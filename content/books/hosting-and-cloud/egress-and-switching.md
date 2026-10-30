@@ -66,7 +66,7 @@ Regulation (EU) 2023/2854 applies from September 12, 2025 (Article 50). Chapter 
 - **Interoperability (Articles 34 and 35).** Article 34 covers interoperability for in-parallel use of services, the basis for the multicloud programs above; Article 35 covers interoperability of data processing services generally.
 - **Exemptions (Article 31).** Services "of which the majority of main features has been custom-built" for one customer and not offered at broad commercial scale are exempt from the charge and some other provisions; and the chapter doesn't apply to services "provided as a non-production version for testing and evaluation purposes and for a limited period of time."
 
-The effect on billing is concrete. From January 12, 2027, a provider serving EU customers can't charge egress for data moved as part of a switch, so it must be able to tell switching egress apart from ordinary egress, on the customer's request, with the notice, transitional and retrieval clocks the contract states.
+The effect on billing is concrete. From January 12, 2027, a provider serving EU customers can't charge egress for data moved as part of a switch, so it must be able to tell switching egress apart from ordinary egress, on the customer's request, with the notice, transitional and retrieval clocks the contract states. What the same rules ask of a SaaS workplace tool's exports and imports is [The EU Data Act: Switching as a Duty](/books/workplace-and-collaboration/migrations-and-switching#the-eu-data-act-switching-as-a-duty).
 
 ## The Alternatives
 

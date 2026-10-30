@@ -72,7 +72,7 @@ Deployment data on the item is what makes cycle time end at "in production" rath
 
 ## Integrations and Who Can Read the Code
 
-A tracker integration reads repository data: branch names, commit messages, pull request titles, sometimes diffs. That is source code access granted by the customer's admins to a third party, through an app installation with scopes (Apps & Marketplaces covers the consent model). Three rules apply:
+A tracker integration reads repository data: branch names, commit messages, pull request titles, sometimes diffs. That is source code access granted by the customer's admins to a third party, through an app installation with scopes ([Apps & Marketplaces](/books/workplace-and-collaboration/apps-and-marketplaces) covers the consent model). Three rules apply:
 
 - **Request metadata scopes, not contents**, unless the feature needs the diff. Branch names, commit messages and pull request state are enough for linking.
 - **Respect visibility on both sides.** A private repository's pull request linked to an item in a project with a wider audience shows its existence and state, not its title, to people who can't see the repository.
@@ -90,7 +90,7 @@ Large changes review badly, and a long-standing alternative to big pull requests
 
 ## How to Build It
 
-The chapter adds the code-host connection and the links between work items and development objects, with their events. Connections ride on the core `app_installations`; each linked object is a row keyed by the provider's ID, with the item it points to.
+The chapter adds the code-host connection and the links between work items and development objects, with their events. Connections ride on the [core](/books/workplace-and-collaboration/workplace-business#the-core-data-model) `app_installations`; each linked object is a row keyed by the provider's ID, with the item it points to.
 
 ```sql
 CREATE TABLE dev_connections (            -- one installed code-host integration

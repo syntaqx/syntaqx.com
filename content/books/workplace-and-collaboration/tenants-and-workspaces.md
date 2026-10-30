@@ -33,7 +33,7 @@ Three patterns run through the table:
 
 ## Workspace, Organization, Tenant
 
-The terms collide, so this volume uses the core data model's names: an `organizations` row is the customer that signs the contract and verifies domains; a `workspaces` row is a tenant unit where content lives and where region and residency are set. A Slack workspace, an Atlassian site (or app instance), a Microsoft 365 tenant, a Google Workspace customer, a Notion workspace and a Figma team are all `workspaces`; Slack's Enterprise organization, Atlassian's organization and Notion's and Figma's organizations are `organizations`. A Microsoft 365 tenant is both at once, which is why multitenant Microsoft customers are the hardest case below.
+The terms collide, so this volume uses the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model)'s names: an `organizations` row is the customer that signs the contract and verifies domains; a `workspaces` row is a tenant unit where content lives and where region and residency are set. A Slack workspace, an Atlassian site (or app instance), a Microsoft 365 tenant, a Google Workspace customer, a Notion workspace and a Figma team are all `workspaces`; Slack's Enterprise organization, Atlassian's organization and Notion's and Figma's organizations are `organizations`. A Microsoft 365 tenant is both at once, which is why multitenant Microsoft customers are the hardest case below.
 
 ### Slack: workspaces, then the organization
 
@@ -82,7 +82,7 @@ The design question every builder faces is the default. Open joining by domain g
 
 ### Shadow workspaces
 
-The other side of bottom-up adoption is the workspace nobody in IT knows about: a second Slack workspace started by a team, a Notion workspace on a personal plan, a Figma team paid by a manager's card. Vendors give the organization ways to find and absorb them: Notion's verified domain gives "visibility over people and spaces tied to that domain"; Figma lists accounts on the domain outside the organization; Slack Enterprise claiming prevents new unsanctioned workspaces. Absorbing one is a consolidation, below.
+The other side of bottom-up adoption is the workspace nobody in IT knows about: a second Slack workspace started by a team, a Notion workspace on a personal plan, a Figma team paid by a manager's card. Vendors give the organization ways to find and absorb them: Notion's verified domain gives "visibility over people and spaces tied to that domain"; Figma lists accounts on the domain outside the organization; Slack Enterprise claiming prevents new unsanctioned workspaces. Absorbing one is a consolidation, below; finding them is also the vendor's sales signal ([From Self-Serve to Enterprise](/books/workplace-and-collaboration/selling-to-enterprises#domain-capture-and-admin-claiming)).
 
 ## Consolidating and Splitting Tenants
 
@@ -97,7 +97,7 @@ The hard parts are the same in every product:
 - **Identity first.** People must exist in the target before their content does, and their old identifiers must map to new ones, or every authorship, mention, assignment and permission points at a ghost. Microsoft's mailbox migration requires the target user to exist first; Notion's consolidation migrates users along with pages.
 - **References.** Links between items (a page linking another page, an issue mentioning a channel) break when ids change. A move needs a map from old ids to new ones, kept after the move, so old links redirect.
 - **Permissions.** A grant to a group in the source has no meaning in the target unless the group comes too. Consolidations move groups or map them to equivalent target groups before content.
-- **Compliance state.** Retention policies and legal holds bind content in the source. A move that deletes the source (as Microsoft's mailbox migration does) has to carry holds into the target or leave a searchable copy, and the Teams chat example shows what stays behind for the source tenant's investigators. Microsoft blocks OneDrive accounts under a hold policy from cross-tenant migration: the admin removes the hold, migrates, and reapplies it in the target. The hold rules themselves belong to Retention & Legal Hold in this volume's Security and Compliance part; here the rule is that a tenant move never silently drops a hold.
+- **Compliance state.** Retention policies and legal holds bind content in the source. A move that deletes the source (as Microsoft's mailbox migration does) has to carry holds into the target or leave a searchable copy, and the Teams chat example shows what stays behind for the source tenant's investigators. Microsoft blocks OneDrive accounts under a hold policy from cross-tenant migration: the admin removes the hold, migrates, and reapplies it in the target. The hold rules themselves belong to [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold); here the rule is that a tenant move never silently drops a hold.
 - **Licenses and money.** Moves happen across contracts; the per-user migration license is Microsoft's way of pricing that work.
 
 Splitting is the same machinery in the other direction, with one more question: who owns content that both halves used? A shared channel or a page edited by people who now belong to two companies has no obvious owner. My default is that content stays with the container's owning workspace, the leaving side gets an export of what its own people authored, and anything else is decided by the two admins, not by the vendor.
@@ -108,23 +108,21 @@ Everything above assumes that one tenant can never see another's data. The gener
 
 - **The partition key is the workspace, and the exceptions are the product.** Notion sharded its block data by workspace id because "each block belongs to exactly one workspace," which keeps most queries on one shard; it used 480 logical shards over 32 physical databases, a number chosen because it has many factors. Slack started the same way and had to shard messages by channel once organizations and shared channels crossed workspaces. Any feature that deliberately crosses tenants (shared channels, org-wide search, cross-tenant sync) needs its own explicit path, never a relaxed tenant filter.
 - **Two scopes on every row.** Content belongs to a workspace; policy belongs to an organization. Queries that enforce policy (is this file type allowed? may this person share outside?) read the organization; queries that return content filter by workspace. Mixing them is how a workspace admin ends up reading another workspace's data in the same organization.
-- **Isolation includes the indexes.** Search indexes, AI retrieval indexes, caches and exports are all copies of tenant data and need the same tenant scoping as the primary store (Enterprise Search, in this volume's Search, Integrations and AI part).
+- **Isolation includes the indexes.** Search indexes, AI retrieval indexes, caches and exports are all copies of tenant data and need the same tenant scoping as the primary store ([Enterprise Search](/books/workplace-and-collaboration/enterprise-search)).
 - **Support access is a tenant boundary crossing.** A vendor engineer opening a customer's workspace is the one cross-tenant read that is legitimate; it needs a reason, a time box and a record the customer can see ([Delegation, Not Impersonation](/docs/security/support-access#delegation-not-impersonation)).
 
 ## How to Build It
 
-The core data model in The Workplace Software Business (this volume's first chapter) defines `organizations`, `workspaces`, `domains`, `accounts` and `members`. This chapter adds the structure between them: workspace placement under an organization, organizational units for policy scope, domain-based join rules, and tenant moves.
+The [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) defines `organizations`, `workspaces`, `domains`, `accounts` and `members`. This chapter adds the structure between them: workspace placement under an organization, organizational units for policy scope, domain-based join rules, and tenant moves.
 
 ```sql
-ALTER TABLE workspaces
-  ADD COLUMN organization_id UUID REFERENCES organizations (id),   -- null until claimed or moved in
-  ADD COLUMN slug            TEXT NOT NULL,                        -- acme.slack.com-style handle
+ALTER TABLE workspaces                     -- core already has organization_id and a unique slug;
+                                           -- a free workspace starts under its own organization
   ADD COLUMN access_mode     TEXT NOT NULL DEFAULT 'invite_only'
     CHECK (access_mode IN ('open', 'by_request', 'invite_only', 'hidden')),
   ADD COLUMN shard_key       INT  NOT NULL,                        -- logical shard, assigned at creation
   ADD COLUMN created_by_account_id UUID REFERENCES accounts (id),
-  ADD COLUMN joined_organization_at TIMESTAMPTZ,
-  ADD CONSTRAINT workspaces_slug_unique UNIQUE (slug);
+  ADD COLUMN joined_organization_at TIMESTAMPTZ;   -- when it moved under its current organization
 
 CREATE TABLE org_units (                  -- Google-style OU tree for policy scope
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

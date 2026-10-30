@@ -11,7 +11,7 @@ Every work management product ships a rules engine for its customers: when somet
 
 The hard parts are the ones a product team can't see from a single rule. Rules fire on events that other rules cause, so one careless rule can loop until something stops it. Rules run with someone's authority, so the actor on an automated change matters for permissions and audit. Rules cost compute per run, so every vendor meters them by plan and throttles the heavy users. And rules fail silently, so the run log is the only way a customer learns that the automation they depend on stopped working last Tuesday. The customer's admins own the rules and their consequences; the vendor owns the engine's guarantees, its limits and its loop protection, and should publish all three.
 
-This chapter covers the trigger-condition-action model, smart values and templating, quotas and service limits, loops, the rule actor, and the run log. Workflow post functions, which are rules bound to a single transition, are [Workflows & Status Machines](/books/workplace-and-collaboration/workflows-and-states#conditions-validators-and-post-functions); cross-product automation through Zapier, Power Automate and Slack Workflow Builder is Integration Platforms & Workflow Builders. The playbook's [Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule) covers storing rules with versions, and [Background Jobs](/docs/architecture/background-jobs#retries-and-dead-letters) the execution machinery.
+This chapter covers the trigger-condition-action model, smart values and templating, quotas and service limits, loops, the rule actor, and the run log. Workflow post functions, which are rules bound to a single transition, are [Workflows & Status Machines](/books/workplace-and-collaboration/workflows-and-states#conditions-validators-and-post-functions); cross-product automation through Zapier, Power Automate and Slack Workflow Builder is [Integration Platforms & Workflow Builders](/books/workplace-and-collaboration/integration-platforms). The playbook's [Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule) covers storing rules with versions, and [Background Jobs](/docs/architecture/background-jobs#retries-and-dead-letters) the execution machinery.
 
 ## How the Platforms Do It
 
@@ -23,7 +23,7 @@ As of October 2026:
 | **monday.com** | Automations | Actions per month: Standard 250, Pro 25,000, Enterprise up to 250,000 combined with integrations | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
 | **ClickUp** | Automations | Actions per workspace per month: Free Forever 100, Core 1,000, Business 10,000, Enterprise and Max 1 million | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
 | **Asana** | Rules | "Unlimited automations" from Starter | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
-| **GitHub Actions on issues and projects** | Workflows triggered by `issues`, `issue_comment` and other events; built-in project workflows | Actions minutes by plan (see the Hosting & Cloud chapters); auto-add workflows: Free 1, Pro and Team 5, Enterprise 20 | Events caused by `GITHUB_TOKEN` don't start new runs | The token's identity, or a GitHub App or personal token | Workflow run logs |
+| **GitHub Actions on issues and projects** | Workflows triggered by `issues`, `issue_comment` and other events; built-in project workflows | Actions minutes by plan (see the Hosting & Cloud volume's [The CI/CD Platform Business](/books/hosting-and-cloud/ci-cd-platform-business)); auto-add workflows: Free 1, Pro and Team 5, Enterprise 20 | Events caused by `GITHUB_TOKEN` don't start new runs | The token's identity, or a GitHub App or personal token | Workflow run logs |
 | **Linear** | Built-in automations (Git, sub-issues, triage) | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
 | **Azure Boards** | Work item rules (conditions and actions) on the process | Up to 1,024 rules per work item type | Rules evaluate on save, not as chained events | Not covered in the sources cited here | Not covered in the sources cited here |
 
@@ -95,7 +95,7 @@ The choices trade off:
 - **The author as actor** limits the rule to what its author can do and attributes changes to a person who didn't make them; the rule breaks when the author is deactivated.
 - **The triggering user as actor** makes the rule an extension of the user's action and is right for save-time rules, wrong for scheduled ones.
 
-My default is a per-rule service identity (a `members` row of kind `bot` scoped to the rule's projects), with the rule's owner recorded separately, so history shows "Automation (rule: Auto-assign bugs, owner: …)." Permissions for the identity are the intersection of what the rule needs and what its owner may grant, checked when the rule is saved and again when the owner's access changes. Offboarding lists the rules a departing member owns (Provisioning, SCIM & Offboarding), and every automated audit event names the rule and its version ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+My default is a per-rule service identity (a `members` row of kind `bot` scoped to the rule's projects), with the rule's owner recorded separately, so history shows "Automation (rule: Auto-assign bugs, owner: …)." Permissions for the identity are the intersection of what the rule needs and what its owner may grant, checked when the rule is saved and again when the owner's access changes. Offboarding lists the rules a departing member owns ([Provisioning, SCIM & Offboarding](/books/workplace-and-collaboration/provisioning-and-scim#content-ownership-on-the-way-out)), and every automated audit event names the rule and its version ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
 
 ## Run History
 
@@ -106,7 +106,7 @@ A rule nobody can debug is a rule nobody trusts. Atlassian's automation audit lo
 - usage consumed, duration, and the final status (success, no actions performed, some errors, throttled, loop, disabled);
 - the actor used.
 
-Two retention periods apply: run logs for debugging (days to months) and the audit events for the writes themselves, which follow the workspace's audit retention (Audit Logs). The writes are business records; the logs are diagnostics.
+Two retention periods apply: run logs for debugging (days to months) and the audit events for the writes themselves, which follow the workspace's audit retention ([Audit Logs](/books/workplace-and-collaboration/audit-logs)). The writes are business records; the logs are diagnostics.
 
 ## How to Build It
 

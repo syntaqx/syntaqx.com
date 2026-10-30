@@ -105,7 +105,7 @@ Bulk access is priced and governed separately from the request API.
 - **Slack** reserves its Discovery API for security and compliance partners (exempted from the Marketplace install minimum) and its API terms bar bulk export of message and file data except under an additional agreement.
 - **Google** routes compliance export through Vault rather than the product APIs.
 
-The design lesson is that compliance and backup integrations are a different product from workflow integrations: they need every message in the tenant, they run under the customer's legal and retention obligations (eDiscovery & Export and Retention & Legal Hold), and the vendors gate them with their own programs, terms and sometimes prices.
+The design lesson is that compliance and backup integrations are a different product from workflow integrations: they need every message in the tenant, they run under the customer's legal and retention obligations ([eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export) and [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold)), and the vendors gate them with their own programs, terms and sometimes prices.
 
 ## The 2025 Slack Changes
 
@@ -131,7 +131,7 @@ For an app developer these terms are storage requirements. An AI feature built o
 
 ## How to Build It
 
-The core model has `apps`, `app_installations` and `api_tokens`. A platform that offers events and enforces limits adds event subscriptions with expiry, a delivery log, rate-limit policies as data, and the data-use terms each app accepted:
+The [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) has `apps`, `app_installations` and `api_tokens`. A platform that offers events and enforces limits adds event subscriptions with expiry, a delivery log, rate-limit policies as data, and the data-use terms each app accepted:
 
 ```sql
 CREATE TABLE event_subscriptions (           -- an app's standing request for changes

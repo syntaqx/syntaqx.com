@@ -9,9 +9,9 @@ tags = ["workplace", "intranet", "knowledge-management", "internal-communication
 
 An intranet is the company's front page: the benefits link, the holiday calendar, the CEO's quarterly note, the expense policy, the IT status banner, the "how do I" answers that a thousand people need once a year. A knowledge base is the same idea aimed at answers rather than announcements: short, verified pieces of truth that support, sales and HR can quote without checking. Both sit on top of the docs and wikis of [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis), and both fail the same way: content goes stale, nobody owns it, search returns three contradictory pages, and employees stop trusting it and ask in chat instead.
 
-What makes the category distinct is that the audience is everyone and the authors are few. A wiki is written by the people who use it; an intranet is published by communications, HR and IT to the whole company, often in many languages, to frontline workers on phones as well as desk workers in Teams, with targeting by role and region and analytics on who read what. That last part is where the customer's decisions matter most: the employer decides what to measure about its own employees' reading, under the privacy rules of the book's monitoring chapter.
+What makes the category distinct is that the audience is everyone and the authors are few. A wiki is written by the people who use it; an intranet is published by communications, HR and IT to the whole company, often in many languages, to frontline workers on phones as well as desk workers in Teams, with targeting by role and region and analytics on who read what. That last part is where the customer's decisions matter most: the employer decides what to measure about its own employees' reading, under the privacy rules of [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy).
 
-This chapter covers the platforms, the publishing model (sites, news, announcements, dashboards), targeting, translation, verification and expiry, findability, and what to build. Generic search ranking and permission-trimmed indexes are the book's enterprise search chapter; AI assistants answering from intranet content are its AI assistants chapter.
+This chapter covers the platforms, the publishing model (sites, news, announcements, dashboards), targeting, translation, verification and expiry, findability, and what to build. Generic search ranking and permission-trimmed indexes are [Enterprise Search](/books/workplace-and-collaboration/enterprise-search); AI assistants answering from intranet content are [AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants).
 
 ## How the Platforms Do It
 
@@ -51,7 +51,7 @@ The inversion is plain: Microsoft provides the slots, but the customer's communi
 
 **Staffbase** calls itself an AI-native employee experience platform "that connects Comms, HR, and IT," with an intranet ("the digital front door for your company"), an employee app for frontline workers and internal newsletters, with communications "dynamically tailored by role, location, and context." **Simpplr** calls itself an AI intranet and employee experience platform built around governed, trusted content, AI search and answers, and analytics. I haven't found public engineering detail for either; they're in the survey as representatives of the category internal communications teams buy, not as models for any rule below.
 
-The category's selling points tell you where the suites are thin: a mobile app that works for people without a corporate laptop or a Microsoft 365 account (the book's frontline workers chapter), email newsletters with read measurement, and multi-channel campaigns where one announcement goes to the intranet, the app, chat and email at once.
+The category's selling points tell you where the suites are thin: a mobile app that works for people without a corporate laptop or a Microsoft 365 account ([Frontline & Deskless Workers](/books/workplace-and-collaboration/frontline-workers)), email newsletters with read measurement, and multi-channel campaigns where one announcement goes to the intranet, the app, chat and email at once.
 
 ## Announcements and News
 
@@ -61,7 +61,7 @@ My rules for announcements:
 
 - **Every announcement has an expiry from the front page.** "Office closed Friday" must not be the top item on Monday.
 - **Acknowledgment is a record**, not a click metric: who acknowledged which version of which policy, when. That's the same evidence model as [Click-Through Terms Are Signatures Too](/docs/compliance/electronic-signatures#click-through-terms-are-signatures-too), and a policy acknowledgment may be produced in an employment dispute.
-- **Urgent channels are rationed.** A banner, a push notification and a chat broadcast at once is for outages and emergencies, with a named small group allowed to send them. Notification fatigue is the book's notifications chapter.
+- **Urgent channels are rationed.** A banner, a push notification and a chat broadcast at once is for outages and emergencies, with a named small group allowed to send them. Notification fatigue is [Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention).
 - **Read analytics are aggregate by default.** Per-person read tracking of every news post is employee monitoring; offer counts and percentages by audience, and per-person tracking only for required acknowledgments.
 
 ## Targeting Is Not Permission
@@ -70,7 +70,7 @@ Every intranet targets content: this dashboard card for finance, these resource 
 
 The design consequence is two independent checks on every intranet item: **can this person see it** (grants, which a direct link or search must respect) and **should it be shown to them here** (targeting, which only decides placement). Mixing them produces the classic leak: an "HR-only" salary-band page that's merely targeted, found by everyone through search. My rule: anything confidential is permissioned, and targeting is applied on top of permission, never as a substitute.
 
-Targeting depends on directory data being right: department, location, employment type and manager, synced from the HRIS through the directory (the provisioning chapter covers SCIM and HR-driven sync). A dynamic group built on a stale attribute targets the wrong people silently, so audience previews ("show me this page as a member of Sales, on mobile") are a core authoring feature; SharePoint's dashboard preview by audience and device is the reference.
+Targeting depends on directory data being right: department, location, employment type and manager, synced from the HRIS through the directory ([Provisioning, SCIM & Offboarding](/books/workplace-and-collaboration/provisioning-and-scim#joiner-mover-leaver) covers SCIM and HR-driven sync). A dynamic group built on a stale attribute targets the wrong people silently, so audience previews ("show me this page as a member of Sales, on mobile") are a core authoring feature; SharePoint's dashboard preview by audience and device is the reference.
 
 ## Translation
 
@@ -107,11 +107,11 @@ Intranets live or die in search. Three mechanisms beyond ranking recur:
 - **Verified content ranks higher.** Notion shows a verified check in search results; Guru's verified state is the product's core signal.
 - **One canonical page per question.** Duplicates are the biggest findability problem in any intranet, and the fix is editorial: archive the old page, redirect its links, and give the canonical page the keywords people actually type (Microsoft suggests at least five keyword variants per bookmark).
 
-Permission trimming is non-negotiable in every one of these: a bookmark or promoted result pointing to a restricted page must not reveal its title to people who can't open it. The machinery is the enterprise search chapter's.
+Permission trimming is non-negotiable in every one of these: a bookmark or promoted result pointing to a restricted page must not reveal its title to people who can't open it. The machinery is [Enterprise Search](/books/workplace-and-collaboration/enterprise-search#permission-trimming)'s.
 
 ## How to Build It
 
-The chapter adds announcements, audience targeting, translations and verification on top of `pages` from [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#how-to-build-it) and the core `groups`, `members` and `grants`.
+The chapter adds announcements, audience targeting, translations and verification on top of `pages` from [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#how-to-build-it) and the [core](/books/workplace-and-collaboration/workplace-business#the-core-data-model) `groups`, `members` and `grants`.
 
 ```sql
 -- containers.kind gains 'portal' (an intranet site; a workspace may have several).

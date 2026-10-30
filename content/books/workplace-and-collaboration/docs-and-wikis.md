@@ -73,7 +73,7 @@ A component pasted into a group chat therefore lives in the sender's OneDrive an
 
 ## Containers, Trees and Restrictions
 
-A wiki is a tree of pages inside a container: a Confluence space, a Notion teamspace, a Google shared drive, a Loop workspace. In the core data model the container is a `containers` row with `kind = 'space'` and the pages are `items` with `kind = 'page'`; the tree is a parent pointer on the page.
+A wiki is a tree of pages inside a container: a Confluence space, a Notion teamspace, a Google shared drive, a Loop workspace. In the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) the container is a `containers` row with `kind = 'space'` and the pages are `items` with `kind = 'page'`; the tree is a parent pointer on the page.
 
 Restrictions flow through the tree, and the products differ in exactly how. Confluence's rules are explicit and worth adopting as a reference:
 
@@ -82,7 +82,7 @@ Restrictions flow through the tree, and the products differ in exactly how. Conf
 - **Restricted pages disappear.** They don't show in the page tree or in macros for people who can't view them; a shared link reveals the title in the URL and nothing else.
 - **Admins see through.** Space admins can view and change restrictions on any content in their space; site admins across the site.
 
-Notion's walk-up-the-parent rule and Box's waterfall folders (in [Files, Sync & Storage](/books/workplace-and-collaboration/files-and-sync#shared-drives-and-who-owns-the-file)) are the same principle with different exceptions. The generic modeling is in [Authorization](/docs/security/authorization#choosing-a-model); the permissions chapter of this book covers role ladders and link sharing in depth. What docs add is that every derived surface must apply the same check: search results, the page tree, backlinks, page previews in chat unfurls, embedded excerpts and transclusions (a Confluence excerpt include or a Loop component shown elsewhere), notifications, exports and AI answers. An excerpt macro that renders a restricted page's text into a public page is a data leak with a nice UI.
+Notion's walk-up-the-parent rule and Box's waterfall folders (in [Files, Sync & Storage](/books/workplace-and-collaboration/files-and-sync#shared-drives-and-who-owns-the-file)) are the same principle with different exceptions. The generic modeling is in [Authorization](/docs/security/authorization#choosing-a-model); [Permissions & Sharing](/books/workplace-and-collaboration/permissions-and-sharing) covers role ladders and link sharing in depth. What docs add is that every derived surface must apply the same check: search results, the page tree, backlinks, page previews in chat unfurls, embedded excerpts and transclusions (a Confluence excerpt include or a Loop component shown elsewhere), notifications, exports and AI answers. An excerpt macro that renders a restricted page's text into a public page is a data leak with a nice UI.
 
 My rule: **compute effective access from the tree at read time, cache it with the tree version, and evaluate every embed against the viewer, not the author.** When a page moves, its effective access changes, so a move is a permissions event and gets audited like one.
 
@@ -106,7 +106,7 @@ Every product keeps page history, and they differ on how long, who can see it, a
 Three rules for a version store in a workplace product:
 
 - **Restore is a forward edit.** It writes a new version whose content equals an old one, attributed to the person who restored it. Nothing in history is overwritten, which is what makes history usable as evidence ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
-- **Version retention is the customer's policy, bounded by holds.** The plan sets a default window; an admin's retention policy can lengthen or shorten it; a legal hold freezes it. Microsoft's SharePoint versioning is the clearest public statement of that precedence: items under a retention policy or eDiscovery hold ignore library version limits until the hold is released ([Files, Sync & Storage](/books/workplace-and-collaboration/files-and-sync#versions-deletes-and-ransomware)). Retention policies and holds as a system are the subject of the book's retention and legal hold chapter.
+- **Version retention is the customer's policy, bounded by holds.** The plan sets a default window; an admin's retention policy can lengthen or shorten it; a legal hold freezes it. Microsoft's SharePoint versioning is the clearest public statement of that precedence: items under a retention policy or eDiscovery hold ignore library version limits until the hold is released ([Files, Sync & Storage](/books/workplace-and-collaboration/files-and-sync#versions-deletes-and-ransomware)). Retention policies and holds as a system are the subject of [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
 - **Snapshot the rendered result, not just the operations.** A block tree's history is a stream of operations; reconstructing a page as of a date by replaying them is slow and breaks when the schema evolves. Periodic full snapshots plus the operations between them make "show me this page on March 3" a bounded read.
 
 ## Publishing to the Web
@@ -126,11 +126,11 @@ Wikis rot. The author moves teams, the system changes, and the page keeps rankin
 - **Verification that expires.** Notion verified pages show a check mark in search and mentions; verification can last until a date or indefinitely, a verified page must have an owner, and on expiry the owner is notified in Notion and by email to re-verify. Verification outside wikis needs a Business or Enterprise plan. Guru, in [Intranets & Knowledge Bases](/books/workplace-and-collaboration/intranets-and-knowledge#verification-and-expiry), builds a product around the same idea.
 - **Archive instead of delete.** Confluence archiving removes a page from page trees, search, the activity feed, macros and the home page while keeping its permissions and keeping links working; archived pages can't be edited, moved, copied or commented on; anyone can archive a single page and Premium and Enterprise admins can bulk archive, delete or change owners from a content manager that filters pages with no views, comments or updates over a chosen period, including pages "without active owners."
 
-The ownership problem is mostly an offboarding problem. When a member is deactivated (the provisioning chapter covers the mechanics), every page they own needs a new owner or an explicit "unowned" state that shows in admin reports; silently leaving a deactivated account as owner is how a wiki ends up with thousands of pages nobody is responsible for. My rule: **ownership is a required field, reassigned in the same transaction as deactivation, to the person's manager or the space owner by policy, with the reassignment in the audit log.**
+The ownership problem is mostly an offboarding problem. When a member is deactivated ([Provisioning, SCIM & Offboarding](/books/workplace-and-collaboration/provisioning-and-scim#deactivation-versus-deletion) covers the mechanics), every page they own needs a new owner or an explicit "unowned" state that shows in admin reports; silently leaving a deactivated account as owner is how a wiki ends up with thousands of pages nobody is responsible for. My rule: **ownership is a required field, reassigned in the same transaction as deactivation, to the person's manager or the space owner by policy, with the reassignment in the audit log.**
 
 ## How to Build It
 
-This chapter adds the `pages` kind table and the page tree on top of the core model's `containers`, `items`, `item_versions` and `grants`. Blocks are stored per page because pages are the unit of permission, versioning and export; a block-level store (Notion's) is a valid alternative when blocks must be shared across pages, at the price of the parent-pointer walk on every check.
+This chapter adds the `pages` kind table and the page tree on top of the [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model)'s `containers`, `items`, `item_versions` and `grants`. Blocks are stored per page because pages are the unit of permission, versioning and export; a block-level store (Notion's) is a valid alternative when blocks must be shared across pages, at the price of the parent-pointer walk on every check.
 
 ```sql
 -- containers.kind gains 'space' (wikis); items.kind gains 'page'.
@@ -234,7 +234,7 @@ Docs are records the customer may have to produce, so the audit trail (core `aud
 - **Ownership:** owner changed (by whom, from whom, why: transfer, offboarding, bulk admin action), verification set, renewed and expired.
 - **Admin policy:** publishing allowed or disabled, live docs enabled per space, retention window changed, template published.
 
-Page views are personal data about employees and belong to a separate, shorter-lived analytics store with its own access controls; the book's monitoring chapter covers what admins may see. [Audit Trails](/docs/architecture/audit-trails#what-a-record-holds) has the record format.
+Page views are personal data about employees and belong to a separate, shorter-lived analytics store with its own access controls; [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy) covers what admins may see. [Audit Trails](/docs/architecture/audit-trails#what-a-record-holds) has the record format.
 
 ## What This Means for the System You Build
 

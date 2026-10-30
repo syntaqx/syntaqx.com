@@ -17,7 +17,7 @@ In consumer products the platform scans content against its own rules. In workpl
 - **Coverage.** Images, recordings, encrypted content, AI summaries and link previews are often out of scope, and each vendor lists different gaps.
 - **Many enforcement points.** The same document is protected by a label in the file, a policy on the storage service, a rule in the chat product, a browser extension and a cloud access security broker, each configured separately.
 
-This chapter covers labels, DLP policies, CASBs and insider risk as the workplace suites ship them. Key management and encryption that a label may trigger are [Encryption & Customer-Managed Keys](/books/workplace-and-collaboration/encryption-and-customer-keys); regulated supervision and lexicon review of employee communications are Regulated Communications & Archiving, and what employers may lawfully monitor is Employee Monitoring & Privacy, both later in this part.
+This chapter covers labels, DLP policies, CASBs and insider risk as the workplace suites ship them. Key management and encryption that a label may trigger are [Encryption & Customer-Managed Keys](/books/workplace-and-collaboration/encryption-and-customer-keys); regulated supervision and lexicon review of employee communications are [Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications), and what employers may lawfully monitor is [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy), both later in this part.
 
 ## How the Platforms Do It
 
@@ -79,7 +79,7 @@ Shared channels make the inversion concrete. Microsoft documents it precisely fo
 - **External access chats** follow the hosting tenant, the one that started the chat: Contoso's policies apply to Contoso users' messages only when Contoso hosts, and a user's home policies "don't automatically follow the user into a conversation hosted by another tenant."
 - **Guests** in the tenant are covered by the host's policies, and a Teams policy can delete messages with sensitive information sent to guests when the tenant initiated the chat.
 
-Slack's DLP rules can be limited to Slack Connect conversations, which lets an admin be stricter where outsiders can read, and its legal holds exclude Slack Connect content, so a company that wants records of external conversations needs separate controls ([Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold)). The trust model between two admins is Guests & Cross-Org Collaboration in the Tenancy and Identity part. For DLP the rule is simple and has to be shown to users: your company's policy protects what you send; it can't protect you from what the other company's people send, or stop them from copying what they read.
+Slack's DLP rules can be limited to Slack Connect conversations, which lets an admin be stricter where outsiders can read, and its legal holds exclude Slack Connect content, so a company that wants records of external conversations needs separate controls ([Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold)). The trust model between two admins is [Guests & Cross-Org Collaboration](/books/workplace-and-collaboration/guests-and-external-collaboration) in the Tenancy and Identity part. For DLP the rule is simple and has to be shown to users: your company's policy protects what you send; it can't protect you from what the other company's people send, or stop them from copying what they read.
 
 ## Containers and Sharing Controls
 
@@ -103,7 +103,7 @@ Slack's list of what its DLP doesn't scan is a useful checklist for any product:
 
 Insider risk management correlates many weak signals about one person (downloads, DLP matches, unusual sharing, an HR event) into a case. Microsoft's Insider Risk Management is the reference: policy templates such as "Data theft by departing users" (which needs an HR connector to know who is leaving), "Data leaks," "Data leaks by priority users," "Risky AI usage" and "Risky Agents"; alerts and cases; and escalation to eDiscovery (Premium) when a case needs preservation and review. It is "built with privacy by design": users are pseudonymized by default, access is role-based, and reviewers' own actions are audited.
 
-Those defaults are the right ones for anyone building in this space, and they are not optional where employee privacy law applies: pseudonymize until a reviewer with cause unmasks, restrict who can unmask, log every unmasking, and keep the signal set proportionate to the risk. Works council co-determination over tools like this in Germany, and US monitoring-notice statutes, are Employee Monitoring & Privacy, later in this part.
+Those defaults are the right ones for anyone building in this space, and they are not optional where employee privacy law applies: pseudonymize until a reviewer with cause unmasks, restrict who can unmask, log every unmasking, and keep the signal set proportionate to the risk. Works council co-determination over tools like this in Germany, and US monitoring-notice statutes, are [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy), later in this part.
 
 ## Information Protection and AI
 
@@ -114,7 +114,7 @@ AI assistants read across everything a user can access, which turns quiet oversh
 - **Atlassian:** a data security policy control can prevent Atlassian MCP server access by space, app or classification level.
 - **Network and browser:** Purview's inline DLP for Edge for Business and network integrations covers uploads to ChatGPT, Gemini, DeepSeek and Copilot, the "unmanaged cloud apps" employees paste into.
 
-Permission-aware retrieval and oversharing remediation belong to AI Assistants Over Company Data in the Search, Integrations and AI part; the information-protection rule is that labels and DLP decisions must be inputs to retrieval, not filters applied to the answer afterward.
+Permission-aware retrieval and oversharing remediation belong to [AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants) in the Search, Integrations and AI part; the information-protection rule is that labels and DLP decisions must be inputs to retrieval, not filters applied to the answer afterward.
 
 ## Encryption Limits Inspection
 
@@ -122,7 +122,7 @@ Strong encryption and DLP pull in opposite directions. Google says DLP scans "ca
 
 ## How to Build It
 
-The core model gives items, containers, grants and audit events. This chapter adds labels, their assignments, DLP policies and rules, and incidents:
+The [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) gives items, containers, grants and audit events. This chapter adds labels, their assignments, DLP policies and rules, and incidents:
 
 ```sql
 CREATE TABLE sensitivity_labels (

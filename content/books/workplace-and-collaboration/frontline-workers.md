@@ -12,7 +12,7 @@ Most collaboration software was designed for information workers: a laptop, a co
 
 What makes the segment hard is that the employer's duties change shape. Identity can't assume an email address or a personal device. The schedule, not the calendar, is the system of record for who should be reachable. A message that an office worker reads at 9 p.m. is an annoyance; the same message read by an hourly worker can be compensable work time under US wage-hour law, and in some countries a contact the employee may lawfully refuse. And the products the segment depends on can disappear: Workplace from Meta, a workplace collaboration product, has closed.
 
-This chapter covers frontline seats and their restrictions, identity and shared devices, schedules as the system of record, communicating with a shift (tags, push-to-talk, task publishing), predictive scheduling laws, and the wage-hour exposure of after-hours messages. Notification mechanics and the right-to-disconnect laws are in [Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention); conversation models are in [Channels, Threads & Direct Messages](/books/workplace-and-collaboration/workplace-chat). Field-service dispatch and routing are the Field Operations volume's subject; seat pricing in general is the Plans, Pricing & Seats chapter.
+This chapter covers frontline seats and their restrictions, identity and shared devices, schedules as the system of record, communicating with a shift (tags, push-to-talk, task publishing), predictive scheduling laws, and the wage-hour exposure of after-hours messages. Notification mechanics and the right-to-disconnect laws are in [Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention); conversation models are in [Channels, Threads & Direct Messages](/books/workplace-and-collaboration/workplace-chat). Field-service dispatch and routing are the Field Operations volume's subject ([Dispatch & the Day of Service](/books/field-operations/dispatch)); seat pricing in general is the [Plans, Pricing & Seats](/books/workplace-and-collaboration/plans-pricing-and-seats) chapter.
 
 ## How the Platforms Do It
 
@@ -38,7 +38,7 @@ Microsoft draws the line through licensing rather than an account type. F licens
 Two things follow for anyone building a restricted seat:
 
 - **Restrictions are permissions, enforced server-side,** not a slimmed-down client. A Frontline Member who can't search for channels must get nothing from the channel-list API either.
-- **Billing follows assignment, not activity.** Slack bills Frontline Members on everyone added, active or not, which differs from its fair-billing treatment of other members; a frontline seat is a provisioned entitlement, and offboarding on the last day of employment is what stops the charge (the Provisioning, SCIM & Offboarding chapter).
+- **Billing follows assignment, not activity.** Slack bills Frontline Members on everyone added, active or not, which differs from its fair-billing treatment of other members; a frontline seat is a provisioned entitlement, and offboarding on the last day of employment is what stops the charge (the [Provisioning, SCIM & Offboarding](/books/workplace-and-collaboration/provisioning-and-scim) chapter).
 
 ## Identity Without a Desk
 
@@ -90,7 +90,7 @@ Frontline communication is addressed by role and time, not by name: "whoever is 
 
 Frontline teams used radios long before chat, and collaboration suites now replace them. Teams' **Walkie Talkie** turns Android and iOS devices into push-to-talk handsets over Wi-Fi or cellular data, using the Teams channels the user already belongs to (standard and private channels, not shared ones). It's included in all paid Teams licenses, needs network round-trip latency under 300 ms, jitter under 30 ms and packet loss under 1%, uses about 20 Kb/s while sending or receiving audio, and doesn't work without connectivity. It works with generic wired headsets and with rugged devices and headsets that have a dedicated PTT button (Zebra, Honeywell, Samsung, Kyocera, Sonim and others), and its data is stored in the EU for tenants in the EU Data Boundary or the UK, and in the US for everyone else.
 
-Push-to-talk is a different real-time workload from chat: one speaker at a time per channel, latency that's felt in a conversation, no persistent record by default, and hardware buttons that must work with the phone locked. The media mechanics belong with voice (the Meetings & Video and Business Phone & Contact Center chapters); the collaboration-level decision is that the channel membership and permissions are shared with chat, so one roster governs both.
+Push-to-talk is a different real-time workload from chat: one speaker at a time per channel, latency that's felt in a conversation, no persistent record by default, and hardware buttons that must work with the phone locked. The media mechanics belong with voice (the [Meetings & Video](/books/workplace-and-collaboration/meetings-and-video) and [Business Phone & Contact Center](/books/workplace-and-collaboration/business-phone-and-contact-center) chapters); the collaboration-level decision is that the channel membership and permissions are shared with chat, so one roster governs both.
 
 ### Publishing Tasks to Locations
 
@@ -116,7 +116,7 @@ For a collaboration product deployed to hourly workers, the implications are con
 - **Off-shift messaging creates exposure.** A manager's 10 p.m. chat that asks a cashier to cover tomorrow's opening, and the cashier's reply, is work the employer knows about. Products should make the audience's shift state visible to the sender and default to delivering at the start of the recipient's next shift.
 - **Gate notifications on the schedule.** Shift-based tags already notify only on-shift staff; the same rule can apply to all non-urgent notifications for hourly members, with quiet periods derived from the schedule rather than a fixed evening window ([Do Not Disturb, Schedules and Breakthrough](/books/workplace-and-collaboration/notifications-and-attention#do-not-disturb-schedules-and-breakthrough)).
 - **Provide the reporting path in the product.** If workers can work in the app off the clock, the app should offer a way to report that time (a "log time for this" action that creates a time-card entry for manager approval), because a reasonable, actually-used reporting procedure is the employer's defense.
-- **Don't build a surveillance trail by accident.** Logs of off-shift app activity are the "non-payroll records" the bulletin discusses. Whether an employer must review them depends on circumstances; a product that surfaces "Ana was active at 11:40 p.m." on a manager dashboard may turn those records into constructive knowledge. Collect activity data for operations, retain it briefly, and keep it out of manager-facing views unless the employer configures otherwise (the Employee Monitoring & Privacy chapter).
+- **Don't build a surveillance trail by accident.** Logs of off-shift app activity are the "non-payroll records" the bulletin discusses. Whether an employer must review them depends on circumstances; a product that surfaces "Ana was active at 11:40 p.m." on a manager dashboard may turn those records into constructive knowledge. Collect activity data for operations, retain it briefly, and keep it out of manager-facing views unless the employer configures otherwise (the [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy) chapter).
 - **Let the employer block access off shift.** An employer may decide hourly workers shouldn't use the app outside their shifts at all; the product should support a schedule-aware access policy rather than leave employers to choose between all or nothing.
 
 Outside the US the framing differs but the duty points the same way: Ontario's guidance says reviewing or drafting emails after a shift is generally working time even under a policy against it, and Australia's right to disconnect lets employees refuse unreasonable out-of-hours contact ([The Right to Disconnect](/books/workplace-and-collaboration/notifications-and-attention#the-right-to-disconnect)).
@@ -125,7 +125,7 @@ Outside the US the framing differs but the duty points the same way: Ontario's g
 
 Meta's page for Workplace, its workplace collaboration product, now states that "Workplace has closed as of May 2026." For an employer whose store and factory staff communicated on a product like that, a shutdown is a migration of identities (often without email), groups mapped to locations, years of posts and files, and integrations, on the vendor's timeline. The lessons apply to buying and building:
 
-- **Export must be complete and usable,** including membership history and the location hierarchy, not just posts; the Migrations, Imports & Switching chapter covers export formats and the EU Data Act's switching rules.
+- **Export must be complete and usable,** including membership history and the location hierarchy, not just posts; the [Migrations, Imports & Switching](/books/workplace-and-collaboration/migrations-and-switching) chapter covers export formats and the EU Data Act's switching rules.
 - **Frontline identity must be portable:** if accounts were keyed on the vendor's own usernames, re-provisioning thousands of workers who have no corporate email is the hardest part of the move. Provisioning from the HR system through SCIM keeps the employer's identifier authoritative.
 - **Records outlive products.** Retention obligations on messages don't end when the vendor does; the employer needs its archive before the shutdown date.
 
@@ -138,8 +138,9 @@ ALTER TABLE members
   ADD COLUMN seat_profile   TEXT NOT NULL DEFAULT 'standard'
     CHECK (seat_profile IN ('standard', 'frontline')),
   ADD COLUMN pay_basis      TEXT CHECK (pay_basis IN ('hourly', 'salaried_exempt',
-    'salaried_nonexempt')),              -- drives off-shift notification and access rules
-  ADD COLUMN employee_number TEXT;       -- identity when there is no corporate email
+    'salaried_nonexempt'));              -- drives off-shift notification and access rules
+-- members.employee_number (from Provisioning, SCIM & Offboarding) is the identity
+-- when there is no corporate email
 
 CREATE TABLE locations (                 -- the targeting hierarchy, separate from reporting lines
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

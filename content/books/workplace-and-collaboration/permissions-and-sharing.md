@@ -40,13 +40,13 @@ Above the item sit container roles (space admin, channel manager, project lead, 
 
 ## Containers and Inheritance
 
-Content lives in containers (the core data model's `containers`: channels, spaces, projects, boards, folders), and permission flows down. The design choices:
+Content lives in containers (the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model)'s `containers`: channels, spaces, projects, boards, folders), and permission flows down. [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#containers-trees-and-restrictions) and [Files, Sync & Storage](/books/workplace-and-collaboration/files-and-sync#shared-drives-and-who-owns-the-file) cover the same choices for pages and files. The design choices:
 
 **Narrow-only.** Confluence's rule is that "restrictions can only narrow access": a content item can't have more access than its container, whether that is the space or a parent page. Space permissions decide who can be in the space at all, restrictions remove people from parts of it, and group permissions are additive (in two groups where only one grants view, the person can view). A person who can't see a page with no restrictions on it is missing a space permission. The advantage is that a space admin can reason about the maximum exposure of anything in the space; the cost is that sharing one page with someone outside the space means adding them to the space.
 
 **Broadest wins.** Notion's subpages inherit the parent's permissions until changed on the subpage, and Notion applies the broadest access a person has, so a workspace-wide grant overrides a narrower one. Pages can be reachable without their direct link when they're linked from a more broadly shared page, use a two-way relation to one, or are nested inside one. Moving a shared page to Private removes others' access to that page while subpage permissions stay as they were. The advantage is that sharing one page with anyone is one click; the cost is that the maximum exposure of a teamspace is only knowable by walking every page.
 
-**Explicit deny.** Figma's DSL, modeled on AWS IAM, lets deny policies override allow policies. It handles the cases inheritance can't express ("everyone in the org can view files in this team, except files marked as deleted"), at the price of an extra rule to understand.
+**Explicit deny.** Figma's DSL, modeled on AWS IAM, lets deny policies override allow policies. It handles the cases inheritance can't express ("everyone in the org can view files in this team, except files marked as deleted"), at the price of an extra rule to understand. A law firm's ethical wall is the same exclusion in professional form ([Matters, Intake & Conflicts](/books/workplace-and-collaboration/matters-intake-and-conflicts#ethical-walls)).
 
 My default for a builder: inheritance from container to item, restrictions that narrow by default, explicit item-level grants for sharing outside the container only when the container's policy allows it, and an "effective access" view on every item that lists who can see it and why (direct grant, group, container, link). The why is what lets a person trust the model.
 
@@ -96,18 +96,18 @@ The general lessons match the playbook's [Policy as Code](/docs/security/authori
 
 ## Permission Checks in Search, Notifications and AI
 
-The page view is the easy case: one person, one item, one check. Everything that returns lists is harder:
+The page view is the easy case: one person, one item, one check. Everything that returns lists is harder, down to a saved work-item query ([Queries, Views & Dashboards](/books/workplace-and-collaboration/queries-views-and-dashboards#permission-trimmed-queries)):
 
-- **Search.** A search engine retrieves candidates and then has to drop every one the searcher can't see. Post-filtering a top-k result set can return an empty page when most hits are restricted; pre-filtering requires the index to know each item's audience. The common design stores, per indexed item, the principals that can read it (users, groups, workspace, link), and the query filters on the searcher's principals. Keeping that audience current as grants change is ACL sync, and its latency is the window in which a removed person can still find something; Enterprise Search, in this volume's Search, Integrations and AI part, owns the details.
+- **Search.** A search engine retrieves candidates and then has to drop every one the searcher can't see. Post-filtering a top-k result set can return an empty page when most hits are restricted; pre-filtering requires the index to know each item's audience. The common design stores, per indexed item, the principals that can read it (users, groups, workspace, link), and the query filters on the searcher's principals. Keeping that audience current as grants change is ACL sync, and its latency is the window in which a removed person can still find something; [Enterprise Search](/books/workplace-and-collaboration/enterprise-search#the-acl-model) owns the details.
 - **Notifications.** A mention or a digest that includes content the recipient can't open leaks its preview. Confluence doesn't notify users without access to a content item when they're @mentioned. Every notification renders under the recipient's permissions at send time.
-- **AI assistants.** Retrieval-augmented answers are search plus summarization, so they inherit search's permission filter, and they amplify oversharing: content that was technically open but never found becomes an answer. The admin side (oversharing reports, restricting what the assistant may index) belongs to AI Assistants Over Company Data, in the same part.
-- **Exports and APIs.** An export or an API token acts as some principal; it must not see more than that principal could in the UI, and the scopes of an app's token are a second filter on top (Apps & Marketplaces, also in that part, owns app consent).
+- **AI assistants.** Retrieval-augmented answers are search plus summarization, so they inherit search's permission filter, and they amplify oversharing: content that was technically open but never found becomes an answer. The admin side (oversharing reports, restricting what the assistant may index) belongs to [AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants#oversharing).
+- **Exports and APIs.** An export or an API token acts as some principal; it must not see more than that principal could in the UI, and the scopes of an app's token are a second filter on top ([Apps & Marketplaces](/books/workplace-and-collaboration/apps-and-marketplaces) owns app consent).
 
 The rule underneath all four: there is one authorization decision function, and every path calls it or a precomputed index derived from it with a known freshness. The playbook's [Where Checks Belong](/docs/security/authorization#where-checks-belong) and [Caching Decisions Safely](/docs/security/authorization#caching-decisions-safely) cover the mechanics.
 
 ## How to Build It
 
-The core data model's `grants` (`principal_type` and `principal_id` of member, group, workspace or link, `resource_type`, `resource_id`, `role`) and `share_links` are the tuple store. This chapter adds the container tree, restriction and grant metadata, link life cycle, an ACL revision counter for consistency, and a precomputed audience index for search.
+The [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model)'s `grants` (`principal_type` and `principal_id` of member, group, workspace or link, `resource_type`, `resource_id`, `role`) and `share_links` are the tuple store. This chapter adds the container tree, restriction and grant metadata, link life cycle, an ACL revision counter for consistency, and a precomputed audience index for search.
 
 ```sql
 ALTER TABLE containers
@@ -119,22 +119,18 @@ ALTER TABLE containers
 ALTER TABLE items
   ADD COLUMN restricted BOOLEAN NOT NULL DEFAULT FALSE;              -- page-level restriction
 
-ALTER TABLE grants
-  ADD COLUMN workspace_id UUID NOT NULL REFERENCES workspaces (id),
+ALTER TABLE grants                       -- core has workspace_id, granted_by and expires_at
   ADD COLUMN effect       TEXT NOT NULL DEFAULT 'allow' CHECK (effect IN ('allow', 'deny')),
   ADD COLUMN can_reshare  BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN granted_by   UUID REFERENCES members (id),
-  ADD COLUMN expires_at   TIMESTAMPTZ,
   ADD COLUMN acl_revision BIGINT NOT NULL,                           -- the revision that wrote it
   ADD CONSTRAINT grants_role_check CHECK (role IN ('owner', 'full_access', 'editor',
     'content_editor', 'creator', 'commenter', 'viewer'));
 
-ALTER TABLE share_links
-  ADD COLUMN audience     TEXT NOT NULL CHECK (audience IN ('organization', 'workspace', 'anyone')),
+ALTER TABLE share_links                  -- core has audience, created_by and expires_at
+  DROP CONSTRAINT share_links_audience_check,
+  ADD CONSTRAINT share_links_audience_check CHECK (audience IN ('organization', 'workspace', 'anyone')),
   ADD COLUMN role         TEXT NOT NULL DEFAULT 'viewer' CHECK (role IN ('viewer', 'commenter', 'editor')),
   ADD COLUMN resource_key TEXT NOT NULL,          -- secret part of the URL; rotated to kill old links
-  ADD COLUMN expires_at   TIMESTAMPTZ,
-  ADD COLUMN created_by   UUID REFERENCES members (id),
   ADD COLUMN disabled_at  TIMESTAMPTZ,
   ADD COLUMN disabled_reason TEXT CHECK (disabled_reason IN ('owner', 'admin_policy', 'expired',
     'creator_offboarded'));

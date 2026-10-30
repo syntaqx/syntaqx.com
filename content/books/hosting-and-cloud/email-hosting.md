@@ -125,7 +125,7 @@ Three consequences for a reseller's systems:
 
 - **Seat changes are commitments.** A Workspace annual plan's seat count and an NCE annual term are paid for the term; a seat added by mistake on day nine can't be refunded. The host's billing has to know the vendor's commitment and cancellation window for every seat change and show it to the customer before the change, not after.
 - **The vendor's identifiers are the record.** The customer's Google customer ID or Microsoft tenant, the vendor's subscription, and the reseller relationship (including a transfer in or out) are what support, billing and a dispute will need.
-- **The customer can leave the reseller and keep the mailbox.** Google's transfer token and Microsoft's partner relationships let a customer move between resellers without moving mail, which makes resale a support and billing business, not a lock-in.
+- **The customer can leave the reseller and keep the mailbox.** Google's transfer token and Microsoft's partner relationships let a customer move between resellers without moving mail, which makes resale a support and billing business, not a lock-in. What the mailbox and calendar are to the employer is [Email as Infrastructure](/books/workplace-and-collaboration/email-and-calendar#email-as-infrastructure).
 
 ## Migrating Mail
 

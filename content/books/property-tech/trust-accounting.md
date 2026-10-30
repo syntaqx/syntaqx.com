@@ -97,7 +97,7 @@ How a platform runs it:
 - **The beneficiary leg is a query,** not a report someone exports: the sum of every liability account dimensioned by beneficiary for that bank account, as of the date.
 - **Outstanding items age against the state's limits.** A deposit in transit for six weeks or a check outstanding for ten months is flagged before month end, not discovered in the reconciliation.
 - **The reconciliation is a signed record,** with the three numbers, the outstanding items listed, the negative beneficiary balances listed (expected: none), the preparer, the reviewer (the broker where the state requires it) and the evidence ([Closing the Day and the Month](/books/payments/ledger-and-reconciliation#closing-the-day-and-the-month)).
-- **A difference blocks money out.** No distributions or discretionary payments from a trust account with an unexplained difference, which is the same rule as the Payments volume's cash breaks holding payouts.
+- **A difference blocks money out.** No distributions or discretionary payments from a trust account with an unexplained difference, which is the same rule as the Payments volume's cash breaks holding payouts. Law firms reconcile client trust (IOLTA) accounts the same three ways ([Three-Way Reconciliation](/books/workplace-and-collaboration/trust-accounting-iolta#three-way-reconciliation)).
 
 ## Negative Balances and Conversion
 

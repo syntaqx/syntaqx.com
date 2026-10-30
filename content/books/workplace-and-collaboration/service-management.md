@@ -47,7 +47,7 @@ In Jira Service Management, "request types are the types of requests that your c
 The request catalog is where service management meets the customer's organization chart. A good catalog is the company's menu of internal services, and its design questions are product questions:
 
 - **Who may request what.** Request types are visible to some groups and not others (contractors can't order laptops); the portal shows each person only what they may ask for.
-- **Who approves.** Many requests need a manager's or an owner's approval before fulfillment; the approver is derived from the requester's directory data, which is why ITSM depends on HR-sourced identity (Provisioning, SCIM & Offboarding).
+- **Who approves.** Many requests need a manager's or an owner's approval before fulfillment; the approver is derived from the requester's directory data, which is why ITSM depends on HR-sourced identity ([Provisioning, SCIM & Offboarding](/books/workplace-and-collaboration/provisioning-and-scim#joiner-mover-leaver)).
 - **What fulfillment does.** Some requests are fulfilled by a person, increasingly many by automation (grant the group, assign the license), which makes request types the front door for [Automation Rules](/books/workplace-and-collaboration/automation-rules#triggers-conditions-and-actions).
 
 Queues are views ([Saved Filters and Views](/books/workplace-and-collaboration/queries-views-and-dashboards#saved-filters-and-views)) ordered by what the SLA says is due next.

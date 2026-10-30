@@ -12,7 +12,7 @@ No large employer buys a chat tool, a wiki or a meeting product on a demo. Befor
 
 It's hard for three reasons. Every program certifies a **scope** (named products, named environments, a named period), and the scope rarely matches what the buyer will deploy: a FedRAMP authorization covers a separate government environment, not the commercial product the sales team demoed; a HIPAA agreement covers messages and files but not the third-party apps installed beside them. Government and regulated buyers often need a **different cloud**, with different staff, features and prices, not a different contract. And the thesis of this volume shows up in the reports themselves: every report lists controls the customer must run, and most of them are settings in the customer's admin console. The vendor proves the platform; the customer's admin decides whether the deployment stays inside what was proven.
 
-This chapter covers the programs as a workplace vendor holds them and a workplace buyer reads them. The infrastructure side (the shared responsibility model, SOC 2 and ISO 27001 for a cloud provider, FedRAMP 20x and GovRAMP, sovereign clouds) is the Hosting & Cloud volume's [Shared Responsibility & Compliance Programs](/books/hosting-and-cloud/compliance-programs); the frameworks as engineering disciplines are the playbook's [SOC 2](/docs/compliance/soc-2), [HIPAA](/docs/compliance/hipaa) and [GDPR](/docs/compliance/gdpr). Data residency is Data Residency & Sovereignty, and the procurement process around these documents (security reviews, DPAs, MSAs) is From Self-Serve to Enterprise. Financial-services recordkeeping is [Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications). Program status is as of October 2026.
+This chapter covers the programs as a workplace vendor holds them and a workplace buyer reads them. The infrastructure side (the shared responsibility model, SOC 2 and ISO 27001 for a cloud provider, FedRAMP 20x and GovRAMP, sovereign clouds) is the Hosting & Cloud volume's [Shared Responsibility & Compliance Programs](/books/hosting-and-cloud/compliance-programs); the frameworks as engineering disciplines are the playbook's [SOC 2](/docs/compliance/soc-2), [HIPAA](/docs/compliance/hipaa) and [GDPR](/docs/compliance/gdpr). Data residency is [Data Residency & Sovereignty](/books/workplace-and-collaboration/data-residency-and-sovereignty), and the procurement process around these documents (security reviews, DPAs, MSAs) is [From Self-Serve to Enterprise](/books/workplace-and-collaboration/selling-to-enterprises). Financial-services recordkeeping is [Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications). Program status is as of October 2026.
 
 ## How the Platforms Do It
 
@@ -31,7 +31,7 @@ Four patterns run through the table:
 - **The baseline is the same everywhere.** SOC 2 Type 2 and ISO 27001 with its cloud and privacy extensions are table stakes; a buyer who doesn't receive them stops. The differences are above the baseline.
 - **Government means another environment.** Microsoft's GCC, GCC High and DoD, Slack's GovSlack, Atlassian Government Cloud and Google's eligible editions are separate scopes with their own eligibility, staff screening and feature lists. A commercial tenant doesn't become FedRAMP authorized by contract.
 - **HIPAA is a contract and a configuration, not a certificate.** Every vendor offers a BAA, every BAA names the features it covers, and every vendor's guide tells the customer's admin what to switch off.
-- **AI got its own management standard.** ISO/IEC 42001 appears on Microsoft's and Slack's lists within two years of publication, which is how buyers now ask about assistants (AI Assistants Over Company Data covers the products).
+- **AI got its own management standard.** ISO/IEC 42001 appears on Microsoft's and Slack's lists within two years of publication, which is how buyers now ask about assistants ([AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants) covers the products).
 
 ## What a Buyer Asks For
 
@@ -52,7 +52,7 @@ Two editions changed the family's shape recently:
 - **ISO/IEC 27701:2025** was published on October 14, 2025 as a standalone privacy information management system standard. The 2019 edition was an extension of 27001, so a privacy certificate required a security certificate underneath it; the 2025 edition can be certified on its own. As of October 2026 the accreditation bodies hadn't fixed the transition period for holders of the 2019 certificate. Slack and Zoom both list 27701.
 - **ISO/IEC 42001:2023** specifies an AI management system: policies, objectives and processes for the responsible development, provision or use of AI systems, audited like any management system. Microsoft lists Microsoft Copilot, Copilot Chat, Copilot Studio, Security Copilot, GitHub Copilot, Foundry and Dragon Copilot in scope and says a customer can use the certification in its own 42001 assessment while engaging its own assessor for its own controls. Slack lists 42001 alongside its security certifications.
 
-A 42001 certificate answers whether the vendor manages AI risk as a process; it says nothing about whether a given assistant can reach data a user shouldn't see. That question is permission-trimmed retrieval, which is a product property tested in AI Assistants Over Company Data, not a certificate. A buyer who accepts the certificate as the answer to oversharing has answered the wrong question.
+A 42001 certificate answers whether the vendor manages AI risk as a process; it says nothing about whether a given assistant can reach data a user shouldn't see. That question is permission-trimmed retrieval, which is a product property tested in [AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants), not a certificate. A buyer who accepts the certificate as the answer to oversharing has answered the wrong question.
 
 ## Government Clouds
 
@@ -72,9 +72,9 @@ Staff with temporary access to customer content in GCC, GCC High or DoD must hav
 
 Three consequences for the product:
 
-- **Federation is bounded by the environment.** GCC High users share only with GCC High; Teams' external access to unmanaged consumer accounts isn't available in GCC, GCC High or DoD at all. Cross-organization features (Guests & Cross-Org Collaboration) have to know which environment each side is in.
+- **Federation is bounded by the environment.** GCC High users share only with GCC High; Teams' external access to unmanaged consumer accounts isn't available in GCC, GCC High or DoD at all. Cross-organization features ([Guests & Cross-Org Collaboration](/books/workplace-and-collaboration/guests-and-external-collaboration)) have to know which environment each side is in.
 - **Features lag, and the lag is published.** Every government offering lists what it lacks, and AI features are usually the last to arrive. A roadmap that ships to commercial first has to track, per feature, which environments it has reached.
-- **Apps break the boundary.** An authorized environment with unauthorized apps installed is only as authorized as the weakest app; Atlassian's rule that only it and certified partners install apps is the strict answer, and app review (Apps & Marketplaces) is the general one.
+- **Apps break the boundary.** An authorized environment with unauthorized apps installed is only as authorized as the weakest app; Atlassian's rule that only it and certified partners install apps is the strict answer, and app review ([Apps & Marketplaces](/books/workplace-and-collaboration/apps-and-marketplaces)) is the general one.
 
 ## Programs Without a Certificate
 
@@ -82,7 +82,7 @@ Several of the programs buyers ask about have no certificate to hand over. The v
 
 **CJIS.** The FBI's CJIS Security Policy governs criminal justice information in the cloud, and "the FBI doesn't offer certification" of compliance. Instead every private contractor that processes CJI signs the CJIS Security Addendum (Appendix H of the policy), and a vendor signs information agreements state by state with each state's CJIS Systems Agency; Microsoft lists agreements covering criminal justice agencies in 47 states and the District of Columbia, as of August 24, 2026. Version 6.1 of the policy took effect June 25, 2026; since 6.0 it is organized around NIST SP 800-53 Revision 5 control families, requires MFA at Authenticator Assurance Level 2, and requires CJI to be stored and processed within the United States. Zoom lists a CJIS compliance assessment report. For a vendor, CJIS is fifty separate relationships, not one audit.
 
-**HIPAA.** HHS approves no certification standard for HIPAA compliance by a business associate, as Microsoft's page says and the playbook's [There Is No HIPAA Certification](/docs/compliance/hipaa#there-is-no-hipaa-certification) explains. The vendor's commitment is the [business associate agreement](/docs/compliance/hipaa#the-business-associate-agreement), and its evidence is ISO 27001, SOC 2 and, for some, HITRUST (Microsoft's BAA-covered services are audited for both ISO 27001 and HITRUST CSF; Zoom lists a SOC 2 + HITRUST report). The next section is how the agreement scopes the product.
+**HIPAA.** HHS approves no certification standard for HIPAA compliance by a business associate, as Microsoft's page says and the playbook's [There Is No HIPAA Certification](/docs/compliance/hipaa#there-is-no-hipaa-certification) explains. The vendor's commitment is the [business associate agreement](/docs/compliance/hipaa#the-business-associate-agreement), and its evidence is ISO 27001, SOC 2 and, for some, HITRUST (Microsoft's BAA-covered services are audited for both ISO 27001 and HITRUST CSF; Zoom lists a SOC 2 + HITRUST report). The next section is how the agreement scopes the product; what a BAA must say and how it chains to subcontractors is the Health Tech volume's [What a BAA Must Say](/books/health-tech/vendor-compliance-posture#what-a-baa-must-say).
 
 **ITAR and CUI.** Neither has a certificate; a contractor handling export-controlled or controlled unclassified data needs an environment whose people and data stay inside US boundaries. That is why GCC High exists as a separate environment with US-citizen screening, and why it sells to contractors as well as agencies.
 
@@ -110,7 +110,7 @@ The national programs a workplace vendor meets most often, from Microsoft's desc
 - **C5 (Germany).** The BSI created the Cloud Computing Compliance Criteria Catalogue in 2016 and revised it as C5:2020: 114 requirements in 17 domains, built on ISO/IEC 27001, the CSA Cloud Controls Matrix and IT-Grundschutz. Its distinctive demand is disclosure: the system description must state jurisdiction and data processing locations and the provider's disclosure obligations to public authorities. A C5 audit can be combined with a SOC 2 audit to reuse overlapping work, and Microsoft publishes a combined SOC 2, C5 and CSA STAR report alongside a Microsoft 365 C5 Type 2 report.
 - **ISMAP, ENS and TISAX.** Slack lists registration in Japan's ISMAP, Spain's ENS at High and a TISAX assessment for automotive buyers, whose results it says are "not intended for the general public."
 
-The pattern is the same as FedRAMP's: each national program reuses ISO and SOC work and adds a jurisdictional question (who can compel the data, where staff sit, which country's assessor signed). Where the buyer's question is really sovereignty, the answer moves to Data Residency & Sovereignty and the Hosting & Cloud volume's [Sovereign Cloud](/books/hosting-and-cloud/compliance-programs#sovereign-cloud).
+The pattern is the same as FedRAMP's: each national program reuses ISO and SOC work and adds a jurisdictional question (who can compel the data, where staff sit, which country's assessor signed). Where the buyer's question is really sovereignty, the answer moves to [Data Residency & Sovereignty](/books/workplace-and-collaboration/data-residency-and-sovereignty) and the Hosting & Cloud volume's [Sovereign Cloud](/books/hosting-and-cloud/compliance-programs#sovereign-cloud).
 
 ## Trust Centers and Questionnaires
 
@@ -128,7 +128,7 @@ Three rules make the library honest:
 
 ## How to Build It
 
-The vendor side of assurance is bookkeeping of scope: which program covers which product in which environment for which period, which features a contract covers, and who saw which document. It adds four tables to the core data model in The Workplace Software Business and two columns on `workspaces`. The Hosting & Cloud volume's `compliance_attestations` is the same idea for a provider's regions; this book names its tables `assurance_*` to keep the two models distinct.
+The vendor side of assurance is bookkeeping of scope: which program covers which product in which environment for which period, which features a contract covers, and who saw which document. It adds four tables to the core data model in [The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model) and two columns on `workspaces`. The Hosting & Cloud volume's `compliance_attestations` is the same idea for a provider's regions; this book names its tables `assurance_*` to keep the two models distinct.
 
 ```sql
 ALTER TABLE workspaces
@@ -187,20 +187,23 @@ The check that matters at runtime is whether turning a feature on keeps a worksp
 
 ```sql
 -- Features enabled in a HIPAA workspace that its BAA doesn't cover
-SELECT f.feature
-FROM workspace_features f            -- feature switches per workspace (Admin Consoles & Policies)
-JOIN workspaces w ON w.id = f.workspace_id
+-- $2: the vendor's list of features that may hold PHI ('chat.files', 'huddles.recording')
+SELECT p.setting_key AS feature
+FROM admin_policies p                -- feature switches per scope (Admin Consoles & Policies)
+JOIN workspaces w ON w.organization_id = p.organization_id
 LEFT JOIN assurance_agreements a
   ON a.organization_id = w.organization_id AND a.kind = 'baa' AND a.terminated_at IS NULL
 WHERE w.id = $1
+  AND p.scope_type = 'workspace' AND p.scope_id = w.id
+  AND p.value = 'true'::jsonb
   AND 'hipaa' = ANY (w.compliance_profile)
-  AND f.may_hold_phi
-  AND (a.id IS NULL OR NOT f.feature = ANY (a.covered_features));
+  AND p.setting_key = ANY ($2)
+  AND (a.id IS NULL OR NOT p.setting_key = ANY (a.covered_features));
 ```
 
 Notes on the sketch:
 
-- **The environment is a workspace fact.** `cloud_environment` is set at creation and never edited in place; moving a customer from commercial to a government environment is a migration (Migrations, Imports & Switching), because staff, regions and features differ.
+- **The environment is a workspace fact.** `cloud_environment` is set at creation and never edited in place; moving a customer from commercial to a government environment is a migration ([Migrations, Imports & Switching](/books/workplace-and-collaboration/migrations-and-switching)), because staff, regions and features differ.
 - **Scope goes to the feature.** A wildcard row says the whole product is in scope; feature rows record the exceptions, so a sales answer, the trust center and the admin console all read one source. A feature that ships to `commercial` first has no `gov_high` row until it's assessed.
 - **Customer controls point at settings.** Each complementary control id maps to an admin setting or report, so the admin console can show the customer which of their own controls are met.
 - **Agreements constrain the console.** When a HIPAA workspace turns on a feature outside `covered_features`, or installs an app that can read messages, the console blocks or asks for an attestation; the decision is an `audit_events` row.

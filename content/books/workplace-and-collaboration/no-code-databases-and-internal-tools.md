@@ -12,7 +12,7 @@ Every company runs on spreadsheets that outgrew themselves. The hiring tracker w
 
 The schema belongs to the user. A member can add a field, change its type, rename it or delete it at any moment, and every view, formula, automation, integration and API client built on it has to cope. The data is the customer's business records, sometimes personal data and sometimes regulated, held in a tool the customer's admins may not know exists. And the apps connect to everything, which is where data leaks: a flow that copies the CRM into a personal spreadsheet is two connectors and a trigger. The inversion is sharper here than anywhere in the book: the vendor provides a database engine and an app runtime, and the customer's makers design the schema while the customer's admins have to govern applications they didn't commission.
 
-This chapter covers the platforms, the user-defined schema, formulas and computed fields, limits, the gap between a database and an app, and governance of what the book calls shadow apps. Custom fields as a general engineering pattern are [Custom Fields](/docs/architecture/custom-fields); triggers and actions inside work tools are the book's automation rules chapter; cross-tool integration platforms (Zapier, Make, Power Automate as an iPaaS) are its integration platforms chapter.
+This chapter covers the platforms, the user-defined schema, formulas and computed fields, limits, the gap between a database and an app, and governance of what the book calls shadow apps. Custom fields as a general engineering pattern are [Custom Fields](/docs/architecture/custom-fields); triggers and actions inside work tools are [Automation Rules](/books/workplace-and-collaboration/automation-rules); cross-tool integration platforms (Zapier, Make, Power Automate as an iPaaS) are [Integration Platforms & Workflow Builders](/books/workplace-and-collaboration/integration-platforms).
 
 ## How the Platforms Do It
 
@@ -105,7 +105,7 @@ The cultural reality is that bans don't work. A company that blocks the no-code 
 
 ## How to Build It
 
-The chapter adds user-defined tables, fields and records on top of the core model, with automations and connections owned by identities the admin can see. Tables are `containers` children (the base is a `containers` row with `kind = 'base'`); records are `items` with `kind = 'record'` so they share permissions, versions, holds and export with everything else.
+The chapter adds user-defined tables, fields and records on top of the [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model), with automations and connections owned by identities the admin can see. Tables are `containers` children (the base is a `containers` row with `kind = 'base'`); records are `items` with `kind = 'record'` so they share permissions, versions, holds and export with everything else.
 
 ```sql
 -- containers.kind gains 'base'; items.kind gains 'record'.
@@ -167,22 +167,9 @@ CREATE TABLE nocode_automations (
   last_run_at      TIMESTAMPTZ
 );
 
-CREATE TABLE connector_policies (          -- tenant data policy over connectors
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  organization_id  UUID NOT NULL REFERENCES organizations (id),
-  workspace_id     UUID REFERENCES workspaces (id),  -- null applies tenant-wide
-  default_group    TEXT NOT NULL DEFAULT 'non_business'
-                     CHECK (default_group IN ('business', 'non_business', 'blocked')),
-  version          INT NOT NULL,
-  effective_at     TIMESTAMPTZ NOT NULL
-);
-
-CREATE TABLE connector_classifications (
-  policy_id        UUID NOT NULL REFERENCES connector_policies (id),
-  connector        TEXT NOT NULL,            -- 'salesforce', 'gmail', 'http', ...
-  data_group       TEXT NOT NULL CHECK (data_group IN ('business', 'non_business', 'blocked')),
-  PRIMARY KEY (policy_id, connector)
-);
+-- The tenant data policy over connectors (business, non-business, blocked groups) is
+-- connector_policies, owned by Integration Platforms & Workflow Builders; no-code apps
+-- and automations are checked against the same rows as integration flows.
 ```
 
 Three behaviors carry the design:

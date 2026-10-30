@@ -9,7 +9,7 @@ tags = ["apps", "marketplaces", "oauth", "admin-consent", "forge"]
 
 A workplace app is someone else's software holding a key to the customer's data. A standup bot reads a channel and posts a summary; a Jira add-on adds a field and a report; a Google Workspace add-on reads mail to file invoices; a Teams app puts a tab on every meeting. Each one is an identity of its own (a bot user, a service principal, an OAuth client), installed into a tenant with a set of scopes, holding tokens that keep working after the person who clicked "Allow" has gone home, changed teams or left the company.
 
-On a community platform the person installing an app decides for themselves, and the platform reviews apps that grow large ([Bots and Apps](/books/user-generated-platforms/developer-platforms-and-apis#bots-and-apps)). In workplace software the data belongs to the customer organization, so the decision moves to its admin: which apps may be installed at all, by whom, with which scopes, into which workspaces. The vendor runs a marketplace and a review, but the review is a floor, not a guarantee, and the admin's allowlist is the real control. This chapter covers what an app is, how the marketplaces review them, how admins approve and consent, why Atlassian moved every app onto its own runtime, how the money splits, and what goes wrong when an app's tokens are stolen. APIs and rate limits are [APIs, Events & Rate Limits](/books/workplace-and-collaboration/apis-webhooks-and-rate-limits); no-code integration tools are [Integration Platforms & Workflow Builders](/books/workplace-and-collaboration/integration-platforms); AI agents and MCP clients, which arrive through the same consent screens, are [AI Agents, Connectors & MCP](/books/workplace-and-collaboration/ai-agents-and-mcp). The core tables (`apps`, `app_installations`, `api_tokens`) are from the core data model in The Workplace Software Business.
+On a community platform the person installing an app decides for themselves, and the platform reviews apps that grow large ([Bots and Apps](/books/user-generated-platforms/developer-platforms-and-apis#bots-and-apps)). In workplace software the data belongs to the customer organization, so the decision moves to its admin: which apps may be installed at all, by whom, with which scopes, into which workspaces. The vendor runs a marketplace and a review, but the review is a floor, not a guarantee, and the admin's allowlist is the real control. This chapter covers what an app is, how the marketplaces review them, how admins approve and consent, why Atlassian moved every app onto its own runtime, how the money splits, and what goes wrong when an app's tokens are stolen. APIs and rate limits are [APIs, Events & Rate Limits](/books/workplace-and-collaboration/apis-webhooks-and-rate-limits); no-code integration tools are [Integration Platforms & Workflow Builders](/books/workplace-and-collaboration/integration-platforms); AI agents and MCP clients, which arrive through the same consent screens, are [AI Agents, Connectors & MCP](/books/workplace-and-collaboration/ai-agents-and-mcp). The core tables (`apps`, `app_installations`, `api_tokens`) are from the core data model in [The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model).
 
 ## How the Platforms Do It
 
@@ -30,7 +30,7 @@ The pattern: **the marketplace review checks the app once; the customer's admin 
 The vocabulary differs by vendor; the parts don't.
 
 - **An identity.** Slack apps get a bot user with a bot token (`xoxb-`) and can also act as an individual through user tokens (`xoxp-`), and every app has an app-level token (`xapp-`) for app-wide tasks such as opening Socket Mode connections. A Microsoft 365 app is an Entra application registration, which becomes a service principal in each tenant that consents to it. A Google Workspace app is an OAuth client in a Google Cloud project. The identity is what the audit log names when the app acts.
-- **An installation.** The app installed into one workspace, site or tenant, by someone allowed to install it, with the scopes granted at that moment. One app, many installations; each installation has its own tokens and can be revoked alone. In the core model this is `app_installations`.
+- **An installation.** The app installed into one workspace, site or tenant, by someone allowed to install it, with the scopes granted at that moment. One app, many installations; each installation has its own tokens and can be revoked alone. In the [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) this is `app_installations`.
 - **Scopes.** The permissions the installation holds. Slack's granular bot scopes replaced an umbrella `bot` scope that Slack no longer recommends; Microsoft Graph splits permissions into delegated (act as the signed-in user) and application (act as the app, across the tenant); Google classifies scopes as non-sensitive, sensitive or restricted. Application-level scopes across a whole tenant ("read all channels", "read all files") are the ones that turn an app into a data processor for the entire organization.
 - **Surfaces.** Where the app shows up: slash commands, message actions and shortcuts, link unfurls, home tabs and modals in Slack; tabs, bots, message extensions and meeting apps in Teams; issue panels, custom fields and macros in Jira and Confluence; side panels and add-ons in Gmail, Docs and Drive.
 - **A runtime.** Most marketplaces leave hosting to the developer: Slack delivers events to a public Request URL or over a WebSocket ([Socket Mode](/books/workplace-and-collaboration/apis-webhooks-and-rate-limits#slack-events-and-socket-mode)), Microsoft and Google call the developer's endpoints. Atlassian's Forge hosts the app's functions and storage itself.
@@ -66,7 +66,7 @@ The rules that follow, anchored in all three:
 - **Approval and existing grants are different switches.** Every suite separates "may new installs happen" from "revoke what's already installed." A policy change that doesn't sweep existing grants leaves the old ones live.
 - **Requests are a queue with an owner.** Approval only works if requests get answered; otherwise employees route around it with personal accounts or integration platforms ([Credential Custody](/books/workplace-and-collaboration/integration-platforms#credential-custody)).
 
-Where the admin console's policy engine lives, and the delegated admin roles that run these queues, is the subject of Admin Consoles & Policies.
+Where the admin console's policy engine lives, and the delegated admin roles that run these queues, is the subject of [Admin Consoles & Policies](/books/workplace-and-collaboration/admin-consoles-and-policies#third-party-app-controls).
 
 ## Hosting: Forge and the Connect Retirement
 
@@ -82,14 +82,14 @@ Atlassian announced Connect's end of support in three phases:
 
 **Runs on Atlassian** is the badge that makes the move legible to admins. A Forge app qualifies when it uses only Atlassian-hosted compute and storage, supports data residency matching the host product, and lets customers control any external egress (analytics, logs) through admin controls; in general it can't send data outside Atlassian except analytics without in-scope end-user data. Atlassian applies the badge automatically.
 
-Why a platform would take on hosting thousands of third-party apps: once the app's code and data live inside the platform, the platform's residency, encryption and audit promises extend to it, and the customer's admin can answer a procurement question ("where does this app send our data?") from the manifest instead of a questionnaire. The cost moves to the platform and to developers, who give up their own infrastructure and accept the runtime's limits. Data residency itself is Data Residency & Sovereignty's subject.
+Why a platform would take on hosting thousands of third-party apps: once the app's code and data live inside the platform, the platform's residency, encryption and audit promises extend to it, and the customer's admin can answer a procurement question ("where does this app send our data?") from the manifest instead of a questionnaire. The cost moves to the platform and to developers, who give up their own infrastructure and accept the runtime's limits. Data residency itself is [Data Residency & Sovereignty](/books/workplace-and-collaboration/data-residency-and-sovereignty)'s subject.
 
 ## Revenue Share and Billing
 
 Marketplaces split into those that bill the customer and those that only list.
 
 - **Atlassian** bills customers for paid apps on its invoice and pays partners net of a revenue share. After a deferral, the rates moved from 15% to 16% for Forge apps and from 15% to 20% for Connect apps on April 1, 2026, and to 17% and 25% on October 1, 2026. Qualifying Runs on Atlassian apps (since October 2025) and other qualifying Forge apps (from January 1, 2026) pay no revenue share until the partner's lifetime Forge revenue reaches $1 million, counted per partner company including subsidiaries. The spread between Forge and Connect is the retirement plan expressed in money.
-- **Microsoft** charges a 3% standard store service fee on transactable offers sold through its marketplace (SaaS offers included), with a 50% discount available on qualifying private offer renewals; Microsoft acts as the publisher's agent for billing and collection, and the customer can pay on its Enterprise Agreement invoice. That invoice is the attraction: a purchase that draws down an existing Microsoft commitment avoids a new vendor in procurement. Cloud marketplace mechanics belong to Billing, Seats & Resellers and [Hosting & Cloud's marketplace chapter](/books/hosting-and-cloud/commitments-and-marketplaces).
+- **Microsoft** charges a 3% standard store service fee on transactable offers sold through its marketplace (SaaS offers included), with a 50% discount available on qualifying private offer renewals; Microsoft acts as the publisher's agent for billing and collection, and the customer can pay on its Enterprise Agreement invoice. That invoice is the attraction: a purchase that draws down an existing Microsoft commitment avoids a new vendor in procurement. Cloud marketplace mechanics belong to [Billing, Seats & Resellers](/books/workplace-and-collaboration/billing-and-seat-management) and [Hosting & Cloud's marketplace chapter](/books/hosting-and-cloud/commitments-and-marketplaces).
 - **Google Workspace Marketplace** doesn't process payments: developers collect directly from users, and Google doesn't verify the pricing labels on listings.
 
 For the developer, the marketplace that bills is a channel with a fee; the marketplace that lists is a directory with a review. For the customer, an app bought through the suite's own billing shows up in the same contract, the same renewal and often the same seat count as the suite, which is why the suites push it.
@@ -102,18 +102,17 @@ What that implies for an app platform:
 
 - **Tokens are bearer credentials held by a third party.** A refresh token for an installation with tenant-wide read scope is, in practice, a standing export capability stored in someone else's database. Short-lived access tokens limit the window: Slack's token rotation issues access tokens that expire after 12 hours, with single-use refresh tokens, and can't be turned off once on ([Rotation](/docs/api-design/authentication#rotation)).
 - **Revocation must be by app, fleet-wide, in one action.** The response above was "revoke every token this app holds, everywhere", which only works if the platform can enumerate them by app and installation.
-- **Exports leave a trail.** The actor deleted its query jobs but not the logs. Bulk reads by an app identity, especially out of its normal pattern, are the detection signal ([Auditing](#auditing) below; the attack catalog is Threats & Incidents).
+- **Exports leave a trail.** The actor deleted its query jobs but not the logs. Bulk reads by an app identity, especially out of its normal pattern, are the detection signal ([Auditing](#auditing) below; the attack catalog is [Threats & Incidents](/books/workplace-and-collaboration/threats-and-incidents#oauth-consent-and-app-abuse)).
 - **Admins need the inventory.** Microsoft's SharePoint Advanced Management, for example, includes an app insights report on which third-party Entra apps access SharePoint content and how. The customer can only revoke what it can see.
 
 ## How to Build It
 
-The core model's `apps`, `app_installations` and `api_tokens` hold the app, its installations and its credentials. This chapter adds versions with declared scopes and egress, marketplace listings and reviews, tenant policies and install requests, and columns that make fleet-wide revocation a query:
+The [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model)'s `apps`, `app_installations` and `api_tokens` hold the app, its installations and its credentials. This chapter adds versions with declared scopes and egress, marketplace listings and reviews, tenant policies and install requests, and columns that make fleet-wide revocation a query:
 
 ```sql
-ALTER TABLE apps                              -- the core table: one row per app identity
+ALTER TABLE apps                              -- the core table: one row per app identity,
+                                              -- with distribution already on it
   ADD COLUMN publisher_org_id UUID REFERENCES organizations (id),  -- the developer's org
-  ADD COLUMN distribution     TEXT NOT NULL DEFAULT 'internal' CHECK (distribution IN
-                                ('internal', 'unlisted', 'marketplace', 'first_party')),
   ADD COLUMN hosting          TEXT NOT NULL DEFAULT 'external' CHECK (hosting IN
                                 ('external', 'platform_hosted')),
   ADD COLUMN publisher_verified_at TIMESTAMPTZ,
@@ -194,8 +193,7 @@ ALTER TABLE app_installations
   ADD COLUMN revoked_at      TIMESTAMPTZ,
   ADD COLUMN revoked_reason  TEXT;            -- 'uninstalled', 'policy', 'app_suspended'
 
-ALTER TABLE api_tokens                        -- every token traceable to its installation
-  ADD COLUMN app_installation_id UUID REFERENCES app_installations (id);
+-- every token traceable to its installation (core api_tokens.app_installation_id)
 CREATE INDEX api_tokens_installation_idx ON api_tokens (app_installation_id)
   WHERE revoked_at IS NULL;
 ```
@@ -213,7 +211,7 @@ Notes on the sketch:
 - **Every install, upgrade, consent and uninstall,** with the version, scopes granted, consent kind and the member or admin who granted it; an installation with a tenant-wide scope and `consent_kind = 'user'` is a finding.
 - **Every policy decision and request,** with who decided and when; open requests older than the queue's target are a finding of their own.
 - **Token issuance, refresh and revocation by installation,** so "which tokens did this app hold on this date" is answerable after a compromise.
-- **Reads by app identities in volume.** Bulk exports, searches across many containers and access from new network locations by an app, reported per installation for the customer's security team (the audit event's contents are Audit Logs' subject).
+- **Reads by app identities in volume.** Bulk exports, searches across many containers and access from new network locations by an app, reported per installation for the customer's security team (the audit event's contents are [Audit Logs](/books/workplace-and-collaboration/audit-logs)' subject).
 - **Review history per version,** including returned and rejected reviews and lapsed annual assessments, kept for the life of the listing.
 
 ## What This Means for the System You Build

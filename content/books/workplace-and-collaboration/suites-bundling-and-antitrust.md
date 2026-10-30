@@ -69,7 +69,7 @@ The commitments the Commission accepted, from its decision ([IP/25/2048](https:/
 
 Two things the decision is not. It is not a finding of infringement: commitments under Article 9 of Regulation 1/2003 close a case without concluding that the law was broken. And it is not limited to Europe in practice: the Commission "takes note that Microsoft has unilaterally decided to align its worldwide suites offers and pricing with these commitments" and to keep offering, and further discount, frontline suites without Teams ([IP/25/2048](https://ec.europa.eu/commission/presscorner/detail/en/ip_25_2048)).
 
-For a standalone vendor, the interoperability and portability commitments are the durable part. A chat product can embed the Office web editors and integrate into Outlook through published interfaces, and a customer leaving Teams can take its messages with it, which feeds directly into Migrations, Imports & Switching and the import tools there.
+For a standalone vendor, the interoperability and portability commitments are the durable part. A chat product can embed the Office web editors and integrate into Outlook through published interfaces, and a customer leaving Teams can take its messages with it, which feeds directly into [Migrations, Imports & Switching](/books/workplace-and-collaboration/migrations-and-switching) and the import tools there.
 
 ## The UK Case: Business Software and Copilot
 
@@ -79,7 +79,7 @@ The investigation launched on May 14, 2026 under the Digital Markets, Competitio
 
 The CMA's roadmap of possible interventions, if Microsoft is designated, names three areas: whether customers can freely choose AI tools and "whether alternative AI providers have a level playing field to compete with Microsoft's Copilot," whether bundling and integration of Microsoft's security products limits choice, and whether customers can choose which cloud to deploy their licenses on ([CMA, October 16, 2026](https://www.gov.uk/government/news/cma-takes-first-steps-to-ensure-choice-in-business-software)). Consultation on the proposed decision closes on November 13, 2026, and the statutory deadline for the decision is February 13, 2027 ([CMA case page](https://www.gov.uk/cma-cases/microsofts-business-software-ecosystem)). Designation doesn't assume wrongdoing; it allows conduct requirements and pro-competition interventions afterward.
 
-The UK case extends the Teams logic to AI. Where the EU case was about a chat product tied to a suite, the UK case asks the same question about an assistant built into the suite's documents, mail and meetings, and about the interfaces competing assistants need to reach the same data. AI Assistants Over Company Data and AI Agents, Connectors & MCP cover what those interfaces look like.
+The UK case extends the Teams logic to AI. Where the EU case was about a chat product tied to a suite, the UK case asks the same question about an assistant built into the suite's documents, mail and meetings, and about the interfaces competing assistants need to reach the same data. [AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants) and [AI Agents, Connectors & MCP](/books/workplace-and-collaboration/ai-agents-and-mcp) cover what those interfaces look like.
 
 ## Bundled AI
 
@@ -151,7 +151,7 @@ Design notes:
 - **Show the alternative wherever the bundle is sold.** Storefront and quote templates read `plan_alternatives` to display the counterpart beside the bundle in markets where an obligation applies.
 - **Windows are generated, dated and notified.** A job creates `switch_windows` at each anniversary or renewal for subscriptions in covered markets, notifies the customer, and records the outcome; long-term licenses get windows on the obligation's schedule, not only at term end.
 - **Unbundling is a dated catalog change.** Ending a product's inclusion sets `included_until`, never deletes the row, so the bill for any past period can be explained.
-- **Portability is an export, built once.** The data portability obligation is served by the same export path the customer uses to leave (Migrations, Imports & Switching and eDiscovery & Export), with a documented format.
+- **Portability is an export, built once.** The data portability obligation is served by the same export path the customer uses to leave ([Migrations, Imports & Switching](/books/workplace-and-collaboration/migrations-and-switching) and [eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export)), with a documented format.
 
 ## Auditing
 
