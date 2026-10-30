@@ -123,9 +123,9 @@ For the system, the late fee is a rule with versions: the amount (cost-justified
 
 ## Credit Limits
 
-- **Assignment.** The initial limit comes from the underwriting decision, inside the product's range (Marqeta's products carry a minimum and maximum), under the ability-to-pay rule above. Underwriting & Decision Engines covers the decision.
+- **Assignment.** The initial limit comes from the underwriting decision, inside the product's range (Marqeta's products carry a minimum and maximum), under the ability-to-pay rule above. [Underwriting & Decision Engines](/books/banking-and-lending/decision-engines) covers the decision.
 - **Increases.** A requested or proactive increase is a new ability-to-pay determination, with the same under-21 rules. Lithic exposes temporary increases; a temporary increase still needs a recorded basis.
-- **Decreases.** Cutting a limit, closing an account or changing its terms unfavorably for credit risk is adverse action on an existing account, with a notice within 30 days and specific principal reasons (12 CFR 1002.9(a)(1)), covered in Adverse Action & Explaining Decisions. If the new limit is below the balance, the issuer can't impose an over-limit fee or penalty rate based on the reduced limit until 45 days after notice of the decrease (1026.9(c)(2)(vi)).
+- **Decreases.** Cutting a limit, closing an account or changing its terms unfavorably for credit risk is adverse action on an existing account, with a notice within 30 days and specific principal reasons (12 CFR 1002.9(a)(1)), covered in [Adverse Action & Explaining Decisions](/books/banking-and-lending/adverse-action). If the new limit is below the balance, the issuer can't impose an over-limit fee or penalty rate based on the reduced limit until 45 days after notice of the decrease (1026.9(c)(2)(vi)).
 - **Shared and nested limits.** Commercial programs put a business-level limit over card-level limits; Lithic documents both, with several cards drawing on one line. Corporate Cards & Underwriting covers cash- and revenue-based limits.
 - **Delinquency.** Processors can lower a limit automatically on delinquency and restore it after paydown (Lithic documents this); each automatic change is still an account action with its notices.
 
