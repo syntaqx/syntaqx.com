@@ -1,15 +1,15 @@
 +++
 title = "Phones for Practices"
-description = "The practice phone system: VoIP for small offices, call pop from the PMS, routing and hours, missed-call text-back, 911 duties, recording consent, call analytics."
+description = "The practice phone system: VoIP for small offices, call pop from the PMS, routing and hours, missed-call text-back, 911 duties, recording consent, analytics."
 category = "Health Tech Industry"
 order = 1932
 part = "Practice Management and Patient Engagement"
 tags = ["health-tech", "voip", "phones", "e911", "call-recording", "hipaa", "data-model"]
 +++
 
-A small practice runs on its phone. New patients call to book, existing ones call to reschedule, ask about a bill or a prescription, or report that their dog ate a sock; insurance companies, labs and referring offices call too, and the front desk that answers them is also checking in the patient standing at the counter. A missed call during lunch is often a new patient who calls the next practice on the list. That's why patient engagement vendors sell phones: Weave, Dental Intelligence, PetDesk, Podium and Mango Voice all sell phone systems with practice data beside the call. A phone system that knows who is calling, what they owe and when they're due is worth more to a practice than one that's merely cheaper.
+A small practice runs on its phone. New patients call to book, existing ones call to reschedule, ask about a bill or a prescription, or report that their dog ate a sock; insurance companies, labs and referring offices call too, and the front desk that answers them is also checking in the patient standing at the counter ([How a Small Practice Runs](/books/health-tech/practice-business#how-a-small-practice-runs)). A missed call during lunch is often a new patient who calls the next practice on the list. That's why patient engagement vendors sell phones: Weave, Dental Intelligence, PetDesk, Podium and Mango Voice all sell phone systems with practice data beside the call. A phone system that knows who is calling, what they owe and when they're due is worth more to a practice than one that's merely cheaper.
 
-This chapter covers the practice side of voice: what a practice phone system is, call pop with patient context, routing and hours, missed calls and text-back, 911 duties for a multi-line system, call recording consent and recordings as PHI, call analytics, and the hardware and number. It adds call records, lines, routing and device locations, extending `communications` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). The carrier and platform mechanics are in the Hosting & Cloud volume, and this chapter links them rather than repeating them: [Voice Platforms](/books/hosting-and-cloud/voice-platforms) for SIP trunking, STIR/SHAKEN and call labeling, [Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting) for keeping the practice's number, and [911, CPNI & Telecom Duties](/books/hosting-and-cloud/telecom-duties) for the provider's 911 obligations. Call centers serving many locations are this part's Multi-Location Groups & Call Centers chapter; AI receptionists are its Practice Analytics & AI Front Desk chapter.
+This chapter covers the practice side of voice: what a practice phone system is, call pop with patient context, routing and hours, missed calls and text-back, 911 duties for a multi-line system, call recording consent and recordings as PHI, call analytics, and the hardware and number. It adds phone numbers, call records, routing and emergency locations, extending `communications` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model). The carrier and platform mechanics are in the Hosting & Cloud volume, and this chapter links them rather than repeating them: [Voice Platforms](/books/hosting-and-cloud/voice-platforms) for SIP trunking, STIR/SHAKEN and call labeling, [Phone Numbers & Porting](/books/hosting-and-cloud/phone-numbers-and-porting) for keeping the practice's number, and [911, CPNI & Telecom Duties](/books/hosting-and-cloud/telecom-duties) for the provider's 911 obligations. Call centers serving many locations are this part's Multi-Location Groups & Call Centers chapter; AI receptionists are its Practice Analytics & AI Front Desk chapter.
 
 ## How the Platforms Do It
 
@@ -106,28 +106,28 @@ Booking rate needs a call outcome recorded per call, by staff or by a model read
 
 ## How to Build It
 
-Calls are `communications` rows with `channel = 'voice'`; the chapter adds lines, routing rules, call details, recordings and device locations:
+Calls are `communications` rows with `channel = 'voice'` ([The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model)); the chapter adds the practice's numbers, routing rules, a call record per call and an emergency location per device:
 
 ```sql
-CREATE TABLE phone_lines (                        -- the practice's numbers
+CREATE TABLE phone_numbers (                      -- the practice's numbers
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   location_id        UUID REFERENCES locations (id),  -- null for a group's main number
   e164               TEXT NOT NULL UNIQUE,
   purpose            TEXT NOT NULL CHECK (purpose IN ('main', 'location', 'tracking', 'fax',
                        'after_hours', 'department')),
-  text_enabled       BOOLEAN NOT NULL DEFAULT FALSE,
-  sender_registration_ref TEXT,                    -- 10DLC campaign or toll-free verification
+  text_enabled       BOOLEAN NOT NULL DEFAULT FALSE,  -- registration lives in sender_registrations
   ported_in_at       TIMESTAMPTZ,
-  owned_by_practice  BOOLEAN NOT NULL DEFAULT TRUE
+  owned_by_practice  BOOLEAN NOT NULL DEFAULT TRUE,
+  status             TEXT NOT NULL CHECK (status IN ('porting', 'active', 'ported_out', 'released'))
 );
 
 CREATE TABLE call_routes (                         -- routing as dated rules
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
-  phone_line_id      UUID NOT NULL REFERENCES phone_lines (id),
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
+  phone_number_id    UUID NOT NULL REFERENCES phone_numbers (id),
   version            INT NOT NULL,
-  hours              JSONB NOT NULL,              -- per weekday, in the location's zone
+  hours              JSONB NOT NULL,              -- per weekday, in the location's time zone
   closures           JSONB NOT NULL DEFAULT '[]', -- holidays and one-off closures
   ring_plan          JSONB NOT NULL,              -- groups, order, timeouts, overflow
   after_hours_plan   JSONB NOT NULL,              -- message, answering service, on-call, ER number
@@ -135,47 +135,41 @@ CREATE TABLE call_routes (                         -- routing as dated rules
                        'announced_inbound')),
   effective_from     TIMESTAMPTZ NOT NULL,
   approved_by        UUID NOT NULL,
-  UNIQUE (phone_line_id, version)
+  UNIQUE (phone_number_id, version)
 );
 
-CREATE TABLE call_details (                        -- side table for communications.channel = 'voice'
+CREATE TABLE call_records (                        -- one per voice communication
   communication_id   UUID PRIMARY KEY REFERENCES communications (id),
-  phone_line_id      UUID NOT NULL REFERENCES phone_lines (id),
-  direction          TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
+  phone_number_id    UUID NOT NULL REFERENCES phone_numbers (id),
   remote_e164        TEXT,                        -- null when caller ID was withheld
   matched_contact_ids UUID[] NOT NULL DEFAULT '{}',  -- every contact on that number
-  identified_patient_id UUID REFERENCES patients (id),  -- set by staff, never by the match alone
   route_version      INT,
   answered_by        UUID,                        -- staff user, or null
   outcome            TEXT CHECK (outcome IN ('answered', 'missed', 'voicemail', 'abandoned',
                        'after_hours', 'transferred')),
-  disposition        TEXT,                        -- 'booked', 'rescheduled', 'billing', 'clinical', ...
+  disposition        TEXT,                        -- 'booked', 'rescheduled', 'billing', 'clinical'
   disposition_source TEXT CHECK (disposition_source IN ('staff', 'model')),
   started_at         TIMESTAMPTZ NOT NULL,
   answered_at        TIMESTAMPTZ,
   ended_at           TIMESTAMPTZ,
   is_emergency_call  BOOLEAN NOT NULL DEFAULT FALSE,
+  recording_document_id  UUID REFERENCES documents (id),  -- call audio, kept as created
+  voicemail_document_id  UUID REFERENCES documents (id),
+  transcript_document_id UUID REFERENCES documents (id),
+  announcement_captured  BOOLEAN,
   text_back_communication_id UUID REFERENCES communications (id)
 );
 
-CREATE TABLE call_recordings (
+CREATE TABLE emergency_locations (                 -- dispatchable location per device, over time
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  communication_id   UUID NOT NULL REFERENCES communications (id),
-  kind               TEXT NOT NULL CHECK (kind IN ('call', 'voicemail', 'transcript', 'summary')),
-  storage_ref        TEXT NOT NULL,               -- encrypted object; never a public URL
-  announcement_captured BOOLEAN NOT NULL,
-  retain_until       DATE NOT NULL,
-  legal_hold         BOOLEAN NOT NULL DEFAULT FALSE,
-  deleted_at         TIMESTAMPTZ
-);
-
-CREATE TABLE device_locations (                    -- dispatchable location per device, over time
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
+  location_id        UUID REFERENCES locations (id),  -- null for an off-premises device
   device_ref         TEXT NOT NULL,               -- desk phone MAC, softphone install id
   device_kind        TEXT NOT NULL CHECK (device_kind IN ('fixed', 'non_fixed', 'off_premises')),
   dispatchable_location JSONB NOT NULL,           -- address plus suite, floor, room
   source             TEXT NOT NULL CHECK (source IN ('provisioned', 'user_updated', 'detected')),
+  notify_user_ids    UUID[] NOT NULL DEFAULT '{}',  -- who hears about a 911 call from it
   valid_during       TSTZRANGE NOT NULL,
   EXCLUDE USING GIST (device_ref WITH =, valid_during WITH &&)
 );
@@ -183,11 +177,12 @@ CREATE TABLE device_locations (                    -- dispatchable location per 
 
 Notes on the sketch:
 
-- **A match is a list, identification is a choice.** `matched_contact_ids` holds every contact on the number; `identified_patient_id` is set only when staff pick, which is what makes call history attach to the right chart.
+- **A match is a list, identification is a choice.** `matched_contact_ids` holds every contact on the number; the core `communications.patient_id` and `guarantor_id` are set only when staff pick, which is what makes call history attach to the right chart.
 - **Routing is versioned.** Every call records the route version that handled it, so "why did my after-hours call go to voicemail?" has an answer, and closures are scheduled, not toggled.
-- **Recordings have a retention date at creation** and a legal hold flag, and are deleted on schedule ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)). Playback is logged as access.
-- **Device locations are effective-dated,** one per device at a time, and a softphone that can't confirm its location prompts the user before it's used.
-- **911 calls notify.** A call flagged `is_emergency_call` fires a notification to the location's configured recipients in the same moment, and the event is kept for compliance.
+- **Recordings are documents.** Audio, voicemail and transcripts are `documents` rows (encrypted, hashed, kept as created), so they follow the same retention schedule, legal holds and access logging as every other piece of the record ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)). Playback is a `read` in `audit_events`.
+- **Emergency locations are effective-dated,** one per device at a time, and a softphone that can't confirm its location prompts the user before it's used.
+- **911 calls notify.** A call flagged `is_emergency_call` notifies the device's `notify_user_ids` in the same moment, and the event is kept for compliance.
+- **Text enablement is a registration.** A `phone_numbers` row with `text_enabled` has a `sender_registrations` row ([Two-Way Texting & Messaging](/books/health-tech/patient-texting#how-to-build-it)) that says which campaign or verification it sends under.
 - **Events:** `call.missed`, `call.ended`, `voicemail.received`, `call.emergency_dialed` and `recording.played` feed text-back, the inbox, analytics and the audit trail.
 
 ## Auditing

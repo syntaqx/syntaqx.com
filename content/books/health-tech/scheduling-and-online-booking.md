@@ -138,79 +138,76 @@ The field rule that slot offers are a business decision ([Offer Times Where the 
 
 ## How to Build It
 
-The chapter extends `schedules` (a provider's working time), `appointment_slots` (bookable time derived from schedules, or published to a marketplace) and `appointments` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model), and adds operatories, appointment types, booking rules, booking requests and waitlist entries:
+The core model already has the shape: a `schedules` row is a bookable resource's calendar (a practitioner, an operatory, a room or equipment), an `appointment_slots` row is time on one schedule with an exclusion constraint against overlap, and an `appointments` row books a patient with a practitioner role and a schedule ([The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model)). The chapter adds operatory attributes, appointment types with patterns, schedule templates for working hours and blockouts, booking requests and waitlist entries, and makes the provider's `X` units and the chair's whole pattern into busy slots so the core constraint does the conflict checking:
 
 ```sql
-CREATE TABLE operatories (                       -- chairs, exam rooms, lanes, surgery suites
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
-  location_id        UUID NOT NULL REFERENCES locations (id),
-  name               TEXT NOT NULL,
-  kind               TEXT NOT NULL CHECK (kind IN ('dental_operatory', 'exam_room', 'surgery',
-                       'exam_lane', 'pretest', 'treatment_area', 'kennel', 'telehealth')),
-  is_hygiene         BOOLEAN NOT NULL DEFAULT FALSE,
-  default_practitioner_role_id UUID REFERENCES practitioner_roles (id),
-  online_bookable    BOOLEAN NOT NULL DEFAULT FALSE,
-  sort_order         INT NOT NULL                  -- column order; some PMSs pick the leftmost open
-);
+ALTER TABLE schedules                              -- operatories are schedules with resource_kind 'operatory'
+  ADD COLUMN operatory_kind TEXT CHECK (operatory_kind IN ('dental_operatory', 'exam_room', 'surgery',
+                              'exam_lane', 'pretest', 'treatment_area', 'kennel', 'telehealth')),
+  ADD COLUMN is_hygiene     BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN default_practitioner_role_id UUID REFERENCES practitioner_roles (id),
+  ADD COLUMN online_bookable BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN sort_order     INT;                    -- column order; some PMSs pick the leftmost open
 
 CREATE TABLE appointment_types (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   location_id        UUID REFERENCES locations (id),
-  name               TEXT NOT NULL,                -- 'New Patient Exam', 'Prophy', 'Puppy Vaccines'
-  pattern            TEXT NOT NULL,                -- per unit: 'X' provider needed, '/' chair only
+  code               TEXT NOT NULL,                 -- matches appointments.appointment_type
+  name               TEXT NOT NULL,                 -- 'New Patient Exam', 'Prophy', 'Puppy Vaccines'
+  pattern            TEXT NOT NULL,                 -- per unit: 'X' provider needed, '/' chair only
   unit_minutes       SMALLINT NOT NULL DEFAULT 5,
-  procedure_codes    TEXT[] NOT NULL DEFAULT '{}', -- CDT/CPT/practice codes it schedules
+  procedure_codes    TEXT[] NOT NULL DEFAULT '{}',  -- CDT, CPT or practice codes it schedules
   operatory_kinds    TEXT[] NOT NULL,
   practitioner_role_ids UUID[] NOT NULL DEFAULT '{}',  -- empty = any qualified
-  bookable_by        TEXT[] NOT NULL DEFAULT '{}', -- 'new_patient', 'existing', 'recall', 'marketplace'
+  bookable_by        TEXT[] NOT NULL DEFAULT '{}',  -- 'new_patient', 'existing', 'recall', 'marketplace'
+  UNIQUE (organization_id, code),
   CHECK (pattern ~ '^[X/]+$')
 );
 
-ALTER TABLE schedules
-  ADD COLUMN kind TEXT NOT NULL DEFAULT 'working'
-    CHECK (kind IN ('working', 'blockout', 'holiday', 'meeting')),
-  ADD COLUMN operatory_id UUID REFERENCES operatories (id),          -- blockouts sit on a room
-  ADD COLUMN reserved_for_type_ids UUID[] NOT NULL DEFAULT '{}';     -- blockout: who may book it
-
-ALTER TABLE appointments
-  ADD COLUMN operatory_id UUID REFERENCES operatories (id),
-  ADD COLUMN hygienist_role_id UUID REFERENCES practitioner_roles (id),
-  ADD COLUMN appointment_type_id UUID REFERENCES appointment_types (id),
-  ADD COLUMN pattern TEXT,                          -- copied from the type, editable per appointment
-  ADD COLUMN chair_during TSTZRANGE,                -- the whole pattern, derived
-  ADD COLUMN is_new_patient BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('normal', 'asap')),
-  ADD COLUMN booked_via TEXT NOT NULL CHECK (booked_via IN ('front_desk', 'online', 'recall_link',
-                         'marketplace', 'call_center', 'ai_agent', 'pms_sync')),
-  ADD COLUMN source_booking_ref TEXT,               -- marketplace or widget booking id
-  ADD COLUMN idempotency_key TEXT,
-  ADD COLUMN overbook_reason TEXT,                  -- set when a person overrode a conflict
-  ADD CONSTRAINT appointments_chair_excl EXCLUDE USING GIST (
-    operatory_id WITH =, chair_during WITH &&
-  ) WHERE (status IN ('held', 'booked', 'arrived') AND overbook_reason IS NULL);
-
-CREATE TABLE appointment_provider_units (          -- the X units, so provider time is checked per unit
-  appointment_id     UUID NOT NULL REFERENCES appointments (id) ON DELETE CASCADE,
-  practitioner_role_id UUID NOT NULL REFERENCES practitioner_roles (id),
-  needed_during      TSTZRANGE NOT NULL,
-  active             BOOLEAN NOT NULL DEFAULT TRUE,  -- false once the appointment is cancelled
-  overbook_reason    TEXT,
-  EXCLUDE USING GIST (practitioner_role_id WITH =, needed_during WITH &&)
-    WHERE (active AND overbook_reason IS NULL)
+CREATE TABLE schedule_templates (                  -- working hours, blockouts and ideal days, as rules
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
+  schedule_id        UUID NOT NULL REFERENCES schedules (id),
+  kind               TEXT NOT NULL CHECK (kind IN ('working', 'blockout', 'closed')),
+  weekday            SMALLINT CHECK (weekday BETWEEN 1 AND 7),  -- null with a date for one-offs
+  on_date            DATE,
+  starts_local       TIME NOT NULL,                 -- in the location's time zone
+  ends_local         TIME NOT NULL,
+  reserved_for_type_ids UUID[] NOT NULL DEFAULT '{}',  -- blockout: which appointment types may use it
+  valid_during       DATERANGE NOT NULL,
+  CHECK ((weekday IS NULL) <> (on_date IS NULL))
 );
 
-CREATE TABLE booking_rules (                       -- online booking policy, versioned
+ALTER TABLE appointment_slots
+  ADD COLUMN appointment_id UUID REFERENCES appointments (id),  -- set on busy slots an appointment holds
+  ADD COLUMN reserved_for_type_ids UUID[] NOT NULL DEFAULT '{}'; -- blocked slots from a blockout
+
+ALTER TABLE appointments
+  ADD COLUMN appointment_type_id UUID REFERENCES appointment_types (id),
+  ADD COLUMN hygienist_role_id UUID REFERENCES practitioner_roles (id),
+  ADD COLUMN pattern TEXT,                          -- copied from the type, editable per appointment
+  ADD COLUMN is_new_patient BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('normal', 'asap')),
+  ADD COLUMN hold_expires_at TIMESTAMPTZ,           -- set while status = 'proposed' during booking
+  ADD COLUMN source_detail TEXT,                    -- 'web_sched', 'recall_link', 'marketplace:zocdoc'
+  ADD COLUMN source_booking_ref TEXT,               -- the widget's or marketplace's booking id
+  ADD COLUMN idempotency_key TEXT,
+  ADD COLUMN overbook_reason TEXT,                  -- set when a person overrode a conflict
+  ADD COLUMN overbooked_by UUID,
+  ADD CONSTRAINT appointments_idem UNIQUE (location_id, idempotency_key);
+
+CREATE TABLE booking_rules (                       -- online booking policy, versioned per location
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   location_id        UUID NOT NULL REFERENCES locations (id),
   version            INT NOT NULL,
   min_lead_minutes   INT NOT NULL DEFAULT 120,
   horizon_days       INT NOT NULL DEFAULT 60,
+  hold_minutes       INT NOT NULL DEFAULT 10,
   max_new_patients_per_day INT,
   mode_by_type       JSONB NOT NULL,              -- {"<type_id>": "booked" | "request_queue" | "request"}
-  accepted_payer_ids UUID[] NOT NULL DEFAULT '{}',
+  accepted_plan_ids  UUID[] NOT NULL DEFAULT '{}',
   max_sync_age_minutes INT NOT NULL DEFAULT 30,   -- older copy: no real-time offers
   effective_from     TIMESTAMPTZ NOT NULL,
   approved_by        UUID NOT NULL,
@@ -219,7 +216,7 @@ CREATE TABLE booking_rules (                       -- online booking policy, ver
 
 CREATE TABLE booking_requests (                    -- demand without a confirmed appointment
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   location_id        UUID NOT NULL REFERENCES locations (id),
   patient_id         UUID REFERENCES patients (id),   -- null until matched
   submitted_identity JSONB NOT NULL,               -- name, birth date, phone, email as entered
@@ -227,7 +224,7 @@ CREATE TABLE booking_requests (                    -- demand without a confirmed
   preferred_times    JSONB,                        -- request mode
   held_appointment_id UUID REFERENCES appointments (id),  -- request-queue mode
   coverage_entered   JSONB,                        -- carrier and member id as typed
-  source             TEXT NOT NULL,                -- 'website', 'google', 'marketplace:zocdoc', ...
+  source             TEXT NOT NULL,                -- 'website', 'google', 'marketplace:zocdoc'
   source_ref         TEXT,
   booking_rules_version INT NOT NULL,
   status             TEXT NOT NULL CHECK (status IN ('open', 'booked', 'declined', 'expired',
@@ -239,7 +236,7 @@ CREATE TABLE booking_requests (                    -- demand without a confirmed
 
 CREATE TABLE waitlist_entries (                    -- ASAP list and waitlist
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   patient_id         UUID NOT NULL REFERENCES patients (id),
   location_id        UUID NOT NULL REFERENCES locations (id),
   kind               TEXT NOT NULL CHECK (kind IN ('asap', 'waitlist')),
@@ -247,20 +244,22 @@ CREATE TABLE waitlist_entries (                    -- ASAP list and waitlist
   appointment_type_id UUID REFERENCES appointment_types (id),
   practitioner_role_ids UUID[] NOT NULL DEFAULT '{}',
   available_times    JSONB,                        -- 'weekday mornings', as ranges
-  created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   removed_at         TIMESTAMPTZ
 );
 ```
 
 Notes on the sketch:
 
-- **Two constraints, two resources.** The chair constraint stops two patients in one operatory; the per-unit provider constraint stops one provider being needed twice in the same minutes, while letting their time interleave across rooms. Both exclude rows a person overrode with a reason, which is how deliberate double booking stays possible and visible.
-- **Patterns are data.** The type carries a pattern and the appointment copies it, because a front desk lengthens an appointment for a nervous patient. `appointment_provider_units` is derived from the pattern on every write.
-- **The PMS is still the authority.** When the PMS owns the schedule, these constraints protect your copy and your holds; the write-back can still be refused, and that refusal is a normal outcome ([Writing Back](/books/health-tech/pms-integration#writing-back)). Rows created from sync carry `booked_via = 'pms_sync'`.
-- **Booking policy is versioned.** `booking_rules` holds lead time, horizon, caps, per-type mode, accepted payers and the freshness limit, approved by the practice, with the version recorded on every request ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Two resources, one constraint.** Booking an appointment writes busy `appointment_slots` rows: one on the operatory's schedule for the whole pattern, and one on the practitioner's schedule for each run of `X` units (and on the hygienist's for theirs). The core exclusion constraint on `(schedule_id, during)` then refuses a second patient in the chair and a provider needed in two rooms in the same minutes, while letting a dentist's time interleave across columns.
+- **Overrides skip the slot, not the record.** Deliberate double booking writes the appointment with `overbook_reason` and `overbooked_by` and doesn't claim the conflicting slots, so the overlap is visible in a query and nobody can create it by accident.
+- **Holds are proposed appointments.** An online booking in progress is an `appointments` row with `status = 'proposed'`, its slots marked `busy_tentative` and `hold_expires_at` set from `booking_rules.hold_minutes`; confirming moves it to `booked`, and a lapsed hold is cancelled in the same transaction as the next booking that wants the time ([Expiry Is Enforced on Read](/docs/architecture/reservations-and-holds#expiry-is-enforced-on-read)).
+- **Patterns are data.** The type carries a pattern and the appointment copies it, because a front desk lengthens an appointment for a nervous patient; slots are rewritten from the pattern on every change.
+- **The PMS is still the authority.** When the PMS owns the schedule, these constraints protect your copy and your holds; the write-back can still be refused, and that refusal is a normal outcome ([Writing Back](/books/health-tech/pms-integration#writing-back)). Rows created from sync carry `source = 'sync'`.
+- **Booking policy is versioned.** `booking_rules` holds lead time, horizon, hold length, caps, per-type mode, accepted plans and the freshness limit, approved by the practice, with the version recorded on every request ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 - **Requests are not appointments.** A `booking_requests` row consumes no time unless it holds one, keeps what the patient typed separately from the matched patient, and dedupes marketplace webhooks on `(source, source_ref)`.
-- **Waitlist offers are holds.** A claim from a waitlist text goes through the same booking path and constraints; the waitlist only decides who is told.
-- **Events:** `appointment.booked`, `appointment.rescheduled`, `appointment.cancelled`, `appointment.broken`, `booking_request.received` and `waitlist.slot_offered` feed reminders, the waitlist and the PMS write-back.
+- **Waitlist offers are holds.** A claim from a waitlist text goes through the same booking path and constraint; the waitlist only decides who is told.
+- **Events:** `appointment.booked`, `appointment.rescheduled`, `appointment.cancelled`, `appointment.no_show`, `booking_request.received` and `waitlist.slot_offered` feed reminders, the waitlist and the PMS write-back.
 
 ## Auditing
 

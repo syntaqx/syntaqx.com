@@ -10,7 +10,7 @@ tags = ["health-tech", "reminders", "recall", "no-shows", "dental", "veterinary"
 
 Reminders are the first product patient engagement vendors sold and still the one every practice buys. They do two jobs that look alike and aren't. **Confirmations and reminders** protect appointments already on the books: a text two days out that the patient confirms, a reminder the morning before, an early warning that Tuesday's 9 a.m. crown won't show. **Recall** creates appointments that don't exist yet: the hygiene patient due for a cleaning six months after the last one, the dog due for its rabies booster, the contact lens wearer whose prescription is about to expire. Confirmations save revenue the practice already scheduled; recall is where much of a dental or veterinary practice's future revenue comes from, because the patient who isn't reminded often doesn't come back. Both losses are real, and only one of them, the no-show, ever appears on the schedule.
 
-This chapter covers both: how the platforms run them, confirmation flows and reminder cadences, what the research says reminders do, no-shows and how to measure them, recall in dentistry, veterinary medicine and optometry, reactivation and unscheduled treatment, and the rules that bound how often a practice may text. It extends `appointments` and `communications` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model) and adds recalls. The sending machinery (consent ledger, one outbound gate, send-time re-checks) is the playbook's [Notifications & Consent](/docs/architecture/notifications); the field-service message lifecycle it resembles is the Field Operations volume's [Customer Communications](/books/field-operations/customer-communications); the texting law for health care is [Two-Way Texting & Messaging](/books/health-tech/patient-texting).
+This chapter covers both: how the platforms run them, confirmation flows and reminder cadences, what the research says reminders do, no-shows and how to measure them, recall in dentistry, veterinary medicine and optometry, reactivation and unscheduled treatment, and the rules that bound how often a practice may text. It extends `appointments` and `communications` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model) and adds recall types, patient recalls, cadence rules and confirmations. Why recall is the revenue loop of a dental, optometry or veterinary practice, and what the front desk does with it, is [The Practice Business](/books/health-tech/practice-business#recall-is-the-revenue-loop); this chapter builds it. The sending machinery (consent ledger, one outbound gate, send-time re-checks) is the playbook's [Notifications & Consent](/docs/architecture/notifications); the field-service message lifecycle it resembles is the Field Operations volume's [Customer Communications](/books/field-operations/customer-communications); the texting law for health care is [Two-Way Texting & Messaging](/books/health-tech/patient-texting).
 
 ## How the Platforms Do It
 
@@ -75,7 +75,7 @@ Measurement pitfalls are specific. A practice that converts no-shows to "cancell
 
 ## Recall: the Core Revenue Loop
 
-Recall is a due date attached to a patient for a kind of visit, recalculated when the visit happens. Each completed visit sets the next due date, outreach starts before it, and a patient who books closes the loop. A patient who doesn't is overdue, then lapsed, then a reactivation target.
+As a record, recall is a due date attached to a patient for a kind of visit, recalculated when the visit happens. Each completed visit sets the next due date, outreach starts before it, and a patient who books closes the loop; a patient who doesn't is overdue, then lapsed, then a reactivation target. The business side of the loop (reappointment, case acceptance, the hygiene schedule as predictable revenue) is in [Recall Is the Revenue Loop](/books/health-tech/practice-business#recall-is-the-revenue-loop).
 
 ### Hygiene Recall
 
@@ -118,12 +118,12 @@ Reminder and recall texts sit under three regimes at once.
 
 ## How to Build It
 
-The chapter adds recall types and recalls, a reminder policy, and the confirmation status on appointments, and uses `communications` for every message sent:
+The core `appointments` row already carries `confirmed` and `no_show` as statuses, and every message is a `communications` row with a `purpose` (`confirmation`, `appointment_reminder`, `recall`) and an `appointment_id` ([The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model)). The chapter adds recall types and patient recalls, cadence rules, and a confirmation record per request and reply:
 
 ```sql
 CREATE TABLE recall_types (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   name               TEXT NOT NULL,              -- 'Prophy', 'Perio', 'Rabies', 'Annual Eye Exam'
   kind               TEXT NOT NULL CHECK (kind IN ('hygiene', 'perio', 'vaccine', 'wellness',
                        'eye_exam', 'contact_lens_rx', 'plan_of_care', 'care_gap', 'other')),
@@ -132,9 +132,9 @@ CREATE TABLE recall_types (
   appointment_type_id UUID REFERENCES appointment_types (id)  -- what a recall books
 );
 
-CREATE TABLE recalls (                           -- one per patient per recall type
+CREATE TABLE patient_recalls (                   -- one per patient per recall type
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   patient_id         UUID NOT NULL REFERENCES patients (id),   -- vet: the animal
   recall_type_id     UUID NOT NULL REFERENCES recall_types (id),
   interval           INTERVAL NOT NULL,          -- per patient; copied from the type
@@ -146,19 +146,20 @@ CREATE TABLE recalls (                           -- one per patient per recall t
   scheduled_appointment_id UUID REFERENCES appointments (id),
   outreach_count     SMALLINT NOT NULL DEFAULT 0,
   last_outreach_at   TIMESTAMPTZ,
-  source_external_id TEXT,                       -- the PMS's recall key, when synced
+  external_ref       TEXT,                       -- the PMS's recall key, when synced
   UNIQUE (patient_id, recall_type_id)
 );
 
-CREATE TABLE reminder_policies (                 -- cadence as data, versioned per location
+CREATE TABLE reminder_rules (                    -- cadence as data, versioned per location
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id          UUID NOT NULL,
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
   location_id        UUID NOT NULL REFERENCES locations (id),
   version            INT NOT NULL,
   steps              JSONB NOT NULL,             -- [{"key": "confirm_72h", "offset": "-72 hours",
                                                  --   "template_id": "...", "only_types": [...]}]
   recall_steps       JSONB NOT NULL,             -- [{"offset_from_due": "-30 days"}, ...]
   max_recall_outreach SMALLINT NOT NULL DEFAULT 3,
+  late_cancel_window INTERVAL NOT NULL DEFAULT '24 hours',
   aggregate_family   BOOLEAN NOT NULL DEFAULT TRUE,
   relies_on_tcpa_healthcare_exemption BOOLEAN NOT NULL DEFAULT FALSE,
   effective_from     TIMESTAMPTZ NOT NULL,
@@ -166,33 +167,41 @@ CREATE TABLE reminder_policies (                 -- cadence as data, versioned p
   UNIQUE (location_id, version)
 );
 
+CREATE TABLE confirmations (                     -- each request and its answer
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id    UUID NOT NULL REFERENCES organizations (id),
+  appointment_id     UUID NOT NULL REFERENCES appointments (id),
+  request_communication_id UUID REFERENCES communications (id),
+  reply_communication_id   UUID REFERENCES communications (id),
+  result             TEXT NOT NULL CHECK (result IN ('sent', 'confirmed', 'reschedule_requested',
+                       'cancel_requested', 'not_accepted', 'failed', 'confirmed_by_staff')),
+  interpreted_by     TEXT NOT NULL CHECK (interpreted_by IN ('keyword', 'model', 'staff')),
+  written_back       BOOLEAN NOT NULL DEFAULT FALSE,  -- the PMS's confirmation status was set
+  recorded_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 ALTER TABLE appointments
-  ADD COLUMN confirmation_status TEXT NOT NULL DEFAULT 'none'
-    CHECK (confirmation_status IN ('none', 'sent', 'confirmed', 'not_accepted', 'failed',
-           'confirmed_by_staff')),
-  ADD COLUMN confirmed_at TIMESTAMPTZ,
-  ADD COLUMN confirmed_via_communication_id UUID REFERENCES communications (id),
-  ADD COLUMN broken_kind TEXT CHECK (broken_kind IN ('no_show', 'late_cancel', 'cancel')),
-  ADD COLUMN broken_at TIMESTAMPTZ,
+  ADD COLUMN cancelled_at TIMESTAMPTZ,
+  ADD COLUMN late_cancel BOOLEAN,                  -- cancelled inside the rule's window
   ADD COLUMN refilled_by_appointment_id UUID REFERENCES appointments (id);
 
 ALTER TABLE communications
-  ADD COLUMN subject_appointment_id UUID REFERENCES appointments (id),
-  ADD COLUMN subject_recall_id UUID REFERENCES recalls (id),
+  ADD COLUMN patient_recall_id UUID REFERENCES patient_recalls (id),
   ADD COLUMN subject_version TEXT,               -- the appointment version it was rendered for
   ADD COLUMN cadence_step TEXT,                  -- 'confirm_72h', 'day_before', 'recall_1'
-  ADD COLUMN reminder_policy_version INT;
+  ADD COLUMN reminder_rule_version INT;
 ```
 
 Notes on the sketch:
 
-- **Recalls are the PMS's, mirrored.** When the PMS owns recall (Open Dental, Dentrix, Cornerstone), `recalls` is a synced copy with `source_external_id`, and only outreach fields are yours. When you own it (a practice on a system without recall, or a vendor that computes care gaps), the same table is authoritative.
-- **One recall per patient per type,** as Open Dental enforces, with the interval on the patient's row because a perio patient's interval isn't the type's default.
-- **Every send carries its subject and its version.** `subject_version` is what the send-time check compares against; a mismatch drops the message, and the drop is logged ([Event-Triggered, Re-Checked at Send Time](/docs/architecture/notifications#event-triggered-re-checked-at-send-time)).
+- **Recalls are the PMS's, mirrored.** When the PMS owns recall (Open Dental, Dentrix, Cornerstone), `patient_recalls` is a synced copy with `external_ref`, and only the outreach columns are yours. When you own it (a practice on a system without recall, or a vendor that computes care gaps), the same table is authoritative.
+- **One recall per patient per type,** as Open Dental enforces, with the interval on the patient's row because a perio patient's interval isn't the type's default. A deceased patient (`patients.deceased_at`) stops every recall at once.
+- **Confirmations are records, the status is a result.** Each request and reply is a `confirmations` row saying how the reply was read (a keyword, a model, a person) and whether it reached the PMS; the appointment's `confirmed` status follows from it, and a misread "yes" can be traced.
+- **Every send carries its subject and its version.** `subject_version` is what the send-time check compares against; a mismatch drops the message as `blocked`, with the reason logged ([Event-Triggered, Re-Checked at Send Time](/docs/architecture/notifications#event-triggered-re-checked-at-send-time)).
 - **Idempotency key per step.** The key is the appointment, the cadence step and the appointment version, so a double-fired event sends one reminder, and a reschedule starts a new sequence.
-- **The exemption is a flag on the policy.** A location whose policy relies on the TCPA health care exemption gets a frequency budget enforced at send time (one a day, three a week per patient across every template) and a 160-character limit enforced at render; a location with express consent on file doesn't.
-- **Broken appointments are recorded, not overwritten,** with what refilled them, so no-show, late-cancel and refill rates come from history.
-- **Events:** `appointment.confirmed`, `appointment.broken`, `recall.due`, `recall.scheduled` and `recall.lapsed` drive the cadence and the reports.
+- **The exemption is a flag on the rule.** A location whose rules rely on the TCPA health care exemption gets a frequency budget enforced at send time (one a day, three a week per patient across every template) and a 160-character limit enforced at render ([Two-Way Texting & Messaging](/books/health-tech/patient-texting#how-to-build-it) builds the budget); a location with express consent on file doesn't.
+- **No-shows and late cancellations stay as history,** with what refilled them, so no-show, late-cancel and refill rates come from records, not from final statuses.
+- **Events:** `appointment.confirmed`, `appointment.no_show`, `appointment.cancelled`, `recall.due`, `recall.scheduled` and `recall.lapsed` drive the cadence and the reports.
 
 ## Auditing
 

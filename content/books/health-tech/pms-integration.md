@@ -20,7 +20,7 @@ There are two sides: the systems of record, and the engagement vendors that read
 | --- | --- | --- | --- |
 | **Open Dental** | Windows client, MySQL database on the office server; Open Dental Cloud option | REST API in three modes (Local, API Service, Remote through the office's eConnector), keys per developer and per customer | Full API reference, permission tiers and per-location fees paid by the developer, throttles, polling webhooks |
 | **Dentrix, Dentrix Enterprise, Dentrix Ascend** (Henry Schein One) | Dentrix and Enterprise on premises; Ascend in the cloud | The API Exchange: application, security review, agreement and a program fee | Program pages and partner announcements; fees and API reference not public |
-| **Eaglesoft** (Patterson) | On premises | No public developer program found <!-- source-gap: eaglesoft-api-program | missing | whether Patterson runs a developer or partner API program for Eaglesoft, and its terms | closes with: a Patterson or Eaglesoft partner page | checked: 2026-10-29 --> | Version support appears only in integrators' docs |
+| **Eaglesoft** (Patterson) | On premises | No public developer program found | Version support appears only in integrators' docs |
 | **Denticon** (Planet DDS) | Cloud | An "API Program" with sandbox and beta access | Partner list; no fees or auth model |
 | **ezyVet** (IDEXX) | Cloud | OAuth 2.0 client credentials per clinic database; Commercial Partnership or Private Integration tracks | Full API reference, rate limits, webhooks |
 | **Cornerstone** (IDEXX) | On premises | Named partner integrations | A partner list (PetDesk, Vetstoria, Weave, AllyDVM, IDEXX's own Vello); no API or terms |
@@ -38,6 +38,7 @@ And the vendors that connect to them:
 | **Vetstoria** | "A direct, approved link to your PMS" per system, 29 listed | Confirms and writes bookings in real time | An integration table (Cornerstone, AVImark, ezyVet, Neo, Provet Cloud, Vetspire and others) |
 
 <!-- source-gap: weave-data-sync-app | secondary | Weave's Data Sync App installed on the practice server by its install team and configured against the PMS database (from search snippets of weavehelp.com, which renders empty to fetch) | closes with: a fetchable Weave help center article on the Data Sync App's requirements and scope | checked: 2026-10-29 -->
+<!-- source-gap: eaglesoft-api-program | missing | whether Patterson runs a developer or partner API program for Eaglesoft, and its terms | closes with: a Patterson or Eaglesoft partner page | checked: 2026-10-29 -->
 
 The pattern across both tables: the cloud systems publish APIs and the on-premises systems mostly don't, so the engagement industry built its own access layer, a fleet of agents on practice servers, and the PMS vendors have spent the last few years pulling that access back into programs they control.
 
@@ -148,32 +149,27 @@ The defenses:
 
 ## How to Build It
 
-The chapter extends `integrations` (one row per connection from a practice location to an external system) and `sync_cursors` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model), and adds the agent fleet, a crosswalk for every synced record, the write-back queue and conflicts:
+The chapter extends `integrations` (one row per connection from a practice to an external system, with its `method`, `vendor` and, from [The Health Tech Landscape](/books/health-tech/health-tech-landscape#how-to-build-it), `product_id` and `product_version`) and `sync_cursors` from [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model), and adds the agent fleet, sync runs, a crosswalk for every synced record, write-back requests and conflicts:
 
 ```sql
 ALTER TABLE integrations
-  ADD COLUMN system_product   TEXT NOT NULL,       -- 'open_dental', 'dentrix', 'dentrix_ascend', 'eaglesoft',
-                                                   -- 'cornerstone', 'avimark', 'ezyvet', 'athenahealth', ...
-  ADD COLUMN access_path      TEXT NOT NULL CHECK (access_path IN ('onprem_agent', 'vendor_api',
-                                'unified_api', 'browser_session', 'file_drop')),
   ADD COLUMN agreement_ref    TEXT,                -- partner agreement or program enrollment it runs under
-  ADD COLUMN permissions      TEXT[] NOT NULL DEFAULT '{}',  -- as granted: 'read_all', 'appointments_write', ...
-  ADD COLUMN capabilities     TEXT[] NOT NULL DEFAULT '{}',  -- what this PMS and path support: 'appointment_write',
-                                                   -- 'patient_write', 'form_writeback', 'payment_post'
-  ADD COLUMN location_zone    TEXT NOT NULL,       -- IANA zone of the office; PMS times are local
+  ADD COLUMN permissions      TEXT[] NOT NULL DEFAULT '{}',  -- as granted: 'read_all', 'appointments_write'
+  ADD COLUMN capabilities     TEXT[] NOT NULL DEFAULT '{}',  -- what this PMS and method support:
+                                                   -- 'appointment_write', 'patient_write',
+                                                   -- 'form_writeback', 'payment_post'
   ADD COLUMN last_read_at     TIMESTAMPTZ,
   ADD COLUMN last_write_check_in_at TIMESTAMPTZ,
-  ADD COLUMN fee_sku_id       UUID;                -- per-location integration fee, if any
+  ADD COLUMN fee_contract_fee_id UUID;             -- per-location integration fee, if any
 
 CREATE TABLE sync_agents (                         -- one per installed service on a practice server
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id         UUID NOT NULL,
+  organization_id   UUID NOT NULL REFERENCES organizations (id),
   integration_id    UUID NOT NULL REFERENCES integrations (id),
   host_fingerprint  TEXT NOT NULL,                 -- machine identity, re-keyed on server replacement
   os_version        TEXT,
   agent_version     TEXT NOT NULL,
-  pms_version_seen  TEXT,                          -- reported on every check-in
-  db_role           TEXT,                          -- the role it was granted: 'db_datareader', 'mysql_full', ...
+  db_role           TEXT,                          -- the role it was granted: 'db_datareader', 'mysql_full'
   installed_by      TEXT,                          -- support ticket or installer
   installed_at      TIMESTAMPTZ NOT NULL,
   last_check_in_at  TIMESTAMPTZ,
@@ -181,29 +177,43 @@ CREATE TABLE sync_agents (                         -- one per installed service 
 );
 
 ALTER TABLE sync_cursors
-  ADD COLUMN source_table     TEXT NOT NULL,       -- 'appointment', 'patient', 'procedurelog', 'recall', ...
-  ADD COLUMN cursor_value     TEXT NOT NULL,       -- last timestamp or row version acknowledged
-  ADD COLUMN overlap_seconds  INT NOT NULL DEFAULT 300,  -- re-read window behind the cursor
-  ADD COLUMN last_full_scan_at TIMESTAMPTZ,
-  ADD COLUMN last_advanced_at TIMESTAMPTZ;
+  ADD COLUMN overlap_seconds   INT NOT NULL DEFAULT 300,   -- re-read window behind the cursor
+  ADD COLUMN last_full_scan_at TIMESTAMPTZ;
 
-CREATE TABLE integration_records (                 -- crosswalk: our row <-> their key, per integration
+CREATE TABLE sync_runs (                           -- one poll, full scan or resync
+  id                UUID PRIMARY KEY DEFAULT uuidv7(),
   integration_id    UUID NOT NULL REFERENCES integrations (id),
-  resource_type     TEXT NOT NULL,                 -- 'appointment', 'patient', 'schedule', 'recall', 'document'
+  agent_id          UUID REFERENCES sync_agents (id),
+  kind              TEXT NOT NULL CHECK (kind IN ('incremental', 'key_scan', 'full_resync')),
+  resource          TEXT NOT NULL,
+  cursor_from       TEXT,
+  cursor_to         TEXT,
+  rows_seen         INT NOT NULL DEFAULT 0,
+  rows_changed      INT NOT NULL DEFAULT 0,
+  deletes_detected  INT NOT NULL DEFAULT 0,
+  product_version_seen TEXT,                       -- the PMS version the agent saw this run
+  started_at        TIMESTAMPTZ NOT NULL,
+  finished_at       TIMESTAMPTZ,
+  error_detail      TEXT
+);
+
+CREATE TABLE external_records (                    -- crosswalk: our row <-> their key, per integration
+  integration_id    UUID NOT NULL REFERENCES integrations (id),
+  resource          TEXT NOT NULL,                 -- 'appointments', 'patients', 'schedules', 'recalls'
   external_id       TEXT NOT NULL,                 -- PatNum, AptNum, the PIMS's id
   local_id          UUID NOT NULL,
   source_version    TEXT,                          -- DateTStamp, row version or content hash last seen
   last_seen_at      TIMESTAMPTZ NOT NULL,
   deleted_at_source TIMESTAMPTZ,                   -- from a deleted-rows signal or a key scan
   merged_into_external_id TEXT,                    -- the surviving key after a PMS merge
-  PRIMARY KEY (integration_id, resource_type, external_id)
+  PRIMARY KEY (integration_id, resource, external_id)
 );
 
-CREATE TABLE writebacks (                          -- every change we ask the PMS to make
+CREATE TABLE writeback_requests (                  -- every change we ask the PMS to make
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id         UUID NOT NULL,
+  organization_id   UUID NOT NULL REFERENCES organizations (id),
   integration_id    UUID NOT NULL REFERENCES integrations (id),
-  resource_type     TEXT NOT NULL,
+  resource          TEXT NOT NULL,
   local_id          UUID NOT NULL,
   operation         TEXT NOT NULL CHECK (operation IN ('create', 'update', 'cancel', 'attach_document',
                       'post_payment', 'set_confirmation')),
@@ -215,17 +225,17 @@ CREATE TABLE writebacks (                          -- every change we ask the PM
   claimed_by_agent  UUID REFERENCES sync_agents (id),
   external_id       TEXT,                          -- the PMS key once written
   error_detail      TEXT,
-  created_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   finished_at       TIMESTAMPTZ,
   UNIQUE (integration_id, idempotency_key)
 );
 
 CREATE TABLE sync_conflicts (                      -- a person decides
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id         UUID NOT NULL,
+  organization_id   UUID NOT NULL REFERENCES organizations (id),
   integration_id    UUID NOT NULL REFERENCES integrations (id),
-  writeback_id      UUID REFERENCES writebacks (id),
-  resource_type     TEXT NOT NULL,
+  writeback_request_id UUID REFERENCES writeback_requests (id),
+  resource          TEXT NOT NULL,
   local_id          UUID,
   external_id       TEXT,
   kind              TEXT NOT NULL CHECK (kind IN ('slot_taken', 'record_changed', 'record_deleted',
@@ -240,19 +250,20 @@ CREATE TABLE sync_conflicts (                      -- a person decides
 
 Notes on the sketch:
 
-- **The crosswalk is the integration.** `integration_records` maps every local row to its PMS key and the version last seen. Patients also get a `patient_identifiers` row per PMS key, because the patient's identity across systems is a core record; the crosswalk tracks sync state for every resource type.
-- **Agents are fleet members.** `sync_agents` is what support looks at first: which version runs where, what PMS version it last saw, when it last checked in. A server replacement retires one row and installs another; it doesn't silently reuse the identity.
-- **Writes are jobs.** `writebacks` has a deadline, an idempotency key and a terminal status, mirroring the asynchronous write lifecycle the agents impose. The API that queued the write returns `202 Accepted` with the write's ID ([Accepting the Work](/docs/requests/long-running-operations#accepting-the-work)), and the outcome is an event.
+- **The crosswalk is the integration.** `external_records` maps every local row to its PMS key and the version last seen. Patients also get a `patient_identifiers` row (`system = 'pms'`, the integration as issuer) per PMS key, because a patient's identity across systems is a core record; the crosswalk tracks sync state for every resource. Appointments keep their `external_ref` as the quick lookup.
+- **`method` says how, `capabilities` says what.** The core `integrations.method` (`sync_agent`, `vendor_api`, `fhir`, ...) records the access path; `capabilities` gates features, so a practice on an analytics-only connector never sees "book online," and `agreement_ref` and `permissions` record what the access rests on.
+- **Agents are fleet members.** `sync_agents` is what support looks at first: which version runs where and when it last checked in, while `sync_runs` records what each poll saw, including the PMS version, which is how a silent upgrade shows up. A server replacement retires one agent row and installs another; it doesn't silently reuse the identity.
+- **Writes are jobs.** `writeback_requests` has a deadline, an idempotency key and a terminal status, mirroring the asynchronous write lifecycle the agents impose. The API that queued the write returns `202 Accepted` with the request's ID ([Accepting the Work](/docs/requests/long-running-operations#accepting-the-work)), and the outcome is an event.
 - **Conflicts are tasks.** A `slot_taken` conflict on an online booking creates a task for the front desk and a message to the patient that the time needs confirming, never a silent drop.
-- **Capabilities gate features.** The product reads `integrations.capabilities` before offering write-back features; a practice on an analytics-only connector doesn't see "book online."
-- **Events:** `integration.read_stale`, `integration.write_stale`, `writeback.written`, `writeback.failed`, `sync_conflict.opened` and `pms.version_changed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to alerts, the practice's dashboard and support.
+- **The integration's status is derived.** The core `integrations.status` moves to `degraded` when `last_read_at` or `last_write_check_in_at` passes its threshold, and back to `active` when they recover.
+- **Events:** `integration.read_stale`, `integration.write_stale`, `writeback_request.written`, `writeback_request.failed`, `sync_conflict.opened` and `pms.version_changed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to alerts, the practice's dashboard and support.
 
 Support engineers will need to look at a practice's synced data to diagnose a connector; that access is PHI access and follows [Support Access](/docs/security/support-access#read-only-by-default): read-only by default, a reason per session, time-boxed and logged.
 
 ## Auditing
 
-- **What access each integration had, under what agreement,** from `integrations.access_path`, `agreement_ref` and `permissions` over time. A PMS vendor's audit or a practice's question ("who can read our database?") is answered from it.
-- **Every write to the PMS, as sent and as resolved,** from `writebacks`, because a wrong appointment, a payment posted twice or a form attached to the wrong chart is traced to the write that did it.
+- **What access each integration had, under what agreement,** from `integrations.method`, `agreement_ref` and `permissions` over time. A PMS vendor's audit or a practice's question ("who can read our database?") is answered from it.
+- **Every write to the PMS, as sent and as resolved,** from `writeback_requests`, because a wrong appointment, a payment posted twice or a form attached to the wrong chart is traced to the write that did it.
 - **Every conflict and who resolved it.**
 - **Agent installs, upgrades and retirements,** with the support ticket, since an agent is software with database credentials on a covered entity's server.
 - **Reads of PHI by your own staff,** through support tooling, per [Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes).

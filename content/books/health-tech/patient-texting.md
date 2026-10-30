@@ -128,17 +128,27 @@ The inbox is where the front desk spends its day, and its design decides whether
 
 ## How to Build It
 
-Every text is a `communications` row; the chapter extends `communications`, `contacts` and `consents`, and adds conversations, templates and confidential communications requests:
+Every text is a `communications` row with its `purpose`, `contact_id` and `status`, and every texting permission is a `consents` row of kind `texting` (or `marketing`) pointing at the exact wording shown in `disclosure_texts` ([The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model)). The chapter adds sender registrations, conversations and opt-outs, plus two records the gate needs, message templates and confidential communications requests:
 
 ```sql
+CREATE TABLE sender_registrations (              -- what each text-enabled number sends under
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id     UUID NOT NULL REFERENCES organizations (id),
+  phone_number_id     UUID NOT NULL REFERENCES phone_numbers (id),
+  kind                TEXT NOT NULL CHECK (kind IN ('10dlc_campaign', 'toll_free_verification')),
+  brand_ref           TEXT,                      -- the registry's brand id for the practice
+  campaign_ref        TEXT,                      -- or the verification id
+  use_cases           TEXT[] NOT NULL,           -- as registered: notifications, customer care, marketing
+  status              TEXT NOT NULL CHECK (status IN ('pending', 'approved', 'rejected', 'suspended')),
+  valid_during        TSTZRANGE NOT NULL
+);
+
 CREATE TABLE message_templates (
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id           UUID NOT NULL,
+  organization_id     UUID NOT NULL REFERENCES organizations (id),
   name                TEXT NOT NULL,
-  purpose             TEXT NOT NULL CHECK (purpose IN ('appointment', 'recall', 'treatment_followup',
-                        'forms', 'results_available', 'billing', 'review_request', 'marketing',
-                        'conversation')),
-  tcpa_exemption_eligible BOOLEAN NOT NULL,      -- purpose is in (a)(9)(iv)(C) and not excluded by (D)
+  purpose             TEXT NOT NULL,             -- the communications.purpose values
+  tcpa_exemption_eligible BOOLEAN NOT NULL,      -- purpose is in (a)(9)(iv)(C), not excluded by (D)
   body                TEXT NOT NULL,
   max_segments        SMALLINT NOT NULL DEFAULT 1,
   detail_level        TEXT NOT NULL DEFAULT 'logistics' CHECK (detail_level IN ('logistics',
@@ -146,47 +156,38 @@ CREATE TABLE message_templates (
   neutral_sender      BOOLEAN NOT NULL DEFAULT FALSE,
   version             INT NOT NULL,
   approved_by         UUID NOT NULL,
-  CHECK (NOT tcpa_exemption_eligible OR purpose IN ('appointment', 'recall', 'results_available'))
+  CHECK (NOT tcpa_exemption_eligible OR purpose IN ('appointment_reminder', 'confirmation', 'recall'))
 );
 
-CREATE TABLE conversations (                     -- one thread per practice line and patient number
+CREATE TABLE conversations (                     -- one thread per practice number and patient number
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id           UUID NOT NULL,
-  phone_line_id       UUID NOT NULL REFERENCES phone_lines (id),
+  organization_id     UUID NOT NULL REFERENCES organizations (id),
+  phone_number_id     UUID NOT NULL REFERENCES phone_numbers (id),
   remote_e164         TEXT NOT NULL,
   assigned_to         UUID,                      -- staff user or team
   status              TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'waiting', 'closed')),
   flagged_clinical_at TIMESTAMPTZ,
-  UNIQUE (phone_line_id, remote_e164)
+  UNIQUE (phone_number_id, remote_e164)
 );
 
-ALTER TABLE communications
-  ADD COLUMN conversation_id UUID REFERENCES conversations (id),
-  ADD COLUMN template_id UUID REFERENCES message_templates (id),
-  ADD COLUMN template_version INT,
-  ADD COLUMN purpose TEXT,                       -- copied from the template, or 'conversation'
-  ADD COLUMN legal_basis TEXT CHECK (legal_basis IN ('express_consent', 'written_consent',
-                         'tcpa_healthcare_exemption', 'patient_initiated', 'none_required')),
-  ADD COLUMN about_patient_id UUID REFERENCES patients (id),  -- set by staff on shared numbers
-  ADD COLUMN segments SMALLINT,
-  ADD COLUMN suppressed_reason TEXT;             -- 'opted_out', 'confidential_request', 'budget',
-                                                 -- 'quiet_hours', 'stale_subject', ...
-
-ALTER TABLE contacts
-  ADD COLUMN line_type TEXT CHECK (line_type IN ('mobile', 'landline', 'voip', 'unknown')),
-  ADD COLUMN line_type_checked_at TIMESTAMPTZ,
-  ADD COLUMN shared_with_patient_ids UUID[] NOT NULL DEFAULT '{}';
-
-ALTER TABLE consents
-  ADD COLUMN channel TEXT,                       -- 'sms', 'voice', 'email'
-  ADD COLUMN purposes TEXT[],                    -- the template purposes it covers
-  ADD COLUMN captured_via TEXT,                  -- 'intake_form', 'front_desk', 'keyword', 'booking'
-  ADD COLUMN revoked_scope TEXT CHECK (revoked_scope IN ('purpose', 'all_automated')),
-  ADD COLUMN revoked_in_reply_to UUID REFERENCES communications (id);
+CREATE TABLE opt_outs (                          -- STOP and its equivalents, per number
+  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id     UUID NOT NULL REFERENCES organizations (id),
+  remote_e164         TEXT NOT NULL,
+  channel             TEXT NOT NULL CHECK (channel IN ('sms', 'voice', 'email')),
+  scope               TEXT NOT NULL CHECK (scope IN ('purpose', 'all_automated')),
+  purposes            TEXT[],                    -- when scope = 'purpose'
+  words_received      TEXT,                      -- 'STOP', 'please stop texting me'
+  in_reply_to_communication_id UUID REFERENCES communications (id),
+  received_via        TEXT NOT NULL CHECK (received_via IN ('keyword', 'staff', 'portal', 'carrier')),
+  received_at         TIMESTAMPTZ NOT NULL,
+  ended_at            TIMESTAMPTZ,               -- an opt-in keyword or a new consent
+  ended_by_consent_id UUID REFERENCES consents (id)
+);
 
 CREATE TABLE confidential_communication_requests (   -- 45 CFR 164.522(b)
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  tenant_id           UUID NOT NULL,
+  organization_id     UUID NOT NULL REFERENCES organizations (id),
   patient_id          UUID NOT NULL REFERENCES patients (id),
   instruction         TEXT NOT NULL CHECK (instruction IN ('no_sms', 'no_voicemail', 'no_email',
                         'portal_only', 'alternate_contact', 'no_mail_to_home')),
@@ -197,24 +198,40 @@ CREATE TABLE confidential_communication_requests (   -- 45 CFR 164.522(b)
   ended_at            TIMESTAMPTZ
 );
 
+ALTER TABLE communications
+  ADD COLUMN conversation_id UUID REFERENCES conversations (id),
+  ADD COLUMN template_id UUID REFERENCES message_templates (id),
+  ADD COLUMN template_version INT,
+  ADD COLUMN legal_basis TEXT CHECK (legal_basis IN ('express_consent', 'written_consent',
+                         'tcpa_healthcare_exemption', 'patient_initiated', 'none_required')),
+  ADD COLUMN consent_id UUID REFERENCES consents (id),
+  ADD COLUMN segments SMALLINT,
+  ADD COLUMN blocked_reason TEXT;                -- 'opted_out', 'confidential_request', 'budget',
+                                                 -- 'quiet_hours', 'stale_subject', ...
+
+ALTER TABLE contacts
+  ADD COLUMN line_type_checked_at TIMESTAMPTZ;    -- kind re-verified against a line-type lookup
+
 CREATE VIEW exemption_budget AS                  -- (a)(9)(iv)(F): one a day, three a week
-SELECT about_patient_id,
-       count(*) FILTER (WHERE created_at >= date_trunc('day', now())) AS today,
-       count(*) FILTER (WHERE created_at >= now() - interval '7 days') AS last_7_days
+SELECT patient_id,
+       count(*) FILTER (WHERE occurred_at >= date_trunc('day', NOW())) AS today,
+       count(*) FILTER (WHERE occurred_at >= NOW() - INTERVAL '7 days') AS last_7_days
 FROM communications
 WHERE legal_basis = 'tcpa_healthcare_exemption' AND direction = 'outbound'
-GROUP BY about_patient_id;
+  AND status IN ('sent', 'delivered')
+GROUP BY patient_id;
 ```
 
 Notes on the sketch:
 
-- **One outbound gate.** Every product (reminders, recall, payments, reviews, staff replies) sends through one gate that checks, in order: opt-out for the number, confidential communications requests for the patient, consent for the template's purpose or exemption eligibility and budget, quiet hours in the patient's time zone, and segment count ([One Outbound Gate](/docs/architecture/notifications#one-outbound-gate)). Each suppression is a row with its reason.
-- **The legal basis is recorded per message,** so a TCPA claim is answered message by message: this one under written consent, that one under the exemption within budget.
+- **One outbound gate.** Every product (reminders, recall, payments, reviews, staff replies) sends through one gate that checks, in order: an open `opt_outs` row for the number, open confidential communications requests for the patient, a permitting `consents` row for the template's purpose (or exemption eligibility and budget), quiet hours in the location's time zone, and segment count ([One Outbound Gate](/docs/architecture/notifications#one-outbound-gate)). A refusal is a `communications` row with `status = 'blocked'` and its `blocked_reason`.
+- **The legal basis is recorded per message,** with the consent row it relied on, so a TCPA claim is answered message by message: this one under written consent captured at intake with this wording, that one under the exemption within budget.
+- **Opt-outs belong to the number,** not the patient: a STOP from a parent's phone stops texts about every child on it. The core `contacts.text_ok` flag is cleared as a cache; `opt_outs` is the evidence, with the words and the message they answered.
 - **The budget view is illustrative.** In production the check runs inside the send transaction with a lock per patient, so two products can't both send the third message of the week.
 - **Templates carry purpose, eligibility and detail level,** with a constraint that a billing or review template can never be marked exemption-eligible.
 - **Confidential requests are their own records,** dated, scoped and synced to every sending system, not a column on the contact.
-- **Inbound first writes, then routes.** An inbound message is stored, keywords are processed (opt-out written to `consents`), the conversation is updated, clinical flags are raised, and only then does it reach a person or a model.
-- **Events:** `message.received`, `consent.revoked`, `conversation.flagged_clinical` and `confidential_request.recorded` fan out to every system that sends.
+- **Inbound first writes, then routes.** An inbound message is stored, keywords are processed (an `opt_outs` row written), the conversation is updated, clinical flags are raised, and only then does it reach a person or a model.
+- **Events:** `message.received`, `consent.revoked`, `opt_out.recorded`, `conversation.flagged_clinical` and `confidential_request.recorded` fan out to every system that sends.
 
 ## Auditing
 
