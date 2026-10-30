@@ -144,6 +144,19 @@ export const BOOKS: Book[] = [
       "It reads in ten parts, plus a reference. The Business: the parties and how money flows, the landscape, how a practice runs, business models for health software and selling into health care. Records and Interoperability: EHR and PMS records, HL7 v2, FHIR, SMART apps, documents and images, exchange networks, patient matching and code sets. Rules of the Record: HIPAA in practice, information blocking and certification, state health privacy, consent and security. Revenue Cycle: eligibility, claims, clearinghouses, remittance, denials, prior authorization, patient financial experience, coding compliance and value-based care. Practice Management and Patient Engagement: integrating with practice management systems, scheduling and online booking, reminders and recall, phones, texting, intake, reviews, payments, membership plans, veterinary, dental and specialty practices, multi-location groups, and analytics and the AI front desk. Care Delivery: telehealth, e-prescribing, labs, referrals, hospitals, digital health and patient portals. Payers, Pharma and Clinical Trials, and Beyond the US. Running the Platform: architecture, AI, operations, metrics, migrations and data use. Reference: a glossary of every term, grouped by part.",
     ],
   },
+  {
+    slug: "workplace-and-collaboration",
+    type: "industry",
+    name: "Workplace & Collaboration",
+    shortName: "Workplace",
+    cover: "board",
+    summary:
+      "How workplace software works, from chat, meetings, docs and work tracking to identity, retention and AI, with the customer's admins holding the controls.",
+    intro: [
+      "Workplace software runs the same machinery as consumer chat and content, with the duties turned around. A team's Slack channel, a Zoom call, a Confluence page, a Jira issue, a Figma file and a law firm's matter folder all sit in a tenant the customer organization controls: its admins provision people from the directory and cut them off through SSO, decide who outside the company can see what, set retention, place legal holds, answer the subpoena, approve the apps and the AI, and can leave with their data. The vendor runs the service and follows the customer's instructions. Around that inversion sit the parts every vendor has to build: organizations and workspaces, managed accounts and SCIM, guests and shared channels, permissions and link sharing, seats priced by tier and counted by rules that differ by vendor, real-time messaging, meetings and co-editing, work items and workflows, enterprise search and assistants over company data, and the audit, eDiscovery, DLP and archiving that regulators and courts expect, under GDPR, works council rules, SEC and FINRA recordkeeping, the Commission's Teams decision and the ABA's rules for lawyers. This book surveys how the industry does each piece, benchmarked across Microsoft 365, Google Workspace, Zoho, Atlassian, Slack, Zoom, Webex, Notion, Figma, Miro, Asana, monday.com, Linear, Dropbox, Box, DocuSign, ServiceNow, Glean, Okta, Mattermost, Matrix, Clio and iManage, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in eleven parts, plus a reference. The Business: the parties, the inverted duties, how the money works, the core data model, the landscape, business models and unit economics, plans, pricing and seats, and suites, bundling and antitrust. Tenancy and Identity: tenants and workspaces, SSO and managed accounts, provisioning and SCIM, guests and cross-org collaboration, permissions and sharing, admin consoles and policies, and data residency. Chat and Messaging: channels and threads, chat at scale, notifications and presence, email and calendar, and frontline workers. Meetings and Voice: meetings and video, recordings, transcripts and AI notes, async video, business phone and contact center, and rooms and the hybrid office. Docs, Wikis and Files: docs and wikis, real-time co-editing, files and sync, intranets, no-code databases, and e-signatures. Work Management: work items and fields, workflows, queries and dashboards, boards and sprints, portfolios and goals, automation rules, service management, and development collaboration. Design and Visual Collaboration: design tools, whiteboards, and design systems and handoff. Search, Integrations and AI: enterprise search, apps and marketplaces, APIs and rate limits, integration platforms, AI assistants over company data, and agents and MCP. Security and Compliance: audit logs, retention and legal hold, eDiscovery, DLP, customer-managed keys, certifications, regulated communications, employee monitoring, and threats and incidents. Law Firms and Professional Services: the matter-centric firm, intake and conflicts, trust accounting, time and e-billing, and legal documents and AI. Running the Platform: architecture, clients, reliability, billing and resellers, selling to enterprises, migrations and switching, accessibility, and metrics. Reference: a glossary of every term, grouped by part.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
@@ -153,12 +166,6 @@ export const UPCOMING_BOOKS: UpcomingBook[] = [
     type: "industry",
     cover: "bank",
     summary: "Deposit and loan ledgers on a core or a sponsor bank, credit decisions under TILA and ECOA, and business spend management.",
-  },
-  {
-    name: "Workplace & Collaboration",
-    type: "industry",
-    cover: "board",
-    summary: "Tenants, seats and permissions for chat, docs and work tracking, where the customer owns the content and sets retention.",
   },
 ];
 
