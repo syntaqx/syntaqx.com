@@ -115,7 +115,7 @@ A business account adds three things to the person's flow:
 - **The people are verified as people.** Each beneficial owner and the control person go through the person's CIP verification, and so do authorized signers, who are customers' agents on the account even when they are not owners.
 - **The structure is understood.** A company owned by another company means following the chain until individuals appear, which is where sanctions' aggregate ownership rule meets CDD's 25% rule ([The 50 Percent Rule](/books/banking-and-lending/sanctions-screening#the-50-percent-rule)). Sole proprietors are individuals with a trade name, not legal entity customers.
 
-Business banking for startups, with sub-accounts, user permissions and multiple sponsor banks, is the subject of Business Accounts & Startup Banking; the payment-provider version, where the business is a merchant to be paid, is [Merchant Onboarding](/books/payments/merchant-onboarding).
+Business banking for startups, with sub-accounts, user permissions and multiple sponsor banks, is the subject of [Business Accounts & Startup Banking](/books/banking-and-lending/business-accounts); the payment-provider version, where the business is a merchant to be paid, is [Merchant Onboarding](/books/payments/merchant-onboarding).
 
 ## When Verification Fails
 
