@@ -266,6 +266,7 @@ Design decisions:
 - [ASTP/ONC: HTI-1 Final Rule Overview and Key Dates (PDF, October 2025)](https://www.healthit.gov/sites/default/files/2024-03/Overview-and-Key-Dates-2024_508.pdf), US Core 6.1.0 and SMART App Launch 2.0.0 for (g)(10) by December 31, 2025
 - [ASTP/ONC: HTI-1 Final Rule](https://healthit.gov/regulations/hti-rules/hti-1-final-rule/), USCDI v3 baseline and the HTI-5 finalization notice
 - [ASTP/ONC: HTI-5 final rule removals or revisions of certification criteria (October 26, 2026)](https://healthit.gov/resources/hti-5-final-rule-removals-or-revisions-of-certification-criteria/), the 14 removed and 7 revised criteria, which leave (g)(10) unchanged
+- [Federal Register: HTI-5 deregulatory final rule (91 FR 67916, document 2026-21943)](https://www.federalregister.gov/documents/2026/10/28/2026-21943), published October 28, 2026, effective December 28, 2026 except amendments effective January 1, 2027; 14 of 60 criteria removed and 7 revised
 - [Healthcare Dive: ONC final rule cuts health IT certification criteria](https://www.healthcaredive.com/news/onc-final-rule-cuts-health-it-certification-criteria/872876/), HTI-5's 14 removed and 7 revised criteria and effective dates (October 27, 2026)
 - [CMS: Interoperability and Prior Authorization final rule (CMS-0057-F)](https://www.cms.gov/priorities/burden-reduction/overview/interoperability/policies-regulations/cms-interoperability-prior-authorization-final-rule-cms-0057-f), FHIR APIs for impacted payers primarily by January 1, 2027
 

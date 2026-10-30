@@ -18,9 +18,9 @@ As of October 2026, from public pages:
 
 | Platform | Identity function |
 | --- | --- |
-| **NextGate (Rhapsody)** | "A pioneer in healthcare identity resolution and Enterprise Master Person Index (EMPI)," merged into Rhapsody under a March 15, 2022 agreement to pair the EMPI with its integration engines |
+| **NextGate (Rhapsody)** | "A pioneer in healthcare identity resolution and Enterprise Master Person Index (EMPI)," merged with Lyniate (now Rhapsody) under a March 15, 2022 agreement to pair the EMPI with its integration engines |
 | **CommonWell Health Alliance** | A master person index and record locator service at the center of its network |
-| **TEFCA individual access** | Requires IAL2 identity proofing by an approved credential service provider and a demographics double-check before records are released to a person's app |
+| **TEFCA individual access** | Requires IAL2 identity proofing by an approved credential service provider and (from January 1, 2027) a demographics double-check before records are released to a person's app |
 | **HL7 FHIR** | `Patient/$match`, which asks an MPI to find patients matching a partial record, returning graded candidates with scores from 0 to 1 |
 | **HL7 Identity Matching IG** | The Interoperable Digital Identity and Patient Matching guide (1.0.0 on June 2, 2023; 2.0.0 on December 10, 2025), profiling `$match` for cross-organization use and identity assurance |
 | **CMS** | Medicare Beneficiary Identifiers: 11 random characters, replacing SSN-based claim numbers |
@@ -29,7 +29,9 @@ The pattern: **matching is a service, not a feature.** Health systems buy an EMP
 
 ## No National Identifier
 
-Providers have a national identifier (the NPI); patients don't, because Congress stopped it. As GAO reports HHS's statement, "since fiscal year 1999, Congress has prohibited the implementation of a national patient identifier": the restriction, first enacted in the Omnibus Consolidated and Emergency Supplemental Appropriations Act of 1999, bars HHS from using funds to "promulgate or adopt any final standard providing for, or providing for the assignment of, a unique health identifier for an individual" until legislation specifically approves the standard. GAO cites it as carried in the 2019 Labor-HHS appropriations act, and it is still law as of October 2026: section 510 of the fiscal 2026 Labor-HHS act (division B of the Further Consolidated Appropriations Act, 2026, Public Law 119-75) repeats it, and the fiscal 2027 continuing resolution (H.R. 6500) funds HHS under that act's authority and conditions through December 11, 2026.
+Providers have a national identifier (the NPI); patients don't, because Congress stopped it. As GAO reports HHS's statement, "since fiscal year 1999, Congress has prohibited the implementation of a national patient identifier": the restriction, first enacted in the Omnibus Consolidated and Emergency Supplemental Appropriations Act of 1999, bars HHS from using funds to "promulgate or adopt any final standard providing for, or providing for the assignment of, a unique health identifier for an individual" until legislation specifically approves the standard. GAO cites it as carried in the 2019 Labor-HHS appropriations act, and it is still law as of October 2026: section 510 of the fiscal 2026 Labor-HHS act (division B of the Consolidated Appropriations Act, 2026, Public Law 119-75, signed February 3, 2026) repeats it, and the fiscal 2027 continuing resolution (the Continuing Appropriations and Extensions Act, 2027, Public Law 119-103, signed September 2, 2026) funds HHS under that act's authority and conditions through December 11, 2026.
+
+CMS has circled the problem without regulating it. Its Interoperability and Patient Access final rule (CMS-9115-F, published May 1, 2020 and effective June 30, 2020) carried a request for information on patient matching, including whether payers should be required to use a matching solution with a proven success rate, and answered only that CMS would consider the comments for future rulemaking; in finalizing hospital event notifications, applicable 12 months after publication, it called matching "a larger issue beyond the scope" of that rule.
 
 What fills the gap is a patchwork of identifiers, none universal:
 
@@ -198,8 +200,9 @@ Design decisions:
 
 - [GAO-19-197: Health Information Technology, Approaches and Challenges to Electronically Matching Patients' Records across Providers](https://www.gao.gov/products/gao-19-197), released January 15, 2019
 - [GAO-19-197 (PDF)](https://www.gao.gov/assets/gao-19-197.pdf), as few as 50% of records accurately matched (2014 study), the ECRI DNR case, the FY1999 prohibition on a unique patient identifier, inconsistent formats, the Texas standards and 90% less manual review, referential matching, views on a national identifier
-- [Further Consolidated Appropriations Act, 2026 (H.R. 7148, enrolled)](https://www.govinfo.gov/content/pkg/BILLS-119hr7148enr/html/BILLS-119hr7148enr.htm), division B section 510, the unique health identifier prohibition for fiscal 2026
-- [H.R. 6500: Fiscal 2027 continuing appropriations (enrolled)](https://www.govinfo.gov/content/pkg/BILLS-119hr6500enr/html/BILLS-119hr6500enr.htm), fiscal 2026 Labor-HHS authority and conditions continued through December 11, 2026
+- [Public Law 119-75: Consolidated Appropriations Act, 2026 (H.R. 7148)](https://www.govinfo.gov/content/pkg/PLAW-119publ75/html/PLAW-119publ75.htm), signed February 3, 2026, division B section 510, the unique health identifier prohibition for fiscal 2026
+- [Public Law 119-103: Continuing Appropriations and Extensions Act, 2027 (H.R. 6500)](https://www.govinfo.gov/content/pkg/PLAW-119publ103/html/PLAW-119publ103.htm), signed September 2, 2026, fiscal 2026 Labor-HHS authority and conditions continued through December 11, 2026
+- [CMS-9115-F: Interoperability and Patient Access final rule (85 FR 25510)](https://www.federalregister.gov/documents/2020/05/01/2020-05050/medicare-and-medicaid-programs-patient-protection-and-affordable-care-act-interoperability-and), published May 1, 2020, effective June 30, 2020, the patient matching RFI and its disposition, event notifications 12 months after publication
 - [CMS: New Medicare card (MBI)](https://www.cms.gov/medicare/new-medicare-card), MBI format, excluded letters, random characters, the April 1, 2018 to December 31, 2019 transition
 - [NIST: SP 800-63-4, Digital Identity Guidelines](https://csrc.nist.gov/pubs/sp/800/63/4/final), final July 2025, superseding 800-63-3
 - [NIST: SP 800-63A-4, Identity Proofing and Enrollment](https://pages.nist.gov/800-63-4/sp800-63a.html), IAL1, IAL2 and IAL3, evidence strength

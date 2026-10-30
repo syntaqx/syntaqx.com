@@ -68,7 +68,7 @@ The claim goes out as an X12 837 (professional, institutional or dental), the pa
 
 ### Value-based payment and capitation
 
-Payers increasingly tie payment to cost and quality. Under the Medicare Shared Savings Program, groups of providers form accountable care organizations that stay paid fee for service but share in savings against a benchmark for their assigned Medicare patients; under capitation, a provider group or a dental HMO is paid a fixed amount per member per month whether the member comes in or not, and under Medicare Advantage the government pays a private plan per enrollee, adjusted for risk. For the software the twist is that the claim keeps flowing (it's how the payer learns what happened) while the money depends on attribution lists, quality measures and risk scores computed over a population. [Value-Based Care & Quality](/books/health-tech/value-based-care) covers the programs; the rule for the model is that a claim on a capitated plan is still a claim, priced at zero or a nominal amount, and its codes still matter.
+Payers increasingly tie payment to cost and quality. Under the Medicare Shared Savings Program, groups of providers form accountable care organizations that stay paid fee for service but share in savings against a benchmark for their assigned Medicare patients; under capitation, a provider group or a dental HMO is paid a fixed amount per member per month whether the member comes in or not, and under Medicare Advantage the government pays a private plan per enrollee, adjusted for risk. The scale is large: CMS counts 511 Shared Savings Program ACOs serving 12.6 million people with traditional Medicare in 2026, and KFF counts 35.2 million people, 55% of eligible Medicare beneficiaries, in Medicare Advantage in 2026. For the software the twist is that the claim keeps flowing (it's how the payer learns what happened) while the money depends on attribution lists, quality measures and risk scores computed over a population. [Value-Based Care & Quality](/books/health-tech/value-based-care) covers the programs; the rule for the model is that a claim on a capitated plan is still a claim, priced at zero or a nominal amount, and its codes still matter.
 
 ### Cash pay, memberships and the patient-pay specialties
 
@@ -835,6 +835,8 @@ The mechanics (typed actors, append-only history, tamper evidence) are in [Audit
 - [ADA Health Policy Institute: National dental expenses](https://www.ada.org/resources/research/health-policy-institute/dental-care-market/national-dental-expenses), $189 billion of dental spending in 2024 and its sources
 - [NAPHIA: Industry data](https://naphia.org/industry-data/), 7.6 million insured pets in North America at the end of 2025
 - [CMS: Shared Savings Program, about](https://www.cms.gov/medicare/payment/fee-for-service-providers/shared-savings-program-ssp-acos/about), accountable care organizations in Medicare
+- [CMS: 2026 Medicare ACO initiatives participation highlights](https://www.cms.gov/newsroom/fact-sheets/2026-medicare-accountable-care-organization-initiatives-participation-highlights), 511 Shared Savings Program ACOs serving 12.6 million people in 2026 (February 4, 2026)
+- [KFF: Medicare Advantage enrollment update and key trends](https://www.kff.org/medicare/medicare-advantage-enrollment-update-and-key-trends/), 35.2 million enrollees, 55% of eligible beneficiaries, in 2026
 
 **Rules and standards**
 
