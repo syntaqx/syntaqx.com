@@ -543,7 +543,7 @@ Banking borrows its words from accounting, law and a century of bank operations,
 ## Running the Platform
 
 - **Account position:** the real-time ledger and available balance the posting engine keeps per account, updated in the same transaction as each posting and proved against the lines nightly ([Banking Architecture](/books/banking-and-lending/banking-architecture#balances-derived-then-held)).
-- **Bank service provider notice:** a provider's duty to tell each affected bank customer as soon as possible when an incident disrupts covered services for four hours or more (12 CFR 53.4) ([Security, Resilience & Incident Notice](/books/banking-and-lending/security-and-resilience#the-36-hour-rule)).
+- **Bank service provider notice:** a bank service provider's duty to tell each affected banking organization it serves as soon as possible when an incident disrupts covered services for four hours or more (12 CFR 53.4) ([Security, Resilience & Incident Notice](/books/banking-and-lending/security-and-resilience#the-36-hour-rule)).
 - **BSA ID:** the 14-digit identifier FinCEN's BSA E-Filing System returns for each accepted report, cited by any amendment ([Regulatory Reporting & Data](/books/banking-and-lending/regulatory-reporting#ctr-and-sar-e-filing)).
 - **Business date:** the institution's processing date a posting counts for, which differs from the calendar date after a cutoff or on a holiday ([The Banking & Lending Business](/books/banking-and-lending/banking-business#the-core-data-model)).
 - **Central Data Repository (CDR):** the FFIEC system banks file call reports through, which also publishes them with the UBPR and bulk data ([Regulatory Reporting & Data](/books/banking-and-lending/regulatory-reporting#the-filing-calendar)).
