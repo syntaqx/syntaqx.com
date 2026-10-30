@@ -141,7 +141,7 @@ State banks don't get the National Bank Act's preemption; they get parity on int
 
 ## How to Build It
 
-These are deltas against the core model's `institutions` table (The Banking & Lending Business) and the `institution_events` history in The Banking Landscape. The charter determines the supervisors and the state law that applies, both change over time, and both are data:
+These are deltas against the core model's `institutions` table ([The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model)) and the `institution_events` history in [The Banking Landscape](/books/banking-and-lending/banking-landscape#how-to-build-it). The charter determines the supervisors and the state law that applies, both change over time, and both are data:
 
 ```sql
 ALTER TABLE institutions

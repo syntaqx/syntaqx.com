@@ -1,6 +1,6 @@
 +++
 title = "When Banks Fail"
-description = "SVB, Signature and First Republic; uninsured deposit runs; FDIC resolution, the least-cost test, the systemic risk exception, the special assessment; failure in systems."
+description = "SVB, Signature and First Republic, uninsured runs, FDIC resolution, the least-cost test and its exception, the special assessment, and failure in systems."
 category = "Banking & Lending Industry"
 order = 2407
 part = "The Business"
@@ -119,7 +119,7 @@ On May 1, 2023 the FDIC published three options for deposit insurance reform: li
 
 ## How to Build It
 
-These are deltas against the core model's `institutions`, `accounts`, `account_parties` and `holds` (The Banking & Lending Business), with failures recorded as `institution_events` (The Banking Landscape). The computation of insured amounts per owner and category belongs to Deposit Insurance; this chapter adds what a failure needs on top: the hold, the extract, and, for anyone with money at a bank, the exposure view.
+These are deltas against the core model's `institutions`, `accounts`, `account_parties` and `holds` ([The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model)), with failures recorded as `institution_events` ([The Banking Landscape](/books/banking-and-lending/banking-landscape#how-to-build-it)). The computation of insured amounts per owner and category belongs to Deposit Insurance; this chapter adds what a failure needs on top: the hold, the extract, and, for anyone with money at a bank, the exposure view.
 
 ```sql
 -- A failure-day hold is a hold like any other, with its own reason.

@@ -1,7 +1,7 @@
 +++
 title = "Exams, Ratings & Call Reports"
 nav_title = "Exams & Call Reports"
-description = "How banks are supervised: exam cycles, CAMELS and its 2026 proposal, MRAs, consent orders, confidential supervisory information, call reports, public data and CRA."
+description = "How banks are supervised: exam cycles, CAMELS and its 2026 proposal, MRAs, consent orders, supervisory confidentiality, call reports, public data and CRA."
 category = "Banking & Lending Industry"
 order = 2406
 part = "The Business"
@@ -108,7 +108,7 @@ Every insured bank files a Consolidated Report of Condition and Income (the call
 
 The report is due "no more than 30 calendar days after the report date" (the March 31 report by April 30), 35 days for a bank with more than one foreign office, and "No extensions of time for submitting reports are granted." Holding companies of $3 billion or more file the Federal Reserve's FR Y-9C; credit unions file NCUA's call report through its CUOnline system by April 30, July 30, October 30 and January 30.
 
-A call report is a regulatory view of the GL: a balance sheet (Schedule RC), an income statement (Schedule RI) and dozens of supporting schedules on loans by type, past dues, deposits by type and insured status, securities, capital and off-balance-sheet items, many requiring data the GL doesn't hold (loan purpose, collateral, maturity buckets, insured versus uninsured deposits). That is why the core model's `gl_accounts` carries a `report_line` (The Banking & Lending Business), and why Regulatory Reporting & Data covers the full lineage problem. Its numbers are public within weeks, and every number in the QBP and in [Bank Economics](/books/banking-and-lending/bank-economics) is built from them.
+A call report is a regulatory view of the GL: a balance sheet (Schedule RC), an income statement (Schedule RI) and dozens of supporting schedules on loans by type, past dues, deposits by type and insured status, securities, capital and off-balance-sheet items, many requiring data the GL doesn't hold (loan purpose, collateral, maturity buckets, insured versus uninsured deposits). That is why the core model's `gl_accounts` carries a `report_line` ([The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model)), and why Regulatory Reporting & Data covers the full lineage problem. Its numbers are public within weeks, and every number in the QBP and in [Bank Economics](/books/banking-and-lending/bank-economics) is built from them.
 
 ## Reading the Public Data
 
@@ -124,7 +124,7 @@ Uses a builder actually has:
 - **Partner diligence.** A fintech choosing a sponsor bank, or a bank choosing a correspondent, reads its capital ratios, growth, deposit mix, uninsured share and enforcement history before it signs.
 - **Monitoring.** A program can watch its bank's quarterly capital, liquidity and asset growth, and the enforcement releases, for the early signs of an order or a failure.
 - **Market sizing and benchmarking** across peers by size, charter and region.
-- **Identity.** Mergers, failures and charter changes come with the FDIC certificate and RSSD ID, which is how routing and institution data stay current (The Banking Landscape).
+- **Identity.** Mergers, failures and charter changes come with the FDIC certificate and RSSD ID, which is how routing and institution data stay current ([The Banking Landscape](/books/banking-and-lending/banking-landscape#how-to-build-it)).
 
 ## CRA
 
@@ -141,7 +141,7 @@ The systems side of CRA is data: loans geocoded to census tracts with income lev
 
 ## How to Build It
 
-These are deltas against the core model's `institutions` and `gl_accounts` (The Banking & Lending Business). Supervision produces three kinds of records: confidential ones the bank holds under the agency's rules (examinations, ratings, findings), public ones that can be ingested (orders, call reports), and the bank's own filings:
+These are deltas against the core model's `institutions` and `gl_accounts` ([The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model)). Supervision produces three kinds of records: confidential ones the bank holds under the agency's rules (examinations, ratings, findings), public ones that can be ingested (orders, call reports), and the bank's own filings:
 
 ```sql
 CREATE TABLE examinations (                -- CSI: restricted store, access logged

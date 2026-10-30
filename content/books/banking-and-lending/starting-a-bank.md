@@ -125,7 +125,7 @@ What buying gets and costs:
 
 ## How to Build It
 
-These are deltas against the core model's `institutions` and `programs` (The Banking & Lending Business). A bank in organization and in its first three years runs under conditions that are dated, enforceable and measurable, so they are records with owners, metrics and evidence, not a PDF in a shared drive:
+These are deltas against the core model's `institutions` and `programs` ([The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model)). A bank in organization and in its first three years runs under conditions that are dated, enforceable and measurable, so they are records with owners, metrics and evidence, not a PDF in a shared drive:
 
 ```sql
 CREATE TABLE regulatory_approvals (        -- charter, insurance, holding company, change in control

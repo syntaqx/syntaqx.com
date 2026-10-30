@@ -40,7 +40,7 @@ The Federal Reserve's ranking of domestically chartered commercial banks, as of 
 | 9 | Truist Bank | $548.3 billion |
 | 10 | The Bank of New York Mellon | $425.1 billion |
 
-The four largest hold about 40% of the QBP's industry assets (my arithmetic, across two releases that define their populations slightly differently). For software, size changes almost everything: the largest banks build and run their own systems, regionals buy and customize, and community banks rent a vendor's core in the vendor's data center. Charters & Regulators covers which agency supervises each kind of charter.
+The four largest hold about 40% of the QBP's industry assets (my arithmetic, across two releases that define their populations slightly differently). For software, size changes almost everything: the largest banks build and run their own systems, regionals buy and customize, and community banks rent a vendor's core in the vendor's data center. [Charters & Regulators](/books/banking-and-lending/charters-and-regulators#who-examines-whom) covers which agency supervises each kind of charter.
 
 ## Credit Unions
 
@@ -112,7 +112,7 @@ Dated facts age fast; this is the landscape as of October 2026, from each compan
 
 | Date | Move | Why it matters |
 | --- | --- | --- |
-| March 10, 2023 | Silicon Valley Bank closed; on March 26 First-Citizens Bank & Trust agreed to assume its deposits and loans from the FDIC | Uninsured deposit runs become a design input (When Banks Fail) |
+| March 10, 2023 | Silicon Valley Bank closed; on March 26 First-Citizens Bank & Trust agreed to assume its deposits and loans from the FDIC | Uninsured deposit runs become a design input ([When Banks Fail](/books/banking-and-lending/bank-failures#anatomy-of-a-run)) |
 | March 2025 | Alkami acquires MANTL | Digital banking and account opening consolidate |
 | May 18, 2025 | Capital One completes its acquisition of Discover, adding the Discover, PULSE and Diners Club networks | A bank owns a card network |
 | October 1, 2025 | Rocket completes its acquisition of Mr. Cooper | Origination and servicing combine at scale |
@@ -128,7 +128,7 @@ Dated facts age fast; this is the landscape as of October 2026, from each compan
 
 Failures continue at a small-bank pace: the FDIC's list shows two in 2025 (Pulaski Savings Bank in January, The Santa Anna National Bank in June) and six in 2026 through September, the latest Nano Banc on September 25, 2026, each sold to another bank.
 
-Three patterns run through the list. **Charters are the exit from sponsorship:** Mercury, Revolut, Nubank and Upstart applied for what SoFi bought in 2022, trading a partner's compliance program for their own and Regulation II's exemption for capital requirements (Starting a Bank). **Banks buy fintechs:** Capital One bought a network and a spend platform within a year. **Vendors bundle:** FIS added issuer processing, Alkami added account opening, Rocket added servicing; a buyer of one product increasingly buys a roadmap tied to a larger suite.
+Three patterns run through the list. **Charters are the exit from sponsorship:** Mercury, Revolut, Nubank and Upstart applied for what SoFi bought in 2022, trading a partner's compliance program for their own and Regulation II's exemption for capital requirements ([Starting a Bank](/books/banking-and-lending/starting-a-bank#capital-liquidity-and-the-three-year-plan)). **Banks buy fintechs:** Capital One bought a network and a spend platform within a year. **Vendors bundle:** FIS added issuer processing, Alkami added account opening, Rocket added servicing; a buyer of one product increasingly buys a roadmap tied to a larger suite.
 
 ## Build, Buy or Partner
 
