@@ -39,7 +39,7 @@ The CFPB's study of the system put each nationwide agency at more than 200 milli
 
 Trended data is the history behind the balances: not just "owes $4,000 on a $10,000 limit" but the last 24 months of balances and payments, which separates someone who pays in full each month from someone who carries the same balance. FICO 10T and VantageScore 4.0 both use it; the classic models mostly don't.
 
-**Specialty agencies.** The CFPB's list of consumer reporting companies groups dozens of agencies by what they hold: supplementary credit (Innovis), low-income and subprime lending (DataX, FactorTrust), utilities (NCTUE), check and bank screening (Certegy among them), tenant screening, employment. A subprime lender may pull a specialty file instead of, or beside, a nationwide one. Deposit-account screening at account opening is KYC & Account Opening.
+**Specialty agencies.** The CFPB's list of consumer reporting companies groups dozens of agencies by what they hold: supplementary credit (Innovis), low-income and subprime lending (DataX, FactorTrust), utilities (NCTUE), check and bank screening (Certegy among them), tenant screening, employment. A subprime lender may pull a specialty file instead of, or beside, a nationwide one. Deposit-account screening at account opening is [KYC & Account Opening](/books/banking-and-lending/kyc-and-account-opening#deposit-screening-chexsystems-and-early-warning).
 
 ## Permissible Purpose
 
