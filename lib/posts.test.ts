@@ -93,14 +93,14 @@ describe("markdownToHtml diagrams", () => {
 
   it("turns a GitHub alert blockquote into a titled callout", async () => {
     const html = await markdownToHtml("> [!NOTE] Lucky me\n> Bought in **2014**.");
-    expect(html).toMatch(/^<aside class="callout callout-note"><p class="callout-title"><svg [^>]*class="lucide lucide-info[^"]*"[^>]*>.*<\/svg>Lucky me<\/p>/);
+    expect(html).toMatch(/^<aside class="callout callout-note"><p class="callout-title"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"\/>.*<\/svg>Lucky me<\/p>/);
     expect(html).toContain("<p>Bought in <strong>2014</strong>.</p>");
     expect(html).not.toContain("[!NOTE]");
     expect(html).not.toContain("<blockquote");
   });
 
   it("defaults the callout title to its type and leaves plain quotes alone", async () => {
-    expect(await markdownToHtml("> [!warning]\n> Careful.")).toMatch(/<p class="callout-title"><svg [^>]*lucide-triangle-alert/);
+    expect(await markdownToHtml("> [!warning]\n> Careful.")).toContain('<p class="callout-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.73 18');
     expect(await markdownToHtml("> [!warning]\n> Careful.")).toContain("</svg>Warning</p>");
     expect(await markdownToHtml("> Just a quote.")).toContain("<blockquote>");
   });
