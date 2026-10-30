@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/metadata";
 export const metadata = pageMetadata(
   "/tools",
   "Developer Tools",
-  "Free browser-based developer tools: a JWT debugger, UUID and ULID generator, format converters, JavaScript and Markdown tools. What you paste stays local.",
+  "Free browser-based developer tools: a JWT debugger, UUID and ULID generator, format converters, JavaScript and Markdown tools, and end-to-end encrypted one-time secrets.",
 );
 
 function ToolGrid({ items }: { items: Tool[] }) {
@@ -68,7 +68,9 @@ export default function ToolsPage() {
       >
         <p>
           Small tools I use often enough to keep. They run in your browser,
-          so nothing you paste is sent anywhere.
+          so nothing you paste is sent anywhere. One-time secrets is the
+          exception, by design: it encrypts in your browser and sends only
+          the ciphertext.
         </p>
       </PageHeader>
 

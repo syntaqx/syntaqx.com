@@ -28,6 +28,13 @@ export const tools: Tool[] = [
     tags: ["uuid", "ulid", "identifier"],
   },
   {
+    title: "One-Time Secrets",
+    description:
+      "Share a password or token through a link that works once. Encrypted in your browser; the server only holds ciphertext.",
+    href: "/tools/secrets",
+    tags: ["secrets", "encryption", "sharing"],
+  },
+  {
     title: "JS Beautify / Minify / Obfuscate",
     description:
       "Format, compress, or obfuscate JavaScript and JSON with Prettier, Terser, and javascript-obfuscator.",

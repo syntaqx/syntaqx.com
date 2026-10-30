@@ -38,7 +38,7 @@ registry.registerPath({
   operationId: "createSecret",
   summary: "Create a one-time secret",
   description:
-    "Stores a secret behind a one-time link: the first GET of the link returns it and deletes it, and an unread secret expires after `ttl` seconds. It's stored encrypted under a key derived from the link, so only the link can read it. A demo for https://www.syntaqx.com/posts/github-actions-secret-inputs, with no SLA: don't send production credentials.",
+    "Stores a secret behind a one-time link: the first GET of the link returns it and deletes it, and an unread secret expires after `ttl` seconds. It's stored encrypted under a key derived from the link, so only the link can read it. For end-to-end encryption, encrypt before sending and keep the key out of the request, as https://www.syntaqx.com/tools/secrets does: the API stores whatever string you send. A demo for https://www.syntaqx.com/posts/github-actions-secret-inputs, with no SLA: don't send production credentials.",
   tags: ["Testing"],
   request: {
     body: {
@@ -47,7 +47,7 @@ registry.registerPath({
         "application/json": {
           schema: z
             .object({
-              secret: z.string().min(1).openapi({ description: "Up to 4 KB of UTF-8" }),
+              secret: z.string().min(1).openapi({ description: "Up to 8 KB of UTF-8" }),
               ttl: z
                 .number()
                 .int()
@@ -64,7 +64,7 @@ registry.registerPath({
   responses: {
     201: { description: "Secret stored", content: { "application/json": { schema: CreatedSecret } } },
     400: errorDoc("Malformed JSON"),
-    413: errorDoc("Secret over 4 KB"),
+    413: errorDoc("Secret over 8 KB"),
     422: errorDoc("Missing secret, or ttl out of range"),
     429: errorDoc("Rate limited"),
     503: errorDoc("Secret storage unavailable; nothing was stored"),
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
     return invalidField("secret", "secret must be a non-empty string.");
   }
   if (new TextEncoder().encode(secret).length > MAX_SECRET_BYTES) {
-    return errorResponse(413, "secret must not exceed 4 KB.");
+    return errorResponse(413, "secret must not exceed 8 KB.");
   }
   if (typeof ttl !== "number" || !Number.isInteger(ttl) || ttl < MIN_TTL_SECONDS || ttl > MAX_TTL_SECONDS) {
     return invalidField("ttl", `ttl must be an integer from ${MIN_TTL_SECONDS} to ${MAX_TTL_SECONDS} seconds.`);

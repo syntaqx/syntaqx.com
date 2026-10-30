@@ -372,12 +372,15 @@ function rehypeDiagrams() {
   };
 }
 
+// Lucide's icons (info, lightbulb, message-square-warning, triangle-alert,
+// octagon-alert), as SVG markup: this module also runs where React can't
+// render to a string. Size and stroke come from the `.callout-title svg` styles.
 const CALLOUT_ICONS: Record<string, string> = {
-  note: '<circle cx="8" cy="8" r="6.5"/><path d="M8 7.25v4M8 4.75v.01"/>',
-  tip: '<path d="M5.75 12.5h4.5M6.5 14.75h3M8 1.75a4.5 4.5 0 0 0-2.6 8.17c.4.3.6.7.6 1.2v.38h4v-.38c0-.5.2-.9.6-1.2A4.5 4.5 0 0 0 8 1.75Z"/>',
-  important: '<rect x="1.75" y="1.75" width="12.5" height="10" rx="2"/><path d="M5 11.75v2.5l3-2.5M8 4.5v3.5M8 9.75v.01"/>',
-  warning: '<path d="M8 1.75 1.25 13.5h13.5L8 1.75Z"/><path d="M8 6v3.5M8 11.25v.01"/>',
-  caution: '<path d="M5.25 1.75h5.5l3.5 3.5v5.5l-3.5 3.5h-5.5l-3.5-3.5v-5.5l3.5-3.5Z"/><path d="M8 4.75v4M8 10.75v.01"/>',
+  note: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+  tip: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
+  important: '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 15h.01"/><path d="M12 7v4"/>',
+  warning: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  caution: '<path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/>',
 };
 
 /**
@@ -400,7 +403,7 @@ function rehypeCallouts() {
       lead.value = (lead.value ?? "").slice(match[0].length);
       if (!lead.value) first.children = first.children?.slice(1).filter((c, i) => i || c.tagName !== "br");
       if (!first.children?.some((c) => c.type !== "text" || c.value?.trim())) n.children = n.children?.filter((c) => c !== first);
-      const icon = `<svg viewBox="0 0 16 16" aria-hidden="true">${CALLOUT_ICONS[kind]}</svg>`;
+      const icon = `<svg viewBox="0 0 24 24" aria-hidden="true">${CALLOUT_ICONS[kind]}</svg>`;
       n.tagName = "aside";
       n.properties = { className: ["callout", `callout-${kind}`] };
       n.children = [{ type: "raw", value: `<p class="callout-title">${icon}${title}</p>` }, ...(n.children ?? [])];

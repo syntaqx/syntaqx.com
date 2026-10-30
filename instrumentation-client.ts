@@ -4,7 +4,18 @@
 
 import * as Sentry from "@sentry/nextjs";
 
+// A /tools/secrets link carries its decryption key in the fragment. The page
+// strips it on load, but Sentry reads the URL first, so drop it from
+// anything sent.
+const SECRET_FRAGMENT = /(\/tools\/secrets\/?)#[^"\s\\]*/g;
+function scrub<T>(event: T): T {
+  return JSON.parse(JSON.stringify(event).replace(SECRET_FRAGMENT, "$1"));
+}
+
 Sentry.init({
+  beforeSend: scrub,
+  beforeSendTransaction: scrub,
+  beforeBreadcrumb: scrub,
   dsn: "https://83053c7854f5d2501223a9d596b331ff@o463483.ingest.us.sentry.io/4511368166572032",
 
   // Only run in real production (NODE_ENV is also "production" in preview
