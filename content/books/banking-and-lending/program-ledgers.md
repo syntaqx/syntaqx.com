@@ -122,9 +122,9 @@ One line in the July 2024 report is the most useful sentence in the record for a
 
 ### The end of the case
 
-The trustee asked to dismiss the case in June 2025, with no money to pay creditors and no viable bidder for the assets, and Judge Martin Barash dismissed it on November 12, 2025. Before that, the CFPB sued Synapse in the bankruptcy court on August 21, 2025 (Adv. No. 1:25-ap-01052-MB) on one count: unfair acts or practices, "failing to maintain adequate records of the location of consumers' funds and failing to ensure those records matched the records maintained by the Partner Banks." The stipulated judgment of September 12, 2025 imposed injunctive relief, including a ban on selling customer information, and a $1 civil money penalty, which is what lets the CFPB pay victims from its Civil Penalty Fund. On November 28, 2025 the CFPB allocated $46,248,291 to eligible victims (end users with a positive balance on May 17, 2024); it added nearly $9 million in August 2026, for $55.2 million in all, with Rust Consulting as claims administrator. As of September 2026 no disbursement timeline had been published, and some Yotta customers had sued Evolve in small claims court with mixed results.
+The trustee asked to dismiss the case in June 2025, with no money to pay creditors and no viable bidder for the assets, and Judge Martin Barash dismissed it on November 12, 2025. Before that, the CFPB sued Synapse in the bankruptcy court on August 21, 2025 (Adv. No. 1:25-ap-01052-MB) on one count: unfair acts or practices, "failing to maintain adequate records of the location of consumers' funds and failing to ensure those records matched the records maintained by the Partner Banks." The stipulated judgment of September 12, 2025 imposed injunctive relief, including a ban on selling customer information, and a $1 civil money penalty, which is what lets the CFPB pay victims from its Civil Penalty Fund. The CFPB's Civil Penalty Fund page lists two allocations to eligible victims (end users with a positive balance on May 17, 2024): $46,248,291 on November 28, 2025 and $8,965,767 on May 29, 2026, $55.2 million in all, with Rust Consulting reported as claims administrator. As of October 2026 the CFPB's list of payments to harmed consumers didn't include the case, so no distribution had been reported, and some Yotta customers had sued Evolve in small claims court with mixed results.
 
-<!-- source-gap: synapse-cpf-disbursement | status | whether the CFPB has opened claims or paid Synapse victims from the Civil Penalty Fund | closes with: the CFPB's Synapse enforcement page or a CFPB release announcing claims or payments | checked: 2026-10-29 -->
+<!-- source-gap: synapse-cpf-disbursement | status | whether the CFPB has opened claims or paid Synapse victims from the Civil Penalty Fund (allocations confirmed; no distribution listed) | closes with: the case appearing on the CFPB's payments-by-case page, or a CFPB release announcing payments | checked: 2026-10-30 -->
 
 ### What the records couldn't say
 
@@ -150,9 +150,9 @@ For accounts in scope, a bank would:
 - **Maintain internal controls and written policies,** including over third-party arrangements, and test them at least every 12 months, with independent validation of third-party records.
 - **Certify and report annually:** the chief executive officer, chief operating officer or highest-ranking official certifies compliance "within 1 year of the effective date of this part and annually thereafter", with a report on the accounts, balances, beneficial owner counts, test results and third-party validations.
 
-The FDIC estimated that 600 to 1,100 insured institutions would be directly affected, at about 2,200 hours to set up and 1,100 hours a year to maintain, roughly $220,000 for a small bank in the first year and $110,000 a year after at its assumed $100 an hour.
+The FDIC estimated that 600 to 1,100 insured institutions would be directly affected, at about 2,200 hours per institution to set up and 1,100 hours a year to maintain, on average: roughly $220,000 in the first year and $110,000 a year after at its assumed $100 an hour, with smaller banks bearing more relative to their assets.
 
-As of October 29, 2026 the proposal is neither final nor withdrawn: the Federal Register shows it and the extension of its comment period to January 16, 2025, and it wasn't among the four proposals the FDIC withdrew on March 3, 2025 ([Pass-Through Coverage](/books/banking-and-lending/deposit-insurance#pass-through-coverage) tracks the status). My advice is the same from either side of the arrangement: build to it now. The file it describes is the one an insurance determination, a program exit and a regulator's sample all need, and a sponsor bank that asks for it daily is asking for what Synapse's banks didn't have.
+As of October 30, 2026 the proposal is neither final nor withdrawn: the Federal Register shows it and the extension of its comment period to January 16, 2025, no later FDIC document on it, and it wasn't among the four proposals the FDIC withdrew on March 3, 2025 ([Pass-Through Coverage](/books/banking-and-lending/deposit-insurance#pass-through-coverage) tracks the status). My advice is the same from either side of the arrangement: build to it now. The file it describes is the one an insurance determination, a program exit and a regulator's sample all need, and a sponsor bank that asks for it daily is asking for what Synapse's banks didn't have.
 
 ## How to Build It
 
@@ -287,6 +287,8 @@ How it runs:
 **Regulators and guidance**
 
 - [CFPB: Synapse Financial Technologies, Inc. enforcement action](https://www.consumerfinance.gov/enforcement/actions/synapse-financial-technologies-inc/), the allegation, the September 12, 2025 stipulated judgment and the $1 penalty
+- [CFPB: Civil Penalty Fund](https://www.consumerfinance.gov/enforcement/payments-harmed-consumers/civil-penalty-fund/), the Synapse allocations of November 28, 2025 and May 29, 2026
+- [CFPB: Payments to harmed consumers by case](https://www.consumerfinance.gov/enforcement/payments-harmed-consumers/payments-by-case/), checked October 30, 2026: Synapse not listed
 - [California DFPI: Notice to California Yotta customers (May 2026)](https://dfpi.ca.gov/wp-content/uploads/2026/05/Notice-to-California-Yotta-Technologies-Inc.-Customers.pdf), the November 28, 2025 allocation of $46,248,291 and the May 17, 2024 eligibility date
 - [FDIC: Board withdraws four outstanding proposed rules (March 3, 2025)](https://fdic.gov/news/press-releases/2025/fdic-board-directors-withdraws-four-outstanding-proposed-rules), the custodial proposal not among them
 
@@ -299,4 +301,4 @@ How it runs:
 **In practice**
 
 - [Banking Dive: Synapse bankruptcy case tossed (November 14, 2025)](https://www.bankingdive.com/news/synapse-bankruptcy-case-tossed/805575/), the dismissal, the trustee's June 2025 request and the reasons
-- [Banking Dive: Synapse customers in small claims court (September 17, 2026)](https://www.bankingdive.com/news/synapse-small-claims-court-evolve-yotta-cfpb-customer-reimbursement/830655/), the $55.2 million total, Rust Consulting and the suits against Evolve
+- [Banking Dive: Synapse customers in small claims court (September 17, 2026)](https://www.bankingdive.com/news/synapse-small-claims-court-evolve-yotta-cfpb-customer-reimbursement/830655/), Rust Consulting and the suits against Evolve

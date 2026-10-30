@@ -44,7 +44,7 @@ Most large banks publish their deadlines only in client documentation, so a syst
 
 ### Who Bears the Loss
 
-Without positive pay, a forged or altered check is allocated by the UCC's negligence rules: a customer whose failure to exercise ordinary care "substantially contributes" to an alteration or forgery is precluded from asserting it against a bank that paid in good faith, with the loss split by comparative fault (UCC 3-406), and a customer must examine its statements "with reasonable promptness" and is barred after a year (UCC 4-406). The account agreement can then reset those standards, since the parties "may determine by agreement the standards by which the bank's responsibility is to be measured" though not disclaim the bank's good faith (UCC 4-103). Banks use that room: Bank of America's terms say a client that continues without positive pay "has elected not to use the Positive Pay services offered by the Bank and will bear any resulting fraud losses that would have otherwise been prevented by proper use of available Positive Pay Services", and a 2013 Wells Fargo commercial agreement filed with the SEC says a company declining a fraud prevention service "will be treated as having assumed the risk of any loss that could have been prevented". The offer, the refusal and every exception decision are therefore evidence, kept like any other.
+Without positive pay, a forged or altered check is allocated by the UCC's negligence rules: a customer whose failure to exercise ordinary care "substantially contributes" to an alteration or forgery is precluded from asserting it against a bank that paid in good faith, with the loss split by comparative fault (UCC 3-406), and a customer must examine its statements "with reasonable promptness" and is barred after a year (UCC 4-406). The account agreement can then reset those standards, since the parties "may determine by agreement the standards by which the bank's responsibility is to be measured" though not disclaim the bank's good faith (UCC 4-103). Banks use that room: Bank of America's terms say a client that continues without positive pay "has elected not to use the Positive Pay services offered by the Bank and will bear any resulting fraud losses that would have otherwise been prevented by proper use of available Positive Pay Services", and a 2013 Wells Fargo commercial agreement filed with the SEC says a company declining a fraud prevention service "will be treated as having assumed the risk of any loss that could have been prevented". Courts enforce such terms. In *Cincinnati Insurance Co. v. Wachovia Bank* (D. Minn. No. 08-CV-2734, July 14, 2010), thieves washed a $153,856.46 check and rewrote the payee; the customer had declined the bank's Positive Pay after three earlier frauds, and the court held that under the deposit agreement the customer bore the loss, granting the bank summary judgment, because Positive Pay "would have prevented the loss" and UCC 4-103 lets the parties vary the default rule. The offer, the refusal and every exception decision are therefore evidence, kept like any other.
 
 ## Receivables: Lockbox
 
@@ -146,7 +146,7 @@ What a builder needs to know:
 
 ## Cash Positioning, Forecasting and FX
 
-A mid-market treasurer's day starts with the **cash position**: every account at every bank, opening available balance from the prior-day reports, plus what intraday reports and known flows say will land or leave before each bank's cutoffs, by entity and currency. Treasury management systems sell exactly that. Trovata describes "cash reporting and positioning across banks and entities", with bank data collected as "ISO20022, CAMT53, MT940, BAI2", through SWIFT, legacy sFTP and direct bank APIs; Ripple Treasury (powered by GTreasury) claims "300+ pre-built bank connectors" and visibility "always current, not at yesterday's close"; Nomentia advertises bank connectivity through Swift Business Connect.
+A mid-market treasurer's day starts with the **cash position**: every account at every bank, opening available balance from the prior-day reports, plus what intraday reports and known flows say will land or leave before each bank's cutoffs, by entity and currency. Treasury management systems sell exactly that. Trovata describes "cash reporting and positioning across banks and entities", with bank data collected as "ISO20022, CAMT53, MT940, BAI2", through SWIFT, legacy sFTP and direct bank APIs; Ripple Treasury (powered by GTreasury) claims "300+ pre-built bank connectors" and visibility "always current, not at yesterday's close"; Kyriba sells "real-time cash & treasury management" with "bank, ERP & API connectivity"; Nomentia advertises bank connectivity through Swift Business Connect.
 
 **Forecasting** extends the position forward: short- and long-term forecasts "built from historical data, ERP inputs, and projected activity" (Trovata), receipts from open receivables, disbursements from open payables and payroll calendars, and scenarios that "test the impact of timing shifts, rate changes, funding strategies" (Trovata again). The engineering is unglamorous: forecasts are versioned snapshots, each actual is compared with what each prior forecast said, and accuracy by category and horizon is the metric that tells a treasurer which inputs to trust.
 
@@ -311,6 +311,10 @@ Treasury management records are read by the bank's operational risk and audit fu
 - [UCC 4-406: Customer's duty to discover and report](https://www.law.cornell.edu/ucc/4/4-406), reasonable promptness, comparative allocation and the one-year bar
 - [UCC 4-103: Variation by agreement](https://www.law.cornell.edu/ucc/4/4-103), agreements setting the standards for the bank's responsibility, without disclaiming good faith
 
+**Courts**
+
+- [Cincinnati Insurance Co. v. Wachovia Bank, N.A., No. 08-CV-2734 (D. Minn. July 14, 2010)](https://www.govinfo.gov/content/pkg/USCOURTS-mnd-0_08-cv-02734/pdf/USCOURTS-mnd-0_08-cv-02734-0.pdf), the declined Positive Pay, the washed check and the loss left with the customer under the deposit agreement
+
 **Regulators and guidance**
 
 - [FinCEN: Alert on Nationwide Surge in Mail Theft-Related Check Fraud (FIN-2023-Alert003, February 27, 2023)](https://www.fincen.gov/sites/default/files/shared/FinCEN%20Alert%20Mail%20Theft-Related%20Check%20Fraud%20FINAL%20508.pdf), check fraud SARs in 2021 and 2022 and why business checks are targeted
@@ -341,6 +345,7 @@ Treasury management records are read by the bank's operational risk and audit fu
 - [Trovata: Multibank connector](https://trovata.io/multibank-connector), BAI2, MT940 and camt.053 collection, SWIFT, sFTP and bank APIs
 - [Trovata](https://trovata.io/) and [Trovata: Cash forecasting](https://trovata.io/cash-forecasting), cash positioning across banks and entities and forecasting from history, ERP inputs and scenarios
 - [Ripple Treasury, powered by GTreasury](https://treasury.ripple.com/), bank connectors, current visibility, forecasting and FX and interest rate hedging
+- [Kyriba: Cash management](https://www.kyriba.com/solutions/cash-management/), real-time cash and treasury management and bank, ERP and API connectivity
 - [Nomentia](https://www.nomentia.com/), bank connectivity and Swift Business Connect
 
 **In practice**

@@ -101,7 +101,7 @@ A worked example of my own: a program originates $100 million of credit card bal
 
 ## Moving Between Sponsor Banks
 
-Programs move: to diversify, after a bank's consent order restricts growth, when a bank exits the business, or to a charter of their own. Dave is mid-move as of October 2026: onboarding at Coastal Community Bank began in the second quarter of 2025, all new members were opening there by the fourth quarter, and Dave expects existing members' transition to be "substantially finalized by the end of 2026", while its Evolve agreement renews annually. Mercury, conditionally approved for a national charter in April 2026, still runs on Choice Financial Group, Column and, for cards, Patriot Bank.
+Programs move: to diversify, after a bank's consent order restricts growth, when a bank exits the business, or to a charter of their own. Dave is mid-move as of October 2026: onboarding at Coastal Community Bank began in the second quarter of 2025, all new members were opening there by the fourth quarter, and Dave expects existing members' transition to be "substantially finalized by the end of 2026", while its Evolve agreement renews annually. Mercury, granted preliminary conditional approval for a national bank on April 24, 2026, still runs on Choice Financial Group, Column and, for cards, Patriot Bank.
 
 A move is a conversion across institutions ([Core Modernization & Conversions](/books/banking-and-lending/core-modernization#conversion-weekends) covers the discipline), with four things that make it harder than a core change:
 
@@ -242,7 +242,12 @@ Design notes:
 - [Synctera: Funds flow](https://docs.synctera.com/docs/funds-flow), the FBO, settlement, reserve, operating and adjustment accounts on the bank's core
 - [Synctera: Reconciliation for banks](https://docs.synctera.com/docs/reconciliation-banks), the daily files, the interchange flow and the revenue share
 - [Unit: Accounts overview](https://unit.co/docs/api/accounts/overview/), deposit, wallet (FBO) and credit accounts, append-only balances and hard and soft limits
+- [Mercury: Pricing](https://mercury.com/pricing), Choice Financial Group and Column N.A. as its banks
+
+**Charter decisions**
+
+- [OCC: Corporate Decision #1372, Mercury Bank, N.A. (April 24, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1372.pdf), preliminary conditional approval and the FDIC and Federal Reserve applications still pending
 
 **In practice**
 
-- [Payments Dive: Mercury nabs conditional OCC charter (April 29, 2026)](https://www.paymentsdive.com/news/mercury-fintech-nabs-conditional-occ-charter/818722/), the approvals still needed and its partner banks
+- [Payments Dive: Mercury nabs conditional OCC charter (April 29, 2026)](https://www.paymentsdive.com/news/mercury-fintech-nabs-conditional-occ-charter/818722/), Patriot Bank as its card issuer

@@ -24,7 +24,7 @@ What the companies disclose about their structure and money, as of October 2026:
 | **MoneyLion** (Gen Digital) | Program manager | Pathward, N.A. | Instacash Turbo fees and optional tips, paid memberships |
 | **SoFi** | National bank (SoFi Bank, N.A., since 2022) | Its own | Lending, deposits' net interest income, Galileo and Technisys platform |
 | **Varo** | National bank (2020) | Its own | Not broken out here; a $20.8 million loss in the fourth quarter of 2025 |
-| **Revolut US** | Conditional OCC approval for a national bank, September 2026 | Not yet its own; Fed and FDIC approvals pending | Not in a US filing |
+| **Revolut US** | Preliminary conditional OCC approval for a national bank, September 2, 2026 | Not yet its own; final OCC approval, FDIC insurance and Federal Reserve stock still to come | Not in a US filing |
 | **Monzo** (UK) | Licensed UK bank | Its own | £1.2bn of revenue on £16.6bn of deposits |
 | **Starling** (UK) | Licensed UK bank | Its own | Not covered here; fined by the FCA in 2024 ([The UK Contrast](#the-uk-contrast)) |
 
@@ -44,7 +44,7 @@ The second line is short-term liquidity, sold in forms that are carefully not ca
 
 - **Fee-free overdraft within a limit.** Chime's SpotMe "allows eligible members to overdraft fee-free within their available limit"; Chime bears the loss risk on it. How it differs from bank overdraft, and the eligibility models behind it, are in [Overdraft, NSF & Fees](/books/banking-and-lending/overdraft-and-fees#how-the-platforms-do-it).
 - **Advances priced as a percentage.** Dave's ExtraCash provides "up to $500 of credit in the form of a discretionary overdraft", and since February 2025 carries "a mandatory 5% overdraft service fee, including a $5 minimum" in place of its previous optional fee model. Dave's operating revenue went from $259.1 million in 2023 to $347.1 million in 2024 and $554.2 million in 2025.
-- **Earned wage access.** Chime's MyPay lets members draw "a portion of their earned pay on demand before payday", free within 24 hours or instantly for a fee; it added $212.5 million to Chime's 2025 platform-related revenue, which grew to $686.2 million. MoneyLion's Instacash advertises up to $500 (up to $1,000 with qualifying activity), with optional tips and a Turbo fee of 7.5% capped at $14.99 to its own account or 9% to an external one. Whether such products are credit is the subject of [Earned Wage Access and the Credit Question](#earned-wage-access-and-the-credit-question).
+- **Earned wage access.** Chime's MyPay lets members draw "a portion of their earned pay on demand before payday", free within 24 hours or instantly for a fee; its full launch in July 2024 drove a $212.5 million increase in Chime's platform-related revenue, which reached $686.2 million in 2025. MoneyLion's Instacash advertises up to $500 (up to $1,000 with qualifying activity), with optional tips and a Turbo fee of 7.5% capped at $14.99 to its own account or 9% to an external one. Whether such products are credit is the subject of [Earned Wage Access and the Credit Question](#earned-wage-access-and-the-credit-question).
 - **Instant transfer fees.** Moving money out of the app now rather than by ACH is a fee: Chime's outbound instant transfers, launched in the first quarter of 2025, brought in $38.0 million that year.
 
 In each case the program manager, not the bank, usually carries the loss. Chime's 10-K says it "bears certain risk of loss from the liquidity products offered through our platform" and is liable to its partner banks for member defaults, which is the credit enhancement structure [Banking as a Service](/books/banking-and-lending/banking-as-a-service#reserves-and-credit-enhancement) describes from the bank's side.
@@ -101,7 +101,7 @@ The two models put the same records in different hands:
 
 Either way the conduct rules reach the brand. The CFPB's January 16, 2025 order against Block required up to $120 million of redress and a $55 million penalty because Cash App didn't fully investigate unauthorized-transaction disputes under the Electronic Fund Transfer Act and told users to ask their banks instead ([Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes) is the workflow that should have run); its May 7, 2024 order against Chime ($3.25 million penalty, at least $1.3 million redress) was over refunds of closed accounts' balances that often took more than 14 days and in thousands of cases more than 90. A program manager is a "covered person" to the CFPB in its own right, and its customer agreement doesn't move its Reg E obligations to the bank.
 
-The 2025 and 2026 charter wave (Nubank, Mercury, Upstart and others conditionally approved by the OCC; Revolut in September 2026 with at least $95 million of capital and a 10% leverage ratio for three years) is in [Fintechs That Chartered](/books/banking-and-lending/starting-a-bank#fintechs-that-chartered). The engineering consequence of moving is the same as moving between sponsor banks, with a new institution at the end: [Moving Between Sponsor Banks](/books/banking-and-lending/banking-as-a-service#moving-between-sponsor-banks).
+The 2025 and 2026 charter wave (Nubank, Mercury, Upstart and others conditionally approved by the OCC; Revolut on September 2, 2026 with at least $95 million of initial capital and a 10% Tier 1 leverage ratio for its first three years) is in [Fintechs That Chartered](/books/banking-and-lending/starting-a-bank#fintechs-that-chartered). The engineering consequence of moving is the same as moving between sponsor banks, with a new institution at the end: [Moving Between Sponsor Banks](/books/banking-and-lending/banking-as-a-service#moving-between-sponsor-banks).
 
 ## The UK Contrast
 
@@ -213,6 +213,10 @@ Design notes:
 - [Consumer Finance Monitor: Eighth Circuit invalidates the 21-cent cap (October 28, 2026)](https://www.consumerfinancemonitor.com/2026/10/28/eighth-circuit-invalidates-federal-reserves-21-cent-debit-card-interchange-fee-cap-holding-that-the-durbin-amendment-requires-a-transaction-specific-cost-analysis/), the October 26 affirmance, the remand, the mandate, and Linney's Pizza's argument in the Sixth Circuit
 - [Orrick InfoBytes: Sixth Circuit to receive Regulation II case (November 14, 2025)](https://infobytes.orrick.com/2025-11-14/sixth-circuit-to-receive-regulation-ii-interchange-fee-case-after-plaintiffs-appeal/), the E.D. Kentucky judgment upholding Regulation II and the appeal
 
+**Charter decisions**
+
+- [OCC: Corporate Decision #1390, Revolut Bank US, N.A. (September 2, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1390.pdf), preliminary conditional approval, $95 million of capital, the 10% leverage ratio and the FDIC and Federal Reserve steps
+
 **Company pages**
 
 - [Cash App: Card agreement](https://cash.app/legal/us/en-us/card-agreement), Sutton Bank as issuer
@@ -222,5 +226,4 @@ Design notes:
 
 **In practice**
 
-- [Banking Dive: Revolut nabs conditional OCC charter (September 4, 2026)](https://www.bankingdive.com/news/revolut-nabs-conditional-occ-charter/829703/), the conditions and the approvals still needed
 - [American Banker: Varo's funding round and fourth-quarter call report](https://www.americanbanker.com/news/varo-funding-round-2025q4-call-report?position=2), the quarterly loss, deposits and new capital
