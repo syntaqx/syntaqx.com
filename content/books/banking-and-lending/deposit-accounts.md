@@ -122,7 +122,7 @@ The account's title decides who can withdraw, who inherits, and how much is insu
 | **Custodial (UTMA/UGMA)** | Custodian, minor as owner | The custodian acts; the money belongs to the minor |
 | **Estate** | Executor or administrator | Opened after a death to collect and pay out |
 | **Retirement (IRA)** | Owner, custodian (often the bank), beneficiaries | Tax reporting and distribution rules on top of the deposit |
-| **Business** | The entity, its signers, its beneficial owners | Opened with the KYB in KYC & Account Opening; sole proprietorships are the owner's own accounts for insurance |
+| **Business** | The entity, its signers, its beneficial owners | Opened with the KYB in [KYC & Account Opening](/books/banking-and-lending/kyc-and-account-opening#kyb-business-accounts); sole proprietorships are the owner's own accounts for insurance |
 | **Fiduciary, custodial pooled (FBO)** | An agent or custodian for many owners | Pass-through insurance only if the records support it ([Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance)) |
 
 The core data model stores this as two things: an `ownership_category` on the account, which is the insurance category, and the parties with their roles in `account_parties`. They must agree, and [Deposit Insurance](/books/banking-and-lending/deposit-insurance#the-ownership-categories) explains why the category has to come from the parties and the title, not from a dropdown.
