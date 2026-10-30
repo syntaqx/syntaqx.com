@@ -16,13 +16,13 @@ Migrations happen for four reasons, and each has its own forcing function: a ven
 
 | Path | What the vendors provide, as of October 2026 | What doesn't move |
 | --- | --- | --- |
-| **Slack export** | Free and Pro: public channel messages and file links in JSON (Free: file links only from the last 90 days); Business+: Owners can apply for a self-serve tool covering private channels and DMs, with scheduled weekly or monthly exports; Enterprise: custom exports by conversation type, member or workspace in JSON or TXT, through Support | Private conversations without an approved application; files themselves (links require an API token to fetch) |
-| **Slack to Teams** (Microsoft's guidance) | Map workspaces to teams (one team for workspaces under 200 channels, the per-team limit); copy files into channel document libraries; import history with the Graph migration API | DMs into Teams per the guidance page; apps and workflows (rebuilt as Teams apps or connectors) |
+| **Slack export** | Free and Pro: public channel messages and file links in JSON (Free: file links only from the last 90 days); Business+: Owners can apply for a self-serve tool covering private channels and DMs, with scheduled weekly or monthly exports; Enterprise: Org Owners request self-serve tools from Support for custom exports by conversation type, member or workspace in JSON or TXT | Private conversations without an approved application; files themselves (links require an API token to fetch) |
+| **Slack to Teams** (Microsoft's guidance) | Map workspaces to teams (one team for workspaces under 200 channels, the per-team limit); copy files into channel document libraries; channel history through GitHub or partner tools, or the Graph import API below | DMs, which the admin guide (written in 2019) says Teams can't import, although the newer import API accepts 1:1 and group chats; apps and workflows (rebuilt as Teams apps or connectors) |
 | **Teams import API** | `startMigration`, message import with original `createdDateTime` and author, `completeMigration`, on existing channels and chats including 1:1 and group chats; up to 250 reactions, replies, mentions, inline images; five requests per second per channel | Videos, cross-posts between channels, federated content; corrections require deleting and re-migrating |
-| **Confluence to Notion** | Zip importer up to 5 GB (15 GB on request); API importer for whole workspaces up to 30 GB, preserving comments and mapping users; imports around 50,000 pages or 30 GB may fail | Permissions (imported pages are private to the importer); most macros flattened to text, images or links |
-| **Jira to Linear** | One-time import of history, separate from Jira Sync, which keeps new and updated issues flowing both ways and maps epics to projects | Import filters don't carry over to sync |
+| **Confluence to Notion** | Zip importer up to 5 GB (15 GB on request) for part of a workspace; API importer for whole workspaces up to 30 GB, preserving comments and mapping users; up to 50,000 pages per import, larger imports may fail, over 100 GB through the account manager | Permissions (imported pages are private to the importer); most macros flattened to text, images or links |
+| **Jira to Linear** | One-time import of history, separate from Jira Sync, which runs one-way or two-way per space-to-team mapping, with updates flowing both ways and epics syncing as projects | Import filters don't carry over to sync |
 | **Exchange tenant to tenant** | Cross-tenant mailbox migration through Exchange Online PowerShell and MRS, with an organization relationship between tenants; a one-time per-user Cross Tenant User Data Migration license that also covers OneDrive | Migrations without the license fail; Microsoft "doesn't offer exceptions" |
-| **Atlassian Server and Data Center to Cloud** | Atlassian Migration Program, migration trials for the length of the Data Center subscription, step-up credits for unused maintenance, dual licensing for larger customers | Read-only instances after Data Center end of life |
+| **Atlassian Server and Data Center to Cloud** | Atlassian Migration Program, migration trials for the length of the Data Center subscription, step-up credits for unused maintenance, dual licensing for larger customers | Read-only instances after Data Center end of life; Bitbucket and Bamboo Data Center are excluded and move to a Bitbucket Hybrid License |
 
 The patterns:
 
@@ -37,12 +37,12 @@ Atlassian's move off self-managed software is the largest planned migration in w
 
 - **February 2, 2021:** Server app sales ended.
 - **February 15, 2024:** end of support for Server products, including Jira, Confluence, Bitbucket, Crowd and Bamboo: "Support and bug fixes are no longer available."
-- **March 30, 2026:** Data Center end of sale for new customers.
+- **March 30, 2026:** Data Center end of sale for new customers, and the start of the support wind-down.
 - **March 30, 2028:** end of new Data Center subscriptions, expansions and Marketplace app sales for existing customers.
-- **March 28, 2029:** end of life for Jira Software, Jira Service Management, Confluence and Crowd Data Center, Data Center mobile apps, and Atlassian and Marketplace apps for them. Bitbucket, Bamboo and Jira Align Data Center are excluded. At end of life the instance becomes read-only: data stays accessible, but nothing new can be added, support and updates end, and Atlassian advises against running it connected to the internet.
+- **March 28, 2029:** end of life for Jira Software, Jira Service Management, Confluence and Crowd Data Center, Data Center mobile apps, and Atlassian and Marketplace apps for them. Bitbucket and Bamboo Data Center are excluded (they move to a Bitbucket Hybrid License), as is Jira Align Data Center. Renewals past the date are prorated to it. At end of life the instance becomes read-only: data stays accessible, but nothing new can be added, support and updates end, and Atlassian advises against running it connected to the internet.
 - **May 15, 2028:** end of support for Fisheye and Crucible.
 
-The offers attached to the deadline show what a vendor-driven migration needs: assessment and planning help (the Atlassian Migration Program), cloud trials that last the whole remaining Data Center term instead of seven days, step-up credits that offset paying twice by crediting unused maintenance, dual licensing for larger customers during the move, a first-year Cloud Enterprise discount for purchases by June 2027, and specialized partners for complex cases.
+The offers attached to the deadline show what a vendor-driven migration needs: assessment and planning help (the Atlassian Migration Program), cloud trials that last the whole remaining Data Center term instead of seven days, step-up credits that offset paying twice by crediting unused maintenance, dual licensing for larger customers during the move, a first-year Cloud Enterprise discount of 10 to 20 percent for purchases by June 2027, and specialized partners for complex cases.
 
 For an enterprise customer, the hard parts of a self-managed-to-cloud move are rarely the core data. They are apps (each Marketplace app has its own cloud equivalent, or none), customizations (scripted fields, custom workflows, direct database integrations), identity (local directories to the cloud organization and SSO), and compliance (residency, keys and audit, which the self-managed instance handled on the customer's own terms). The lifecycle of a shutdown is in [The Lifecycle of a Sunset](/books/hosting-and-cloud/migrations-and-end-of-life#the-lifecycle-of-a-sunset).
 
@@ -60,7 +60,7 @@ A switch between vendors runs through the customer's admin, with both vendors as
 
 The source vendor holds two levers that make this easier or harder: the completeness of the export (private conversations, files, edit history, permissions) and the rate at which its API allows a full-tenant export. A vendor that wants to be trusted as a destination must be a good source as well; the EU now requires it.
 
-There is also a vendor-to-vendor version: a product that exits a market by agreement with a competitor sends its customers to the competitor, as Atlassian's HipChat and Stride did to Slack in 2018. I couldn't open Atlassian's announcement of that deal at its original address, so this chapter states the deal without its dates and terms, and the timeline in [The Collaboration Landscape](/books/workplace-and-collaboration/workplace-landscape#a-dated-timeline) leaves it out for the same reason. <!-- source-gap: hipchat-stride-slack-2018 | missing | Atlassian sold HipChat and Stride IP to Slack and ended both products, with migration to Slack | closes with: Atlassian's 2018 announcement or a filing describing the deal | checked: 2026-10-29 -->
+There is also a vendor-to-vendor version: a product that exits a market by agreement with a competitor sends its customers to the competitor. Atlassian announced on July 26, 2018 that it would no longer offer its own real-time communications products: Slack acquired the IP for Stride and HipChat Cloud, Atlassian made an equity investment in Slack and discontinued Stride, HipChat Cloud, HipChat Server and HipChat Data Center, and the two companies committed to a migration path to Slack for customers of all four. For the customer's admin, a deal like this turns a planned switch into a forced one with someone else's timetable, which is the same position as a product end of life.
 
 ## Tenant to Tenant: Mergers and Divestitures
 
@@ -83,9 +83,9 @@ Regulation (EU) 2023/2854, the Data Act, is "applicable from 12 September 2025,"
 - **For PaaS and SaaS:** make open interfaces available and, at a minimum, export data in a "commonly used and machine-readable format."
 - **For IaaS:** take measures toward "functional equivalence," materially comparable outcomes for shared features after switching.
 - **For all providers:** remove obstacles that prevent customers from switching or using several services in parallel, and meet minimum contractual transparency requirements.
-- **Charges:** providers may charge for switching and data egress during a transitional period from January 11, 2024 to January 12, 2027; from January 12, 2027, switching charges, including egress charges, are removed entirely.
+- **Charges:** providers may impose reduced switching charges, including egress, capped at their costs, from January 11, 2024 to January 12, 2027 (Article 29); from January 12, 2027, switching charges, including egress charges, are removed entirely.
 
-The contract clocks (maximum notice, the transitional period to complete the switch, and the minimum period for data retrieval after termination) are set in Article 25 and summarized in [The EU Data Act](/books/hosting-and-cloud/egress-and-switching#the-eu-data-act), with the cost-based charges of Article 29 and the exemptions of Article 31.
+The contract clocks are set in Article 25: a maximum notice period to start the switch of two months; a maximum transitional period of 30 calendar days after the notice, during which the contract and service continue; an alternative period of up to seven months where 30 days is technically unfeasible, which the provider must notify and justify within 14 working days of the request; a customer right to extend the transitional period once; and a data retrieval period of at least 30 calendar days after the transitional period ends. [The EU Data Act](/books/hosting-and-cloud/egress-and-switching#the-eu-data-act) covers the cost-based charges of Article 29 and the exemptions of Article 31 from the infrastructure side.
 
 For a collaboration vendor selling in the EU, the practical consequences:
 
@@ -246,15 +246,17 @@ Notes on the sketch:
 **Vendor documentation**
 
 - [Atlassian: Server end of support](https://www.atlassian.com/licensing/server-end-of-support), Server app sales end February 2, 2021, end of support February 15, 2024, Fisheye and Crucible May 15, 2028
-- [Atlassian: Data Center end of life](https://www.atlassian.com/licensing/data-center-end-of-life), end of sale for new and existing customers, end of life March 28, 2029, affected and excluded products, read-only state and migration offers
+- [Atlassian: Data Center end of life](https://www.atlassian.com/licensing/data-center-end-of-life), end of sale for new and existing customers, the support wind-down, end of life March 28, 2029, prorated renewals, affected and excluded products, the Bitbucket Hybrid License, read-only state and migration offers including the 10 to 20 percent discount
+- [Atlassian Blog: Announcing our new partnership with Slack (July 26, 2018), Wayback Machine snapshot](https://web.archive.org/web/20180802073414/https://www.atlassian.com/blog/announcements/new-atlassian-slack-partnership), the Stride and HipChat Cloud IP sale, the equity investment, the four discontinued products and the migration path
 - [Slack Help Center: Export your workspace data](https://slack.com/help/articles/201658943-Export-your-workspace-data), export scope by plan, approvals, scheduled exports, the 90-day file link limit on Free, who can export
 - [Microsoft Learn: Migrate from Slack to Microsoft Teams](https://learn.microsoft.com/en-us/microsoftteams/migrate-slack-to-teams), assessment, identity mapping script, workspace-to-team mappings, the 200-channel limit, DMs, apps and cutover advice
 - [Microsoft Learn: Import third-party platform messages to Teams using Microsoft Graph](https://learn.microsoft.com/en-us/microsoftteams/platform/graph-api/import-messages/import-external-messages-to-teams), migration mode, content in and out of scope, timestamps, completion and the five-per-second throttle
-- [Microsoft Learn: Cross-tenant mailbox migration](https://learn.microsoft.com/en-us/microsoft-365/enterprise/cross-tenant-mailbox-migration), merger and divestiture use, organization relationships, target preparation and the per-user license
-- [Notion Help Center: Import from Confluence](https://www.notion.com/help/import-from-confluence), zip and API importers, size limits, what transfers and that permissions don't
-- [Linear Docs: Jira](https://linear.app/docs/jira), one-time import versus ongoing Jira Sync
+- [Microsoft Learn: Cross-tenant mailbox migration](https://learn.microsoft.com/en-us/microsoft-365/migration/cross-tenant-mailbox-migration), merger and divestiture use, organization relationships, target preparation and the per-user license
+- [Notion Help Center: Import from Confluence](https://www.notion.com/help/import-from-confluence), zip and API importers, size and page limits, what transfers and that permissions don't
+- [Linear Docs: Jira](https://linear.app/docs/jira), one-time import versus ongoing Jira Sync, sync directions, epics as projects, import filters not applied to sync
 
 **Law and regulation**
 
+- [Regulation (EU) 2023/2854 (Data Act), EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32023R2854), Article 25 notice, transitional, alternative and retrieval periods
 - [European Commission: Data Act](https://digital-strategy.ec.europa.eu/en/policies/data-act), application from September 12, 2025 and the switching framework
 - [European Commission: Data Act explained](https://digital-strategy.ec.europa.eu/en/factpages/data-act-explained), SaaS and PaaS export and interface duties, IaaS functional equivalence, and switching charges removed from January 12, 2027
