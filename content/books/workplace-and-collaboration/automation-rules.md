@@ -20,14 +20,15 @@ As of October 2026:
 | Product | Model | Metered unit and allowance | Loop protection | Actor on changes | Run history |
 | --- | --- | --- | --- | --- | --- |
 | **Jira and Atlassian Automation** | Flows (formerly rules) of trigger, conditions, branches and actions, with smart values | Steps per month: Jira Free 150 per subscription; Standard 400, Premium 750, Enterprise 1,000 per user; pooled across the org | Flows don't trigger other flows unless "Allow flow trigger" is set; loop detection stops a chain at 10 | "Automation for Jira" by default in Jira; the creator in Confluence | Audit log, 90 days |
-| **monday.com** | Automations | Actions per month: Standard 250, Pro 25,000, Enterprise up to 250,000 combined with integrations | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
-| **ClickUp** | Automations | Actions per workspace per month: Free Forever 100, Core 1,000, Business 10,000, Enterprise and Max 1 million | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
-| **Asana** | Rules | "Unlimited automations" from Starter | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
+| **monday.com** | Automations (a trigger and one or more actions) and workflows with condition steps | Actions per account per month: Standard 250, Pro 25,000, each with an equal separate integrations allowance; Enterprise "enterprise-scale," and only Enterprise can buy more | Not documented in the pages cited here | The board activity log links each automated change to the automation that made it | Run history per board, automation and item, kept 10 days |
+| **ClickUp** | Automations: one trigger, up to 15 conditions (Business and above) and 6 actions | Actions per workspace per month: Free Forever 100, Unlimited and Core 1,000, Business 10,000, Business Plus 25,000 (100,000 on new plans), Enterprise 250,000 (1 million on new plans) | Not documented in the pages cited here | Not documented in the pages cited here | Usage history: 1 day through Business, 30 days on Business Plus, 6 months on Enterprise and Max |
+| **Asana** | Automations (formerly rules) of triggers, conditions and actions | "Unlimited automations" from Starter | Not documented in the pages cited here | An owner; the automation keeps the access it was saved with when the owner's permissions change | An Activity tab per automation: triggering task, actions taken, AI credits used |
+| **Smartsheet** | Automations on sheets | 250 automations a month on Pro; unlimited from Business | Not documented in the pages cited here | Not documented in the pages cited here | Not documented in the pages cited here |
 | **GitHub Actions on issues and projects** | Workflows triggered by `issues`, `issue_comment` and other events; built-in project workflows | Actions minutes by plan (see the Hosting & Cloud volume's [The CI/CD Platform Business](/books/hosting-and-cloud/ci-cd-platform-business)); auto-add workflows: Free 1, Pro and Team 5, Enterprise 20 | Events caused by `GITHUB_TOKEN` don't start new runs | The token's identity, or a GitHub App or personal token | Workflow run logs |
 | **Linear** | Built-in automations (Git, sub-issues, triage) | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here | Not covered in the sources cited here |
 | **Azure Boards** | Work item rules (conditions and actions) on the process | Up to 1,024 rules per work item type | Rules evaluate on save, not as chained events | Not covered in the sources cited here | Not covered in the sources cited here |
 
-Three patterns run through the table. **Automation is metered by plan**, and the unit moved from rule runs toward finer-grained steps or actions, which prices heavy rules accurately and makes the bill harder to predict. **Rules don't trigger rules by default** in the engines that publish their loop rules: Atlassian makes chaining opt-in and GitHub refuses to start runs from its own token's events. **The actor is a design decision**: a bot identity makes automated changes easy to spot and hard to permission; a person's identity does the reverse.
+Three patterns run through the table. **Automation is metered by plan** (Asana from Starter and Smartsheet from Business advertise no cap), and the unit moved from rule runs toward finer-grained steps or actions, which prices heavy rules accurately and makes the bill harder to predict. **Rules don't trigger rules by default** in the engines that publish their loop rules: Atlassian makes chaining opt-in and GitHub refuses to start runs from its own token's events. **The actor is a design decision**: a bot identity makes automated changes easy to spot and hard to permission; a person's identity does the reverse.
 
 ## Triggers, Conditions and Actions
 
@@ -46,7 +47,7 @@ The distinction matters to a builder: **save-time rules** are part of the write 
 
 ## Smart Values and Templating
 
-An action that sets a field or writes a comment needs values from the triggering event. Atlassian's smart values use "dot notation inside double mustache brackets," such as `{{issue.summary}}` and `{{issue.assignee.displayName}}`, with functions (`{{now.plusDays(5)}}`, `.toLowerCase()`), list iteration (`{{#issue.comments}}...{{/}}`) and defaults (`{{x|"Hello world"}}`). 
+An action that sets a field or writes a comment needs values from the triggering event. Atlassian's smart values use "dot notation inside double mustache brackets," such as `{{issue.summary}}` and `{{issue.assignee.displayName}}`, with functions (`{{now.plusDays(5)}}`, `.toLowerCase()`), list iteration (`{{#issue.comments}}...{{/}}`) and defaults (`{{x|"Hello world"}}`).
 
 Templating is where automation meets permissions. A rule that writes `{{issue.description}}` into a public comment, a chat message or an outbound webhook copies content to an audience the original item may not have had. The engine should evaluate templates as the rule's actor, and admins should be able to see which rules send item content outside the product.
 
@@ -64,9 +65,15 @@ Automation is compute the customer triggers, and every vendor meters it. Atlassi
 
 Allowances pool at the organization level and refresh monthly. System steps such as logging, creating variables and lookups don't count, nor do aborted or throttled runs, Atlassian system errors, or Rovo agent steps (billed as Rovo credits). Usage beyond the allowance costs $0.50 per 1,000 steps, with extra usage billing taking effect December 3, 2026; admins are notified at 80 and 100 percent, and with extra usage disabled, flows stop at 100 percent. The older model, still described in Atlassian's knowledge base, capped "the total number of successful rule runs" per month.
 
-Other vendors meter **actions**: monday.com allows 250 automation actions a month on Standard and 25,000 on Pro (with separate equal allowances for integration actions), and "up to 250,000 automation and integration actions per month" combined on Enterprise; ClickUp allows 100 automation actions per workspace per month on Free Forever, 1,000 on Core, 10,000 on Business and 1 million on Enterprise and Max. Asana advertises "Unlimited automations" from its Starter plan.
+Other vendors meter **actions**, and what counts as one differs in ways that move the bill:
 
-Beside the monthly quota sit **service limits**, which protect the shared engine from one tenant. Atlassian publishes them: daily processing time of "60 min per 12 hrs," 50,000 items queued globally, 65 steps in a standard flow and 500 in an advanced one, 5,000 associated items per flow, 999 items from a scheduled search, the first 100 results from a lookup, and concurrent flows of 5, 10, 20 and 30 by plan. Breaching a service limit marks the run "THROTTLED in the audit log" and may disable the rule; breaching the queued-items limit disables it.
+- **monday.com** allows 250 automation actions a month on Standard and 25,000 on Pro, each with a separate equal allowance for integration actions, and "enterprise-scale" volumes on Enterprise, the only tier that can buy more. One trigger usually costs one action, but a notification to board subscribers costs one per recipient, mapping columns into a new item costs one per mapped column plus one for the item, and condition steps in workflows consume actions too. Billing contacts are warned at 50 and 80 percent; at 100 percent automations pause after a 72-hour grace period, and the first overrun rolls over as debt into the next month, so an account can start a month with no actions left.
+- **ClickUp** allows 100 actions per workspace per month on Free Forever, 1,000 on Unlimited and Core, 10,000 on Business, 25,000 on Business Plus and 250,000 on Enterprise for existing plans (100,000 and 1 million on its new plans), and caps active automations at 5 on Free Forever and 500 on Unlimited and Core. Owners and admins are emailed at 90 and 100 percent, past the limit the workspace's automations pause for the rest of the month, and Sprint automations don't count.
+- **Asana** advertises "Unlimited automations" from Starter; **Smartsheet** allows 250 automations a month on Pro and unlimited from Business.
+
+The overage behaviors are the design choice worth noticing: Atlassian bills extra usage or stops flows, monday.com grants a grace period and carries the debt forward, ClickUp pauses until the month resets. Each is defensible; what isn't is a pause the customer learns about from a broken process rather than from an alert.
+
+Beside the monthly quota sit **service limits**, which protect the shared engine from one tenant. Atlassian publishes them: daily processing time of "60 min per 12 hrs," 50,000 items queued globally, 65 steps in a standard flow and 500 in an advanced one, 5,000 associated items per flow, 999 items from a scheduled search, the first 100 results from a lookup, and concurrent flows of 5, 10, 20 and 30 by plan. Breaching a service limit marks the run THROTTLED in the audit log; a flow that reaches the associated-items limit is disabled "to prevent future runs," and at the global queued-items limit flows stop running.
 
 The two kinds of limit serve different purposes, and a builder needs both. **Quotas** are commercial: they price automation and push heavy users up a tier. **Service limits** are operational: they keep one tenant's runaway rule from delaying everyone's. The metering hosting platforms use is the same machinery ([Metering and Rating](/books/hosting-and-cloud/metering-and-rating#how-the-providers-do-it)); the work management twist is that the customer's admin needs to see, per rule, what it consumed, because the bill is the sum of rules someone else wrote.
 
@@ -75,7 +82,7 @@ The two kinds of limit serve different purposes, and a builder needs both. **Quo
 A rule that reacts to field changes and changes a field can trigger itself; two rules can trigger each other. Every engine needs a defense, and the public ones layer three:
 
 1. **No chaining by default.** "By default, automation rules won't be triggered by other automation rules"; an author opts in with "Allow flow trigger" (formerly "Allow rule trigger"). GitHub's version is structural: "events triggered by the GITHUB_TOKEN will not create a new workflow run," except `workflow_dispatch` and `repository_dispatch`, and "this behavior prevents you from accidentally creating recursive workflow runs." A workflow that needs to trigger another uses a GitHub App or personal token, deliberately.
-2. **Loop detection.** Atlassian stops a chain when a flow triggers itself or others "in quick succession" more than 10 times and marks the run as LOOP.
+2. **Loop detection.** Atlassian caps at 10 "how many times a flow can trigger itself (or other flows) in quick succession." monday.com, ClickUp and Asana don't document a loop rule in the pages cited here, which leaves customers to find it by tripping it.
 3. **Budgets.** Processing-time and queue limits stop the rule that loops slowly enough to evade detection.
 
 The builder's version:
@@ -87,7 +94,7 @@ The builder's version:
 
 ## The Rule Actor
 
-Every automated change needs an author. In Jira, "the default flow actor is the 'user' called Automation for Jira," and "changes performed by your flow will be seen as being made by the flow actor"; in Confluence the actor is "the person who created the flow." GitHub workflows act as the `GITHUB_TOKEN`, scoped to the repository (it "cannot access projects," so project automation uses a GitHub App or a personal token). 
+Every automated change needs an author. In Jira, "the default flow actor is the 'user' called Automation for Jira," and "changes performed by your flow will be seen as being made by the flow actor"; in Confluence the actor is "the person who created the flow." In Jira, editors can choose only themselves or Automation for Jira, and app administrators can set anyone. Asana takes the opposite position on permissions: its automations "are designed to keep running even when the owner's access control permissions change," so an automation keeps writing to a project its owner can no longer open, while one duplicated to an owner without sufficient access is disabled. GitHub workflows act as the `GITHUB_TOKEN`, scoped to the repository (it "cannot access projects," so project automation uses a GitHub App or a personal token).
 
 The choices trade off:
 
@@ -99,7 +106,7 @@ My default is a per-rule service identity (a `members` row of kind `bot` scoped 
 
 ## Run History
 
-A rule nobody can debug is a rule nobody trusts. Atlassian's automation audit log keeps "activity from the past 90 days," after which "older entries are automatically deleted and can't be recovered," and statuses like THROTTLED and LOOP appear there. The minimum run record:
+A rule nobody can debug is a rule nobody trusts. Atlassian's automation audit log keeps "activity from the past 90 days," after which "older entries are automatically deleted and can't be recovered," and throttled runs appear there as THROTTLED. monday.com's run history covers only "the past 10 days' worth of data," per board, per automation and per item, shows the action count each run consumed, and its board activity log links each automated change to the automation responsible. Asana gives each automation an Activity tab listing the triggering task, who triggered it, the actions taken and AI credits used, with a step-by-step log per run. ClickUp keeps usage history for 1 day on most plans and 6 months on Enterprise. The minimum run record:
 
 - the rule and its version, the trigger event and its causation chain;
 - each step with its outcome (passed, failed condition, action result, error), and the items it touched;
@@ -218,11 +225,11 @@ Usage is incremented with the run's final step count when it finishes; at 80 and
 - [Atlassian Support: What are automation flows?](https://support.atlassian.com/cloud-automation/docs/what-are-automation-rules/), triggers, conditions, branches and actions
 - [Atlassian Support: What are smart values?](https://support.atlassian.com/cloud-automation/docs/what-are-smart-values/), syntax, functions, lists and defaults
 - [Atlassian Support: How is my usage calculated?](https://support.atlassian.com/cloud-automation/docs/how-is-my-usage-calculated/), steps, allowances by app and plan, pooling, exclusions, overage price, December 3, 2026 billing date and notifications
-- [Atlassian Support: Automation service limits](https://support.atlassian.com/cloud-automation/docs/automation-service-limits/), processing time, queue, loop detection, step, item, search and concurrency limits
+- [Atlassian Support: Automation service limits](https://support.atlassian.com/cloud-automation/docs/automation-service-limits/), processing time, queue, loop detection, step, item, search and concurrency limits, THROTTLED status and disabling
 - [Atlassian Support: Service limits vs usage limits](https://support.atlassian.com/automation/kb/difference-between-automation-service-limits-and-automation-usage-limits/), the older rule-run cap, throttling and disabling
 - [Atlassian Support: Rules not triggered by other rules](https://support.atlassian.com/automation/kb/rules-dont-get-triggered-if-the-trigger-came-from-another-rule/), no chaining by default and the Allow rule trigger setting
 - [Atlassian Support: Flow details](https://support.atlassian.com/cloud-automation/docs/what-are-rule-details-in-atlassian-automation/), Allow flow trigger and changes made as the flow actor
-- [Atlassian Support: What is a flow actor?](https://support.atlassian.com/cloud-automation/docs/what-is-a-rule-actor/), Automation for Jira and the Confluence creator
+- [Atlassian Support: What is a flow actor?](https://support.atlassian.com/cloud-automation/docs/what-is-a-rule-actor/), Automation for Jira, who may change the actor, and the Confluence creator
 - [Atlassian Support: Automation audit log](https://support.atlassian.com/cloud-automation/docs/what-is-the-automation-audit-log/), 90-day retention
 - [GitHub Docs: GITHUB_TOKEN](https://docs.github.com/en/actions/concepts/security/github_token), events from the token don't create workflow runs and the dispatch exceptions
 - [GitHub Docs: Events that trigger workflows](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows), issues and issue_comment activity types
@@ -233,6 +240,13 @@ Usage is incremented with the run's final step count when it finishes; at 80 and
 - [Linear Docs: Parent and sub-issues](https://linear.app/docs/parent-and-sub-issues), sub-issue automations
 - [Microsoft Learn: Rules reference](https://learn.microsoft.com/en-us/azure/devops/organizations/settings/work/rule-reference), conditions and actions per rule, enforcement and bypass
 - [Microsoft Learn: Work tracking, process, and project limits](https://learn.microsoft.com/en-us/azure/devops/organizations/settings/work/object-limits), rules per work item type
-- [monday.com: Pricing](https://monday.com/pricing), automation and integration actions by plan
-- [ClickUp: Pricing](https://clickup.com/pricing), automation actions per workspace per month by plan
+- [monday.com: Pricing](https://monday.com/pricing), automation and integration actions by plan and Enterprise-scale volumes
+- [monday.com Support: Automation and Integration actions and limits](https://support.monday.com/hc/en-us/articles/360017556179), what counts as an action, alerts, grace period, debt rollover and purchase on Enterprise only
+- [monday.com Support: Automation Run history](https://support.monday.com/hc/en-us/articles/360017254600-Automation-Run-history), 10-day run history, action counts per run and the activity log link to the automation
+- [ClickUp Help: Automations feature availability and limits](https://help.clickup.com/hc/en-us/articles/23477062949911-Automations-feature-availability-and-limits), actions and active automations by plan, trigger, condition and action limits, pause on overrun, usage history retention
+- [ClickUp Help: Track your Automations Actions usage](https://help.clickup.com/hc/en-us/articles/10936258508311-Track-your-Automations-Actions-usage), monthly reset and 90 and 100 percent alerts
+- [ClickUp Help: Sprints feature availability and limits](https://help.clickup.com/hc/en-us/articles/35714017592471-Sprints-feature-availability-and-limits), Sprint automations excluded from the quota
 - [Asana: Pricing](https://asana.com/pricing), unlimited automations from Starter
+- [Asana Help: Automation execution history](https://help.asana.com/s/article/rule-history?language=en_US), the Activity tab and what each run records
+- [Asana Help: Automation permissions](https://help.asana.com/s/article/rule-permissions?language=en_US), access kept when the owner's permissions change and disabling on duplication
+- [Smartsheet: Pricing](https://www.smartsheet.com/pricing), automations per month on Pro and unlimited from Business
