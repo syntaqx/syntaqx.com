@@ -3,6 +3,7 @@
 import { useId } from "react";
 import * as RadixSelect from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 export interface SelectOption {
   value: string;
@@ -46,7 +47,7 @@ export function Select({
   ariaLabel,
   id,
   size = "sm",
-  className = "",
+  className,
 }: SelectProps) {
   const autoId = useId();
   const triggerId = id ?? autoId;
@@ -59,7 +60,11 @@ export function Select({
       <RadixSelect.Trigger
         id={triggerId}
         aria-label={ariaLabel}
-        className={`inline-flex items-center justify-between gap-2 border border-border bg-background text-foreground transition-colors cursor-pointer outline-none hover:border-border-hover focus-visible:border-accent/50 data-[state=open]:border-accent/50 ${sizes[size]} ${className}`}
+        className={cn(
+          "inline-flex items-center justify-between gap-2 border border-border bg-background text-foreground transition-colors cursor-pointer outline-none hover:border-border-hover focus-visible:border-accent/50 data-[state=open]:border-accent/50",
+          sizes[size],
+          className,
+        )}
       >
         <RadixSelect.Value />
         <RadixSelect.Icon className="text-dim">

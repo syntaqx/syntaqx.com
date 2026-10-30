@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { nav, type NavGroup, type NavLink } from "@/lib/constants";
+import { cn } from "@/lib/cn";
 
 function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(href + "/");
@@ -210,7 +211,7 @@ export function MobileMenu() {
 function MobileLink({
   link,
   pathname,
-  className = "",
+  className,
 }: {
   link: NavLink;
   pathname: string;
@@ -222,9 +223,11 @@ function MobileLink({
       <Link
         href={link.href}
         aria-current={on ? "page" : undefined}
-        className={`font-voice block px-6 py-4 text-3xl font-semibold uppercase leading-none transition-colors ${className} ${
-          on ? "text-accent" : "text-foreground hover:text-accent"
-        }`}
+        className={cn(
+          "font-voice block px-6 py-4 text-3xl font-semibold uppercase leading-none transition-colors",
+          className,
+          on ? "text-accent" : "text-foreground hover:text-accent",
+        )}
       >
         {link.label}
       </Link>

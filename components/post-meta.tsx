@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import { slugifyTag } from "@/lib/posts";
+import { cn } from "@/lib/cn";
 
 interface PostMetaProps {
   date: string;
@@ -13,11 +14,11 @@ export function PostMeta({
   date,
   dateFormat = "MMM d, yyyy",
   readingTimeMinutes,
-  className = "",
+  className,
 }: PostMetaProps) {
   return (
     <div
-      className={`inst flex flex-wrap items-center gap-x-3 gap-y-1 text-dim ${className}`}
+      className={cn("inst flex flex-wrap items-center gap-x-3 gap-y-1 text-dim", className)}
     >
       <time dateTime={date} className="shrink-0">
         {format(new Date(date), dateFormat)}
@@ -47,14 +48,14 @@ interface PostTagsProps {
 export function PostTags({
   tags,
   max,
-  className = "",
+  className,
   asLinks = false,
 }: PostTagsProps) {
   if (!tags || tags.length === 0) return null;
   const shown = max ? tags.slice(0, max) : tags;
   const chip = "inst inline-block border border-border px-2 py-1 text-dim";
   return (
-    <div className={`flex flex-wrap gap-1 ${className}`}>
+    <div className={cn("flex flex-wrap gap-1", className)}>
       {shown.map((tag) =>
         asLinks ? (
           <Link

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { codeToHtml } from "shiki";
+import { cn } from "@/lib/cn";
 
 interface CodeHighlightProps {
   code: string;
@@ -12,7 +13,7 @@ interface CodeHighlightProps {
 export function CodeHighlight({
   code,
   lang,
-  className = "",
+  className,
 }: CodeHighlightProps) {
   const [html, setHtml] = useState<string>("");
 
@@ -46,7 +47,7 @@ export function CodeHighlight({
   if (!html) {
     return (
       <pre
-        className={`text-sm font-mono whitespace-pre-wrap text-foreground ${className}`}
+        className={cn("text-sm font-mono whitespace-pre-wrap text-foreground", className)}
       >
         {code}
       </pre>
@@ -55,7 +56,10 @@ export function CodeHighlight({
 
   return (
     <div
-      className={`[&_pre]:bg-transparent! [&_pre]:p-0! [&_pre]:text-sm [&_pre]:font-mono [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:!text-sm ${className}`}
+      className={cn(
+        "[&_pre]:bg-transparent! [&_pre]:p-0! [&_pre]:text-sm [&_pre]:font-mono [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:!text-sm",
+        className,
+      )}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
