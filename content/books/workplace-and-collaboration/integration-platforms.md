@@ -19,11 +19,11 @@ As of October 2026:
 | Platform | Model | Billing unit | Where it runs | Governance highlights |
 | --- | --- | --- | --- | --- |
 | **Zapier** | Zaps: trigger, actions, filters and paths, across thousands of app integrations | Tasks: each successful action; triggers, polling and built-in tools don't count | Zapier's cloud | App access controls and action restrictions, managed app connections, SCIM and a one-year audit log on Enterprise |
-| **Make** | Scenarios: visual graphs of modules with per-module error handlers | Usage-based, per scenario run | Make's cloud | Error handlers and stored incomplete executions per scenario |
-| **Workato** | Recipes: a trigger and actions over connections, sold to IT-run enterprise integration teams | By contract | Workato's cloud | Run by IT rather than by individual employees |
+| **Make** | Scenarios: visual graphs of modules with per-module error handlers | Credits: most module actions cost one; routers and error handlers cost none | Make's cloud | Error handlers and stored incomplete executions per scenario |
+| **Workato** | Recipes: a trigger and actions (with conditions, loops and error handling) over connections, sold to IT-run enterprise integration teams | Quoted editions with a task-based usage component | Workato's cloud, with on-premises agents for internal systems | Run by IT rather than by individual employees |
 | **Microsoft Power Automate** | Cloud flows (automated, scheduled, instant) over standard and premium connectors; desktop flows for UI automation | Power Platform requests per user or per flow per 24 hours, by license | Microsoft's cloud, in Power Platform environments | Tenant and environment data policies (Business, Non-business, Blocked), advanced connector policies |
-| **Slack Workflow Builder** | Workflows started from a link, schedule, emoji, channel event or form, with connector steps | Included with paid plans | Slack | Admins control who builds, which connector and custom steps are allowed, and use in Slack Connect |
-| **n8n** | Workflows of nodes, including custom code | Cloud plans, or self-hosting under its license | n8n's cloud or self-hosted | Self-hosting puts credentials and patching with the customer |
+| **Slack Workflow Builder** | Workflows started from a link, schedule, emoji reaction or channel event, with connector steps | Included with paid plans | Slack | Admins control who builds, which connector and custom steps are allowed, and use in Slack Connect |
+| **n8n** | Workflows of nodes, including custom code | Executions: one per workflow run, however many steps | n8n's cloud or self-hosted | Self-hosting puts credentials and patching with the customer |
 | **Merge** | A unified API: one schema per category (HR, ATS, CRM, ticketing, accounting, file storage) over many vendors | Linked accounts: $650 a month for up to 10 on Launch, then $65 each | Merge's cloud | Built into the developer's product, not the customer's admin console |
 
 The pattern: **two markets share the name.** Zapier, Make, Power Automate, Workato, Slack's builder and n8n sell automation to the customer organization, whose employees build the flows. Merge and the embedded integration vendors (Paragon, Prismatic, Workato's embedded offering) sell integrations to software vendors, who ship them inside their own product so their customers can connect a CRM or an HRIS in a settings page. The first market's hard problem is governance; the second's is schema mapping across many vendors' APIs.
@@ -42,11 +42,14 @@ The consequence for the source system is that integration platforms are among it
 
 The unit of billing decides what users optimize and what the platform must meter.
 
-- **Zapier tasks.** A task is counted when an action successfully completes a unit of work. Failed actions, triggers, polling and built-in tools such as Formatter and Paths don't count; some actions cost more than one task. Entry plans are 100 tasks a month on Free, 750 on Pro ($19.99 a month billed annually, $29.99 monthly) and 2,000 on Team ($69 annually, $103.50 monthly). With pay-per-task on, usage continues past the plan at 1.25 times the base rate on annual plans or 2.5 times on monthly plans and pauses at three times the subscription; with it off, Zaps stop at the limit.
-- **Power Platform requests.** Every connector call, HTTP action and built-in action counts, including failed actions, retries and pagination. Limits are per 24-hour sliding window: 40,000 for a Power Automate Premium user, 6,000 for Office 365 licenses with seeded Power Automate, 250,000 for a flow with a Process license (stackable to 10 on one flow, or shared across a flow group of up to 25 flows), and a separate 100,000 per five minutes regardless of license. As of October 2026 every tenant is in a transition period where Premium and seeded limits are applied per cloud flow (200,000 a day per flow for Premium, 10,000 for Office 365) rather than per user; Microsoft says enforcement of the per-user limits won't begin until at least six months after Power Automate usage reporting is generally available. Automated and scheduled flows use the owner's limits; instant flows use those of the person who runs them.
+- **Zapier tasks.** A task is counted when an action successfully completes a unit of work. Failed actions, triggers, polling and built-in tools such as Formatter and Paths don't count; some actions cost more than one task. Entry plans are 100 tasks a month on Free, 750 on Pro ($19.99 a month billed annually, $29.99 monthly) and 2,000 on Team ($69 annually, $103.50 monthly). With pay-per-task on, usage continues past the plan at 1.25 times the base rate on annual plans or 2.5 times on monthly plans and pauses at three times the subscription; with it off, Zaps stop at the limit. AI traffic is metered on the same unit: each tool call through Zapier's MCP server uses two tasks, while its agents draw on a separate allowance of activities that doesn't touch task usage.
+- **Make credits.** Every time a module performs an action (reading, searching, creating, updating or deleting data, and transforming, aggregating or iterating it) it consumes credits, usually one; router and error-handler modules consume none, and some AI features cost more than one. The Free plan includes 1,000 credits a month, and extra credits are sold in bundles of 1,000 or 10,000. Paid plans (Core, Pro, Teams and Enterprise) add larger allowances; I haven't been able to confirm their current prices from Make's own pages, so they aren't quoted here. <!-- source-gap: make-paid-plan-prices | missing | Make Core, Pro and Teams prices and included credits | closes with: make.com/en/pricing rendered text or a Make Help Center plans article listing prices | checked: 2026-10-29 -->
+- **n8n executions.** n8n counts a single run of an entire workflow as one execution "regardless of complexity": as of October 2026, billed annually, Starter is €20 a month for 2,500 executions and Pro €50 for 10,000 (both hosted by n8n), and Business is €667 for 40,000 and self-hosted only. A twenty-step workflow costs the same as a two-step one, the opposite incentive from per-step units.
+- **Workato tasks.** Workato sells editions (Standard, Business MCP, Enterprise MCP and Workato ONE) by quote, with a task-based usage component and a set number of on-premises agents per edition (3, 10 or 30) for reaching systems behind the customer's firewall; it publishes no list prices.
+- **Power Platform requests.** Every connector call, HTTP action and built-in action counts, including failed actions, retries and pagination. Limits are per 24-hour sliding window: 40,000 for a Power Automate Premium user, 6,000 for Office 365 licenses with seeded Power Automate, 250,000 for a flow with a Process license (stackable to 10 on one flow, or shared across a flow group of up to 25 flows), and a separate 100,000 per five minutes regardless of license. As of October 2026 every tenant is in a transition period where Premium and seeded limits are applied per cloud flow (200,000 a day per flow for Premium, 10,000 for Office 365) rather than per user; Microsoft says enforcement of the per-user limits won't begin until at least six months after Power Automate usage reporting is generally available. Automated and scheduled flows use the owner's limits; instant flows use those of the person who runs them. Agent flows built for Copilot Studio sit outside this meter entirely and consume Copilot Credits instead.
 - **Merge linked accounts.** A unified API charges per customer connection: the Launch plan is $650 a month for up to 10 production linked accounts with 3 free, $65 for each additional one, and syncs daily; Professional and Enterprise are contracted with configurable sync frequency.
 
-The pattern across units: failed work is free at Zapier and counted at Microsoft, which changes who pays for a broken flow retrying; and per-connection pricing (Merge) prices the integration by the end customer, which suits a vendor reselling it inside a product.
+The pattern across units: failed work is free at Zapier and counted at Microsoft, which changes who pays for a broken flow retrying; per-step units (Zapier tasks, Make credits, Power Platform requests) push builders to shorten flows, while per-run units (n8n executions) don't; and per-connection pricing (Merge) prices the integration by the end customer, which suits a vendor reselling it inside a product.
 
 ## Failure Handling
 
@@ -68,7 +71,7 @@ Every action runs as somebody. In an integration platform that somebody is a **c
 
 **Shared connections need an owner.** Zapier's Enterprise plan includes managed app connections, so a connection to a business system can belong to the organization rather than an individual. The data model needs the same: a connection owned by a group or service identity, with a human accountable for it.
 
-**The platform is a concentration of tokens.** An integration platform holds standing OAuth grants into thousands of customers' CRMs, file stores and mailboxes. The 2025 theft of the Salesloft Drift integration's tokens ([When an App's Tokens Are Stolen](/books/workplace-and-collaboration/apps-and-marketplaces#when-an-app-s-tokens-are-stolen)) is the failure this creates: an attacker who reaches the platform's token store reaches every connected tenant at once. For the customer, each connection is a third-party processor with a key; for the platform, token encryption, scope minimization and fleet-wide revocation are the core of the security program, not features.
+**The platform is a concentration of tokens.** An integration platform holds standing OAuth grants into thousands of customers' CRMs, file stores and mailboxes. The 2025 theft of the Salesloft Drift integration's tokens ([When an App's Tokens Are Stolen](/books/workplace-and-collaboration/apps-and-marketplaces#when-an-app-s-tokens-are-stolen)) is the failure this creates: an attacker who reaches the platform's token store reaches every connected tenant at once. Google's investigators traced exports from numerous Salesforce instances between at least August 8 and 18, 2025, found the same actor using the integration's Google Workspace tokens too, and advised treating every token stored in or connected to the integration as compromised; the fix was revoking all of them at once. For the customer, each connection is a third-party processor with a key; for the platform, token encryption, scope minimization and fleet-wide revocation are the core of the security program, not features.
 
 ## Governance
 
@@ -83,7 +86,7 @@ The customer's controls are the reason an IT team allows these platforms at all.
 The rules that cross the three:
 
 - **Classify data paths, not just apps.** Allowing Gmail and allowing SharePoint is fine; allowing a flow between them is the decision. Power Platform's group rule is the cleanest expression of it.
-- **New connectors start untrusted.** The default group for anything new is the restrictive one.
+- **New connectors start untrusted.** The default group for anything new is the one that can't touch business data (Non-business at Microsoft, which advises against changing the default).
 - **Inventory flows by owner and connection.** The admin's view is a list of every flow, who owns it, which connections it uses and which systems it bridges.
 - **Expect shadow integration when the sanctioned path is slow.** An approval queue that takes weeks sends employees to personal accounts on [unsanctioned platforms](/books/workplace-and-collaboration/no-code-databases-and-internal-tools#governance-and-shadow-apps), where none of the above applies.
 
@@ -97,7 +100,7 @@ The outside platforms win on breadth: thousands of connectors across vendors no 
 
 ## Unified APIs and Embedded Integration
 
-A software vendor whose customers each use a different HRIS, ATS or CRM faces the same integration many times. A **unified API** collapses a category into one schema: Merge offers common models for accounting, ATS, CRM, file storage, HR and payroll, and ticketing; the vendor integrates once, and an end customer connects their own system, producing a linked account and an account token the vendor stores. Merge recommends combining its "linked account synced" webhook with incremental pulls using `modified_after`, and polling a `/sync-status` endpoint at least every 24 hours because webhooks can fail; each common model reports its own sync status.
+A software vendor whose customers each use a different HRIS, ATS or CRM faces the same integration many times. A **unified API** collapses a category into one schema: Merge offers common models for accounting, ATS, CRM, file storage, HR and payroll, and ticketing; the vendor integrates once, and an end customer connects their own system, producing a linked account and an account token the vendor stores. Merge recommends combining its "linked account synced" webhook with incremental pulls using `modified_after`, and polling a `/sync-status` endpoint every 24 hours because webhooks can fail; each common model reports its own sync status.
 
 **Embedded integration platforms** (Paragon, Prismatic, Workato's embedded product) take the other approach: instead of one normalized schema, they give the vendor a workflow engine and connector library to build and host per-vendor integrations under the vendor's own brand.
 
@@ -167,7 +170,7 @@ CREATE TABLE integration_flow_runs (         -- one execution, with per-step out
   ended_at         TIMESTAMPTZ,
   outcome          TEXT NOT NULL CHECK (outcome IN ('running', 'succeeded', 'errored',
                      'halted', 'incomplete', 'rolled_back')),
-  billable_units   INT NOT NULL DEFAULT 0,   -- tasks, requests or operations
+  billable_units   INT NOT NULL DEFAULT 0,   -- tasks, requests, credits or 1 per run
   steps            JSONB NOT NULL DEFAULT '[]',  -- step, connection, status, target ID
   replay_of        UUID REFERENCES integration_flow_runs (id),
   UNIQUE (flow_id, trigger_event_id, replay_of)
@@ -192,7 +195,7 @@ Notes on the sketch:
 - **Policy is checked on publish and on change.** Publishing a flow version computes the data groups of its `connector_keys` and refuses a mix of business and non-business; a policy change re-evaluates every published version and sets `status = 'suspended_policy'` and connections to `disabled_by_policy`, the Power Platform behavior.
 - **Owner departure is an event.** Deactivating a member (from SCIM or the admin) marks their connections `owner_departed`, notifies co-owners and the workspace admin, and lists every flow affected; whether flows keep running is a workspace setting, defaulting to stop.
 - **Runs carry a dedupe key.** `trigger_event_id` plus `replay_of` makes a replay a new run linked to the original, and each step records the target ID it created, so a replay can skip or upsert instead of duplicating.
-- **Billing reads runs.** `billable_units` follows the platform's rule (successful actions only, or every action including failures), written once when the run ends and summed into usage ([Metering & Rating](/books/hosting-and-cloud/metering-and-rating)).
+- **Billing reads runs.** `billable_units` follows the platform's rule (successful actions only, every action including failures, or one per run), written once when the run ends and summed into usage ([Metering & Rating](/books/hosting-and-cloud/metering-and-rating)).
 - **Secrets stay out of the row.** `secret_ref` points into a secret store with its own access log; the database never holds a token ([Store a Hash, Show the Key Once](/docs/api-design/authentication#store-a-hash-show-the-key-once) for the platform's own keys).
 
 ## Auditing
@@ -217,13 +220,16 @@ Notes on the sketch:
 
 **Vendor documentation**
 
-- [Zapier: Pricing](https://zapier.com/pricing), plans, prices, task counts, polling intervals, task counting rules, pay-per-task overage and Enterprise controls
+- [Zapier: Pricing](https://zapier.com/pricing), plans, prices, task counts, polling intervals, task counting rules, pay-per-task overage, MCP tool calls at two tasks, agent activities and Enterprise controls
 - [Zapier Help: Replay failed Zap runs automatically](https://help.zapier.com/hc/en-us/articles/8496241726989-Replay-failed-Zap-runs-automatically), Autoreplay's plans, scope and overrides
+- [Make: Pricing](https://www.make.com/en/pricing), credits as the billing unit, what consumes credits, the Free plan's 1,000 credits and extra-credit bundles
 - [Make Help: Error handlers](https://help.make.com/error-handlers), Skip, Retry, Resume, Commit and Rollback, and incomplete executions
-- [Workato Docs: Recipes](https://docs.workato.com/en/recipes.html), recipes as a trigger, actions and connections
+- [Workato Docs: Recipes](https://docs.workato.com/en/recipes.html), recipes as a trigger, actions, logic and connections
+- [Workato: Pricing](https://www.workato.com/pricing), quoted editions, task-based usage and on-premises agents per edition
+- [n8n: Pricing](https://n8n.io/pricing/), executions as the billing unit and plan prices and allowances
 - [Microsoft Learn: Data policies](https://learn.microsoft.com/en-us/power-platform/admin/wp-data-loss-prevention), connections as saved credentials, MCP connectors, design-time and runtime enforcement, suspension and enforcement latency
 - [Microsoft Learn: Connector classification](https://learn.microsoft.com/en-us/power-platform/admin/dlp-connector-classification), Business, Non-business and Blocked groups, the cross-group rule, unblockable connectors, custom connector patterns, the default group and advanced connector policies
-- [Microsoft Learn: Requests limits and allocations](https://learn.microsoft.com/en-us/power-platform/admin/api-request-limits-allocations), what counts as a request, limits by license, Process licenses and flow groups, the five-minute limit, the transition period and whose limits a flow uses
+- [Microsoft Learn: Requests limits and allocations](https://learn.microsoft.com/en-us/power-platform/admin/api-request-limits-allocations), what counts as a request, limits by license, Process licenses and flow groups, the five-minute limit, the transition period, whose limits a flow uses and agent flows on Copilot Credits
 - [Microsoft Learn: Limits of automated, scheduled, and instant flows](https://learn.microsoft.com/en-us/power-automate/limits-and-config), 30-day run duration and retention, 90-day inactivity suspension and the departed-owner performance profile
 - [Slack Help: Guide to Workflow Builder](https://slack.com/help/articles/360035692513-Guide-to-Workflow-Builder), paid plans, triggers, connector steps, admin controls and workflow management
 - [n8n: License](https://raw.githubusercontent.com/n8n-io/n8n/master/LICENSE.md), the Sustainable Use License's permitted uses and distribution terms and the enterprise-licensed files
@@ -232,4 +238,4 @@ Notes on the sketch:
 
 **Incident reports**
 
-- [Google Threat Intelligence Group: Data theft from Salesforce instances via Salesloft Drift](https://cloud.google.com/blog/topics/threat-intelligence/data-theft-salesforce-instances-via-salesloft-drift), stolen integration tokens used across many customers' tenants
+- [Google Threat Intelligence Group: Data theft from Salesforce instances via Salesloft Drift](https://cloud.google.com/blog/topics/threat-intelligence/data-theft-salesforce-instances-via-salesloft-drift), compromised integration tokens used across many customers' tenants, the August 2025 window, the Workspace tokens and the advice to treat all connected tokens as compromised
