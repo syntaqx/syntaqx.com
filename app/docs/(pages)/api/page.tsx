@@ -16,6 +16,7 @@ import {
   SHOWN_RESPONSE_HEADERS,
 } from "@/lib/api-console";
 import { Select } from "@/components/select";
+import { cn } from "@/lib/cn";
 
 // ---------------------------------------------------------------------------
 // Types for OpenAPI 3.1
@@ -363,7 +364,7 @@ function Endpoint({
           <ChevronRight size={14} className="text-dim shrink-0" />
         )}
         <span
-          className={`inst w-19 shrink-0 border py-1 text-center ${METHOD_COLORS[method] || "text-dim"}`}
+          className={cn("inst w-19 shrink-0 border py-1 text-center", METHOD_COLORS[method] || "text-dim")}
         >
           {method}
         </span>
@@ -433,7 +434,10 @@ function Endpoint({
                   <div key={code} className="space-y-2">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`text-xs font-mono font-bold ${code.startsWith("2") ? "text-emerald-400" : code.startsWith("4") ? "text-amber-400" : "text-red-400"}`}
+                        className={cn(
+                          "text-xs font-mono font-bold",
+                          code.startsWith("2") ? "text-emerald-400" : code.startsWith("4") ? "text-amber-400" : "text-red-400",
+                        )}
                       >
                         {code}
                       </span>
@@ -537,7 +541,7 @@ function Endpoint({
                     onKeyDown={onKeyDown}
                     spellCheck={false}
                     rows={Math.min(12, defaultBody.split("\n").length + 1)}
-                    className={`${inputClass} resize-y`}
+                    className={cn(inputClass, "resize-y")}
                   />
                 </div>
               )}
@@ -569,13 +573,16 @@ function Endpoint({
               {(result || trying) && (
                 <div
                   aria-live="polite"
-                  className={`relative ${trying ? "opacity-50" : ""}`}
+                  className={cn("relative", trying && "opacity-50")}
                 >
                   {result && (
                     <>
                       <div className="mb-1.5 flex items-center gap-3">
                         <span
-                          className={`text-xs font-mono font-bold ${result.status >= 200 && result.status < 300 ? "text-emerald-400" : "text-red-400"}`}
+                          className={cn(
+                            "text-xs font-mono font-bold",
+                            result.status >= 200 && result.status < 300 ? "text-emerald-400" : "text-red-400",
+                          )}
                         >
                           {result.status || "Error"} {result.statusText}
                         </span>
@@ -741,11 +748,10 @@ export default function ApiDocsPage() {
                 onClick={() => setServerIdx(i)}
                 title={s.description}
                 aria-pressed={active}
-                className={`relative border-r border-border px-4 py-3 font-mono text-sm break-all transition-colors cursor-pointer after:absolute after:inset-x-4 after:-bottom-px after:h-0.5 ${
-                  active
-                    ? "text-foreground after:bg-accent"
-                    : "text-dim hover:text-foreground"
-                }`}
+                className={cn(
+                  "relative border-r border-border px-4 py-3 font-mono text-sm break-all transition-colors cursor-pointer after:absolute after:inset-x-4 after:-bottom-px after:h-0.5",
+                  active ? "text-foreground after:bg-accent" : "text-dim hover:text-foreground",
+                )}
               >
                 {s.url}
               </button>

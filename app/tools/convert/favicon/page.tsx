@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import NextImage from "next/image";
 import { Upload, Download, Trash2, ImageIcon, Archive } from "lucide-react";
 import { zipSync } from "fflate";
+import { cn } from "@/lib/cn";
 
 // --- ICO Encoder (client-side) ----------------------------------------------
 
@@ -306,13 +307,10 @@ export default function FaviconPage() {
             onDragLeave={() => setDragOver(false)}
             onDrop={onDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed bg-surface flex flex-col items-center justify-center py-16 cursor-pointer transition-colors ${
-              dragOver
-                ? "border-accent/60 bg-accent/5"
-                : sourceUrl
-                  ? "border-accent/30"
-                  : "border-border hover:border-accent/30"
-            }`}
+            className={cn(
+              "border-2 border-dashed bg-surface flex flex-col items-center justify-center py-16 cursor-pointer transition-colors",
+              dragOver ? "border-accent/60 bg-accent/5" : sourceUrl ? "border-accent/30" : "border-border hover:border-accent/30",
+            )}
           >
             <input
               ref={fileInputRef}
@@ -455,11 +453,10 @@ export default function FaviconPage() {
                 <button
                   key={size}
                   onClick={() => toggleSize(size)}
-                  className={`border px-2.5 py-1 text-[11px] font-medium tabular-nums transition-colors cursor-pointer ${
-                    sizes.includes(size)
-                      ? "border-accent/40 bg-accent/10 text-accent"
-                      : "border-border text-dim hover:text-foreground hover:border-border"
-                  }`}
+                  className={cn(
+                    "border px-2.5 py-1 text-[11px] font-medium tabular-nums transition-colors cursor-pointer",
+                    sizes.includes(size) ? "border-accent/40 bg-accent/10 text-accent" : "border-border text-dim hover:text-foreground hover:border-border",
+                  )}
                 >
                   {size}
                 </button>

@@ -16,6 +16,8 @@ import {
 import { PasteButton } from "@/components/paste-button";
 import { CopyButton } from "@/components/copy-button";
 import { Select } from "@/components/select";
+import { Segmented } from "@/components/segmented";
+import { cn } from "@/lib/cn";
 
 // A static sample JWT (HS256, secret: "secret") with readable claims.
 const SAMPLE_TOKEN =
@@ -673,28 +675,12 @@ export default function JwtPage() {
 
       {/* Mode toggle + Algorithm selector */}
       <div className="mb-5 flex items-center gap-3 flex-wrap">
-        <div className="inline-flex border border-border p-0.5 bg-surface">
-          <button
-            onClick={() => switchMode("decode")}
-            className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-              mode === "decode"
-                ? "bg-accent text-background"
-                : "text-dim hover:text-foreground"
-            }`}
-          >
-            Decoder
-          </button>
-          <button
-            onClick={() => switchMode("encode")}
-            className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-              mode === "encode"
-                ? "bg-accent text-background"
-                : "text-dim hover:text-foreground"
-            }`}
-          >
-            Encoder
-          </button>
-        </div>
+        <Segmented
+          value={mode}
+          onChange={switchMode}
+          ariaLabel="Mode"
+          options={[{ value: "decode", label: "Decoder" }, { value: "encode", label: "Encoder" }]}
+        />
 
         {mode === "encode" && (
           <Select
@@ -835,11 +821,11 @@ export default function JwtPage() {
                     placeholder="Paste a JWT token (eyJhbG...)..."
                     rows={6}
                     spellCheck={false}
-                    className={`relative w-full bg-transparent px-3 py-2 text-sm font-mono break-all focus:outline-none resize-y ${
-                      decoded.jwt
-                        ? "text-transparent caret-foreground"
-                        : "text-foreground"
-                    } placeholder:text-dim/50`}
+                    className={cn(
+                      "relative w-full bg-transparent px-3 py-2 text-sm font-mono break-all focus:outline-none resize-y",
+                      decoded.jwt ? "text-transparent caret-foreground" : "text-foreground",
+                      "placeholder:text-dim/50",
+                    )}
                   />
                 </div>
               </div>
@@ -897,13 +883,10 @@ export default function JwtPage() {
                   <span className="text-xs font-medium text-dim">Claims</span>
                   {expiry && (
                     <span
-                      className={`inline-flex items-center gap-1 text-xs ${
-                        expiry.status === "expired"
-                          ? "text-pink"
-                          : expiry.status === "valid"
-                            ? "text-green"
-                            : "text-dim"
-                      }`}
+                      className={cn(
+                        "inline-flex items-center gap-1 text-xs",
+                        expiry.status === "expired" ? "text-pink" : expiry.status === "valid" ? "text-green" : "text-dim",
+                      )}
                     >
                       <Clock size={10} />
                       {expiry.label}
@@ -998,7 +981,7 @@ export default function JwtPage() {
                       )}
                     {verifyStatusLabel && (
                       <span
-                        className={`text-xs ${verifyStatusLabel.className}`}
+                        className={cn("text-xs", verifyStatusLabel.className)}
                       >
                         {verifyStatusLabel.text}
                       </span>

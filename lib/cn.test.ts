@@ -22,6 +22,11 @@ describe("cn", () => {
     expect(cn("flex", { "text-accent": true, "text-dim": false })).toBe("flex text-accent");
   });
 
+  it("lets a text size replace an earlier leading, but not a later one", () => {
+    expect(cn("leading-snug", "text-lg")).toBe("text-lg");
+    expect(cn("text-lg", "leading-snug")).toBe("text-lg leading-snug");
+  });
+
   it("keeps custom utilities", () => {
     expect(cn("inst text-dim", "flex")).toBe("inst text-dim flex");
   });

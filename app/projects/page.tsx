@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { pageMetadata } from "@/lib/metadata";
+import { cn } from "@/lib/cn";
 
 export const metadata = pageMetadata(
   "/projects",
@@ -116,14 +117,13 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
       {/* The face leans; its accent bar is a child, so it leans with it. */}
       <span
         aria-hidden="true"
-        className={`absolute inset-0 -z-10 border transition-colors before:absolute before:-top-px before:left-0 before:h-0.5 before:w-12 before:bg-accent before:transition-[width] before:duration-300 before:ease-out group-hover:before:w-full md:slant ${
-          lead
-            ? "beams border-accent/50 bg-surface group-hover:border-accent"
-            : "border-border bg-surface group-hover:border-border-hover"
-        }`}
+        className={cn(
+          "absolute inset-0 -z-10 border transition-colors before:absolute before:-top-px before:left-0 before:h-0.5 before:w-12 before:bg-accent before:transition-[width] before:duration-300 before:ease-out group-hover:before:w-full md:slant",
+          lead ? "beams border-accent/50 bg-surface group-hover:border-accent" : "border-border bg-surface group-hover:border-border-hover",
+        )}
       />
       <span className="mb-4 flex items-center justify-between gap-4">
-        <span className={`inst ${lead ? "text-accent" : "text-dim"}`}>
+        <span className={cn("inst", lead ? "text-accent" : "text-dim")}>
           {item.kicker}
         </span>
         <ArrowUpRight
@@ -132,14 +132,16 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
         />
       </span>
       <h3
-        className={`mb-3 leading-[0.95] wrap-break-word text-foreground transition-colors group-hover:text-accent ${
-          lead ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"
-        }`}
+        className={cn(
+          "mb-3 wrap-break-word text-foreground transition-colors group-hover:text-accent",
+          lead ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl",
+          "leading-[0.95]",
+        )}
       >
         {item.title}
       </h3>
       <p
-        className={`mb-6 text-[0.95rem] leading-relaxed text-muted ${lead ? "max-w-xl" : ""}`}
+        className={cn("mb-6 text-[0.95rem] leading-relaxed text-muted", lead && "max-w-xl")}
       >
         {item.description}
       </p>

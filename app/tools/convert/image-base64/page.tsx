@@ -18,6 +18,8 @@ import {
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { CopyButton } from "@/components/copy-button";
+import { Segmented } from "@/components/segmented";
+import { cn } from "@/lib/cn";
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -310,28 +312,13 @@ export default function ImageBase64Page() {
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
           {/* Segmented control */}
-          <div className="mb-5 inline-flex border border-border p-0.5 bg-surface">
-            <button
-              onClick={() => switchMode("encode")}
-              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                mode === "encode"
-                  ? "bg-accent text-background"
-                  : "text-dim hover:text-foreground"
-              }`}
-            >
-              Image to Base64
-            </button>
-            <button
-              onClick={() => switchMode("decode")}
-              className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                mode === "decode"
-                  ? "bg-accent text-background"
-                  : "text-dim hover:text-foreground"
-              }`}
-            >
-              Base64 to Image
-            </button>
-          </div>
+          <Segmented
+            value={mode}
+            onChange={switchMode}
+            ariaLabel="Mode"
+            options={[{ value: "encode", label: "Image to Base64" }, { value: "decode", label: "Base64 to Image" }]}
+            className="mb-5"
+          />
 
           {mode === "encode" ? (
             <div className="flex flex-col gap-4">
@@ -343,9 +330,10 @@ export default function ImageBase64Page() {
                   setEncDragging(true);
                 }}
                 onDragLeave={() => setEncDragging(false)}
-                className={`border bg-surface transition-colors ${
-                  encDragging ? "border-accent border-dashed" : "border-border"
-                }`}
+                className={cn(
+                  "border bg-surface transition-colors",
+                  encDragging ? "border-accent border-dashed" : "border-border",
+                )}
               >
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <label className="text-xs text-dim flex items-center gap-1.5">
@@ -452,9 +440,10 @@ export default function ImageBase64Page() {
                   setDecDragging(true);
                 }}
                 onDragLeave={() => setDecDragging(false)}
-                className={`border bg-surface transition-colors ${
-                  decDragging ? "border-accent border-dashed" : "border-border"
-                }`}
+                className={cn(
+                  "border bg-surface transition-colors",
+                  decDragging ? "border-accent border-dashed" : "border-border",
+                )}
               >
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <label className="text-xs text-dim">Base64 or data URI</label>

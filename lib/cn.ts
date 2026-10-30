@@ -11,6 +11,9 @@ import { twMerge } from "tailwind-merge";
  * unknown to the merge and always kept, which is what they need: Tailwind
  * emits them ahead of single-property utilities, so `cn("inst", "text-sm")`
  * resizes the text and keeps the rest of `inst`.
+ *
+ * A text size (`text-lg`) also sets line height, so it drops an earlier
+ * `leading-*`; put `leading-*` after any size it should beat.
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -33,6 +33,7 @@ import {
   validKey,
   type SecretLink,
 } from "@/lib/secret-link";
+import { cn } from "@/lib/cn";
 
 // --- Link intake --------------------------------------------------------------
 
@@ -161,7 +162,7 @@ function CopyField({ label, value }: { label: string; value: string }) {
 function Note({ tone = "dim", icon, children }: { tone?: "dim" | "pink" | "accent"; icon: ReactNode; children: ReactNode }) {
   const tones = { dim: "text-dim", pink: "text-pink", accent: "text-accent" };
   return (
-    <p className={`flex items-start gap-1.5 text-xs leading-relaxed ${tones[tone]}`}>
+    <p className={cn("flex items-start gap-1.5 text-xs leading-relaxed", tones[tone])}>
       <span className="mt-0.5 shrink-0">{icon}</span>
       <span>{children}</span>
     </p>
@@ -278,7 +279,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
           </label>
           <div className="flex items-center gap-1.5">
             {secret && (
-              <span className={`text-[10px] tabular-nums ${tooBig ? "text-pink" : "text-dim"}`}>
+              <span className={cn("text-[10px] tabular-nums", tooBig ? "text-pink" : "text-dim")}>
                 {byteSize(bytes)} / {byteSize(MAX_PLAINTEXT_BYTES)}
               </span>
             )}
@@ -496,7 +497,10 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
           <CopyButton text={state.secret} label />
         </div>
         <pre
-          className={`max-h-96 overflow-auto whitespace-pre-wrap break-all border border-border bg-background px-3 py-2 font-mono text-sm text-foreground transition-[filter] ${shown ? "" : "blur-sm select-none"}`}
+          className={cn(
+            "max-h-96 overflow-auto whitespace-pre-wrap break-all border border-border bg-background px-3 py-2 font-mono text-sm text-foreground transition-[filter]",
+            shown ? "" : "blur-sm select-none",
+          )}
         >
           {state.secret}
         </pre>

@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { Card } from "@/components/card";
+import { cn } from "@/lib/cn";
 
 // ---------------------------------------------------------------------------
 // HoverCard primitive
@@ -82,7 +83,12 @@ function HoverCard({
         <span
           id={id}
           role="tooltip"
-          className={`absolute ${align === "end" ? "right-0" : "left-0"} top-full z-50 mt-2 block rounded-lg border border-border bg-surface p-3 shadow-lg ${className || "w-72"}`}
+          className={cn(
+            "absolute",
+            align === "end" ? "right-0" : "left-0",
+            "top-full z-50 mt-2 block rounded-lg border border-border bg-surface p-3 shadow-lg",
+            className || "w-72",
+          )}
         >
           {children}
         </span>
@@ -228,12 +234,12 @@ function TzRow({
         )}
       </span>
       <span
-        className={`whitespace-nowrap text-xs ${accent ? "text-accent" : "text-foreground"}`}
+        className={cn("whitespace-nowrap text-xs", accent ? "text-accent" : "text-foreground")}
       >
         {date}
       </span>
       <span
-        className={`whitespace-nowrap text-xs tabular-nums ${accent ? "text-accent" : "text-foreground"}`}
+        className={cn("whitespace-nowrap text-xs tabular-nums", accent ? "text-accent" : "text-foreground")}
       >
         {time} <span className="text-dim">{abbr}</span>
       </span>

@@ -17,6 +17,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { footerNav, socials, SITE_URL } from "@/lib/constants";
 import "./globals.css";
+import { cn } from "@/lib/cn";
 
 const bigShoulders = Big_Shoulders({
   variable: "--font-big-shoulders",
@@ -88,7 +89,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bigShoulders.variable} ${michroma.variable} ${hanken.variable} ${jetbrains.variable} h-full`}
+      className={cn(bigShoulders.variable, michroma.variable, hanken.variable, jetbrains.variable, "h-full")}
       suppressHydrationWarning
     >
       <head>

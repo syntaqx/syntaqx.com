@@ -14,6 +14,8 @@ import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
 import { CopyButton } from "@/components/copy-button";
+import { Segmented } from "@/components/segmented";
+import { cn } from "@/lib/cn";
 
 // --- Types ------------------------------------------------------------------
 
@@ -225,22 +227,17 @@ export default function JsToolPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
-          {/* Segmented control */}
-          <div className="mb-5 inline-flex border border-border p-0.5 bg-surface">
-            {(["beautify", "minify", "obfuscate"] as const).map((m) => (
-              <button
-                key={m}
-                onClick={() => switchMode(m)}
-                className={`px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer capitalize ${
-                  mode === m
-                    ? "bg-accent text-background"
-                    : "text-dim hover:text-foreground"
-                }`}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
+          <Segmented
+            value={mode}
+            onChange={switchMode}
+            ariaLabel="Mode"
+            options={[
+              { value: "beautify", label: "Beautify" },
+              { value: "minify", label: "Minify" },
+              { value: "obfuscate", label: "Obfuscate" },
+            ]}
+            className="mb-5"
+          />
 
           <div className="flex flex-col gap-4">
             {/* Input card */}
@@ -251,9 +248,10 @@ export default function JsToolPage() {
                 setDragging(true);
               }}
               onDragLeave={() => setDragging(false)}
-              className={`border bg-surface transition-colors ${
-                dragging ? "border-accent border-dashed" : "border-border"
-              }`}
+              className={cn(
+                "border bg-surface transition-colors",
+                dragging ? "border-accent border-dashed" : "border-border",
+              )}
             >
               <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                 <label className="text-xs text-dim flex items-center gap-1.5">

@@ -14,6 +14,8 @@ import { CopyButton } from "@/components/copy-button";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { uuidv7 } from "@/lib/uuid";
+import { Segmented } from "@/components/segmented";
+import { cn } from "@/lib/cn";
 
 // --- UUID / ULID generators ------------------------------------------------
 
@@ -285,24 +287,17 @@ export default function UuidPage() {
 
             {/* Type selector */}
             <div className="px-4 py-3 flex flex-wrap items-center gap-3">
-              <div className="inline-flex border border-border p-0.5 bg-background/50">
-                {(Object.keys(ID_LABELS) as IdType[]).map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => {
-                      setIdType(type);
-                      setGenerated([]);
-                    }}
-                    className={`px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-                      idType === type
-                        ? "bg-accent text-background"
-                        : "text-dim hover:text-foreground"
-                    }`}
-                  >
-                    {ID_LABELS[type]}
-                  </button>
-                ))}
-              </div>
+              <Segmented
+                value={idType}
+                onChange={(type) => {
+                  setIdType(type);
+                  setGenerated([]);
+                }}
+                ariaLabel="ID type"
+                size="sm"
+                options={(Object.keys(ID_LABELS) as IdType[]).map((type) => ({ value: type, label: ID_LABELS[type] }))}
+                className="bg-background/50"
+              />
 
               {/* Format options */}
               <div className="flex items-center gap-3">
@@ -404,7 +399,7 @@ export default function UuidPage() {
                 <div className="border border-border bg-background px-3 py-2 space-y-1.5">
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-xs font-medium ${inspectResult.valid ? "text-green" : "text-pink"}`}
+                      className={cn("text-xs font-medium", inspectResult.valid ? "text-green" : "text-pink")}
                     >
                       {inspectResult.valid ? "✓ Valid" : "✗ Invalid"}
                     </span>

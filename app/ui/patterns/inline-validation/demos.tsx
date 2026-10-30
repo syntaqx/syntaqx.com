@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState, type ReactNode } from "react";
 import { Check, Circle, RotateCcw } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -319,7 +320,7 @@ function RulesDemo() {
             return (
               <li
                 key={r.label}
-                className={`flex items-center gap-2 text-[11px] transition-colors ${ok ? "text-accent" : "text-dim"}`}
+                className={cn("flex items-center gap-2 text-[11px] transition-colors", ok ? "text-accent" : "text-dim")}
               >
                 {ok ? <Check size={11} /> : <Circle size={9} className="mx-px" />}
                 {r.label}

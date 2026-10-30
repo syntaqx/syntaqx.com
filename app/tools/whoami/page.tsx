@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { RefreshCw, Info, ExternalLink } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
+import { cn } from "@/lib/cn";
 
 function Row({
   label,
@@ -20,7 +21,7 @@ function Row({
         {value ? (
           <>
             <span
-              className={`text-xs text-foreground text-right truncate ${mono ? "font-mono" : ""}`}
+              className={cn("text-xs text-foreground text-right truncate", mono && "font-mono")}
             >
               {value}
             </span>
@@ -233,7 +234,7 @@ export default function WhoamiPage() {
                     </div>
                   ) : (
                     <span
-                      className={`text-xs ${loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim/50"}`}
+                      className={cn("text-xs", loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim/50")}
                     >
                       {loading
                         ? "0000:0000:0000:0000:0000:0000"
@@ -242,7 +243,10 @@ export default function WhoamiPage() {
                   )}
                 </div>
                 <span
-                  className={`text-xs ${!location && loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim"}`}
+                  className={cn(
+                    "text-xs",
+                    !location && loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim",
+                  )}
                 >
                   {location || (loading ? "Loading location" : "\u00A0")}
                 </span>
