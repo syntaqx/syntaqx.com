@@ -24,13 +24,11 @@ The owners and distributors, as of October 2026:
 | **HCPCS Level II** | CMS | Supplies, equipment, drugs, ambulance and services outside CPT | Quarterly update files | Public |
 | **CDT** | American Dental Association | Dental procedures | Annual, set by the ADA's Code Maintenance Committee | Copyrighted; licensed by the ADA |
 | **SNOMED CT** | SNOMED International; NLM is the US National Release Center | Clinical meaning: problems, findings, procedures | US Edition each March and September | Free to UMLS licensees in the US under an affiliate license |
-| **LOINC** | Regenstrief Institute (see note) | Lab tests, observations and document types | See note | See note |
+| **LOINC** | Regenstrief Institute | Lab tests, observations and document types | Every six months, in February and August | Free under Regenstrief's open license, including commercial use; downloads require signing in to loinc.org |
 | **RxNorm** | NLM | Normalized clinical drug names | Monthly full release, weekly updates | UMLS license terms; some sources restricted |
 | **NDC** | FDA, with manufacturers | Drug packages on pharmacy claims | FDA's directory updated daily | Public |
 | **CVX and MVX** | CDC's NCIRD | Vaccines administered and their manufacturers | As vaccines change | Public |
 | **Provider taxonomy** | National Uniform Claim Committee | Provider type and specialty | Updated periodically | Public |
-
-<!-- source-gap: loinc-terms | missing | LOINC's current release cadence, license terms and Regenstrief's role from loinc.org | closes with: loinc.org About and license pages (blocked to automated fetching on 2026-10-29) | checked: 2026-10-29 --> LOINC's own pages weren't readable for this chapter, so its row states its role without a release schedule.
 
 Two patterns. **Billing codes are mandated by HIPAA, clinical codes by certification.** The transaction rules require ICD-10-CM, ICD-10-PCS, CPT, HCPCS, CDT and NDC; the EHR certification program requires SNOMED CT, LOINC, RxNorm and CVX for clinical exchange. A practice system needs both families. **Licensing splits public from private.** The federal code sets are free; CPT and CDT are private property, and a product that shows their descriptors to users needs a license from the AMA or the ADA.
 
@@ -233,6 +231,8 @@ Design decisions:
 - [NLM: RxNorm](https://www.nlm.nih.gov/research/umls/rxnorm/index.html), normalized clinical drug names and linked drug vocabularies
 - [NLM: RxNorm technical documentation](https://www.nlm.nih.gov/research/umls/rxnorm/docs/techdoc.html), monthly and weekly releases, RXCUI, term types, normalized 11-digit NDCs, source restrictions
 - [CDC: CVX vaccines administered](https://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx), NCIRD maintenance, MVX pairing, HL7 immunization messages
+- [LOINC: License](https://loinc.org/kb/license/), free under an open license for commercial and non-commercial use, copyright and trademarks held by Regenstrief Institute
+- [LOINC: Download LOINC](https://loinc.org/downloads/), version 2.83 released August 19, 2026, updates every six months in February and August, sign-in to download
 - [NUCC: Health Care Provider Taxonomy](https://www.nucc.org/index.php/code-sets-mainmenu-41/provider-taxonomy-mainmenu-40), ten-character codes, three levels, use in HIPAA transactions and the NPI application
 
 **Distribution and licensing**
