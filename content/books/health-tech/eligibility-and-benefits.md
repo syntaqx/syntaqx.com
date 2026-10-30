@@ -59,7 +59,7 @@ The service type code is the question's subject, from an X12 external code list.
 
 | Code | Name | Typical asker |
 | --- | --- | --- |
-| `30` | Health Benefit Plan Coverage | Any practice; the default "is this person covered?" |
+| `30` | Plan Coverage and General Benefits | Any practice; the default "is this person covered?" |
 | `35` | Dental Care | Dental, general coverage |
 | `23` | Diagnostic Dental | Dental: exams and X-rays |
 | `41` | Preventive Dental | Dental: cleanings, fluoride, sealants |
@@ -100,7 +100,7 @@ Dental plans are small indemnity contracts with many rules, and those rules deci
 | **Downgrades and alternate benefits** | The plan pays a composite (white) filling on a back tooth at the amalgam (silver) rate, or a crown at the rate of a filling | Rarely |
 | **Orthodontic lifetime maximum and age limit** | A separate lifetime cap and an age cutoff | Sometimes |
 
-Stedi's documentation says that for dental, benefit-specific dates are common and waiting periods vary by service. The structural reason frequencies come back badly is in the 5010 transaction itself. Asked how a payer should report one frequency limit shared across several CDT codes (one exam limit covering periodic, comprehensive and limited exams, say), X12's interpretation (RFI 2773) explains that in version 5010 the procedure element holds only one code or range, that later versions let it repeat but aren't the HIPAA-mandated version, and that "we do not have a way to provide a response that would be better parsable." Shared frequencies arrive as several segments or as text.
+Stedi's documentation gives a dental waiting period for major services (crowns, say) as its example of a benefit-specific date. The structural reason frequencies come back badly is in the 5010 transaction itself. Asked how a payer should report one frequency limit shared across several CDT codes (one exam limit covering periodic, comprehensive and limited exams, say), X12's interpretation (RFI 2773) explains that in version 5010 the procedure element holds only one code or range, that later versions let it repeat but aren't the HIPAA-mandated version, and that "we do not have a way to provide a response that would be better parsable." Shared frequencies arrive as several segments or as text.
 
 So a dental eligibility product has three layers:
 
@@ -118,7 +118,7 @@ When a patient has two plans, one pays first (primary) and the other pays some o
 - **For a dependent child of parents who are married or living together,** the "birthday rule": "The plan of the parent whose birthday falls earlier in the calendar year is the primary plan," with "Birthday" referring "only to month and day," and if both parents share a birthday, the plan that has covered a parent longer is primary. Separated or divorced parents follow a court decree first, then a sequence of custodial rules.
 - **Active employment over retirement or COBRA,** and longer coverage over shorter when nothing else decides.
 
-Medicare has its own secondary payer rules. For example, Medicare is secondary for a person aged 65 or older covered by a group health plan through current employment with an employer that has at least 20 employees (42 CFR 411.172); liability and workers' compensation coverage can be primary for the injury they cover.
+Medicare has its own secondary payer rules. For example, Medicare is secondary for a person aged 65 or older covered by a group health plan through current employment with an employer that has at least 20 employees (42 CFR 411.172), and for a person entitled because of end-stage renal disease, an employer group health plan stays primary for a 30-month coordination period, set by statute in place of the 12 and 18 months the regulation still prints (42 U.S.C. 1395y(b)(1)(C)); liability and workers' compensation coverage can be primary for the injury they cover.
 
 Dental adds a wrinkle: secondary dental plans differ in how they compute what's left (some pay up to their own allowance, some only the balance the primary left, some never more than they'd have paid as primary), so the secondary payment is a function of the secondary plan's coordination method, which belongs on the plan record.
 
@@ -275,6 +275,7 @@ Design notes:
 - [X12: RFI 2773, eligibility frequency limits shared by multiple procedures](https://x12.org/resources/requests-for-interpretation/rfi-2773-eligibility-frequency-limits-shared-multiple), the 5010 single-code limit and X12's answer
 - [NAIC: Coordination of Benefits Model Regulation](https://content.naic.org/sites/default/files/model-law-120.pdf), order of benefit determination and the birthday rule
 - [42 CFR 411.172: Medicare secondary payer for the working aged](https://www.law.cornell.edu/cfr/text/42/411.172), the 20-employee threshold
+- [42 U.S.C. 1395y: Exclusions from coverage and Medicare as secondary payer](https://www.law.cornell.edu/uscode/text/42/1395y), the 30-month ESRD coordination period in (b)(1)(C)
 
 **Vendor documentation**
 

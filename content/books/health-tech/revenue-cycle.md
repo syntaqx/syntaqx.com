@@ -17,7 +17,7 @@ The revenue cycle is sold in layers: a practice management system (PMS) that hol
 
 | Vendor | What it is | What it publishes |
 | --- | --- | --- |
-| **Waystar** | RCM software and clearinghouse for providers (NASDAQ: WAY) | Its 2025 10-K: "over 7.5 billion healthcare payments transactions," "over $2.4 trillion in annual gross claims," "over 30,000 clients" and "over one million distinct providers"; revenue of $1.10 billion in 2025, up from $944 million in 2024 |
+| **Waystar** | RCM software and clearinghouse for providers (NASDAQ: WAY) | Its 2025 10-K: "over 7.5 billion healthcare payments transactions," "more than $2.4 trillion in annual gross claims," "over 30,000 clients" and "over one million distinct providers"; revenue of $1.10 billion in 2025, up from $944 million in 2024 |
 | **Availity** | Payer-provider network; Availity Essentials is its provider portal | Real-time eligibility, claims, claim status, remittance, prior authorization with attachments and appeals in one portal; a Coverages API for 270/271 |
 | **Stedi** | API-first clearinghouse | Per-transaction list prices: eligibility from $0.30 down to $0.08 a check, claims from $0.30 to $0.10, 835 ERAs from $0.20 to $0.08 per adjudicated claim, 277CA acknowledgments free |
 | **Claim.MD** | Clearinghouse for small practices and billing services | $120 a month for unlimited claims and ERAs plus 1,000 eligibility checks; $60 a month for 100 transactions; $30 a month plus per-use fees |

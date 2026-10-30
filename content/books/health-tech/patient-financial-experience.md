@@ -54,7 +54,7 @@ An estimate stores its inputs (the eligibility check, plan rules, contract rates
 
 ## The No Surprises Act
 
-The No Surprises Act (part of the Consolidated Appropriations Act, 2021) is best known for ending surprise out-of-network bills for emergency care and certain facility care, settled between plans and providers through independent dispute resolution. For most practices, its daily obligation is the good faith estimate.
+The No Surprises Act (part of the Consolidated Appropriations Act, 2021) is best known for ending surprise out-of-network bills for emergency care and certain facility care, settled between plans and providers through independent dispute resolution. Each party to a federal IDR dispute pays an administrative fee, $115 per party under the December 2023 fee rule and $15 per party, whatever the amount or eligibility of the dispute, for disputes initiated from five business days after the IDR operations final rule (released May 28, 2026) was published. For most practices, its daily obligation is the good faith estimate.
 
 **Good faith estimates for uninsured and self-pay patients (45 CFR 149.610).** When such a patient schedules care, or asks for an estimate, the provider must give one:
 
@@ -250,6 +250,8 @@ Design notes:
 - [45 CFR 149.610: Good faith estimates for uninsured or self-pay individuals](https://www.law.cornell.edu/cfr/text/45/149.610), timing, contents, retention
 - [CMS: Progress toward AEOB rulemaking and implementation (April 23, 2024)](https://www.cms.gov/files/document/progress-aeob-rulemaking-implementation.pdf), enforcement deferred pending rulemaking, proposed rules in development, Da Vinci Patient Cost Transparency
 - [Federal Register: Request for information on AEOB and good faith estimates for covered individuals (September 16, 2022)](https://www.federalregister.gov/documents/2022/09/16/2022-19798/request-for-information-advanced-explanation-of-benefits-and-good-faith-estimate-for-covered), still the only AEOB-specific rulemaking document in the Federal Register as of October 2026
+- [Federal Register: Federal IDR administrative fee and certified IDR entity fee ranges final rule (December 21, 2023)](https://www.federalregister.gov/d/2023-27931), the $115 per party administrative fee
+- [CMS: Federal independent dispute resolution operations final rule fact sheet (May 28, 2026)](https://www.cms.gov/newsroom/fact-sheets/federal-independent-dispute-resolution-operations-final-rule), the $15 per party administrative fee and when it applies
 - [45 CFR 149.620: Patient-provider dispute resolution](https://www.law.cornell.edu/cfr/text/45/149.620), the $400 threshold, 120 days, the administrative fee
 - [CMS: CY 2026 OPPS final rule, hospital price transparency changes](https://www.cms.gov/newsroom/fact-sheets/cy-2026-opps-ambulatory-surgical-center-final-rule-hospital-price-transparency-policy-changes), allowed amount statistics from 835 data, attestation, dates
 - [45 CFR 180.90: Civil monetary penalties](https://www.law.cornell.edu/cfr/text/45/180.90), penalty amounts by bed count
