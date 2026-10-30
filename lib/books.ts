@@ -132,16 +132,22 @@ export const BOOKS: Book[] = [
       "It reads in twelve parts, plus a reference. The Business: the parties, the channels, how the money splits, the core data model, the landscape, business models and unit economics, and choosing and hosting a store. Catalog and Pricing: products, variants and bundles, product information, price lists and pricing law, promotions and gift cards, and site search and merchandising. Storefront and Checkout: storefronts and commerce SEO, cart and checkout, taking payment, sales tax, VAT and duties, customers and privacy, and consumer protection online. Orders, Inventory and Fulfillment: order management, inventory, warehouses and 3PLs, shipping and carriers, returns, omnichannel fulfillment, purchasing and replenishment, and cross-border commerce. Subscriptions and Memberships: subscription commerce, memberships and loyalty, and auto-renewal and cancellation law. Marketplaces: selling on Amazon, retail media, Walmart, eBay, Etsy, TikTok Shop and others, multichannel listing, brand protection, running your own marketplace, reviews, and agentic shopping. Wholesale and B2B: selling to retailers, EDI, B2B commerce, and drop ship and print on demand. Point of Sale and Stores: the register, store operations, and restaurants. On-Demand Delivery: the delivery landscape, merchants and menus, dispatch and batching, fees and the law, delivery memberships, and refunds and fraud. Regulated Goods: alcohol, tobacco and age-restricted goods, cannabis and hemp, pesticides, chemicals and hazmat, product safety and recalls, and automotive retail. Marketing and Customers: email, SMS and lifecycle marketing, acquisition and attribution, and customer service. Running the Platform: architecture, ERP and integrations, accounting, fraud, store security and PCI, peak season and drops, AI, metrics, and replatforming. Reference: a glossary of every term, grouped by part.",
     ],
   },
+  {
+    slug: "health-tech",
+    type: "industry",
+    name: "Health Tech",
+    cover: "pulse",
+    summary:
+      "How health care runs in software, from the front desk of a small practice to records, claims, payers, pharmacy and trials, under HIPAA and the Cures Act.",
+    intro: [
+      "A dental office, a vet clinic and a hospital look like different businesses, and underneath they run on the same records: a patient, the people and places that treat them, appointments, encounters, coded procedures, the coverage that pays for some of it and the ledger that bills the rest. Every one of those records lives in several systems at once (a practice management system on a server in the back office, an EHR, a clearinghouse, a payer, a patient engagement platform texting reminders from the front desk), each speaking its own standard (HL7 v2, FHIR, X12, NCPDP, DICOM) and each answerable to HIPAA, the Cures Act's information blocking rules, state health privacy laws and the payer's contract. This book surveys how the industry does each piece, benchmarked across Epic, Oracle Health, athenahealth, Dentrix, Open Dental, ezyVet, Weave, NexHealth, Phreesia, Availity, Waystar, Surescripts, Medidata, Veeva and the others, with no single vendor as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in ten parts, plus a reference. The Business: the parties and how money flows, the landscape, how a practice runs, business models for health software and selling into health care. Records and Interoperability: EHR and PMS records, HL7 v2, FHIR, SMART apps, documents and images, exchange networks, patient matching and code sets. Rules of the Record: HIPAA in practice, information blocking and certification, state health privacy, consent and security. Revenue Cycle: eligibility, claims, clearinghouses, remittance, denials, prior authorization, patient financial experience, coding compliance and value-based care. Practice Management and Patient Engagement: integrating with practice management systems, scheduling and online booking, reminders and recall, phones, texting, intake, reviews, payments, membership plans, veterinary, dental and specialty practices, multi-location groups, and analytics and the AI front desk. Care Delivery: telehealth, e-prescribing, labs, referrals, hospitals, digital health and patient portals. Payers, Pharma and Clinical Trials, and Beyond the US. Running the Platform: architecture, AI, operations, metrics, migrations and data use. Reference: a glossary of every term, grouped by part.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
 export const UPCOMING_BOOKS: UpcomingBook[] = [
-  {
-    name: "Health Tech",
-    type: "industry",
-    cover: "pulse",
-    summary: "Practice management and patient engagement first, then EHRs, FHIR, claims, prior auth and pharmacy, under HIPAA.",
-  },
   {
     name: "Banking & Lending",
     type: "industry",
