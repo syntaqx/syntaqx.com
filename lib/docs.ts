@@ -118,7 +118,22 @@ export function getBookChapters(book: string): DocData[] {
   return getAllBookChapters().filter((c) => c.section === book);
 }
 
+/**
+ * A production build reads each content directory once per process: every
+ * page, its metadata, layout and OG image ask for the chapters, and reading
+ * all ~400 of them took ~180ms a time. Dev reads afresh so edits show at once.
+ */
+const docsCache = new Map<string, DocData[]>();
+
 function readDocs(directory: string): DocData[] {
+  const cached = docsCache.get(directory);
+  if (cached) return cached;
+  const docs = readDocsUncached(directory);
+  if (process.env.NODE_ENV === "production") docsCache.set(directory, docs);
+  return docs;
+}
+
+function readDocsUncached(directory: string): DocData[] {
   if (!fs.existsSync(directory)) return [];
 
   return markdownFiles(directory)
