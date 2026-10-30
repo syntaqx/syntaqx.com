@@ -208,7 +208,8 @@ CREATE TABLE posting_order_rules (
   UNIQUE (institution_id, version, rank)
 );
 
--- The core's own calendar, and the night's checkpoints.
+-- The core's own calendar, and the night's checkpoints. Future dates are loaded
+-- ahead from the holiday schedule, so deadline queries can join days not yet open.
 CREATE TABLE business_days (
   institution_id        UUID NOT NULL REFERENCES institutions (id),
   business_date         DATE NOT NULL,

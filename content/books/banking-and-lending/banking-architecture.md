@@ -299,6 +299,8 @@ WHERE c.rail = :rail
   AND c.is_operating_day;                              -- both the rail and the bank are open
 ```
 
+The join only finds a date if the bank's `business_days` row for it already exists, which is why the core loads its calendar ahead ([Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances#end-of-day-and-the-business-date)).
+
 Design notes:
 
 - **The position never leaves the posting transaction.** Other modules read it through the posting engine's interface or its events, and nothing but the posting engine updates it. The nightly `position_equals_lines` check is the proof that rule held.
