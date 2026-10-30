@@ -49,7 +49,7 @@ CDISC standards carry trial data from collection to submission:
 - **ADaM** supports "efficient generation, replication, and review of clinical trial statistical analyses" and "traceability among analysis results, analysis data, and data represented in" SDTM; ADSL, the subject-level analysis dataset, is its anchor.
 - **Define-XML** "transmits metadata that describes any tabular dataset structure"; v2.1 is current.
 
-FDA requires these standards for study data in NDAs, ANDAs and certain BLAs for studies that started after December 2016, and in commercial INDs for studies after December 2017, through its Data Standards Catalog and Study Data Technical Conformance Guide. <!-- source-gap: fda-study-data-dates | secondary | FDA study data standards required for studies starting after December 17, 2016 (NDAs, ANDAs, certain BLAs) and December 17, 2017 (commercial INDs) | closes with: the FDA Data Standards Catalog or the binding guidance "Providing Regulatory Submissions in Electronic Format: Standardized Study Data," opened (only search snippets of FDA PDFs were read) | checked: 2026-10-29 -->
+FDA requires these standards under section 745A(a) of the FD&C Act: its binding guidance on standardized study data says studies starting on or after December 18, 2016 in NDAs, ANDAs and certain BLAs, and on or after December 18, 2017 in certain INDs, must use the standards listed in its Data Standards Catalog, with the Study Data Technical Conformance Guide covering the details. A newly supported standard becomes required for studies starting 24 months after the transition date in its Federal Register notice.
 
 For software, the standards are a mapping problem with traceability: each SDTM variable should trace back to an eCRF field and forward to the ADaM variables derived from it, and the mapping specification is itself a versioned, validated document.
 
@@ -216,6 +216,8 @@ Design notes:
 - [European Commission: EudraLex Volume 4](https://health.ec.europa.eu/medicinal-products/eudralex/eudralex-volume-4_en), Annex 11 still at its January 2011 revision
 - [FDA: Computer Software Assurance for Production and Quality Management System Software (February 2026)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/computer-software-assurance-production-and-quality-management-system-software), current final guidance superseding the September 2025 version
 - [FDA: Patient-Reported Outcome Measures guidance (December 2009)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/patient-reported-outcome-measures-use-medical-product-development-support-labeling-claims), PROs supporting labeling claims
+- [FDA: Providing Regulatory Submissions in Electronic Format, Standardized Study Data (Revision 2, June 2021)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/providing-regulatory-submissions-electronic-format-standardized-study-data), binding guidance under FD&C Act 745A(a), December 18, 2016 and 2017 start dates, 24-month rule for new standards
+- [FDA: Data Standards Catalog](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/data-standards-catalog), the supported and required standards
 - [ISPE: GAMP 5 Guide, 2nd Edition](https://ispe.org/publications/guidance-documents/gamp-5-guide-2nd-edition), published July 2022, critical thinking, CSA, iterative methods
 
 **Standards**

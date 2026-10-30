@@ -88,7 +88,7 @@ A network is the set of providers who signed a contract with the payer to accept
 
 ## Coordination of Benefits
 
-A person can have more than one coverage: two employer plans through two spouses, an employer plan and Medicare, Medicare and Medicaid. Coordination of benefits rules decide which pays first. The commercial rules come from the National Association of Insurance Commissioners model regulation adopted by most states (the birthday rule for dependent children, employee before dependent, active before COBRA), and Medicare Secondary Payer rules decide when Medicare pays second (for example behind a large employer's group plan for a working beneficiary). The provider workflow for primary and secondary claims is in [Eligibility & Benefits](/books/health-tech/eligibility-and-benefits) and [Remittance & Posting](/books/health-tech/remittance-and-payment-posting); the payer side is that each payer must know about the other coverage to coordinate, which is what the coverage order on `coverages` records. <!-- source-gap: cob-rules | missing | NAIC coordination of benefits model regulation (birthday rule, order of benefit determination) and Medicare Secondary Payer conditions | closes with: NAIC Model Regulation 120 text and CMS Medicare Secondary Payer manual chapter, opened | checked: 2026-10-29 -->
+A person can have more than one coverage: two employer plans through two spouses, an employer plan and Medicare, Medicare and Medicaid. Coordination of benefits rules decide which pays first. The commercial rules come from the National Association of Insurance Commissioners' Coordination of Benefits Model Regulation (Model 120), which states adopt through their insurance codes. Each plan applies the first rule that settles the order: the plan covering the person other than as a dependent is primary; for a child of parents married or living together, "the plan of the parent whose birthday falls earlier in the calendar year" is primary (the birthday rule), with court decrees and custody deciding for separated parents; an active employee's plan comes before a retiree's or laid-off employee's; a plan covering the person as an employee or dependent comes before COBRA or state continuation coverage; then the longer-held coverage, and failing all of those, the plans share the allowable expense equally (Section 6). Medicare Secondary Payer rules decide when Medicare pays second: behind a group health plan from current employment when the employer has 20 or more employees (beneficiaries 65 and over) or 100 or more (beneficiaries entitled through disability), behind a group plan or COBRA during the 30-month coordination period for end-stage renal disease, and behind no-fault, liability and workers' compensation coverage, with conditional payments repaid later. The provider workflow for primary and secondary claims is in [Eligibility & Benefits](/books/health-tech/eligibility-and-benefits) and [Remittance & Posting](/books/health-tech/remittance-and-payment-posting); the payer side is that each payer must know about the other coverage to coordinate, which is what the coverage order on `coverages` records.
 
 ## How to Build It
 
@@ -194,6 +194,7 @@ Design notes:
 
 - [29 U.S.C. 1144: Other laws (Cornell LII)](https://www.law.cornell.edu/uscode/text/29/1144), ERISA preemption, the insurance saving clause and the deemer clause
 - [42 U.S.C. 300gg-115: Provider directory information (Cornell LII)](https://www.law.cornell.edu/uscode/text/42/300gg-115), 90-day verification, 2-business-day updates, 1-business-day responses, cost-sharing protection
+- [NAIC: Coordination of Benefits Model Regulation (Model 120)](https://content.naic.org/sites/default/files/model-law-120.pdf), Section 6 order of benefit determination rules, the birthday rule, the consumer explanatory booklet
 
 **Agencies**
 
@@ -202,6 +203,7 @@ Design notes:
 - [Medicaid.gov: Managed care](https://www.medicaid.gov/medicaid/managed-care), managed care as capitated contracts with MCOs, 42 CFR Part 438
 - [HealthCare.gov: Out-of-pocket maximum/limit](https://www.healthcare.gov/glossary/out-of-pocket-maximum-limit/), the 2026 limit of $10,600 and $21,200 and what counts toward it
 - [CMS: Medical loss ratio](https://www.cms.gov/marketplace/private-health-insurance/medical-loss-ratio), the 80% or 85% standard and rebates since 2012
+- [CMS: Medicare Secondary Payer](https://www.cms.gov/medicare/coordination-benefits-recovery/overview/secondary-payer), when Medicare pays second: 20+ and 100+ employee thresholds, the 30-month ESRD coordination period, no-fault, liability and workers' compensation, conditional payments
 - [FTC: Interim staff report on prescription drug middlemen (July 9, 2024)](https://www.ftc.gov/news-events/news/press-releases/2024/07/ftc-releases-interim-staff-report-prescription-drug-middlemen), PBMs vertically integrated with the largest insurers
 
 **Market data**
