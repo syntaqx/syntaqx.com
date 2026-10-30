@@ -104,7 +104,7 @@ Much of US consumer credit is made outside banks or through them only on paper:
 - **Consumer installment and BNPL.** Affirm facilitated $50.2 billion of GMV in fiscal 2026 for about 27.8 million active consumers, originating through its bank partners. Upstart's marketplace originated $4.23 billion across 558,014 loans in the second quarter of 2026 for more than 100 bank and credit union partners.
 - **Lenders that became banks.** LendingClub, which described itself in its 2025 10-K as "a leading nationally chartered digital bank" (LendingClub Bank, N.A.), renamed itself Happen, Inc. in June 2026, as its EDGAR record now shows; Upstart received conditional approval for Upstart Bank, N.A. in July 2026 (below).
 
-The Lending Business covers how each model makes money, and Lender Licensing & Bank Partnerships covers the licenses and the true lender question that push lenders toward charters.
+[The Lending Business](/books/banking-and-lending/lending-business) covers how each model makes money, and Lender Licensing & Bank Partnerships covers the licenses and the true lender question that push lenders toward charters.
 
 ## Who Owns Whom: Recent Moves
 

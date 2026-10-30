@@ -125,17 +125,14 @@ Banks lending across state lines export their home state's rate, a state can opt
 
 ## How to Build It
 
-These are deltas against the core data model defined in The Banking & Lending Business. An installment loan is an `accounts` row with `account_kind = 'loan'`, a `loans` row (principal, rate, term, amortization method), a versioned `payment_schedules` with its `schedule_installments`, `loan_payments` with their `payment_allocations`, and `fee_assessments` for the origination fee. [The Lending Business](/books/banking-and-lending/lending-business#how-to-build-it) added `loan_pricing`. This chapter adds disbursements, accrual method, payoff quotes, the rate cap rules and the payment attempt limits.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). An installment loan is an `accounts` row with `account_kind = 'loan'` (its `institution_id` is the lender of record), a `loans` row (principal, rate, term, `amortization` of `level_payment` or `daily_simple_interest`, owner and servicer), a versioned `payment_schedules` with its `schedule_installments`, `loan_payments` with their `payment_allocations`, and `fee_assessments` for the origination fee. [The Lending Business](/books/banking-and-lending/lending-business#how-to-build-it) added `loan_pricing`. This chapter adds precomputed loans and the prepayment policy, disbursements, payoff quotes, the rate cap rules and the payment attempt limits.
 
 ```sql
 ALTER TABLE loans
-  ADD COLUMN accrual_method TEXT NOT NULL
-    CHECK (accrual_method IN ('scheduled_simple', 'daily_simple', 'precomputed')),
-  ADD COLUMN day_count_basis SMALLINT NOT NULL DEFAULT 365,
+  ADD COLUMN precomputed BOOLEAN NOT NULL DEFAULT false,    -- add-on interest, rebated on payoff
   ADD COLUMN rebate_method TEXT CHECK (rebate_method IN ('actuarial', 'rule_of_78s')),  -- precomputed only
   ADD COLUMN prepayment_policy TEXT NOT NULL DEFAULT 'shorten_term'
-    CHECK (prepayment_policy IN ('shorten_term', 'reamortize', 'borrower_choice')),
-  ADD COLUMN lender_of_record UUID NOT NULL REFERENCES institutions (id);   -- whose note it is
+    CHECK (prepayment_policy IN ('shorten_term', 'reamortize', 'borrower_choice'));
 
 ALTER TABLE loans ADD CONSTRAINT rule_of_78s_term
   CHECK (rebate_method IS DISTINCT FROM 'rule_of_78s' OR term_months <= 61);  -- 15 U.S.C. 1615
@@ -207,7 +204,7 @@ CREATE TABLE payment_transfer_attempts (     -- 12 CFR 1041.8 for covered loans;
 );
 ```
 
-The schedule is generated once at origination by the same function that produces the disclosure, stored as `schedule_installments`, and replaced only by a new `payment_schedules` version with a reason (modification, deferral, re-amortization after a partial prepayment). For `daily_simple` loans, a nightly job posts `interest_accruals` from the principal balance and `day_count_basis`, and each payment's allocation reads the accrued interest as of its effective date, so a backdated payment correctly reverses and reposts the days after it ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)). The disbursement rows must sum to the principal, with the withheld fee as its own row, so the amount financed on the disclosure is a query, not a separate number. Before any debit on a covered loan, the collection job reads the latest `consecutive_nsf`; at two, it stops and requires a new authorization. `rate_cap_rules` is reference data with its citation on every row; `rate_cap_evaluations` records every rule checked for every offer, including the ones that passed, because the examiner's question is "show me that you checked."
+The schedule is generated once at origination by the same function that produces the disclosure, stored as `schedule_installments`, and replaced only by a new `payment_schedules` version with a reason (modification, deferral, re-amortization after a partial prepayment). For `daily_simple_interest` loans, a nightly job posts `interest_accruals` from the principal balance and the product version's day count, and each payment's allocation reads the accrued interest as of its effective date, so a backdated payment correctly reverses and reposts the days after it ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)). The disbursement rows must sum to the principal, with the withheld fee as its own row, so the amount financed on the disclosure is a query, not a separate number. Before any debit on a covered loan, the collection job reads the latest `consecutive_nsf`; at two, it stops and requires a new authorization. `rate_cap_rules` is reference data with its citation on every row; `rate_cap_evaluations` records every rule checked for every offer, including the ones that passed, because the examiner's question is "show me that you checked."
 
 ## Auditing
 

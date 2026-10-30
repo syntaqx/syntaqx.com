@@ -112,7 +112,7 @@ Who makes the loan decides which of the four lines it can move:
 
 ## How to Build It
 
-These are deltas against the core data model defined in The Banking & Lending Business: `products` (versioned loan products), `accounts` (one per loan or line), `loans` (terms extending an account), `credit_decisions`, `interest_accruals`, `fee_assessments`, and `journal_entries` with `journal_lines`. This chapter adds the records that let anyone explain a loan's price and its economics after the fact.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model): `products` (versioned loan products), `accounts` (one per loan or line), `loans` (terms extending an account), `credit_decisions`, `interest_accruals`, `fee_assessments`, and `journal_entries` with `journal_lines`. This chapter adds the records that let anyone explain a loan's price and its economics after the fact.
 
 ```sql
 CREATE TABLE pricing_grids (                 -- versioned: the price a product offers by risk and term

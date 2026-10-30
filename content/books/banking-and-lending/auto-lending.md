@@ -149,7 +149,7 @@ For the system: the lender's record of a contract points at the authoritative co
 
 ## How to Build It
 
-These are deltas against the core data model defined in The Banking & Lending Business: an auto loan is an `accounts` row (`account_kind = 'loan'`) with a `loans` row, `collateral` for the vehicle, an `applications` row from the dealer, `credit_decisions` per lender quote, and the schedule and payment tables from [Personal & Installment Loans](/books/banking-and-lending/installment-loans#how-to-build-it). The Commerce volume models the dealer's side of the same transaction; the records map one to one: Commerce's `vehicles` (the VIN) to this book's `collateral`, its `deals` to `indirect_contracts`, its `deal_fi_products` to `contract_products`, and its `title_registrations` to `lien_records`.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model): an auto loan is an `accounts` row (`account_kind = 'loan'`) with a `loans` row, `collateral` for the vehicle, an `applications` row from the dealer, `credit_decisions` per lender quote, and the schedule and payment tables from [Personal & Installment Loans](/books/banking-and-lending/installment-loans#how-to-build-it). The Commerce volume models the dealer's side of the same transaction; the records map one to one: Commerce's `vehicles` (the VIN) to this book's `collateral`, its `deals` to `indirect_contracts`, its `deal_fi_products` to `contract_products`, and its `title_registrations` to `lien_records`.
 
 ```sql
 CREATE TABLE dealers (

@@ -122,6 +122,33 @@ Banking borrows its words from accounting, law and a century of bank operations,
 ## Lending Products
 
 - **Amortization (level payment):** repaying a loan in equal periodic payments whose interest share falls and principal share rises over the term ([The Banking & Lending Business](/books/banking-and-lending/banking-business#the-life-of-a-loan)).
+- **Amortized cost:** measuring a loan at its principal adjusted for deferred fees and costs, with a CECL allowance for expected losses booked at origination ([The Lending Business](/books/banking-and-lending/lending-business#amortized-cost-or-fair-value)).
+- **Average daily balance:** the sum of a card balance at the end of each day in the cycle divided by the days in the cycle, to which the daily periodic rate applies ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#interest-calculation-methods)).
+- **Balance segment:** a part of a card balance with its own rate and rules: purchases, cash advances, balance transfers, promotional, deferred interest, penalty ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#balance-segments-and-aprs)).
+- **Buy rate (indirect auto):** the risk-based rate at which a lender will buy a dealer's retail installment contract; not the Payments volume's partner buy rate ([Auto Lending](/books/banking-and-lending/auto-lending#direct-and-indirect-lending)).
+- **Captive finance company:** a manufacturer's own lender, which carries the parent's subsidized rates, leases and dealer floorplan ([Auto Lending](/books/banking-and-lending/auto-lending#captive-finance)).
+- **Charge card:** a card whose balance is due in full each cycle, so it carries no revolving balance or interest ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#how-the-platforms-do-it)).
+- **Cost of funds:** what the money a lender lends costs it: deposit rates for a bank, facility and securitization spreads for a nonbank ([The Lending Business](/books/banking-and-lending/lending-business#cost-of-funds)).
+- **Daily simple interest:** interest accrued each day on the outstanding principal, so early payments save interest and late ones cost it ([Personal & Installment Loans](/books/banking-and-lending/installment-loans#how-interest-accrues)).
+- **Dealer reserve (participation):** the lender's payment to a dealer for a contract, usually a share of the interest from marking the contract rate above the buy rate ([Auto Lending](/books/banking-and-lending/auto-lending#dealer-markup-and-participation)).
+- **Deferred interest:** a promotion under which interest accrues but is waived if the balance is paid in full by the end of the period, and charged if not; not a grace period ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#balance-segments-and-aprs)).
+- **Double-cycle billing:** charging interest on the previous cycle's balance after a grace period is lost; barred by Regulation Z ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#grace-periods)).
+- **Fair value (loans):** measuring a loan each period at what it would sell for, with expected losses in the price and changes in earnings ([The Lending Business](/books/banking-and-lending/lending-business#amortized-cost-or-fair-value)).
+- **GAP (guaranteed asset protection):** insurance or a debt cancellation waiver that covers what's owed beyond a totaled or stolen vehicle's value, refundable when it stops providing a benefit ([Auto Lending](/books/banking-and-lending/auto-lending#gap-and-add-on-products)).
+- **Grace period:** the time after a card statement during which new purchases accrue no interest if the statement balance is paid in full ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#grace-periods)).
+- **Holder Rule:** the FTC rule requiring consumer credit contracts from a sale to carry a notice that any holder takes them subject to the buyer's claims against the seller ([Auto Lending](/books/banking-and-lending/auto-lending#direct-and-indirect-lending)).
+- **Indirect lending:** lending through a dealer, which submits the application, writes the contract as original creditor and assigns it to the lender ([Auto Lending](/books/banking-and-lending/auto-lending#direct-and-indirect-lending)).
+- **Minimum payment warning:** the card statement box showing how long and how much it takes to repay paying only the minimum, and the 36-month alternative ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#minimum-payments)).
+- **Money factor:** a lessor's rent charge per dollar of capitalized cost plus residual, per month; a lease rate that may not be called an APR ([Auto Lending](/books/banking-and-lending/auto-lending#leases)).
+- **Origination fee:** a fee charged at funding, usually deducted from the proceeds, which is a finance charge and raises the APR above the interest rate ([Personal & Installment Loans](/books/banking-and-lending/installment-loans#origination-fees-and-the-apr)).
+- **Payday alternative loan (PAL):** a federal credit union's small-dollar loan under NCUA rules: PAL I up to $1,000 over 6 months, PAL II up to $2,000 over 12 ([Personal & Installment Loans](/books/banking-and-lending/installment-loans#small-dollar-and-payday-loans)).
+- **Penalty APR:** a higher rate a card issuer may apply to an existing balance only after a payment is more than 60 days late, reversed after six on-time payments ([Credit Cards as Credit](/books/banking-and-lending/credit-cards#the-card-act-rules)).
+- **Residual value:** a leased vehicle's estimated value at the end of the term, which the lessor carries the risk of under a closed-end lease ([Auto Lending](/books/banking-and-lending/auto-lending#leases)).
+- **Retail installment contract (RIC):** a credit sale contract a dealer writes with the buyer as original creditor and then assigns to a lender ([Auto Lending](/books/banking-and-lending/auto-lending#direct-and-indirect-lending)).
+- **Rule of 78s:** a rebate method that front-loads earned interest on a precomputed loan; barred for consumer terms over 61 months ([Personal & Installment Loans](/books/banking-and-lending/installment-loans#how-interest-accrues)).
+- **Subvention:** a manufacturer's payment to its captive to offer below-market loan rates or lease terms ([Auto Lending](/books/banking-and-lending/auto-lending#captive-finance)).
+- **Vintage:** the month or quarter a loan was originated, the cohort its losses are read by ([The Lending Business](/books/banking-and-lending/lending-business#credit-losses)).
+- **Yield (loan):** what a loan portfolio earns as a rate on its average balance, interest plus fees that are part of the cost of credit ([The Lending Business](/books/banking-and-lending/lending-business#yield)).
 
 ## Business Lending
 

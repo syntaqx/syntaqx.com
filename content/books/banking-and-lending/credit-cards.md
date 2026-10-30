@@ -131,13 +131,13 @@ For the system, the late fee is a rule with versions: the amount (cost-justified
 
 ## How to Build It
 
-These are deltas against the core data model defined in The Banking & Lending Business. A card's credit line is an `accounts` row with `account_kind = 'line'`, attached to the program's product version; the Payments volume's `card_accounts` (which carries `credit_limit` and `receivable_owner`) maps to it one to one, and `cards` and authorizations stay where [Card Issuing](/books/payments/card-issuing#how-to-build-it) and [Issuer Processing](/books/payments/issuer-processing#how-to-build-it) put them. Interest posts through `interest_accruals`, fees through `fee_assessments`, statements through `statements`, all to `journal_entries`.
+These are deltas against [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model). A card's credit line is an `accounts` row with `account_kind = 'line'` and a `loans` row with `amortization = 'revolving'` (its `principal` is the original limit), attached to the program's product version; the Payments volume's `card_accounts` (which carries `credit_limit` and `receivable_owner`) maps to it one to one, and `cards` and authorizations stay where [Card Issuing](/books/payments/card-issuing#how-to-build-it) and [Issuer Processing](/books/payments/issuer-processing#how-to-build-it) put them. Interest posts through `interest_accruals`, fees through `fee_assessments`, statements through `statements`, all to `journal_entries`.
 
 ```sql
 CREATE TABLE credit_lines (                  -- the revolving terms on a line account
-  account_id          UUID PRIMARY KEY REFERENCES accounts (id),
+  account_id          UUID PRIMARY KEY REFERENCES loans (account_id),
   card_account_id     UUID UNIQUE REFERENCES card_accounts (id),   -- from Payments, when card-accessed
-  credit_limit        BIGINT NOT NULL CHECK (credit_limit >= 0),
+  credit_limit        BIGINT NOT NULL CHECK (credit_limit >= 0),  -- current; history in credit_limit_changes
   cash_limit          BIGINT,
   cycle_close_day     SMALLINT NOT NULL CHECK (cycle_close_day BETWEEN 1 AND 28),
   due_day             SMALLINT NOT NULL CHECK (due_day BETWEEN 1 AND 31),   -- the same day every cycle
