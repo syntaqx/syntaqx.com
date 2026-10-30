@@ -88,7 +88,7 @@ Workplace software borrows its words from consumer chat, document editing, IT ad
 - **Slack Connect:** Slack's shared channels and DMs between organizations, with each organization's settings governing its own members' messages ([Guests & Cross-Org Collaboration](/books/workplace-and-collaboration/guests-and-external-collaboration#who-owns-shared-content)).
 - **System role:** A Slack admin role carved out for one job, such as Legal Holds Admin, Export Admin or Users Admin ([Admin Consoles & Policies](/books/workplace-and-collaboration/admin-consoles-and-policies#slack)).
 - **Tenant isolation:** Guaranteeing one customer's data can't reach another's, across primary stores, indexes, caches and exports ([Tenants, Workspaces & Organizations](/books/workplace-and-collaboration/tenants-and-workspaces#tenant-isolation)).
-- **Zookie:** Zanzibar's consistency token, letting a client require a permission answer at least as fresh as a recent change ([Permissions & Sharing](/books/workplace-and-collaboration/permissions-and-sharing#zanzibar-and-relationship-based-access-control)).
+- **Zookie:** Zanzibar's opaque consistency token encoding a timestamp, stored with a content version so later permission checks for it run on a snapshot at least that fresh ([Permissions & Sharing](/books/workplace-and-collaboration/permissions-and-sharing#zanzibar-and-relationship-based-access-control)).
 
 ## Chat and Messaging
 
