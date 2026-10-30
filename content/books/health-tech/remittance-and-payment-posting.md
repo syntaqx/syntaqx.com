@@ -19,7 +19,7 @@ As of October 2026, from regulators' and vendors' documentation:
 | --- | --- | --- |
 | **HIPAA standards (45 CFR 162.1602)** | Health care payments by EFT use the NACHA CCD+ with the 835's "TRN Reassociation Trace Number" in the addenda; the remittance is the 835 005010X221 | One trace number ties the deposit to its ERA |
 | **CAQH CORE rule 370** (adopted under HIPAA) | The plan must release the 835 "No sooner than three business days" before and "No later than three business days after" the CCD+ effective entry date | "Late or missing" means four business days after either the payment or the 835 arrives |
-| **CMS virtual card guidance (May 24, 2022)** | Plans may pay by virtual card, but if a provider asks for EFT and ERA, "the health plan must comply"; HHS doesn't regulate the fees | A plan "may not require a provider to agree to receive payment or reassociation services from its business associate" |
+| **CMS virtual card guidance (March 22, 2022)** | Plans may pay by virtual card, but if a provider asks for EFT and ERA, "the health plan must comply"; HHS doesn't regulate the fees | A plan "may not require a provider to agree to receive payment or reassociation services from its business associate" |
 | **Medicare** | EFT is required at enrollment (CMS-588) | 835s through the contractor's EDI gateway |
 | **Stedi** | 835s delivered as events or by polling, as JSON or X12 | Match claims on CLP01 to the claim's patient control number, lines on the line item control number; a repeated TRN02 marks a duplicate ERA |
 
@@ -88,7 +88,7 @@ Small practices often never see the addenda, because their bank shows deposits a
 
 Some payers, and the payment vendors they use, pay providers with a single-use virtual credit card: a card number delivered by fax, email or portal, which the practice runs through its own card terminal for the payment amount. The practice pays its card processing fees on that amount, so a payment by card costs the practice a few percent of the claim that an ACH credit wouldn't, and the payer or its vendor may earn a share of the card's interchange.
 
-CMS's guidance letter of May 24, 2022, from its National Standards Group, sets the boundaries under HIPAA:
+CMS's guidance letter of March 22, 2022, from its National Standards Group, sets the boundaries under HIPAA:
 
 - The standards "permit health plans to pay claims by VCC."
 - "HHS does not regulate … fees assessed by health plans or credit card networks for VCC payments."
@@ -282,7 +282,7 @@ Design notes:
 
 - [45 CFR 162.1602: Standards for EFT and remittance advice](https://www.law.cornell.edu/cfr/text/45/162.1602), CCD+, the TRN in addenda field 3, the 835 version
 - [CAQH CORE: EFT and ERA Reassociation Rule (CORE 370)](https://www.caqh.org/hubfs/EFTERA_Reassociation_Rule.pdf), the three-business-day release window and the late or missing definition
-- [CMS: Guidance letter on virtual credit cards, EFT and ERA (May 24, 2022)](https://www.cms.gov/files/document/guidance-letter-vcc-eft-era.pdf), plans may pay by card, must honor EFT and ERA requests, can't require their business associate's services
+- [CMS: Guidance letter on virtual credit cards, EFT and ERA (March 22, 2022)](https://www.cms.gov/files/document/guidance-letter-vcc-eft-era.pdf), plans may pay by card, must honor EFT and ERA requests, can't require their business associate's services
 - [CMS: Administrative simplification FAQs](https://www.cms.gov/priorities/key-initiatives/burden-reduction/administrative-simplification/subregulatory-guidance/faqs), the guidance letter's FAQ companion
 - [CMS-588: EFT authorization agreement](https://www.cms.gov/medicare/cms-forms/cms-forms/downloads/cms588.pdf), Medicare's EFT requirement
 

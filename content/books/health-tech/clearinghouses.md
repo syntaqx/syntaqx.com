@@ -19,7 +19,7 @@ As of October 2026, from each company's pages and filings:
 | --- | --- | --- | --- | --- |
 | **Change Healthcare (Optum)** | Providers, payers, pharmacies; part of UnitedHealth Group's Optum Insight | Files, portals, APIs | Not published | Systems taken down after the February 2024 cyberattack; UnitedHealth's 10-K estimated about 190 million people affected |
 | **Waystar** | Hospitals, health systems, physician groups (NASDAQ: WAY) | Platform, files, integrations | Not published | 2025 10-K: "over 7.5 billion healthcare payments transactions," "over 30,000 clients"; more than 30,000 providers began adopting its solutions after a competitor's 2024 cyber incident |
-| **Availity** | Providers and payers; Availity Essentials portal for providers | Portal, APIs, files | Not published on the Essentials page | Eligibility, claims, status, remittance, prior authorization with attachments, appeals |
+| **Availity** | Providers and payers; Availity Essentials portal for providers | Portal, APIs, files | Free to providers for payers that sponsor Essentials; Essentials Plus, a monthly subscription for non-sponsoring payers, with no price on its page | Eligibility, claims, status, remittance, prior authorization with attachments, appeals |
 | **Stedi** | Software companies and providers | JSON APIs, raw X12 APIs, SFTP | Per transaction, published: claims $0.30 down to $0.10, eligibility $0.30 to $0.08, ERAs $0.20 to $0.08 per adjudicated claim, 277CA free; free sandbox | Enrollment by API with statuses; webhooks for 277CA and 835 |
 | **Claim.MD** | Small practices and billing services | Web, uploads, PMS integrations, API | Unlimited plan $120 a month (claims, ERAs, 1,000 eligibility checks); $60 for 100 transactions; $30 base | Paper claims $1.00, attachments $0.60 |
 | **Office Ally** | Small practices | Web Service Center, uploads, integrations | "Start for Free*" with "Transactional fees may apply"; eligibility $10 a month for 100 | Attachments $0.55; an EHR at $44.95 a month per provider |
@@ -233,5 +233,6 @@ Design notes:
 - [Claim.MD: Pricing](https://www.claim.md/pricing), monthly plans, paper and attachment fees
 - [Office Ally: Pricing](https://cms.officeally.com/products/pricing), the free tier and add-on fees
 - [Availity Essentials](https://www.availity.com/essentials), the provider portal's transactions
+- [Availity: Essentials Plus](https://www.availity.com/essentials-plus/), free submission to sponsoring payers and the monthly subscription for others
 - [Vyne Dental: Vyne Trellis](https://vynedental.com/blog/unlock-the-potential-of-vyne-trellis/), dental claims, attachments, eligibility, practice count
 - [DentalXChange: Real-Time](https://help.dentalxchange.com/DentalXChangeHelp/RealTime.htm), dental eligibility and claim status, PMS integrations

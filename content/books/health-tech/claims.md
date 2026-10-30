@@ -38,7 +38,7 @@ Every 837 has a paper ancestor, and the forms still matter: payers that don't ac
 | --- | --- | --- | --- |
 | **1500 Health Insurance Claim Form** (the CMS-1500), version 02/12 | National Uniform Claim Committee (NUCC); in use since April 1, 2014 | Professional claims: physicians, therapists, labs, ambulance, suppliers | 837P |
 | **UB-04** (CMS-1450) | National Uniform Billing Committee (NUBC), with the "Official UB-04 Data Specifications Manual" copyrighted by the American Hospital Association | Institutional claims: hospitals, skilled nursing, home health, hospice | 837I |
-| **ADA Dental Claim Form**, 2024 version | American Dental Association, with its Council on Dental Benefit Programs | Dental claims and predeterminations | 837D |
+| **ADA Dental Claim Form**, 2024 version | American Dental Association (prepared by ADA Practice Institute staff, with contributions from its Council on Dental Benefit Programs) | Dental claims and predeterminations | 837D |
 
 The forms differ in what they center. The 1500 is a list of service lines, each with a date, place of service, procedure code, up to four modifiers, a pointer to the diagnoses, a charge and units. The UB-04 adds revenue codes (the department that provided each line), type of bill, admission and discharge data, occurrence and value codes, and the attending and operating physicians. The ADA form adds tooth numbers and surfaces, the area of the mouth, prosthesis replacement dates, orthodontic treatment months and a place to say whether X-rays or models are enclosed.
 
