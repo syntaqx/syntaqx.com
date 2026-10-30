@@ -96,7 +96,7 @@ The UK brought interest-free BNPL into regulation on **July 15, 2026** ("Regulat
 
 For the system, the UK regime is a property of each agreement fixed at its creation: a loan entered on July 14, 2026 is unregulated for life, and one entered on July 15 carries a creditworthiness record, key product information as delivered, forbearance obligations and an ombudsman-ready complaint file.
 
-US furnishing of BNPL loans to the bureaus, and how scoring models treat them, is covered in Furnishing Credit Data.
+US furnishing of BNPL loans to the bureaus, and how scoring models treat them, is covered in [Furnishing Credit Data](/books/banking-and-lending/credit-reporting).
 
 ## How to Build It
 

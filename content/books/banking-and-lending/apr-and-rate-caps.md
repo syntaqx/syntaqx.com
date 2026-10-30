@@ -102,7 +102,7 @@ For a covered member of the armed forces or a dependent, a creditor may not impo
 
 Separately, a servicemember's debts incurred before military service, alone or jointly with a spouse, may not bear interest above **6%** a year during service, and for mortgages through one year after service ends (50 U.S.C. 3937). Interest above 6% is **forgiven**, not deferred, and periodic payments drop by the forgiven amount. "Interest" includes service charges, renewal charges and fees (bona fide insurance excepted). The servicemember sends written notice with a copy of orders within 180 days after release; the creditor may instead rely on the Defense Manpower Data Center; once notice arrives, the cap applies from the date the servicemember was called to service, which means a retroactive recalculation. A court can relieve the creditor if service doesn't materially affect the ability to pay, and a knowing violation is a crime.
 
-For the system the SCRA benefit is a rate change on an existing loan with an effective date in the past, so it needs the same backdated reposting machinery as a payment correction, plus a record of the notice, the orders and the period. Collections & Recovery covers the SCRA's protections against default judgments and foreclosure.
+For the system the SCRA benefit is a rate change on an existing loan with an effective date in the past, so it needs the same backdated reposting machinery as a payment correction, plus a record of the notice, the orders and the period. [Collections & Recovery](/books/banking-and-lending/collections) covers the SCRA's protections against default judgments and foreclosure.
 
 ## State Usury and Rate Exportation
 

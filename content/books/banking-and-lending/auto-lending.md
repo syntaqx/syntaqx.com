@@ -139,7 +139,7 @@ A car loan's collateral can be taken back without going to court, and that makes
 
 **What goes wrong.** CFPB examiners found servicers repossessing cars after the borrower had made a payment, agreed to a deferral or a modification, because the repossession order sent to the vendor wasn't canceled, and repossessing without a valid recorded lien (Supervisory Highlights, 2022 and 2024). The December 2022 order against Wells Fargo included wrongful repossessions, misapplied auto payments and unrefunded GAP fees among its findings.
 
-The engineering lesson is that a repossession is a workflow with an external party (the agent) acting on the lender's last instruction, so every event that cures or pauses the default (payment, promise to pay, deferral, modification, bankruptcy filing, a servicemember status check) has to cancel the outstanding order synchronously and get the agent's acknowledgment, and nothing may be dispatched without a confirmed, perfected lien. Collections & Recovery covers the delinquency path that leads here; Loan Servicing covers deferrals.
+The engineering lesson is that a repossession is a workflow with an external party (the agent) acting on the lender's last instruction, so every event that cures or pauses the default (payment, promise to pay, deferral, modification, bankruptcy filing, a servicemember status check) has to cancel the outstanding order synchronously and get the agent's acknowledgment, and nothing may be dispatched without a confirmed, perfected lien. [Collections & Recovery](/books/banking-and-lending/collections) covers the delinquency path that leads here; [Loan Servicing](/books/banking-and-lending/loan-servicing#deferrals-and-modifications) covers deferrals.
 
 ## Electronic Contracts and Control
 

@@ -22,7 +22,7 @@ Strip the vendor names away and every core does the same jobs, whether it runs o
 | **Account servicing** | Opening, maintenance, status changes (dormant, frozen, charged off, closed), stop payments, standing orders | [Dormancy, Escheat & Closing Accounts](/books/banking-and-lending/dormancy-and-escheat) |
 | **Posting** | Applying debits and credits in a defined order, computing ledger, available and collected balances, holds | [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances) |
 | **Interest and fees** | Daily accrual, periodic crediting or billing, fee assessment, waivers | [Interest, APY & Statements](/books/banking-and-lending/interest-and-statements) |
-| **Loan servicing** | Schedules, payment application, delinquency, payoff | Loan Servicing |
+| **Loan servicing** | Schedules, payment application, delinquency, payoff | [Loan Servicing](/books/banking-and-lending/loan-servicing) |
 | **End of day** | Closing the business day: final posting, accrual, aging, snapshots, GL summaries, files out | [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances#end-of-day-and-the-business-date) |
 | **Statements and notices** | Periodic statements, maturity and change-in-terms notices, tax forms | [Interest, APY & Statements](/books/banking-and-lending/interest-and-statements) |
 | **GL interface** | Summarizing account activity into journal entries for the general ledger | [The General Ledger and Its Subledgers](#the-general-ledger-and-its-subledgers) below |
