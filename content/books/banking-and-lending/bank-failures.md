@@ -92,7 +92,7 @@ What happens to the running systems between Friday's close and Monday's opening,
 
 The hard cases are the accounts the bank's own records can't settle in a weekend. A custodial or FBO account holding thousands of fintech customers' money is insured per owner only if the bank's records "expressly disclose" the custodial relationship and each owner's interest is ascertainable from records kept "in good faith and in the regular course of business" (12 CFR 330.5), which may be a fintech's or a middleware's ledger rather than the bank's. If those records are incomplete or late, the FDIC can't pay those owners promptly, and the program's customers wait ([Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers) covers what happens when the records themselves fail; the Payments volume's [Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance) covers FBO accounts from a provider's side).
 
-For a business with operating cash at a failing bank, the weekend question is simpler and harder: how much is insured, how much is held, and where payroll will come from on Monday. Sweeps, Reciprocal Deposits & Yield covers the products that spread balances across banks for that reason.
+For a business with operating cash at a failing bank, the weekend question is simpler and harder: how much is insured, how much is held, and where payroll will come from on Monday. [Sweeps, Reciprocal Deposits & Yield](/books/banking-and-lending/sweeps-and-yield) covers the products that spread balances across banks for that reason.
 
 ## Failures Since 2023
 
@@ -115,7 +115,7 @@ Every one found an acquirer. The Deposit Insurance Fund stood at $161.1 billion 
 
 ## Reform Options
 
-On May 1, 2023 the FDIC published three options for deposit insurance reform: limited coverage (today's structure, possibly with a higher limit), unlimited coverage for all depositors, and targeted coverage, in which "business payment accounts receive significantly higher coverage" than other deposits. The FDIC judged targeted coverage the best balance of stability against cost and moral hazard; most of it would need Congress. As of October 2026 the $250,000 limit is unchanged, and the industry's response has been products rather than law: reciprocal deposit networks and sweeps that place balances at many banks (Sweeps, Reciprocal Deposits & Yield).
+On May 1, 2023 the FDIC published three options for deposit insurance reform: limited coverage (today's structure, possibly with a higher limit), unlimited coverage for all depositors, and targeted coverage, in which "business payment accounts receive significantly higher coverage" than other deposits. The FDIC judged targeted coverage the best balance of stability against cost and moral hazard; most of it would need Congress. As of October 2026 the $250,000 limit is unchanged, and the industry's response has been products rather than law: reciprocal deposit networks and sweeps that place balances at many banks ([Sweeps, Reciprocal Deposits & Yield](/books/banking-and-lending/sweeps-and-yield)).
 
 ## How to Build It
 

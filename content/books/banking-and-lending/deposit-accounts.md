@@ -36,7 +36,7 @@ Regulation D sorts every deposit into three legal kinds, and the market sells fo
 | **Money market deposit account (MMDA)** | Savings deposit | A savings deposit that historically allowed a few checks or debits a month | Minimum balances for its tiered rates, check writing |
 | **Certificate of deposit (CD, share certificate)** | Time deposit | A maturity of at least 7 days; withdrawals within 6 days of deposit cost at least 7 days' simple interest | Term, rate, penalty schedule above, renewal policy, whether partial withdrawals are allowed |
 
-A money market deposit account is not a money market fund: the first is a deposit, insured like any other; the second is a security, which deposit insurance doesn't cover. The words differ by one and the products differ completely, which is why sweep products that move cash between the two have their own disclosure problems, the subject of Sweeps, Reciprocal Deposits & Yield.
+A money market deposit account is not a money market fund: the first is a deposit, insured like any other; the second is a security, which deposit insurance doesn't cover. The words differ by one and the products differ completely, which is why sweep products that move cash between the two have their own disclosure problems, the subject of [Sweeps, Reciprocal Deposits & Yield](/books/banking-and-lending/sweeps-and-yield).
 
 ### Regulation D After 2020
 
@@ -49,7 +49,7 @@ What the rule did was permit, not require. The release lets institutions "suspen
 
 ### Interest on Business Checking
 
-Regulation Q prohibited member banks from paying interest on demand deposits for decades, and the industry built workarounds: overnight sweeps of business balances into repurchase agreements or money funds, and earnings credits that offset service fees instead of paying interest. Section 627 of the Dodd-Frank Act repealed the statutory basis, and the Board repealed Regulation Q effective July 21, 2011. Banks may now pay interest on business checking, and the workarounds survive anyway: account analysis with an earnings credit is still how many operating accounts are priced (Treasury Management covers it), so a business deposit product needs room for both an interest rate and an earnings credit rate.
+Regulation Q prohibited member banks from paying interest on demand deposits for decades, and the industry built workarounds: overnight sweeps of business balances into repurchase agreements or money funds, and earnings credits that offset service fees instead of paying interest. Section 627 of the Dodd-Frank Act repealed the statutory basis, and the Board repealed Regulation Q effective July 21, 2011. Banks may now pay interest on business checking, and the workarounds survive anyway: account analysis with an earnings credit is still how many operating accounts are priced ([Treasury Management](/books/banking-and-lending/treasury-management) covers it), so a business deposit product needs room for both an interest rate and an earnings credit rate.
 
 ## Truth in Savings
 
