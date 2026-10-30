@@ -169,8 +169,21 @@ Banking borrows its words from accounting, law and a century of bank operations,
 
 ## Fintech and BaaS
 
+- **Bank-direct:** a BaaS model in which the bank exposes its own core and ledger through an API, with no middleware between it and the programs ([Banking as a Service](/books/banking-and-lending/banking-as-a-service#three-shapes)).
+- **Compliance task matrix:** the record, per program, of which party performs each obligation the bank owns, under which procedure, with what evidence ([Banking as a Service](/books/banking-and-lending/banking-as-a-service#who-owns-which-obligation)).
+- **Credit enhancement:** a program partner's contractual promise to indemnify or reimburse the sponsor bank's credit and fraud losses on loans it originates ([Banking as a Service](/books/banking-and-lending/banking-as-a-service#reserves-and-credit-enhancement)).
+- **Critical activity:** under the 2023 interagency guidance, a third-party activity whose failure could cause significant risk, customer impact or harm to the bank's condition or operations ([Sponsor Bank Oversight](/books/banking-and-lending/sponsor-bank-oversight#the-2023-interagency-guidance)).
+- **Custodial deposit account with transactional features:** the FDIC proposal's term for a pooled account held for many beneficial owners who can direct transfers from it ([Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers#what-the-custodial-proposal-would-require)).
 - **FBO account (for-benefit-of):** a bank account in the provider's name holding money for its merchants ([Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance)).
+- **In-transit item:** an amount posted on one side of a program reconciliation that will clear on the other on a known date, such as an ACH credit awaiting the next sweep ([Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers#daily-reconciliation)).
+- **Lookback:** a review an order requires of past activity, such as every customer onboarded or every dispute handled since a date ([Sponsor Bank Oversight](/books/banking-and-lending/sponsor-bank-oversight#what-an-order-does-to-a-program)).
+- **Omnibus account:** one account at a bank holding many owners' money in aggregate, with a subledger saying whose each dollar is ([Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers#the-accounts-on-the-bank-s-core)).
 - **Pass-through insurance:** FDIC coverage that reaches each owner of a pooled custodial account, if the records allow it ([Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance)).
+- **Per-owner balance file:** the daily file of each beneficial owner's balance in an omnibus account, reconciled to the account's balance at the bank ([Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers#how-to-build-it)).
+- **Program reserve:** cash a program posts at its sponsor bank against fraud, negative balances and losses, at a level the bank sets ([Banking as a Service](/books/banking-and-lending/banking-as-a-service#reserves-and-credit-enhancement)).
+- **Regulation II (Durbin):** the Federal Reserve's cap on debit interchange for issuers with $10 billion or more in assets, tested at each year end ([Neobanks & Consumer Fintech](/books/banking-and-lending/neobanks#the-durbin-line)).
+- **Sponsor migration:** moving a program's accounts from one bank to another, with new account numbers, cards and agreements ([Banking as a Service](/books/banking-and-lending/banking-as-a-service#moving-between-sponsor-banks)).
+- **Third-party risk management (TPRM):** a bank's oversight of its vendors and partners across planning, due diligence, contracting, monitoring and termination ([Sponsor Bank Oversight](/books/banking-and-lending/sponsor-bank-oversight#the-guidance)).
 
 ## Lending Products
 

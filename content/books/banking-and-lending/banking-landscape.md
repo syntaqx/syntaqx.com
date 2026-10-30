@@ -84,7 +84,7 @@ A fintech that doesn't want a charter rents one. The sponsor bank holds the depo
 | Stripe Capital (business loans in the US) | Celtic Bank or Lead Bank; merchant cash advances from YouLend | Stripe's documentation |
 | Shopify Capital (US) | WebBank | Shopify's help center |
 
-The banks on the other side are mostly small. Coastal Financial, whose CCBX segment is its BaaS business, had 28 partners at December 31, 2025 and $1.81 billion of CCBX loans, 48.1% of all its loans, on total assets of $4.74 billion: a sponsor bank's balance sheet can be half fintech. Column runs the opposite model, a national bank that "built our core, ledger, and tech stack from scratch" and sells direct access with "freedom from vendors and middleware." The middleware model is the one that broke: when Synapse failed in 2024, the records of whose money sat at which bank didn't match the banks' records, and the CFPB's case against it was about exactly that. Banking as a Service, Program Ledgers & the Synapse Lesson and Sponsor Bank Oversight cover the roles, the ledgers and the consent orders; [Sponsor Banks Under Scrutiny](/books/payments/card-issuing#sponsor-banks-under-scrutiny) covers the card side.
+The banks on the other side are mostly small. Coastal Financial, whose CCBX segment is its BaaS business, had 28 partners at December 31, 2025 and $1.81 billion of CCBX loans, 48.1% of all its loans, on total assets of $4.74 billion: a sponsor bank's balance sheet can be half fintech. Column runs the opposite model, a national bank that "built our core, ledger, and tech stack from scratch" and sells direct access with "freedom from vendors and middleware." The middleware model is the one that broke: when Synapse failed in 2024, the records of whose money sat at which bank didn't match the banks' records, and the CFPB's case against it was about exactly that. [Banking as a Service](/books/banking-and-lending/banking-as-a-service), [Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers) and [Sponsor Bank Oversight](/books/banking-and-lending/sponsor-bank-oversight) cover the roles, the ledgers and the consent orders; [Sponsor Banks Under Scrutiny](/books/payments/card-issuing#sponsor-banks-under-scrutiny) covers the card side.
 
 ## Neobanks
 
@@ -94,7 +94,7 @@ Consumer fintechs split by whether they hold a charter:
 - **Fintechs that became banks.** SoFi announced on January 18, 2022 that the OCC and the Federal Reserve had approved it becoming a bank holding company by acquiring Golden Pacific Bancorp, which became SoFi Bank, N.A.; at the end of 2025 SoFi had 13.7 million members, $37.5 billion of deposits and $3,613.4 million of 2025 net revenue. Above $10 billion, SoFi's debit interchange is capped, and its model leans on deposit funding for its loans instead.
 - **Applicants.** Revolut won the OCC's conditional approval for Revolut Bank US in September 2026, about six months after applying, with at least $95 million of paid-in capital and a 10% tier 1 leverage ratio for three years among the conditions, and Federal Reserve and FDIC approvals still to come.
 
-Neobanks & Consumer Fintech covers the revenue models from the filings and the UK banks that hold full licenses from the start.
+[Neobanks & Consumer Fintech](/books/banking-and-lending/neobanks) covers the revenue models from the filings and the UK banks that hold full licenses from the start.
 
 ## Nonbank Lenders
 

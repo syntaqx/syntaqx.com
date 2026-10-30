@@ -110,7 +110,7 @@ A bank's architecture diagram is the core in the middle with a ring of systems i
 - **Data.** Cores are poor analytical databases; banks extract to a warehouse nightly, and newer vendor offerings stream changes out (Jack Henry's Data Hub delivers to BigQuery, Azure or AWS). Regulatory reporting, CECL and fraud models run off that copy.
 - **Risk and compliance.** BSA/AML transaction monitoring, sanctions screening and fraud scoring read transactions from the core or the hub and write back holds, blocks and case flags (BSA/AML Programs, Sanctions Screening).
 
-Q2 also sells Helix, a "cloud-native core processing and BaaS platform", and Fiserv's Finxact powers embedded-finance ledgers, which is the line where a core vendor and a banking-as-a-service platform become the same thing (Banking as a Service).
+Q2 also sells Helix, a "cloud-native core processing and BaaS platform", and Fiserv's Finxact powers embedded-finance ledgers, which is the line where a core vendor and a banking-as-a-service platform become the same thing ([Banking as a Service](/books/banking-and-lending/banking-as-a-service)).
 
 Every one of those integrations is a contract, a data feed and a failure mode. When the core is unavailable, each surrounding system needs a defined behavior: digital banking shows the last memo balance with a timestamp, the card processor stands in against a shadow balance and a limit, the payments hub queues. Designing those degraded modes is part of building on a core, not an afterthought.
 

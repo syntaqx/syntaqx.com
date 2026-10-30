@@ -30,7 +30,7 @@ A product definition has the same parts across cores, whatever they're called.
 
 | Part | Holds | Notes |
 | --- | --- | --- |
-| **Identity** | Code, name, kind (checking, savings, money market, CD, loan, line), currency, institution, program | The program link matters for fintech products at a sponsor bank (Banking as a Service) |
+| **Identity** | Code, name, kind (checking, savings, money market, CD, loan, line), currency, institution, program | The program link matters for fintech products at a sponsor bank ([Banking as a Service](/books/banking-and-lending/banking-as-a-service)) |
 | **Interest** | Rate source (fixed, index plus spread), tiers and tier method, balance basis, day count, compounding, crediting frequency, accrual after maturity | [Interest, APY & Statements](/books/banking-and-lending/interest-and-statements) has each one |
 | **Fees** | Fee schedule: each fee's trigger, amount method, waivers, caps | [Fee Schedules](#fee-schedules) below |
 | **Balances and limits** | Opening deposit, minimum balance to avoid a fee or earn interest, maximum balance, withdrawal limits | Transaction limits on savings are now a bank choice, not Regulation D's (Deposit Accounts & Truth in Savings) |
