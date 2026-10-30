@@ -111,7 +111,7 @@ What the system records and why:
 
 ## Zelle Integration
 
-Zelle is a bank-owned P2P network run by Early Warning Services. Its 2025 figures: "more than $1.2 trillion" sent, about 4.2 billion transactions, and "more than 2,300 financial institutions" in the network; 2024's were "over $1 trillion," 3.6 billion transactions and "more than 2,200." The network has lived inside banks' own apps since the standalone Zelle app stopped enrolling and transacting; Zelle said in October 2024 that users had until March 2025 to re-enroll through a bank and that the app carried "~2%" of transactions.
+Zelle is a bank-owned P2P network run by Early Warning Services. Its 2025 figures: "more than $1.2 trillion" sent, about 4.2 billion transactions, and "more than 2,300 financial institutions" in the network; 2024's were "over $1 trillion," 3.6 billion transactions and "more than 2,200." The network lives inside banks' own apps. Zelle said on October 31, 2024 that it would phase out enrolling and transacting in its standalone app "over the next few months," that users had until March 2025 to re-enroll through a bank, and that the app carried "~2%" of transactions; its data center page now says the standalone app "is no longer accessible." Zelle's pages don't give the date it closed.
 
 How a bank or credit union joins:
 
@@ -310,6 +310,7 @@ Design notes:
 - [Zelle: 2025 results (February 11, 2026)](https://www.zelle.com/press-releases/zelle-posts-20-growth-12-trillion-sent-far-outpacing-consumer-spending-and-cementing), dollars and transactions sent and participating institutions
 - [Zelle: 2024 results (February 12, 2025)](https://www.zelle.com/press-releases/zelle-shatters-records-1-trillion-sent-single-year), dollars, transactions and institutions in 2024
 - [Zelle: We're evolving how consumers send money (October 31, 2024)](https://www.zelle.com/blog/were-evolving-how-consumers-send-money-zelle), phasing out the standalone app and its share of transactions
+- [Zelle: Fast facts and data center](https://www.zelle.com/data-center), the standalone app "no longer accessible"
 
 **In practice**
 
