@@ -1,6 +1,6 @@
 +++
 title = "AI in Banking & Lending"
-description = "Models and agents across a bank as of October 2026: underwriting, fraud, servicing and collections agents, rights a chat can trigger, explanation limits and governance."
+description = "Models and agents across a bank, October 2026: underwriting, fraud, servicing and collections agents, rights a chat triggers, explanation limits, governance."
 category = "Banking & Lending Industry"
 order = 2474
 part = "Running the Platform"
@@ -21,9 +21,9 @@ This chapter maps where models decide and where they assist across a bank or len
 | **Fraud and account takeover** | Machine learning, device and behavior signals | A risk score per login, change or payment | Step-up rules, holds, payment interventions | [Account Takeover & Scams](/books/banking-and-lending/account-takeover-and-scams) |
 | **AML monitoring** | Rules plus models for alert scoring | Which alerts to work first, a draft narrative | The SAR decision, the deadline, confidentiality | [BSA/AML Programs](/books/banking-and-lending/bsa-aml) |
 | **Customer service assistants** | LLMs with tools | Answers, summaries, proposed actions | Fees, refunds, disputes opened, money moved | This chapter |
-| **Collections** | Propensity models, LLM agents | Who to contact, when, with what offer | Contact limits, hardship terms, legal holds | Collections & Recovery |
+| **Collections** | Propensity models, LLM agents | Who to contact, when, with what offer | Contact limits, hardship terms, legal holds | [Collections & Recovery](/books/banking-and-lending/collections) |
 | **Complaints and QA** | LLM classification | Which conversations are complaints, which rights were raised | The complaint record and its clock | [Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes#complaints) |
-| **Loss forecasting** | Statistical and ML models | Expected losses for CECL and stress tests | The allowance as approved and booked | Credit Losses & CECL |
+| **Loss forecasting** | Statistical and ML models | Expected losses for CECL and stress tests | The allowance as approved and booked | [Credit Losses & CECL](/books/banking-and-lending/credit-losses-and-cecl) |
 
 The line through every row is the playbook's: the model scores, extracts, drafts or proposes, and code the institution can read and change decides ([Decide in Code](/docs/architecture/ai-agents#decide-in-code)). In banking the line is drawn by law as much as by money. A model may suggest a hardship plan; the plan's terms, the disclosures and the stop on collection activity are rules. A model may draft a SAR narrative; whether to file is a person's determination with a clock.
 
@@ -65,9 +65,9 @@ A customer service assistant at a bank is a support agent with one property a re
 | "I didn't make this transfer" or "this debit is wrong" | A Regulation E notice of error, which may be oral and needs only enough to identify the account and the error | The 10-business-day investigation clock, at that message ([The Notice and the Clock](/books/banking-and-lending/deposit-errors-and-disputes#the-notice-and-the-clock)) |
 | "I was charged twice on my card" | A billing error under Regulation Z if it arrives in writing at the creditor's designated address; otherwise a dispute the bank may handle anyway | The billing error clock when it qualifies ([Cardholder Disputes](/books/payments/issuer-processing#cardholder-disputes)) |
 | "I'm filing a complaint" or a sustained grievance | A complaint, under the bank's complaint program and, for a program bank, the sponsor's | The complaint record and its response target ([Complaints](/books/banking-and-lending/deposit-errors-and-disputes#complaints)) |
-| "I lost my job and can't pay" | A hardship request; for a mortgage, possibly a loss mitigation application | Hardship evaluation; Regulation X timelines for a mortgage (Mortgage Servicing, Escrow & Loss Mitigation) |
+| "I lost my job and can't pay" | A hardship request; for a mortgage, possibly a loss mitigation application | Hardship evaluation; Regulation X timelines for a mortgage ([Loss Mitigation](/books/banking-and-lending/mortgage-servicing#loss-mitigation)) |
 | "I'm on active duty" | A Servicemembers Civil Relief Act request | The SCRA rate cap and protections ([The Servicemembers Civil Relief Act](/books/banking-and-lending/apr-and-rate-caps#the-servicemembers-civil-relief-act)) |
-| "I filed for bankruptcy" | Notice of the automatic stay | A stop on collection activity (Collections & Recovery) |
+| "I filed for bankruptcy" | Notice of the automatic stay | A stop on collection activity ([Stays: Bankruptcy and the SCRA](/books/banking-and-lending/collections#stays-bankruptcy-and-the-scra)) |
 | "Stop calling me" | A cease-communication request under Regulation F for a debt collector, a TCPA revocation for automated calls and texts | The contact stop ([Revoking Consent](/docs/compliance/consumer-contact#revoking-consent)) |
 
 The design that follows:
@@ -81,7 +81,7 @@ The design that follows:
 
 ## Collections
 
-Collections is where AI meets the most specific conduct law in the volume. Who may be contacted, how often, at what hours, through which channels and with what disclosures is Regulation F for debt collectors, the TCPA for automated calls and texts, state law beyond both, and the SCRA and bankruptcy stays for protected borrowers (Collections & Recovery owns the rules). What changes with models and agents:
+Collections is where AI meets the most specific conduct law in the volume. Who may be contacted, how often, at what hours, through which channels and with what disclosures is Regulation F for debt collectors, the TCPA for automated calls and texts, state law beyond both, and the SCRA and bankruptcy stays for protected borrowers ([Collections & Recovery](/books/banking-and-lending/collections#contact-strategy) owns the rules). What changes with models and agents:
 
 - **AI voices are artificial voices.** The FCC's February 2024 declaratory ruling (FCC 24-17, CG Docket 23-362) confirms that the TCPA's restrictions on "artificial or prerecorded voice" encompass AI technologies that generate human voices, so such calls "require the prior express consent of the called party" absent an emergency purpose or exemption ([Artificial and AI Voices](/docs/compliance/consumer-contact#artificial-and-ai-voices)). An AI agent calling a delinquent borrower is a prerecorded-voice call for consent purposes, whatever it sounds like.
 - **Telling people it's an AI.** The playbook's rule is to say so at the start, which also meets the state laws that require it in some contexts ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)).

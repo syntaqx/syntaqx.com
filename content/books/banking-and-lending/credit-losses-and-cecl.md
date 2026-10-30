@@ -98,7 +98,7 @@ The allowance turns into four entries, each a balanced `journal_entries` row:
 - **Recoveries are traceable to the loan.** A recovery credits the allowance, not income, and carries the account it came from, so recovery rates by vintage feed the next estimate.
 - **Fees and accrued interest.** Interest that stops accruing on a nonaccrual loan, and interest and fees charged off with it, follow the lender's written accounting policy, which the system implements as data rather than code.
 
-Bank regulatory reporting reads the same entries: charge-offs and recoveries by loan category on the call report's allowance schedule, which reconciles only if every entry carries the loan's category (Regulatory Reporting & Data covers the call report).
+Bank regulatory reporting reads the same entries: charge-offs and recoveries by loan category on the call report's allowance schedule, which reconciles only if every entry carries the loan's category ([Regulatory Reporting & Data](/books/banking-and-lending/regulatory-reporting) covers the call report).
 
 ## Modifications and Vintage Disclosures
 
