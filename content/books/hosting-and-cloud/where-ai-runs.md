@@ -184,7 +184,7 @@ The reasons to move a workload down the tiers are mostly about data, not price:
 
 - **Retention.** Abuse-monitoring logs (30 days by default at OpenAI) and models with mandatory retention (Anthropic's Covered Models) mean data persists at the lab unless the customer has a zero-retention agreement that covers the model and endpoint in use.
 - **Residency.** In-region processing exists only in some regions and costs about 10%; OpenAI stores data in ten regions but processes in-region only in three.
-- **Health and regulated data.** Agreements cover named endpoints, not a lab's whole API; a feature outside them (Anthropic returns 400 for ineligible features) is not covered.
+- **Health and regulated data.** Agreements cover named endpoints, not a lab's whole API; a feature outside them (Anthropic returns 400 for ineligible features) is not covered. Clinical and front-desk uses add their own rules, from scribe consent to state AI disclosure laws ([AI in Health Tech](/books/health-tech/ai-in-health-tech) and [Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai)).
 - **Free tiers.** Google's unpaid Gemini services may use prompts for training and human review, and developers serving the EEA, Switzerland or the UK must use paid services.
 
 A cloud-hosted open model inside the customer's own account, or self-hosting, removes the third-party processor entirely, which is the cleanest answer to all four. It is also more work than signing an agreement, and for most workloads a zero-retention or in-region contract with a frontier lab or a cloud is enough.

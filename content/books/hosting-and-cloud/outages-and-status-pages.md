@@ -125,7 +125,7 @@ Every provider depends on vendors whose failures become its own: the cloud under
 - **A building.** After the 2021 Strasbourg fire, a French commercial court awarded Bati Courtage about €101,000 in January 2023 because its backups, contractually described as isolated, were in the same building; another customer was awarded about €154,000 in March 2023 (the storage lessons are [Storage: Block, File & Object](/books/hosting-and-cloud/storage#when-storage-failed-in-public)'s).
 - **A dependency of the dependency.** Cloudflare's KV outage came from the third-party cloud under it, which is the case for asking every vendor which providers it depends on and what happens when they fail.
 
-My rule for vendor risk: for each vendor in the data path, record what fails when it fails, whether the provider can switch away within the incident, and whether the vendor's status feeds the provider's own status page.
+My rule for vendor risk: for each vendor in the data path, record what fails when it fails, whether the provider can switch away within the incident, and whether the vendor's status feeds the provider's own status page. In health care the customer at the end of that chain is a practice that can't check patients in, which is why [Downtime from the Practice's Side](/books/health-tech/health-tech-operations#downtime-from-the-practice-s-side) treats outage communication as part of the product.
 
 ## Status Pages
 

@@ -115,7 +115,7 @@ Two measures practices use that HFMA's page doesn't define, so a product must st
 
 The arithmetic of a single claim shows what each number sees. A practice bills $1,000; the payer's contracted rate is $700, so $300 is a contractual adjustment (group code CO, reason 45, "Charge exceeds fee schedule/maximum allowable or contracted/legislated fee arrangement"). The payer pays $560 and assigns $140 to the patient as coinsurance (group PR, reason 2). The patient pays $100 and $40 is written off as bad debt. Gross collection is $660 of $1,000, 66%; net collection is $660 of $700, 94%; and days in A/R depends on when each of those dollars arrived. A gross collection rate looks alarming for any practice with discounted contracts; net collection is the one that measures the billing office.
 
-Dental practices watch the same numbers under their own names (collections over production, insurance aging buckets), with one difference: a much larger share of dental revenue is patient-pay, so patient collection at the time of service moves the totals more than claim follow-up does, which is why The Practice Business in Part 1 treats front-desk collection as a core job.
+Dental practices watch the same numbers under their own names (collections over production, insurance aging buckets), with one difference: a much larger share of dental revenue is patient-pay, so patient collection at the time of service moves the totals more than claim follow-up does, which is why [The Practice Business](/books/health-tech/practice-business) in Part 1 treats front-desk collection as a core job.
 
 ## In-House or Outsourced
 

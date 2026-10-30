@@ -9,7 +9,7 @@ tags = ["health-tech", "metrics", "kpis", "revenue-cycle", "saas-metrics", "anal
 
 Health tech runs on three sets of numbers that are usually computed by different people from different systems. The practice measures itself: production and collections, hygiene reappointment, no-shows, case acceptance. The revenue cycle measures the money's path: days in accounts receivable, clean claims, denials, how much of what was owed was collected. And the vendor measures its business: how many practices or locations it serves, how much revenue each brings, how much of last year's revenue it kept. A platform that sells to practices ends up computing all three, because its customers judge it by the first two and its board by the third.
 
-Each set has the same failure: a word that sounds defined isn't. A "no-show" may or may not include a same-day cancellation; "days in A/R" may be gross or net of expected adjustments; "net revenue retention" in one company's filing counts payments revenue on a trailing average and in another's counts invoices. This chapter defines the metrics a health platform reports, shows how public companies define their own (benchmarked from filings, as of October 2026), and builds the definitions into the system so two dashboards can't disagree. The method is the playbook's [One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric); the practice's own dashboards are Practice Analytics & AI Front Desk, and the revenue cycle's KPIs in depth are The Revenue Cycle. It adds `metric_definitions` and `metric_values` to the core data model in The Health Tech Business.
+Each set has the same failure: a word that sounds defined isn't. A "no-show" may or may not include a same-day cancellation; "days in A/R" may be gross or net of expected adjustments; "net revenue retention" in one company's filing counts payments revenue on a trailing average and in another's counts invoices. This chapter defines the metrics a health platform reports, shows how public companies define their own (benchmarked from filings, as of October 2026), and builds the definitions into the system so two dashboards can't disagree. The method is the playbook's [One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric); the practice's own dashboards are [Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai), and the revenue cycle's KPIs in depth are [The Revenue Cycle](/books/health-tech/revenue-cycle#the-kpis). It adds `metric_definitions` and `metric_values` to the core data model in [The Health Tech Business](/books/health-tech/health-tech-business#the-core-data-model).
 
 ## How the Companies Report
 
@@ -42,7 +42,7 @@ The practice's own measures, defined once so the platform's dashboard matches th
 | **Recall due, unscheduled** | Patients past their recall due date with no future appointment, as of a date | Including inactive or deceased patients, or those who moved |
 | **New patients** | Patients whose first completed visit falls in the period | Counting records created (a booked new patient who never came) |
 
-The PMS is usually the system of record for production and collections, and practices trust its reports. My rule: a platform dashboard that shows a PMS-owned number either reads it as the PMS computes it or shows both with the difference explained, and never quietly recomputes it with a different rule. Practice Analytics & AI Front Desk covers the dashboards themselves.
+The PMS is usually the system of record for production and collections, and practices trust its reports. My rule: a platform dashboard that shows a PMS-owned number either reads it as the PMS computes it or shows both with the difference explained, and never quietly recomputes it with a different rule. [Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai#dashboards-and-the-morning-huddle) covers the dashboards themselves.
 
 ## Revenue Cycle Metrics
 
@@ -52,7 +52,7 @@ HFMA's MAP Keys are the industry's shared definitions: 29 KPIs in five groups (p
 - **Clean claim rate (CL-1):** claims that pass edits without manual intervention over claims accepted into the claims processing tool for billing. A vendor's "first-pass acceptance" at the clearinghouse is a different and higher number.
 - **Remittance denial rate (AR-5):** claims denied over claims remitted, counting initial and appeal denials. HFMA's key is by claim count; a denial rate by dollars weights a few large claims heavily.
 
-Cash collection as a percentage of net patient service revenue (FM-2) is HFMA's closest key to the "net collection rate" practices quote, and the two are computed differently, so a report names which it means. The Revenue Cycle owns the full set and the operational meaning.
+Cash collection as a percentage of net patient service revenue (FM-2) is HFMA's closest key to the "net collection rate" practices quote, and the two are computed differently, so a report names which it means. [The Revenue Cycle](/books/health-tech/revenue-cycle#the-kpis) owns the full set and the operational meaning.
 
 ## Engagement Metrics
 
@@ -72,7 +72,7 @@ What a health software company tracks about itself, defined the way the filings 
 - **Net and gross revenue retention.** Cohort-based: the recurring revenue in a month from locations (or customers) active a year earlier, over their revenue then; GRR caps each at its starting value and excludes expansion. State whether payments and other usage revenue are included and how they're smoothed, as Weave does.
 - **Revenue per unit.** Revenue per location or per client per period, with the unit's averaging rule (Phreesia averages monthly client counts).
 - **Payment volume and attach.** Patient payment volume processed, the share of locations using payments, and, for a payment facilitator, the share of volume under the facilitator model, which Phreesia reports.
-- **Integration health as a business metric.** The share of locations with a healthy PMS sync, because a location whose sync is broken is a location about to churn; Health Tech Architecture's [Sync and Integration Layer](/books/health-tech/health-tech-architecture#the-sync-and-integration-layer) produces the signal.
+- **Integration health as a business metric.** The share of locations with a healthy PMS sync, because a location whose sync is broken is a location about to churn; [Health Tech Architecture](/books/health-tech/health-tech-architecture)'s [Sync and Integration Layer](/books/health-tech/health-tech-architecture#the-sync-and-integration-layer) produces the signal.
 
 ## Measurement Pitfalls
 

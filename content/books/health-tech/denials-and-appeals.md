@@ -125,11 +125,11 @@ A payment can be on time, error-free and wrong: the payer paid less than its con
 - **Payment methodology,** where it isn't a simple fee schedule: a percentage of the Medicare rate for the year, multiple procedure reductions, a case rate.
 - **Expected allowed amount** computed for every claim line when the claim is built, compared with the allowed amount in the 835.
 
-A line paid below expected by more than a tolerance opens an underpayment work item with the variance. Patterns (one payer underpaying one code after a fee schedule update) are worth more than single lines, and the fix is usually a call to the payer's provider relations with the list. For small practices, this is often the most money RCM software can find that nobody was looking for.
+A line paid below expected by more than a tolerance opens an underpayment work item with the variance. Patterns (one payer underpaying one code after a fee schedule update) are worth more than single lines, and the fix is usually a call to the payer's provider relations with the list. For small practices, this is often the most money RCM software can find that nobody was looking for. The payer loads the same contract as `network_contracts` to price the claim ([How to Build It](/books/health-tech/payers-and-plans#how-to-build-it) in Payers & Plans), so the two sides are checking one document.
 
 ## How to Build It
 
-This chapter adds claim status checks, denials, appeals with their levels and deadlines, records requests, overpayment investigations, and payment methods on the payer fee schedules The Practice Business defines:
+This chapter adds claim status checks, denials, appeals with their levels and deadlines, records requests, overpayment investigations, and payment methods on the payer fee schedules [The Practice Business](/books/health-tech/practice-business) defines:
 
 ```sql
 CREATE TABLE claim_status_checks (

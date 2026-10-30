@@ -73,7 +73,7 @@ New patients are the reason most practices buy online booking, and the hardest t
 
 ### Insurance at Booking
 
-Insurance decides whether many patients book at all, and practices decide which plans they take. Open Dental's Web Sched Carrier Rules decide whether patients enter insurance and which carriers are accepted; NexHealth collects insurance during booking. Collecting it at booking lets the office verify eligibility before the visit (the subject of this volume's Eligibility & Benefits chapter) and lets the booking flow tell a patient with a plan the office doesn't accept before they drive in. Capture the card itself at intake ([Insurance Cards and ID](/books/health-tech/digital-intake-and-forms#insurance-cards-and-id)); at booking, the carrier and member ID are enough.
+Insurance decides whether many patients book at all, and practices decide which plans they take. Open Dental's Web Sched Carrier Rules decide whether patients enter insurance and which carriers are accepted; NexHealth collects insurance during booking. Collecting it at booking lets the office verify eligibility before the visit (the subject of this volume's [Eligibility & Benefits](/books/health-tech/eligibility-and-benefits) chapter) and lets the booking flow tell a patient with a plan the office doesn't accept before they drive in. Capture the card itself at intake ([Insurance Cards and ID](/books/health-tech/digital-intake-and-forms#insurance-cards-and-id)); at booking, the carrier and member ID are enough.
 
 ### Request-Based Versus Real-Time
 
@@ -116,7 +116,7 @@ Health care double-books on purpose, and a booking engine that treats every over
 
 - **Dentists across columns.** One dentist runs two or three operatories, with patterns interleaving their `X` time; and a hygienist's appointment carries a doctor's exam, so the hygiene patient needs a few minutes of the dentist in the middle.
 - **Medical overbooking.** Clinics book more patients than slots to absorb no-shows; the overbooking rate is a policy, set from the no-show rate ([Overbooking Is a Policy, Not a Bug](/docs/architecture/reservations-and-holds#overbooking-is-a-policy-not-a-bug)).
-- **Overlapping therapy sessions.** Physical therapy clinics see more than one patient at a time, under billing rules covered in this part's Optometry, PT & Other Specialties chapter.
+- **Overlapping therapy sessions.** Physical therapy clinics see more than one patient at a time, under billing rules covered in this part's [Optometry, PT & Other Specialties](/books/health-tech/specialty-practices#physical-therapy) chapter.
 - **Veterinary drop-offs.** A pet dropped off at 8 for a procedure during the day occupies a kennel and a surgery slot, not a fixed exam time.
 
 So conflicts are defined per resource and per unit: the operatory can't hold two patients at once, a provider can't be needed in two places in the same five minutes, and everything else is policy. The front desk can override, and the override is recorded.

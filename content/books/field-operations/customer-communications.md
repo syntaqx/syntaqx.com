@@ -98,7 +98,7 @@ Review requests are the message most tied to revenue in home services, where a m
 
 The FTC's rule on consumer reviews prohibits offering compensation or incentives conditioned on a review expressing a particular sentiment, positive or negative, and prohibits misrepresenting that the reviews you display are all or most of those submitted when you suppress some by rating. A "rate us first, and only happy customers get the Google link" flow deserves a lawyer's review before you build it. Asking every eligible customer, and offering an incentive (if any) for any honest review, is the safe design. Google's own review policy, and reviews as a lead source, are in [Direct Mail, Referrals and Reputation](/books/field-operations/marketing-and-lead-sources#direct-mail-referrals-and-reputation).
 
-**Net Promoter Score** (0 to 10, percent promoters at 9 or 10 minus percent detractors at 0 to 6) is the common survey. Tie each response to the visit and technician, so a detractor creates a follow-up task for the branch manager, not just a number.
+**Net Promoter Score** (0 to 10, percent promoters at 9 or 10 minus percent detractors at 0 to 6) is the common survey. Tie each response to the visit and technician, so a detractor creates a follow-up task for the branch manager, not just a number. Health care practices ask the same way but can't reply with anything a patient told them, which [Reviews & Reputation](/books/health-tech/reviews-and-reputation) covers.
 
 ## How to Build It
 

@@ -129,7 +129,7 @@ Health care borrows its words from medicine, insurance, law and a dozen standard
 - **USCDI (United States Core Data for Interoperability):** ASTP/ONC's versioned list of data classes certified health IT must exchange; v3 is the certification baseline ([EHRs, PMSs & the Clinical Record](/books/health-tech/ehr-and-pms-data#what-the-clinical-record-holds)).
 - **Value set:** a purpose-built list of codes from one or more code systems, with a definition and dated expansions ([Terminologies & Code Sets](/books/health-tech/terminology-and-coding#value-sets)).
 - **VSAC (Value Set Authority Center):** NLM's repository of public value sets, including CMS's eCQM value sets ([Terminologies & Code Sets](/books/health-tech/terminology-and-coding#value-sets)).
-- **X12:** the standards body and format for HIPAA's administrative transactions: 837 claims, 835 remittances, 270/271 eligibility, 276/277 claim status, 278 authorizations ([The Health Tech Business](/books/health-tech/health-tech-business#fee-for-service-through-insurance)).
+- **X12:** the standards body and format for HIPAA's administrative transactions: 837 claims, 835 remittances, 270/271 eligibility, 276/277 claim status, 278 authorizations ([The X12 Transaction Family](/books/health-tech/revenue-cycle#the-x12-transaction-family)).
 - **Z segment:** a locally defined HL7 v2 segment, where each interface keeps the fields the standard doesn't have ([HL7 v2 & Interfaces](/books/health-tech/hl7-v2#anatomy-of-a-message)).
 
 ## Rules of the Record

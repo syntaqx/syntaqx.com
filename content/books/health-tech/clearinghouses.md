@@ -57,7 +57,7 @@ Three different things are called enrollment, and confusing them stalls a practi
 
 | Enrollment | With whom | What it enables | Typical evidence |
 | --- | --- | --- | --- |
-| **Payer enrollment and credentialing** | The payer's provider network | Being a participating provider at all, with an NPI and tax ID on file | Credentialing applications, CAQH profile; Part 7's Credentialing, Enrollment & Provider Data chapter |
+| **Payer enrollment and credentialing** | The payer's provider network | Being a participating provider at all, with an NPI and tax ID on file | Credentialing applications, CAQH profile; Part 7's [Credentialing, Enrollment & Provider Data](/books/health-tech/credentialing-and-enrollment) chapter |
 | **EDI enrollment** | The payer, through the clearinghouse | Sending claims, eligibility or status electronically for that payer, where the payer requires it | A form or electronic agreement per payer |
 | **ERA and EFT enrollment** | The payer (ERA through the clearinghouse; EFT with the payer or its payment vendor) | Receiving 835s, and receiving payment by ACH instead of check | ERA enrollment per payer; for Medicare, the CMS-588 EFT form |
 
@@ -105,7 +105,7 @@ On February 21, 2024, UnitedHealth Group "identified that cybercrime threat acto
 
 - **Costs.** Direct response costs of $2.2 billion and $867 million of business disruption at Optum Insight in 2024.
 - **Provider loans.** Interest-free loans to providers whose cash stopped, "more than $9 billion through December 31, 2024," and in the fourth quarter of 2025 an added $799 million to reserves for collecting provider loans and other customer balances.
-- **People affected.** UnitedHealth estimated about 190 million people, with the final count for OCR's breach report to follow. The data breach side of the event (notification, HIPAA enforcement) belongs to Part 3's Security for Health Data chapter.
+- **People affected.** UnitedHealth estimated about 190 million people, with the final count for OCR's breach report to follow. The data breach side of the event (notification, HIPAA enforcement) belongs to Part 3's [Security for Health Data](/books/health-tech/health-records-security#ransomware-and-the-sector) chapter.
 
 What the outage taught practices and the software they use:
 
