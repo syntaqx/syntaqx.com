@@ -87,7 +87,7 @@ Apple Pay, Google Pay and Shop Pay at checkout are, for capture purposes, cards:
 
 ## BNPL at Checkout
 
-Buy now, pay later at checkout splits the purchase into installments financed by a lender (Affirm, Klarna, Afterpay, PayPal Pay Later), while the merchant is paid in full, less a fee, and the lender carries the credit risk. The Payments volume covers the model ([Buy Now, Pay Later](/books/payments/wallets-and-local-methods#buy-now-pay-later)); for the store:
+Buy now, pay later at checkout splits the purchase into installments financed by a lender (Affirm, Klarna, Afterpay, PayPal Pay Later), while the merchant is paid in full, less a fee, and the lender carries the credit risk. The Payments volume covers the model ([Buy Now, Pay Later](/books/payments/wallets-and-local-methods#buy-now-pay-later)) and the Banking & Lending volume the credit product and its law ([Buy Now, Pay Later](/books/banking-and-lending/buy-now-pay-later)); for the store:
 
 - **It has an authorization and a capture.** Affirm's default authorization window is 30 days, with split captures allowed inside it and uncaptured amounts "refunded to the customer's loan" after it; Klarna's standard authorization is 28 days, configurable up to 180 at onboarding and extendable from the extension date within 180 days of the order. Capture at fulfillment works the same way as for cards, on the lender's clock.
 - **Fees are higher than cards and not always returned.** Square publishes Afterpay at 6% + 30¢. Shop Pay Installments, financed by Affirm, is limited to orders of $35 to $30,000 in the US (and set ranges in Canada, the UK and Australia), requires Shopify Payments, pays the merchant one to three business days after capture, and doesn't return its fee on a refund.
