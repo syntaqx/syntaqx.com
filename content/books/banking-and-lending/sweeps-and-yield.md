@@ -19,7 +19,7 @@ Public claims and terms, as of October 2026:
 | Platform | Insured sweep | Off-bank yield product |
 | --- | --- | --- |
 | **Bluevine** | "$3,000,000 in FDIC insurance is offered by multiplying the standard $250,000 FDIC coverage across multiple banks", through Coastal Community Bank's program banks | Treasury services, which are not deposits of Coastal Community Bank |
-| **Brex** (Capital One) | Not first-hand; press reports about $13 billion of customer deposits "at partner banks and money market funds" | Money market funds, per the same report |
+| **Brex** (Capital One since April 7, 2026) | Not first-hand; press reports at the deal's announcement put about $13 billion of customer deposits "at partner banks and money market funds" | Money market funds, per the same report |
 | **Mercury** | "Up to $5M in FDIC insurance" through Choice Financial Group, Column N.A. and their sweep networks; Column's published sweep agreement names IntraFi's ICS | Mercury Treasury, from Mercury Advisory, LLC, "an SEC-registered investment adviser", in the JPMorgan U.S. Treasury Plus Money Market Fund; "up to 4.09%" with a $250,000 Mercury balance (company figure); same-day transfers by 3pm ET; two automatic transfers a month |
 | **Novo** | "insured up to $5,000,000 per depositor" through Middlesex Federal Savings and its sweep network | Not offered on the page |
 | **Relay** | Up to $3,000,000 "when Thread Bank places them at program banks", $250,000 per program bank "inclusive of any other deposits you may already hold" | Not offered on the page |
@@ -277,5 +277,6 @@ Sweeps are examined by the sponsor bank's regulators (custodial records, recipro
 
 **In practice**
 
+- [Capital One: Capital One completes acquisition of Brex (April 7, 2026)](https://www.capitalone.com/about/newsroom/capital-one-completes-acquisition-of-brex/), the completion date
 - [Banking Dive: Capital One to acquire Brex (January 23, 2026)](https://www.bankingdive.com/news/capital-one-acquire-brex-5-billion-fintech/810335/), about $13 billion of customer deposits at partner banks and money market funds, as reported by The Wall Street Journal
 - [First Citizens: brand alignment in Q4 2026 (April 23, 2026)](https://newsroom.firstcitizens.com/2026-04-23-First-Citizens-Bank-to-Expand-Commercial-Solutions-and-Align-Brand-Names-in-Q4-2026), SVB renamed First Citizens Innovation Banking and First Citizens Fund Banking
