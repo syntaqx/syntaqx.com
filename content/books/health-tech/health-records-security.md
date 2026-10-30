@@ -1,6 +1,6 @@
 +++
 title = "Security for Health Data"
-description = "Security where health records live: ransomware and Change Healthcare, HHS 405(d) practices and CPGs, break-the-glass, access audits, device cybersecurity, downtime."
+description = "Security for health records: ransomware and Change Healthcare, HHS 405(d) practices and CPGs, break-the-glass, access audits, device security, downtime."
 category = "Health Tech Industry"
 order = 1918
 part = "Rules of the Record"
@@ -96,7 +96,7 @@ The Security Rule's **contingency plan** has three required specifications (a da
 - **Downtime procedures are clinical procedures.** Practices and hospitals keep paper forms, printed schedules and read-only "downtime viewers" for when the EHR or PMS is unavailable, then **back-enter** what happened on paper when systems return. A vendor helps by producing a daily downtime extract (tomorrow's schedule, active patients' allergies and medications, balances) to a place the practice can read offline ([Offline-First Sync](/docs/architecture/offline-sync)).
 - **The closet server is the weakest copy.** Many dental, optometry and veterinary practices still run a PMS database on a Windows server in the office; an encrypted server with backups on an attached drive loses both. Cloud-connected backup with an immutable copy, and a restore the practice has actually seen work, are what HICP Volume 1 asks of small organizations.
 - **Restore order is the criticality analysis.** Scheduling and the clinical record come before reporting; eligibility and claims before marketing; the analysis decides which a vendor restores first.
-- **Tell practices on a clock.** During a vendor outage, practices need to know whether to switch to downtime procedures; status pages and direct notice to each practice's admin are part of the contingency plan, not marketing ([Communicate on a Clock](/docs/operations/incident-response#communicate-on-a-clock)). Operations, Support & Downtime covers the vendor's on-call and communications side.
+- **Tell practices on a clock.** During a vendor outage, practices need to know whether to switch to downtime procedures; status pages and direct notice to each practice's admin are part of the contingency plan, not marketing ([Communicate on a Clock](/docs/operations/incident-response#communicate-on-a-clock)). [Operations, Support & Downtime](/books/health-tech/health-tech-operations#downtime-from-the-practice-s-side) covers the vendor's on-call and communications side.
 
 ## How to Build It
 

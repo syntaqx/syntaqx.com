@@ -1,7 +1,7 @@
 +++
 title = "State Health Privacy & Sensitive Data"
 nav_title = "State Health Privacy"
-description = "Health privacy beyond HIPAA: consumer health data laws, California's CMIA, Part 2 for SUD records, the vacated reproductive health rule, minors, HIV and genetic data."
+description = "Health privacy beyond HIPAA: consumer health data laws, California's CMIA, Part 2 for SUD records, the vacated reproductive health rule, minors and genetics."
 category = "Health Tech Industry"
 order = 1916
 part = "Rules of the Record"
@@ -10,7 +10,7 @@ tags = ["health-tech", "privacy", "consumer-health-data", "part-2", "reproductiv
 
 HIPAA is a floor with a hole in it. It sets minimum protections for covered entities and their business associates, lets states protect health information more strictly, and doesn't reach health data collected by anyone else: a period tracker, a telehealth company that takes only cash, a pharmacy coupon app, a fitness wearable, an ad network inferring pregnancy from purchases. Two layers fill the space. **Consumer health data laws** in a growing set of states cover health data wherever it lives, with consent rules far stricter than HIPAA's. **Sensitive data rules** carve out categories (substance use disorder treatment, reproductive care, HIV status, genetics, mental health, minors' confidential care) that get extra protection even inside HIPAA.
 
-For a health software vendor the result is that **the same record can be governed by three regimes at once**, and which one depends on the patient's state, the provider's state, how the data was collected and what it reveals. This chapter covers the laws that most often change a product's design, as of October 2026. Consent records and proxies are [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization); de-identification and data sales are De-identification, Research & Data Use; the EU and UK regimes are in Beyond the US.
+For a health software vendor the result is that **the same record can be governed by three regimes at once**, and which one depends on the patient's state, the provider's state, how the data was collected and what it reveals. This chapter covers the laws that most often change a product's design, as of October 2026. Consent records and proxies are [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization); de-identification and data sales are [De-identification, Research & Data Use](/books/health-tech/de-identification-and-data-use#outside-hipaa-the-ftc-and-the-states); the EU and UK regimes are in Beyond the US.
 
 ## How the Platforms Do It
 
@@ -103,25 +103,11 @@ Proxy access design (age thresholds, the adolescent portal, what each proxy sees
 
 ## How to Build It
 
-Sensitivity is a property of records, and the rules are a property of jurisdictions. The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model) (`patients`, `encounters`, `conditions`, `procedures`, `documents`, `medication_requests`, `disclosures`):
+Sensitivity is a property of records, and the rules are a property of jurisdictions. Record-level labels are `sensitivity_labels` from [Health Tech Architecture](/books/health-tech/health-tech-architecture#segmenting-phi) (`part2_sud`, `reproductive`, `mental_health`, `hiv`, `genetic`, set from the source program, a code value set or by hand, and inherited by derived records); this chapter adds the label values its laws need (`sud_counseling_notes`, `psychotherapy_notes`, `gender_affirming`, `contraception`, `minor_confidential`), which rule applied each label, and the jurisdictional rules themselves. The deltas against [The Core Data Model](/books/health-tech/health-tech-business#the-core-data-model) (`contacts`, `documents`, `disclosures`):
 
 ```sql
-CREATE TABLE sensitivity_labels (         -- one row per labeled record; labels never live in free text
-  id             UUID PRIMARY KEY DEFAULT uuidv7(),
-  organization_id UUID NOT NULL REFERENCES organizations (id),
-  patient_id     UUID NOT NULL REFERENCES patients (id),
-  record_type    TEXT NOT NULL CHECK (record_type IN ('encounter', 'condition', 'procedure',
-                   'observation', 'medication_request', 'document', 'claim', 'communication')),
-  record_id      UUID NOT NULL,
-  category       TEXT NOT NULL CHECK (category IN ('sud_part2', 'sud_counseling_notes',
-                   'reproductive', 'gender_affirming', 'contraception', 'hiv_sti', 'genetic',
-                   'mental_health', 'psychotherapy_notes', 'minor_confidential')),
-  source         TEXT NOT NULL CHECK (source IN ('program', 'code_rule', 'clinician', 'inbound')),
-  rule_id        UUID,                    -- the code-set rule that applied it, if automatic
-  applied_at     TIMESTAMPTZ NOT NULL,
-  removed_at     TIMESTAMPTZ,
-  UNIQUE (record_type, record_id, category)
-);
+ALTER TABLE sensitivity_labels           -- Health Tech Architecture's table
+  ADD COLUMN rule_id UUID;               -- the code value set or privacy_rule_sets row that applied it
 
 CREATE TABLE privacy_rule_sets (          -- what each jurisdiction requires, effective-dated
   id             UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -152,17 +138,17 @@ CREATE TABLE consumer_health_data_requests (  -- MHMDA-style rights outside HIPA
 );
 
 ALTER TABLE disclosures
-  ADD COLUMN sensitivity_categories TEXT[] NOT NULL DEFAULT '{}',  -- what the disclosure carried
+  ADD COLUMN sensitivity_labels     TEXT[] NOT NULL DEFAULT '{}',  -- the labels on what was disclosed
   ADD COLUMN part2_notice_attached  BOOLEAN,                       -- 42 CFR 2.32 statement sent
   ADD COLUMN attestation_document_id UUID REFERENCES documents (id); -- kept for state-law attestations
 ```
 
 Design decisions:
 
-- **Labels are rows, applied at the source.** A Part 2 program labels everything it creates; code-set rules label records by diagnosis, procedure or medication code (with `rule_id` recording which); clinicians can add labels; inbound records keep the labels they arrived with (FHIR security labels and C-CDA confidentiality codes carry them, covered in the interoperability part). Don't count on certified EHRs to send them: HTI-5 removed the security tags certification criteria, 170.315(b)(7) and (b)(8), effective December 28, 2026 ([The HTI Rules](/books/health-tech/information-blocking-and-certification#the-hti-rules)). A record without a label is ordinary PHI, so removing a label is an audited act.
+- **Labels are rows, applied at the source.** A Part 2 program labels everything it creates; code-set rules label records by diagnosis, procedure or medication code (with `rule_id` recording which); clinicians can add labels; inbound records keep the labels they arrived with (FHIR security labels and C-CDA confidentiality codes carry them, covered in the interoperability part). Don't count on certified EHRs to send them: HTI-5 removed the security tags certification criteria, 170.315(b)(7) and (b)(8), effective December 28, 2026 ([The HTI Rules](/books/health-tech/information-blocking-and-certification#the-hti-rules)). A record without a label is ordinary PHI, so removing a label is an audited act. The outbound check that reads the labels against consents is the architecture chapter's ([Segmenting PHI](/books/health-tech/health-tech-architecture#segmenting-phi)).
 - **Rules are data per jurisdiction and regime.** Geofence distances, consent requirements, segmentation categories, parental access, US storage: rows with citations and effective dates, plus an `override_note` for court decisions the Code doesn't reflect ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 - **Filters run at every exit.** Portal views, proxy access, exports, FHIR APIs, outbound messages and claims all ask the same question (who is asking, from where, for which categories) and get the same answer, logged ([Where Checks Belong](/docs/security/authorization#where-checks-belong)).
-- **Disclosures carry what they carried.** The categories in each disclosure and whether the Part 2 notice went with it make a later accounting or an OCR inquiry answerable.
+- **Disclosures carry what they carried.** The labels on each disclosure and whether the Part 2 notice went with it make a later accounting or an OCR inquiry answerable.
 - **Consumer rights outside HIPAA are a separate queue.** A HIPAA access request and an MHMDA access request have different clocks, scopes and appeal rules; the playbook's erasure mechanics apply to the deletion ones ([Erasure Requests](/docs/architecture/data-retention#erasure-requests)).
 
 ## Auditing

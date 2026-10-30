@@ -1,7 +1,7 @@
 +++
 title = "Consent, Authorization & Proxies"
 nav_title = "Consent & Proxies"
-description = "The many consents of health care: HIPAA authorizations, consent to treat, financial and telehealth consent, Part 2, personal representatives, minors and pet owners."
+description = "The consents of health care: HIPAA authorizations, consent to treat, financial and telehealth consent, Part 2, personal representatives, minors, pet owners."
 category = "Health Tech Industry"
 order = 1917
 part = "Rules of the Record"
