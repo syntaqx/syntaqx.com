@@ -53,7 +53,7 @@ A worked example. An account opens the day with a ledger balance of $500.00. The
 | Legal block | 0.00 | 0.00 | −150.00 |
 | **Next morning** | **1,700.00** | **500.00** | **545.00** |
 
-Interest accrues on $1,700.00 (Regulation DD lets the bank start accrual no later than the business day Regulation CC sets for the deposit, [Interest, APY & Statements](/books/banking-and-lending/interest-and-statements#when-interest-starts-and-stops)). The customer can spend $545.00. The bank has actually collected $500.00. If the check comes back unpaid, the ledger drops by $1,200.00 and nothing that read the available balance was wrong.
+Interest accrues on the ledger balance, with the check's $1,200.00 starting no later than the business day Regulation CC sets for it ([When Interest Starts and Stops](/books/banking-and-lending/interest-and-statements#when-interest-starts-and-stops)), so $1,700.00 once that day arrives. The customer can spend $545.00. The bank has actually collected $500.00. If the check comes back unpaid, the ledger drops by $1,200.00 and nothing that read the available balance was wrong.
 
 Two rules keep the three straight:
 
