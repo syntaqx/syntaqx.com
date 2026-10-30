@@ -102,7 +102,7 @@ After funding, the loan file isn't complete until trailing items arrive and the 
 - **The closing package:** every signed document, the settlement statement, the final Closing Disclosure, the notary's records or RON recording reference, and the rescission notices with their delivery.
 - **Post-consummation corrections:** a corrected Closing Disclosure within 30 days for a changed amount or 60 for a clerical error or cure ([Cures](/books/banking-and-lending/mortgage-disclosures#cures)).
 
-One limit carries into servicing: E-SIGN's consent rules don't reach notices of "default, acceleration, repossession, foreclosure, or eviction, or the right to cure" under credit secured by a primary residence (15 U.S.C. 7003(b)(2)), so an all-digital loan still needs paper for its most serious notices (Mortgage Servicing, Escrow & Loss Mitigation).
+One limit carries into servicing: E-SIGN's consent rules don't reach notices of "default, acceleration, repossession, foreclosure, or eviction, or the right to cure" under credit secured by a primary residence (15 U.S.C. 7003(b)(2)), so an all-digital loan still needs paper for its most serious notices ([Mortgage Servicing, Escrow & Loss Mitigation](/books/banking-and-lending/mortgage-servicing)).
 
 ## How to Build It
 

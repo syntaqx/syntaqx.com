@@ -60,7 +60,7 @@ A mortgage moves through a sequence of stages that every LOS names slightly diff
 4. **Underwriting.** An underwriter (or the decision engine) reviews the file, the AUS findings and the documents, and issues a decision: approved with conditions, suspended for missing information, referred, or declined ([Underwriting & Decision Engines](/books/banking-and-lending/decision-engines)).
 5. **Conditional approval to clear to close.** The borrower and processor satisfy each condition; the underwriter signs each one off. When the last is cleared, the file is clear to close.
 6. **Closing and funding.** The Closing Disclosure, the signing, the note and security instrument, the wire (Closing, eNotes & MERS).
-7. **Post-closing and delivery.** The file is audited, trailing documents (recorded mortgage, final title policy) are collected, and the loan is delivered to the investor or kept, then boarded to servicing (Loan Servicing, The Secondary Mortgage Market).
+7. **Post-closing and delivery.** The file is audited, trailing documents (recorded mortgage, final title policy) are collected, and the loan is delivered to the investor or kept, then boarded to servicing ([Loan Servicing](/books/banking-and-lending/loan-servicing), The Secondary Mortgage Market).
 
 The pipeline is also a business report: pull-through (the share of applications that close), cycle time per stage, and fallout by reason. Those are derived from stage transitions, which is why the transitions must be events with timestamps and actors, not a status column that gets overwritten.
 

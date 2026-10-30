@@ -34,7 +34,7 @@ The QBP and every bank's earnings release follow the same order, and so does the
 1. **Interest income** on loans, securities, cash at the Federal Reserve and fed funds sold.
 2. **Interest expense** on deposits, borrowings (Federal Home Loan Bank advances, repo, the discount window) and debt.
 3. **Net interest income (NII)**, the difference.
-4. **Provision for credit losses**, the expense that builds the allowance for expected losses (Credit Losses & CECL covers the method).
+4. **Provision for credit losses**, the expense that builds the allowance for expected losses ([Credit Losses & CECL](/books/banking-and-lending/credit-losses-and-cecl) covers the method).
 5. **Noninterest income**: service charges on deposit accounts, card and ATM fees, interchange, treasury management, wealth and trust, mortgage banking, capital markets, gains on securities.
 6. **Noninterest expense**: salaries, occupancy, equipment and software, outside services, marketing, FDIC assessments, operational losses.
 7. **Pretax income**, taxes, **net income**.

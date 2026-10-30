@@ -49,6 +49,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Scheduling and Routing": "Scheduling",
   "Search, Integrations and AI": "Search and AI",
   "Security and Compliance": "Security",
+  "Servicing and Collections": "Servicing",
   "Social and Short-Form": "Short-Form",
   "Storefront and Checkout": "Storefront",
   "Subscriptions and Memberships": "Subscriptions",
