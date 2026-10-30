@@ -110,7 +110,7 @@ A change in terms is therefore a workflow with dates, not a configuration save:
 3. **Compute the notice deadline** from the effective date and the longest notice period that applies, and refuse an effective date that can't be met ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
 4. **Generate and send the notices,** each recorded as a disclosure with its version, channel and delivery time, and track failures (returned mail, bounced email) per account.
 5. **On the effective date, migrate** the accounts that were noticed in time to the new version, and only those; accounts whose notice failed or went late stay on the old version until they can be noticed properly.
-6. **For credit card accounts, honor rejections:** an account whose holder rejected the change stays on the old terms under the rules in Credit Cards as Credit.
+6. **For credit card accounts, honor rejections:** an account whose holder rejected the change stays on the old terms under the rules in [Credit Cards as Credit](/books/banking-and-lending/credit-cards).
 
 Posting order, overdraft coverage and dispute terms are product terms too, so changing them runs through the same workflow ([Posting Order](/books/banking-and-lending/posting-holds-and-balances#posting-order)).
 

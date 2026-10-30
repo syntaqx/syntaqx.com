@@ -20,11 +20,11 @@ As of October 2026, from approval letters, agency releases and company announcem
 | Varo | De novo | National bank | Final OCC approval and FDIC and Fed sign-off July 2020 | At least $104.4 million of capital (FDIC); deposits had been held at The Bancorp Bank since 2017 |
 | SoFi | Acquisition | National bank | OCC and Fed approval January 18, 2022 to acquire Golden Pacific Bancorp | $750 million capital contribution to the renamed SoFi Bank, N.A. |
 | Erebor | De novo | National bank | Granted late 2025 | Not reviewed here |
-| Nubank, VALT, Mercury | De novo | National bank | OCC conditional approvals January, March and April 2026 | FDIC and, for holding companies, Fed approvals still to come at the time |
+| Nubank, VALT, Mercury | De novo | National bank | OCC conditional approvals January 29, March 13 and April 24, 2026 | FDIC and, for holding companies, Fed approvals still to come at the time |
 | Augustus National Bank | De novo | National bank | OCC conditional approval May 8, 2026; FDIC deposit insurance August 4, 2026 | Not reviewed here |
 | Upstart Bank | De novo | National bank | OCC conditional approval July 23, 2026 | FDIC insurance and Fed holding company applications pending |
-| Revolut Bank US | De novo | National bank | OCC preliminary conditional approval announced September 2026 | At least $95 million paid-in capital net of pre-opening costs; tier 1 leverage of at least 10% for three years; retail FX excluded until a separate non-objection; Fed and FDIC approvals needed |
-| Ford Credit Bank, GM Financial Bank | De novo | Utah industrial bank | FDIC conditional approvals January 2026; to be established within 12 months | $1.5 billion and $667 million initial capital; 15% leverage ratio; FDIC non-objection on contracts, incentive plans and dividends in the first three years |
+| Revolut Bank US | De novo | National bank | OCC preliminary conditional approval September 2, 2026 | At least $95 million paid-in capital net of pre-opening costs; tier 1 leverage of at least 10% for three years; retail FX excluded until a separate non-objection; Fed and FDIC approvals needed |
+| Ford Credit Bank, GM Financial Bank | De novo | Utah industrial bank | FDIC conditional approvals January 22, 2026; to be established within 12 months | $1.5 billion and $667 million initial capital; 15% leverage ratio; FDIC non-objection on contracts, incentive plans and dividends in the first three years |
 | Circle | De novo | National trust bank | Conditional approval December 12, 2025; final approval July 10, 2026 | Trust charter: no deposit insurance application |
 | Laser Digital (Nomura) | De novo | National trust bank | Preliminary conditional approval May 29, 2026 | $6.5 million tier 1 capital, liquidity floors, business plan lock (detailed below) |
 
@@ -43,7 +43,7 @@ The OCC grants a national charter "in two steps: preliminary approval and final 
 7. **Preopening examination.** Requested by letter at least 60 days before the planned opening, certifying the bank is "fully operationally ready."
 8. **Final approval and opening.** The charter issues once all conditions are met and the FDIC insurance and any Fed approvals are in place.
 
-Since June 2026 the OCC has said it may return a "materially deficient filing before meaningful processing" and plans to deny filings with significant supervisory, CRA or compliance concerns, so the completeness of the first submission now sets the schedule.
+Since June 17, 2026 the OCC has said it may "return a filing as materially deficient where it lacks sufficient information" and plans to deny a filing when "a significant supervisory, Community Reinvestment Act (if applicable), or compliance concern exists," so the completeness of the first submission now sets the schedule.
 
 ## The FDIC's Statutory Factors
 
@@ -106,7 +106,7 @@ A fintech that charters usually has a working product on a sponsor bank, and the
 
 - **Varo** received its national charter and FDIC and Federal Reserve approvals in July 2020, after "a three-year journey" that its CEO put at nearly $100 million, with the FDIC requiring at least $104.4 million of capital. It had held deposits at The Bancorp Bank since 2017; as a national bank it holds its own, and it has had to keep raising capital since ([Neobanks & Consumer Fintech](/books/banking-and-lending/neobanks) has its results).
 - **SoFi** bought a bank instead of building one: the OCC and Fed approved its acquisition of Golden Pacific Bancorp on January 18, 2022, SoFi committed $750 million of capital, and the bank became SoFi Bank, N.A., which SoFi said would let it pay "high-yielding interest in checking and savings."
-- **The 2026 approvals.** The OCC gave conditional approvals to full-service national banks for Nubank (January), VALT (March), Mercury (April), Augustus (May 8, with FDIC insurance approved August 4) and Upstart (July 23), after Erebor's late in 2025, and announced Revolut's in September. Upstart's FDIC and Fed applications were still pending in August; Revolut's needed both.
+- **The 2026 approvals.** The OCC gave conditional approvals to full-service national banks for Nubank (January 29), VALT (March 13), Mercury (April 24), Augustus (May 8, with FDIC insurance approved August 4) and Upstart (July 23), after Erebor's late in 2025, and Revolut's on September 2. Upstart's FDIC and Fed applications were still pending in August; Revolut's needed both.
 - **Industrial banks** for commercial parents (Ford, GM, Stellantis, Edward Jones) went through the FDIC rather than the OCC ([Charters & Regulators](/books/banking-and-lending/charters-and-regulators#industrial-loan-companies)).
 - **Trust banks** for crypto and payments firms (Circle, Ripple, BitGo, Fidelity Digital Assets, Paxos, Laser Digital) took the uninsured national trust route, which skips deposit insurance and so the FDIC application.
 
@@ -135,7 +135,7 @@ CREATE TABLE regulatory_approvals (        -- charter, insurance, holding compan
   kind             TEXT NOT NULL CHECK (kind IN ('charter_preliminary', 'charter_final',
                      'deposit_insurance', 'holding_company', 'change_in_control',
                      'fed_membership', 'business_plan_change', 'new_activity')),
-  decision_ref     TEXT NOT NULL,            -- 'OCC CA 1377', FDIC order number
+  decision_ref     TEXT NOT NULL,            -- 'OCC CD 1377', FDIC order number
   document_uri     TEXT NOT NULL,            -- the letter, archived
   decided_on       DATE NOT NULL,
   expires_on       DATE,                     -- e.g. 18 months to open
@@ -209,15 +209,18 @@ Design notes:
 **Regulators and guidance**
 
 - [OCC: Comptroller's Licensing Manual, Charters (December 2021)](https://www.occ.gov/publications-and-resources/publications/comptrollers-licensing-manual/files/charters.pdf), the two-step approval, organization phase, 12- and 18-month deadlines, 30-day comment period, 120-day target, 8% leverage expectation and three-year conditions
-- [OCC: Conditional Approval No. 1377, Laser Digital National Trust Bank (May 29, 2026)](https://www.occ.treas.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1377.pdf), the business plan, capital, liquidity, personnel, audit and deadline conditions and their enforceability under 12 USC 1818
+- [OCC: Corporate Decision #1377, Laser Digital National Trust Bank (May 29, 2026)](https://www.occ.treas.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1377.pdf), the business plan, capital, liquidity, personnel, audit and deadline conditions and their enforceability under 12 USC 1818
 - [FDIC: Applying for Deposit Insurance, A Handbook for Organizers of De Novo Institutions](https://www.fdic.gov/sites/default/files/2024-03/handbook_0.pdf), key considerations, standard and non-standard conditions, the three-year business plan, technology planning and the review timeline (April 2017 edition as posted)
 - [OCC: Conditional approvals of national trust bank charters (NR 2025-125, December 12, 2025)](https://www.occ.gov/news-issuances/news-releases/2025/nr-occ-2025-125.html), the December 2025 trust bank approvals
+- [OCC: Corporate Decision #1382, Upstart Bank, N.A. (July 23, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1382.pdf), the preliminary conditional approval
+- [OCC: Corporate Decision #1390, Revolut Bank US, N.A. (September 2, 2026)](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1390.pdf), capital, the 10% leverage condition, the retail FX exclusion and the Federal Reserve and FDIC applications
+- [OCC: Interpretations and Actions, 2026](https://www.occ.gov/topics/charters-and-licensing/interpretations-and-decisions/index-interpretations-and-decisions.html), the dated decisions for Nubank (CA 1362), VALT (CD 1368), Mercury (CD 1372) and Augustus (CD 1374)
+- [OCC: Licensing filing decisions (NR 2026-47, June 17, 2026)](https://www.occ.gov/news-issuances/news-releases/2026/nr-occ-2026-47.html), returning materially deficient filings and denying filings with significant concerns
+- [FDIC: FDIC approves deposit insurance applications for Ford Credit Bank and GM Financial Bank (January 22, 2026)](https://www.fdic.gov/news/press-releases/2026/fdic-approves-deposit-insurance-applications-ford-credit-bank-salt-lake), the 15% leverage condition and the 12-month establishment deadline
 
 **In practice**
 
 - [Banking Dive: Varo becomes first challenger bank to win national bank charter (July 31, 2020)](https://www.bankingdive.com/news/varo-first-challenger-bank-charter-occ/582686/), the final approvals, the $104.4 million capital requirement, the three years and the cost
 - [SoFi: SoFi receives regulatory approval to become a national bank (January 18, 2022)](https://www.sofi.com/press/sofi-receives-regulatory-approval-become-national-bank/), the Golden Pacific acquisition and the $750 million contribution
-- [Davis Wright Tremaine: OCC signals digital asset charter momentum (August 2026)](https://www.dwt.com/blogs/financial-services-law-advisor/2026/08/occ-signals-digital-asset-charter-momentum), the 2025-26 national bank and trust bank approvals, pending applications and the OCC's June 2026 filing guidance
-- [Banking Dive: Revolut nabs conditional OCC charter (September 4, 2026)](https://www.bankingdive.com/news/revolut-nabs-conditional-occ-charter/829703/), capital, the 10% leverage condition, the retail FX exclusion and the remaining approvals
+- [Davis Wright Tremaine: OCC signals digital asset charter momentum (August 2026)](https://www.dwt.com/blogs/financial-services-law-advisor/2026/08/occ-signals-digital-asset-charter-momentum), Erebor's late-2025 charter, Augustus's FDIC approval and Circle's final approval
 - [Goodwin: FDIC approves deposit insurance applications for ILCs proposing specialty business models (June 2026)](https://www.goodwinlaw.com/en/insights/publications/2026/06/insights-technology-fs-fdic-approves-deposit-insurance-applications-ilcs-specialty-business-models), the Ford, GM, Stellantis and Edward Jones conditions
-- [ICBA Independent Banker: FDIC approves ILC applications for Ford, GM (January 23, 2026)](https://www.independentbanker.org/w/fdic-approves-icba-opposed-ilc-applications-for-ford-gm), the 12-month establishment deadline

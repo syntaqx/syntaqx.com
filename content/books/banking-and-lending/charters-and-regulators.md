@@ -78,7 +78,7 @@ As of October 2026:
 
 - **Fintech ILCs:** Square Financial Services (Block's bank) and Nelnet Bank were approved in 2020 ([Neobanks & Consumer Fintech](/books/banking-and-lending/neobanks) covers what Block does with its bank).
 - **Policy:** on July 15, 2025 the FDIC withdrew its August 2024 proposal to tighten Part 354 for ILC parents, said it no longer intends to finalize it, and opened a request for information on how it reviews ILC filings against the statutory factors.
-- **The 2026 wave:** the FDIC conditionally approved Ford Credit Bank and GM Financial Bank in January 2026, both based in Salt Lake City to buy auto retail installment contracts and fund with online savings and time deposits, each to be established within 12 months. GM Financial Bank's conditions included $667 million of initial paid-in capital and a 15% leverage ratio, Ford Credit Bank's $1.5 billion, and conditional approvals followed for Stellantis Bank and Edward Jones Bank.
+- **The 2026 wave:** the FDIC conditionally approved deposit insurance for Ford Credit Bank and GM Financial Bank on January 22, 2026, both based in Salt Lake City to buy auto retail installment contracts and fund with online savings and time deposits, each to be established within 12 months and to hold a tier 1 leverage ratio of at least 15%. Initial paid-in capital was set at $667 million for GM Financial Bank and $1.5 billion for Ford Credit Bank, and conditional approvals followed for Stellantis Bank and Edward Jones Bank.
 
 ## Trust Banks and Novel Charters
 
@@ -135,6 +135,7 @@ The escrow question then became the test case. As of October 2026:
 - **May 5, 2026:** on remand, the Second Circuit again held New York's escrow interest law preempted.
 - **May 15, 2026:** the OCC issued a rule affirming national banks' flexibility over escrow account terms, including whether to pay interest, and a preemption determination covering New York's law and 13 substantively equivalent laws, both effective June 18, 2026.
 - **Circuit split:** the First Circuit (Citizens Bank v. Conti, Rhode Island) and the Ninth Circuit (Flagstar Bank v. Kivett, California) held similar laws not preempted.
+- **August 11, 2026:** New York and nine other states sued the OCC, arguing both rules exceed the limits Dodd-Frank set on preemption and violate the Administrative Procedure Act.
 - **October 5, 2026:** the Supreme Court invited the Solicitor General's views in all three cases rather than granting review.
 
 State banks don't get the National Bank Act's preemption; they get parity on interest rates through 12 USC 1831d, state "wild card" statutes that give them national bank powers, and their home state's law, and they remain subject to host states' consumer laws in ways national banks may not be. That difference is a reason fintechs pick sponsor banks carefully and a reason several sought national charters.
@@ -217,17 +218,19 @@ Design notes:
 - [Federal Reserve: Who are the regulators of banks?](https://www.federalreserve.gov/faqs/banking_12779.htm), the OCC's national charter authority and the Fed's and FDIC's approval roles
 - [OCC: Comptroller's Licensing Manual, Charters (December 2021)](https://www.occ.gov/publications-and-resources/publications/comptrollers-licensing-manual/files/charters.pdf), national banks, FSAs and special purpose banks, the qualified thrift lender review
 - [OCC: Conditional approvals of national trust bank charters (NR 2025-125, December 12, 2025)](https://www.occ.gov/news-issuances/news-releases/2025/nr-occ-2025-125.html), the five approvals and the Comptroller's statement
-- [OCC: Conditional Approval No. 1377, Laser Digital National Trust Bank (May 29, 2026)](https://www.occ.treas.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1377.pdf), permitted trust bank activities and trust bank assets under administration
+- [OCC: Corporate Decision #1377, Laser Digital National Trust Bank (May 29, 2026)](https://www.occ.treas.gov/topics/charters-and-licensing/interpretations-and-decisions/2026/cd1377.pdf), permitted trust bank activities and trust bank assets under administration
 - [FDIC: BankFind Suite API](https://api.fdic.gov/banks/docs), institution counts by charter class and chartering agent (dataset of October 23, 2026)
 - [FDIC: Board approves request for information on industrial banks and ILCs (July 15, 2025)](https://www.fdic.gov/news/press-releases/2025/fdic-board-approves-request-information-industrial-banks-and-industrial), the RFI and the withdrawal of the August 12, 2024 Part 354 proposal
 - [NCUA: Quarterly Credit Union Data Summary, 2026 Q2](https://www.ncua.gov/files/publications/analysis/quarterly-data-summary-2026-Q2.pdf), federal and state credit union counts and membership
 - [Federal Reserve: FR Y-9C](https://www.federalreserve.gov/apps/reportingforms/Report/Index/FR_Y-9C), consolidated reports for bank and savings and loan holding companies of $3 billion or more
+- [FDIC: FDIC approves deposit insurance applications for Ford Credit Bank and GM Financial Bank (January 22, 2026)](https://www.fdic.gov/news/press-releases/2026/fdic-approves-deposit-insurance-applications-ford-credit-bank-salt-lake), business models, funding, the 15% leverage condition and the 12-month deadline
+- [OCC: OCC finalizes escrow account rules (NR 2026-37, May 15, 2026)](https://www.occ.gov/news-issuances/news-releases/2026/nr-occ-2026-37.html), the escrow powers rule and the preemption determination covering New York and 13 other states and territories
+- [New York Attorney General: Attorney General James sues to protect interest payments to homeowners (August 11, 2026)](https://ag.ny.gov/press-release/2026/attorney-general-james-sues-trump-administration-protect-valuable-interest), the ten-state challenge to both OCC rules
 - [CSBS: About](https://www.csbs.org/about), the state supervisors' role in the dual banking system
 
 **In practice**
 
-- [Goodwin: FDIC approves deposit insurance applications for ILCs proposing specialty business models (June 2026)](https://www.goodwinlaw.com/en/insights/publications/2026/06/insights-technology-fs-fdic-approves-deposit-insurance-applications-ilcs-specialty-business-models), the 2026 ILC approvals, their capital and leverage conditions, and Part 354 commitments
-- [ICBA Independent Banker: FDIC approves ILC applications for Ford, GM (January 23, 2026)](https://www.independentbanker.org/w/fdic-approves-icba-opposed-ilc-applications-for-ford-gm), business models, funding and the 12-month deadline
+- [Goodwin: FDIC approves deposit insurance applications for ILCs proposing specialty business models (June 2026)](https://www.goodwinlaw.com/en/insights/publications/2026/06/insights-technology-fs-fdic-approves-deposit-insurance-applications-ilcs-specialty-business-models), the 2026 ILC approvals, their initial capital, and the Stellantis and Edward Jones approvals
 - [Davis Wright Tremaine: OCC signals digital asset charter momentum (August 2026)](https://www.dwt.com/blogs/financial-services-law-advisor/2026/08/occ-signals-digital-asset-charter-momentum), Circle's July 10, 2026 final approval
 - [Ballard Spahr Consumer Finance Monitor: OCC finalizes rules confirming preemption of state mortgage interest-on-escrow laws (May 19, 2026)](https://www.consumerfinancemonitor.com/2026/05/19/occ-finalizes-rules-confirming-preemption-of-state-mortgage-interest-on-escrow-laws/), the Second Circuit's remand decision and the OCC's two rules
 - [Legal 500: Supreme Court invites the Solicitor General's views in Cantero, Conti and Kivett (October 2026)](https://www.legal500.com/intelligence/united-states/corporate-commercial-law/supreme-court-takes-next-step-toward-resolving-national-bank-act-preemption-split-inviting-solicitor-generals-views-in-cantero-conti-and-kivett), the October 5, 2026 order and the circuit split

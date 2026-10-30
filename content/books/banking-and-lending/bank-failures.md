@@ -126,7 +126,7 @@ These are deltas against the core model's `institutions`, `accounts`, `account_p
 ALTER TABLE holds DROP CONSTRAINT holds_reason_check;
 ALTER TABLE holds ADD CONSTRAINT holds_reason_check CHECK (reason IN (
   'card_authorization', 'deposit_availability', 'legal_process', 'fraud', 'collateral',
-  'manual', 'provisional_insurance'));     -- 12 CFR 360.9 provisional hold
+  'dispute', 'manual', 'provisional_insurance'));  -- 12 CFR 360.9 provisional hold; 'dispute' from Posting, Holds & Balances
 
 CREATE TABLE failure_readiness_extracts (  -- the files the FDIC would need, produced on schedule
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

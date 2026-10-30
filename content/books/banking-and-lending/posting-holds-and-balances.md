@@ -101,7 +101,7 @@ Same items, same ending balance, three times the fees. "High to low" was defende
 - **The multidistrict overdraft litigation** alleged that dozens of large banks resequenced "debit card transactions each day from highest-to-lowest in dollar amount"; settlements approved by the court totaled over $1 billion, including $410 million from Bank of America with final approval in November 2011.
 - **Gutierrez v. Wells Fargo** (9th Cir. No. 10-16959, decided December 26, 2012) shows the legal limit of the attack on a national bank. The district court had enjoined high-to-low posting and ordered $203 million in restitution; the Ninth Circuit held that posting order is "a federally authorized pricing decision", that the National Bank Act preempts California's unfair-practices claim against it, and vacated both, while letting claims based on misleading representations about posting proceed.
 
-The lesson the industry took is that posting order is a disclosed product term with fee consequences, not an internal detail. The CFPB's Circular 2022-06 on unanticipated overdraft fees, which as of October 2026 still shows no withdrawal notice on its page, makes the same point from the other direction: fees can depend on "how the financial institution orders the transactions at the end of the banking day", and its example of **authorize positive, settle negative (APSN)** is a posting-order problem. A customer with $100 available makes a $50 debit card purchase that is authorized; a $120 ACH debit settles first and overdraws the account; then the $50 purchase settles into a negative balance and is charged a second fee, though it was authorized against money that was there. Whether a bank may charge that second fee is in [Overdraft, NSF & Fees](/books/banking-and-lending/overdraft-and-fees); whether it can even tell which transactions were authorized positive depends on the memo-to-hard-post link above.
+The lesson the industry took is that posting order is a disclosed product term with fee consequences, not an internal detail. The CFPB's Circular 2022-06 on unanticipated overdraft fees made the same point from the other direction before the Bureau withdrew it with 66 other guidance documents on May 12, 2025 (90 FR 20084; its page still carries no withdrawal notice), and its mechanics still describe the problem: fees can depend on "how the financial institution orders the transactions at the end of the banking day", and its example of **authorize positive, settle negative (APSN)** is a posting-order problem. A customer with $100 available makes a $50 debit card purchase that is authorized; a $120 ACH debit settles first and overdraws the account; then the $50 purchase settles into a negative balance and is charged a second fee, though it was authorized against money that was there. Whether a bank may charge that second fee is in [Overdraft, NSF & Fees](/books/banking-and-lending/overdraft-and-fees); whether it can even tell which transactions were authorized positive depends on the memo-to-hard-post link above.
 
 Build posting order as configuration with a version, not code:
 
@@ -182,7 +182,8 @@ ALTER TABLE transactions
 ALTER TABLE holds
   DROP CONSTRAINT holds_reason_check,
   ADD CONSTRAINT holds_reason_check CHECK (reason IN ('card_authorization', 'deposit_availability',
-    'legal_process', 'fraud', 'collateral', 'dispute', 'manual')),
+    'legal_process', 'fraud', 'collateral', 'dispute', 'manual',
+    'provisional_insurance')),                     -- keeps When Banks Fail's 12 CFR 360.9 hold
   ADD COLUMN secured_amount    BIGINT NOT NULL,    -- what it reduces available balance by now; amount is the target
   ADD COLUMN release_condition TEXT,               -- for blocks with no expires_at
   ADD COLUMN placed_by         TEXT NOT NULL,
@@ -302,11 +303,12 @@ Posting records answer complaints, Reg E claims, overdraft litigation and examin
 
 **Regulators and guidance**
 
-- [CFPB Circular 2022-06: Unanticipated overdraft fee assessment practices](https://www.consumerfinance.gov/compliance/circulars/consumer-financial-protection-circular-2022-06-unanticipated-overdraft-fee-assessment-practices/), ledger and available balance, the APSN example, and fees that depend on posting order
+- [CFPB Circular 2022-06: Unanticipated overdraft fee assessment practices](https://www.consumerfinance.gov/compliance/circulars/consumer-financial-protection-circular-2022-06-unanticipated-overdraft-fee-assessment-practices/), ledger and available balance, the APSN example, and fees that depend on posting order, withdrawn May 12, 2025
+- [Federal Register: Interpretive Rules, Policy Statements, and Advisory Opinions; Withdrawal (90 FR 20084, May 12, 2025)](https://www.federalregister.gov/documents/2025/05/12/2025-08286/interpretive-rules-policy-statements-and-advisory-opinions-withdrawal), the withdrawal of Circular 2022-06 among 67 guidance documents
 
 **Court records**
 
-- [Orrick InfoBytes: Ninth Circuit vacates restitution order in overdraft ordering case (Gutierrez v. Wells Fargo)](https://infobytes.orrick.com/2013-01-04/ninth-circuit-vacates-restitution-order-overdraft-ordering-case-allows-state-fraud-claims-proceed/), posting order as a federally authorized pricing decision, the vacated $203 million restitution and the surviving misrepresentation claims
+- [*Gutierrez v. Wells Fargo Bank, N.A.*, No. 10-16959 (9th Cir. Dec. 26, 2012)](https://cdn.ca9.uscourts.gov/datastore/opinions/2012/12/26/10-16959.pdf), posting order as a federally authorized pricing decision, the vacated $203 million restitution order and the surviving misrepresentation claims
 - [Lieff Cabraser: Bank overdraft fee cases](https://lieffcabraser.com/consumer/bank-overdraft), highest-to-lowest resequencing claims, settlements over $1 billion and the $410 million Bank of America settlement approved November 2011
 
 **Vendor documentation**
