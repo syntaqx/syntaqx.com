@@ -37,7 +37,7 @@ export function MarkdownMenu({ href }: { href: string }) {
     "flex cursor-pointer gap-2.5 px-3 py-2 outline-none transition-colors data-highlighted:bg-background";
 
   return (
-    <div className="inst flex shrink-0 items-stretch border border-border bg-surface text-dim">
+    <div className="inst flex h-6.5 shrink-0 items-stretch border border-border bg-surface text-dim">
       <Tip label={labels[state]}>
         <button
           type="button"
