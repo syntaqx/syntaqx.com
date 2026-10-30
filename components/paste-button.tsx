@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ClipboardPaste, Check } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 interface PasteButtonProps {
   onPaste: (text: string) => void;
@@ -14,7 +15,7 @@ export function PasteButton({
   onPaste,
   label = false,
   size = "md",
-  className = "",
+  className,
 }: PasteButtonProps) {
   const [pasted, setPasted] = useState(false);
 
@@ -47,7 +48,11 @@ export function PasteButton({
   return (
     <button
       onClick={paste}
-      className={`inline-flex items-center ${s.button} text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer ${className}`}
+      className={cn(
+        "inline-flex items-center text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer",
+        s.button,
+        className,
+      )}
     >
       {pasted ? <Check size={s.icon} /> : <ClipboardPaste size={s.icon} />}
       {label && (pasted ? "Pasted" : "Paste")}

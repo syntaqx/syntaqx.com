@@ -4,6 +4,7 @@ import { useId, type ReactNode } from "react";
 import * as RadixCheckbox from "@radix-ui/react-checkbox";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { Check, Info } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 interface CheckboxProps {
   checked: boolean;
@@ -18,12 +19,12 @@ export function Checkbox({
   onChange,
   label,
   tooltip,
-  className = "",
+  className,
 }: CheckboxProps) {
   const id = useId();
 
   return (
-    <div className={`flex items-center gap-1.5 ${className}`}>
+    <div className={cn("flex items-center gap-1.5", className)}>
       <div className="flex items-center gap-1.5 group">
         <RadixCheckbox.Root
           id={id}

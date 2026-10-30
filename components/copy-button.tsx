@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 interface CopyButtonProps {
   text: string;
@@ -15,7 +16,7 @@ export function CopyButton({
   text,
   label = false,
   size = "md",
-  className = "",
+  className,
   disabled = false,
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
@@ -44,7 +45,11 @@ export function CopyButton({
     <button
       onClick={copy}
       disabled={disabled}
-      className={`inline-flex items-center ${s.button} text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none ${className}`}
+      className={cn(
+        "inline-flex items-center text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none",
+        s.button,
+        className,
+      )}
     >
       {copied ? <Check size={s.icon} /> : <Copy size={s.icon} />}
       {label && (copied ? "Copied" : "Copy")}

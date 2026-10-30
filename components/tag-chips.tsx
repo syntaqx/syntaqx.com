@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { TagInfo } from "@/lib/posts";
+import { cn } from "@/lib/cn";
 
 interface TagChipsProps {
   tags: TagInfo[];
@@ -14,10 +15,10 @@ export function TagChips({
   tags,
   activeSlug = null,
   showCounts = false,
-  className = "",
+  className,
 }: TagChipsProps) {
   return (
-    <div className={`flex flex-wrap gap-2 ${className}`}>
+    <div className={cn("flex flex-wrap gap-2", className)}>
       {tags.map((tag) => {
         const isActive = tag.slug === activeSlug;
         return (

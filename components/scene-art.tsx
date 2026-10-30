@@ -5,6 +5,7 @@ import { project, type SceneState, type V2 } from "@/lib/scene/iso";
 import { HOT, LEVELS, WARN, levels, rasterize } from "@/lib/scene/raster";
 import { sceneAt, type SceneName } from "@/lib/scene/scenes";
 import { walk, type Ink, type Pen } from "@/lib/scene/walk";
+import { cn } from "@/lib/cn";
 
 /*
  * Live isometric art: tonal teal tiles (ordered-dithered between four tints,
@@ -186,7 +187,7 @@ export function SceneArt({
   scene,
   wide = false,
   grain = 5,
-  className = "",
+  className,
   label,
   still = false,
 }: Props) {
@@ -333,7 +334,7 @@ export function SceneArt({
       ref={ref}
       role="img"
       aria-label={label}
-      className={`block w-full mask-[radial-gradient(closest-side,black_86%,transparent)] ${className}`}
+      className={cn("block w-full mask-[radial-gradient(closest-side,black_86%,transparent)]", className)}
     />
   );
 }

@@ -359,7 +359,7 @@ export default function UuidPage() {
                       </code>
                       <CopyButton
                         text={id}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="opacity-0 group-hover:opacity-100 transition"
                       />
                     </div>
                   ))}

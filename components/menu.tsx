@@ -2,6 +2,7 @@
 
 import { createContext, use, useRef, type ComponentProps, type RefObject } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { cn } from "@/lib/cn";
 
 /*
  * A dropdown menu: Radix's DropdownMenu with the site's styling, in parts
@@ -51,7 +52,7 @@ export function MenuTrigger({
 }
 
 export function MenuContent({
-  className = "",
+  className,
   onCloseAutoFocus,
   ...props
 }: ComponentProps<typeof DropdownMenu.Content>) {
@@ -65,7 +66,7 @@ export function MenuContent({
           if (byPointerRef.current) e.preventDefault();
           onCloseAutoFocus?.(e);
         }}
-        className={`z-100 border border-border bg-surface py-1 shadow-lg ${className}`}
+        className={cn("z-100 border border-border bg-surface py-1 shadow-lg", className)}
         {...props}
       />
     </DropdownMenu.Portal>
@@ -74,15 +75,15 @@ export function MenuContent({
 
 const item = "flex cursor-pointer px-3 outline-none transition-colors data-highlighted:bg-background";
 
-export function MenuItem({ className = "", ...props }: ComponentProps<typeof DropdownMenu.Item>) {
-  return <DropdownMenu.Item className={`${item} ${className}`} {...props} />;
+export function MenuItem({ className, ...props }: ComponentProps<typeof DropdownMenu.Item>) {
+  return <DropdownMenu.Item className={cn(item, className)} {...props} />;
 }
 
 export const MenuRadioGroup = DropdownMenu.RadioGroup;
 
 export function MenuRadioItem({
-  className = "",
+  className,
   ...props
 }: ComponentProps<typeof DropdownMenu.RadioItem>) {
-  return <DropdownMenu.RadioItem className={`${item} ${className}`} {...props} />;
+  return <DropdownMenu.RadioItem className={cn(item, className)} {...props} />;
 }
