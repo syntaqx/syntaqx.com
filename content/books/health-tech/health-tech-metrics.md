@@ -13,17 +13,19 @@ Each set has the same failure: a word that sounds defined isn't. A "no-show" may
 
 ## How the Companies Report
 
-Public health software companies each define their own key metrics in their annual reports. As of October 2026, from the most recent 10-K filings:
+Public health software and virtual care companies each define their own key metrics in their annual reports. As of October 2026, from the most recent 10-K filings:
 
 | Company | Unit counted | Retention metric | Size metric | Notes |
 | --- | --- | --- | --- | --- |
 | **Weave** (FY2025) | Locations: "customer locations under active subscription," with a multi-location organization "counted as multiple locations"; 39,625 at December 31, 2025 (34,997 a year earlier) | Dollar-based NRR 93% (98% in 2024) and GRR 89% (91%), from adjusted monthly revenue per location | Revenue $239.0 million, up 17% | Adjusted monthly revenue is subscription revenue plus the trailing three-month average of recurring payments revenue; NRR "does not include any new customer locations" |
-| **Phreesia** (FY ended January 31, 2026) | Average healthcare services clients (AHSCs): "the average number of clients that generate subscription and related services" or payment revenue each month; 4,514 (4,203 a year earlier) | Not reported as NRR | Total revenue per AHSC $106,467 ($99,884); patient payment volume $4,873 million; about 180 million patient visits facilitated, which it puts at about one in six US ambulatory visits | Payment processing was 24% of revenue |
+| **Phreesia** (FY ended January 31, 2026) | Average healthcare services clients (AHSCs): "the average number of clients that generate subscription and related services" or payment revenue each month; 4,514 (4,203 a year earlier) | Not reported as NRR | Total revenue per AHSC $106,467 ($99,884); patient payment volume $4,873 million; about 180 million patient visits facilitated, which it puts at about one in six US ambulatory visits | Payment solutions (the line formerly labeled payment processing fees) was 25% of revenue (24% a year earlier) |
 | **Waystar** (FY2025) | Clients contributing over $100,000, "based on an accumulation of the amounts invoiced to clients over the preceding 12 months"; 1,391 (1,203) | NRR 112.0% (110.1%), current period invoices over prior period invoices for the same clients | "Over 7.5 billion healthcare payments transactions" | The filing notes the NRR includes elevated win rates after a competitor's February 2024 cybersecurity incident |
+| **Teladoc Health** (FY2025) | U.S. Integrated Care members, "the number of unique individuals who have paid access and visit fee only access": 101.8 million at December 31, 2025, up 8.0 million; BetterHelp paying users, "the average number of global monthly paying users": 0.39 million (0.41 million) | Not reported as NRR | Revenue $2,530.0 million, down 2%; 17.1 million telehealth visits in 2025 | Average monthly revenue per U.S. Integrated Care member $1.29 ($1.37); 83% of revenue from access fees |
+| **Hims & Hers** (FY2025) | Subscribers: "customers who have one or more 'Subscriptions'," excluding one-time purchasers; about 2.51 million at December 31, 2025 (2.23 million) | Not reported as NRR | Revenue $2,347.6 million ($1,476.5 million) | Monthly Online Revenue per Average Subscriber $81 ($64): "Online Revenue divided by Average Subscribers," further divided by the months in the period |
 
 Three things the table shows:
 
-- **The unit decides the story.** A per-location company (Weave), a per-client company with a revenue-per-client metric (Phreesia) and an enterprise company counting large clients (Waystar) are each measuring the unit that matches how they sell. A platform that sells to both single offices and DSOs needs both: locations for footprint, organizations for revenue concentration.
+- **The unit decides the story.** A per-location company (Weave), a per-client company with a revenue-per-client metric (Phreesia) and an enterprise company counting large clients (Waystar) are each measuring the unit that matches how they sell, and the virtual care companies count people instead: members with access (Teladoc) or paying subscribers (Hims & Hers), each with a monthly revenue per person. A platform that sells to both single offices and DSOs needs both: locations for footprint, organizations for revenue concentration.
 - **Payments make retention metrics messy.** Weave folds a trailing average of payments revenue into its retention base, Phreesia reports payment volume separately, and Waystar counts invoices. Usage-based revenue moves with patient volume, seasonality and price changes; a retention number that mixes it with subscriptions needs its rule written down.
 - **Exogenous events show up in the numbers.** Waystar names the Change Healthcare attack's effect on its NRR. A metric definition can't exclude events like that, but the commentary beside the number should name them.
 
@@ -190,6 +192,8 @@ Design notes:
 - [Weave Communications: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1609151/000160915126000016/weav-20251231.htm), locations, NRR and GRR definitions and values, adjusted monthly revenue, and revenue
 - [Phreesia: Form 10-K for the fiscal year ended January 31, 2026](https://www.sec.gov/Archives/edgar/data/1412408/000141240826000079/phr-20260131.htm), AHSCs, revenue per AHSC, payment volume, patient visits and the payment processing share
 - [Waystar: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1990354/000199035426000011/way-20251231.htm), clients over $100,000, NRR and transaction volume
+- [Teladoc Health: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1477449/000147744926000012/tdoc-20251231.htm), U.S. Integrated Care members, average monthly revenue per member, BetterHelp paying users, telehealth visits, access fee share and revenue
+- [Hims & Hers Health: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1773751/000177375126000022/hims-20251231.htm), subscribers, Monthly Online Revenue per Average Subscriber and revenue
 
 **Standards**
 

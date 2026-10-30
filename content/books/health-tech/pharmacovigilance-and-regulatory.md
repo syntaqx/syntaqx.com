@@ -70,9 +70,9 @@ The record is a case with versions: initial, then each follow-up, each submitted
 
 The electronic common technical document is the dossier format for applications: five modules (regional administrative information, summaries, quality, nonclinical and clinical study reports) in a folder structure with an XML backbone, submitted as sequences that add, replace or delete documents in the application's lifecycle. As of October 2026, from FDA:
 
-- eCTD is required for NDAs, ANDAs, BLAs, commercial INDs and master files, and optional for noncommercial INDs.
+- eCTD is required for NDAs, ANDAs, BLAs, commercial INDs and master files such as DMFs, and optional for noncommercial INDs, blood submissions and Type III master files.
 - "Electronic submissions must use a version of eCTD currently supported by FDA, either v3.2.2 or v4.0." FDA announced support for eCTD v4.0 in September 2024, supports moving a v3.2.2 application onto v4.0 (forward compatibility) beginning October 16, 2026, and says it "will provide advance notice of when the Agency will begin supporting electronic submission only in eCTD v4.0"; no v4.0-only date has been announced.
-- New validation rejection criteria for v3.2.2 and v4.0 were noticed October 16, 2026.
+- New high-severity validation criteria for v3.2.2 and v4.0 were noticed in the Federal Register on October 16, 2026.
 
 **ESG NextGen** is "the FDA's modernized platform for securely receiving and processing electronic regulatory submissions," offering a Unified Submission Portal (replacing the legacy WebTrader), APIs that enable programmatic submissions, and AS2 for system-to-system transfer. Regulatory information management systems (Veeva RIM among them) publish sequences, validate them against FDA's rules, submit through the gateway and track acknowledgments and agency correspondence.
 
@@ -202,7 +202,7 @@ Design notes:
 - [FDA: AEMS electronic submissions](https://www.fda.gov/drugs/fda-adverse-event-monitoring-system-aems/fda-adverse-event-monitoring-system-aems-electronic-submissions), E2B(R3) dates for postmarketing and IND reports, the Safety Reporting Portal
 - [FDA: AEMS public dashboard](https://www.fda.gov/drugs/fda-adverse-event-monitoring-system-aems/fda-adverse-event-monitoring-system-aems-public-dashboard), the FAERS rename, consolidation, causation and rates caveats
 - [FDA: AEMS quarterly data files](https://www.fda.gov/drugs/fda-adverse-event-monitoring-system-aems/fda-adverse-event-monitoring-system-aems-latest-quarterly-data-files), raw non-cumulative data in ASCII or SGML
-- [FDA: Electronic Common Technical Document](https://www.fda.gov/drugs/electronic-regulatory-submission-and-review/electronic-common-technical-document-ectd), required submission types, v3.2.2 and v4.0, forward compatibility from October 16, 2026, no v4.0-only date
+- [FDA: Electronic Common Technical Document](https://www.fda.gov/drugs/electronic-regulatory-submission-and-review/electronic-common-technical-document-ectd), required and optional submission types, v3.2.2 and v4.0, forward compatibility from October 16, 2026, the October 16, 2026 validation notice, no v4.0-only date
 - [FDA: ESG NextGen](https://www.fda.gov/industry/electronic-submissions-gateway-next-generation-esg-nextgen), Unified Submission Portal, APIs and AS2
 - [21 U.S.C. 355-1: Risk evaluation and mitigation strategies (Cornell LII)](https://www.law.cornell.edu/uscode/text/21/355-1), elements to assure safe use in subsection (f)(3)
 - [FDA: Risk Evaluation and Mitigation Strategies](https://www.fda.gov/drugs/drug-safety-and-availability/risk-evaluation-and-mitigation-strategies-rems), REMS as a drug safety program, REMS@FDA

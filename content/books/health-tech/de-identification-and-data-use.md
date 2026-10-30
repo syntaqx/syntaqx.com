@@ -53,6 +53,8 @@ Two numbers from OCR's guidance explain why demographics are the risk: the combi
 
 **Re-identification codes.** A covered entity may keep a code to re-identify de-identified data itself, if the code isn't derived from information about the person and the mechanism isn't disclosed (45 CFR 164.514(c)). That code is a key the de-identified data set must never contain in a recoverable form.
 
+**Part 2 records use the same standard.** Since the February 16, 2024 final rule, 42 CFR Part 2 points to HIPAA's: research reports may include Part 2 data "only in aggregate form" de-identified in accordance with 45 CFR 164.514(b) (42 CFR 2.52(b)(3)), and a Part 2 program may disclose records to a public health authority without patient consent if the content is de-identified to that standard (42 CFR 2.54).
+
 ## Limited Data Sets and Data Use Agreements
 
 Between PHI and de-identified data sits the limited data set: PHI with 16 kinds of direct identifiers removed (names, street addresses, phone and fax numbers, email addresses, Social Security, medical record, health plan and account numbers, license, vehicle and device identifiers, URLs, IP addresses, biometrics and full-face photos) but allowed to keep dates and the town, state and ZIP code (45 CFR 164.514(e)). It may be used or disclosed only for "research, public health, or health care operations," and only under a data use agreement in which the recipient agrees to the permitted uses, to safeguards, to report misuse, to bind its agents, and to "not identify the information or contact the individuals."
@@ -213,6 +215,7 @@ Design notes:
 - [45 CFR 164.514 (Cornell LII)](https://www.law.cornell.edu/cfr/text/45/164.514), limited data sets and data use agreement contents
 - [45 CFR 164.502 (Cornell LII)](https://www.law.cornell.edu/cfr/text/45/164.502), the sale of PHI and its exceptions
 - [45 CFR 164.512 (Cornell LII)](https://www.law.cornell.edu/cfr/text/45/164.512), research waivers, preparatory reviews and decedents
+- [eCFR: 42 CFR Part 2](https://www.ecfr.gov/current/title-42/chapter-I/subchapter-A/part-2), §§ 2.52(b)(3) and 2.54, de-identification of Part 2 records under 45 CFR 164.514(b) for research reports and public health disclosures
 - [45 CFR 46.104 (Cornell LII)](https://www.law.cornell.edu/cfr/text/45/46.104), Common Rule exemptions for secondary research and broad consent
 - [RCW 19.373: Washington My Health My Data Act](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373), sections on sharing, valid authorization to sell and geofencing
 - [California Privacy Protection Agency: Data brokers](https://cppa.ca.gov/data_brokers/), registration, DROP and the 45-day processing requirement from August 1, 2026

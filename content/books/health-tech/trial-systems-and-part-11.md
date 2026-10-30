@@ -18,7 +18,7 @@ As of October 2026, from vendor pages and filings:
 
 | Vendor | Products | What its public record says |
 | --- | --- | --- |
-| **Medidata** (Dassault Systèmes) | Rave EDC, randomization, eCOA, CTMS and more | "the leading Electronic Data Capture (EDC)," 38,000+ studies and 1.8M+ users; acquired by Dassault Systèmes, closing October 28, 2019 at $92.25 a share in cash |
+| **Medidata** (Dassault Systèmes) | Rave EDC, randomization, eCOA, CTMS and more | "the leading Electronic Data Capture (EDC)," 38,000+ studies and 1.8M+ users; acquired by Dassault Systèmes, closing October 28, 2019 at $92.25 a share in cash, a total equity value of about $5.8 billion (8-K) |
 | **Veeva** | Veeva Development Cloud: EDC, Clinical Data Management, CTMS, eTMF, Safety, RIM | FY2026 revenue $3,195 million and 1,552 customers (10-K); its clinical data products put EDC, data quality, eCOA and RTSM in one flow; eTMF is "the leading trial master file application" |
 | **Oracle Health Sciences** | Clinical One | Documentation describes a Clinical One Cloud Service with Randomization and Supplies, Study Design and Study Conduct modules |
 | **Suvoda** | RTSM, eCOA, travel and payments | "agentic RTSM: from kickoff to UAT in as little as two weeks" |
@@ -34,7 +34,7 @@ Three patterns:
 
 - **EDC (electronic data capture).** Sites enter data from the source (the chart, a lab report, a questionnaire) into electronic case report forms (eCRFs) organized by visit; edit checks fire queries; monitors verify against source and data managers clean; the database is locked for analysis. Every value has an audit trail and investigator signatures attest to casebooks.
 - **CTMS (clinical trial management).** Study and site milestones, enrollment tracking, monitoring visit reports, site payments, issue management. Veeva describes CTMS as "an enterprise trial management system that provides end-to-end study management."
-- **eTMF (electronic trial master file).** Every essential document: protocol versions, IRB approvals, 1572s, CVs, training, monitoring reports, correspondence. Organized by the TMF Reference Model, which "provides standardized taxonomy and metadata and outlines a reference definition of TMF content" and has been maintained by CDISC since June 2022 (it began as a DIA group).
+- **eTMF (electronic trial master file).** Every essential document: protocol versions, IRB approvals, 1572s, CVs, training, monitoring reports, correspondence. Organized by the TMF Standard Model (formerly the TMF Reference Model), which "provides standardized taxonomy and metadata and outlines a reference definition of TMF content" and has been part of CDISC since 2022 (it began as a DIA group).
 - **RTSM or IRT (randomization and trial supply management).** Assigns a randomized subject to an arm and a kit number without revealing the arm to blinded users, manages drug supply to sites and depots, tracks expiry and temperature excursions, and supports emergency unblinding.
 - **eCOA and ePRO.** Patient-reported outcomes, clinician-reported outcomes and diaries on a provisioned device or the subject's own phone. FDA's PRO guidance (December 2009, final) governs using such measures to support labeling claims, which is why instruments are licensed and their electronic versions validated against the paper.
 - **Safety, coding and lab systems.** Adverse events feed the safety database; medical terms are coded (MedDRA for events, WHODrug for medications); central labs send data transfers.
@@ -226,12 +226,12 @@ Design notes:
 - [CDISC: ADaM](https://www.cdisc.org/standards/foundational/adam), analysis datasets and traceability
 - [CDISC: CDASH](https://www.cdisc.org/standards/foundational/cdash), standard collection and traceability to SDTM
 - [CDISC: Define-XML](https://www.cdisc.org/standards/data-exchange/define-xml), dataset metadata, v2.1
-- [CDISC: TMF Reference Model](https://www.cdisc.org/tmf), taxonomy and metadata, origin at DIA, part of CDISC since June 2022
+- [CDISC: TMF Standard Model](https://www.cdisc.org/tmf), formerly the TMF Reference Model, taxonomy and metadata, origin at DIA, part of CDISC since 2022
 
 **Vendors and filings**
 
 - [Medidata: Rave EDC](https://www.medidata.com/en/clinical-trial-products/clinical-data-management/edc-systems/), studies and users
-- [Medidata: Form 8-K on the merger (October 2019)](https://www.sec.gov/Archives/edgar/data/1453814/000114036119019146/form8k.htm), closing October 28, 2019, Dassault Systèmes, $92.25 a share
+- [Medidata: Form 8-K on the merger (October 2019)](https://www.sec.gov/Archives/edgar/data/1453814/000114036119019146/form8k.htm), closing October 28, 2019, Dassault Systèmes, $92.25 a share, total equity value of about $5.8 billion
 - [Veeva: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1393052/000139305226000014/veev-20260131.htm), revenue, customers, Development Cloud products
 - [Veeva: Clinical data management](https://www.veeva.com/products/clinical-data-management/), EDC, data quality, eCOA and RTSM
 - [Veeva: eTMF](https://www.veeva.com/products/vault-etmf/), the trial master file application
