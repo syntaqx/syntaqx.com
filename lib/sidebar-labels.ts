@@ -25,6 +25,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "How Games Get Made": "Making Games",
   "How the Work Flows": "How Work Flows",
   "Infrastructure as Code": "Infra as Code",
+  "Law Firms and Professional Services": "Law Firms",
   "Market Rules and Compliance": "Compliance",
   "Marketing and Customers": "Marketing",
   "Meetings and Voice": "Meetings",
