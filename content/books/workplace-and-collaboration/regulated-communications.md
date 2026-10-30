@@ -12,7 +12,7 @@ A broker-dealer that lets its staff talk business in Slack, Teams or Zoom has to
 
 For a workplace vendor this is the inversion at its sharpest. The vendor doesn't keep the firm's books and can't supervise its brokers; the firm does, usually through a specialist archiver (Smarsh, Proofpoint and others) that pulls every message out of the collaboration tool as it happens. The vendor's job is to make capture complete: an export API that misses edits, deletions, reactions, meeting chat or an AI summary leaves the firm with a books-and-records gap it can't see. The firm's admin decides which channels are approved, which users are registered persons, which retention applies, and what the reviewers look at.
 
-This chapter covers the financial recordkeeping rules, the off-channel enforcement wave, how capture and supervision work across the major tools, and what a vendor builds to be usable by regulated firms. Retention policies and legal holds in general are Retention & Legal Hold; exports for litigation are eDiscovery & Export; content inspection outside recordkeeping is DLP & Information Protection; HIPAA agreements are [HIPAA Agreements Are Scoped to Features](/books/workplace-and-collaboration/compliance-certifications#hipaa-agreements-are-scoped-to-features); consent to record a meeting is Recordings, Transcripts & AI Notes. The engineering of a tamper-evident store is the playbook's [Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident), and WORM object storage is the Hosting & Cloud volume's [Object Storage Semantics](/books/hosting-and-cloud/storage#object-storage-semantics). This is what the rules say and how systems that follow them are built, not legal advice.
+This chapter covers the financial recordkeeping rules, the off-channel enforcement wave, how capture and supervision work across the major tools, and what a vendor builds to be usable by regulated firms. Retention policies and legal holds in general are [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold); exports for litigation are [eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export); content inspection outside recordkeeping is [DLP & Information Protection](/books/workplace-and-collaboration/dlp-and-information-protection); HIPAA agreements are [HIPAA Agreements Are Scoped to Features](/books/workplace-and-collaboration/compliance-certifications#hipaa-agreements-are-scoped-to-features); consent to record a meeting is [Recordings, Transcripts & AI Notes](/books/workplace-and-collaboration/recordings-transcripts-and-ai-notes#convenience-and-compliance-recording). The engineering of a tamper-evident store is the playbook's [Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident), and WORM object storage is the Hosting & Cloud volume's [Object Storage Semantics](/books/hosting-and-cloud/storage#object-storage-semantics). This is what the rules say and how systems that follow them are built, not legal advice.
 
 ## How the Platforms Do It
 
@@ -42,7 +42,7 @@ FINRA's guidance applied these to new channels early. Regulatory Notice 17-18 (A
 Rule 17a-4(f) sets the electronic recordkeeping requirements, and its two options are the design choice for any archive:
 
 - **Audit trail.** Keep the records with a complete, time-stamped audit trail that logs every modification and deletion, with the date, time and identity of whoever acted, and that allows the original record to be re-created.
-- **Non-rewriteable, non-erasable.** "Preserve the records exclusively in a non-rewriteable, non-erasable format," the WORM option that object locks in compliance mode implement.
+- **Non-rewriteable, non-erasable.** "Preserve the records exclusively in a non-rewriteable, non-erasable format," the WORM option that [object locks in compliance mode](/books/workplace-and-collaboration/retention-and-legal-hold#preservation-lock) implement.
 
 Either way the system must verify completeness and accuracy of storage automatically and keep a backup or other redundancy. The firm also files an undertaking with its designated examining authority, signed by a designated executive officer or a designated third party (a person not affiliated with the firm), promising to furnish records to the SEC promptly. That undertaking is why archivers matter beyond storage: the firm needs someone outside its own staff who can produce the records if the firm can't or won't.
 
@@ -129,11 +129,11 @@ Lexicons generate false positives at a scale that makes reviewers ignore them, w
 
 ## HIPAA in Chat and Meetings
 
-Health care organizations face a different regime with the same shape: the vendor signs a business associate agreement that covers specific features, and the organization's admin keeps protected health information inside them. Slack's agreement covers PHI in messages, files and certain names on Enterprise plans; Google's covers its Included Functionality; Microsoft's covers listed services including Teams. Meeting recordings and transcripts that contain PHI are records in the covered service only if that feature is on the in-scope list. The vendor-by-vendor detail is in [HIPAA Agreements Are Scoped to Features](/books/workplace-and-collaboration/compliance-certifications#hipaa-agreements-are-scoped-to-features); the rules themselves are the playbook's [HIPAA](/docs/compliance/hipaa).
+Health care organizations face a different regime with the same shape: the vendor signs a business associate agreement that covers specific features, and the organization's admin keeps protected health information inside them. Slack's agreement covers PHI in messages, files and certain names on Enterprise plans; Google's covers its Included Functionality; Microsoft's covers listed services including Teams. Meeting recordings and transcripts that contain PHI are records in the covered service only if that feature is on the in-scope list. The vendor-by-vendor detail is in [HIPAA Agreements Are Scoped to Features](/books/workplace-and-collaboration/compliance-certifications#hipaa-agreements-are-scoped-to-features); the rules themselves are the playbook's [HIPAA](/docs/compliance/hipaa), and how they bind a product team is the Health Tech volume's [HIPAA in Practice](/books/health-tech/hipaa-in-practice).
 
 ## How to Build It
 
-A vendor that wants regulated firms as customers builds the capture feed, the controls that keep it complete, and enough of the supervision surface that an archiver can work. The firm's archive itself is the archiver's product. This adds to the core data model in The Workplace Software Business:
+A vendor that wants regulated firms as customers builds the capture feed, the controls that keep it complete, and enough of the supervision surface that an archiver can work. The firm's archive itself is the archiver's product. This adds to the core data model in [The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model):
 
 ```sql
 ALTER TABLE members
@@ -157,7 +157,7 @@ CREATE TABLE archive_connections (       -- an archiver's authorized feed from o
 CREATE TABLE capture_cursors (           -- how far each connection has read, per stream
   connection_id   UUID NOT NULL REFERENCES archive_connections (id),
   stream          TEXT NOT NULL,          -- 'messages', 'edits', 'deletions', 'files', 'recordings'
-  position        TEXT NOT NULL,          -- opaque cursor or high-water event id
+  position        TEXT NOT NULL,          -- vendor cursor, or the high-water capture_events id
   read_at         TIMESTAMPTZ NOT NULL,
   PRIMARY KEY (connection_id, stream)
 );

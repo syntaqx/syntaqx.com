@@ -10,7 +10,7 @@ nav_title = "Migrations & Switching"
 
 Collaboration data is hard to move because its value is in its connections. A message matters because of the thread it's in, the channel's members, the file it links to and the person who wrote it; an issue matters because of its links, history, watchers, workflow state and the commits that reference it; a page matters because of its children, comments, permissions and the macros that render other pages into it. An export flattens those connections into files, and an import has to rebuild them in a product with a different model. Identity makes it worse: every author, assignee and mention must be mapped to an account in the destination, and the destination's accounts usually don't exist yet.
 
-Migrations happen for four reasons, and each has its own forcing function: a vendor ends a product (Atlassian Server, then Data Center), a customer switches vendors (Slack to Teams, Jira to Linear, Confluence to Notion), two companies merge or one divests (tenant-to-tenant moves), or a regulation requires the vendor to make leaving possible (the EU Data Act). In every case the customer's admin owns the decision and the data, and the vendors on both sides decide how hard the move is. This chapter covers each, the export options vendors offer by plan, the importers and APIs on the receiving side, and what a vendor must build to be easy to join and lawful to leave. It adds import jobs, ID maps, tenant exports and switching requests to the core data model. The playbook covers the general engineering: [Replacing Systems](/docs/architecture/replacing-systems), and Hosting & Cloud covers infrastructure moves and shutdowns in [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life) and [Egress & Switching](/books/hosting-and-cloud/egress-and-switching).
+Migrations happen for four reasons, and each has its own forcing function: a vendor ends a product (Atlassian Server, then Data Center), a customer switches vendors (Slack to Teams, Jira to Linear, Confluence to Notion), two companies merge or one divests (tenant-to-tenant moves), or a regulation requires the vendor to make leaving possible (the EU Data Act). In every case the customer's admin owns the decision and the data, and the vendors on both sides decide how hard the move is. This chapter covers each, the export options vendors offer by plan, the importers and APIs on the receiving side, and what a vendor must build to be easy to join and lawful to leave. It adds import jobs, ID maps, tenant exports and switching requests to the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model). The playbook covers the general engineering: [Replacing Systems](/docs/architecture/replacing-systems), and Hosting & Cloud covers infrastructure moves and shutdowns in [Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life) and [Egress & Switching](/books/hosting-and-cloud/egress-and-switching).
 
 ## How the Platforms Do It
 
@@ -60,18 +60,18 @@ A switch between vendors runs through the customer's admin, with both vendors as
 
 The source vendor holds two levers that make this easier or harder: the completeness of the export (private conversations, files, edit history, permissions) and the rate at which its API allows a full-tenant export. A vendor that wants to be trusted as a destination must be a good source as well; the EU now requires it.
 
-There is also a vendor-to-vendor version: a product that exits a market by agreement with a competitor sends its customers to the competitor, as Atlassian's HipChat and Stride did to Slack in 2018. I couldn't open Atlassian's announcement of that deal at its original address, so the dates and terms are left to The Collaboration Landscape. <!-- source-gap: hipchat-stride-slack-2018 | missing | Atlassian sold HipChat and Stride IP to Slack and ended both products, with migration to Slack | closes with: Atlassian's 2018 announcement or a filing describing the deal | checked: 2026-10-29 -->
+There is also a vendor-to-vendor version: a product that exits a market by agreement with a competitor sends its customers to the competitor, as Atlassian's HipChat and Stride did to Slack in 2018. I couldn't open Atlassian's announcement of that deal at its original address, so this chapter states the deal without its dates and terms, and the timeline in [The Collaboration Landscape](/books/workplace-and-collaboration/workplace-landscape#a-dated-timeline) leaves it out for the same reason. <!-- source-gap: hipchat-stride-slack-2018 | missing | Atlassian sold HipChat and Stride IP to Slack and ended both products, with migration to Slack | closes with: Atlassian's 2018 announcement or a filing describing the deal | checked: 2026-10-29 -->
 
 ## Tenant to Tenant: Mergers and Divestitures
 
-Mergers create the opposite problem: two tenants of the same product that must become one, or one tenant that must split. Microsoft's cross-tenant mailbox migration exists for exactly this: "During mergers or divestitures, you might need the ability to move your users' Exchange Online mailboxes into a new tenant." It runs through Exchange's mailbox replication service with an organization relationship configured on both sides, requires target mail users prepared to match the source (including the source's ExchangeGUID), and requires a one-time per-user Cross Tenant User Data Migration license, which also covers OneDrive; without it "the migration fails."
+Mergers create the opposite problem: [two tenants of the same product that must become one, or one tenant that must split](/books/workplace-and-collaboration/tenants-and-workspaces#consolidating-and-splitting-tenants). Microsoft's cross-tenant mailbox migration exists for exactly this: "During mergers or divestitures, you might need the ability to move your users' Exchange Online mailboxes into a new tenant." It runs through Exchange's mailbox replication service with an organization relationship configured on both sides, requires target mail users prepared to match the source (including the source's ExchangeGUID), and requires a one-time per-user Cross Tenant User Data Migration license, which also covers OneDrive; without it "the migration fails."
 
 The general shape of a tenant-to-tenant move:
 
 - **A trust between the two admins.** Both tenants consent, usually through an organization relationship or a migration app approved on each side. Neither vendor support nor one admin alone can move another tenant's data.
 - **Identity first.** Accounts are created or matched in the target, domains are moved (a verified domain can belong to only one organization at a time, so the domain move is a scheduled cutover), and SSO is repointed.
 - **Content with its IDs remapped.** Every reference (mentions, links, permissions, app installs) must be rewritten from source IDs to target IDs.
-- **A period of coexistence.** Free/busy, mail routing and cross-tenant chat must work while users are split between tenants, which is where guest and external access features (Guests & Cross-Org Collaboration) carry the load.
+- **A period of coexistence.** Free/busy, mail routing and cross-tenant chat must work while users are split between tenants, which is where guest and external access features ([Guests & Cross-Org Collaboration](/books/workplace-and-collaboration/guests-and-external-collaboration)) carry the load.
 - **Retention and holds travel.** A legal hold in the source must be honored in the target, or the source must be kept until the hold is released. A merger doesn't suspend a preservation duty.
 
 For the vendor, a tenant-to-tenant move inside its own product is the same machinery as a residency move or a rebalance: copy, catch up, verify, cut over ([Logical Shards and Moving Tenants](/books/workplace-and-collaboration/collaboration-architecture#logical-shards-and-moving-tenants)), plus ID remapping when the target is a different tenant rather than the same tenant elsewhere.
@@ -104,7 +104,7 @@ There is no standard export format for collaboration data. Each vendor publishes
 - **Permissions as data,** even when the destination can't apply them directly, so the admin can rebuild them.
 - **A manifest** listing every file, its checksum and the export's scope and time range.
 
-eDiscovery exports are a different product with different requirements (review formats, custodians, chain of custody); eDiscovery & Export covers them.
+eDiscovery exports are a different product with different requirements (review formats, custodians, chain of custody); [eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export) covers them.
 
 ## Importers and Migration Mode
 
@@ -197,7 +197,7 @@ WITH author AS (
   WHERE import_job_id = $1 AND source_kind = 'user' AND source_id = $4
 ),
 ins AS (
-  INSERT INTO items (id, workspace_id, container_id, kind, author_account_id,
+  INSERT INTO items (id, workspace_id, container_id, kind, author_id,
                      created_at, imported_from, source_id)
   SELECT uuidv7(), c.workspace_id, c.id, 'message', author.target_id, $5, j.source_system, $2
   FROM containers c, author, import_jobs j

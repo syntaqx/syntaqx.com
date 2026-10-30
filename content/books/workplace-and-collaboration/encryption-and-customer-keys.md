@@ -82,7 +82,7 @@ Encryption the service can't read meets the duties in the rest of this part head
 - **Holds.** Zoom's chat legal hold requires Advanced Chat Encryption to be disabled ([Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold)). A hold over content the service can't decrypt preserves ciphertext; the customer must keep the keys for as long as the hold lasts, or the hold preserves nothing usable.
 - **Discovery.** A production needs plaintext. Google's decrypter for Vault exports and Microsoft's DKE-aware clients are the paths; the customer's key service becomes part of its eDiscovery chain ([eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export)).
 - **DLP.** Inspection is impossible; only labels and metadata can drive policy ([Encryption Limits Inspection](/books/workplace-and-collaboration/dlp-and-information-protection#encryption-limits-inspection)).
-- **Regulated recordkeeping.** Archiving obligations assume the firm can produce the record. Encrypted modes are usually disabled for regulated users (Regulated Communications & Archiving, later in this part).
+- **Regulated recordkeeping.** Archiving obligations assume the firm can produce the record. Encrypted modes are usually disabled for regulated users ([Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications), later in this part).
 
 My rule: encryption that defeats the service is a property of specific containers or labels chosen by the customer for specific reasons, never a tenant-wide default, and the admin console shows, per container, which compliance functions it switches off.
 
@@ -90,7 +90,7 @@ My rule: encryption that defeats the service is a property of specific container
 
 Zoom's end-to-end encryption generates the keys for each meeting on participants' machines, "not by Zoom's servers," so Zoom's servers relay data they can't decrypt; the host can read a security code aloud for participants to verify. Enabling it disables Zoom AI features, cloud recording, live transcription, live streaming, meeting chat before and after the meeting, polling and surveys, Zoom Apps, My Notes and Zoom Whiteboard. Every participant must join from the desktop or mobile app or Zoom Rooms (no phone or SIP/H.323), meetings are limited to 1,000 participants, breakout rooms each get their own key, and a post-quantum variant is used automatically when every participant runs version 6.0.10 or later (6.1.0 for Zoom Rooms). Free accounts can host E2EE meetings after the host verifies a phone number.
 
-The feature exists in its current form because of a promise Zoom couldn't keep. In its November 9, 2020 settlement announcement, the FTC alleged that since at least 2016 Zoom had advertised "end-to-end, 256-bit encryption" while providing a lower level of security, and that Zoom "maintained the cryptographic keys that could allow Zoom to access the content of its customers' meetings"; the FTC described end-to-end encryption as readable by sender and recipients and "not even the platform provider." The order required a comprehensive information security program, biennial independent assessments and an end to security misrepresentations. Meeting architecture is Meetings & Video in the Meetings and Voice part; for this chapter the lesson is about words. "End-to-end" means the vendor can't decrypt; a vendor holding the keys, or any key path, is at rung 1 or 2, and must say so.
+The feature exists in its current form because of a promise Zoom couldn't keep. In its November 9, 2020 settlement announcement, the FTC alleged that since at least 2016 Zoom had advertised "end-to-end, 256-bit encryption" while providing a lower level of security, and that Zoom "maintained the cryptographic keys that could allow Zoom to access the content of its customers' meetings"; the FTC described end-to-end encryption as readable by sender and recipients and "not even the platform provider." The order required a comprehensive information security program, biennial independent assessments and an end to security misrepresentations. Meeting architecture is [Meetings & Video](/books/workplace-and-collaboration/meetings-and-video#e2ee-as-shipped) in the Meetings and Voice part; for this chapter the lesson is about words. "End-to-end" means the vendor can't decrypt; a vendor holding the keys, or any key path, is at rung 1 or 2, and must say so.
 
 ## Keys and AI
 
@@ -99,7 +99,7 @@ AI assistants and search need plaintext, and the vendors handle it differently b
 - **Rung 2: index under the customer's key.** Slack's EKM covers the "Search index of Customer Data," and in Slack Connect each organization's messages are encrypted with its own keys while the shared search index is "duplicated and encrypted with each customer's keys." Microsoft's Customer Key multi-workload policy covers Microsoft 365 Copilot interactions. The derived data (indexes, embeddings, summaries) inherits the source's key, so revocation reaches it too.
 - **Rung 3: no AI.** DKE content isn't available to Copilot at rest or in use in current Office versions. Google's CSE content can't be scanned by DLP, and the same opacity applies to any service-side processing.
 
-A builder adding AI to a product with customer keys must treat embeddings and caches as customer data under the same key, or revocation leaves a readable shadow copy. The AI features themselves are AI Assistants Over Company Data in the Search, Integrations and AI part.
+A builder adding AI to a product with customer keys must treat embeddings and caches as customer data under the same key, or revocation leaves a readable shadow copy. The AI features themselves are [AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants) in the Search, Integrations and AI part.
 
 ## Shared Spaces
 
@@ -107,7 +107,7 @@ When two organizations share a channel, whose key encrypts it? Slack's answer is
 
 ## How to Build It
 
-The core model gives organizations, workspaces, containers, items and item versions. This chapter adds customer key references, the binding of keys to scopes, an encryption mode on containers, and a record of key use:
+The [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) gives organizations, workspaces, containers, items and item versions. This chapter adds customer key references, the binding of keys to scopes, an encryption mode on containers, and a record of key use:
 
 ```sql
 CREATE TABLE customer_keys (                 -- references to keys in the customer's KMS; never key material
@@ -149,7 +149,7 @@ ALTER TABLE item_versions
   ADD COLUMN wrapped_dek    BYTEA,               -- data key wrapped by the binding's key
   ADD COLUMN client_side    BOOLEAN NOT NULL DEFAULT FALSE;  -- service holds ciphertext only
 
-CREATE TABLE key_use_events (                -- our side of every unwrap, matched to the customer's KMS log
+CREATE TABLE key_use_events (                -- the vendor's side of every unwrap, matched to the customer's KMS log
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   key_binding_id   UUID NOT NULL REFERENCES key_bindings (id),
   customer_key_id  UUID NOT NULL REFERENCES customer_keys (id),

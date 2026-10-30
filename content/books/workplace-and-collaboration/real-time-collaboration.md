@@ -11,7 +11,7 @@ Co-editing is the feature that made browser documents replace emailed attachment
 
 There are two families of solutions and a pragmatic middle. **Operational transformation (OT)** sends operations through a central server that orders them and transforms each against the ones it crossed; Google Docs is the reference implementation. **Conflict-free replicated data types (CRDTs)** give every element a stable identity so concurrent operations commute and replicas converge without a central order; Yjs and Automerge are the widely used libraries. **Server-authoritative object sync**, which Figma described in 2019, takes CRDT ideas but lets one server per document decide order, which removes most of the CRDT overhead for data that isn't long runs of text.
 
-The generic transport (WebSockets, fan-out, ordering and catch-up, reconnect) is [Realtime Connections](/docs/architecture/realtime-connections); offline queues and conflict policy for business records are [Offline Sync](/docs/architecture/offline-sync). This chapter covers what document co-editing adds: the merge algorithms, rich text, presence, undo, offline merges, size limits, and the records a workplace product must keep. The page and block models being edited are [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis); design-canvas specifics are in the book's design tools chapter.
+The generic transport (WebSockets, fan-out, ordering and catch-up, reconnect) is [Realtime Connections](/docs/architecture/realtime-connections); offline queues and conflict policy for business records are [Offline Sync](/docs/architecture/offline-sync). This chapter covers what document co-editing adds: the merge algorithms, rich text, presence, undo, offline merges, size limits, and the records a workplace product must keep. The page and block models being edited are [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis); design-canvas specifics are in [Design Tools](/books/workplace-and-collaboration/design-tools#multiplayer) and [Whiteboards & Diagrams](/books/workplace-and-collaboration/whiteboards-and-diagrams#sync-and-storage).
 
 ## How the Platforms Do It
 
@@ -97,7 +97,7 @@ Presence (who's here, where their cursor is, what they've selected) is ephemeral
 - **Anchored to content identity.** A cursor is a position relative to an element ID (or, in OT, a position transformed like any other operation), so it stays on the right word when someone types above it.
 - **Bounded per document.** Presence fan-out is quadratic in participants. Confluence's live docs state limits of 100 simultaneous viewers and 40 simultaneous editors; above a threshold, show a count and the people near your viewport rather than every cursor.
 
-Presence is also employee data. Who opened which document, when and for how long is exactly what the book's monitoring chapter worries about; keep presence in memory, and record document access in the audit trail only where the customer's policy asks for it, not as a by-product of the cursor system.
+Presence is also employee data. Who opened which document, when and for how long is exactly what [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy) worries about; keep presence in memory, and record document access in the audit trail only where the customer's policy asks for it, not as a by-product of the cursor system.
 
 ## Undo in Multiplayer
 
@@ -133,7 +133,7 @@ Limits should be explicit and enforced before they become performance failures: 
 
 ## How to Build It
 
-The chapter adds the live-session and operation log tables. The document itself stays in the core model: `items` (with `pages` from [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#how-to-build-it)) and `item_versions`.
+The chapter adds the live-session and operation log tables. The document itself stays in the [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model): `items` (with `pages` from [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis#how-to-build-it)) and `item_versions`.
 
 ```sql
 CREATE TABLE doc_sessions (                -- one live editing session per document

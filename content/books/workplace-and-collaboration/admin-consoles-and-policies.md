@@ -26,7 +26,7 @@ Three patterns:
 
 - **One top role, kept small.** Every vendor has an all-powerful role (Primary Owner, Super Admin, Global Administrator, organization admin), and every vendor's guidance is to give it to few people and do daily work with narrower roles. Microsoft puts a number on it: fewer than five Global Administrators, and fewer than ten privileged role assignments overall, with warnings in the console past those numbers.
 - **Scope by the same structure that holds people.** Google scopes admin roles to organizational units, Microsoft to administrative units, Slack to workspaces under the organization, Atlassian to apps and sites. The admin model reuses the tenant's own tree ([Tenants, Workspaces & Organizations](/books/workplace-and-collaboration/tenants-and-workspaces)).
-- **Change history is a paid, time-limited asset.** Log retention ranges from seven days to six months by default, with longer retention sold separately; the Audit Logs chapter in this volume's Security and Compliance part covers it in depth.
+- **Change history is a paid, time-limited asset.** Log retention ranges from seven days to six months by default, with longer retention sold separately; [Audit Logs](/books/workplace-and-collaboration/audit-logs) covers it in depth.
 
 ## Admin Role Ladders
 
@@ -86,7 +86,7 @@ Apps and integrations are the other way data leaves. Two public models:
 - **Slack app approval.** By default members can install apps without approval; owners can switch to "only allow pre-approved apps," pre-approve or restrict apps from their Marketplace pages, let members request apps (with required comments, routed to app managers), and define automation rules that approve, restrict or dismiss requests. Approving an install approves the scopes it uses in the workspace. Restricting an app doesn't remove it where already installed. On Enterprise plans an org-level app management policy turns approval on in every workspace.
 - **Google API controls.** Admins set each third-party app to Trusted (all scopes, including restricted services), Specific Google data (only listed scopes), Limited (unrestricted services only) or Blocked. Unconfigured apps can be allowed, limited to basic sign-in information, or blocked until configured. Each Google service can be marked restricted, which stops untrusted apps from using it and revokes their tokens, and Gmail, Drive, Docs and Chat can restrict a predefined list of high-risk scopes such as sending mail or deleting Drive files.
 
-App review, marketplaces and OAuth verification belong to Apps & Marketplaces in this volume's Search, Integrations and AI part; the admin's side is the allow, restrict and request loop above.
+App review, marketplaces and OAuth verification belong to [Apps & Marketplaces](/books/workplace-and-collaboration/apps-and-marketplaces); the admin's side is the allow, restrict and request loop above.
 
 ## Admin APIs
 
@@ -112,7 +112,7 @@ The rule that matters for a builder: an admin change event records the before an
 
 ## How to Build It
 
-The core data model has `audit_events`; the OU tree (`org_units`) comes from [Tenants, Workspaces & Organizations](/books/workplace-and-collaboration/tenants-and-workspaces#how-to-build-it). This chapter adds admin roles and their scoped, possibly just-in-time assignments, and scoped policies with revisions.
+The [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) has `audit_events`; the OU tree (`org_units`) comes from [Tenants, Workspaces & Organizations](/books/workplace-and-collaboration/tenants-and-workspaces#how-to-build-it). This chapter adds admin roles and their scoped, possibly just-in-time assignments, and scoped policies with revisions.
 
 ```sql
 CREATE TABLE admin_roles (

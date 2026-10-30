@@ -94,9 +94,9 @@ How walls work in practice:
 - **Two shapes: exclusionary and inclusionary.** An exclusionary wall keeps named people out of a matter everyone else can see. An inclusionary wall (need-to-know) makes a matter visible only to its named team. iManage describes barriers by client, matter, department, practice area or office.
 - **Drift is detected and reversed.** If someone adds a screened lawyer to a matter's document workspace by hand, the wall system notices on its next sync and removes the access; Intapp describes unauthorized changes being "automatically reversed in systems outside Intapp Walls." The reversal and the attempt are both audit events.
 - **Acknowledgment and certification.** My default is a written acknowledgment from each screened person when the wall starts, plus the certifications Rule 1.10(a)(2)(iii) requires on request and at the end, as a workflow with reminders rather than a memo.
-- **Search and AI respect it.** A screened lawyer's enterprise search and AI assistant must not return the walled matter's content. That only works if retrieval checks permissions at query time against the same grants the wall wrote (the book's chapter AI Assistants Over Company Data covers permission-aware retrieval).
+- **Search and AI respect it.** A screened lawyer's enterprise search and AI assistant must not return the walled matter's content. That only works if retrieval checks permissions at query time against the same grants the wall wrote (the book's chapter [AI Assistants Over Company Data](/books/workplace-and-collaboration/ai-assistants#how-grounding-works) covers permission-aware retrieval).
 
-In the core model, a wall is a set of **deny grants**: the screen record says "member X (or group Y) may not access matter Z," and the platform writes grants with a deny effect on the matter container that override any allow from group membership or link sharing. Deny-overrides-allow is a deliberate exception to the additive model most collaboration products use ([Choosing a Model](/docs/security/authorization#choosing-a-model)), and it's the one exception a legal product can't do without. The general permission model is the subject of the Part 2 chapter Permissions & Sharing.
+In the [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model), a wall is a set of **deny grants**: the screen record says "member X (or group Y) may not access matter Z," and the platform writes grants with a deny effect on the matter container that override any allow from group membership or link sharing. Deny-overrides-allow is a deliberate exception to the additive model most collaboration products use ([Choosing a Model](/docs/security/authorization#choosing-a-model)), and it's the one exception a legal product can't do without. The general permission model is the subject of the Part 2 chapter [Permissions & Sharing](/books/workplace-and-collaboration/permissions-and-sharing).
 
 ## Engagement Letters
 
@@ -109,7 +109,7 @@ Once the conflict check clears, the firm documents the engagement. The rules set
 - **Technology consents.** Formal Opinion 512 says that where informed consent is needed before putting client information into a self-learning AI tool, "merely adding general, boiler-plate provisions to engagement letters purporting to authorize the lawyer to use GAI is not sufficient" ([Generative AI](/books/workplace-and-collaboration/legal-documents-and-ai#generative-ai)). Consent to specific tools is a separate, specific record.
 - **Conflict waivers.** Informed consents under Rules 1.7 and 1.9 are often part of the engagement letter or a companion letter; they're "confirmed in writing," which Rule 1.0(b) allows to be a writing the lawyer sends promptly confirming an oral consent.
 
-The engagement letter itself is a document in the matter, usually signed electronically (the Part 5 chapter E-Signatures & Agreements covers validity). What the system keeps as structured data is what other modules need: the fee arrangement and rates (for billing), whether advance fees go to trust (for trust accounting), the scope (for matter closing and for disputes about it), consents given (for conflicts and AI), and the date signed.
+The engagement letter itself is a document in the matter, usually signed electronically (the Part 5 chapter [E-Signatures & Agreements](/books/workplace-and-collaboration/e-signatures-and-agreements) covers validity). What the system keeps as structured data is what other modules need: the fee arrangement and rates (for billing), whether advance fees go to trust (for trust accounting), the scope (for matter closing and for disputes about it), consents given (for conflicts and AI), and the date signed.
 
 ## Matter Closing and File Retention
 
@@ -119,14 +119,14 @@ Closing a matter is a checklist with legal content:
 2. **The client's file.** The client is entitled to its file; Formal Opinion 471 (July 1, 2015) addresses what papers and property a lawyer must surrender to a former client. Rule 1.16(d) adds that the lawyer "may retain papers relating to the client to the extent permitted by other law." The system needs an export of the matter's documents and correspondence in a form the client can use.
 3. **A closing letter.** Telling the client the representation has ended fixes the date when the client becomes a former client, which matters for Rule 1.9 and for retention clocks.
 4. **Retention.** Trust records have fixed periods: Model Rule 1.15(a) says records "shall be preserved for a period of [five years] after termination of the representation" (the bracket means each state picks its number); Florida keeps trust records 6 years after the final conclusion of each representation, Illinois 7 years after the end of the representation, and California 5 years after final distribution of the funds. The rest of the file (documents, email, notes) has no single period in the Model Rules, and closed-file retention guidance varies by state. <!-- source-gap: wc-closed-file-retention | missing | closed client file retention periods (non-trust) vary by state; no ABA or state source opened | closes with: a state bar opinion or rule on closed-file retention periods (e.g. a Florida Bar closed-files packet) | checked: 2026-10-29 --> Firms set their own schedules, often longer for wills, matters involving minors and anything with a continuing obligation.
-5. **Holds.** A matter that may be the subject of litigation (a malpractice claim, a related case) is put on legal hold before its retention clock can delete anything. The mechanics are those of the Part 9 chapter Retention & Legal Hold; the legal twist is that the firm is often the custodian of its client's documents, not just its own.
+5. **Holds.** A matter that may be the subject of litigation (a malpractice claim, a related case) is put on legal hold before its retention clock can delete anything. The mechanics are those of the Part 9 chapter [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold); the legal twist is that the firm is often the custodian of its client's documents, not just its own.
 6. **Destruction, recorded.** When retention ends, destruction is a recorded act with the policy, the date, the approver, and confirmation that the client was offered the file, because a former client may ask for it years later ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
 
 The conflicts record never closes. A closed matter's parties stay in the conflicts database permanently (as former client, former adverse party), because Rule 1.9 has no expiry. Retention policies on documents must not delete the party and role data that conflict search depends on.
 
 ## How to Build It
 
-Deltas against the core data model (The Workplace Software Business) and the matter tables in [How to Build It](/books/workplace-and-collaboration/law-firms-and-professional-services#how-to-build-it). This chapter owns matter parties, intake, conflict checks, screens, engagement letters and closing.
+Deltas against the core data model ([The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model)) and the matter tables in [How to Build It](/books/workplace-and-collaboration/law-firms-and-professional-services#how-to-build-it). This chapter owns matter parties, intake, conflict checks, screens, engagement letters and closing.
 
 ```sql
 CREATE TABLE party_relationships (           -- the corporate family and other links
@@ -243,9 +243,8 @@ CREATE TABLE screen_certifications (
   certified_at    TIMESTAMPTZ NOT NULL
 );
 
--- Walls write deny grants that override any allow.
+-- Walls write deny grants (grants.effect = 'deny', from Permissions & Sharing) that override any allow.
 ALTER TABLE grants
-  ADD COLUMN effect     TEXT NOT NULL DEFAULT 'allow' CHECK (effect IN ('allow', 'deny')),
   ADD COLUMN screen_id  UUID REFERENCES screens (id);
 
 CREATE TABLE engagement_letters (

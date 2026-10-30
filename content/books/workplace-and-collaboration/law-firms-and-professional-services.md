@@ -49,9 +49,9 @@ Four records are at the center of every product above, under different names:
 | **Timekeeper** | A lawyer, paralegal or other person whose time is billed | Has a classification (partner, associate, paralegal) and rates; may not be a user of every system |
 | **Rate** | What an hour of a timekeeper costs on a matter | Varies by timekeeper, client, matter and date; negotiated discounts and e-billing caps depend on it |
 
-Around them sit the records each later chapter owns: the parties to a matter and their relationships (for conflicts), the engagement letter (scope and fee basis), the trust ledger per client and matter, time and expense entries, invoices in LEDES, and the matter's documents and email.
+Around them sit the records each later chapter owns: the parties to a matter and their relationships (for [conflicts](/books/workplace-and-collaboration/matters-intake-and-conflicts)), the engagement letter (scope and fee basis), the [trust ledger](/books/workplace-and-collaboration/trust-accounting-iolta) per client and matter, [time and expense entries, invoices in LEDES](/books/workplace-and-collaboration/time-billing-and-ledes), and the matter's [documents and email](/books/workplace-and-collaboration/legal-documents-and-ai).
 
-The matter-centric model differs from the book's general model in three ways:
+The matter-centric model differs from the book's [general model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) in three ways:
 
 - **The container has a client.** A Slack channel or Jira project belongs to the workspace; a matter belongs to a client of the firm, and the client's identity drives conflicts, billing and who may see it.
 - **The container has a lifecycle with legal effect.** Opening a matter is a decision recorded after a conflict check; closing it starts retention clocks and ends the duty to hold money for it ([Matter Closing and File Retention](/books/workplace-and-collaboration/matters-intake-and-conflicts#matter-closing-and-file-retention)).
@@ -87,13 +87,13 @@ Read together, the rules put the firm's admin in the position the rest of this b
 
 Agencies, consultancies, accounting firms and architects bill time to clients too, and their software (professional services automation, PSA) uses the same skeleton: a client, an engagement or project, people with roles and rates, time entries, invoices. Kantata describes itself as a PSA platform that connects "sales, resourcing, and delivery in one system"; Harvest helps teams "track time, bill clients" and measure performance; Toggl is a time tracker.
 
-What PSA adds is forward planning: resource management (who is booked on what next month), utilization targets and project budgets with margin. What it usually lacks is the legal layer: no client trust accounts, no conflicts rules under bar discipline, no LEDES. Intapp spans both, selling the same intake, conflicts and walls products to accounting and consulting firms that it sells to law firms, because independence and confidentiality obligations exist there too.
+What PSA adds is forward planning: [resource management](/books/workplace-and-collaboration/portfolios-roadmaps-and-goals#capacity-and-resource-management) (who is booked on what next month), utilization targets and project budgets with margin. What it usually lacks is the legal layer: no client trust accounts, no conflicts rules under bar discipline, no LEDES. Intapp spans both, selling the same intake, conflicts and walls products to accounting and consulting firms that it sells to law firms, because independence and confidentiality obligations exist there too.
 
 My view for a builder: the matter model generalizes cleanly to any professional service if the legal layer is a set of optional modules (conflicts, trust, LEDES) on top of client, engagement, timekeeper and rate. Building law first and generalizing is easier than adding trust accounting to a PSA product later, because trust money changes the ledger's shape.
 
 ## How the Records Map to the Core Model
 
-The book's core data model (in the Part 1 chapter The Workplace Software Business) already has most of what a firm needs. The matter-centric variant extends it rather than running beside it:
+The book's core data model (in the Part 1 chapter [The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model)) already has most of what a firm needs. The matter-centric variant extends it rather than running beside it:
 
 | Firm concept | Core table | How it maps |
 | --- | --- | --- |
@@ -114,7 +114,7 @@ The design choice that matters: a matter is a **container**, not a parallel "pro
 
 ## How to Build It
 
-Deltas against the core data model in The Workplace Software Business. This chapter owns parties, clients, matters, timekeepers and rates; later chapters in this part add conflicts, trust, billing and documents.
+Deltas against the core data model in [The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model). This chapter owns parties, clients, matters, timekeepers and rates; later chapters in this part add [conflicts](/books/workplace-and-collaboration/matters-intake-and-conflicts#how-to-build-it), [trust](/books/workplace-and-collaboration/trust-accounting-iolta#how-to-build-it), [billing](/books/workplace-and-collaboration/time-billing-and-ledes#how-to-build-it) and [documents](/books/workplace-and-collaboration/legal-documents-and-ai#how-to-build-it).
 
 ```sql
 -- The matter is a container kind.

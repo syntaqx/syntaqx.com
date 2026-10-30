@@ -72,7 +72,7 @@ The question an auditor asks of an agent's action is "who did this", and "the us
 
 Agent ID is available to all Entra customers; extending Entra security features (conditional access, governance) to agents requires Agent 365.
 
-The pattern generalizes: **an agent is a principal with a sponsor.** Its own identity makes its actions attributable and its access revocable without touching any human's account; its sponsor (the person or team accountable for it) is who gets asked when it misbehaves and who must re-justify it periodically. Delegated access is bounded by the user's own rights and ends with the user's session; autonomous access needs its own grants, its own review and an owner, like a service account ([Typed Actors](/docs/architecture/audit-trails#typed-actors)). Platforms without a separate agent identity can approximate it with a bot member per agent plus an "on behalf of" field on every action, which is what the core model's `members.kind = 'bot'` and the sketch below do.
+The pattern generalizes: **an agent is a principal with a sponsor.** Its own identity makes its actions attributable and its access revocable without touching any human's account; its sponsor (the person or team accountable for it) is who gets asked when it misbehaves and who must re-justify it periodically. Delegated access is bounded by the user's own rights and ends with the user's session; autonomous access needs its own grants, its own review and an owner, like a service account ([Typed Actors](/docs/architecture/audit-trails#typed-actors)). Platforms without a separate agent identity can approximate it with a bot member per agent plus an "on behalf of" field on every action, which is what the [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model)'s `members.kind = 'bot'` and the sketch below do.
 
 ## Consent, Scopes and Confirmation
 
@@ -105,7 +105,7 @@ What follows for a workplace platform:
 - **Detection is a signal, not a defense.** Classifiers and flags like `XPIADetected` belong in the audit trail and in incident triage; the permission and egress limits are what actually contain an attack.
 - **The admin needs a kill switch per agent and per client** that takes effect on the next request, not at token expiry.
 
-Attacks on collaboration tools generally (consent phishing, token theft, external-access phishing) are Threats & Incidents.
+Attacks on collaboration tools generally (consent phishing, token theft, external-access phishing) are [Threats & Incidents](/books/workplace-and-collaboration/threats-and-incidents).
 
 ## Auditing Agent Actions
 
@@ -120,7 +120,7 @@ The record design itself is the playbook's ([Auditing AI Actions](/docs/architec
 
 ## How to Build It
 
-The core model supplies `members` (an agent can be a member with `kind = 'bot'`), `apps`, `app_installations`, `api_tokens` and `audit_events`. Agents add a registry with sponsors, tool grants, registered MCP clients with an admin decision, and a per-call action log:
+The [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) supplies `members` (an agent can be a member with `kind = 'bot'`), `apps`, `app_installations`, `api_tokens` and `audit_events`. Agents add a registry with sponsors, tool grants, registered MCP clients with an admin decision, and a per-call action log:
 
 ```sql
 CREATE TABLE agents (                          -- an agent as a principal with a sponsor

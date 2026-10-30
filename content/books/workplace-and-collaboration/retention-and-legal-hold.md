@@ -16,7 +16,7 @@ The duties are inverted from a consumer platform. The vendor doesn't decide how 
 - **Users can delete and edit.** A hold that preserves the current message but not the version before an edit, or the message a user deleted, preserves the wrong thing.
 - **Ephemeral modes.** Chat history off, disappearing messages, encrypted chat: features users like and courts have punished companies for leaving on under a hold.
 
-The generic machinery (soft and hard delete, windows, schedules, erasure) is the playbook's [Data Retention](/docs/architecture/data-retention). This chapter is what retention and hold mean in collaboration products and in US litigation. Getting the preserved content out (collection, review, export) is [eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export); broker-dealer and other regulated recordkeeping is Regulated Communications & Archiving, later in this part. This isn't legal advice.
+The generic machinery (soft and hard delete, windows, schedules, erasure) is the playbook's [Data Retention](/docs/architecture/data-retention). This chapter is what retention and hold mean in collaboration products and in US litigation. Getting the preserved content out (collection, review, export) is [eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export); broker-dealer and other regulated recordkeeping is [Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications#the-us-recordkeeping-rules), later in this part. This isn't legal advice.
 
 ## How the Platforms Do It
 
@@ -52,7 +52,7 @@ My rule for a builder: there is one precedence function, written once, shared by
 
 ## Deletion Is a Pipeline
 
-Microsoft's Teams documentation is unusually candid about time. A retention policy takes up to seven days to apply. A timer job evaluates the hidden mailbox folders where Teams messages are copied for compliance, typically every one to seven days; an expired message moves to `SubstrateHolds`, stays there at least one day, and is permanently deleted the next time the job runs. A message a user deletes disappears from the app but doesn't reach `SubstrateHolds` for 21 days. Microsoft's own example: a delete-only policy of one day "could take 16 days before the message is permanently deleted." And: "Messages visible in the Teams app are not an accurate reflection of whether they're retained or permanently deleted for compliance requirements."
+Microsoft's Teams documentation is unusually candid about time. A retention policy takes up to seven days to apply. A timer job evaluates the [hidden mailbox folders](/books/workplace-and-collaboration/chat-architecture#teams-a-chat-service-and-a-record-in-every-mailbox) where Teams messages are copied for compliance, typically every one to seven days; an expired message moves to `SubstrateHolds`, stays there at least one day, and is permanently deleted the next time the job runs. A message a user deletes disappears from the app but doesn't reach `SubstrateHolds` for 21 days. Microsoft's own example: a delete-only policy of one day "could take 16 days before the message is permanently deleted." And: "Messages visible in the Teams app are not an accurate reflection of whether they're retained or permanently deleted for compliance requirements."
 
 The other vendors have their own clocks: Slack deletes once a day; Google keeps Gmail messages searchable by Vault admins for about 30 days after coverage expires, may take up to 15 days to remove Drive items, and begins purging Chat messages on day 30; Notion holds deleted pages for its retention period before permanent deletion.
 
@@ -60,7 +60,7 @@ What a builder takes from this:
 
 - **Separate the user's view from the compliance store.** Teams removes a message from the app while a copy waits in a hidden folder; that separation is what lets a hold work without users noticing. A product with one copy of each message can't both honor a user's delete and preserve under a hold.
 - **Publish the timeline.** Customers write records schedules and answer regulators; "deleted within 16 days of expiry" is a commitment they can use, "deleted" isn't.
-- **Backups are part of deletion.** A deleted message still sitting in last month's backup is not deleted for an erasure request and is still evidence for a hold ([Backups](/docs/architecture/data-retention#backups)).
+- **Backups are part of deletion.** A deleted message still sitting in last month's backup is not deleted for an erasure request and is still evidence for a hold ([Backups](/docs/architecture/data-retention#backups); the vendor's restore tools are in [Backups, Restores and Shared Responsibility](/books/workplace-and-collaboration/reliability-and-outages#backups-restores-and-shared-responsibility)).
 
 ## Edits and Deletions
 
@@ -70,7 +70,7 @@ Chat and documents change after they're written, and the original is often the e
 - **Copy-on-edit into the compliance store.** Under a Teams retention policy, an edited message's original is copied to `SubstrateHolds` and a deleted one moved there, so eDiscovery finds both.
 - **Holds that freeze history.** Slack's holds preserve messages and files even if members edit or delete them; the Discovery API returns "content that has been edited and deleted (if preserved by retention policies or legal holds)."
 
-In the core data model, every edit is an `item_versions` row and every user delete is a state change on `items`, never a physical delete while any retention or hold covers the item.
+In the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model), every edit is an `item_versions` row and every user delete is a state change on `items`, never a physical delete while any retention or hold covers the item.
 
 ## Legal Hold Mechanics
 
@@ -100,7 +100,7 @@ Release is the dangerous moment: Notion re-enables retention for the released pa
 
 ### Preservation Lock
 
-Some customers need a policy that even they can't undo. Microsoft's Preservation Lock, set only through PowerShell (`-RestrictiveRetention $true`), means that after locking nobody, global admins included, can disable the policy or make it less restrictive; adaptive scopes don't support it. Box's non-modifiable retention policies, designed for SEC Rule 17a-4, can't be shortened and retained content can't be removed. These exist for regulated recordkeeping (Regulated Communications & Archiving, later in this part); for litigation holds the ordinary, releasable hold is the right tool.
+Some customers need a policy that even they can't undo. Microsoft's Preservation Lock, set only through PowerShell (`-RestrictiveRetention $true`), means that after locking nobody, global admins included, can disable the policy or make it less restrictive; adaptive scopes don't support it. Box's non-modifiable retention policies, designed for SEC Rule 17a-4, can't be shortened and retained content can't be removed. These exist for regulated recordkeeping ([Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications), later in this part); for litigation holds the ordinary, releasable hold is the right tool.
 
 ## Rule 37(e) and Spoliation
 
@@ -142,7 +142,7 @@ The Justice Department's Criminal Division asks the same question of corporate c
 
 Every one of these cases turns on a setting the employee controlled and the employer could have overridden. For a vendor, that defines the feature:
 
-- **A hold overrides user-controlled ephemerality automatically.** History off, disappearing timers, member-set retention on DMs, auto-delete on recordings: for a custodian on hold, each is suppressed by the system, not by a notice asking the custodian to behave. Google's own email holds worked that way; its chat holds didn't.
+- **A hold overrides user-controlled ephemerality automatically.** History off, disappearing timers, member-set retention on DMs, [auto-delete on recordings](/books/workplace-and-collaboration/recordings-transcripts-and-ai-notes#expiry-retention-and-holds): for a custodian on hold, each is suppressed by the system, not by a notice asking the custodian to behave. Google's own email holds worked that way; its chat holds didn't.
 - **Encryption modes that defeat holds must say so.** Zoom's chat legal hold requires Advanced Chat Encryption disabled; Google Vault can retain and export client-side encrypted files but can't search their content ([Encryption & Customer-Managed Keys](/books/workplace-and-collaboration/encryption-and-customer-keys)). The admin console should show, per custodian, which of their channels a hold can't reach.
 - **The product reports preservation status.** "Custodian X: 14 channels held, 2 DMs with history off suppressed, 1 Slack Connect channel not covered" is what lets counsel call the steps reasonable.
 - **Approved channels are part of the hold.** The Amazon allegations are about an app outside the company's systems; a workplace vendor can't fix that, but its customers' policies (and the DOJ's questions) push them toward tools with holds, which is a reason those features sell.
@@ -153,7 +153,7 @@ Retention has a second master. GDPR's storage limitation pushes toward deleting 
 
 ## How to Build It
 
-The core model owns `retention_policies`, `legal_holds` and `hold_custodians`. This chapter gives them their shape, adds container and query scopes, a compliance store for preserved versions, custodian notices and a record of every deletion run:
+The [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) owns `retention_policies`, `legal_holds` and `hold_custodians`. This chapter gives them their shape, adds container and query scopes, a compliance store for preserved versions, custodian notices and a record of every deletion run. The columns below are the full definitions: where one restates a core sketch column, this definition replaces it; `retention_policy_targets` replaces the sketch's `scope_type`/`scope_id`, and `hold_containers` takes the container custodians, so `hold_custodians` holds members only:
 
 ```sql
 ALTER TABLE retention_policies

@@ -11,7 +11,7 @@ Every screen in a work management product is a query. A board is a query grouped
 
 The hard parts are not the grammar. They are that the query runs over a schema each customer defined ([Work Items, Hierarchies & Fields](/books/workplace-and-collaboration/work-items-and-fields#custom-fields)), that a saved query outlives its author and is shared with people who can see different things, and that every result must be trimmed to what the person looking at it may see, at the speed of a board load. A saved filter shared to the whole organization is a small publication, and the customer's admins decide who may publish to whom; the vendor's job is to make sure the same filter shows each viewer only their own slice.
 
-This chapter covers the query languages, filters and saved views, view layouts, dashboards, and permission-trimmed queries. Board columns, sprints and flow charts are [Boards, Sprints & Cycles](/books/workplace-and-collaboration/boards-sprints-and-cycles); search across every product a company uses, with connectors and ranking, is Enterprise Search. The playbook covers filter and sort parameters for APIs in [Filtering and Sorting](/docs/requests/filtering-and-sorting#allowlisted-fields) and authorization checks in [Where Checks Belong](/docs/security/authorization#where-checks-belong).
+This chapter covers the query languages, filters and saved views, view layouts, dashboards, and permission-trimmed queries. Board columns, sprints and flow charts are [Boards, Sprints & Cycles](/books/workplace-and-collaboration/boards-sprints-and-cycles); search across every product a company uses, with connectors and ranking, is [Enterprise Search](/books/workplace-and-collaboration/enterprise-search). The playbook covers filter and sort parameters for APIs in [Filtering and Sorting](/docs/requests/filtering-and-sorting#allowlisted-fields) and authorization checks in [Where Checks Belong](/docs/security/authorization#where-checks-belong).
 
 ## How the Platforms Do It
 
@@ -93,7 +93,7 @@ A saved query becomes an object with an owner, an audience and a lifecycle.
 
 Four rules for a builder follow:
 
-- **Ownership survives the owner.** Saved views referenced by boards and dashboards can't vanish when their author is deactivated; an admin must be able to reassign them, and offboarding (Provisioning, SCIM & Offboarding) should list what a departing member owns.
+- **Ownership survives the owner.** Saved views referenced by boards and dashboards can't vanish when their author is deactivated; an admin must be able to reassign them, and offboarding ([Provisioning, SCIM & Offboarding](/books/workplace-and-collaboration/provisioning-and-scim#content-ownership-on-the-way-out)) should list what a departing member owns.
 - **Sharing never widens access to items.** A filter shared with the whole organization returns, for each viewer, only the items that viewer can see. The share grants the query, not the results.
 - **Subscriptions run as the recipient.** A scheduled email of a filter's results must evaluate permissions per recipient, or a subscription becomes a way to mail restricted items to a group; Jira's rule that you can only target a group you belong to is one guard, per-recipient evaluation is the other.
 - **Group recipients are a publication.** A view piped into a chat channel publishes its results to everyone in the channel, including guests, so the channel's audience must be checked against the view's audience when the subscription is created.
@@ -117,7 +117,7 @@ Dashboards concentrate three problems. **Each widget is a query per viewer**, so
 
 ## Permission-Trimmed Queries
 
-Every query result must be trimmed to what the viewer may see. In work management, visibility comes from several layers at once: the workspace, the project (container) and its grants, sometimes an item-level restriction, and occasionally field-level security. Jira's work item security schemes are the item-level case: users not assigned to an item's security level "won't be able to view those work items, even if they can access the rest of the space," and an item moved to a new space takes that space's default level. The permission model itself, with roles, inheritance and link sharing, is Permissions & Sharing; this section is about making a trimmed query fast.
+Every query result must be trimmed to what the viewer may see. In work management, visibility comes from several layers at once: the workspace, the project (container) and its grants, sometimes an item-level restriction, and occasionally field-level security. Jira's work item security schemes are the item-level case: users not assigned to an item's security level "won't be able to view those work items, even if they can access the rest of the space," and an item moved to a new space takes that space's default level. The permission model itself, with roles, inheritance and link sharing, is [Permissions & Sharing](/books/workplace-and-collaboration/permissions-and-sharing); this section is about making a trimmed query fast.
 
 There are three ways to trim, and products use all three:
 
@@ -134,7 +134,7 @@ Two subtleties catch builders:
 
 ## How to Build It
 
-The chapter adds saved views with their condition tree, view subscriptions, and dashboards with widgets. Sharing reuses the core `grants` table with `resource_type = 'work_item_view'` or `'work_dashboard'`; the share grants the object, never the items.
+The chapter adds saved views with their condition tree, view subscriptions, and dashboards with widgets. Sharing reuses the [core](/books/workplace-and-collaboration/workplace-business#the-core-data-model) `grants` table with `resource_type = 'work_item_view'` or `'work_dashboard'`; the share grants the object, never the items.
 
 ```sql
 CREATE TABLE work_item_views (

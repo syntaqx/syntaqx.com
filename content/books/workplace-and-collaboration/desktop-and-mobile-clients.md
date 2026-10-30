@@ -9,7 +9,7 @@ tags = ["desktop", "mobile", "electron", "mdm", "push-notifications"]
 
 Collaboration clients are open all day. A chat or meetings app starts with the machine, holds a connection for eight or ten hours, keeps hundreds of conversations and files cached, draws notifications over whatever the user is doing, and is expected to cost little memory while it does. On the phone it must deliver a message within seconds while the operating system does everything it can to keep it asleep. That alone makes client engineering hard. The workplace twist adds a second customer: the IT department that packages the client, decides when it updates, wraps it in mobile app protection, blocks it on jailbroken phones, and pins it to the organization's own domain. The end user picks a consumer app; the customer's admin deploys a workplace one.
 
-This chapter covers why the desktop clients are mostly web technology in a native shell (Slack on Electron, the new Teams on WebView2), the memory and startup budgets that pushed both through rewrites, how auto-update works and why vendors refuse to let clients get old, the enterprise packaging and policy surface (MSIX, MSI, Intune, Group Policy, app configuration), mobile app management without device enrollment, and push delivery under Android's and iOS's background limits. It adds client releases, version floors and installs to the core data model. The playbook covers the generic pieces: [Mobile Releases](/docs/delivery/mobile-releases), [Software Updates](/docs/security/software-updates), [Offline Sync](/docs/architecture/offline-sync) and [Push Notifications](/docs/architecture/notifications#push-notifications).
+This chapter covers why the desktop clients are mostly web technology in a native shell (Slack on Electron, the new Teams on WebView2), the memory and startup budgets that pushed both through rewrites, how auto-update works and why vendors refuse to let clients get old, the enterprise packaging and policy surface (MSIX, MSI, Intune, Group Policy, app configuration), mobile app management without device enrollment, and push delivery under Android's and iOS's background limits. It adds client releases, version floors and installs to the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model). The playbook covers the generic pieces: [Mobile Releases](/docs/delivery/mobile-releases), [Software Updates](/docs/security/software-updates), [Offline Sync](/docs/architecture/offline-sync) and [Push Notifications](/docs/architecture/notifications#push-notifications).
 
 ## How the Platforms Do It
 
@@ -84,7 +84,7 @@ Microsoft Intune's app protection policies "ensure an organization's data remain
 
 Slack's EMM offering, available on Enterprise Grid and Enterprise+, works through AppConfig keys pushed by the customer's EMM: `OrgDomain` restricts the managed app to the organization's Slack, `ApprovedDevice` limits access to enrolled devices, `DisableCopy` blocks downloads and message copying, `BrowserControl` sends links to a managed browser. The admin can require "Slack for EMM" or "Slack for Intune" so "login will be blocked for any other version of the Slack app"; members on the regular app are signed out within 12 hours.
 
-The inversion is plain here: on a consumer app the device owner decides what the app may do; on a workplace app the employer decides what its data may do inside an app on someone else's phone. A vendor building a mobile client needs a policy surface for that (per tenant, delivered at sign-in, re-checked periodically) and a wipe that is selective by tenant. Device and session policy as a whole is covered in Admin Consoles & Policies.
+The inversion is plain here: on a consumer app the device owner decides what the app may do; on a workplace app the employer decides what its data may do inside an app on someone else's phone. A vendor building a mobile client needs a policy surface for that (per tenant, delivered at sign-in, re-checked periodically) and a wipe that is selective by tenant. Device and session policy as a whole is covered in [Admin Consoles & Policies](/books/workplace-and-collaboration/admin-consoles-and-policies).
 
 ## Push Under the Operating System's Rules
 
@@ -93,13 +93,13 @@ Mobile workplace clients rely on push to wake them, and the operating systems ra
 The consequences for a collaboration product:
 
 - **Send a visible notification for anything that should wake the phone,** carrying enough content (or a fetch hint) to render the notification without a background sync. Silent pushes are for opportunistic cache refresh only.
-- **Decide on the server what deserves a push.** Mentions, DMs and keywords, filtered by the user's notification schedule and do-not-disturb, and suppressed when the user is active on another device. The attention model is the subject of Notifications, Presence & Attention.
+- **Decide on the server what deserves a push.** Mentions, DMs and keywords, filtered by the user's notification schedule and do-not-disturb, and suppressed when the user is active on another device. The attention model is the subject of [Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention).
 - **Respect the tenant in the payload.** Lock-screen previews can leak message content; workplace clients let the admin hide previews for a tenant, so the push carries a generic body and the app fetches the content after unlock.
 - **Keep the registration current.** Push tokens rotate and devices change hands; an install's token is replaced on refresh and deleted on sign-out or wipe.
 
 ## How to Build It
 
-The core tables (`accounts`, `members`, `workspaces`, `audit_events`) are fixed by the core data model. This chapter adds client releases with version floors, tenant client policy, and the installs that tie a device to a member.
+The core tables (`accounts`, `members`, `workspaces`, `audit_events`) are fixed by the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model). This chapter adds client releases with version floors, tenant client policy, and the installs that tie a device to a member.
 
 ```sql
 CREATE TABLE client_releases (

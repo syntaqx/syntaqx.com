@@ -48,7 +48,7 @@ What a platform adds to the statute:
 - **Data abroad is still reachable.** The CLOUD Act's 2713 requires providers to produce data in their possession, custody or control "regardless of whether such communication, record, or other information is located within or outside of the United States."
 - **Civil litigants can't get content.** The SCA's bar on divulging contents has no civil discovery exception: *O'Grady v. Superior Court* (2006) held that "the Act makes no exception for civil discovery" and quashed civil subpoenas for a user's email. Private parties can subpoena non-content records, and platforms review those too: Reddit disclosed information in response to 9% of 35 private-party requests in the second half of 2025, and notified 17 users before producing.
 
-National security letters and FISA orders exist on the same ladder (Google lists both), and the law allows reporting them only in ranges, which is why Pinterest reports national security requests as "0 to 249." Their handling is a counsel-only path and isn't covered further here.
+National security letters and FISA orders exist on the same ladder (Google lists both), and the law allows reporting them only in ranges, which is why Pinterest reports national security requests as "0 to 249." Their handling is a counsel-only path and isn't covered further here. Workplace products send requests for a workspace's content to the customer organization instead ([Who Answers the Subpoena](/books/workplace-and-collaboration/ediscovery-and-export#who-answers-the-subpoena)).
 
 ## International Requests
 

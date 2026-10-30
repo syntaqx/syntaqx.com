@@ -24,7 +24,7 @@ As of October 2026:
 | **Google Voice** | Google numbers, or existing carrier numbers through SIP Link | 14 countries | Ring groups and call queuing, not a full contact center | Starter $10 (up to 10 users), Standard $20, Premier $30 per user per month, on top of Workspace |
 | **Amazon Connect** | Amazon telephony | Regional | Usage-priced CCaaS | $0.038 per voice minute plus telephony; $0.010 per chat message |
 
-Two business models share the table. **UCaaS is seat-priced**: a phone license per user plus a calling plan or the customer's own carrier, and the vendors' growth story is attaching phone seats to existing meeting and chat seats (the suite fight in Suites, Bundling & Antitrust in the Business part). **CCaaS is often usage-priced**, per minute and per message, because contact center volume follows customers, not employees.
+Two business models share the table. **UCaaS is seat-priced**: a phone license per user plus a calling plan or the customer's own carrier, and the vendors' growth story is attaching phone seats to existing meeting and chat seats (the suite fight in [Suites, Bundling & Antitrust](/books/workplace-and-collaboration/suites-bundling-and-antitrust)). **CCaaS is often usage-priced**, per minute and per message, because contact center volume follows customers, not employees.
 
 ## What a Business Phone System Is
 
@@ -104,7 +104,7 @@ The vendors reach it differently. RingCentral sells a contact center built on NI
 
 ## The Money
 
-UCaaS revenue is subscription revenue: RingCentral reports subscriptions as "over 90% of our total revenues" for 2025 and 2024, sold through a direct inside sales force and through resellers, distributors and global service providers. Phone seats are sold on top of meeting and chat seats, calling plans or carrier contracts on top of phone seats, and regulatory fees and taxes pass through on the invoice ([Universal Service and Regulatory Fees](/books/hosting-and-cloud/telecom-duties#universal-service-and-regulatory-fees)). The vendor's margin depends on how much of the carrier stack it owns, the same owned-versus-aggregated question as [Owned Network Versus Aggregator](/books/hosting-and-cloud/cpaas-business#owned-network-versus-aggregator); RingCentral, for instance, holds a competitive local exchange carrier subsidiary certificated in two states. Seat counting and resellers are Billing, Seats & Resellers in the Running the Platform part.
+UCaaS revenue is subscription revenue: RingCentral reports subscriptions as "over 90% of our total revenues" for 2025 and 2024, sold through a direct inside sales force and through resellers, distributors and global service providers. Phone seats are sold on top of meeting and chat seats, calling plans or carrier contracts on top of phone seats, and regulatory fees and taxes pass through on the invoice ([Universal Service and Regulatory Fees](/books/hosting-and-cloud/telecom-duties#universal-service-and-regulatory-fees)). The vendor's margin depends on how much of the carrier stack it owns, the same owned-versus-aggregated question as [Owned Network Versus Aggregator](/books/hosting-and-cloud/cpaas-business#owned-network-versus-aggregator); RingCentral, for instance, holds a competitive local exchange carrier subsidiary certificated in two states. Seat counting and resellers are [Billing, Seats & Resellers](/books/workplace-and-collaboration/billing-and-seat-management).
 
 ## How to Build It
 

@@ -9,7 +9,7 @@ tags = ["billing", "seats", "proration", "resellers", "marketplaces"]
 
 A seat-based subscription looks like the simplest kind of billing: a price per user per month, times the number of users. Operating it is not simple, because the number of users changes every day, and the customer's admin, not the vendor, changes it. People join and leave; guests are invited; SCIM deactivates a hundred accounts after a layoff; a department buys its own workspace on a credit card and is later folded into the enterprise contract. Each change raises the same questions: does it change the bill, from when, by how much, and on which invoice. The answers differ by vendor, by plan, by term, and by whether the customer bought directly, through a reseller or through a cloud marketplace.
 
-This chapter is the operations side of seat billing. Plan design and what a seat means (active versus provisioned, guest pricing, seat types) belong to Plans, Pricing & Seats; the billing engine that rates usage and runs invoices belongs to Hosting & Cloud ([Metering & Rating](/books/hosting-and-cloud/metering-and-rating), [Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension)). Here: how vendors count seats and prorate changes, the three ways to handle growth mid-term (prorate now, true up later, buy a tier), co-terming, invoices, purchase orders and payment terms, the Microsoft CSP channel, cloud marketplaces, and the sales tax twist for software used by employees in many states. It adds seat changes, true-ups, invoices and channel records to the core data model. Generic subscription mechanics are the playbook's [Subscriptions](/docs/payments/subscriptions).
+This chapter is the operations side of seat billing. Plan design and what a seat means (active versus provisioned, guest pricing, seat types) belong to [Plans, Pricing & Seats](/books/workplace-and-collaboration/plans-pricing-and-seats); the billing engine that rates usage and runs invoices belongs to Hosting & Cloud ([Metering & Rating](/books/hosting-and-cloud/metering-and-rating), [Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension)). Here: how vendors count seats and prorate changes, the three ways to handle growth mid-term (prorate now, true up later, buy a tier), co-terming, invoices, purchase orders and payment terms, the Microsoft CSP channel, cloud marketplaces, and the sales tax twist for software used by employees in many states. It adds seat changes, true-ups, invoices and channel records to the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model). Generic subscription mechanics are the playbook's [Subscriptions](/docs/payments/subscriptions).
 
 ## How the Platforms Do It
 
@@ -24,7 +24,7 @@ The patterns:
 
 - **Monthly plans follow the headcount; annual plans follow the commitment.** Every vendor in the table lets monthly customers shrink, and none lets annual customers shrink before renewal (Microsoft allows seven days after a purchase). The discount for an annual term buys the vendor a floor.
 - **Growth is always allowed and always prorated.** All four charge for added seats from the day they're added to the end of the period or term. The variation is when the charge is invoiced: immediately, at month end, quarterly, or at a true-up.
-- **"Active" is a billing policy, not a seat definition.** Slack's 28-day inactivity credit is a billing rule applied to a seat count; Atlassian counts users with access regardless of activity. Plans, Pricing & Seats covers the definitions; this chapter covers the ledger that applies them.
+- **"Active" is a billing policy, not a seat definition.** Slack's 28-day inactivity credit is a billing rule applied to a seat count; Atlassian counts users with access regardless of activity. [Plans, Pricing & Seats](/books/workplace-and-collaboration/plans-pricing-and-seats) covers the definitions; this chapter covers the ledger that applies them.
 - **Payment terms are a tier feature.** Net-30 invoicing is gated by order size at Atlassian; monthly plans are card-only at Atlassian. The ability to pay by invoice is as much a part of the enterprise tier as SSO.
 
 ## Counting Seats
@@ -37,7 +37,7 @@ The bill is computed from a seat count, and the seat count is computed from memb
 
 Whatever the method, the count has to be reproducible: from membership events, the vendor must be able to show which members were billable on which days. That record is also what the customer's admin reconciles against, using the license utilization reports covered in [Workplace Metrics](/books/workplace-and-collaboration/workplace-metrics#license-utilization-and-reclaim).
 
-Directory sync makes counting an integration problem. A SCIM push that provisions every employee in the identity provider, including those who will never open the product, turns provisioned users into billed seats. Atlassian says users count "once product access is granted," and stop counting only when deactivated, deleted, or removed from a synced directory. The customer controls this through which groups it syncs (Provisioning, SCIM & Offboarding covers group push); the vendor's billing UI should show which seats came from sync and when, because the admin who set up SCIM is rarely the one reading the invoice.
+Directory sync makes counting an integration problem. A SCIM push that provisions every employee in the identity provider, including those who will never open the product, turns provisioned users into billed seats. Atlassian says users count "once product access is granted," and stop counting only when deactivated, deleted, or removed from a synced directory. The customer controls this through which groups it syncs ([Provisioning, SCIM & Offboarding](/books/workplace-and-collaboration/provisioning-and-scim) covers group push); the vendor's billing UI should show which seats came from sync and when, because the admin who set up SCIM is rarely the one reading the invoice.
 
 ## Proration
 
@@ -60,7 +60,7 @@ For annual and multi-year contracts, charging every add as it happens produces d
 - **Periodic true-up.** The customer may exceed its committed quantity during the term, and the vendor counts usage at intervals (quarterly or annually) and invoices the overage, prorated from the true-up date or for the full period depending on contract. Slack's annual invoice customers have their prorated balances settled once per calendar quarter, which is the self-serve form of the same idea. Negotiated enterprise order forms set their own true-up cadence.
 - **Tiers.** The customer buys a band of users, and moving to the next band is an upgrade. Atlassian's annual plans are sold in "distinct user tiers," and adding seats beyond the tier requires a prorated upgrade quote.
 
-The tier model has a pricing consequence covered in Plans, Pricing & Seats: Atlassian's published example for Jira Cloud Standard prices 450 seats in bands, $8.60 per user for the first 100, $7.30 for 101 to 250 and $6.10 for 251 to 450, for $3,175.00 a month, an average of $7.06 per user. For billing operations, the tier and band are attributes of the subscription that every upgrade quote must reprice.
+The tier model has a pricing consequence covered in [Plans, Pricing & Seats](/books/workplace-and-collaboration/plans-pricing-and-seats): Atlassian's published example for Jira Cloud Standard prices 450 seats in bands, $8.60 per user for the first 100, $7.30 for 101 to 250 and $6.10 for 251 to 450, for $3,175.00 a month, an average of $7.06 per user. For billing operations, the tier and band are attributes of the subscription that every upgrade quote must reprice.
 
 My default for an enterprise contract: a committed quantity with a quarterly true-up, priced at the contract rate and prorated from the true-up date, invoiced against the existing purchase order with a stated cap above which a new PO is required. It keeps procurement out of individual hires and keeps the vendor paid for growth within a quarter.
 
@@ -79,7 +79,7 @@ Self-serve customers pay by card; enterprise customers pay invoices, and an invo
 
 - **Quotes before orders.** Atlassian's annual plans are bought and changed through quotes: in the Quotes tab, a contact can download a PDF, pay by card, update a PO number or delete the quote, and bank transfer, check or ACH payment requires a renewal quote. A quote is a priced, dated offer with an expiry; accepting it creates the order.
 - **Purchase order numbers on every invoice.** Large customers' accounts payable systems reject invoices without a matching PO. The PO number must be captured at the order, printed on every invoice drawn against it, and updatable when the customer issues a new PO mid-term.
-- **Only billing contacts see billing.** Atlassian restricts quotes and invoices to listed billing or technical contacts. Billing is a separate role from workspace administration; Admin Consoles & Policies covers the admin role ladder.
+- **Only billing contacts see billing.** Atlassian restricts quotes and invoices to listed billing or technical contacts. Billing is a separate role from workspace administration; [Admin Consoles & Policies](/books/workplace-and-collaboration/admin-consoles-and-policies) covers the admin role ladder.
 - **Net terms by threshold.** Atlassian offers Net-30 terms on orders above $10,000. Net terms are credit the vendor extends, so they need a credit decision and dunning that doesn't suspend a customer for an invoice that is merely in approval ([Failed Payments and Dunning](/books/hosting-and-cloud/invoices-dunning-and-suspension#failed-payments-and-dunning)).
 - **Refund windows.** Atlassian refunds annual plans within 30 days of payment and monthly plans only in the first paid month after a trial; Microsoft's MCA allows cancellation with a prorated refund within seven days of the start or renewal, after which only recurring billing can be turned off. Each is a rule with a clock, and the clock runs from a recorded event.
 
@@ -115,7 +115,7 @@ The workplace twist is sourcing. A seat-based contract is bought by a company at
 
 ## How to Build It
 
-`plans`, `subscriptions` and `seat_assignments` are core. Plans, Pricing & Seats defines what a billable seat is; this chapter records how the count changes, how changes are priced and invoiced, and who pays.
+`plans`, `subscriptions` and `seat_assignments` are core. [Plans, Pricing & Seats](/books/workplace-and-collaboration/plans-pricing-and-seats) defines what a billable seat is; this chapter records how the count changes, how changes are priced and invoiced, and who pays.
 
 ```sql
 ALTER TABLE subscriptions

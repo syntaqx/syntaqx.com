@@ -77,9 +77,9 @@ The rules for a builder:
 
 Capacity planning compares the work assigned to a team or person with the time they have. Jira Plans needs estimates in story points or hours or days, and "your plan needs to use boards as work sources": "work drawn from spaces and filters won't show capacity information." Azure sets capacity per person per sprint in hours or days, accounting for days off ([Estimates and Velocity](/books/workplace-and-collaboration/boards-sprints-and-cycles#estimates-and-velocity)). Linear derives a team's cycle capacity from its last three cycles. Asana and monday.com sell resource management as a separate, top-tier capability.
 
-Two models coexist. **Velocity-based capacity** (Jira Plans, Linear) uses a team's own history in its own unit; it needs no time entry and can't be compared across teams. **Time-based capacity** (Azure, Asana, monday workload) uses hours per person; it can be summed across teams and requires people to keep availability current. Professional services firms live in the second model because hours are what they bill, which is the PSA territory of Law Firms & Professional Services. My default for product teams is velocity-based capacity at the team level, with time-based allocation only for people split across teams, because person-level hour plans for knowledge work tend to be precise and wrong.
+Two models coexist. **Velocity-based capacity** (Jira Plans, Linear) uses a team's own history in its own unit; it needs no time entry and can't be compared across teams. **Time-based capacity** (Azure, Asana, monday workload) uses hours per person; it can be summed across teams and requires people to keep availability current. Professional services firms live in the second model because hours are what they bill, which is the PSA territory of [Law Firms & Professional Services](/books/workplace-and-collaboration/law-firms-and-professional-services). My default for product teams is velocity-based capacity at the team level, with time-based allocation only for people split across teams, because person-level hour plans for knowledge work tend to be precise and wrong.
 
-Capacity data is also people data. A workload view that shows each person's allocation and overruns is a monitoring surface, and where works councils or employee-monitoring rules apply (Employee Monitoring & Privacy), the customer's admin should be able to restrict person-level views to aggregate ones.
+Capacity data is also people data. A workload view that shows each person's allocation and overruns is a monitoring surface, and where works councils or employee-monitoring rules apply ([Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy)), the customer's admin should be able to restrict person-level views to aggregate ones.
 
 ## Status Updates
 
@@ -89,7 +89,7 @@ The pattern is a cadence, a health value, free text, and a digest to followers. 
 
 - **Store each update as an immutable record** with the health, the text, the computed progress at that moment and the author. The history of updates is the project's story, and an edited update should be a new version.
 - **Show computed and declared health together.** A project declared on track whose computed progress lags is the most useful signal a portfolio can show.
-- **Reminders are notifications** with the same schedule and quiet-hours handling as the rest of the product (Notifications, Presence & Attention).
+- **Reminders are notifications** with the same schedule and quiet-hours handling as the rest of the product ([Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention)).
 
 ## How to Build It
 

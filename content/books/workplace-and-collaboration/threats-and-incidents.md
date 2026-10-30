@@ -9,7 +9,7 @@ tags = ["security", "incident-response", "phishing", "oauth", "token-theft", "th
 
 A workplace suite is the most valuable account an attacker can take. One sign-in reaches the mail, the chat, the files, the wiki and the calendar of a company, and every app the company has connected. The attacks on these tools in the public record rarely break the vendor's cryptography or find a bug in the core product. They abuse what the product is for: a chat from outside the company that looks like the help desk, a sign-in code the victim types on a real Microsoft page, a consent screen for an app that asks for the mailbox, a session token copied out of a support file, an OAuth token held by a connected SaaS tool. The self-hosted products are the exception, where unpatched servers were exploited at internet scale.
 
-Most of the controls belong to the customer's admins: who outside the company may message employees, which apps users may consent to, which sign-in flows are allowed, how sessions are bound and revoked, which logs are kept and watched. The vendor owns the platform, its own corporate and support systems (which several of the incidents below went through), the defaults, and the tools admins use to respond. This chapter covers the attack patterns from vendors' and governments' own write-ups, how to detect them in a workspace, and the response playbook. The audit events themselves are Audit Logs; content inspection is DLP & Information Protection; guest and external access models are Guests & Cross-Org Collaboration; app review is Apps & Marketplaces; agents acting in workspaces are AI Agents, Connectors & MCP. Abuse of infrastructure and stolen cloud keys are the Hosting & Cloud volume's [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure) and [Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#stolen-keys); the incident process itself is the playbook's [Incident Response](/docs/operations/incident-response).
+Most of the controls belong to the customer's admins: who outside the company may message employees, which apps users may consent to, which sign-in flows are allowed, how sessions are bound and revoked, which logs are kept and watched. The vendor owns the platform, its own corporate and support systems (which several of the incidents below went through), the defaults, and the tools admins use to respond. This chapter covers the attack patterns from vendors' and governments' own write-ups, how to detect them in a workspace, and the response playbook. The audit events themselves are [Audit Logs](/books/workplace-and-collaboration/audit-logs); content inspection is [DLP & Information Protection](/books/workplace-and-collaboration/dlp-and-information-protection); guest and external access models are [Guests & Cross-Org Collaboration](/books/workplace-and-collaboration/guests-and-external-collaboration); app review is [Apps & Marketplaces](/books/workplace-and-collaboration/apps-and-marketplaces); agents acting in workspaces are [AI Agents, Connectors & MCP](/books/workplace-and-collaboration/ai-agents-and-mcp). Abuse of infrastructure and stolen cloud keys are the Hosting & Cloud volume's [Abuse on Infrastructure](/books/hosting-and-cloud/abuse-on-infrastructure) and [Stolen Keys](/books/hosting-and-cloud/free-tier-fraud-and-stolen-keys#stolen-keys); the incident process itself is the playbook's [Incident Response](/docs/operations/incident-response).
 
 ## How the Platforms Do It
 
@@ -38,7 +38,7 @@ Five patterns account for nearly all of it:
 
 ## External Messages and Help-Desk Impersonation
 
-In Microsoft Teams, *external access* lets users chat and meet with people in other Microsoft 365 organizations, separately from guest access. Microsoft's documentation states the default plainly: "By default, all external domains are allowed." An admin can allow only listed domains, block listed domains, or block all; can separately allow or block chat with unmanaged Teams accounts (and whether those accounts may start conversations); and can block specific external users, up to 200. Since federation needs both sides to allow it, an attacker who controls any tenant, including one compromised from a small business, can start a chat with employees of every organization left at the default. Teams blocks trial-only tenants by default (`-ExternalAccessWithTrialTenants` is `Blocked` unless changed), which removes the cheapest source of attacker tenants but not compromised paid ones.
+In Microsoft Teams, [*external access*](/books/workplace-and-collaboration/guests-and-external-collaboration#external-access-as-an-attack-surface) lets users chat and meet with people in other Microsoft 365 organizations, separately from guest access. Microsoft's documentation states the default plainly: "By default, all external domains are allowed." An admin can allow only listed domains, block listed domains, or block all; can separately allow or block chat with unmanaged Teams accounts (and whether those accounts may start conversations); and can block specific external users, up to 200. Since federation needs both sides to allow it, an attacker who controls any tenant, including one compromised from a small business, can start a chat with employees of every organization left at the default. Teams blocks trial-only tenants by default (`-ExternalAccessWithTrialTenants` is `Blocked` unless changed), which removes the cheapest source of attacker tenants but not compromised paid ones.
 
 The attacks then rely on the victim:
 
@@ -83,7 +83,7 @@ The defenses Microsoft recommends:
 Three incidents show that apps already trusted are the larger risk:
 
 - **Microsoft, 2024.** Midnight Blizzard escalated from one test account to a legacy test OAuth app "that had elevated access to the Microsoft corporate environment," created new OAuth apps and a user to consent to them, and used the `full_access_as_app` role to read mailboxes through Exchange Web Services. Microsoft's guidance afterwards is to audit privileged apps and remove unneeded `EWS.AccessAsUser.All` and `full_access_as_app` grants.
-- **Salesloft Drift, 2025.** The attacker didn't phish anyone; it stole the OAuth tokens the Drift integration held for its customers' Salesforce and Google Workspace accounts. Google's recommendation was to treat every token stored in or connected to Drift as compromised, and revoke and rotate them.
+- **Salesloft Drift, 2025.** The attacker didn't phish anyone; it stole the OAuth tokens the Drift integration held for its customers' Salesforce and Google Workspace accounts. Google's recommendation was to treat every token stored in or connected to Drift as compromised, and revoke and rotate them ([When an App's Tokens Are Stolen](/books/workplace-and-collaboration/apps-and-marketplaces#when-an-app-s-tokens-are-stolen)).
 - **UNC6040, 2025.** The victim was talked into authorizing an attacker-controlled copy of Salesforce's Data Loader, often renamed to match the pretext ("My Ticket Portal"); Google's advice is to restrict who can manage connected apps and to allowlist approved ones.
 
 For the customer's admin, the inventory of app grants is as important as the list of admins: which apps hold tenant-wide or offline access, who granted it, when it was last used. The archive and eDiscovery connections in [Capture: What an Archive Needs From the Tool](/books/workplace-and-collaboration/regulated-communications#capture-what-an-archive-needs-from-the-tool) are the most privileged of all. For the vendor, it means scopes narrow enough to grant safely, publisher verification, consent screens that say plainly what an app will read, and an API that lets an admin list, disable and revoke grants in one place.
@@ -94,7 +94,7 @@ Workplace content is full of credentials. Microsoft's March 2024 update said the
 
 The countermeasures are ordinary and rarely complete:
 
-- **Scan for secrets in messages and files,** with DLP rules for known token formats (DLP & Information Protection covers the tooling) and a prompt to rotate when one is posted.
+- **Scan for secrets in messages and files,** with DLP rules for known token formats ([DLP & Information Protection](/books/workplace-and-collaboration/dlp-and-information-protection) covers the tooling) and a prompt to rotate when one is posted.
 - **Join the token-format ecosystems.** GitHub's secret scanning recognizes Slack API tokens and incoming webhook URLs, and Atlassian API tokens, among its supported patterns; a vendor that issues tokens in a recognizable format and accepts revocation reports from scanners gets leaked tokens revoked within minutes of a public push.
 - **Rotate after any incident,** including secrets that only passed through the compromised mail or chat, as Microsoft did with its customers.
 
@@ -117,11 +117,11 @@ The Confluence advisories are the self-hosted version of the same story. In each
 - **CVE-2023-22518** (October 31, 2023): improper authorization letting an unauthenticated attacker reset Confluence and create an administrator, raised to CVSS 10 on November 6 after Atlassian observed active exploits and ransomware.
 - **CVE-2023-22527** (January 16, 2024): template injection giving unauthenticated code execution on out-of-date 8.x versions.
 
-The joint advisory's response guidance is worth adopting for any self-hosted collaboration server: patch immediately or take the server off untrusted networks; if compromise is suspected, assume the attacker has full administrative access, collect artifacts, quarantine, issue new credentials and reimage, because removing malicious accounts alone may not remove persistence. The general practice of patching by exploitation risk rather than score is the playbook's [Prioritize by Risk, Not Score](/docs/security/vulnerability-management#prioritize-by-risk-not-score). For a vendor, that burden on self-hosted customers is one of the costs weighed when a product moves from servers to cloud, which Migrations, Imports & Switching covers.
+The joint advisory's response guidance is worth adopting for any self-hosted collaboration server: patch immediately or take the server off untrusted networks; if compromise is suspected, assume the attacker has full administrative access, collect artifacts, quarantine, issue new credentials and reimage, because removing malicious accounts alone may not remove persistence. The general practice of patching by exploitation risk rather than score is the playbook's [Prioritize by Risk, Not Score](/docs/security/vulnerability-management#prioritize-by-risk-not-score). For a vendor, that burden on self-hosted customers is one of the costs weighed when a product moves from servers to cloud, which [Migrations, Imports & Switching](/books/workplace-and-collaboration/migrations-and-switching) covers.
 
 ## Detection
 
-The signals that would have caught each pattern above are in the platforms' own logs, if they're kept and watched:
+The signals that would have caught each pattern above are in the platforms' own logs, [if they're kept](/books/workplace-and-collaboration/audit-logs#the-2023-lesson-logging-as-a-security-baseline) and watched:
 
 - **Consent and app changes.** In Microsoft 365, the "Consent to application" audit activity, with `IsAdminConsent` true for tenant-wide grants; new app registrations and credentials; apps granted mailbox-wide roles.
 - **Sign-in anomalies.** Device code sign-ins, sign-ins from new devices or networks, anomalous token detections, and password spray patterns. Microsoft notes that Midnight Blizzard's residential proxies made IP-based indicators "infeasible," so behavioral detections matter more than IP lists.
@@ -145,13 +145,12 @@ A compromise in a collaboration tenant follows the playbook's [Incident Response
 
 ## How to Build It
 
-The vendor builds the controls and the response surface the customer's admins use. Audit events themselves belong to Audit Logs; this chapter adds alerts, incidents, response actions and app-grant facts to the core data model in The Workplace Software Business:
+The vendor builds the controls and the response surface the customer's admins use. Audit events themselves belong to [Audit Logs](/books/workplace-and-collaboration/audit-logs); this chapter adds alerts, incidents, response actions and app-grant facts to the core data model in [The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model):
 
 ```sql
+-- consent_kind and the publisher's verification come from Apps & Marketplaces;
+-- approved_by (the admin who granted it) and api_tokens.revoked_at are core
 ALTER TABLE app_installations
-  ADD COLUMN consent_type     TEXT NOT NULL DEFAULT 'admin' CHECK (consent_type IN ('user', 'admin')),
-  ADD COLUMN granted_by       UUID REFERENCES members (id),
-  ADD COLUMN publisher_verified BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN risk_level       TEXT CHECK (risk_level IN ('low', 'medium', 'high', 'critical')),
   ADD COLUMN disabled_at      TIMESTAMPTZ,    -- disabled, not deleted, so it can't be re-consented
   ADD COLUMN last_used_at     TIMESTAMPTZ;
@@ -159,7 +158,6 @@ ALTER TABLE app_installations
 ALTER TABLE api_tokens
   ADD COLUMN bound_to         JSONB,          -- {"network": "...", "device_id": "..."} when bound
   ADD COLUMN last_used_ip     INET,
-  ADD COLUMN revoked_at       TIMESTAMPTZ,
   ADD COLUMN revoked_reason   TEXT CHECK (revoked_reason IN ('user', 'admin', 'incident',
                                 'leak_report', 'expired', 'app_disabled'));
 
@@ -219,14 +217,15 @@ The question an admin asks first in an app-abuse incident, as a query:
 
 ```sql
 -- Apps holding tenant-wide or high-risk access, who granted it, and whether they're still used
-SELECT ai.id, a.name, ai.consent_type, ai.granted_by, ai.publisher_verified, ai.risk_level,
+SELECT ai.id, a.name, ai.consent_kind, ai.approved_by,
+       a.publisher_verified_at IS NOT NULL AS publisher_verified, ai.risk_level,
        ai.last_used_at, array_agg(DISTINCT t.scopes) AS scopes
 FROM app_installations ai
 JOIN apps a ON a.id = ai.app_id
 LEFT JOIN api_tokens t ON t.app_installation_id = ai.id AND t.revoked_at IS NULL
 WHERE ai.workspace_id = $1
   AND ai.disabled_at IS NULL
-  AND (ai.consent_type = 'admin' OR ai.risk_level IN ('high', 'critical'))
+  AND (ai.consent_kind = 'admin' OR ai.risk_level IN ('high', 'critical'))
 GROUP BY ai.id, a.name
 ORDER BY ai.risk_level DESC NULLS LAST, ai.last_used_at DESC NULLS LAST;
 ```

@@ -12,7 +12,7 @@ Workplace chat looks like consumer chat: a sidebar of channels, a box to type in
 
 The other hard part is that the products disagree about the basic shape of a conversation. Slack hangs threads off messages in a channel; Teams started with posts and replies and added a chat-like threads layout; Google Chat moved every new space to in-line threads in 2023; Zulip makes every message carry a topic; Matrix models a room as a replicated event graph with threads as a relation. Each shape changes what "unread" means, what a notification is for, and what an export looks like. This chapter covers the conversation models, the container types (channels, private and shared channels, DMs and group chats), the work surfaces attached to them (canvases, lists, huddles), the admin rules for edits, deletes and archiving, and the data model that holds it all.
 
-The generic real-time and storage mechanics (gateways, sharding by channel, time-ordered ids, tombstones) are in the User-Generated Platforms volume's [Real-Time Chat](/books/user-generated-platforms/real-time-chat), and the inversion this book is built on is stated there in [Workplace Chat Inverts the Duties](/books/user-generated-platforms/real-time-chat#workplace-chat-inverts-the-duties). How the workplace vendors run chat at scale is the next chapter, [Chat at Scale](/books/workplace-and-collaboration/chat-architecture); mentions, presence and do-not-disturb are [Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention). Guests and channels shared between two organizations are the Guests & Cross-Org Collaboration chapter; what a retention policy or legal hold does to a deleted message is the Retention & Legal Hold chapter.
+The generic real-time and storage mechanics (gateways, sharding by channel, time-ordered ids, tombstones) are in the User-Generated Platforms volume's [Real-Time Chat](/books/user-generated-platforms/real-time-chat), and the inversion this book is built on is stated there in [Workplace Chat Inverts the Duties](/books/user-generated-platforms/real-time-chat#workplace-chat-inverts-the-duties). How the workplace vendors run chat at scale is the next chapter, [Chat at Scale](/books/workplace-and-collaboration/chat-architecture); mentions, presence and do-not-disturb are [Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention). Guests and channels shared between two organizations are the [Guests & Cross-Org Collaboration](/books/workplace-and-collaboration/guests-and-external-collaboration) chapter; what a retention policy or legal hold does to a deleted message is the [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold) chapter.
 
 ## How the Platforms Do It
 
@@ -81,7 +81,7 @@ Every product distinguishes channels anyone in the workspace can find and join f
 | Moderation | Yes | No | No |
 | Bots, connectors and messaging extensions | Yes | No | No |
 
-The table shows the general rule: **each step away from "everyone in the container can see it" costs features**, because files, apps, compliance and search were built for the simple case. Private and shared channels each get their own SharePoint site because their files need different permissions from the team's. Slack draws the same line between workspace channels and Slack Connect channels, where two organizations' policies meet; that's the Guests & Cross-Org Collaboration chapter.
+The table shows the general rule: **each step away from "everyone in the container can see it" costs features**, because files, apps, compliance and search were built for the simple case. Private and shared channels each get their own SharePoint site because their files need different permissions from the team's. Slack draws the same line between workspace channels and Slack Connect channels, where two organizations' policies meet; that's the [Guests & Cross-Org Collaboration](/books/workplace-and-collaboration/guests-and-external-collaboration#trust-between-two-admins) chapter.
 
 ### Direct Messages and Group Chats
 
@@ -91,15 +91,15 @@ Teams also lets admins control whether users can delete a whole chat from their 
 
 ### Membership Is Not Permission
 
-A channel's membership list and its permission grants are different things. Membership drives notifications, unread state and the sidebar; permission decides who may read. Public channels can be read by non-members (search, previews, joining), private channels only by members, and admins may read content without being members at all, through compliance tools rather than the chat client. I keep membership in its own table and permissions in the book's `grants`, so a member leaving a public channel stops notifications without changing who can read it, and a compliance export reads through grants, not membership. The general model is in [Authorization](/docs/security/authorization); this book's version is the Permissions & Sharing chapter.
+A channel's membership list and its permission grants are different things. Membership drives notifications, unread state and the sidebar; permission decides who may read. Public channels can be read by non-members (search, previews, joining), private channels only by members, and admins may read content without being members at all, through compliance tools rather than the chat client. I keep membership in its own table and permissions in the book's `grants`, so a member leaving a public channel stops notifications without changing who can read it, and a compliance export reads through grants, not membership. The general model is in [Authorization](/docs/security/authorization); this book's version is the [Permissions & Sharing](/books/workplace-and-collaboration/permissions-and-sharing) chapter.
 
 ## Canvases, Lists and Huddles
 
 Chat products have absorbed adjacent tools so a channel can hold the documents, trackers and calls that belong to its work.
 
 - **Canvases.** A Slack canvas is "a surface built into Slack where you can create and share fully-formatted content," either standalone (shared into conversations later) or attached to a channel or DM as a tab that can open by default. Canvases are on paid plans; editors and commenters are distinct permissions, view-only users can request access, and mentions notify only people who already have access. A canvas is a document with its own grants living inside a chat container, which is exactly the place permission bugs breed.
-- **Lists.** Slack lists track work with fields (completion, name, assignee, due date by default, plus custom fields), items and subtasks, with a dedicated message thread on each item that travels with it. Pro and Business+ lists hold up to 1,000 items and subtasks, Enterprise Grid up to 5,000. A list is a small work-item tracker; the Work Items, Hierarchies & Fields chapter covers the full version.
-- **Huddles.** Huddles are informal calls started in any channel or DM, with video, screen sharing, a thread for notes, links and files, and a canvas for meeting notes. The free plan allows two participants; paid plans allow up to 50, with 25 on video at once and two people sharing screens. The media mechanics are the Meetings & Video chapter.
+- **Lists.** Slack lists track work with fields (completion, name, assignee, due date by default, plus custom fields), items and subtasks, with a dedicated message thread on each item that travels with it. Pro and Business+ lists hold up to 1,000 items and subtasks, Enterprise Grid up to 5,000. A list is a small work-item tracker; the [Work Items, Hierarchies & Fields](/books/workplace-and-collaboration/work-items-and-fields) chapter covers the full version.
+- **Huddles.** Huddles are informal calls started in any channel or DM, with video, screen sharing, a thread for notes, links and files, and a canvas for meeting notes. The free plan allows two participants; paid plans allow up to 50, with 25 on video at once and two people sharing screens. The media mechanics are the [Meetings & Video](/books/workplace-and-collaboration/meetings-and-video) chapter.
 - **Teams tabs and Loop components** play the same role in Teams: apps and documents pinned to a channel, with files stored in the channel's SharePoint folder or site.
 
 Each absorbed tool creates a second object model inside the chat container. The rule that keeps it manageable: **the attached object has its own item kind and its own grants, defaulting to the container's members**, and retention, export and search treat it as its own item, not as a message.
@@ -117,7 +117,7 @@ The pattern across both vendors:
 - **Edit and delete are separate permissions**, each set by admin policy at the tenant (or org) level, with narrower scopes allowed where the policy permits.
 - **Time windows bound edits**, because an edit made a week later changes a record people have already relied on.
 - **Moderator deletes are a role**, not a side effect of being an owner; Teams makes "owners can delete others' messages" its own setting.
-- **What the client shows is not what is retained.** Deletion from view is immediate; deletion from the record follows retention and holds ([Edits, Deletes and Retention](/books/user-generated-platforms/real-time-chat#edits-deletes-and-retention) describes the consumer version; the workplace version is the Retention & Legal Hold chapter).
+- **What the client shows is not what is retained.** Deletion from view is immediate; deletion from the record follows retention and holds ([Edits, Deletes and Retention](/books/user-generated-platforms/real-time-chat#edits-deletes-and-retention) describes the consumer version; the workplace version is the [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold) chapter).
 
 My default for a new product: edits allowed for a configurable window (default unlimited, as both leading vendors default to permissive), deletes allowed for authors, edit history kept as item versions regardless of what the client shows, and every setting expressed as a tenant policy with an audit event on change.
 
@@ -127,7 +127,7 @@ The small features carry policy too.
 
 - **Channel-wide mentions.** Slack's `@channel` notifies every member, `@here` only active ones, and `@everyone` only works in the general channel; channels with at least six members ask for confirmation before sending one, owners and admins can restrict who may use them, and in Enterprise organizations channels of 10,000 members or more allow them only for owners and admins. Teams blocks team and channel mentions in teams over 10,000 members. Notification semantics are in [Notifications, Presence & Attention](/books/workplace-and-collaboration/notifications-and-attention#what-triggers-a-notification).
 - **Reactions and custom emoji.** Reactions are cheap metadata but they're also acknowledgments ("read and agreed"). Teams makes uploading and deleting custom emoji messaging-policy settings (upload on by default, delete off except for admins), and Teams retention for messages explicitly excludes reactions from others. If reactions matter as acknowledgments in a regulated setting, the record has to keep them deliberately.
-- **Read receipts.** Teams shows read receipts in one-to-one and group chats of 20 or fewer, and admins choose user-controlled, on for everyone, or off for everyone; read receipts aren't captured in eDiscovery reporting. A read receipt is an employee-monitoring signal as much as a convenience, which is why it's an admin decision (the Employee Monitoring & Privacy chapter).
+- **Read receipts.** Teams shows read receipts in one-to-one and group chats of 20 or fewer, and admins choose user-controlled, on for everyone, or off for everyone; read receipts aren't captured in eDiscovery reporting. A read receipt is an employee-monitoring signal as much as a convenience, which is why it's an admin decision (the [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy) chapter).
 - **Pins and bookmarks.** A pin elevates a message within a channel; a bookmark or saved item is personal. Pins are channel state (who pinned what, when), bookmarks are per-member state, and both point at items rather than copying them.
 
 ## Channel Management and Archiving
@@ -162,7 +162,7 @@ The numbers are less important than the pattern: limits are set where a containe
 
 ## How to Build It
 
-The chapter's additions to the core model. A channel is a `containers` row with `kind = 'channel'` plus a kind table; a DM or group chat is the same with its own kinds; a message is an `items` row with `kind = 'message'` plus the `messages` kind table; edits are `item_versions`.
+The chapter's additions to the [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model). A channel is a `containers` row with `kind = 'channel'` plus a kind table; a DM or group chat is the same with its own kinds; a message is an `items` row with `kind = 'message'` plus the `messages` kind table; edits are `item_versions`.
 
 ```sql
 CREATE TABLE channels (                      -- kind table for chat containers
@@ -264,10 +264,10 @@ Notes on the sketch:
 
 - **One item per message.** Messages are `items`, so retention policies, legal holds, search, DLP and export all see them through the same table as pages and files. At scale the `messages` kind table lives in a store partitioned by channel and time, as [Message Storage at Scale](/books/user-generated-platforms/real-time-chat#message-storage-at-scale) describes; `items` keeps the identity and the tenant.
 - **Edits write versions.** Every edit writes an `item_versions` row with the previous body, whatever the client shows. Whether a member can see edit history is a display setting; whether the history exists is retention's decision.
-- **Removal is a state, not a delete.** `removed_at` hides the message; the retention job (owned by the Retention & Legal Hold chapter) decides when the body and versions are purged, after checking `legal_holds`.
+- **Removal is a state, not a delete.** `removed_at` hides the message; the retention job (owned by the [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold#how-to-build-it) chapter) decides when the body and versions are purged, after checking `legal_holds`.
 - **The edit check is a policy lookup.** On edit, resolve the member's effective `messaging_policies` row (direct assignment, then group assignments by rank, then the workspace default, with `locked_by_org` overriding) and compare `NOW() - items.created_at` with `edit_window`.
 - **Thread model is per channel.** `layout` records how the channel was written; a converted channel keeps old posts as thread roots, and export renders each message by its `thread_root_id` or `topic`, not by the current layout.
-- **Shared channels need a host.** A channel visible to two organizations is stored once, in the host's workspace; the Building It Yourself chapter adds the table that records the host and the participating orgs.
+- **Shared channels need a host.** A channel visible to two organizations is stored once, in the host's workspace; the [Building It Yourself](/books/workplace-and-collaboration/collaboration-architecture#how-to-build-it) chapter adds the table that records the host and the participating orgs.
 - **Events:** `message.created`, `message.edited`, `message.removed`, `channel.archived`, `channel.deleted`, `channel_membership.changed` and `messaging_policy.changed` feed the gateway, search, notifications, compliance capture and audit.
 
 ## Auditing
@@ -276,7 +276,7 @@ Notes on the sketch:
 - **Removals with their actor kind:** author, owner, admin, retention or DLP, and for owner and admin removals, which policy permitted it.
 - **Channel lifecycle:** creation, visibility changes (public to private, sharing with another org), archive, unarchive, rename and delete, with the hold check result for deletes.
 - **Membership ranges:** who was in a channel and when, so a later question ("could she have seen this?") has an answer from the record, not the current list.
-- **Admin access to content** through compliance tools, logged as access ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)); the Audit Logs chapter covers the event catalogs vendors publish.
+- **Admin access to content** through compliance tools, logged as access ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)); the [Audit Logs](/books/workplace-and-collaboration/audit-logs) chapter covers the event catalogs vendors publish.
 
 ## What This Means for the System You Build
 

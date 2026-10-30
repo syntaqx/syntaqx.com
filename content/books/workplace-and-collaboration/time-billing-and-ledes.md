@@ -169,7 +169,7 @@ The metrics are only as good as the record underneath: recorded time with its st
 
 ## How to Build It
 
-Deltas against the book's core data model and the matter, timekeeper and rate tables in [How to Build It](/books/workplace-and-collaboration/law-firms-and-professional-services#how-to-build-it). Time and expense entries are not `items`: they're financial records about work, linked to the item worked on where there is one. Invoices are prefixed `legal_` so they aren't confused with the vendor's own invoices to its customers, which the Part 11 chapter Billing, Seats & Resellers covers.
+Deltas against the book's [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) and the matter, timekeeper and rate tables in [How to Build It](/books/workplace-and-collaboration/law-firms-and-professional-services#how-to-build-it). Time and expense entries are not `items`: they're financial records about work, linked to the item worked on where there is one. Invoices are prefixed `legal_` so they aren't confused with the vendor's own invoices to its customers, which the Part 11 chapter [Billing, Seats & Resellers](/books/workplace-and-collaboration/billing-and-seat-management) covers.
 
 ```sql
 CREATE TABLE utbms_codes (

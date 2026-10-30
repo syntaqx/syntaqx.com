@@ -267,7 +267,7 @@ Platforms where users supply the content or the inventory borrow their words fro
 - **Vote:** one account's judgment of one item (up, down or withdrawn), stored as a row so a later finding can discount it and recompute scores and karma; on Reddit every item starts with its author's upvote ([Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting#votes-and-karma)).
 - **Vote discount:** zeroing a set of votes found to be manipulated and recomputing scores and karma, possible because votes are rows and scores are derived ([Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting#vote-manipulation)).
 - **Votes per view:** votes divided by discounted views, a better quality signal for gallery ranking than raw votes ([Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting#viral-galleries)).
-- **Workplace chat:** chat such as Slack or Microsoft Teams that runs the community architecture with the duties inverted: the customer organization controls the data, moderates, sets retention and legal holds and answers legal requests ([Real-Time Chat](/books/user-generated-platforms/real-time-chat#workplace-chat-inverts-the-duties)).
+- **Workplace chat:** chat such as Slack or Microsoft Teams that runs the community architecture with the duties inverted: the customer organization controls the data, moderates, sets retention and legal holds and answers legal requests ([Real-Time Chat](/books/user-generated-platforms/real-time-chat#workplace-chat-inverts-the-duties); in depth in [The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-inversion)).
 
 ## Media
 
