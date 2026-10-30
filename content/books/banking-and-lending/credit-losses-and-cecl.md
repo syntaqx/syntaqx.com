@@ -31,12 +31,12 @@ The allowance for credit losses is a contra-asset that reduces loans from their 
 
 - **Lifetime, from day one.** Expected credit losses over the contractual term of the asset, adjusted for expected prepayments, recorded when the asset is originated or acquired.
 - **Pools where risk is similar.** Assets with similar risk characteristics are "evaluated on a collective, or pool, basis"; loans that don't share them are evaluated individually.
-- **History, current conditions and forecasts.** The estimate starts from historical loss information, adjusted for current conditions and for "reasonable and supportable forecasts," which "may extend over the entire contractual term"; beyond that period the estimate reverts to historical loss information, immediately or on a straight-line basis.
+- **History, current conditions and forecasts.** The estimate starts from historical loss information, adjusted for current conditions and for "reasonable and supportable forecasts," which "may extend over the entire contractual term"; beyond that period the estimate reverts to historical loss information, immediately, on a straight-line basis or by "any systematic, rational method."
 - **Recoveries count.** Expected recoveries of amounts previously written off, and expected to be written off, may be included, but not above the amounts written off.
 - **Off-balance-sheet exposure.** Unfunded commitments carry an allowance (a liability) unless they are unconditionally cancellable by the issuer, which is why card lines the issuer can cancel at will carry none for their unused portion.
 - **No prescribed method.** "FASB ASC Topic 326 does not require the use of a specific loss estimation method," and the agencies expect methods consistent with the institution's size and complexity; the Federal Reserve said in 2016 that "smaller and less complex institutions" wouldn't need complex modeling techniques.
 
-**Effective dates.** SEC filers other than smaller reporting companies adopted CECL for fiscal years beginning after December 15, 2019; all other entities, including most community banks and credit unions, for fiscal years beginning after December 15, 2022. Before CECL, the incurred loss model reserved only for losses already probable. <!-- source-gap: asu-2016-13-text | secondary | ASU 2016-13 issuance date and the incurred-loss rationale from the standard itself | closes with: the FASB's ASU 2016-13 page or the codification text of ASC 326-20 opened | checked: 2026-10-29 -->
+**Effective dates.** The FASB issued ASU 2016-13 on June 16, 2016. SEC filers other than smaller reporting companies adopted CECL for fiscal years beginning after December 15, 2019; all other entities, including most community banks and credit unions, for fiscal years beginning after December 15, 2022. Before CECL, the incurred loss methodology reserved only for losses "probable of having been incurred as of the reporting date," in the agencies' words when they removed that threshold from the capital rules.
 
 ## Methods
 
@@ -45,8 +45,9 @@ The policy statement names the families an institution may use:
 - **Loss-rate methods,** including **vintage analysis** (losses tracked by origination cohort and applied to each cohort's remaining balance by age) and the **weighted-average remaining maturity (WARM)** method (an average annual loss rate times the pool's remaining life), the simplest approach the agencies recognize for smaller institutions.
 - **Probability of default and loss given default (PD/LGD),** where expected loss is the chance a loan defaults over its life times the share lost when it does, times the exposure.
 - **Discounted cash flow (DCF),** projecting each pool's contractual cash flows adjusted for defaults, recoveries and prepayments, discounted at the effective interest rate, with the allowance the shortfall from amortized cost.
+- **Roll-rate methods** and methods using **aging schedules,** which the policy statement also lists.
 
-**Roll-rate models**, common in consumer and card portfolios, apply observed monthly transitions between delinquency buckets to project which balances reach charge-off. The policy statement I opened doesn't name them; in my reading they are a loss-rate variant built on the bucket transitions collections already measures, and they're strongest over the near term, which is why they're often paired with a vintage or historical loss rate for the rest of the life. <!-- source-gap: roll-rate-cecl | missing | roll-rate models named as an acceptable CECL method by a regulator or the FASB | closes with: an interagency FAQ, OCC or Fed document, or ASC 326 implementation guidance naming roll-rate | checked: 2026-10-29 -->
+**Roll-rate models**, common in consumer and card portfolios, apply observed monthly transitions between delinquency buckets to project which balances reach charge-off. They are built on the bucket transitions collections already measures, and in my reading they're strongest over the near term, which is why they're often paired with a vintage or historical loss rate for the rest of the life.
 
 What every method shares is data the servicing system already has, if it kept it: balances by loan by month, delinquency by day, charge-offs and recoveries by loan with dates, and the origination attributes that define pools (product, vintage, risk grade, term, collateral). A lender that overwrote its delinquency status or kept balances only as current values can't build any of them.
 
@@ -248,12 +249,12 @@ The allowance is audited every year and examined at every bank exam, and the gen
 
 **Regulators and guidance**
 
-- [Federal Register: Interagency Policy Statement on Allowances for Credit Losses (June 1, 2020)](https://www.federalregister.gov/documents/full_text/html/2020/06/01/2020-10291.html), no prescribed method, the named methods, pooling, forecasts and reversion, recoveries, off-balance-sheet exposures, scaling and effective dates
+- [Federal Register: Interagency Policy Statement on Allowances for Credit Losses (June 1, 2020)](https://www.federalregister.gov/documents/full_text/html/2020/06/01/2020-10291.html), no prescribed method, the named methods, pooling, forecasts and reversion, recoveries, off-balance-sheet exposures, roll-rate and aging-schedule methods, scaling, the ASU's June 16, 2016 issuance and effective dates
 - [Federal Reserve: SR 16-12, Interagency Guidance on the New Accounting Standard on Financial Instruments, Credit Losses](https://www.federalreserve.gov/supervisionreg/srletters/sr1612.htm), smaller institutions and complex modeling
 - [Federal Reserve: SR 19-8, Frequently Asked Questions on the New Accounting Standard on Financial Instruments, Credit Losses](https://www.federalreserve.gov/supervisionreg/srletters/sr1908.htm), the interagency CECL FAQs and the deferred effective date
 - [OCC: Bulletin 2019-17, Frequently Asked Questions on the New Accounting Standard on Financial Instruments, Credit Losses](https://occ.gov/news-issuances/bulletins/2019/bulletin-2019-17.html), WARM, scalability and the collateral-dependent expedient
 - [Federal Register: Uniform Retail Credit Classification and Account Management Policy (June 12, 2000)](https://www.federalregister.gov/documents/full_text/html/2000/06/12/00-14704.html), charge-off timing by product and event
-- [Federal Register: Regulatory capital rule, implementation and transition of CECL, 84 FR 4222](https://www.federalregister.gov/api/v1/documents/2018-28281.json), the three-year phase-in of the day-one effect
+- [Federal Register: Regulatory capital rule, implementation and transition of CECL, 84 FR 4222](https://www.federalregister.gov/api/v1/documents/2018-28281.json), the three-year phase-in of the day-one effect and the incurred loss methodology's probable threshold
 - [Federal Register: Regulatory capital rule, revised transition of CECL, 85 FR 61577](https://www.federalregister.gov/api/v1/documents/2020-19782.json), the two-year delay and three-year phase-in for 2020 adopters
 
 **Accounting standards**

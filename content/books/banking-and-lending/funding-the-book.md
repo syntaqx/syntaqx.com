@@ -19,12 +19,12 @@ As of October 2026, from the latest annual filings and quarterly releases:
 | --- | --- | --- | --- |
 | **Affirm** | Partner banks (Celtic Bank and Lead Bank) for substantially all US loans | "Four primary channels": warehouse credit facilities, term and revolving securitizations (including a master trust), pass-through loan sales and forward flow sales | $14.0 billion of borrowing capacity with $8.7 billion outstanding at June 30, 2026; $21.9 billion of loans sold in fiscal 2026; equity capital 4% of the total platform portfolio |
 | **BILL** (Divvy card) | Issuing banks Cross River Bank, WEX Bank and WebBank | BILL buys a 100% participation interest in every card receivable, mostly with corporate cash, partly with revolving facilities secured by the receivables | $600.0 million of facility capacity, $330.0 million drawn at June 30, 2026 |
-| **Enova** | Its own state licenses and five bank partner programs | Debt facilities and securitizations | $5.38 billion of long-term debt and $1.3 billion of liquidity, including available facility capacity, at September 30, 2026 |
+| **Enova** | Its own subsidiaries, licensed where required, and programs with five bank partners | Debt facilities and securitizations | $5.38 billion of long-term debt and $1.3 billion of liquidity, including available facility capacity, at September 30, 2026 |
 | **Happen** (formerly LendingClub) | Its own national bank | Deposits for loans it keeps; whole-loan sales and its Structured Program for loans it sells | About $8 billion of loans sold under the Structured Program since launch, with Happen keeping the senior securities |
 | **Pagaya** | Partners (banks, marketplaces, other lenders) originate with Pagaya's models | Special purpose entities that Pagaya administers buy pools from partners and fund them with securitizations, forward flow and private placements | Holds retained securitization interests that exceed 40% of its assets excluding cash and government securities |
 | **Upstart** | More than 100 bank and credit union partners | 2025 originations: 64% bought by institutional investors, 26% kept by lending partners, 10% on its balance sheet | More than 50% of funding through committed capital, under which Upstart shares in loan performance |
 
-Three patterns stand out. **Nobody funds a large book one way.** Affirm runs four channels, Upstart three, and even Happen, a bank, sells most of what it makes. **The originator and the funder are usually different companies:** a partner bank makes the loan, holds it for days, and sells it or a participation in it to the program or its investors. **Selling doesn't end the exposure.** Affirm's loss-sharing with loan buyers is capped "based on a percentage of the principal balance of loans sold," Upstart shares "some of the risk, including the upside" with committed capital, Pagaya holds the risk retention pieces of its deals, and BILL "bears full credit risk" on receivables a bank originated.
+Three patterns stand out. **Nobody funds a large book one way.** Affirm runs four channels, Upstart three, and even Happen, a bank, sells most of what it makes. **The originator and the funder are usually different companies:** a partner bank makes the loan, holds it for days, and sells it or a participation in it to the program or its investors. **Selling doesn't end the exposure.** Affirm's loss-sharing with loan buyers is capped "based on a percentage of the principal balance of loans sold," Upstart shares "some of the risk, including the upside" with committed capital, Pagaya holds the risk retention pieces of its deals, and BILL says "we bear the entire credit risk" on receivables a bank originated.
 
 ## The Funding Sources
 
@@ -73,7 +73,7 @@ The next month $2,500,000 more of eligible loans roll past 30 days, $6,000,000 o
 
 ## Forward Flow and Whole-Loan Sales
 
-A **forward flow** agreement commits an investor (a bank, an insurer, a private credit fund) to buy loans as they're originated, up to a volume over a term, at a price set by formula (par plus or minus a premium, or a price that resets with interest rates). The seller usually keeps servicing and earns a fee for it; Affirm "generally does not sell servicing rights" and its servicing income rose 44% in fiscal 2026 on $9.1 billion of average principal held by third parties and off-balance-sheet securitizations. A **whole-loan sale** is the same transfer done one pool at a time; a **pass-through** program sells the loans into a trust that issues certificates, which Upstart describes as "sponsored by certain financial institutions" and issued "from an issuer trust."
+A **forward flow** agreement commits an investor (a bank, an insurer, a private credit fund) to buy loans as they're originated, up to a volume over a term, at a price set by formula (par plus or minus a premium, or a price that resets with interest rates). The seller usually keeps servicing and earns a fee for it; Affirm says "we do not sell the servicing rights on any of the loans" it sells, and its servicing income rose 44% in fiscal 2026 on $9.1 billion of average principal held by third parties and off-balance-sheet securitizations. A **whole-loan sale** is the same transfer done one pool at a time; a **pass-through** program sells the loans into a trust that issues certificates, which Upstart describes as "sponsored by certain financial institutions" and issued "from an issuer trust."
 
 What the agreement creates in the data:
 
@@ -81,9 +81,9 @@ What the agreement creates in the data:
 - **A price and a settlement schedule.** The buyer pays at settlement (daily, weekly or monthly), and the gain or loss on sale is the price less the loan's carrying amount ([Gain on Sale](/books/banking-and-lending/banking-business#gain-on-sale)).
 - **Representations and warranties.** The seller promises each loan met the criteria and the law when sold; a loan that didn't must be repurchased at the agreed price, usually par plus accrued interest. A repurchase is a reverse transfer with its own price and reason.
 - **Loss-sharing or performance fees.** Some agreements make the seller pay buyers when losses exceed expectations, as Affirm's do up to a cap, or share upside and downside, as Upstart's committed capital does. The seller carries a contingent liability that must be measured from the sold loans' performance, so their servicing data stays as complete as for loans it owns.
-- **A repricing clause.** Affirm says some loan sale agreements "reprice periodically based on interest rates," so the price a loan sells for depends on the date it is allocated, not the date it was approved.
+- **A repricing clause.** Affirm says certain of its loan sale agreements "are repriced on a recurring basis using a mechanism tied to interest rates," so the price a loan sells for depends on the date it is allocated, not the date it was approved.
 
-Bank partnerships are forward flow with a bank on the selling side. OppFi's 10-K describes partner banks that "use their own capital to originate loans" and "generally hold them for about two to three days," after which OppFi acquires participation rights; Upstart's partners keep some loans and sell the rest through its marketplace. How long the bank holds the loan, what it keeps and who carries the loss are the facts a true lender challenge examines ([Lender Licensing & Bank Partnerships](/books/banking-and-lending/lender-licensing#true-lender-exposure)).
+Bank partnerships are forward flow with a bank on the selling side. OppFi's 10-K describes partner banks that "use their own capital to originate loans" and hold them "for typically two to three days following origination," with OppFi acquiring participation rights in them; Upstart's partners keep some loans and sell the rest through its marketplace. How long the bank holds the loan, what it keeps and who carries the loss are the facts a true lender challenge examines ([Lender Licensing & Bank Partnerships](/books/banking-and-lending/lender-licensing#true-lender-exposure)).
 
 ## Participations
 
@@ -93,7 +93,7 @@ The participation is why one card purchase has two owners in the data: the issui
 
 ## Securitization
 
-In a securitization the lender sells a pool of loans to a bankruptcy-remote special purpose entity, which issues notes in tranches: senior notes paid first, mezzanine next, and a residual (subordinated certificates or equity) that absorbs losses first. Upstart describes selling pools "to a bankruptcy-remote special purpose entity" that issues "tranched notes and subordinated certificates"; Affirm's structures include "term, amortizing, revolving, and variable funding" deals, and its retained residual trust certificates "absorb credit losses first." Each month collections run through a **waterfall** (servicing fee, senior interest, senior principal, junior classes, reserve account top-up, then the residual), and performance triggers like a warehouse's can divert cash from the residual to the senior notes.
+In a securitization the lender sells a pool of loans to a bankruptcy-remote special purpose entity, which issues notes in tranches: senior notes paid first, mezzanine next, and a residual (subordinated certificates or equity) that absorbs losses first. Upstart describes selling pools "to a bankruptcy-remote special purpose entity" that issues "tranched asset-backed notes and subordinated certificates"; Affirm's structures are "a combination of term, amortizing, revolving and variable funding structures," and its retained residual trust certificates "are first to absorb credit losses." Each month collections run through a **waterfall** (servicing fee, senior interest, senior principal, junior classes, reserve account top-up, then the residual), and performance triggers like a warehouse's can divert cash from the residual to the senior notes.
 
 Three rules shape the records:
 
@@ -107,7 +107,7 @@ When a loan is approved, something decides which capital takes it: the balance s
 
 1. **Eligibility.** Each vehicle's criteria, evaluated on the loan's attributes as approved: product, term, rate, grade, amount, state, the originating bank, and anything the buyer excludes.
 2. **Capacity.** What each vehicle can still take today: facility availability from the latest borrowing base, a forward flow buyer's remaining monthly commitment, a securitization's target pool size.
-3. **Concentration.** Whether adding the loan pushes any limit over: a state cap in the warehouse, a grade mix in a buyer's agreement, a merchant concentration (Affirm's top five merchants were 44% of GMV, which every funder will cap).
+3. **Concentration.** Whether adding the loan pushes any limit over: a state cap in the warehouse, a grade mix in a buyer's agreement, a merchant concentration (Affirm's top five merchants and platform partners were 44% of its fiscal 2026 GMV, the kind of concentration every funder caps).
 4. **Priority.** The lender's preference among the eligible vehicles with room, usually by cost and by contract (a committed buyer that must receive its volume before an uncommitted one).
 
 The allocation is a decision record like a credit decision: the loan, the vehicle, the rule version, the vehicles considered and why each was or wasn't eligible, and the time ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). It changes later: a warehouse loan moves into a securitization, an ineligible loan is repurchased out of a sold pool, a forward flow buyer's commitment ends. Each move is a new allocation with a validity range, never an update, so the question "who funded this loan on March 31" has one answer from the records.
@@ -237,17 +237,17 @@ The borrowing base is a query over today's allocations and loan status, written 
 
 ```sql
 SELECT a.funding_vehicle_id,
-       SUM(l.principal_outstanding)                                    AS pledged,
-       SUM(l.principal_outstanding) FILTER (WHERE l.days_past_due >= 30) AS ineligible_dpd,
-       SUM(l.principal_outstanding) FILTER (WHERE l.days_past_due < 30)  AS eligible_before_caps
+       SUM(d.principal_balance)                                     AS pledged,
+       SUM(d.principal_balance) FILTER (WHERE d.days_past_due >= 30) AS ineligible_dpd,
+       SUM(d.principal_balance) FILTER (WHERE d.days_past_due < 30)  AS eligible_before_caps
 FROM loan_funding_allocations a
-JOIN loan_status_daily l ON l.account_id = a.account_id AND l.business_date = :as_of
+JOIN delinquency_snapshots d ON d.account_id = a.account_id AND d.business_date = :as_of
 WHERE a.funding_vehicle_id = :vehicle
   AND a.valid_during @> CAST(:as_of AS DATE)
 GROUP BY a.funding_vehicle_id;
 ```
 
-`loan_status_daily` stands for whatever daily projection the servicer keeps of principal outstanding and days past due (Loan Servicing builds it from the loan ledger); concentration excess is computed on the eligible set afterward, by state, grade and term, against the `concentration` rules.
+`delinquency_snapshots` is the nightly per-loan projection of principal and days past due from [Collections & Recovery](/books/banking-and-lending/collections#how-to-build-it), built from the loan ledger; concentration excess is computed on the eligible set afterward, by state, grade and term, against the `concentration` rules.
 
 Design notes:
 
@@ -292,8 +292,9 @@ The audit store design is in [Audit Trails](/docs/architecture/audit-trails#what
 
 **Filings**
 
-- [Affirm Holdings: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/0001820953/000162828026059279/afrm-20260630.htm), the four funding channels, committed and uncommitted facilities, one-to-three-year terms, $14.0 billion of capacity and $8.7 billion outstanding, US warehouses of $6.1 billion with $2.4 billion drawn, $5.3 billion available, $21.9 billion of loans sold, equity capital at 4% of the platform portfolio, capped loss-sharing, ineligible loan repurchases, default-rate covenants, repricing loan sales, retained residual certificates, servicing income and third-party balances
+- [Affirm Holdings: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/0001820953/000162828026059279/afrm-20260630.htm), the four funding channels, committed and uncommitted facilities, one-to-three-year terms, $14.0 billion of capacity and $8.7 billion outstanding, US warehouses of $6.1 billion with $2.4 billion drawn, $5.3 billion available, $21.9 billion of loans sold, equity capital at 4% of the platform portfolio, capped loss-sharing, ineligible loan repurchases, default-rate covenants, repricing loan sales, retained residual certificates, servicing income and third-party balances, top-five partner GMV concentration
 - [BILL Holdings: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/0001786352/000162828026058238/bill-20260630.htm), the issuing banks, the 100% participation interest and purchase obligation secured by cash deposits, $600.0 million of facility capacity with $330.0 million drawn, receivables as collateral and the limited guarantee
+- [Enova International: Annual report on Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1529864/000119312526060461/enva-20251231.htm), programs with five bank partners and its own licensed subsidiaries
 - [Enova International: Third quarter 2026 results (Form 8-K exhibit 99.1, October 22, 2026)](https://www.sec.gov/Archives/edgar/data/1529864/000119312526428941/enva-ex99_1.htm), long-term debt and liquidity at September 30, 2026
 - [Happen (formerly LendingClub): Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1409970/000140997026000018/lc-20251231.htm), marketplace sales and the Structured Program, about $8 billion sold, senior securities retained
 - [OppFi: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1818502/000181850226000019/opfi-20251231.htm), partner banks originating with their own capital, holding loans two to three days before OppFi acquires participation rights
