@@ -13,7 +13,7 @@ Every serious workplace vendor encrypts customer data in transit and at rest. Th
 The answers form a ladder:
 
 1. **Provider-managed keys.** The vendor generates, stores and uses every key. Protects against stolen disks and storage-layer mistakes; the vendor can read everything.
-2. **Customer-managed root keys** (Slack EKM, Atlassian CMK, Microsoft Customer Key, Box KeySafe). The vendor's data keys are wrapped by a key in the customer's own cloud KMS. The service still decrypts to work, but only while the customer allows it, and every use can be logged in the customer's account. Revoking the key cuts the service off.
+2. **Customer-managed root keys** (Slack EKM, Atlassian CMK, Microsoft Customer Key, Zoom CMK, Box KeySafe). The vendor's data keys are wrapped by a key in the customer's own cloud KMS. The service still decrypts to work, but only while the customer allows it, and every use can be logged in the customer's account. Revoking the key cuts the service off.
 3. **Client-side or double-key encryption** (Google Workspace CSE, Microsoft Double Key Encryption). Content is encrypted on the user's device with a key the vendor never holds. The service stores ciphertext and can't search, scan, preview or summarize it.
 4. **End-to-end encryption** (Zoom's E2EE meetings). Keys are generated on participants' devices; the server relays what it can't read.
 
@@ -31,6 +31,7 @@ As of October 2026, from each vendor's documentation:
 | **Microsoft** | Double Key Encryption (DKE) | One key in the customer's DKE service, one in Azure | Office documents and emails labeled with a DKE sensitivity label | No eDiscovery, content search and indexing, mail-flow malware and spam inspection, Office web apps or co-authoring, Copilot; not for Teams meetings and chat |
 | **Google Workspace** | Client-side encryption (CSE), in Frontline Plus, Enterprise Plus, Education Standard and Education Plus | A key service the customer chooses (Cloud HSM for Google Workspace, a partner, or its own built on the CSE API), with access through the customer's identity provider | Drive, Docs, Sheets, Slides, Gmail, Calendar and Meet content | Vault can retain and export but not search content or preview; no phishing or malware scanning; DLP sees only metadata; mobile Docs editors unsupported; Gmail delegation and aliases unavailable |
 | **Zoom** | End-to-end encrypted meetings | Participants' devices | Meeting audio, video and content | Disables cloud recording, live transcription, live streaming, AI features, chat before and after, polls, Zoom Apps, Whiteboard; app clients only; 1,000 participants |
+| **Zoom** | Customer Managed Key (CMK), for Enterprise accounts, per licensed user | AWS KMS, Azure Key Vault or Oracle OCI Vault | Cloud recordings, transcripts and AI summaries, Zoom Phone recordings and voicemail, chat messages and files, compliance archives, whiteboards, Canvas and notes, Contact Center and other services | Search metadata, reactions and temporary processing data aren't covered; data from before enrollment stays under Zoom's key; a user without a CMK license uses Zoom's key; if the key is unreachable, key-dependent functions fail unless the customer enables a fallback to a Zoom-provided key |
 | **Box** | KeySafe | AWS KMS Custom Key Store or GCP Cloud HSM KMS | File content keys wrapped by the customer's key | Key use recorded in an unchangeable log with reason codes tied to Box events |
 
 Three patterns run through the table:
@@ -59,7 +60,7 @@ The lesson is that crypto-shredding in a multi-tenant SaaS needs keys scoped to 
 
 ### Availability engineering
 
-A customer key the vendor can't reach is an outage. Microsoft's design shows the engineering it takes: each data encryption policy uses two keys in separate Azure Key Vaults (in different regions for SharePoint), plus an availability key Microsoft protects for recovery; keys can be soft-deleted and recovered for up to 90 days; multi-geo tenants need one SharePoint policy per geo. Slack and Atlassian rely on AWS KMS durability in the customer's account. Box cites AWS key storage "designed with 99.99999999% durability" across availability zones.
+A customer key the vendor can't reach is an outage. Microsoft's design shows the engineering it takes: each data encryption policy uses two keys in separate Azure Key Vaults (in different regions for SharePoint), plus an availability key Microsoft protects for recovery; keys can be soft-deleted and recovered for up to 90 days; multi-geo tenants need one SharePoint policy per geo. Slack and Atlassian rely on AWS KMS durability in the customer's account. Zoom makes the availability trade an explicit customer setting: without its fallback option, content "will not be stored" while the key is unavailable; with it, Zoom encrypts with a backup key it provides and re-encrypts under the customer's key once it returns, which trades the customer's switch for continuity. Box cites AWS key storage "designed with 99.99999999% durability" across availability zones.
 
 What the vendor must still build: caching of unwrapped data keys with a bounded lifetime (so a brief KMS blip doesn't take the product down, and a revocation still takes effect within a known time), clear errors when the customer's KMS denies access, and a status page distinction between "vendor outage" and "customer key unavailable."
 
@@ -103,7 +104,7 @@ A builder adding AI to a product with customer keys must treat embeddings and ca
 
 ## Shared Spaces
 
-When two organizations share a channel, whose key encrypts it? Slack's answer is both: each organization's messages are encrypted with its own EKM keys, and the shared search index is duplicated per customer. That preserves each admin's switch over its own people's content, which is the inversion applied to cryptography: Contoso's revocation makes Contoso's messages unreadable in the shared channel without touching Fabrikam's. A design that encrypts a shared container with the host's key hands the host a switch over the guest's content, which no guest's security team will accept.
+When two organizations share a channel, whose key encrypts it? Slack's answer is both: each organization's messages are encrypted with its own EKM keys, and the shared search index is duplicated per customer. That preserves each admin's switch over its own people's content, which is the inversion applied to cryptography: Contoso's revocation makes Contoso's messages unreadable in the shared channel without touching Fabrikam's. Zoom splits the answer: a chat between users of two organizations uses both organizations' keys when both are CMK-licensed, but "an encrypted channel is encrypted using the owner's key, even if external participation is allowed." A design that encrypts a shared container with the host's key hands the host a switch over the guest's content, which a guest's security team should know before it joins.
 
 ## How to Build It
 
@@ -209,6 +210,8 @@ Notes on the sketch:
 - [Google Workspace Admin Help: Client-side encryption user experience overview](https://knowledge.workspace.google.com/admin/security/client-side-encryption-user-experience-overview), per-app limitations
 - [Zoom Support: End-to-end encryption for meetings (KB0065408)](https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0065408), key generation on participants' machines, disabled features, client requirements, the 1,000-participant limit, breakout room keys and post-quantum E2EE
 - [Zoom Support: Chat legal hold (KB0057908)](https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0057908), Advanced Chat Encryption disabled as a requirement
+- [Zoom Support: Content protected by Customer Managed Key (KB0057898)](https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0057898), services covered, chat rules for licensed, unlicensed and cross-organization users, owner-key channels, and what isn't encrypted with the customer's key
+- [Zoom Support: Using Customer Managed Key with OCI Vault (KB0057906)](https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0057906), supported KMS providers, Enterprise account and license prerequisites, behavior when the key is unreachable, the fallback key and pre-enrollment data
 - [Box: KeySafe](https://www.box.com/security/keysafe), AWS KMS Custom Key Store and GCP Cloud HSM KMS, key wrapping, the unchangeable key-use log with reason codes, cutting off access and key durability
 
 **Regulators**
