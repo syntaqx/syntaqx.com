@@ -25,6 +25,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Infrastructure as Code": "Infra as Code",
   "Market Rules and Compliance": "Compliance",
   "Marketing and Customers": "Marketing",
+  "Meetings and Voice": "Meetings",
   "Metering and Billing": "Metering",
   "On-Demand Delivery": "On-Demand",
   "Orders, Inventory and Fulfillment": "Fulfillment",
