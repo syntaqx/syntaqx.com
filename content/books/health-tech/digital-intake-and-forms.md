@@ -18,19 +18,19 @@ As of October 2026, from public product pages, filings and documentation:
 
 | Platform | Where patients fill it in | Write-back | Notable mechanics |
 | --- | --- | --- | --- |
-| **Phreesia** (medical) | The patient's own device at home or in the office, PhreesiaPad tablets and on-site Arrivals Kiosks | Consent forms "sent directly to the PM or EHR system" | Insurance captured at check-in and eligibility verified automatically; consents tailored by appointment type; payments at check-in; about 180 million patient visits in fiscal 2026 |
+| **Phreesia** (medical) | The patient's own device at home or in the office, PhreesiaPad tablets and on-site Arrivals Kiosks | Required forms sent "directly to the PM or EHR system" | Insurance captured at check-in and eligibility verified automatically; consents tailored by appointment type; payments at check-in; about 180 million patient visits in fiscal 2026 |
 | **NexHealth** | Online forms by link | Demographics, medications, allergies and conditions sync to structured chart fields "within seconds," plus a PDF in the document center | Dentrix (including Ascend and Enterprise), Open Dental (including Cloud) and Eaglesoft |
 | **Open Dental eClipboard** (PMS) | Tablets and patient devices, $45 per location per month | Native to the PMS | Talks to the office's eConnector on the local network |
-| **Dental Intelligence** | Online forms | For Dentrix Enterprise, a write-back service that "doesn't require Dentrix Enterprise to be open and logged in" (version 11.0.20.935 or later) | Part of its engagement product |
+| **Dental Intelligence** | Online forms | For Dentrix Enterprise, a write-back service that works "without requiring the Dentrix Enterprise program to be opened and logged in" (version 11.0.20.935 or later) | Part of its engagement product |
 | **Yapi** (dental) | Online forms | "Fully integrated with your practice management software" | Bundled with insurance verification "across 200+ insurances" |
 | **Luma Health** (medical) | "Intake, forms, consents, and payment in one checklist" | Through its EHR integrations | Eligibility checks before scheduling |
-| **Jotform** (general) | Web forms | None to a PMS | HIPAA features on Gold or Enterprise plans with a signed BAA |
+| **Jotform** (general) | Web forms | None to a PMS | HIPAA features on Gold or Enterprise plans, with a signed BAA for covered entities that enable them |
 
 The split that matters is between products that write **structured data** into the chart (NexHealth's medication and allergy fields) and those that file a **document** (a PDF of the signed form). A PDF satisfies the record-keeping need and leaves the front desk to retype the allergies; structured write-back saves the typing and takes on the risk of putting a wrong answer in the clinical record. Most mature products do both, which is the right answer.
 
 ## The Intake Packet
 
-A packet is a set of forms chosen by appointment type, patient status and location: a new adult dental patient gets demographics, insurance, medical and dental history, the notice of privacy practices acknowledgment, the financial policy and consent to treatment; a returning patient gets "has anything changed?" with last year's answers prefilled; a child gets a guardian section; a veterinary client gets a pet history and a release for vaccines. Phreesia tailors consents "by appointment type"; the same rule decides every form.
+A packet is a set of forms chosen by appointment type, patient status and location: a new adult dental patient gets demographics, insurance, medical and dental history, the notice of privacy practices acknowledgment, the financial policy and consent to treatment; a returning patient gets "has anything changed?" with last year's answers prefilled; a child gets a guardian section; a veterinary client gets a pet history and a release for vaccines. Phreesia lets practices "Customize consent forms by appointment type"; the same rule decides every form.
 
 Design points for the packet:
 

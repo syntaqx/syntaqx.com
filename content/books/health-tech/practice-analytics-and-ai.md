@@ -18,12 +18,14 @@ As of October 2026, from vendor pages:
 
 | Vendor | Analytics | AI at the front desk | AI in the visit |
 | --- | --- | --- | --- |
-| **Weave** | Not described on the AI page | AI Receptionist: answers calls, texts and website chats "24/7" with "a friendly, human-like AI voice"; captures appointment requests for staff, and for "qualified dental practice management systems" books and reschedules "right to your calendar"; hands off with a conversation summary | Not described on the page |
-| **Dental Intelligence** | Analytics and Morning Huddle; integrates with Open Dental, Eaglesoft, Dentrix, Dentrix Ascend and Denticon | AI Receptionist: "Answer every patient call, even when your team can't" | Data Q&A: "Ask your practice's data any question" |
-| **Overjet** | DSO analytics | Ivy, "an AI insurance coordinator" that verifies benefits and estimates patient costs | Voice: ambient AI that documents, monitors and analyzes patient visits; imaging AI ([Dental Practice](/books/health-tech/dental-practice#dental-ai)) |
+| **Weave** | Not described on the AI page | AI Receptionist: answers calls, texts and website chats "24/7" with "a friendly, human-like AI voice"; captures appointment requests for staff, and books and reschedules "right to your calendar" ("For qualified Dental PMS only"); hands off to staff "with a conversation summary" | Not described on the page |
+| **Dental Intelligence** | Analytics and Morning Huddle; integrates with Open Dental, Eaglesoft, Dentrix, Dentrix Enterprise, Dentrix Ascend, Denticon and Fuse | AI Receptionist: "Answer every patient call, even when your team can't" | Data Q&A: "Ask your practice's data any question" |
+| **Overjet** | DSO analytics | Ivy, an "AI insurance coordinator" that "verifies insurance before patients arrive" and estimates the patient's share | Voice: ambient AI that documents, monitors and analyzes patient visits; imaging AI ([Dental Practice](/books/health-tech/dental-practice#dental-ai)) |
+| **Podium** | Not described on the page | AI Employee: "a 24/7 AI Employee" across "calls, text, webchat, email, social" that "books directly on your calendar," with "real-time access to your calendar, customer records, and workflows" and "escalation rules for when a human needs to step in"; sold to many local industries, health care not named | Not applicable |
+| **NexHealth** | Insights | No AI receptionist on its public feature pages as of October 2026 | Not applicable |
 | **Shepherd** (vet) | Integrated reports | Not described | SummarizeAI, TranscribeAI and DiagnoseAI, "trained on real clinical cases" |
-| **Abridge** | Not applicable | Not applicable | Ambient documentation for health systems: "trusted by 300+ health systems," "100M+ Conversations" a year, pre-visit, in-visit and post-visit workflows |
-| **WebPT** (rehab) | Compliance insights | Not described | "AI-assisted note creation" in its documentation |
+| **Abridge** | Not applicable | Not applicable | Ambient documentation for health systems: "trusted by 300+ health systems," "100M+ Conversations" a year, pre-visit, encounter and post-visit workflows |
+| **WebPT** (rehab) | Compliance insights | Not described | AI note generation from patient conversations in its documentation, with "real-time compliance insights" |
 
 Three patterns:
 
@@ -199,6 +201,8 @@ Design notes:
 
 - [Weave: AI Receptionist](https://www.getweave.com/ai-receptionist/), calls, texts and chat 24/7, booking for qualified dental PMSs, requests elsewhere, handoff with a summary
 - [Dental Intelligence](https://www.dentalintel.com/), analytics, Morning Huddle, AI receptionist, data Q&A, PMS integrations
+- [Podium: AI Employee](https://www.podium.com/product/ai-employee), channels, calendar booking, access to records and workflows, escalation rules
+- [NexHealth: Features](https://www.nexhealth.com/features), the published feature list, with no AI receptionist
 - [Overjet](https://www.overjet.com/), Ivy benefit verification, Voice ambient documentation, DSO analytics
 - [Shepherd](https://www.shepherd.vet/), SummarizeAI, TranscribeAI and DiagnoseAI in a vet PIMS
 - [Abridge](https://www.abridge.com/), ambient documentation for health systems and its published scale

@@ -17,20 +17,20 @@ As of October 2026, from vendor pages:
 
 | System | What it is | Notable for this chapter |
 | --- | --- | --- |
-| **Dentrix, Dentrix Ascend, Dentrix Enterprise** (Henry Schein One) | Henry Schein One's dental PMS family: desktop, cloud (Ascend) and enterprise editions | Integrated by Pearl, Dental Intelligence and most engagement vendors; Dentrix's own payments post to its ledger ([Payments in the Practice](/books/health-tech/patient-payments)) |
+| **Dentrix, Dentrix Ascend, Dentrix Enterprise** (Henry Schein One) | Henry Schein One's dental PMS family: desktop, cloud (Ascend) and enterprise editions | Integrated by Pearl, Dental Intelligence and most engagement vendors; third-party access runs through the API Exchange ([Integrating with Practice Management Systems](/books/health-tech/pms-integration#henry-schein-one-dentrix-and-ascend)) |
 | **Eaglesoft** (Patterson) | Patterson's dental PMS | A common sync target for engagement and payments vendors |
 | **Open Dental** | Dental PMS with a public API | A Clinics feature that runs "multiple locations ... from one database while keeping locations separate for reporting"; a claim takes its clinic from its procedures |
 | **Denticon** (Planet DDS) | Cloud dental PMS | "Tried and tested by more than 13,000+ dental practices"; built for DSOs and groups |
 | **Curve** | Cloud dental PMS | One of the cloud alternatives to the desktop installed base |
 | **Pearl** | Dental imaging AI | Second Opinion, FDA-cleared for 2D X-rays and 3D CBCT; "40+ Integrations" with imaging and PMS systems |
 | **Overjet** | Dental imaging AI, payer and DSO analytics | "FDA-cleared vision AI x-ray analysis"; an insurance coordinator (Ivy), ambient visit documentation (Voice), and payer utilization review products |
-| **Dental Intelligence** | Analytics and engagement | Integrates with Open Dental, Eaglesoft, Dentrix, Dentrix Ascend and Denticon; an AI receptionist and data Q&A |
+| **Dental Intelligence** | Analytics and engagement | Integrates with Open Dental, Eaglesoft, Dentrix, Dentrix Enterprise, Dentrix Ascend, Denticon and Fuse; an AI receptionist and data Q&A |
 
 The pattern is that every vendor's product is a view over the PMS's procedures, treatment plans and insurance data. A dental engagement or analytics product that can't read tooth-level procedures and treatment plan status can't do case acceptance, can't estimate, and can't count unscheduled treatment, which is why PMS integration ([Integrating with Practice Management Systems](/books/health-tech/pms-integration)) is the whole game.
 
 ## CDT and the Tooth
 
-Dental procedures are coded in the **Code on Dental Procedures and Nomenclature (CDT)**, which the ADA publishes and maintains: its Code Maintenance Committee meets annually (its March 2026 meeting set changes for CDT 2027), and a new edition takes effect each year. CDT is licensed, like CPT: the codes and descriptors can't be shipped in software without a license from the ADA, so a PMS or engagement product either licenses CDT or reads codes from the PMS that does and never displays the official descriptors ([Licensing](/books/health-tech/terminology-and-coding#licensing) covers it).
+Dental procedures are coded in the **Code on Dental Procedures and Nomenclature (CDT)**, which the ADA publishes and maintains: its Code Maintenance Committee meets annually (its March 2026 meeting set changes for CDT 2027), so a new edition arrives each year. CDT is licensed, like CPT: the codes and descriptors can't be shipped in software without a license from the ADA, so a PMS or engagement product either licenses CDT or reads codes from the PMS that does and never displays the official descriptors ([Licensing](/books/health-tech/terminology-and-coding#licensing) covers it).
 
 What makes a dental procedure different from a medical one is where it is (a tooth, surfaces, a quadrant, a sextant or an arch, as the code's treatment area requires) and its chart status (planned, completed, existing by this or another provider, referred), which [Dental: Teeth, Surfaces and Status](/books/health-tech/ehr-and-pms-data#dental-teeth-surfaces-and-status) covers with the numbering systems; existing work and conditions are `tooth_findings` there.
 
@@ -82,7 +82,7 @@ Dental insurance is mostly a defined-benefit product with a small annual maximum
 
 The engine's inputs are a coverage, a plan's benefit rules (from the eligibility response's breakdown, the payer's documents, or staff entry), the patient's history, and the procedure; its output is an estimate with every rule that applied, so staff can see why the number is what it is. My rule: an estimate is never a single number; it's a line with the fee, the allowed amount, each reduction and its reason, the insurance estimate and the patient portion, so the front desk can explain it and the practice can correct the rule that was wrong.
 
-Rule data is the hard part. Eligibility responses carry some of it (maximums, deductibles, coinsurance by service type), payer portals carry more, and frequency and downgrade rules often live only in a plan document or a phone call. Engagement and AI vendors now sell benefit verification as a service (Overjet's Ivy "verifies benefits and estimates patient costs"); whatever the source, each rule records where it came from and when it was verified.
+Rule data is the hard part. Eligibility responses carry some of it (maximums, deductibles, coinsurance by service type), payer portals carry more, and frequency and downgrade rules often live only in a plan document or a phone call. Engagement and AI vendors now sell benefit verification as a service (Overjet says Ivy "verifies insurance before patients arrive" and will "estimate the patient's share for today's visit"); whatever the source, each rule records where it came from and when it was verified.
 
 ## Predeterminations
 

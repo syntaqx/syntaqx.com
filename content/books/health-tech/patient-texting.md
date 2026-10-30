@@ -23,7 +23,7 @@ As of October 2026, from public product pages:
 | **PetDesk** (veterinary) | A comms inbox for texts and missed-call replies | A client app beside SMS |
 | **Luma Health** (medical) | "Multichannel, multilingual communication to one patient or many" | AI inbound and outbound, SMS and RCS |
 | **Open Dental** (PMS) | Integrated Texting at $5 a month access plus $0.04 per outgoing US message, per location | Texting inside the PMS, with landline texting as an add-on to eConfirmations |
-| **Phreesia** (medical) | Patient messaging inside intake and payments | Its 10-K names the TCPA, which "restricts certain calls and text messages," as a risk, and depends on patients who "opt-in to such communications" |
+| **Phreesia** (medical) | Patient messaging inside intake and payments | Its 10-K lists TCPA claims over its calling and texting as a risk, and lists among drivers of its results "the extent to which they opt-in to such communications" |
 
 The common shape is a dedicated or text-enabled practice number per location, a shared inbox with assignment, templates for common replies, and every automated message (reminders, recall, payments, reviews) landing in the same thread as the conversation. That last point is what makes texting hard to build well: the thread has messages from five products with five purposes, and consent, opt-outs and minimum necessary have to be right for each.
 
@@ -34,7 +34,7 @@ Patients recognize the practice's main number and reply to it; texts from an unf
 - **Each practice is its own brand.** A vendor texting for thousands of practices is an ISV registering each customer separately, with campaigns for its use cases ([Registering Your Customers: the ISV Model](/books/hosting-and-cloud/texting-registration#registering-your-customers-the-isv-model)). A dental group with ten offices may be one brand with ten numbers; ten independent offices are ten brands.
 - **Campaigns describe the use.** Appointment reminders, recall and two-way patient conversation register as notification and customer care use cases; review requests and promotions need a campaign that says so, and a reminders campaign that starts sending promotions risks suspension.
 - **Throughput is small and that's fine.** A practice sends hundreds of texts a day, not thousands a minute. The constraint that bites is the per-brand daily cap on T-Mobile for unvetted brands ([Vetting and Trust Scores](/books/hosting-and-cloud/texting-registration#vetting-and-trust-scores)) when a group sends recall to its whole list on one morning, so recall campaigns are paced.
-- **Segments cost money.** A reminder with an emoji or a long practice name turns into several billable segments ([Segments and Encoding](/books/hosting-and-cloud/sending-a-text#segments-and-encoding)); Open Dental bills recall texts "per 160-character segment," and the TCPA health care exemption's 160-character limit (below) makes short templates a legal matter as well as a cost.
+- **Segments cost money.** A reminder with an emoji or a long practice name turns into several billable segments ([Segments and Encoding](/books/hosting-and-cloud/sending-a-text#segments-and-encoding)); Open Dental says "a text message segment is 160 characters" and charges for each additional one, and the TCPA health care exemption's 160-character limit (below) makes short templates a legal matter as well as a cost.
 
 ## The TCPA Healthcare Exemption
 
@@ -268,7 +268,7 @@ Notes on the sketch:
 
 **Vendors and filings**
 
-- [Phreesia: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1412408/000141240826000079/phr-20260131.htm), the TCPA as a risk and dependence on patient opt-in
+- [Phreesia: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1412408/000141240826000079/phr-20260131.htm), TCPA claims as a risk and patient opt-in as a driver of results
 - [Open Dental: Fees](https://opendental.com/site/fees.html), Integrated Texting access and per-message prices
 - [Open Dental: Recall setup](https://www.opendental.com/manual/recallsetup.html), texts billed per 160-character segment
 - [Weave: Phones](https://www.getweave.com/phones/), texting and missed call text beside phones
