@@ -39,6 +39,8 @@ A decision runs in stages, and the order matters for the reasons each stage can 
 4. **Pricing and terms.** The grade, term, amount and jurisdiction select a cell in a versioned pricing grid ([The Lending Business](/books/banking-and-lending/lending-business#how-to-build-it)); the computed APR is checked against every rate cap that applies ([State Rate Caps as Data](/books/banking-and-lending/installment-loans#state-rate-caps-as-data)).
 5. **Outcome.** Approve at the requested terms, counteroffer different terms, decline, or refer to a human.
 
+Some knockouts belong to the lender, not the investor. Fannie Mae's Selling Guide now says "a minimum credit score is not required for DU loan casefiles" (the 620 floor came out in its November 5, 2025 update, SEL-2025-09), leaving DU's risk assessment to decide, while manually underwritten loans keep a 620 minimum for fixed-rate and 640 for adjustable-rate loans; lenders must still pull and deliver scores. A lender that keeps a 620 cutoff on DU loans is running its own overlay, and the rule should say so in its layer.
+
 Running knockouts first is cheap (no paid data for applicants who can't qualify) and keeps reasons clean: a decline for state eligibility should never carry model-derived reasons. Within the model stage, reasons come from the model; within affordability, from the ratio that failed.
 
 ## Scoring and Judgmental Systems Under Reg B
@@ -266,12 +268,13 @@ Decisions are what fair lending exams, model validators, partner banks and inves
 - [CFPB: Regulation Z § 1026.43](https://www.consumerfinance.gov/rules-policy/regulations/1026/43/), higher-priced covered transactions, safe harbor and rebuttable presumption
 - [Federal Register: Truth in Lending (Regulation Z) annual threshold adjustments, 90 FR 57890 (December 15, 2025)](https://www.federalregister.gov/documents/full_text/text/2025/12/15/2025-22773.txt), the 2026 General QM loan amount tiers and points-and-fees limits
 - [Federal Register: Equal Credit Opportunity Act (Regulation B), 91 FR 21620 (April 22, 2026)](https://www.federalregister.gov/documents/full_text/text/2026/04/22/2026-07804.txt), removal of the effects test, effective July 21, 2026
-- [Greenberg Traurig: CFPB final rule revises ECOA framework (May 2026)](https://www.gtlaw.com/en/insights/2026/5/cfpb-final-rule-revises-ecoa-framework-narrows-disparate-impact-and-discouragement-standards), the rule's scope and the NYDFS industry letter issued the same day
+- [NYDFS: Industry letter on New York's fair lending law (April 22, 2026)](https://www.dfs.ny.gov/industry-guidance/industry-letters/20260422-nys-fair-lending-law), disparate impact under Executive Law 296-a, issued the day the Regulation B rule was published
 - [Federal Register: Statement on ability to repay and immigration status, 91 FR 34607 (June 8, 2026)](https://www.federalregister.gov/documents/full_text/text/2026/06/08/2026-11447.txt), immigration status under Regulation B and continuing income for ability to repay
 
 **Agency guides**
 
 - [Fannie Mae Selling Guide B3-2-01: General information on DU](https://selling-guide.fanniemae.com/sel/b3-2-01/general-information-du), no single factor, offsetting factors, the four recommendations and the lender's judgment
+- [Fannie Mae Selling Guide B3-5.1-01: General requirements for credit scores](https://selling-guide.fanniemae.com/sel/b3-5.1-01/general-requirements-credit-scores), no minimum score for DU casefiles, 620 and 640 for manual underwriting, scores still required, and announcement SEL-2025-09 (November 5, 2025)
 - [Fannie Mae Selling Guide B3-2-07: Refer with Caution recommendations](https://selling-guide.fanniemae.com/sel/b3-2-07/refer-caution-recommendations), not acceptable risk for DU loans and manual underwriting where allowed
 - [Fannie Mae Selling Guide B3-6-02: Debt-to-income ratios](https://selling-guide.fanniemae.com/sel/b3-6-02/debt-income-ratios), 50% for DU, 36% and up to 45% for manual underwriting
 - [Freddie Mac: Loan Product Advisor](https://sf.freddiemac.com/tools-learning/loan-advisor/our-solutions/loan-product-advisor), Accept and Caution and feedback on reaching Accept
