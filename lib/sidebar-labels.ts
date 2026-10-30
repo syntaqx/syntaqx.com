@@ -32,6 +32,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Metering and Billing": "Metering",
   "On-Demand Delivery": "On-Demand",
   "Orders, Inventory and Fulfillment": "Fulfillment",
+  "Origination and Underwriting": "Underwriting",
   "Other Property Types": "Property Types",
   "Peer-to-Peer Marketplaces": "P2P Marketplaces",
   "Pharma and Clinical Trials": "Pharma & Trials",
