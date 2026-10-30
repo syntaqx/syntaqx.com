@@ -57,7 +57,7 @@ The bank owns every obligation; the question is who performs it, how the bank kn
 | **OFAC screening** | Bank | Program or middleware, against lists the bank approves | Screening results and dispositions |
 | **Transaction monitoring** | Bank | Program, middleware or bank; often two layers | Alerts, dispositions, referrals with timestamps |
 | **SAR decisions and filing** | Bank (only the bank files) | Bank, on the program's referrals | SAR decisions, kept confidential from the program's customer-facing systems |
-| **Reg E error resolution** | Bank, and the program as covered person | Program | Each claim against its clock (Errors & Disputes on Deposit Accounts) |
+| **Reg E error resolution** | Bank, and the program as covered person | Program | Each claim against its clock ([Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes)) |
 | **Disclosures and statements** (Reg DD, Reg E, privacy) | Bank | Program renders and delivers the bank's approved versions | Every disclosure as delivered ([Deposit Accounts & Truth in Savings](/books/banking-and-lending/deposit-accounts#fintech-accounts-are-bank-accounts)) |
 | **Marketing and deposit insurance statements** (12 CFR 328) | Bank | Program, with bank approval | Each published version and its approval |
 | **Complaints** | Bank | Program, reported to the bank | Every complaint, category, response and time to close |

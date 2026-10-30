@@ -65,7 +65,7 @@ A fintech program on a sponsor bank's charter has three parties touching the pro
 | 314(a) searches | Bank, across program data | Bank |
 | Account restriction or closure after a decision | Fintech, on the bank's instruction | Bank |
 
-The pattern is in the platforms' own descriptions above. A fintech may see a SAR's existence only as the bank's agent and only as far as the bank's procedures allow, which is why SAR confidentiality is an access-control requirement on the fintech's systems too ([Confidentiality](#confidentiality)). How a sponsor bank tests its programs and what the 2024 to 2026 consent orders found is Sponsor Bank Oversight's subject.
+The pattern is in the platforms' own descriptions above. A fintech may see a SAR's existence only as the bank's agent and only as far as the bank's procedures allow, which is why SAR confidentiality is an access-control requirement on the fintech's systems too ([Confidentiality](#confidentiality)). How a sponsor bank tests its programs and what the 2024 to 2026 consent orders found is [Sponsor Bank Oversight](/books/banking-and-lending/sponsor-bank-oversight)'s subject.
 
 ## The Customer Risk Profile
 
@@ -382,7 +382,7 @@ BSA/AML is examined at every bank on every cycle, and independent testing covers
 - **314(a):** every request, the search scope and time, and the response.
 - **Access to SAR data,** every read, by whom.
 
-Five years is the BSA's general retention (31 CFR 1010.430), retrievable within a reasonable time. Records for an exited program stay with the bank, which is why a program's monitoring data is the bank's. The record mechanics are in [Audit Trails](/docs/architecture/audit-trails), and model validation is Model Risk Management's subject.
+Five years is the BSA's general retention (31 CFR 1010.430), retrievable within a reasonable time. Records for an exited program stay with the bank, which is why a program's monitoring data is the bank's. The record mechanics are in [Audit Trails](/docs/architecture/audit-trails), and model validation is [Model Risk Management](/books/banking-and-lending/model-risk)'s subject.
 
 ## What This Means for the System You Build
 

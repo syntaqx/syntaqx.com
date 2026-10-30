@@ -93,6 +93,7 @@ Buy now, pay later at checkout splits the purchase into installments financed by
 - **Fees are higher than cards and not always returned.** Square publishes Afterpay at 6% + 30¢. Shop Pay Installments, financed by Affirm, is limited to orders of $35 to $30,000 in the US (and set ranges in Canada, the UK and Australia), requires Shopify Payments, pays the merchant one to three business days after capture, and doesn't return its fee on a refund.
 - **The regulatory status moved.** In May 2024 the CFPB interpreted pay-in-four lenders as card issuers under Regulation Z, with dispute and refund rights; on May 12, 2025 it "withdrew several guidance documents, including the 2024 BNPL Interpretive Rule." Refund and dispute handling is therefore each lender's terms plus general law, and a merchant refunds through the lender, never in cash.
 - **Refunds go back through the lender,** which adjusts the shopper's loan; a partial return reduces the installments, and the merchant's ledger records a refund against the BNPL payment like any other.
+- **A decline is the lender's to explain.** A shopper the lender declines, or approves for less, is owed the lender's notice, not the store's ([When a Notice Is Owed](/books/banking-and-lending/adverse-action#when-a-notice-is-owed), [Counteroffers](/books/banking-and-lending/decision-engines#counteroffers)), and whether the loan shows on their credit report is the lender's furnishing ([BNPL Reporting](/books/banking-and-lending/credit-reporting#bnpl-reporting)).
 
 ## Fraud Screening and Chargeback Guarantees
 

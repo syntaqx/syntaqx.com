@@ -94,13 +94,13 @@ The FDIC's standard conditions add fidelity bond coverage and financial statemen
 
 The period between conditional approval and opening is when the bank is built, and the regulators examine the build before it opens. What has to exist by the preopening examination:
 
-- **A core and its satellites.** CEOs of successful de novo banks told the FDIC that the core processing choice is "one of the most important decisions to be made" and the initial contract negotiation "critical," and the handbook asks for a technology plan naming each outsourced function and vendor with diligence, costs and dependency risk, plus "back-up and disaster recovery, incident response, cyber threat intelligence" and independent review of controls. Vendor contracts should be contingent on the charter and insurance approvals (Core Banking Systems covers vendor choice).
+- **A core and its satellites.** CEOs of successful de novo banks told the FDIC that the core processing choice is "one of the most important decisions to be made" and the initial contract negotiation "critical," and the handbook asks for a technology plan naming each outsourced function and vendor with diligence, costs and dependency risk, plus "back-up and disaster recovery, incident response, cyber threat intelligence" and independent review of controls. Vendor contracts should be contingent on the charter and insurance approvals ([Core Banking Systems](/books/banking-and-lending/core-banking-systems) covers vendor choice).
 - **BSA, OFAC and CIP running end to end**, from account opening to monitoring to filing ([KYC & Account Opening](/books/banking-and-lending/kyc-and-account-opening), [BSA/AML Programs](/books/banking-and-lending/bsa-aml)).
 - **Policies for every regulation the bank's products touch**, adopted by the board at its first meeting.
 - **Reporting.** The first call report is due 30 days after the first quarter end the bank is open ([Exams, Ratings & Call Reports](/books/banking-and-lending/exams-and-supervision#call-reports)).
 - **Condition monitoring:** the capital, liquidity and business plan metrics the approval set.
 
-A fintech that charters usually has a working product on a sponsor bank, and the hard part is moving it: accounts, card BINs, routing numbers, ledgers and disclosures from the partner to the new bank, often while both run in parallel, inside a business plan the regulators approved and that the migration itself must not deviate from. [Banking as a Service](/books/banking-and-lending/banking-as-a-service) covers moving between banks; the migration discipline is in Core Modernization & Conversions.
+A fintech that charters usually has a working product on a sponsor bank, and the hard part is moving it: accounts, card BINs, routing numbers, ledgers and disclosures from the partner to the new bank, often while both run in parallel, inside a business plan the regulators approved and that the migration itself must not deviate from. [Banking as a Service](/books/banking-and-lending/banking-as-a-service) covers moving between banks; the migration discipline is in [Core Modernization & Conversions](/books/banking-and-lending/core-modernization).
 
 ## Fintechs That Chartered
 
@@ -110,7 +110,7 @@ A fintech that charters usually has a working product on a sponsor bank, and the
 - **Industrial banks** for commercial parents (Ford, GM, Stellantis, Edward Jones) went through the FDIC rather than the OCC ([Charters & Regulators](/books/banking-and-lending/charters-and-regulators#industrial-loan-companies)).
 - **Trust banks** for crypto and payments firms (Circle, Ripple, BitGo, Fidelity Digital Assets, Paxos, Laser Digital) took the uninsured national trust route, which skips deposit insurance and so the FDIC application.
 
-Each move trades sponsor dependence for capital, examinations and, above $10 billion in assets, the debit interchange cap: Lender Licensing & Bank Partnerships covers the trade for lenders.
+Each move trades sponsor dependence for capital, examinations and, above $10 billion in assets, the debit interchange cap: [Lender Licensing & Bank Partnerships](/books/banking-and-lending/lender-licensing) covers the trade for lenders.
 
 ## Buying a Bank Instead
 

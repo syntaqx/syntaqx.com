@@ -169,11 +169,12 @@ Since a 2024 amendment (89 FR 74832, effective March 12, 2025), 31 CFR 501.601 r
 These are deltas against [the core data model](/books/banking-and-lending/banking-business#the-core-data-model) and the `party_relationships` table from [KYC & Account Opening](/books/banking-and-lending/kyc-and-account-opening#how-to-build-it). A sanctions review that ends in a block or reject is a `cases` row of a new kind, `sanctions_review`, with its 10-business-day report deadline in the `case_deadlines` table from [Errors & Disputes on Deposit Accounts](/books/banking-and-lending/deposit-errors-and-disputes#how-to-build-it); a SAR filed alongside it is a separate `aml_investigation` case.
 
 ```sql
--- Sanctions reviews are cases with their own clock.
-ALTER TABLE cases DROP CONSTRAINT cases_kind_check;
-ALTER TABLE cases ADD CONSTRAINT cases_kind_check CHECK (kind IN ('reg_e_error', 'reg_cc_claim',
-  'billing_error', 'fraud_claim', 'credit_report_dispute', 'legal_process', 'complaint',
-  'aml_investigation', 'hardship', 'sanctions_review'));
+-- Sanctions reviews are cases with their own clock: adds 'sanctions_review' to the core kinds.
+ALTER TABLE cases DROP CONSTRAINT cases_kind_check,
+  ADD CONSTRAINT cases_kind_check CHECK (kind IN ('reg_e_error', 'reg_cc_claim',
+    'billing_error', 'fraud_claim', 'credit_report_dispute', 'legal_process', 'complaint',
+    'aml_investigation', 'hardship',
+    'sanctions_review'));
 
 -- Every list version as loaded, with its completeness check.
 CREATE TABLE sanctions_list_versions (

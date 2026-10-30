@@ -17,7 +17,7 @@ Strip the vendor names away and every core does the same jobs, whether it runs o
 
 | Job | What it means | Where this volume covers it |
 | --- | --- | --- |
-| **Customer information file (CIF)** | Parties, their identifiers, addresses and relationships, and which accounts each is attached to and in what role | [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model); KYC & Account Opening |
+| **Customer information file (CIF)** | Parties, their identifiers, addresses and relationships, and which accounts each is attached to and in what role | [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model); [KYC & Account Opening](/books/banking-and-lending/kyc-and-account-opening) |
 | **Product definitions** | The rules an account inherits: rate, balance method, fees, limits, maturity, dormancy, GL mapping | [Products & Product Configuration](/books/banking-and-lending/product-configuration) |
 | **Account servicing** | Opening, maintenance, status changes (dormant, frozen, charged off, closed), stop payments, standing orders | [Dormancy, Escheat & Closing Accounts](/books/banking-and-lending/dormancy-and-escheat) |
 | **Posting** | Applying debits and credits in a defined order, computing ledger, available and collected balances, holds | [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances) |

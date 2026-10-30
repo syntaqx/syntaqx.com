@@ -60,7 +60,7 @@ The tolerance baseline can move only for the reasons the rule lists (1026.19(e)(
 - **(A) Changed circumstances** that raise settlement charges: an extraordinary event beyond anyone's control, information specific to the consumer or transaction that the creditor relied on that was inaccurate or changed, or new information it didn't rely on.
 - **(B) Eligibility:** a changed circumstance makes the consumer ineligible for an estimated charge or terms.
 - **(C) Consumer-requested changes** to terms or settlement that raise charges.
-- **(D) Rate lock:** points and lender credits change because the rate wasn't locked when the estimate was given; a revised estimate is due within three business days after the rate is locked.
+- **(D) Rate lock:** points and lender credits change because the rate wasn't locked when the estimate was given; a revised estimate is due within three business days after the rate is locked (how locks are priced and extended is in [Rate Locks](/books/banking-and-lending/mortgages#rate-locks)).
 - **(E) Expiration:** the consumer indicates an intent to proceed more than 10 business days (or a longer period the creditor sets) after the estimate is provided.
 - **(F) Delayed settlement on new construction:** settlement is expected more than 60 days after the estimate and the estimate said revisions might come.
 

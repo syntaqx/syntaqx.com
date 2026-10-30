@@ -92,7 +92,7 @@ Noninterest income is the part of revenue that doesn't depend on the yield curve
 
 The lines an engineer meets:
 
-- **Service charges on deposit accounts:** monthly maintenance, overdraft and NSF fees, wires, stop payments, account analysis fees for business accounts. Overdraft revenue is a policy and litigation subject of its own (Overdraft, NSF & Fees).
+- **Service charges on deposit accounts:** monthly maintenance, overdraft and NSF fees, wires, stop payments, account analysis fees for business accounts. Overdraft revenue is a policy and litigation subject of its own ([Overdraft, NSF & Fees](/books/banking-and-lending/overdraft-and-fees)).
 - **Card and interchange income:** debit interchange is capped for issuers with $10 billion or more in assets under Regulation II, which is why the $10 billion line shapes neobank and sponsor bank economics (the Payments volume's [Card Issuing](/books/payments/card-issuing#the-economics) has the split). JPMorgan reported lower card income in the fourth quarter of 2025 on lower net interchange and higher costs of originating new accounts, a reminder that rewards come out of interchange.
 - **Treasury management:** fees for payments, liquidity and information services to businesses, often paid in balances rather than cash through account analysis ([Treasury Management](/books/banking-and-lending/treasury-management)).
 - **Wealth, trust and custody:** asset-based fees.
@@ -112,7 +112,7 @@ The efficiency ratio is noninterest expense over revenue (NII, usually FTE, plus
 
 That matches the reported 56.8%. Regions' full-year ratio improved from 59.5% in 2024 to 56.9% in 2025. Banks also report an "adjusted" ratio that removes items management calls nonrecurring (57.5% for the same quarter); the reconciliation is in the filing, and a metric built in-house should state which version it is.
 
-Technology is inside the numerator. Regions' equipment and software expense, its FDIC assessments and its outside services are separate lines, and the FDIC's QBP notes that "all other" noninterest expense, the category that includes data processing, consulting and advisory fees, led the industry's quarterly increase in the second quarter of 2026. A core contract, a digital banking platform priced per registered user and a BaaS program's compliance staff all land here, which is why vendor pricing conversations at a bank are efficiency ratio conversations (Core Banking Systems covers the vendors and how they price).
+Technology is inside the numerator. Regions' equipment and software expense, its FDIC assessments and its outside services are separate lines, and the FDIC's QBP notes that "all other" noninterest expense, the category that includes data processing, consulting and advisory fees, led the industry's quarterly increase in the second quarter of 2026. A core contract, a digital banking platform priced per registered user and a BaaS program's compliance staff all land here, which is why vendor pricing conversations at a bank are efficiency ratio conversations ([Core Banking Systems](/books/banking-and-lending/core-banking-systems) covers the vendors and how they price).
 
 ## Interest Rate Risk and ALM
 
@@ -130,7 +130,7 @@ A one-year repricing gap is the simplest NII model:
 | Gap | -$150M |
 | NII change for a +100 bp parallel shift, held for a year | about -$1.5M |
 
-Every word in that table is an assumption: which deposits "reprice" (savings accounts have no maturity and a beta well under 100%), how fast mortgages prepay, whether rates move in parallel. Real ALM systems run thousands of instruments through rate scenarios with behavioral assumptions for prepayments, deposit betas and deposit decay (how long a non-maturity deposit stays), and those assumptions are models subject to validation (Model Risk Management).
+Every word in that table is an assumption: which deposits "reprice" (savings accounts have no maturity and a beta well under 100%), how fast mortgages prepay, whether rates move in parallel. Real ALM systems run thousands of instruments through rate scenarios with behavioral assumptions for prepayments, deposit betas and deposit decay (how long a non-maturity deposit stays), and those assumptions are models subject to validation ([Model Risk Management](/books/banking-and-lending/model-risk)).
 
 EVE is where securities portfolios bite. A bond's price falls by roughly its duration times the rate change: a $100 million portfolio with a duration of 6 loses about $12 million of value if rates rise 2 percentage points. Accounting decides where that loss shows. Securities classified as available for sale are carried at fair value with unrealized losses in accumulated other comprehensive income (AOCI); held-to-maturity securities are carried at amortized cost and the loss appears only in the footnotes. For all insured institutions at June 30, 2026, unrealized losses on securities totaled $326.7 billion, 5.5% of amortized cost: $109.8 billion on AFS securities (2.9% of cost) and $216.9 billion on HTM securities (10.5% of cost). Regions' regulatory CET1 ratio leaves AOCI out, which is why it also reports a non-GAAP version with it in: 10.8% as calculated for regulation and 9.6% including AOCI.
 
@@ -260,7 +260,7 @@ The realized beta for a window is the change in that cost over the change in `po
 - **NIM from the books, FTE as an explicit step.** Average earning assets come from daily balances of `earning_asset` GL accounts, interest from the income accounts, and the FTE adjustment from `tax_exempt` income at the statutory rate, stored as its own line so the reported and GL figures reconcile ([One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric)).
 - **Positions are snapshots, not live reads.** ALM runs on a frozen `as_of_date`; rerunning last quarter's scenario must produce last quarter's answer, which is why positions are copied rather than joined to live accounts ([Snapshots](/docs/database/temporal-data#snapshots)).
 - **Administered rates are a type, not a missing value.** A savings rate the bank sets has no index and no reset date; modeling it as `floating` with a guessed index is how an assumption hides inside data.
-- **Uninsured concentration is a daily query.** Per-depositor balances by ownership category against the insurance limit (Deposit Insurance owns the computation), summed by segment and top depositors, with the day-over-day change, is the early warning the 2023 failures lacked.
+- **Uninsured concentration is a daily query.** Per-depositor balances by ownership category against the insurance limit ([Deposit Insurance](/books/banking-and-lending/deposit-insurance) owns the computation), summed by segment and top depositors, with the day-over-day change, is the early warning the 2023 failures lacked.
 
 ## Auditing
 

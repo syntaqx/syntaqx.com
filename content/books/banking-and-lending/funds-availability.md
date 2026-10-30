@@ -9,7 +9,7 @@ tags = ["banking", "deposits", "regulation-cc", "funds-availability", "holds", "
 
 A deposit is credited when it arrives and spendable when the law says so, and the gap between the two is the bank's credit risk on every check it hasn't collected yet. The Expedited Funds Availability Act and Regulation CC (12 CFR 229, Subpart B) cap that gap: they tell a bank the latest moment each kind of deposit must be available, the few circumstances in which it may hold longer, and what it must tell the customer when it does. A bank can always release money sooner. It can't release it later than the schedule without an exception it can name and a notice it sent.
 
-This chapter is the depositary bank's side: the schedule as a set of rules a core executes on every deposit. How a check clears, how it's returned, and why availability isn't finality for a platform that credits merchants from checks are in [Accepting Checks](/books/payments/checks#when-the-money-is-available); the balances and holds the schedule produces are the subject of Posting, Holds & Balances.
+This chapter is the depositary bank's side: the schedule as a set of rules a core executes on every deposit. How a check clears, how it's returned, and why availability isn't finality for a platform that credits merchants from checks are in [Accepting Checks](/books/payments/checks#when-the-money-is-available); the balances and holds the schedule produces are the subject of [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances).
 
 ## How the Platforms Do It
 

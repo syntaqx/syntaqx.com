@@ -22,7 +22,7 @@ The suites now sell the whole chain from requisition to payment, which the indus
 - **Buildium.** E-files 1099-MISC and 1099-NEC forms "for both property owners and vendors" and mails paper copies.
 - **Specialists.** AvidXchange sells real estate AP automation with "2-way or 3-way PO matching," invoice approval workflows "set by property or unit," payment by virtual card, ACH or check, rebates, and integrations with MRI, Rent Manager, ResMan, RealPage and Yardi. NetVendor credentials vendors (insurance outreach, expiring and missing certificates, W-9, background checks, OFAC screening, TIN matching) for operators on any of the major platforms. Outsourced AP firms such as IQ BackOffice process property managers' invoices as a service.
 
-The pattern: credentialing, catalog buying, invoice capture and payment are each a business someone sells, sometimes with the contractor paying part of the cost, as it does when it accepts a virtual card. That makes the integration points between them the places where controls break, which is what most of this chapter is about.
+The pattern: credentialing, catalog buying, invoice capture and payment are each a business someone sells, sometimes with the contractor paying part of the cost, as it does when it accepts a virtual card. That makes the integration points between them the places where controls break, which is what most of this chapter is about. The same chain outside property is the Banking & Lending volume's [AP, Bill Pay & Procurement](/books/banking-and-lending/accounts-payable).
 
 ## Vendor Compliance
 

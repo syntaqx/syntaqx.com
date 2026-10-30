@@ -27,7 +27,7 @@ Managed payfac, sometimes called payfac-as-a-service, is where most vertical pla
 
 My rule: go as far down as your risk team and balance sheet can actually support, not as far as the margin is tempting. The margin on a registered payfac only exists after underwriting, monitoring, chargeback losses and compliance are paid for, and a platform that's good at gym software isn't automatically good at any of those.
 
-Acceptance isn't the only embedded product. A platform can also issue cards to the businesses it serves, and the same question decides it: issuing on connected accounts usually puts the platform on the hook for their verification and their losses ([What Gets Built on Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)).
+Acceptance isn't the only embedded product. A platform can also issue cards to the businesses it serves, and the same question decides it: issuing on connected accounts usually puts the platform on the hook for their verification and their losses ([What Gets Built on Issuing](/books/payments/card-issuing#what-gets-built-on-issuing)). Lending is the third: financing a platform's merchants and collecting from their sales is the Banking & Lending volume's [Embedded Lending](/books/banking-and-lending/embedded-lending).
 
 ## Where the Money Goes
 

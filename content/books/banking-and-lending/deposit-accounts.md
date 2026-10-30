@@ -69,11 +69,11 @@ Before an account is opened or a service is provided, whichever comes first, the
 
 Timing depends on the channel. In a branch, the disclosures come before opening. When the consumer isn't present, paper disclosures may follow by mail no later than 10 business days after opening, but an account opened online gets them electronically before it's opened. They're also due on request.
 
-The interest math the disclosures describe is constrained too. Interest has to be paid on the full principal for each day, by the daily balance method or the average daily balance method, and the regulation prohibits the methods that would pay on less: ending balance, lowest balance in the period, investable balance. A core sold globally may offer a minimum daily balance basis; for a US consumer product it isn't an option. Interest, APY & Statements works the day-count and APY formulas through.
+The interest math the disclosures describe is constrained too. Interest has to be paid on the full principal for each day, by the daily balance method or the average daily balance method, and the regulation prohibits the methods that would pay on less: ending balance, lowest balance in the period, investable balance. A core sold globally may offer a minimum daily balance basis; for a US consumer product it isn't an option. [Interest, APY & Statements](/books/banking-and-lending/interest-and-statements) works the day-count and APY formulas through.
 
 ### Change in Terms
 
-A change that may lower the APY or otherwise hurt the consumer needs written notice at least 30 calendar days before it takes effect, stating the effective date. Three exceptions: rate changes on a variable-rate account (the disclosure already said the rate floats), changes to check printing fees, and any term of a time account with a maturity of one month or less. A change that benefits the consumer needs no advance notice. The versioning that makes this enforceable, so an old customer stays on old terms until the notice period runs, is the subject of Products & Product Configuration.
+A change that may lower the APY or otherwise hurt the consumer needs written notice at least 30 calendar days before it takes effect, stating the effective date. Three exceptions: rate changes on a variable-rate account (the disclosure already said the rate floats), changes to check printing fees, and any term of a time account with a maturity of one month or less. A change that benefits the consumer needs no advance notice. The versioning that makes this enforceable, so an old customer stays on old terms until the notice period runs, is the subject of [Products & Product Configuration](/books/banking-and-lending/product-configuration).
 
 ### Maturity and Renewal
 

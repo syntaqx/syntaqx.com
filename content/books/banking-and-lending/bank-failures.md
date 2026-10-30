@@ -9,7 +9,7 @@ tags = ["banking", "bank-failures", "fdic", "deposit-insurance", "resolution", "
 
 Banks fail on Fridays. The chartering authority closes the bank, the FDIC is appointed receiver, and over the weekend the FDIC either hands the deposits to another bank or to a bank it charters for the purpose, so that on Monday insured depositors have their money and the branches, cards, app and direct deposits keep working under a new name. Most failures are small and nearly invisible. In March and May 2023 three of the largest failures in US history happened in eight weeks: Silicon Valley Bank, Signature Bank and First Republic Bank, with $548.5 billion of assets between them at their last reported dates, each brought down by a run of uninsured depositors, two of them resolved with every depositor protected under a systemic risk exception, and the cost charged back to the banking industry by a special assessment that ran through March 2026.
 
-For an engineer, a failure is the moment every record has to be right at once. The FDIC must know, within a weekend, which deposits are insured, which belong to whom behind a custodial account, and which balances to hold; the acquirer must take over accounts, payments in flight and card programs; and every fintech, business and payroll provider with money at the bank has to know where it stands on Monday. This chapter covers the 2023 failures, how the FDIC resolves a bank, the least-cost test and its exception, the special assessment, and what the receivership weekend does to systems. How the FDIC computes insured amounts per depositor is in Deposit Insurance; the risks that cause failures are in [Bank Economics](/books/banking-and-lending/bank-economics).
+For an engineer, a failure is the moment every record has to be right at once. The FDIC must know, within a weekend, which deposits are insured, which belong to whom behind a custodial account, and which balances to hold; the acquirer must take over accounts, payments in flight and card programs; and every fintech, business and payroll provider with money at the bank has to know where it stands on Monday. This chapter covers the 2023 failures, how the FDIC resolves a bank, the least-cost test and its exception, the special assessment, and what the receivership weekend does to systems. How the FDIC computes insured amounts per depositor is in [Deposit Insurance](/books/banking-and-lending/deposit-insurance); the risks that cause failures are in [Bank Economics](/books/banking-and-lending/bank-economics).
 
 ## How the Platforms Do It
 
@@ -52,7 +52,7 @@ A worked example of a depositor's position in a failure without full protection,
 | An advance dividend, if the FDIC declares one at, say, 50% | $475,000 soon after closing |
 | The remaining claim | Paid, in part or full, as assets are sold |
 
-The same depositor with a joint account, retirement accounts and trust accounts at the same bank would have more coverage, one limit per ownership category; Deposit Insurance has the categories and the 2024 trust rule.
+The same depositor with a joint account, retirement accounts and trust accounts at the same bank would have more coverage, one limit per ownership category; [Deposit Insurance](/books/banking-and-lending/deposit-insurance#the-ownership-categories) has the categories and the 2024 trust rule.
 
 ## The Least-Cost Test and the Systemic Risk Exception
 
@@ -88,7 +88,7 @@ What happens to the running systems between Friday's close and Monday's opening,
 3. **Uninsured balances are held.** Large banks must be able to place provisional holds automatically: 12 CFR 360.9 applies to banks with at least $2 billion of deposits and either 250,000 or more deposit accounts or $20 billion or more of assets, and requires the holds to be in place by 9 a.m. local time on the business day after the FDIC's cutoff. Banks with 2 million or more deposit accounts must be able to "calculate the amount of deposit insurance coverage available for each deposit account in the event of its failure" under 12 CFR Part 370.
 4. **Payments keep flowing where they can.** Direct deposits are redirected to the assuming bank; official checks clear; loan payments are still due; in a payoff, checks and payment requests presented after the failure are returned unpaid.
 5. **Monday.** Branches reopen under the assuming bank's name (SVB's as the bridge bank on March 13; First Republic's 84 offices as Chase on the same day it failed), and digital banking resumes.
-6. **Months later.** The acquirer converts the failed bank's accounts to its own core, a conversion with its own weekend (Core Modernization & Conversions).
+6. **Months later.** The acquirer converts the failed bank's accounts to its own core, a conversion with its own weekend ([Core Modernization & Conversions](/books/banking-and-lending/core-modernization)).
 
 The hard cases are the accounts the bank's own records can't settle in a weekend. A custodial or FBO account holding thousands of fintech customers' money is insured per owner only if the bank's records "expressly disclose" the custodial relationship and each owner's interest is ascertainable from records kept "in good faith and in the regular course of business" (12 CFR 330.5), which may be a fintech's or a middleware's ledger rather than the bank's. If those records are incomplete or late, the FDIC can't pay those owners promptly, and the program's customers wait ([Program Ledgers & the Synapse Lesson](/books/banking-and-lending/program-ledgers) covers what happens when the records themselves fail; the Payments volume's [Treasury & Bank Operations](/books/payments/treasury#fbo-accounts-and-pass-through-insurance) covers FBO accounts from a provider's side).
 
@@ -119,7 +119,7 @@ On May 1, 2023 the FDIC published three options for deposit insurance reform: li
 
 ## How to Build It
 
-These are deltas against the core model's `institutions`, `accounts`, `account_parties` and `holds` ([The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model)), with failures recorded as `institution_events` ([The Banking Landscape](/books/banking-and-lending/banking-landscape#how-to-build-it)). The computation of insured amounts per owner and category belongs to Deposit Insurance; this chapter adds what a failure needs on top: the hold, the extract, and, for anyone with money at a bank, the exposure view.
+These are deltas against the core model's `institutions`, `accounts`, `account_parties` and `holds` ([The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model)), with failures recorded as `institution_events` ([The Banking Landscape](/books/banking-and-lending/banking-landscape#how-to-build-it)). The computation of insured amounts per owner and category belongs to [Deposit Insurance](/books/banking-and-lending/deposit-insurance); this chapter adds what a failure needs on top: the hold, the extract, and, for anyone with money at a bank, the exposure view.
 
 ```sql
 -- A failure-day hold is a hold like any other, with its own reason.
