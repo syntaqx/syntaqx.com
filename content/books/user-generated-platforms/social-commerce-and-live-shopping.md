@@ -37,7 +37,7 @@ Live commerce grew up in China, where it works like a television shopping channe
 
 TikTok Shop brought the closed loop to the US on September 12, 2023, with five surfaces from TikTok's announcement: shoppable videos and LIVE streams in the For You feed, a Product Showcase on a brand's profile, a Shop Tab marketplace with search and promotions, an affiliate program connecting creators with sellers, and Fulfilled by TikTok, a logistics service that stores, picks, packs and ships merchants' products. Meta ran the experiment in the other direction. TechCrunch reported in January 2023 that Instagram would remove the Shop tab from its navigation in February, and PYMNTS that Instagram would stop offering live shopping on March 16, 2023. Meta then required checkout for new Shops from June 5, 2023 and stopped hosting Shops without checkout from August 10, 2023 outside the US, except in 21 markets it exempted (TechCrunch, April 2023), only to reverse in June 2025, moving Shops to checkout on the merchant's website by the end of August 2025 and dropping payment processing, order management and chargeback handling for new orders, as PPC Land reported. Running checkout means running disputes, refunds, seller verification and payouts; a platform that doesn't want those duties links out. TikTok doesn't publish US Shop sales, and I cite no third-party estimate.
 
-<!-- source-gap: tiktok-shop-us-gmv | missing | TikTok Shop's US gross merchandise value | closes with: a ByteDance or TikTok statement, filing, or a report citing one with its method | checked: 2026-10-27 -->
+<!-- source-gap: tiktok-shop-us-gmv | missing | TikTok Shop's US gross merchandise value | closes with: a ByteDance or TikTok statement, filing, or a report citing one with its method | checked: 2026-11-01 -->
 
 ### The Parties
 
@@ -79,7 +79,7 @@ Attribution decides which creator, if any, earns on an order. The published rule
 - **Commission is earned on fulfilment.** TikTok says commission is earned once the seller fulfils the order, and its referral fee applies only to completed, paid and delivered orders. YouTube pays through AdSense 60 to 120 days after the purchase, and returns reverse commissions.
 - **Localized sales keep the credit.** When a YouTube viewer abroad is matched to a local seller of the same product, the commission comes from the fulfilling seller's rate.
 
-<!-- source-gap: tiktok-affiliate-windows | missing | TikTok Shop's affiliate view and click attribution windows in days | closes with: a TikTok Shop seller or affiliate help page stating them | checked: 2026-10-27 -->
+<!-- source-gap: tiktok-affiliate-windows | missing | TikTok Shop's affiliate view and click attribution windows in days | closes with: a TikTok Shop seller or affiliate help page stating them | checked: 2026-11-01 -->
 
 My rule: store every touch that could earn (a view of a shoppable video or a stream with the product pinned, a tap on a tag, a link click) with its time, viewer, creator, content and product, and compute attribution once, at checkout, with a versioned rule (method, window, precedence) recorded on the order. A last-click rule that runs in the client, or that is recomputed nightly with today's rule, can't answer a creator who asks why a sale went to someone else. A live stream needs one more input: whether the product was pinned while the buyer watched, which is why pins are stored as time ranges.
 
@@ -119,7 +119,7 @@ The counter-bid extension is the platform's answer to sniping: without it, the w
 
 ### Hosts, Co-hosts and Moderators
 
-<!-- source-gap: whatnot-cohost-raids | missing | Whatnot co-host and raid features (seen only as help-center article titles) | closes with: the Whatnot help articles themselves, opened | checked: 2026-10-27 -->
+<!-- source-gap: whatnot-cohost-raids | missing | Whatnot co-host and raid features (seen only as help-center article titles) | closes with: the Whatnot help articles themselves, opened | checked: 2026-11-01 -->
 
 A live sale has staff. Whatnot sellers can invite a co-host to a show and raid another seller's show at the end of theirs, the commerce version of the audience transfer in [Raids and Audience Transfer](/books/user-generated-platforms/live-chat-and-interactivity#raids-and-audience-transfer). The roles matter for commerce because they act on money: who may start an auction, pin a product, change an offer's price or quantity, or cancel a winner's order. My default is that only the seller's account and accounts the seller has granted a selling role may change offers, chat moderators moderate chat only, and every offer change records which account made it, because a dispute about a mispriced flash deal is a question about who changed what during the show.
 

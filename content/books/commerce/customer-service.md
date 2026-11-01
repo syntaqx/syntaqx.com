@@ -47,7 +47,7 @@ Commerce contacts fall into a short list, each with an owner elsewhere in the vo
 | **Product questions** | Fit, compatibility, use | Product content | [Product Information & Content](/books/commerce/product-information) |
 | **Account and privacy** | Sign-in, email change, deletion | Account recovery, the privacy request process | [Customers, Accounts & Privacy](/books/commerce/customers-and-accounts) |
 
-WISMO is commonly the largest category, and the most avoidable, because every fact needed to answer it already exists in the carrier's events. <!-- source-gap: wismo-share | missing | WISMO's share of ecommerce support contacts | closes with: a helpdesk vendor's or research firm's published benchmark with its method | checked: 2026-10-28 -->
+WISMO is commonly the largest category, and the most avoidable, because every fact needed to answer it already exists in the carrier's events. <!-- source-gap: wismo-share | missing | WISMO's share of ecommerce support contacts | closes with: a helpdesk vendor's or research firm's published benchmark with its method | checked: 2026-11-01 -->
 
 ## WISMO and Self-Service
 

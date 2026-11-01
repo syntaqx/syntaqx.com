@@ -24,7 +24,7 @@ As of October 2026, the carriers and payment providers set the practical limits,
 | **Stripe** | Prohibited only in India and Thailand; restricted in Indonesia and Canada | Restricted: "sold in accordance with applicable law"; in the US only FDA-authorized products | Firearms, regulated parts and weapons like stun guns and pepper spray need approval; illegal weapons prohibited |
 | **Shopify** | Per the merchant's law and Shopify Payments' supported categories | Same | Same; unsupported categories must use a third-party processor |
 
-<!-- source-gap: ups-alcohol-program | secondary | UPS's alcohol shipping agreement, adult-signature requirement and approved states (described from UPS help-page snippets; the pages returned 403 to retrieval) | closes with: the UPS alcohol and wine shipping pages opened directly | checked: 2026-10-28 -->
+<!-- source-gap: ups-alcohol-program | secondary | UPS's alcohol shipping agreement, adult-signature requirement and approved states (described from UPS help-page snippets; the pages returned 403 to retrieval) | closes with: the UPS alcohol and wine shipping pages opened directly | checked: 2026-11-01 -->
 
 Three patterns:
 
@@ -49,7 +49,7 @@ Two Supreme Court cases set the limits on how states may treat out-of-state sell
 
 Retailer shipping went the other way after Tennessee Wine. The courts of appeals have upheld state laws that let in-state retailers deliver but bar out-of-state retailers from shipping in: the Sixth Circuit for Michigan (Lebamoff Enterprises v. Whitmer, 2020), the Eighth Circuit for Missouri (Sarasota Wine Market v. Schmitt, 2021) and the Fourth Circuit for North Carolina (B-21 Wines v. Bauer, 2022), which held that even though North Carolina's bar "discriminates against interstate commerce -- it is authorized by Section 2 of the Twenty-first Amendment," because an out-of-state retailer shipping in would bypass the state's wholesalers entirely.
 
-The result is three different maps. Winery-to-consumer shipping is allowed in most states under a state permit; retailer-to-consumer shipping across state lines in far fewer; spirits and beer shipping to consumers in only a handful. Current counts change every legislative session and come from industry trackers rather than any one statute. <!-- source-gap: dtc-shipping-state-counts | missing | the number of states allowing winery, out-of-state retailer and spirits direct-to-consumer shipping as of 2026 | closes with: the Sovos ShipCompliance/WineBusiness Analytics DTC Wine Shipping Report or an NCSL table | checked: 2026-10-28 -->
+The result is three different maps. Winery-to-consumer shipping is allowed in most states under a state permit; retailer-to-consumer shipping across state lines in far fewer; spirits and beer shipping to consumers in only a handful. Current counts change every legislative session and come from industry trackers rather than any one statute. <!-- source-gap: dtc-shipping-state-counts | missing | the number of states allowing winery, out-of-state retailer and spirits direct-to-consumer shipping as of 2026 | closes with: the Sovos ShipCompliance/WineBusiness Analytics DTC Wine Shipping Report or an NCSL table | checked: 2026-11-01 -->
 
 Where shipping is allowed, the state permit usually brings the same kinds of conditions, which the system has to enforce per destination state:
 

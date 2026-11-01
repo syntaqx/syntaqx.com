@@ -156,7 +156,7 @@ A seller's marketplace metrics are two sets: the channel's, computed by the chan
 | **Deduction rate** (wholesale) | Deductions taken ÷ invoiced amount, by partner and reason | Valid and invalid separated after dispute ([Deductions and Disputes](/books/commerce/wholesale-and-retail-distribution#deductions-and-disputes)) |
 | **Retail sell-through and weeks of supply** (wholesale) | From the partner's sales and stock reports | The retailer's data, loaded by week |
 
-<!-- source-gap: amazon-featured-offer-percentage | secondary | Amazon's definition of Featured Offer percentage in Business Reports (page-view weighted) | closes with: an Amazon Seller Central help page readable without a login | checked: 2026-10-28 -->
+<!-- source-gap: amazon-featured-offer-percentage | secondary | Amazon's definition of Featured Offer percentage in Business Reports (page-view weighted) | closes with: an Amazon Seller Central help page readable without a login | checked: 2026-11-01 -->
 
 A merchant running its own marketplace adds take rate, liquidity and seller concentration, whose definitions are User-Generated Platforms' [Marketplace Volume and Liquidity](/books/user-generated-platforms/operating-metrics#marketplace-volume-and-liquidity).
 

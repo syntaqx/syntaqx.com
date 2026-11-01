@@ -128,7 +128,7 @@ A remix graph is a set of edges from a child post to its parent, each with a sha
 
 The parent can be deleted by its author, removed by the platform, made private, have reuse turned off, or be trimmed or blurred. The platforms disagree on what that does to children:
 
-<!-- source-gap: tiktok-duet-parent-deleted | missing | what happens to a TikTok Duet when the original is deleted | closes with: a TikTok support page documenting it | checked: 2026-10-27 -->
+<!-- source-gap: tiktok-duet-parent-deleted | missing | what happens to a TikTok Duet when the original is deleted | closes with: a TikTok support page documenting it | checked: 2026-11-01 -->
 
 | Event | TikTok | Instagram | YouTube Shorts |
 | --- | --- | --- | --- |
@@ -208,7 +208,7 @@ License terms show up as product limits, and the help pages are where to read th
 
 Lyrics are a separate display surface of the composition. I treat lyric display as its own surface in a license scope, off unless a deal grants it, rather than assuming the music license covers showing the words.
 
-<!-- source-gap: lyrics-licensing | missing | how platforms license lyric display (stated as my rule) | closes with: a platform, publisher or lyrics-licensor page describing lyric deals | checked: 2026-10-27 -->
+<!-- source-gap: lyrics-licensing | missing | how platforms license lyric display (stated as my rule) | closes with: a platform, publisher or lyrics-licensor page describing lyric deals | checked: 2026-11-01 -->
 
 The general rule I take from this: **every feature that touches music checks a scope, not a flag.** The scope is (sound, territory, account kind, surface, duration, time), and it's answered by the deals behind the sound's rights, at creation and again at playback.
 

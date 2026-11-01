@@ -25,7 +25,7 @@ As of October 2026, from the vendors' and platforms' own pages:
 | **Shopify** | Fraud analysis and Fraud Control for merchants, "integrated card testing protection" on Shopify Payments, Shopify Protect on eligible Shop Pay orders, checkout bot protection on Plus | Bot and card testing checkouts excluded from abandoned checkout recovery |
 | **Stripe** | Radar's models and rules, plus card testing controls (rate limiters, models, automatic CAPTCHA) on its newer payment surfaces | Card testing controls separate from Radar's dispute protection |
 
-Riskified's guarantee terms (which chargeback reasons it covers) aren't on its public product pages, so its row names the products, not the coverage. <!-- source-gap: riskified-products | missing | which chargeback reason codes Riskified's Chargeback Guarantee covers (fraud only, or also non-fraud disputes) | closes with: Riskified's Chargeback Guarantee page or its documentation (riskified.com refuses automated fetches; the home page lists the products only) | checked: 2026-10-28 -->
+Riskified's guarantee terms (which chargeback reasons it covers) aren't on its public product pages, so its row names the products, not the coverage. <!-- source-gap: riskified-products | missing | which chargeback reason codes Riskified's Chargeback Guarantee covers (fraud only, or also non-fraud disputes) | closes with: Riskified's Chargeback Guarantee page or its documentation (riskified.com refuses automated fetches; the home page lists the products only) | checked: 2026-11-01 -->
 
 Three things the table shows:
 

@@ -110,7 +110,7 @@ Local inference is the exception to "idle decides": a GPU under load draws hundr
 
 **Noise.** Rack servers are designed for data-center airflow, where nobody sits next to them, and their fans run fast to push air through a dense 1U or 2U chassis. Appliance vendors publish noise; Synology lists the DS925+ at 20.5 dB(A) idle. I found no published idle noise figure for the used enterprise generations homelabs buy, so the practical test is to hear one before deciding where it lives.
 
-<!-- source-gap: enterprise-server-idle-dba | missing | an idle dB(A) figure for Dell R730 or HPE DL380 Gen9 class servers | closes with: a Dell or HPE acoustics spec or an independent measurement, opened | checked: 2026-10-27 -->
+<!-- source-gap: enterprise-server-idle-dba | missing | an idle dB(A) figure for Dell R730 or HPE DL380 Gen9 class servers | closes with: a Dell or HPE acoustics spec or an independent measurement, opened | checked: 2026-11-01 -->
 
 **Racks.** The rack follows the hardware. A full-depth 2U server needs a four-post rack deep enough for it and its rails. Mini PCs, a firewall, switches and a patch panel fit a short-depth or wall-mount rack, or a shelf. Rack units are the same U a colocation provider sells space in ([How Colocation Is Sold](/books/hosting-and-cloud/data-centers-and-colocation#how-colocation-is-sold)), so a lab built into a rack is already measured in the unit it will be priced in if it moves. The cabling, patch panels and switches in the rack are [Home Networks: Ethernet, Wi-Fi & Cabling](/books/hosting-and-cloud/home-networks-and-cabling).
 
