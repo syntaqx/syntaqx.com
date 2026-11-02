@@ -26,11 +26,11 @@ Product writes a ticket. It's mostly a screenshot with a red circle on it. An en
 
 A senior engineer reviews the diff: two comments about naming, one "nit:" resolved without a word. A staff engineer gets tagged because it touches billing, reads the billing part and skims the rest, because the rest of the codebase works. Mostly. Then the tech lead approves the approval. "LGTM" is a load-bearing acronym, and a healthy number of them mean "looks good to whoever looked at it before me."
 
-It merges. Well, it merges after three other pull requests land on main first, done by a completely different team, reviewed by a different senior. One of them changed that function from the file next door in a way nobody mentioned. Your tests still pass, so in it goes. It deploys. The CTO finds out when a number on a dashboard moves.
+It merges. Well, it merges after three other pull requests land on main first, done by completely different teams, reviewed by different seniors. One of them changed that function from the file next door in a way nobody mentioned. Your tests still pass, so in it goes. It deploys. The CTO finds out when a number on a dashboard moves.
 
 Nobody in that chain read every line, and nobody was supposed to. Each of them trusted something: the person before them, the tests, the type checker, the compiler, the fact that it ran locally.
 
-The scrutiny runs downhill, too. A junior's pull request gets the deepest review in the building, and it should, because review is half of how they learn. Flip it. It's 2am, production is down, and your Principal Engineer posts in the incident channel that they found it and they're pushing a fix. How hard is the on-call reading that diff? Be honest. It's approved before CI finishes. We call that trust. It's really reputation, and reputation is usually right, right up until the night it isn't.
+The scrutiny runs downhill, too. A junior's pull request gets the deepest review in the building, and it should, because review is half of how they learn. Flip it. It's 2am, production is down, and your principal engineer posts in the incident channel that they found it and they're pushing a fix. How hard is the on-call reading that diff? Be honest. It's approved before CI finishes. We call that trust. It's really reputation, and reputation is usually right, right up until the night it isn't.
 
 When it did go wrong, nobody I've worked for responded by having the CTO review every pull request. They wrote a [postmortem](/docs/operations/incident-response), added a test, tightened a check, and went back to asking what they'd always asked: did it work, did it ship, did the number move.
 
@@ -38,7 +38,7 @@ When it did go wrong, nobody I've worked for responded by having the CTO review 
 
 Every engineering org has an answer to this, written down or not: can a junior approve another junior's work?
 
-Usually, no. Neither has seen enough things break to know where to look. Two seniors, though, can ship with nobody else looking, and nobody loses sleep. They're wrong all the time. They've just been wrong in front of you often enough that you know roughly how, and how often.
+Usually, no. Neither has seen enough things break to know where to look. Two seniors, though, can ship with nobody else looking, and nobody loses sleep, even though they're wrong plenty. They've just been wrong in front of you and each other often enough that you know roughly how, and how often.
 
 Which seniors, though? The one who started last week and the one who's been here five years have the same title and the same approve button. You don't trust them the same, and you shouldn't.
 
@@ -54,19 +54,19 @@ The good tech leads knew where to look anyway. With a junior's pull request, the
 
 Every company I've worked at had someone like an architect: principal, staff, chief something, whatever the ladder called it that year. They weren't on every pull request. If they had been, nothing would have shipped, and they would have quit.
 
-They got pulled in for a new service, a change to the one service that's been quietly stable for a year, a three-year vendor contract with a termination clause written by someone who hates you. Or they pulled themselves in: skimming merged PRs over coffee, noticing three teams had each built their own rate limiter this quarter, two on Redis and one on the database, each counting slightly differently, and showing up with a doc before it became an incident.
+They got pulled in for a new service, a change to the one service that had been quietly stable for a year, a three-year vendor contract with a termination clause written by someone who hates you. Or they pulled themselves in: skimming merged PRs over coffee, noticing three teams had each built their own rate limiter this quarter, two on Redis and one on the database, each counting slightly differently, and showing up with a doc before it became an incident.
 
 Everyone below them needed the matching skill: knowing when to ping the architect, and when not to. Ask about every variable name and you burn the architect out. Never ask and you ship a second job queue.
 
-The good engineers built up a feel for all of it, and the feel came down to reversibility. Bezos called it [one-way and two-way doors](https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm). Most decisions are two-way: get it wrong, back out, try again. A schema with a billion rows in it isn't. Neither is a public API, a payment flow, a data deletion, or anything with the word "migration" in it.
+That feel came down to reversibility. Bezos called it [one-way and two-way doors](https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm). Most decisions are two-way: get it wrong, back out, try again. Some aren't: the billion-row migration, the public API somebody already integrated, the payment that already cleared, the delete that already ran. You don't back out of those. You clean up after them.
 
-That's what we now call human-in-the-loop. Nobody invented it in 2024. The loop was just made of people.
+Checking with someone first was just how the job worked: whoever last touched the file for the two-way doors, the architect for the one-way ones. When an agent does the asking, we call it human-in-the-loop. Same loop. It just finally has a name.
 
 ## Then the typing got cheap
 
 Typing the code was always the most visible cost in that chain, and it just got cheap. Not free, but close: hand an agent a well-described task and it'll knock it out. It'll build the wrong thing just as happily, too.
 
-Karpathy's version was "forget that the code even exists." No good CTO has ever forgotten the code exists. They just don't read it, because everything built around the lines reads it for them: review, CI, types, tests, monitoring, on-call, postmortems, and the one senior engineer who can smell a bad migration from across the building.
+Karpathy's version was "forget that the code even exists." No good CTO has ever forgotten the code exists. They just don't read it, because everything built around the lines reads it for them: review, CI, tests, monitoring, on-call, postmortems, and the one senior engineer who can smell a bad migration from across the building. Some of that reading was decided years ago, the day somebody picked the language: a compiled one, so the compiler would catch things, or an interpreted one, because everyone already knew it and could ship by Friday.
 
 So the question that matters was never whether a human read it. It's whether anything would catch it if it were wrong.
 
@@ -76,15 +76,17 @@ None of that is "the code is bad." It's "I can't predict how it's bad," which is
 
 ## This is DevOps
 
-Measurement is the one problem this industry knows how to solve. We called it DevOps.
+Measurement is the one problem this industry knows how to solve. We've called it DevOps, SRE, observability and platform engineering, depending on the year and who was selling the conference tickets.
 
 You trust a deploy because the pipeline checks it twice. Before anything ships, the build goes green and the test suite passes. Once it's live, smoke tests run clean against the real deploy, [synthetics](/docs/observability/frontend-and-synthetic#synthetic-monitoring) keep walking the critical flows every few minutes, the canary takes traffic, error rates and latency hold, and nobody rolls back. [DORA's metrics](https://dora.dev/guides/dora-metrics-four-keys/) exist so leadership can know how delivery is going without reading every change.
 
+The watching doesn't stop at the deploy, either. The bulk export nobody has used in three years finally gets a customer, blows past the maximum response time, and the alert fires before the support ticket does. Nobody had read that code since it shipped. Something noticed anyway.
+
 So point the same machine at your agents. It's less work than it sounds. Tag every change with who, or what, wrote it (plenty of agent tooling already adds a co-author trailer to the commit), then slice the numbers you already collect by author and by area. Change failure rate, reverts, escaped defects, review rounds, how often a human caught something the agent missed.
 
-Now trust has a shape. Maybe the agent's UI changes fail less often than your juniors' do, and its billing changes fail way more. Let it merge UI changes on green and require a senior on billing, the way you'd give a junior more rope as they earn it. Autonomy stops being an argument in Slack and becomes a policy that follows the data, and tightens itself the week the numbers turn.
+Now trust has a shape. Maybe the agent's UI changes fail less often than your juniors' do, and its billing changes fail way more. Let it merge UI changes on green and require a senior on billing, the way you'd give a junior more rope as they earn it. Slice it by model, too: when a new one ships, the numbers tell you whether it earned the upgrade or just the press release. Autonomy stops being an argument in Slack and becomes a policy that follows the data, and tightens itself the week the numbers turn.
 
-Read those numbers honestly, though. Agents get the easier tickets, so compare like with like. A human quietly fixing the agent's work in review is a save, not a pass, so count it against the agent. And an architectural mistake won't show up in change failure rate for months, so give slow failures time to land before you hand out more rope. A green dashboard only says it hasn't broken yet.
+Be honest about what those numbers can't see, though. They only count what somebody caught, and a change nobody looked at closely has a spotless record. When a reviewer quietly fixes the agent's work before it merges, that's a save, not a clean pass, so put it on the agent's record. And the worst mistakes don't fail fast: a bad abstraction passes every check for months, then turns up as the reason every feature takes twice as long. A green dashboard doesn't mean it's right. It means it hasn't broken yet.
 
 ## Who clicks approve
 
@@ -92,9 +94,9 @@ Follow the data far enough and you reach the question people flinch at: why can'
 
 The different model and the fresh session matter for the same reason you don't approve your own pull request: you can't see your own blind spots. A reviewer in the same session is the engineer who pair-programmed the change and then approved it: they watched every line get written and were talked into it long before the pull request opened.
 
-Sometimes the loop never ends: the reviewer flags something, the writer fixes it and breaks something else, and around they go, like two very polite people stuck in a doorway. When it won't converge, it's usually because nobody wrote down what "done" looks like. Stop the loop and pick it up yourself.
+Sometimes the loop never ends: the reviewer flags something, the writer fixes it and breaks something else, and around they go, like two very polite people stuck in a doorway. When it won't converge, stop the loop and find out why, because the problem is usually upstream of the code. Either nobody wrote down what "done" looks like, and the fix is [a better ticket](/docs/product/problem-statements#acceptance-criteria-are-outcomes), or the change is fighting [the architecture](/docs/architecture/service-boundaries), and no amount of rerolling fixes that. Fix it there, then hand it back.
 
-And yes, AI-written tests will mock the function under test, or edit the assertion to match the bug and report, cheerfully, that everything passes. It's `test_it_works` with better throughput, and the fix is the old one: read the tests harder than the code.
+And yes, AI-written tests will mock the function under test, or edit the assertion to match the bug and report, cheerfully, that everything passes. Humans have written plenty of tests that only checked the endpoint returned a response, and I've approved my share. It's `test_it_works` with better throughput, and the fix is the old one: read the tests harder than the code.
 
 Then make it show its work, the same way you'd ask an engineer to. "It works" isn't evidence. Screenshots of the change in the PR are. Better yet, have the agent record itself using the feature, clicking through the flow it just built, and attach the video. If it can't demo the thing, it didn't finish the thing.
 
@@ -110,7 +112,7 @@ It's an on-call rotation that never sleeps. Like the human one, it needs an owne
 
 **The volume is different.** A junior opens one to three pull requests a week. An agent can open more than that before lunch, and humans with too much to review start approving things. A 2,000-line diff gets the same "LGTM" as a 20-line one, just faster. If your plan is "we'll review all of it carefully," you don't have a plan. You have a backlog.
 
-So hold agents to the rule we've always held people to: [changes small enough to review](/docs/engineering/commits-and-reviews#pull-requests). We learned to ship in iterations because a small change can actually be read, actually be tested, and actually be rolled back on its own. An agent will cheerfully do the whole feature in one heroic diff if you let it. Don't. Ask for the same work in steps, each one merged, deployed and verified before the next one starts.
+So hold agents to the rule we've always held people to: [changes small enough to review](/docs/engineering/commits-and-reviews#pull-requests). We learned to ship in iterations because a small change can actually be read, actually be tested, and actually be rolled back on its own. An agent will cheerfully do the whole feature in one heroic diff if you let it. So will most engineers I've worked with. Don't let either of them. Ask for the same work in steps, each one merged, deployed and verified before the next one starts.
 
 **Agents are wrong with a straight face.** A nervous junior hedges in the PR description and puts "I think?" at the end of things. An agent sounds exactly as sure about the broken thing as the working one. You lose the tell, so the guardrails have to become the tell.
 
@@ -128,7 +130,7 @@ Before anything, human or otherwise, merges without me reading it, I want the bo
 
 That last one is where agents get fun. Turn one loose in a browser with no idea what the happy path is supposed to be, and [watch where it chokes](/docs/quality/ai-assisted-testing). Wherever it gets stuck, a customer will too, so write a Playwright test that asserts what should be true. Then send the agent back every night, like a new customer who never learns the shortcuts, and read what it found confusing.
 
-With the guardrails in, you inherit the rest of what the architect and the CTO used to carry. That's every engineer's job now.
+With the guardrails in, you inherit the rest of what the architect and the CTO used to carry.
 
 ## It was always the job
 
