@@ -26,7 +26,7 @@ Product writes a ticket. It's mostly a screenshot with a red circle on it. An en
 
 A senior engineer reviews the diff: two comments about naming, one "nit:" resolved without a word. A staff engineer gets tagged because it touches billing, reads the billing part and skims the rest, because the rest of the codebase works. Mostly. Then the tech lead approves the approval. "LGTM" is a load-bearing acronym, and a healthy number of them mean "looks good to whoever looked at it before me."
 
-It merges. Well, it merges after three other pull requests land on main first, one of which changed that function from the file next door in a way nobody mentioned. Your tests still pass, so in it goes. It deploys. The CTO finds out when a number on a dashboard moves.
+It merges. Well, it merges after three other pull requests land on main first, done by a completely different team, reviewed by a different senior. One of them changed that function from the file next door in a way nobody mentioned. Your tests still pass, so in it goes. It deploys. The CTO finds out when a number on a dashboard moves.
 
 Nobody in that chain read every line, and nobody was supposed to. Each of them trusted something: the person before them, the tests, the type checker, the compiler, the fact that it ran locally.
 
