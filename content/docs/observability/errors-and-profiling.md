@@ -142,7 +142,7 @@ Overhead claims vary in how specific they are, and I only quote the specific one
 - **The OpenTelemetry eBPF profiler** states "1% CPU and 250MB memory are our upper limits in testing."
 - **Go's own diagnostics guide** says it "is safe to profile programs in production, but enabling some profiles (e.g. the CPU profile) adds cost," and recommends collecting one profile at a time.
 - **Grafana**, which makes Pyroscope, gives a range rather than a figure: "CPU and latency overhead for typical configurations lands in the low single-digit percentages," and sampling profilers' memory overhead is "usually less than 50 MB per pod."
-- **Datadog and Parca** describe their overhead as low or very low without publishing a figure, so measure it on your own service before and after enabling it. <!-- source-gap: profiling-vendor-overhead | missing | Datadog and Parca publish no numeric overhead figure for their continuous profilers | closes with: a vendor-published overhead percentage or benchmark | checked: 2026-10-28 -->
+- **Datadog and Parca** describe their overhead as low or very low without publishing a figure, so measure it on your own service before and after enabling it. <!-- source-gap: profiling-vendor-overhead | missing | Datadog and Parca publish no numeric overhead figure for their continuous profilers | closes with: a vendor-published overhead percentage or benchmark | checked: 2026-11-01 -->
 
 Block and mutex profiles are the expensive ones: Go leaves both off by default, and Datadog warns that "The block profiler can cause noticeable overhead for production workloads." Turn them on with a sampling rate, not at full fidelity.
 

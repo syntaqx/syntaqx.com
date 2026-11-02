@@ -111,7 +111,7 @@ Past 10G, and between rooms at 10G, glass and twinax beat copper on power, heat 
 | Wi-Fi 6E | 802.11ax | adds 6 GHz | 160 MHz | 14 more 80 MHz and 7 more 160 MHz channels, free of legacy clients |
 | Wi-Fi 7 | 802.11be | 2.4, 5, 6 GHz | 320 MHz (6 GHz only) | Multi-Link Operation across bands; 4K QAM, about 20% over 1024 QAM |
 
-<!-- source-gap: wifi-4-5-channel-widths | missing | widest channel widths for Wi-Fi 4 and 5 | closes with: the IEEE 802.11n/ac amendment pages or a vendor design guide | checked: 2026-10-27 -->
+<!-- source-gap: wifi-4-5-channel-widths | missing | widest channel widths for Wi-Fi 4 and 5 | closes with: the IEEE 802.11n/ac amendment pages or a vendor design guide | checked: 2026-11-01 -->
 
 The 6 GHz band is the reason to buy 6E or 7: in the US, FCC 20-51 lets low-power indoor access points use the whole 5.925 to 7.125 GHz band without an automated frequency coordination system (standard-power and outdoor use need one, in U-NII-5 and U-NII-7). The cost is range: 6 GHz is absorbed by walls faster than 5 GHz, so it rewards more access points, not stronger ones.
 
@@ -125,7 +125,7 @@ The 6 GHz band is the reason to buy 6E or 7: in the US, FCC 20-51 lets low-power
 
 **Powerline** adapters (HomePlug AV2, G.hn) carry Ethernet over the electrical wiring. They are the last resort before mesh; their throughput depends on the circuit, and I have no vendor-neutral measurement to cite.
 
-<!-- source-gap: powerline-throughput | missing | measured powerline (HomePlug AV2, G.hn) throughput and latency in homes | closes with: an independent lab test or the HomePlug/HomeGrid specifications | checked: 2026-10-27 -->
+<!-- source-gap: powerline-throughput | missing | measured powerline (HomePlug AV2, G.hn) throughput and latency in homes | closes with: an independent lab test or the HomePlug/HomeGrid specifications | checked: 2026-11-01 -->
 
 ## ISP Handoffs
 
