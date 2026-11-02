@@ -1,7 +1,7 @@
 +++
 title = "We've Been Vibe Coding This Whole Time"
 date = 2026-11-02T00:00:00Z
-description = "Every promotion has moved you further from the code, and the company has shipped anyway. Leadership has always set direction and managed outcomes. Now that's every engineer's job."
+description = "Every promotion has moved you further from the code, and the company has shipped anyway. Leadership set direction and managed outcomes. That's your job now."
 categories = ["AI", "Engineering Leadership"]
 tags = ["LLMs", "AI in Development", "Engineering Culture", "Software Quality"]
 layout = "feature"
@@ -24,7 +24,7 @@ We've been vibe coding this whole time. We just called it delegation and drew it
 
 Walk a feature to production at a perfectly normal company, any year you like before 2023.
 
-Product writes a ticket. It's mostly a screenshot with a red circle on it. An engineering manager gets it first, complains in a comment that there are no acceptance criteria, and writes them. After sprint planning, a mid-level engineer picks it up and builds it. A third of the code is adapted from a 2014 Stack Overflow answer. (No judgment. It was working code.) Another third is lifted from the file next door, written by the guy who left eight months ago.
+Product writes a ticket. It's mostly a screenshot with a red circle on it. An engineering manager gets it first, complains in a comment that there are no acceptance criteria, and writes them. After sprint planning, a mid-level engineer picks it up and builds it. A third of the code is adapted from a 2014 Stack Overflow answer. (No judgment. It was working code.) Another third executes a function from the file next door, written by the guy who left eight months ago.
 
 A senior engineer reviews the diff: two comments about naming, one "nit:" resolved without a word. A staff engineer gets tagged because it touches billing, reads the billing part and skims the rest, because the rest of the codebase works. Mostly. Then the tech lead approves the approval. "LGTM" is a load-bearing acronym, and a healthy number of them mean "looks good to whoever looked at it before me."
 
