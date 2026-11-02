@@ -270,7 +270,7 @@ Notes on the sketch:
 - [IEEE ComSoc Technology Blog: IBM's Cloud Satellite service in generally available orbit](https://techblog.comsoc.org/2021/03/01/ibms-cloud-satellite-service-in-generally-available-orbit/), March 1, 2021
 - [Google Cloud: Introducing the next evolution of container platforms](https://cloud.google.com/blog/products/containers-kubernetes/whats-new-with-gke-at-google-cloud-next), August 29, 2023, GKE Enterprise and Anthos
 - [Oxide: The cloud computer](https://oxide.computer/blog/the-cloud-computer), general availability on October 26, 2023, the Series A, included software and power draw
-- [VMware by Broadcom: Business transformation (Wayback copy)](http://web.archive.org/web/20231216021905/https://news.vmware.com/company/vmware-by-broadcom-business-transformation), December 11, 2023, the end of perpetual licenses and SnS renewals
+- [VMware by Broadcom: Business transformation (Wayback copy)](https://web.archive.org/web/20231216021905/https://news.vmware.com/company/vmware-by-broadcom-business-transformation), December 11, 2023, the end of perpetual licenses and SnS renewals
 - [Broadcom: Form 8-K exhibit 99.1 (November 2023)](https://www.sec.gov/Archives/edgar/data/1730168/000114036123054354/ef20015100_ex99-1.htm), completion of the VMware acquisition on November 22, 2023
 - [Microsoft: Ignite 2024 Book of News](https://news.microsoft.com/ignite-2024-book-of-news/), Azure Local replacing the Azure Stack product family
 - [Microsoft: Announcing comprehensive sovereign solutions](https://blogs.microsoft.com/blog/2025/06/16/announcing-comprehensive-sovereign-solutions-empowering-european-organizations/), June 16, 2025

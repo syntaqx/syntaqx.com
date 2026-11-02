@@ -271,7 +271,7 @@ Design notes:
 - [California Business and Professions Code 17941](https://california.public.law/codes/business_and_professions_code_section_17941), the bot disclosure rule for commercial transactions
 - [California Business and Professions Code 22757.1](https://california.public.law/codes/business_and_professions_code_section_22757.1), covered providers and large online platforms
 - [California Business and Professions Code 22757.6](https://california.public.law/codes/business_and_professions_code_section_22757.6), operative August 2, 2026
-- [Maine Revised Statutes, Title 10, section 1500-DD](https://legislature.maine.gov/statutes/10/title10sec1500-DD.html), chatbot notice in trade and commerce
+- [Maine Revised Statutes, Title 10, section 1500-DD](https://legislature.maine.gov/statutes/10/title10sec1500-DD-1.html), chatbot notice in trade and commerce
 - [Davis Polk: Utah scales back its generative AI consumer protection law](https://www.davispolk.com/insights/client-update/utah-scales-back-reach-generative-ai-consumer-protection-law), the 2025 amendment's disclosure triggers
 - [Artificial Intelligence Act: Article 50](https://artificialintelligenceact.eu/article/50/), transparency obligations for providers and deployers
 - [European Parliament: Procedure file 2025/0359(COD)](https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2025%2F0359%28COD%29), the Digital Omnibus on AI, Regulation (EU) 2026/1744

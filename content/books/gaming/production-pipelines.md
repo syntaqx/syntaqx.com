@@ -353,7 +353,7 @@ Three smaller decisions make the tables useful later:
 - [Steamworks: Languages supported on Steam](https://partner.steamgames.com/doc/store/localization/languages), declaring supported languages and English as the fallback language
 - [Speech Graphics](https://www.speech-graphics.com/), audio-driven lip sync with SGX and FaceFX
 - [Steamworks: Playtest](https://partner.steamgames.com/doc/features/playtest), the child app ID, limited and open sign-up, random selection, no reviews, no confidentiality and feedback collection
-- [Xbox Research](https://xbox.com/community/research), age limit, remote and onsite studies and their locations
+- [Xbox Research](https://www.xbox.com/en-US/community/research), age limit, remote and onsite studies and their locations
 - [PlayStation Research](https://research.playstation.com/en-gb/home), confidential playtests and interviews, sometimes compensated
 - [Microsoft: Publish on Xbox (ID@Xbox)](https://developer.microsoft.com/en-US/games/publish), what ID@Xbox offers and its age, NDA and country requirements
 - [Sony Interactive: Showing your Game to PlayStation](https://sonyinteractive.com/en/?p=3011416), PlayStation Partners registration, approval and the GDPA

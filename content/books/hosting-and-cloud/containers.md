@@ -253,9 +253,9 @@ Notes on the sketch:
 - [OpenVZ: History](https://wiki.openvz.org/History), Virtuozzo in January 2002 and OpenVZ in 2005
 - [Solomon Hykes: The future of Linux Containers](https://www.youtube.com/watch?v=wW9CAH9nSLs), PyCon lightning talk, March 2013
 - [GitHub: moby/moby tags](https://github.com/moby/moby/tags), Docker v0.1.0 on March 26, 2013
-- [Docker: dotCloud is becoming Docker, Inc.](http://web.archive.org/web/20140604001631/http://blog.docker.com:80/2013/10/dotcloud-is-becoming-docker-inc/), October 29, 2013 (archived)
+- [Docker: dotCloud is becoming Docker, Inc.](https://web.archive.org/web/20140604001631/http://blog.docker.com:80/2013/10/dotcloud-is-becoming-docker-inc/), October 29, 2013 (archived)
 - [Docker: Docker 0.9, introducing execution drivers and libcontainer](https://www.docker.com/blog/docker-0-9-introducing-execution-drivers-and-libcontainer/), March 10, 2014
-- [Docker: It's here, Docker 1.0](http://web.archive.org/web/20140614010625/http://blog.docker.com:80/2014/06/its-here-docker-1-0/), June 9, 2014, Docker Hub and the first 15 months' figures (archived)
+- [Docker: It's here, Docker 1.0](https://web.archive.org/web/20140614010625/http://blog.docker.com:80/2014/06/its-here-docker-1-0/), June 9, 2014, Docker Hub and the first 15 months' figures (archived)
 - [Open Container Initiative: About](https://opencontainers.org/about/overview/), launched June 22, 2015, and Docker's donation of runC
 - [Linux Foundation: OCI releases v1.0 of container standards](https://www.linuxfoundation.org/press/press-release/open-container-initiative-oci-releases-v1-0-of-container-standards), runtime and image specifications, July 19, 2017
 - [GitHub: distribution-spec v1.0.0](https://github.com/opencontainers/distribution-spec/releases/tag/v1.0.0), May 2021

@@ -115,10 +115,10 @@ This chapter adds no tables. Its history is why [the core data model](/books/hos
 - [Mozilla: Tinderbox project page (archive)](https://www-archive.mozilla.org/projects/tinderbox/), the build fleet, browser results and who "broke the build"
 - [LWN: Mozilla newsletter, May 21, 1998](https://lwn.net/1998/0528/a/moznews.html), Tinderbox becoming available
 - [CruiseControl](https://cruisecontrol.sourceforge.net/), the source contributed by ThoughtWorks
-- [SourceForge: CruiseControl release folders (archived)](http://web.archive.org/web/20110427162824/http://sourceforge.net:80/projects/cruisecontrol/files/CruiseControl/), 1.0 dated March 30, 2001 and 2.8.4 dated September 16, 2010
-- [CruiseControl: License (archived)](http://web.archive.org/web/20120110184252/http://cruisecontrol.sourceforge.net/license.html), copyright 2001 ThoughtWorks
+- [SourceForge: CruiseControl release folders (archived)](https://web.archive.org/web/20110427162824/http://sourceforge.net:80/projects/cruisecontrol/files/CruiseControl/), 1.0 dated March 30, 2001 and 2.8.4 dated September 16, 2010
+- [CruiseControl: License (archived)](https://web.archive.org/web/20120110184252/http://cruisecontrol.sourceforge.net/license.html), copyright 2001 ThoughtWorks
 - [InfoQ: ThoughtWorks releases Cruise](https://www.infoq.com/news/2008/07/Cruise-Released/), July 28, 2008, Humble on reusing CruiseControl code
-- [JetBrains: TeamCity 1.0 press release (archived)](http://web.archive.org/web/20220705183713/https://blog.jetbrains.com/blog/2006/10/02/pr_021006tc/), October 2, 2006, platforms, build tools, version control and Remote Run
+- [JetBrains: TeamCity 1.0 press release (archived)](https://web.archive.org/web/20220705183713/https://blog.jetbrains.com/blog/2006/10/02/pr_021006tc/), October 2, 2006, platforms, build tools, version control and Remote Run
 - [JetBrains: IntelliJ IDEA 6.0 and TeamCity 1.0 beta](https://blog.jetbrains.com/idea/2006/07/intellij-idea-60-teamcity-10-beta-release/), the July 2006 beta
 - [JetBrains: TeamCity blog launched](https://blog.jetbrains.com/teamcity/2007/04/jetbrains-teamcity-blog-launched/), the Team Server announcement, rename, beta, 1.0 and 1.2 dates
 - [The Register: Jenkins creator interview](https://www.theregister.com/2018/11/09/jenkins_interview/), Hudson's start at Sun in 2004, InfraDNA and CloudBees
@@ -131,7 +131,7 @@ This chapter adds no tables. Its history is why [the core data model](/books/hos
 - [Linux Foundation: Continuous Delivery Foundation launch](https://www.linuxfoundation.org/press-release/the-linux-foundation-announces-new-foundation-to-support-continuous-delivery-collaboration/), March 12, 2019 and its first projects
 - [SD Times: AtlasCamp 2016 introduces Bitbucket Pipelines](https://sdtimes.com/atlascamp-2016-introduces-bitbucket-pipelines-jira-ios/), the Pipelines beta and Bamboo Cloud's end
 - [Atlassian Community: Bamboo Cloud end of life](https://community.atlassian.com/t5/Questions/Bamboo-Cloud-end-of-life/qaq-p/450934), Pittet's explanation and the January 31, 2017 date
-- [Bitbucket: Bitbucket Pipelines is now generally available (archived)](http://web.archive.org/web/20201108103346/https://bitbucket.org/blog/bitbucket-pipelines-now-generally-available), October 25, 2016
+- [Bitbucket: Bitbucket Pipelines is now generally available (archived)](https://web.archive.org/web/20201108103346/https://bitbucket.org/blog/bitbucket-pipelines-now-generally-available), October 25, 2016
 - [Atlassian: Introducing the Bamboo to Bitbucket Pipelines migration tool](https://www.atlassian.com/blog/bamboo/introducing-bamboo-bitbucket-pipelines-migration-tool), the Data Center end-of-life date and the beta tool
 - [RubyKaigi 2014: Josh Kalderimis](https://rubykaigi.org/2014/presentation/S-JoshKalderimis), Travis CI's start as a side project in February 2011
 - [Travis CI: About us](https://www.travis-ci.com/about-us/), founded in Berlin in 2011
@@ -144,7 +144,7 @@ This chapter adds no tables. Its history is why [the core data model](/books/hos
 - [GitLab Handbook: History](https://handbook.gitlab.com/handbook/company/history/), the first commit and the first GitLab CI in November 2012
 - [GitLab Runner: Changelog](https://gitlab.com/gitlab-org/gitlab-runner/-/raw/main/CHANGELOG.md), the initial public release
 - [GitLab Runner: Tags](https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab-runner/repository/tags), v0.1.0 on January 27, 2015
-- [GitLab: GitLab 8.0 released (archived)](http://web.archive.org/web/2016/https://about.gitlab.com/2015/09/22/gitlab-8-0-released/), September 22, 2015, integrated CI
+- [GitLab: GitLab 8.0 released (archived)](https://web.archive.org/web/2016/https://about.gitlab.com/2015/09/22/gitlab-8-0-released/), September 22, 2015, integrated CI
 - [Amazon: AWS announces application lifecycle management services](https://press.aboutamazon.com/2014/11/amazon-web-services-announces-new-application-lifecycle-management-services), November 12, 2014
 - [AWS News Blog: AWS CodeBuild](https://aws.amazon.com/blogs/aws/aws-codebuild-fully-managed-build-service/), December 1, 2016, fresh container per build and per-minute billing
 - [The Register: Google Container Builder](https://www.theregister.com/2017/03/07/google_cloud_container_builder/), general availability and free build-minutes, March 2017

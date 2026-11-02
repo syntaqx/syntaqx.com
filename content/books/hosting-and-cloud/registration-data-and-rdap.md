@@ -299,4 +299,4 @@ Notes on the sketch:
 - [Porkbun: How to Configure WHOIS Privacy Service](https://kb.porkbun.com/article/97-how-to-configure-whois-privacy-service-porkbun), free and on by default, .us excluded, fields shown when redacted
 - [GoDaddy: Complaint Mechanisms](https://www.godaddy.com/help/godaddy-complaint-mechanisms-40875), no personal data in public WHOIS, legitimate-interest requests, subpoenas, Domains By Proxy
 - [Tucows: Whois use and information](https://tucowsdomains.com/help/whois-use-and-information/), redaction after 25 May 2018, the Tiered Access Directory, accepted jurisdictions, customer notice, fees
-- [Spaceship: TCP WHOIS sunset (Wayback Machine capture)](http://web.archive.org/web/20260914111020/https://www.spaceship.com/blog/tcp-whois-sunset/), port 43 retired from 18 March 2026
+- [Spaceship: TCP WHOIS sunset (Wayback Machine capture)](https://web.archive.org/web/20260914111020/https://www.spaceship.com/blog/tcp-whois-sunset/), port 43 retired from 18 March 2026

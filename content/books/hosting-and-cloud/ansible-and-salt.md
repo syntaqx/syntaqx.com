@@ -209,7 +209,7 @@ HAVING MAX(cr.started_at) IS NULL OR MAX(cr.started_at) < NOW() - INTERVAL '7 da
 
 **Announcements**
 
-- [Red Hat to acquire IT automation and DevOps leader Ansible (Wayback)](http://web.archive.org/web/20151018224043/http://www.redhat.com:80/en/about/press-releases/red-hat-acquire-it-automation-and-devops-leader-ansible), October 16, 2015, agentless approach, nearly 1,200 contributors, Tower, expected close in October 2015
+- [Red Hat to acquire IT automation and DevOps leader Ansible (Wayback)](https://web.archive.org/web/20151018224043/http://www.redhat.com:80/en/about/press-releases/red-hat-acquire-it-automation-and-devops-leader-ansible), October 16, 2015, agentless approach, nearly 1,200 contributors, Tower, expected close in October 2015
 - [Red Hat Developer: What's new in Ansible Automation Platform 2.4](https://developers.redhat.com/articles/2023/06/27/ansible-automation-platform-whats-new), June 27, 2023, Event-Driven Ansible available with 2.4 after the AnsibleFest 2022 preview
 - [HashiCorp: new Terraform and Packer features at HashiConf 2025](https://www.hashicorp.com/en/blog/scale-infrastructure-with-new-terraform-and-packer-features-at-hashiconf-2025), Terraform actions invoking event-driven Ansible
 - [Salt Project: package repo migration and guidance](https://saltproject.io/blog/salt-project-package-repo-migration-and-guidance/), the October 2024 move to `packages.broadcom.com`, packages before 3006 dropped, GitHub Pages, leaving AWS

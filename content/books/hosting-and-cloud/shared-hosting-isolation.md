@@ -218,7 +218,7 @@ Notes on the sketch:
 **Provider documentation**
 
 - [Apache HTTP Server: suEXEC support](https://httpd.apache.org/docs/2.4/suexec.html), the setuid wrapper, its 20 checks, `uidmin` and `gidmin`, `SuexecUserGroup` and the warning against default installation
-- [Apache 1.2 documentation: suEXEC (Wayback copy)](http://web.archive.org/web/19970709163348/http://www.apache.org:80/docs/suexec.html), "introduced in Apache 1.2"
+- [Apache 1.2 documentation: suEXEC (Wayback copy)](https://web.archive.org/web/19970709163348/http://www.apache.org:80/docs/suexec.html), "introduced in Apache 1.2"
 - [suPHP](http://www.suphp.org/Home.html), the module and setuid binary, the 0.7.2 release of May 20, 2013 and the end of maintenance
 - [GitHub: mod_ruid2](https://github.com/mind04/mod-ruid2), POSIX capabilities, `RMode`, the security warning and the February 5, 2025 archive
 - [mpm-itk](https://mpm-itk.sesse.net/), `AssignUserID`, the extra fork per request, running as root until the request is parsed, and the 2016 release

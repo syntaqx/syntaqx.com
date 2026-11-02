@@ -515,7 +515,7 @@ Short-term rentals generate disputes on a schedule of days, and most of them tur
 - [Guesty](https://www.guesty.com/), PMS and channel manager, real-time sync, unified inbox, cleaner tasks, owners portal, trust accounting, dynamic pricing, direct booking, payments, damage protection, tiers by listing count
 - [Hostaway](https://www.hostaway.com/), direct API connections to Airbnb, Vrbo, Booking.com, Google and Expedia, owner statements and portal, direct booking
 - [Track Hospitality Software](https://trackhospitality.com/), PMS for vacation rental, hotel and resort operators, dual-ledger trust accounting, housekeeping and maintenance, distribution, payments and owner payouts, APIs
-- [Streamline: Trust accounting](https://www.streamlinevrs.com/trust-accounting), owner money, advance payments and taxes tracked, ACH and check payables, 1099 and 1042 filing
+- [Streamline: Trust accounting](https://www.streamlinevrs.com/features/trust-accounting/), owner money, advance payments and taxes tracked, ACH and check payables, 1099 and 1042 filing
 - [Escapia: Trust accounting](https://escapia.com/features/trust-accounting/), Vrbo revenue, fees and taxes into the ledger, split and consolidated owner statements, automated month-end close
 - [Rent Manager: Vacation homes](https://www.rentmanager.com/industries/vacation-homes/), short-term rental dashboard, nightly reservations, check-ins register, guest charges, make-ready board
 - [OwnerRez](https://www.ownerrez.com/), direct channel partnerships, no percentage-of-revenue pricing, commission calculation and monthly owner statements

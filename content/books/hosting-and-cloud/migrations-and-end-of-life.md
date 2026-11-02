@@ -259,7 +259,7 @@ The last migration in this volume runs the other way. Every sunset above moved a
 - [Chef: Upcoming deprecation and end-of-life updates for Progress Chef products](https://www.chef.io/blog/upcoming-deprecation-and-end-of-life-updates-for-progress-chef-products), Infra Server 15.x end of life on November 30, 2026, August 20, 2026
 - [GitHub: hashicorp/terraform-cdk](https://github.com/hashicorp/terraform-cdk), the CDKTF sunset and archive, December 10, 2025, and `cdktf synth --hcl`
 - [Google Cloud: Container Registry deprecation](https://docs.cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation), deprecation and shutdown dates
-- [Wayback Machine: Container Registry deprecation, March 2025](http://web.archive.org/web/20250304011230/https://cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation), the read cutoff as published then
+- [Wayback Machine: Container Registry deprecation, March 2025](https://web.archive.org/web/20250304011230/https://cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation), the read cutoff as published then
 - [Travis CI: travis-ci.org shutdown](https://www.travis-ci.com/blog/2021-05-07-orgshutdown/), May 31, 2021 and read-only history
 - [Jeff Geerling: Travis CI's new pricing plan threw a wrench in my open source works](https://www.jeffgeerling.com/blog/2020/travis-cis-new-pricing-plan-threw-wrench-my-open-source-works/), the scheduled read-only date
 - [Upstash: Announcing Upstash Workflow and deprecating Upstash Kafka](https://upstash.com/blog/workflow-kafka), six months, closed to new users, migration credits, September 6, 2024

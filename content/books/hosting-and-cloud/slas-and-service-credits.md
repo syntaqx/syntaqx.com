@@ -321,7 +321,7 @@ Notes on the sketch:
 - [Vercel: Enterprise Service Level Agreement](https://vercel.com/legal/sla), 99.99%, tiers, cap, claim window and sole remedy
 - [Netlify: Netlify for enterprises](https://www.netlify.com/enterprise.md), the 99.99% enterprise edge SLA
 - [Cloudflare: Business SLA](https://www.cloudflare.com/business-sla/), the 100% commitment, affected customer ratio, credit formula, notice and claim deadlines, cap, exclusions and sole remedy
-- [Cloudflare: Plans](https://www.cloudflare.com/plans/network-cdn/), uptime SLA credits by plan
+- [Cloudflare: Plans](https://www.cloudflare.com/plans/network-cdn.md), uptime SLA credits by plan
 - [GoDaddy: Hosting and Security Services Agreement](https://www.godaddy.com/legal/agreements/hosting-agreement), the Service Uptime Guarantee, its credit and exclusions, revised September 30, 2026
 - [Twilio: Service Level Agreement](https://www.twilio.com/en-us/legal/service-level-agreement), the SLAs Twilio publishes, last updated April 9, 2026
 - [Twilio: Twilio APIs SLA](https://www.twilio.com/en-us/legal/service-level-agreement/twilio-apis), availability commitments, the five-minute floor, credit basis, claim window, exclusions and sole remedy
