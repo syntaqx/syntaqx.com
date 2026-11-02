@@ -188,4 +188,4 @@ So no, I'm not losing sleep over code nobody read line by line. Nobody ever did.
 
 What changed is who's at the top of the chain. Getting there used to take a decade of promotions and a calendar full of skip-levels. Now it takes a terminal, and the judgment you used to earn on the way up.
 
-So it's you now. Congratulations on the ~~promotion~~ career change. Set the direction, and let go of the lines. You don't have to read every one of them. You just have to build the thing that would notice.
+So it's you now. Congratulations on the ~~promotion~~ new responsibilities. Set the direction, and let go of the lines. You don't have to read every one of them. You just have to build the thing that would notice.
