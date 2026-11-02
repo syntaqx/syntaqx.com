@@ -157,14 +157,14 @@ WHERE upper_inf(a.assigned_during)
 
 **Announcements and policy**
 
-- [Docker: Scaling Docker to serve millions more developers (August 24, 2020, archived)](http://web.archive.org/web/20200901163048/https://www.docker.com/blog/scaling-docker-to-serve-millions-more-developers-network-egress/), the 30% from 1% figure, the 100 and 200 limits, manifest requests as pulls
-- [Docker: What you need to know about upcoming Docker Hub rate limiting (archived)](http://web.archive.org/web/20201101001754/https://www.docker.com/blog/what-you-need-to-know-about-upcoming-docker-hub-rate-limiting/), phased enforcement from November 2, 2020
+- [Docker: Scaling Docker to serve millions more developers (August 24, 2020, archived)](https://web.archive.org/web/20200901163048/https://www.docker.com/blog/scaling-docker-to-serve-millions-more-developers-network-egress/), the 30% from 1% figure, the 100 and 200 limits, manifest requests as pulls
+- [Docker: What you need to know about upcoming Docker Hub rate limiting (archived)](https://web.archive.org/web/20201101001754/https://www.docker.com/blog/what-you-need-to-know-about-upcoming-docker-hub-rate-limiting/), phased enforcement from November 2, 2020
 - [The Register: Docker pull rate limits enforced](https://www.theregister.com/2020/11/19/docker_pull_rate_enforced/), November 19, 2020, 1.5% of users affected
 - [Docker: We apologize, we did a terrible job announcing the end of Docker Free Teams](https://www.docker.com/blog/we-apologize-we-did-a-terrible-job-announcing-the-end-of-docker-free-teams/), March 16, 2023 and the March 24 reversal
 - [Docker: Docker Hub plans and consumption pricing](https://www.docker.com/blog/scaling-docker-to-serve-millions-more-developers-network-egress/), September 12, 2024, 60 petabytes, billions of pulls, $100 million invested, the March 1, 2025 start
 - [Docker: Revisiting Docker Hub policies](https://www.docker.com/blog/revisiting-docker-hub-policies-prioritizing-developer-experience/), April 8, 2025, limits kept, consumption charges cancelled, storage charges delayed, six months' notice
 - [Google Cloud: Container Registry deprecation](https://docs.cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation), deprecation, Artifact Registry hosting `gcr.io`, the March 18, 2025 shutdown
-- [Google Cloud: Container Registry deprecation (March 2025, archived)](http://web.archive.org/web/20250304011230/https://cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation), the read cutoff after April 22, 2025
+- [Google Cloud: Container Registry deprecation (March 2025, archived)](https://web.archive.org/web/20250304011230/https://cloud.google.com/container-registry/docs/deprecations/container-registry-deprecation), the read cutoff after April 22, 2025
 
 **Documentation and pricing**
 

@@ -307,7 +307,7 @@ Notes on the sketch:
 **Papers**
 
 - [Verbitski et al., Amazon Aurora: Design Considerations for High Throughput Cloud-Native Relational Databases (SIGMOD 2017)](https://www.amazon.science/publications/amazon-aurora-design-considerations-for-high-throughput-cloud-native-relational-databases), the network as the bottleneck and redo pushed to storage
-- [Aurora paper, archived PDF](http://web.archive.org/web/20211009113903/https://www.allthingsdistributed.com/files/p1041-verbitski.pdf), six copies across three zones, 4/6 write and 3/6 read quorums, 10 GB segments in protection groups, "the log is the database," the 35x and 7.7x figures
+- [Aurora paper, archived PDF](https://web.archive.org/web/20211009113903/https://www.allthingsdistributed.com/files/p1041-verbitski.pdf), six copies across three zones, 4/6 write and 3/6 read quorums, 10 GB segments in protection groups, "the log is the database," the 35x and 7.7x figures
 - [Elhemali et al., Amazon DynamoDB: A Scalable, Predictably Performant, and Fully Managed NoSQL Database Service (USENIX ATC 2022)](https://www.usenix.org/conference/atc22/presentation/elhemali), fairness and partition imbalance, the Prime Day 2021 peak
 - [Corbett et al., Spanner: Google's Globally-Distributed Database (OSDI 2012)](https://research.google/pubs/spanner-googles-globally-distributed-database-2/), externally consistent distributed transactions and clock uncertainty
 
@@ -346,8 +346,8 @@ Notes on the sketch:
 - [AWS Database Migration Service](https://aws.amazon.com/dms/), sources, schema conversion and its claims
 - [Azure: Databases](https://azure.microsoft.com/en-us/products/category/databases), the October 2026 portfolio
 - [Microsoft Learn: Azure Database for PostgreSQL](https://learn.microsoft.com/en-us/azure/postgresql/), Flexible Server and the migration service
-- [Microsoft Learn (archived): What's happening to PostgreSQL Single Server](http://web.archive.org/web/20231002024315/https://learn.microsoft.com/en-us/azure/postgresql/single-server/whats-happening-to-postgresql-single-server), the 28 Mar 2025 retirement
-- [Microsoft Learn (archived): What's happening to MySQL Single Server](http://web.archive.org/web/20240512132304/https://learn.microsoft.com/en-us/azure/mysql/single-server/whats-happening-to-mysql-single-server), the 16 Sep 2024 retirement and select-workload auto-migration
+- [Microsoft Learn (archived): What's happening to PostgreSQL Single Server](https://web.archive.org/web/20231002024315/https://learn.microsoft.com/en-us/azure/postgresql/single-server/whats-happening-to-postgresql-single-server), the 28 Mar 2025 retirement
+- [Microsoft Learn (archived): What's happening to MySQL Single Server](https://web.archive.org/web/20240512132304/https://learn.microsoft.com/en-us/azure/mysql/single-server/whats-happening-to-mysql-single-server), the 16 Sep 2024 retirement and select-workload auto-migration
 - [Redis: Redis adopts dual source-available licensing](https://redis.io/blog/redis-adopts-dual-source-available-licensing/), Microsoft's agreement to continue its Redis service
 
 **Filings**

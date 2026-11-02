@@ -230,6 +230,6 @@ Notes on the sketch:
 - [Blocks and Files: Virtuozzo storage](https://www.blocksandfiles.com/block/2019/02/07/virtuozzo-storage-is-like-ceph-only-faster/1606215), Virtuozzo's 2016 spin-out
 - [AWS News Blog: Low-cost burstable EC2 instances](https://aws.amazon.com/blogs/aws/low-cost-burstable-ec2-instances/), T2 on July 1, 2014, the CPU credit and the t2.micro baseline and cap
 - [AWS News Blog: Amazon EC2 Beta](https://aws.amazon.com/blogs/aws/amazon_ec2_beta/), EC2 on Xen, August 25, 2006
-- [VMware by Broadcom: Business transformation (Wayback copy)](http://web.archive.org/web/20231216021905/https://news.vmware.com/company/vmware-by-broadcom-business-transformation), December 11, 2023, the end of perpetual licenses and SnS renewals
+- [VMware by Broadcom: Business transformation (Wayback copy)](https://web.archive.org/web/20231216021905/https://news.vmware.com/company/vmware-by-broadcom-business-transformation), December 11, 2023, the end of perpetual licenses and SnS renewals
 </content>
 </invoke>

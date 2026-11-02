@@ -345,7 +345,7 @@ Treasury management records are read by the bank's operational risk and audit fu
 - [Trovata: Multibank connector](https://trovata.io/multibank-connector), BAI2, MT940 and camt.053 collection, SWIFT, sFTP and bank APIs
 - [Trovata](https://trovata.io/) and [Trovata: Cash forecasting](https://trovata.io/cash-forecasting), cash positioning across banks and entities and forecasting from history, ERP inputs and scenarios
 - [Ripple Treasury, powered by GTreasury](https://treasury.ripple.com/), bank connectors, current visibility, forecasting and FX and interest rate hedging
-- [Kyriba: Cash management](https://www.kyriba.com/solutions/cash-management/), real-time cash and treasury management and bank, ERP and API connectivity
+- [Kyriba: Treasury management](https://www.kyriba.com/products/treasury/), real-time cash and treasury management and bank, ERP and API connectivity
 - [Nomentia](https://www.nomentia.com/), bank connectivity and Swift Business Connect
 
 **In practice**

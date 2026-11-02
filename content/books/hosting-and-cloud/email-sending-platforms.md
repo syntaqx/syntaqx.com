@@ -314,7 +314,7 @@ Notes on the sketch:
 - [Mailgun: Introducing Pathwire](https://www.mailgun.com/blog/introducing-pathwire/), January 29, 2021, under Thoma Bravo
 - [TechCrunch: Sinch acquires Pathwire](https://techcrunch.com/2021/09/30/sinch-acquires-pathwire-the-company-behind-mailgun-and-mailjet-for-1-9b-to-add-email-into-its-api-based-communications-platform), $1.9 billion
 - [CMSWire: Mailchimp's Mandrill move](https://www.cmswire.com/digital-marketing/mailchimps-mandrill-move-enrages-email-users/), Mandrill launched in 2012 and made a paid add-on
-- [The Next Web: Mandrill gives developers 60 days to switch](https://www.thenextweb.com/news/in-hostile-move-mandrill-gives-all-developers-60-days-to-switch-to-paid-mailchimp-service), the February 2016 change
+- [The Next Web: Mandrill gives developers 60 days to switch](https://thenextweb.com/news/in-hostile-move-mandrill-gives-all-developers-60-days-to-switch-to-paid-mailchimp-service), the February 2016 change
 - [VentureBeat: MessageBird acquires SparkPost](https://venturebeat.com/business/messagebird-acquires-email-data-platform-sparkpost-closes-1b-round), $600 million, April 28, 2021
 - [Y Combinator: Resend](https://www.ycombinator.com/companies/resend), founded 2023, Winter 2023 batch
 - [Resend: How we got here](https://resend.com/handbook/company/how-we-got-here), incorporated January 2023, opened to everyone in June 2023

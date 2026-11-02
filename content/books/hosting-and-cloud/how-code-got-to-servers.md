@@ -192,4 +192,4 @@ ORDER BY lower(s.session_during);
 
 - [Ruby on Rails blog: SwitchTower, automating application deployment](https://web.archive.org/web/20200918163752/https://weblog.rubyonrails.org/2005/8/22/switchtower-automating-application-deployment/), August 22, 2005 (archived copy)
 - [Ruby on Rails blog: SwitchTower as an automated deployment archetype](https://rubyonrails.org/2005/11/29/switchtower-as-an-automated-deployment-archetype), November 29, 2005
-- [Ruby on Rails blog: SwitchTower is now Capistrano](http://web.archive.org/web/20070105022406/http://weblog.rubyonrails.org/2006/3/6/switchtower-is-now-capistrano), March 6, 2006, the rename after the trademark cease and desist (archived copy)
+- [Ruby on Rails blog: SwitchTower is now Capistrano](https://web.archive.org/web/20070105022406/http://weblog.rubyonrails.org/2006/3/6/switchtower-is-now-capistrano), March 6, 2006, the rename after the trademark cease and desist (archived copy)

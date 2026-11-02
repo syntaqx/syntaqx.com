@@ -359,7 +359,7 @@ Notes on the sketch:
 - [Vercel: Hobby plan](https://vercel.com/docs/plans/hobby), included usage, the 30-day wait after exceeding a limit and non-commercial use
 - [Netlify: Credit-based pricing plans](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/), plan credits, consumption rates, the Free hard limit and the September 4, 2025 start
 - [Netlify: Resume paused projects](https://docs.netlify.com/manage/accounts-and-billing/billing/resume-paused-projects/), pausing every project when credits run out
-- [Cloudflare: Plans](https://www.cloudflare.com/plans/network-cdn/), what the Free plan includes
+- [Cloudflare: Plans](https://www.cloudflare.com/plans/network-cdn.md), what the Free plan includes
 - [Cloudflare: Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/), Workers Free limits and the Paid minimum
 - [Fly.io: Pricing](https://docs.fly.io/about/pricing), the trial, the absence of a free tier for new organizations and plans discontinued in October 2024
 - [Railway: Free trial](https://docs.railway.com/reference/pricing/free-trial), the $5 trial credit, the Free plan, verification and Limited Trial restrictions

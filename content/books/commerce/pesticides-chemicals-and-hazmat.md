@@ -313,7 +313,7 @@ Design notes:
 
 - [49 CFR 172.704 (Cornell LII)](https://www.law.cornell.edu/cfr/text/49/172.704), hazmat employee training and records
 - [49 CFR 173.156 (Cornell LII)](https://www.law.cornell.edu/cfr/text/49/173.156), limited quantity and the 30 kg limit
-- [Federal Register: Hazardous Materials: Corrections and Response to Administrative Appeals (78 FR 65454, October 31, 2013)](https://www.federalregister.gov/documents/2013/10/31/2013-24714), the ORM-D phase-out dates
+- [Federal Register: Hazardous Materials: Corrections and Response to Administrative Appeals (78 FR 65454, October 31, 2013)](https://www.federalregister.gov/documents/2013/10/31/2013-24714/hazardous-materials-corrections-and-response-to-administrative-appeals-hm-215k-hm-215l-hm-218g-and), the ORM-D phase-out dates
 - [49 CFR 173.306 (Cornell LII)](https://www.law.cornell.edu/cfr/text/49/173.306), aerosol limits and markings
 - [49 CFR 173.185 (Cornell LII)](https://www.law.cornell.edu/cfr/text/49/173.185), small lithium cells and batteries, the marks and the watt-hour rating
 - [IATA: Lithium Battery Guidance Document](https://www.iata.org/contentassets/05e6d8742b0047259bf3a700bc9d42b9/lithium-battery-guidance-document.pdf), power banks as UN3480, 30% state of charge and the January 2026 change for batteries packed with equipment

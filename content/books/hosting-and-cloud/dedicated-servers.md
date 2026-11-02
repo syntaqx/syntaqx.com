@@ -264,7 +264,7 @@ Notes on the sketch:
 
 **Announcements and release notes**
 
-- [IBM: IBM to acquire SoftLayer (Wayback copy)](http://web.archive.org/web/20130608133704/http://www-03.ibm.com:80/press/us/en/pressrelease/41191.wss), June 4, 2013, customers, data centers and the cloud revenue target
+- [IBM: IBM to acquire SoftLayer (Wayback copy)](https://web.archive.org/web/20130608133704/http://www-03.ibm.com:80/press/us/en/pressrelease/41191.wss), June 4, 2013, customers, data centers and the cloud revenue target
 - [AWS News Blog: EC2 bare metal instances](https://aws.amazon.com/blogs/aws/new-amazon-ec2-bare-metal-instances-with-direct-access-to-hardware/), the i3.metal preview on November 28, 2017
 - [AWS Insider: EC2 bare-metal instances generally available](https://awsinsider.net/articles/2018/05/22/aws-ec2-bare-metal-instances.aspx), May 22, 2018
 - [CNCF: Tinkerbell](https://www.cncf.io/projects/tinkerbell/), sandbox acceptance on November 10, 2020

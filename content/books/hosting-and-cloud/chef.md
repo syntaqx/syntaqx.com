@@ -443,7 +443,7 @@ GROUP BY a.policy_group, a.revision_id;
 
 **Announcements**
 
-- [Jesse Robbins: Announcing Mitch Hill as new CEO of Opscode (archived)](http://web.archive.org/web/20190929000859/https://blog.chef.io/announcing-mitch-hill-as-new-ceo-of-opscode-jesse-robbins-role-as-chief-community-officer/), HJK Solutions, the four founders in June 2008 and incorporation on September 12, 2008
+- [Jesse Robbins: Announcing Mitch Hill as new CEO of Opscode (archived)](https://web.archive.org/web/20190929000859/https://blog.chef.io/announcing-mitch-hill-as-new-ceo-of-opscode-jesse-robbins-role-as-chief-community-officer/), HJK Solutions, the four founders in June 2008 and incorporation on September 12, 2008
 - [Adam Jacob: Happy birthday, Chef](https://www.chef.io/blog/happy-birthday-chef), the first public release on January 16, 2009
 - [Chef: Chef 10.14.0 released](https://www.chef.io/blog/chef-10-14-0-released), why-run mode and its assumptions, September 8, 2012
 - [Chef: Custom resources in Chef Client 12.5](https://www.chef.io/blog/custom-resources-in-chef-client-12-5), November 6, 2015

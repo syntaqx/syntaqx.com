@@ -167,7 +167,7 @@ ORDER BY 3 DESC;
 
 - [GitHub Docs: Actions minute multipliers and rates](https://docs.github.com/en/billing/reference/actions-minute-multipliers), current per-minute rates by OS and size, rounding, larger runner rules
 - [GitHub Docs: GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions), included minutes and storage, free self-hosted and public-repository usage, cache billing
-- [GitHub Docs: About billing for GitHub Actions (December 2023, archived)](http://web.archive.org/web/20231202013242/https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions), the previous rates and multipliers
+- [GitHub Docs: About billing for GitHub Actions (December 2023, archived)](https://web.archive.org/web/20231202013242/https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions), the previous rates and multipliers
 - [GitHub Docs source: GitHub Actions billing](https://github.com/github/docs/blob/main/content/billing/concepts/product-billing/github-actions.md), the storage rate table ($0.07 per GB-month for Actions cache) and hourly peak measurement
 - [GitHub Changelog: Cache size can now exceed 10 GB](https://github.blog/changelog/2025-11-20-github-actions-cache-size-can-now-exceed-10-gb-per-repository/), November 20, 2025, retention, eviction and budget behavior
 - [GitHub Docs: Using self-hosted runners in a workflow](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/use-in-a-workflow), selecting self-hosted runners with `runs-on` labels

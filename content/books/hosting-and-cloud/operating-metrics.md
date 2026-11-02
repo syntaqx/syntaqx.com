@@ -289,7 +289,7 @@ Notes on the sketch:
 **Pricing and cost**
 
 - [heise: Hetzner raises prices from April 1, 2026](https://heise.de/-11185981), the increase on existing products and its stated causes
-- [Hetzner Docs: Price adjustment](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/), the June 15, 2026 standardization and old and new prices
+- [Hetzner Docs: Price adjustment (archived)](https://web.archive.org/web/20261022142746/https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/), the June 15, 2026 standardization and old and new prices
 
 **Reference**
 

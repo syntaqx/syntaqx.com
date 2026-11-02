@@ -206,7 +206,7 @@ WHERE a.hostname = $1
 - [The Twelve-Factor App](https://12factor.net/), Adam Wiggins, the twelve factors and the "hundreds of thousands" of apps behind them
 - [CNCF: Cloud Native Buildpacks](https://www.cncf.io/projects/buildpacks/), accepted October 3, 2018, incubating November 18, 2020
 - [Martin Fowler: BlueGreenDeployment](https://martinfowler.com/bliki/BlueGreenDeployment.html), March 1, 2010, and the origin of the name
-- [Weaveworks: GitOps, Operations by Pull Request](http://web.archive.org/web/20180107011605/https://www.weave.works/blog/gitops-operations-by-pull-request), August 7, 2017 (archived copy)
+- [Weaveworks: GitOps, Operations by Pull Request](https://web.archive.org/web/20180107011605/https://www.weave.works/blog/gitops-operations-by-pull-request), August 7, 2017 (archived copy)
 - [OpenGitOps](https://opengitops.dev/), the four principles
 - [CNCF: Argo has graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/), December 6, 2022
 - [Netlify: Introducing Deploy Previews](https://www.netlify.com/blog/2016/07/20/introducing-deploy-previews-in-netlify/), July 20, 2016

@@ -332,7 +332,7 @@ An embedded program is examined by the bank partner, its regulator, state regula
 - [Stripe: How Capital for platforms works](https://docs.stripe.com/capital/how-capital-for-platforms-works), daily prequalification, the four US offer types, integration options, hosted acceptance, no platform liability for credit losses, refills at about 80%, refill behavior by country, and broker licensing in Germany and France
 - [Shopify Help Center: Shopify Capital in the United States](https://help.shopify.com/en/manual/finance/shopify-capital/united-states), WebBank as issuer, daily percentage repayment, fixed and monthly fees, the 6- and 12-month milestones, the 18-month maximum, failed repayment fallback and UCC-1 filings
 - [Square: Square Loans FAQs](https://squareup.com/help/us/en/article/6531-square-loans-faqs), Square Financial Services as issuer, offers by invitation, daily review, repayment from card sales and the personal guarantee threshold
-- [PayPal: PayPal Working Capital](https://www.paypal.com/webapps/mpp/paypal-working-capital), WebBank as lender, loan amounts, the fixed fee, the chosen repayment percentage, the 90-day minimum and eligibility
+- [PayPal: PayPal Working Capital](https://www.paypal.com/us/business/financial-services/working-capital-loan), WebBank as lender, loan amounts, the fixed fee, the chosen repayment percentage, the 90-day minimum and eligibility
 - [Parafin](https://www.parafin.com/), white-label financing for platforms, Celtic Bank as issuer, named platforms and offers extended (company claims)
 
 **Filings and announcements**

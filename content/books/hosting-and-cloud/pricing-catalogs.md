@@ -282,7 +282,7 @@ Publications, versions and notices are kept for as long as any invoice priced fr
 - [Google Cloud: Terms of Service](https://cloud.google.com/terms), section 2.6 fee revisions and the right to terminate for convenience
 - [DigitalOcean Blog: New $4 Droplet and updated pricing](https://www.digitalocean.com/blog/new-4-dollar-droplet-updated-pricing), May 16, 2022 announcement of changes effective July 1, 2022
 - [DigitalOcean: Pricing changes release note](https://docs.digitalocean.com/notes/2022/pricing-changes), the products whose prices increased and the $4 Droplet slug
-- [Hetzner: Price adjustment](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/), the 15 June 2026 change for new orders and rescales, legacy pricing, old and new prices
+- [Hetzner: Price adjustment (archived)](https://web.archive.org/web/20261022142746/https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/), the 15 June 2026 change for new orders and rescales, legacy pricing, old and new prices
 - [Vercel: Fluid compute pricing](https://vercel.com/docs/fluid-compute/pricing), regional prices for active CPU and provisioned memory
 - [Cloudflare: Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/), the Paid plan's price and included usage
 - [Hostinger: Pricing](https://www.hostinger.com/pricing), the Premium plan's intro price, 48-month total and renewal price

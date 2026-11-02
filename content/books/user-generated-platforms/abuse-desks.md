@@ -287,7 +287,7 @@ Notes on the sketch:
 
 **Industry bodies, lists and browsers**
 
-- [M3AAWG and i2Coalition: Anti-Abuse Best Common Practices for Hosting and Cloud Service Providers](https://www.m3aawg.org/sites/maawg/files/news/M3AAWG_Hosting_Abuse_BCPs-2015-03.pdf), vetting, role mailboxes, RIR records, acknowledgments, trusted reporters, the complaint priority chart, the handling steps, suspension short of termination, fraudulent accounts, IPv6 per-customer addressing, ARF for automated reports (March 2015)
+- [M3AAWG and i2Coalition: Anti-Abuse Best Common Practices for Hosting and Cloud Service Providers](https://m3aawg.org/Hosting-BP), vetting, role mailboxes, RIR records, acknowledgments, trusted reporters, the complaint priority chart, the handling steps, suspension short of termination, fraudulent accounts, IPv6 per-customer addressing, RFC 5965 (ARF) for automated reports (March 2015)
 - [M3AAWG: Hosting service providers best practices press release](https://www.m3aawg.org/news/new-m3aawg-hosting-service-providers-best-practices-backed-by-i2c-aim-to-reduce-end-user), publication date and joint authorship (17 March 2015)
 - [APWG: Phishing Activity Trends Reports](https://apwg.org/trendreports/), the second quarter 2026 summary: 425,808 attacks in June 2026, up 10.1% in the quarter
 - [Interisle: Phishing Landscape 2025](https://interisle.net/insights/phishing-landscape-2025-an-annual-study-of-the-scope-and-distribution-of-phishing), 1.96 million attacks, 1.5 million domains, 77% malicious registrations, 37% bulk registrations, US hosting share, recommendations

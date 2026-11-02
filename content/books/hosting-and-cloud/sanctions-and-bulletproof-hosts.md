@@ -195,7 +195,7 @@ Notes on the sketch:
 
 - [Cloudflare: Steps taken around Cloudflare's services in Ukraine, Belarus and Russia](https://blog.cloudflare.com/steps-taken-around-cloudflares-services-in-ukraine-belarus-and-russia/), March 7, 2022
 - [Microsoft: Microsoft suspends new sales in Russia](https://blogs.microsoft.com/on-the-issues/2022/03/04/microsoft-suspends-russia-sales-ukraine-conflict/), March 4, 2022
-- [GeekWire (archived): Amazon halts AWS sign-ups in Russia and Belarus](http://web.archive.org/web/2022/https://www.geekwire.com/2022/amazon-halts-aws-cloud-signups-in-russia-and-belarus-existing-customers-not-impacted/), March 8, 2022
+- [GeekWire (archived): Amazon halts AWS sign-ups in Russia and Belarus](https://web.archive.org/web/2022/https://www.geekwire.com/2022/amazon-halts-aws-cloud-signups-in-russia-and-belarus-existing-customers-not-impacted/), March 8, 2022
 - [TechCrunch: Amazon, Microsoft and Google have suspended cloud sales in Russia](https://techcrunch.com/2022/03/10/amazon-microsoft-and-google-have-suspended-cloud-sales-in-russia), March 10, 2022, Google Cloud's statement
 - [Cloudflare: Russian Internet users are unable to access the open Internet](https://blog.cloudflare.com/russian-internet-users-are-unable-to-access-the-open-internet/), throttling from June 9, 2025
 

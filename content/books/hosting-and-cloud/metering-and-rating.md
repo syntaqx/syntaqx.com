@@ -370,7 +370,7 @@ Retention follows the billing and tax records the events support: raw events and
 - [DigitalOcean: Billing](https://docs.digitalocean.com/platform/billing/), monthly accrual and invoicing on the first of the month
 - [Akamai: Understanding how billing works](https://techdocs.akamai.com/cloud-computing/docs/understanding-how-billing-works), hourly accrual, partial hours rounded up, the monthly cap and uncapped services from July 1, 2026
 - [Hetzner: Cloud billing FAQ](https://docs.hetzner.com/cloud/billing/faq/), hourly rounding, the monthly price cap, billing while off, traffic in 100 MB blocks
-- [Hetzner: Price adjustment](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/), the 15 June 2026 change for new orders and rescales, old and new CX23 prices, orders placed before the date
+- [Hetzner: Price adjustment (archived)](https://web.archive.org/web/20261022142746/https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/), the 15 June 2026 change for new orders and rescales, old and new CX23 prices, orders placed before the date
 - [Vercel: Fluid compute pricing](https://vercel.com/docs/fluid-compute/pricing), active CPU, provisioned memory and invocation meters, regional prices, Hobby allowances and the São Paulo worked example
 - [Cloudflare: Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/), the Paid plan's minimum, allowances and overage, no charge for duration, the 15-million-request example
 - [Cloudflare: D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/), rows read and written, how scans and indexes count

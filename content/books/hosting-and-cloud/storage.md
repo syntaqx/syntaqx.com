@@ -392,7 +392,7 @@ Notes on the sketch:
 - [AWS: Amazon FSx](https://aws.amazon.com/fsx/), the four managed file systems
 - [AWS: Amazon S3 storage classes](https://aws.amazon.com/s3/storage-classes/), availability, SLAs, minimums and the One Zone caveat
 - [AWS: Amazon S3 FAQs](https://aws.amazon.com/s3/faqs/), object sizes, integrity checks and the limits of durability
-- [AWS: Amazon S3 FAQs, archived June 2019](http://web.archive.org/web/20190606093334/https://aws.amazon.com/s3/faqs/), the 10,000,000 objects and 10,000 years illustration
+- [AWS: Amazon S3 FAQs, archived June 2019](https://web.archive.org/web/20190606093334/https://aws.amazon.com/s3/faqs/), the 10,000,000 objects and 10,000 years illustration
 - [AWS: Amazon S3 multipart upload limits](https://docs.aws.amazon.com/AmazonS3/latest/userguide/qfacts.html), parts, part sizes and maximum object size
 - [AWS: Retaining multiple versions of objects with S3 Versioning](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html), bucket versioning states and per-version billing
 - [AWS: Managing the lifecycle of objects](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html), transitions, expirations and billing on eligibility
@@ -442,7 +442,7 @@ Notes on the sketch:
 - [Cloudflare Status: AWS S3 SDK compatibility inconsistencies with R2](https://www.cloudflarestatus.com/incidents/t5nrjmpxc1cj), January 17 to February 3, 2025
 - [MinIO: commit updating the license to AGPLv3](https://github.com/minio/minio/commit/069432566fcfac1f1053677cc925ddafd750730a), April 23, 2021
 - [MinIO: RELEASE.2021-05-11T23-27-41Z](https://github.com/minio/minio/releases/tag/RELEASE.2021-05-11T23-27-41Z), the first AGPLv3 release
-- [MinIO blog: MinIO is now fully licensed under GNU AGPLv3, archived](http://web.archive.org/web/20210615125424/https://blog.min.io/from-open-source-to-free-and-open-source-minio-is-now-fully-licensed-under-gnu-agplv3/)
+- [MinIO blog: MinIO is now fully licensed under GNU AGPLv3, archived](https://web.archive.org/web/20210615125424/https://blog.min.io/from-open-source-to-free-and-open-source-minio-is-now-fully-licensed-under-gnu-agplv3/)
 - [Marc Olson: Continuous reinvention, a brief history of block storage at AWS](https://www.allthingsdistributed.com/2024/08/continuous-reinvention-a-brief-history-of-block-storage-at-aws.html), August 22, 2024
 - [Andy Warfield: Building and operating a pretty big storage system called S3](https://www.allthingsdistributed.com/2023/07/building-and-operating-a-pretty-big-storage-system.html), July 27, 2023, drive IOPS, heat and erasure coding
 

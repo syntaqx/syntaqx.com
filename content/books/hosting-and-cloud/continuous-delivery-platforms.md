@@ -165,8 +165,8 @@ GROUP BY d.id, r.required_approvals, r.wait_timer, d.created_at;
 - [Amazon: AWS announces application lifecycle management services](https://press.aboutamazon.com/2014/11/amazon-web-services-announces-new-application-lifecycle-management-services), November 12, 2014, CodeDeploy, the 95 deployments a minute, free for EC2
 - [The Register: Amazon spins up lifecycle management services](https://www.theregister.com/2014/11/13/amazon_spins_up_ifecycle_management_services_for_cloudy_apps/), CodeDeploy based on Apollo
 - [AWS: CodePipeline now available](https://aws.amazon.com/about-aws/whats-new/2015/07/aws-codepipeline-now-available/), July 9, 2015
-- [Netflix: Moving from Asgard to Spinnaker (archived)](http://web.archive.org/web/20151003022624/http://techblog.netflix.com:80/2015/09/moving-from-asgard-to-spinnaker.html), September 30, 2015
-- [Netflix: Global Continuous Delivery with Spinnaker (archived)](http://web.archive.org/web/20151130054615/http://techblog.netflix.com:80/2015/11/global-continuous-delivery-with.html), November 16, 2015, partners, clouds and the Asgard replacement
+- [Netflix: Moving from Asgard to Spinnaker (archived)](https://web.archive.org/web/20151003022624/http://techblog.netflix.com:80/2015/09/moving-from-asgard-to-spinnaker.html), September 30, 2015
+- [Netflix: Global Continuous Delivery with Spinnaker (archived)](https://web.archive.org/web/20151130054615/http://techblog.netflix.com:80/2015/11/global-continuous-delivery-with.html), November 16, 2015, partners, clouds and the Asgard replacement
 - [Linux Foundation: Continuous Delivery Foundation launch](https://www.linuxfoundation.org/press-release/the-linux-foundation-announces-new-foundation-to-support-continuous-delivery-collaboration/), March 12, 2019, Spinnaker as a founding project
 - [Argo Rollouts](https://argoproj.github.io/argo-rollouts/), strategies, analysis providers and traffic routers
 - [CNCF: Argo has graduated](https://www.cncf.io/announcements/2022/12/06/the-cloud-native-computing-foundation-announces-argo-has-graduated/), December 6, 2022

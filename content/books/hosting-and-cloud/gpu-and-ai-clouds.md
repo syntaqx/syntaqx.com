@@ -403,8 +403,8 @@ Notes on the sketch:
 - [Google Cloud: Calendar mode future reservations](https://docs.cloud.google.com/compute/docs/instances/future-reservations-calendar-mode-overview), 90-day duration, look-ahead and lead time
 - [Google Cloud: GPU network bandwidth](https://docs.cloud.google.com/compute/docs/gpus/gpu-network-bandwidth), RoCE NICs and bandwidth per machine type
 - [Google Cloud: AI Hypercomputer networking overview](https://docs.cloud.google.com/ai-hypercomputer/docs/networking-overview), rail-aligned sub-blocks and blocks
-- [Oracle: Zettascale cloud cluster announcement, September 2024 (archived)](http://web.archive.org/web/20251109203408/https://www.oracle.com/news/announcement/ocw24-oracle-offers-first-zettascale-cloud-computing-cluster-2024-09-11/), orders for up to 131,072 Blackwell GPUs, RoCEv2 or InfiniBand
-- [Oracle: Zettascale10 announcement (archived)](http://web.archive.org/web/20260713070719/https://www.oracle.com/news/announcement/ai-world-oracle-unveils-next-generation-oci-zettascale10-cluster-for-ai-2025-10-14/), Acceleron RoCE, cluster size, availability
+- [Oracle: Zettascale cloud cluster announcement, September 2024 (archived)](https://web.archive.org/web/20251109203408/https://www.oracle.com/news/announcement/ocw24-oracle-offers-first-zettascale-cloud-computing-cluster-2024-09-11/), orders for up to 131,072 Blackwell GPUs, RoCEv2 or InfiniBand
+- [Oracle: Zettascale10 announcement (archived)](https://web.archive.org/web/20260713070719/https://www.oracle.com/news/announcement/ai-world-oracle-unveils-next-generation-oci-zettascale10-cluster-for-ai-2025-10-14/), Acceleron RoCE, cluster size, availability
 - [CoreWeave: HPC interconnect](https://docs.coreweave.com/products/networking/hpc-interconnect/about-hpc-interconnect), InfiniBand, SHARP, Spectrum-X on GB300
 - [Nebius: GPU clusters](https://docs.nebius.com/compute/clusters/gpu), fabrics, cluster membership at creation, partition keys
 - [Lambda: Pricing](https://lambda.ai/pricing), on-demand and 1-Click Cluster prices and terms
@@ -412,7 +412,7 @@ Notes on the sketch:
 - [Lambda: Microsoft agreement](https://lambda.ai/blog/lambda-announces-multibillion-dollar-agreement-with-microsoft-to-deploy-ai-infrastructure-powered-by-tens-of-thousands-of-nvidia-gpus), the November 2025 announcement without value or term
 - [Together AI: Pricing](https://www.together.ai/pricing), GPU cluster prices by term and serverless token prices
 - [DigitalOcean: GPU Droplets pricing](https://www.digitalocean.com/pricing/gpu-droplets), October 2026 prices, minimum billing, reserved and spot
-- [DigitalOcean: GPU Droplets pricing, archived March 2026](http://web.archive.org/web/20260306095551/https://www.digitalocean.com/pricing/gpu-droplets), the earlier H100 prices
+- [DigitalOcean: GPU Droplets pricing, archived March 2026](https://web.archive.org/web/20260306095551/https://www.digitalocean.com/pricing/gpu-droplets), the earlier H100 prices
 - [RunPod: Pricing](https://www.runpod.io/pricing), Community and Secure Cloud and serverless prices
 - [Vast.ai: Billing](https://docs.vast.ai/documentation/reference/billing), host-set prices and charges
 - [Vast.ai: Rental types](https://docs.vast.ai/documentation/reference/faq/rental-types), on-demand, reserved and interruptible
