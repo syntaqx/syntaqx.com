@@ -3,7 +3,7 @@ date = "2024-07-02"
 title = "GitHub Actions & Secret Inputs"
 description = "An exploration and a working solution for passing secret input values into GitHub Actions manual, self-service workflows, without leaking them in the logs."
 images = ["/img/open-graph/github-actions-secret-inputs.png"]
-tags = ["GitHub Actions", "GitHub", "DevOps", "Automation"]
+tags = ["GitHub Actions", "DevOps", "Developer Experience"]
 +++
 
 I've been using GitHub Actions as my primary CI & CD tool for a while now, and I've been very happy with it. It's easy to use, reasonably flexible with the way actions are created, and has a massive marketplace which makes things all too easy to get what I need.

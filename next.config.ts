@@ -130,6 +130,23 @@ export const sectionRedirects = [
   { source: "/ui/patterns", destination: "/ui", permanent: true },
 ];
 
+// Post tags consolidated (November 2026): near-duplicates merged and
+// one-post tags folded into the tag that covers them.
+export const tagRedirects = Object.entries({
+  llms: "/tags/ai",
+  "ai-in-development": "/tags/ai",
+  "software-engineering": "/tags/ai",
+  "career-growth": "/tags/careers",
+  "critical-thinking": "/tags/careers",
+  "tech-industry": "/tags/future-of-work",
+  leadership: "/tags/engineering-leadership",
+  "engineering-culture": "/tags/engineering-leadership",
+  "team-velocity": "/tags/engineering-leadership",
+  github: "/tags/github-actions",
+  automation: "/tags/devops",
+  "hello-world": "/posts",
+}).map(([tag, destination]) => ({ source: `/tags/${tag}`, destination, permanent: true }));
+
 const nextConfig: NextConfig = {
   // Pin the workspace root to this project. A stray, empty package-lock.json
   // in the parent directory otherwise makes Next infer the wrong root, which
@@ -144,7 +161,7 @@ const nextConfig: NextConfig = {
     },
   ],
   rewrites: async () => markdownRewrites,
-  redirects: async () => [...docRedirects(), ...sectionRedirects, ...resumeHostRedirects],
+  redirects: async () => [...docRedirects(), ...sectionRedirects, ...tagRedirects, ...resumeHostRedirects],
   // The Markdown route reads content/ at request time.
   outputFileTracingIncludes: {
     "/md/[[...path]]": ["./content/**/*"],
