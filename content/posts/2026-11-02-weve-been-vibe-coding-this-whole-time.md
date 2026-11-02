@@ -18,6 +18,8 @@ Every promotion in this industry moves you further from the code, whether you wa
 
 The company shipped anyway. For decades. Some of that code is running your bank right now, and some of it was written at 4:55 on a Friday by someone who has since left to start a kombucha company.
 
+An agent isn't an engineer, and I'm not pretending it is. It doesn't remember last quarter's outage, it won't tell you when it's guessing, and nobody can fire it. I'll get to all of that. The comparison is about how we oversee the work, not who's doing it.
+
 We've been vibe coding this whole time. We just called it delegation and drew it as an org chart.
 
 ## Nobody read every line
@@ -48,7 +50,7 @@ You trust someone exactly as far as you can predict their mistakes. Every review
 
 The tests were part of that record, and they were never good either. I've reviewed plenty of human-written tests that existed to drag coverage from 78% to 80% before a deadline. Tests with no assertions. Tests that still pass if you delete the function they're testing. Tests named `test_it_works`. We got a little green badge in the README for it.
 
-Coverage was never a quality metric. Google's testing team says it plainly: coverage is great at telling you [what isn't tested](https://testing.googleblog.com/2020/08/code-coverage-best-practices.html), and says very little about whether what is tested is right. To find out whether your tests catch anything, break the code on purpose and see if they notice. That's mutation testing, the first thing I reach for in [quality metrics](/docs/quality/metrics).
+Coverage was never a quality metric. Google's testing team says it plainly: coverage is great at telling you [what isn't tested](https://testing.googleblog.com/2020/08/code-coverage-best-practices.html), and says very little about whether what is tested is right. To find out whether your tests catch anything, break the code on purpose and see if they notice. That's mutation testing, the first thing I reach for in [quality metrics](/docs/quality/metrics). It tells you whether the tests you have would notice, not whether you're testing the right things.
 
 The good tech leads knew where to look anyway. With a junior's pull request, they read the tests harder than the code, because the assertions are the spec. If the test asserts the refund goes back to the original card, I care a lot less how the forty lines above it got there. If it says `expect(result).toBeDefined()`, I don't care how pretty those forty lines are.
 
@@ -68,7 +70,7 @@ That's basically what we call human-in-the-loop with AI. Nobody invented it in 2
 
 ## Then the typing got cheap
 
-Then the slowest link in that chain, typing the code, got cheap. Not free, but close: hand an agent a well-described task and it'll knock it out. It'll build the wrong thing just as happily, and the wrong thing was never cheap, agent or not. Ask anyone whose four-month project got thrown away the week before launch because the requirements changed. An agent just gets you to that week faster.
+Then one of the most visible costs in that chain, typing the code, got cheap. Not free, but close: hand an agent a well-described task and it'll knock it out. It'll build the wrong thing just as happily, and the wrong thing was never cheap, agent or not. Ask anyone whose four-month project got thrown away the week before launch because the requirements changed. An agent just gets you to that week faster.
 
 Karpathy's version was "forget that the code even exists." No good CTO has ever forgotten the code exists. They just don't read it, because everything built around the lines reads it for them: review, CI, types, tests, monitoring, on-call, postmortems, and the one senior engineer who can smell a bad migration from across the building.
 
@@ -87,6 +89,8 @@ You trust a deploy because the pipeline checks it in two separate places. Before
 So point the same machine at your agents. It's less work than it sounds. Tag every change with who, or what, wrote it (plenty of agent tooling already adds a co-author trailer to the commit), then slice the numbers you already collect by author and by area. Change failure rate, reverts, escaped defects, review rounds, how often a human caught something the agent missed.
 
 Now trust has a shape. Maybe the agent's UI changes fail less often than your juniors' do, and its billing changes fail way more. Let it merge UI changes on green and require a senior on billing, the way you'd give a junior more rope as they earn it. Autonomy stops being an argument in Slack and becomes a policy that follows the data, and tightens itself the week the numbers turn.
+
+Read those numbers honestly, though. Agents tend to get the easier tickets, a human quietly fixing the agent's work in review is a miss rather than a pass, and an architectural mistake won't show up in change failure rate for months. So compare like with like, count every human save against the agent, and give slow failures time to land before you hand out more rope, because a green dashboard only says it hasn't broken yet.
 
 ## Who clicks approve
 
@@ -108,7 +112,7 @@ It's an on-call rotation that never sleeps. Like the human one, it needs an owne
 
 ## Where the analogy breaks
 
-**Agents don't learn from getting yelled at.** A junior who takes down production learns that whole class of mistake; they'll tell the story at their retirement party. An agent will make the same one again tomorrow. It does get better, but in jumps, when the next model ships, and the new one might fix your old mistake and pick up one you've never seen. So tighten the guardrails until the mistake is impossible: a test, a lint rule, a check in CI, a line in its `AGENTS.md`. You'd do the same for engineers who kept breaking production the same way. Every postmortem used to end with a human who learned something. Now it has to end with a commit.
+**Agents don't learn from getting yelled at.** A junior who takes down production learns that whole class of mistake; they'll tell the story at their retirement party. An agent will make the same one again tomorrow. The model itself does get better, but in jumps, when the next one ships, and the new one might fix your old mistake and pick up one you've never seen. Between jumps, the only lessons that stick are the ones written down outside it. So tighten the guardrails until the mistake is impossible: a test, a lint rule, a check in CI, a line in its `AGENTS.md`. You'd do the same for engineers who kept breaking production the same way. Every postmortem used to end with a human who learned something. Now it has to end with a commit.
 
 **The volume is different.** A junior opens one to three pull requests a week. An agent can open more than that before lunch, and humans with too much to review start approving things. A 2,000-line diff gets the same "LGTM" as a 20-line one, just faster. If your plan is "we'll review all of it carefully," you don't have a plan. You have a backlog.
 
@@ -172,11 +176,11 @@ This is what worries me more than any of the code.
 
 Engineers have to move toward the product: what to build, whether it should exist, how it feels to use. A lot of them don't want to. They got into this to write code, and "figure out what the customer needs" sounds like somebody else's job. It isn't anymore. Product is moving the other way, and plenty of PMs and designers are shipping real software with these tools. Good.
 
-But those aren't the same distance. An engineer who learns product is still an engineer, now with better judgment about what to build. A product person who learns to drive an agent can ship software, but shipping it was never the hard part. Somebody has to own it technically: know what it depends on, what it costs, how it fails, and what to do when it does. Bad product shows up where anyone can see it, in the users, the data, the ticket saying the export still works wrong. Bad engineering usually stays invisible until it's an incident.
+But those aren't the same distance. An engineer who learns product is still an engineer, now with better judgment about what to build. A product person who learns to drive an agent can ship software, but shipping it was never the hard part. Somebody has to own it technically: know what it depends on, what it costs, how it fails, and what to do when it does. A demo can prove a feature works. It can't prove anyone is ready to run it: patch it, scale it, get paged when it breaks, and still understand it in two years.
 
 If you're in engineering, you've probably already felt this from the receiving end. Product hands you something "done": built, demoed, just needs a merge. It looks exactly like something you could ship and own for the next five years. It isn't the same thing. "It runs" and "we can own it" used to arrive together, because the same people produced both. Now one shows up without the other.
 
-Here's what that looks like. Code models invent package names that don't exist: in [one study of 16 models](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen), at least 5.2% of the packages commercial models suggested were made up, and 21.7% for open-source ones. An attacker can register one of those names with malicious code in it and wait. The agent imports the package it invented, somebody already published that name, and there's a crypto miner running in production. It works. It demos great. Nobody in that loop knew to look.
+Here's what that looks like. Code models invent package names that don't exist: in [a 2025 study of 16 models](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen), at least 5.2% of the packages the commercial models it tested suggested were made up, and 21.7% for the open-source ones. An attacker can register one of those names with malicious code in it and wait. The agent imports the package it invented, somebody already published that name, and there's a crypto miner running in production. It works. It demos great. Nobody in that loop knew to look.
 
 That's what the ladder is for. A stuck agent loop gets an engineer. A change at a one-way door gets a staff engineer. A 2am outage gets an on-call rotation full of people who can read a stack trace. When a product team runs the loop alone, the ladder stops at them. Stuck agent? Prompt it again: two polite people in a doorway, and nobody to break the tie. Down at 2am? The escalation path is the same agent, asked more nicely.
 
