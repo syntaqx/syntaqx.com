@@ -5,7 +5,7 @@ import { postDay } from "@/lib/post-day";
 
 export type PostSummary = Pick<
   PostData,
-  "slug" | "title" | "date" | "description" | "readingTimeMinutes"
+  "slug" | "title" | "date" | "description" | "readingTimeMinutes" | "draft"
 >;
 
 interface PostListProps {
@@ -37,8 +37,10 @@ export function PostList({ posts, newestSlug = null }: PostListProps) {
               )}
             </div>
             <span className="inst flex items-center gap-3 text-dim sm:justify-end">
-              {post.slug === newestSlug && (
-                <span className="text-accent">new</span>
+              {post.draft ? (
+                <span className="text-pink">draft</span>
+              ) : (
+                post.slug === newestSlug && <span className="text-accent">new</span>
               )}
               {post.readingTimeMinutes} min
             </span>

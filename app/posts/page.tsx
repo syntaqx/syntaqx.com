@@ -53,6 +53,7 @@ export default function PostsPage() {
           date: post.date,
           description: post.description,
           readingTimeMinutes: post.readingTimeMinutes,
+          draft: post.draft,
           tagSlugs: (post.tags ?? []).map(slugifyTag),
         }))}
         tags={tags}
