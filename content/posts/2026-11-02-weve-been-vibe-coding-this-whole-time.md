@@ -90,7 +90,7 @@ So point the same machine at your agents. It's less work than it sounds. Tag eve
 
 Now trust has a shape. Maybe the agent's UI changes fail less often than your juniors' do, and its billing changes fail way more. Let it merge UI changes on green and require a senior on billing, the way you'd give a junior more rope as they earn it. Autonomy stops being an argument in Slack and becomes a policy that follows the data, and tightens itself the week the numbers turn.
 
-Read those numbers honestly, though. Agents tend to get the easier tickets, a human quietly fixing the agent's work in review is a miss rather than a pass, and an architectural mistake won't show up in change failure rate for months. So compare like with like, count every human save against the agent, and give slow failures time to land before you hand out more rope, because a green dashboard only says it hasn't broken yet.
+Read those numbers honestly, though. Agents tend to get the easier tickets, a human quietly fixing the agent's work in review is a save on the agent's record, not a pass, and an architectural mistake won't show up in change failure rate for months. So compare like with like, count every human save against the agent, and give slow failures time to land before you hand out more rope, because a green dashboard only says it hasn't broken yet.
 
 ## Who clicks approve
 
