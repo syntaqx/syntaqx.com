@@ -21,6 +21,8 @@ export interface PostData {
   layout: "default" | "feature";
   /** The feature post's own hero scene. Never shared with other pages. */
   hero?: PostSceneName;
+  /** `draft = true`, or dated after the build: only `next dev` shows it. */
+  draft: boolean;
   content: string;
   readingTimeMinutes: number;
 }
@@ -115,10 +117,20 @@ function parseTomlFrontmatter(fileContents: string): {
   return { data, content };
 }
 
+// Captured at module load so render stays pure for the React Compiler. On a
+// statically generated site this resolves to build time, which is what we
+// want: a post dated in the future goes live with the first build after it.
+const BUILD_TIME = Date.now();
+
+// Drafts and scheduled posts render under `next dev` only, never in a build.
+// Tests see them too, so a scheduled post is checked before it goes live.
+const SHOW_DRAFTS = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
+const visible = (post: PostData) => SHOW_DRAFTS || !post.draft;
+
 export function getPostSlugs(): string[] {
   return fs
     .readdirSync(postsDirectory)
-    .filter((f) => f.endsWith(".md"))
+    .filter((f) => f.endsWith(".md") && visible(getPostByFileName(f)))
     .map((f) => f.replace(/\.md$/, ""));
 }
 
@@ -134,6 +146,7 @@ export function getAllPosts(): PostData[] {
 
   return fileNames
     .map((fileName) => getPostByFileName(fileName))
+    .filter(visible)
     .sort((a, b) => (a.date > b.date ? -1 : 1));
 }
 
@@ -143,17 +156,19 @@ function getPostByFileName(fileName: string): PostData {
   const { data, content } = parseTomlFrontmatter(fileContents);
 
   const slug = fileNameToSlug(fileName.replace(/\.md$/, ""));
+  const date = (data.date as string) ?? "";
 
   return {
     slug,
     title: (data.title as string) ?? slug,
-    date: (data.date as string) ?? "",
+    date,
     description: (data.description as string) ?? "",
     tags: (data.tags as string[]) ?? [],
     categories: (data.categories as string[]) ?? [],
     images: (data.images as string[]) ?? [],
     layout: data.layout === "feature" ? "feature" : "default",
     hero: isPostScene(data.hero) ? data.hero : undefined,
+    draft: data.draft === true || new Date(date).getTime() > BUILD_TIME,
     content,
     readingTimeMinutes: estimateReadingTime(content),
   };
@@ -265,20 +280,18 @@ export function getPostBySlug(slug: string): PostData | undefined {
     // legacy `/posts/YYYY-MM-DD-<slug>` URLs still resolve. The post page
     // permanent-redirects aliases to the canonical slug.
     if (fileNameToSlug(bare) === slug || bare === slug) {
-      return getPostByFileName(fileName);
+      const post = getPostByFileName(fileName);
+      return visible(post) ? post : undefined;
     }
   }
   return undefined;
 }
 
 // "New" badge window: most recent post is highlighted for two weeks after publish.
-// Captured at module load so render stays pure for the React Compiler. On a
-// statically generated site this resolves to build time, which is what we want.
 const NEW_POST_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
-const BUILD_TIME = Date.now();
 
 export function getNewestPostSlug(posts: PostData[]): string | null {
-  const newest = posts[0];
+  const newest = posts.find((p) => !p.draft);
   if (!newest) return null;
   return BUILD_TIME - new Date(newest.date).getTime() < NEW_POST_WINDOW_MS
     ? newest.slug

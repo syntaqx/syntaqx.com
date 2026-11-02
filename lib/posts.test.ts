@@ -8,6 +8,14 @@ import { REST } from "./scene/iso";
 import { scenes } from "./scene/scenes";
 import { levels, rasterize } from "./scene/raster";
 
+describe("drafts", () => {
+  it("treats a post dated after the build as a draft until then", () => {
+    const now = Date.now();
+    for (const post of getAllPosts())
+      if (new Date(post.date).getTime() > now) expect(post.draft, post.slug).toBe(true);
+  });
+});
+
 describe("feature post heroes", () => {
   const features = getAllPosts().filter((p) => p.layout === "feature");
 

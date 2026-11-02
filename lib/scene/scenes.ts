@@ -444,6 +444,67 @@ const stamp: SceneFn = (s) => {
 };
 
 /**
+ * Shipping It Isn't Owning It: the warehouse. A little orange bot builds a
+ * crate, the belt carries it off and it joins the field of crates already
+ * running, each with its status light. Building takes a moment; owning
+ * never ends, and every loop one of the old ones pages somebody. Crates are
+ * evenly spaced on the belt and the field never grows, so the loop has no
+ * seam.
+ */
+const handoff: SceneFn = (s) => {
+  // offset so the resting frame (and the OG image) catches a page going off
+  const T = 4.2;
+  const ph = (((s.t + T * 0.7) / T) % 1 + 1) % 1;
+
+  // the field: what's already been shipped, four by three, each with a
+  // status light. One goes red for the back half of every loop.
+  const field = { x: 3, y: 5, gx: 1.95, gy: 2.2, s: 1.15 };
+  const paged = 7;
+  const alarm = ph > 0.55;
+  const cells = Array.from({ length: 12 }, (_, i) => ({ i, x: field.x + (i % 4) * field.gx, y: field.y + Math.floor(i / 4) * field.gy }));
+  const crates: Part[] = cells.flatMap(({ i, x, y }): Part[] => [
+    { kind: "box", box: box(x, y, 0, field.s, field.s, 0.95) },
+    { kind: "cyl", cx: x + field.s / 2, cy: y + field.s / 2, z: 0.95, r: 0.13, h: 0.1, ...(i === paged && alarm ? { warn: true } : { good: true }) },
+  ]);
+  const hot = cells[paged];
+
+  // the belt runs from the bot straight into the field's second column. Two
+  // crates ride it, evenly spaced: each is assembled out of the belt at the
+  // bot's end and sinks into it at the field's, so none pops.
+  const belt = { x: field.x + field.gx + (field.s - 1.2) / 2, y: 1.7, a: 1.2, b: 3, h: 0.45 };
+  const c = 0.85;
+  const riding: Part[] = [0, 1].map((i): Part => {
+    const k = (i + ph) / 2;
+    const grow = Math.max(0, Math.min(1, k / 0.15, (1 - k) / 0.1));
+    return { kind: "box", box: box(belt.x + (belt.a - c) / 2, belt.y + k * belt.b - c / 2, belt.h, c, c, c * grow) };
+  });
+
+  // the builder: the orange bot from the review desk, hovering at the
+  // belt's head with its eyes on the field
+  const bot = { x: belt.x - 0.25, y: 0.2, w: 1.7, d: 1.3, h: 1.25 };
+  const bodyZ = 1.1 + bob(s, 0.12) + s.spread * 0.6;
+  const robot: Part[] = [
+    { kind: "plane", pts: quad(bot.x + 0.15, bot.y + 0.1, 0.01, bot.w - 0.3, bot.d - 0.2), v: 0.2, dashed: true },
+    { kind: "box", box: box(bot.x, bot.y, bodyZ, bot.w, bot.d, bot.h), orange: true },
+    ...[0.45, 1.1].map((dx): Part => ({ kind: "box", box: box(bot.x + dx, bot.y + bot.d, bodyZ + 0.55, 0.16, 0.05, 0.4) })),
+  ];
+
+  const top: V3 = [hot.x + field.s / 2, hot.y + field.s / 2, 2.6 + s.spread];
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 12, 12), v: 0.09, grid: 12 },
+    ...robot,
+    { kind: "box", box: box(belt.x, belt.y, 0, belt.a, belt.b, belt.h), slots: true },
+    ...riding,
+    ...crates,
+    ...(alarm ? [{ kind: "line", a: [top[0], top[1], 1.05], b: top, warn: true, dashed: true } as Part] : []),
+    { kind: "label", at: [bot.x + bot.w, bot.y, bodyZ + bot.h], text: "built · by lunch", dx: 1.2, dy: -1.2, accent: true },
+    { kind: "label", at: [field.x, field.y + 2 * field.gy + field.s, 0.5], text: "owned · for years", dx: -1.2, dy: 0.8 },
+    { kind: "label", at: top, text: "paged · 3am", dx: 1, dy: -1, accent: alarm },
+  ];
+  return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [bot.x, bot.y, bodyZ + bot.h + 2.4]], axes: ground() };
+};
+
+/**
  * Projects: what I've built as modules on a grid (Flagon the tower, the
  * community the round one), wired together along the gutters, with the
  * next one being lowered into the empty slot the wiring runs to.
@@ -1567,7 +1628,7 @@ const library: SceneFn = (s) => {
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len + t, y0, side]], axes: ground(10) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, stamp, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, stamp, handoff, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Book covers, one per book (written or Soon), never shared with a post or a page. */
@@ -1578,7 +1639,7 @@ export type BookSceneName = (typeof BOOK_SCENES)[number];
 export const BOOKS_INDEX_SCENE = "library" satisfies SceneName;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */
-export const POST_SCENES = ["loop", "weld", "scaffold", "stack", "stamp"] as const satisfies readonly SceneName[];
+export const POST_SCENES = ["loop", "weld", "scaffold", "stack", "stamp", "handoff"] as const satisfies readonly SceneName[];
 export type PostSceneName = (typeof POST_SCENES)[number];
 
 export const isPostScene = (name: unknown): name is PostSceneName =>

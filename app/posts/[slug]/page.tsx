@@ -114,6 +114,7 @@ export default async function PostPage({ params }: Props) {
               date={post.date}
               dateFormat="MMM d, yyyy"
               readingTimeMinutes={post.readingTimeMinutes}
+              draft={post.draft}
               className="border border-border bg-background px-2.5 py-1.5 text-accent!"
             />
             <h1 className="max-w-[26ch] text-balance text-[clamp(2.6rem,5.5vw,4.5rem)] leading-[0.9] text-foreground wrap-break-word [text-shadow:0_2px_28px_var(--background),0_0_3px_var(--background)]">
@@ -127,6 +128,7 @@ export default async function PostPage({ params }: Props) {
             date={post.date}
             dateFormat="MMM d, yyyy"
             readingTimeMinutes={post.readingTimeMinutes}
+            draft={post.draft}
             className="mb-5"
           />
           <h1 className="max-w-4xl text-[clamp(2.2rem,4vw,3.25rem)] leading-[0.92] text-foreground wrap-break-word">

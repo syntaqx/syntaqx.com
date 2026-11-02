@@ -1,0 +1,37 @@
+name: Scheduled posts
+
+# A post dated in the future stays out of every build until a build runs on
+# or after its date (lib/posts.ts). Each morning, if a post is dated today,
+# this redeploys production through a Vercel deploy hook so it goes live
+# without a commit. The hook URL is the VERCEL_DEPLOY_HOOK repository secret.
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish today's posts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Redeploy if a post is dated today
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          today=$(date -u +%F)
+          posts=$(grep -l "^date = ${today}" content/posts/*.md || true)
+          if [ -z "$posts" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            echo "No posts dated ${today}."
+            exit 0
+          fi
+          echo "Publishing: ${posts:-manual run}"
+          if [ -z "$HOOK" ]; then
+            echo "::error::VERCEL_DEPLOY_HOOK is not set"
+            exit 1
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
