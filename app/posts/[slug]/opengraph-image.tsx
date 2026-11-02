@@ -9,6 +9,9 @@ export const alt = "syntaqx blog post";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 
+// Published posts only: a draft's slug gets no card, not a card with its slug.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
 }
