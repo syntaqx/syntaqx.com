@@ -136,7 +136,7 @@ export default async function PostPage({ params }: Props) {
       )}
 
       {/* Contents | reading column | details. Same frame for both layouts. */}
-      <div className="grid gap-x-12 gap-y-10 pt-12 lg:grid-cols-[11rem_minmax(0,44rem)] xl:grid-cols-[11rem_minmax(0,44rem)_13rem] xl:justify-between">
+      <div className="grid gap-x-12 gap-y-10 pt-12 lg:grid-cols-[13rem_minmax(0,44rem)] xl:grid-cols-[13rem_minmax(0,44rem)_15rem] xl:justify-between xl:gap-x-10">
         {toc.length > 1 ? (
           <PostToc headings={toc} />
         ) : (
