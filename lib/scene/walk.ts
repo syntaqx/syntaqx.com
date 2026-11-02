@@ -6,7 +6,7 @@ import { CYL_FRONT, circle, cylSide, type Projector, type Scene, type SceneState
  * into cells. `occlude` erases line work already drawn under a solid face.
  */
 
-export type Ink = "fg" | "dim" | "acc" | "warn";
+export type Ink = "fg" | "dim" | "acc" | "warn" | "good" | "orange";
 
 export interface Pen {
   occlude(pts: V2[], alpha: number): void;
@@ -56,8 +56,8 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
       }
       case "box": {
         const b = p.box;
-        const ink: Ink = p.warn ? "warn" : p.accent ? "acc" : "fg";
-        const lit = p.accent || p.warn;
+        const ink: Ink = p.warn ? "warn" : p.good ? "good" : p.orange ? "orange" : p.accent ? "acc" : "fg";
+        const lit = p.accent || p.warn || p.good || p.orange;
         const alpha = p.ghost ? 0.55 : lit ? 1 : p.small ? 0.65 : 0.9;
         if (!p.ghost) [b.left, b.right, b.top].forEach((f) => pen.occlude(pts(f), 1));
         [b.left, b.right, b.top].forEach((f) =>
@@ -79,7 +79,7 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
         const [f0, f1] = CYL_FRONT;
         const rt = p.rt ?? p.r;
         const rAt = (k: number) => p.r + (rt - p.r) * k;
-        const ink: Ink = p.accent ? "acc" : "fg";
+        const ink: Ink = p.warn ? "warn" : p.good ? "good" : p.accent ? "acc" : "fg";
         pen.occlude(pts(cylSide(p)), 1);
         pen.occlude(pts(circle(p.cx, p.cy, p.z + p.h, rt)), 1);
         pen.path(pts(circle(p.cx, p.cy, p.z + p.h, rt)), { alpha: 0.9, ink, close: false });
@@ -100,7 +100,7 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
         break;
       }
       case "line":
-        seg(p.a, p.b, p.alpha ?? 0.5, p.accent ? "acc" : "fg", p.dashed);
+        seg(p.a, p.b, p.alpha ?? 0.5, p.good ? "good" : p.warn ? "warn" : p.accent ? "acc" : "fg", p.dashed);
         break;
       case "label":
         if (pen.label) {

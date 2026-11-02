@@ -1,5 +1,5 @@
 import { project, REST, type Scene } from "./iso";
-import { HOT, LEVELS, WARN, levels, rasterize, scan } from "./raster";
+import { GOOD, HOT, LEVELS, ORANGE, WARN, levels, rasterize } from "./raster";
 import { sceneAt, type SceneName } from "./scenes";
 import { walk, type Ink, type Pen } from "./walk";
 
@@ -10,7 +10,7 @@ import { walk, type Ink, type Pen } from "./walk";
  * then emitted as a handful of <path> elements (one per color and opacity).
  */
 
-export const OG_COLORS = { bg: "#0a0c0c", fg: "#e6ece9", dim: "#84908e", acc: "#00d1ca", warn: "#ff5d52" };
+export const OG_COLORS = { bg: "#0a0c0c", fg: "#e6ece9", dim: "#84908e", acc: "#00d1ca", warn: "#ff5d52", good: "#74c288", orange: "#d97757" };
 
 type RGB = [number, number, number];
 const rgb = (h: string): RGB => {
@@ -20,7 +20,6 @@ const rgb = (h: string): RGB => {
 const hex = (c: RGB) => `#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
 const mix = (a: RGB, b: RGB, t: number): RGB => a.map((v, i) => Math.round(v + (b[i] - v) * t)) as RGB;
 
-const KIND: Record<Ink | "bg", number> = { fg: 0, dim: 1, acc: 2, bg: 3, warn: 4 };
 
 function render(scene: Scene, width: number, height: number, pitch: number, wide: boolean): string {
   const C = OG_COLORS;
@@ -35,80 +34,53 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
   const { field } = rasterize(scene, cols, rows, 0, wide);
   const lv = levels(field, 0);
   const size = pitch - 1;
-  const tilePaths = Array.from({ length: WARN + 1 }, () => [] as string[]);
+  const tilePaths = Array.from({ length: ORANGE + 1 }, () => [] as string[]);
   for (let y = 0; y < rows; y++)
     for (let x = 0; x < cols; x++) {
       const v = lv[y * cols + x];
       if (v) tilePaths[v].push(`M${x * pitch} ${y * pitch}h${size}v${size}h-${size}z`);
     }
 
-  // Ink: 2px cells for the line work
-  const F = 2;
-  const fc = Math.ceil(width / F);
-  const fr = Math.ceil(height / F);
-  const alpha = new Float32Array(fc * fr);
-  const kind = new Uint8Array(fc * fr);
-  const set = (x: number, y: number, a: number, k: number) => {
-    const xi = Math.round(x);
-    const yi = Math.round(y);
-    if (xi < 0 || yi < 0 || xi >= fc || yi >= fr) return;
-    const i = yi * fc + xi;
-    alpha[i] = a;
-    kind[i] = k;
-  };
+  // Line work as vectors, like the canvas: stroked, anti-aliased, on its own
+  // layer. Occlusion erases only what's drawn so far, so each solid face
+  // wraps everything before it in a mask that cuts the face out.
+  const inkColor: Record<Ink, string> = { fg: C.fg, dim: C.dim, acc: C.acc, warn: C.warn, good: C.good, orange: C.orange };
+  const n = (v: number) => +v.toFixed(1);
+  const d = (pts: [number, number][], close: boolean) =>
+    pts.map(([x, y], i) => `${i ? "L" : "M"}${n(x)} ${n(y)}`).join("") + (close ? "Z" : "");
+  const masks: string[] = [];
+  let lines = "";
   const pen: Pen = {
     occlude(pts, a) {
-      scan(pts, fc, fr, (i) => {
-        alpha[i] *= 1 - a;
-      });
+      const id = `o${masks.length}`;
+      masks.push(
+        `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${width}" height="${height}"><rect width="${width}" height="${height}" fill="#fff"/><path d="${d(pts, true)}" fill="#000" fill-opacity="${a}"/></mask>`,
+      );
+      lines = `<g mask="url(#${id})">${lines}</g>`;
     },
     path(pts, o) {
-      const n = (o.close ?? true) ? pts.length : pts.length - 1;
-      for (let s = 0; s < n; s++) {
-        const [ax, ay] = pts[s];
-        const [bx, by] = pts[(s + 1) % pts.length];
-        const steps = Math.max(1, Math.ceil(Math.max(Math.abs(bx - ax), Math.abs(by - ay))));
-        for (let k = 0; k <= steps; k++) {
-          if (o.dash && k % 4 >= 2) continue;
-          set(ax + ((bx - ax) * k) / steps, ay + ((by - ay) * k) / steps, o.alpha, KIND[o.ink]);
-        }
-      }
+      const dash = o.dash ? ` stroke-dasharray="1.5 4"` : "";
+      lines += `<path d="${d(pts, o.close ?? true)}" fill="none" stroke="${inkColor[o.ink]}" stroke-opacity="${o.alpha}" stroke-width="${o.width ?? 1}"${dash}/>`;
     },
     dot(x, y, ink, sz = 2) {
-      const r = Math.max(0, Math.round(sz / F / 2));
-      for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) set(x + dx, y + dy, 1, KIND[ink]);
+      const r = sz / 2;
+      lines += `<rect x="${n(x - r)}" y="${n(y - r)}" width="${sz}" height="${sz}" fill="${inkColor[ink]}" fill-opacity="0.95"/>`;
     },
     handle(x, y) {
-      for (let dy = -2; dy <= 2; dy++)
-        for (let dx = -2; dx <= 2; dx++) {
-          const edge = Math.abs(dx) === 2 || Math.abs(dy) === 2;
-          set(x + dx, y + dy, 1, edge ? KIND.fg : KIND.bg);
-        }
+      const r = 2.6;
+      lines += `<rect x="${n(x - r)}" y="${n(y - r)}" width="${r * 2}" height="${r * 2}" fill="${C.bg}" stroke="${C.fg}" stroke-width="1"/>`;
     },
   };
-  walk(scene, project(scene.ext, fc, fr, wide), pen, REST);
-
-  const inkColor = [C.fg, C.dim, C.acc, C.bg, C.warn];
-  const inkPaths = new Map<string, string[]>();
-  for (let y = 0; y < fr; y++)
-    for (let x = 0; x < fc; x++) {
-      const i = y * fc + x;
-      const a = Math.round(alpha[i] * 4) / 4;
-      if (a <= 0) continue;
-      const key = `${kind[i]}:${a}`;
-      if (!inkPaths.has(key)) inkPaths.set(key, []);
-      inkPaths.get(key)!.push(`M${x * F} ${y * F}h${F}v${F}h-${F}z`);
-    }
+  walk(scene, project(scene.ext, width, height, wide), pen, REST);
 
   const parts: string[] = [`<rect width="${width}" height="${height}" fill="${C.bg}"/>`];
   for (let k = 1; k <= LEVELS; k++) if (tilePaths[k].length) parts.push(`<path fill="${ramp[k - 1]}" d="${tilePaths[k].join("")}"/>`);
   if (tilePaths[HOT].length) parts.push(`<path fill="${hot}" d="${tilePaths[HOT].join("")}"/>`);
-  if (tilePaths[WARN].length) parts.push(`<path fill="${C.warn}" d="${tilePaths[WARN].join("")}"/>`);
-  for (const [key, d] of inkPaths) {
-    const [k, a] = key.split(":");
-    parts.push(`<path fill="${inkColor[+k]}" fill-opacity="${a}" d="${d.join("")}"/>`);
-  }
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${parts.join("")}</svg>`;
+  if (tilePaths[WARN].length) parts.push(`<path fill="${C.warn}" fill-opacity="0.85" d="${tilePaths[WARN].join("")}"/>`);
+  if (tilePaths[GOOD].length) parts.push(`<path fill="${C.good}" fill-opacity="0.85" d="${tilePaths[GOOD].join("")}"/>`);
+  if (tilePaths[ORANGE].length) parts.push(`<path fill="${C.orange}" fill-opacity="0.85" d="${tilePaths[ORANGE].join("")}"/>`);
+  parts.push(lines);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs>${masks.join("")}</defs>${parts.join("")}</svg>`;
 }
 
 const dataUri = (svg: string) => `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;

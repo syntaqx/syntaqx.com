@@ -25,6 +25,10 @@ export const LEVELS = 4;
 export const HOT = LEVELS + 1;
 /** Level value for red (warn) tiles. */
 export const WARN = HOT + 1;
+/** Level value for green (good) tiles. */
+export const GOOD = WARN + 1;
+/** Level value for orange tiles. */
+export const ORANGE = GOOD + 1;
 
 export const BAYER: number[][] = (() => {
   let b = [[0]];
@@ -121,7 +125,7 @@ export function rasterize(
   const S = 4;
   const cover = new Uint8Array(cols * rows);
   const touched: number[] = [];
-  // mark: 0 plain, 1 accent, 2 warn
+  // mark: 0 plain, 1 accent, 2 warn, 3 good, 4 orange
   const fill = (pts: V3[], v: number, mark = 0, alpha = 1) => {
     const sub = pts.map((p): V2 => {
       const [x, y] = P(p);
@@ -149,17 +153,19 @@ export function rasterize(
     if (p.kind === "plane" && !p.dashed) fill(p.pts, p.v, 0, 0.82);
     if (p.kind === "box" && !p.ghost) {
       const b = p.box;
-      const lit = (p.accent && !p.soft) || p.warn;
-      const mark = p.warn ? 2 : p.accent ? 1 : 0;
+      // soft: a colored outline over a plain fill, for any of the three colors
+      const lit = !p.soft && (p.accent || p.warn || p.good || p.orange);
+      const mark = p.soft && (p.warn || p.good || p.orange) ? 0 : p.warn ? 2 : p.good ? 3 : p.orange ? 4 : p.accent ? 1 : 0;
       const k = lit ? 1 : 0.85;
       fill(b.left, (0.42 - light * 0.2) * k + (lit ? 0.2 : 0), mark);
       fill(b.right, (0.24 + light * 0.2) * k + (lit ? 0.15 : 0), mark);
       fill(b.top, lit ? 1 : 0.6, mark);
     }
     if (p.kind === "cyl") {
-      const lit = p.accent && !p.soft;
-      fill(cylSide(p), lit ? 0.6 : 0.34 + light * 0.08, lit ? 1 : 0);
-      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), lit ? 1 : 0.58, lit ? 1 : 0);
+      const lit = !p.soft && (p.accent || p.warn || p.good);
+      const mark = lit ? (p.warn ? 2 : p.good ? 3 : 1) : 0;
+      fill(cylSide(p), lit ? 0.6 : 0.34 + light * 0.08, mark);
+      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), lit ? 1 : 0.58, mark);
     }
   }
   return { field: { cols, rows, lum, acc }, P };
@@ -184,7 +190,7 @@ export function levels(field: Field, twinkle = 0): Uint8Array {
         Math.floor(v * LEVELS + BAYER[y & 7][x & 7] - 0.5),
       );
       if (lv <= 0) continue;
-      out[i] = acc[i] === 2 ? WARN : acc[i] && lv >= LEVELS ? HOT : lv;
+      out[i] = acc[i] === 2 ? WARN : acc[i] === 3 ? GOOD : acc[i] === 4 ? ORANGE : acc[i] && lv >= LEVELS ? HOT : lv;
     }
   return out;
 }

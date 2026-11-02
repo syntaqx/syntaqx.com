@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import { slugifyTag } from "@/lib/posts";
+import { postDay } from "@/lib/post-day";
 import { cn } from "@/lib/cn";
 
 interface PostMetaProps {
@@ -21,7 +22,7 @@ export function PostMeta({
       className={cn("inst flex flex-wrap items-center gap-x-3 gap-y-1 text-dim", className)}
     >
       <time dateTime={date} className="shrink-0">
-        {format(new Date(date), dateFormat)}
+        {format(postDay(date), dateFormat)}
       </time>
       {readingTimeMinutes !== undefined && (
         <span className="shrink-0 before:mr-3 before:text-border-hover before:content-['/']">

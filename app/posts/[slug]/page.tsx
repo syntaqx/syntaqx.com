@@ -11,7 +11,9 @@ import { CopyCodeScript } from "@/components/copy-code";
 import { CodeTabsScript } from "@/components/code-tabs";
 import { SceneArt } from "@/components/scene-art";
 import { PostToc } from "@/components/post-toc";
-import Link from "next/link";
+import { Pager, type Neighbor } from "@/components/pager";
+import { format } from "date-fns";
+import { postDay } from "@/lib/post-day";
 import { SITE_URL } from "@/lib/constants";
 import { personRef } from "@/lib/schema";
 import { JsonLd } from "@/components/json-ld";
@@ -90,6 +92,9 @@ export default async function PostPage({ params }: Props) {
   const idx = all.findIndex((p) => p.slug === post.slug);
   const newer = idx > 0 ? all[idx - 1] : null;
   const older = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
+  // Older reads as previous (←), newer as next (→), labelled by date.
+  const neighbor = (p: (typeof all)[number] | null): Neighbor | null =>
+    p && { href: `/posts/${p.slug}`, label: format(postDay(p.date), "MMM d, yyyy"), title: p.title };
   const words = post.content.split(/\s+/).filter(Boolean).length;
   const feature = post.layout === "feature" && post.hero;
 
@@ -111,7 +116,7 @@ export default async function PostPage({ params }: Props) {
               readingTimeMinutes={post.readingTimeMinutes}
               className="border border-border bg-background px-2.5 py-1.5 text-accent!"
             />
-            <h1 className="max-w-[12ch] text-[clamp(2.6rem,5.5vw,4.5rem)] leading-[0.9] text-foreground wrap-break-word [text-shadow:0_2px_28px_var(--background),0_0_3px_var(--background)]">
+            <h1 className="max-w-[26ch] text-balance text-[clamp(2.6rem,5.5vw,4.5rem)] leading-[0.9] text-foreground wrap-break-word [text-shadow:0_2px_28px_var(--background),0_0_3px_var(--background)]">
               {post.title}
             </h1>
           </div>
@@ -131,7 +136,7 @@ export default async function PostPage({ params }: Props) {
       )}
 
       {/* Contents | reading column | details. Same frame for both layouts. */}
-      <div className="grid gap-x-12 gap-y-10 pt-12 lg:grid-cols-[11rem_minmax(0,40rem)] xl:grid-cols-[11rem_minmax(0,40rem)_minmax(0,1fr)]">
+      <div className="grid gap-x-12 gap-y-10 pt-12 lg:grid-cols-[11rem_minmax(0,44rem)] xl:grid-cols-[11rem_minmax(0,44rem)_13rem] xl:justify-between">
         {toc.length > 1 ? (
           <PostToc headings={toc} />
         ) : (
@@ -141,7 +146,7 @@ export default async function PostPage({ params }: Props) {
           {post.description && (
             <p
               className={cn(
-                "mb-8 max-w-[40rem]",
+                "mb-8 max-w-[44rem]",
                 feature ? "text-[1.2rem] font-semibold text-foreground" : "text-lg text-muted",
                 "leading-snug",
               )}
@@ -153,33 +158,7 @@ export default async function PostPage({ params }: Props) {
             className={feature ? "prose prose-feature" : "prose"}
             dangerouslySetInnerHTML={{ __html: content }}
           />
-          <nav data-pagefind-ignore
-            aria-label="More posts"
-            className="mt-16 grid gap-px border-y border-border bg-border sm:grid-cols-2"
-          >
-            {[
-              { p: older, label: "older" },
-              { p: newer, label: "newer" },
-            ].map(({ p, label }) =>
-              p ? (
-                <Link
-                  key={label}
-                  href={`/posts/${p.slug}`}
-                  className={cn(
-                    "group grid gap-2 bg-background py-5",
-                    label === "newer" ? "sm:pl-6 sm:text-right" : "sm:pr-6",
-                  )}
-                >
-                  <span className="inst text-dim">{label}</span>
-                  <span className="font-voice text-lg leading-none font-semibold uppercase text-foreground transition-colors group-hover:text-accent">
-                    {p.title}
-                  </span>
-                </Link>
-              ) : (
-                <span key={label} className="hidden bg-background sm:block" />
-              ),
-            )}
-          </nav>
+          <Pager prev={neighbor(older)} next={neighbor(newer)} />
         </div>
         <aside data-pagefind-ignore className="hidden self-start xl:sticky xl:top-24 xl:grid xl:gap-8">
           <dl className="border-t border-border">
@@ -187,7 +166,7 @@ export default async function PostPage({ params }: Props) {
               [
                 "published",
                 post.date
-                  ? new Date(post.date).toLocaleDateString("en-US", {
+                  ? postDay(post.date).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",

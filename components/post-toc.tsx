@@ -44,9 +44,10 @@ export function PostToc({
 
       if (atBottom) setProgress(1);
       else if (body) {
-        const r = body.getBoundingClientRect();
-        const total = Math.max(1, r.height - window.innerHeight * 0.6);
-        setProgress(Math.min(1, Math.max(0, -r.top / total)));
+        // From the first scroll to where the body's end comes into view, so
+        // the intro above the first heading counts too.
+        const end = body.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+        setProgress(Math.min(1, Math.max(0, window.scrollY / Math.max(1, end))));
       }
     };
     update();

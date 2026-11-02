@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import type { PostData } from "@/lib/posts";
+import { postDay } from "@/lib/post-day";
 
 export type PostSummary = Pick<
   PostData,
@@ -23,7 +24,7 @@ export function PostList({ posts, newestSlug = null }: PostListProps) {
             className="post-row group"
           >
             <time dateTime={post.date} className="inst text-dim tabular-nums">
-              {format(new Date(post.date), "yyyy.MM.dd")}
+              {format(postDay(post.date), "yyyy.MM.dd")}
             </time>
             <div className="min-w-0">
               <h2 className="post-row-title">
