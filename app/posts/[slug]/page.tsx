@@ -135,8 +135,9 @@ export default async function PostPage({ params }: Props) {
         </header>
       )}
 
-      {/* Contents | reading column | details. Same frame for both layouts. */}
-      <div className="grid gap-x-12 gap-y-10 pt-12 lg:grid-cols-[11rem_minmax(0,44rem)] xl:grid-cols-[11rem_minmax(0,44rem)_13rem] xl:justify-between">
+      {/* Contents | reading column | details. The reading column holds its
+          measure; the rails share whatever width is left. */}
+      <div className="grid gap-10 pt-12 lg:grid-cols-[minmax(0,16rem)_minmax(0,44rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,44rem)_minmax(0,1fr)]">
         {toc.length > 1 ? (
           <PostToc headings={toc} />
         ) : (
