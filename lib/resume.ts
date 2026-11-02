@@ -31,7 +31,7 @@ export const resume = {
   name: "Chase Pierce",
   title: "Software Architect · Engineering Executive",
   links: [
-    { label: "syntaqx.com", href: SITE_URL },
+    { label: "www.syntaqx.com", href: SITE_URL },
     {
       label: "linkedin.com/in/syntaqx",
       href: "https://www.linkedin.com/in/syntaqx/",
