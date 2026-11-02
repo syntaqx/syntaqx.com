@@ -3,7 +3,7 @@ title = "We Called It Progress"
 date = 2026-10-12T00:00:00Z
 description = "We spent decades building software that made other people's jobs cheaper. Now I'm on the job market, watching it happen to us."
 categories = ["AI", "Technology"]
-tags = ["LLMs", "AI", "Future of Work", "Tech Industry"]
+tags = ["AI", "Future of Work", "Careers"]
 layout = "feature"
 hero = "stack"
 +++

@@ -3,7 +3,7 @@ title = "We've Been \"Vibe Coding\" This Whole Time"
 date = 2026-11-02T00:00:00Z
 description = "Every promotion has moved you further from the code. Now every engineer gets a small org chart of their own."
 categories = ["AI", "Engineering Leadership"]
-tags = ["LLMs", "AI in Development", "Engineering Culture", "Software Quality"]
+tags = ["AI", "Engineering Leadership", "Software Quality", "DevOps"]
 layout = "feature"
 hero = "stamp"
 +++
