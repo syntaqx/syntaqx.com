@@ -38,6 +38,7 @@ Reserve a steady share of every team's capacity for paying down debt and keeping
 - **Not debt sprints.** A quarterly "cleanup sprint" lets interest compound for three months, then gets cancelled the first time a deadline slips.
 - **The team chooses** what to spend it on. They know where the interest hurts.
 - **Upgrades come out of this budget,** before they become emergencies. See [Dependencies & Upgrades](/docs/engineering/dependencies).
+- **It's engineering's share of the roadmap,** set before features are prioritized. [Roadmaps & Capacity](/docs/product/roadmaps) covers what else it pays for.
 
 ## Pay It Down Where You're Working
 
