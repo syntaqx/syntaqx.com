@@ -49,6 +49,10 @@ export type Part =
       soft?: boolean;
       /** Red, for something gone wrong (a blocked card). */
       warn?: boolean;
+      /** Green, for something that passed (an approval). */
+      good?: boolean;
+      /** Orange, for a character that should read as warm (the reviewer bot). */
+      orange?: boolean;
       small?: boolean;
       slots?: boolean;
       vents?: boolean;
@@ -56,9 +60,10 @@ export type Part =
       ghost?: boolean;
     }
   /** `rt` tapers the top rim (a bucket when wider than `r`). */
-  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number; rt?: number; accent?: boolean; soft?: boolean }
+  | { kind: "cyl"; cx: number; cy: number; z: number; r: number; h: number; rt?: number; accent?: boolean; soft?: boolean; warn?: boolean; good?: boolean }
   | { kind: "cable"; pts: V3[]; speed: number; accent?: boolean }
-  | { kind: "line"; a: V3; b: V3; alpha?: number; dashed?: boolean; accent?: boolean }
+  /** `good` inks it green, for something that passed (an approval); `warn` red. */
+  | { kind: "line"; a: V3; b: V3; alpha?: number; dashed?: boolean; accent?: boolean; good?: boolean; warn?: boolean }
   | { kind: "label"; at: V3; text: string; dx: number; dy: number; accent?: boolean };
 
 export interface Scene {

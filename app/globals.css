@@ -310,13 +310,13 @@ body {
 }
 
 /*
- * Prose: posts and docs. Plain and readable (Hanken at a 40rem measure);
+ * Prose: posts and docs. Plain and readable (Hanken at a 44rem measure);
  * the voice face only for section heads, numbered in instrument text.
  */
 .prose {
   font-size: 1.0625rem;
   line-height: 1.7;
-  max-width: 40rem;
+  max-width: 44rem;
   color: var(--muted);
   counter-reset: section;
 }

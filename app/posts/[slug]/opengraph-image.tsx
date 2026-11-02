@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { format } from "date-fns";
 import { getPostBySlug, getAllPosts } from "@/lib/posts";
+import { postDay } from "@/lib/post-day";
 import { ogFonts, OG_SIZE } from "@/lib/og";
 import { OG_COLORS as C, fieldImage, sceneImage } from "@/lib/scene/og";
 
@@ -22,7 +23,7 @@ export default async function Image({
 
   const title = post?.title ?? slug;
   const meta = [
-    post?.date ? format(new Date(post.date), "MMM d, yyyy") : null,
+    post?.date ? format(postDay(post.date), "MMM d, yyyy") : null,
     post ? `${post.readingTimeMinutes} min read` : null,
   ]
     .filter(Boolean)

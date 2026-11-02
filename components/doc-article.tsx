@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
@@ -8,7 +7,7 @@ import { Pencil } from "lucide-react";
 import { MarkdownMenu } from "@/components/copy-markdown";
 import { Tip } from "@/components/tip";
 import { CodeTabsScript } from "@/components/code-tabs";
-import { ChapterKeys } from "@/components/chapter-keys";
+import { Pager, type Neighbor } from "@/components/pager";
 import { JsonLd } from "@/components/json-ld";
 import { DocsHeader } from "@/components/docs-header";
 import { DocsToc } from "@/components/docs-toc";
@@ -16,13 +15,6 @@ import type { Heading } from "@/lib/posts";
 import { article, type Crumb } from "@/lib/schema";
 
 const REPO = "https://github.com/syntaqx/syntaqx.com";
-
-export interface Neighbor {
-  href: string;
-  /** What it belongs to, after "Previous ·" or "Next ·". */
-  label: string;
-  title: string;
-}
 
 /**
  * A doc or a book chapter in the reading layout: the quiet header, the
@@ -108,31 +100,7 @@ export async function DocArticle({
           </div>
         </DocsHeader>
         <div className="prose prose-docs" dangerouslySetInnerHTML={{ __html: content }} />
-        {(prev || next) && (
-          <nav data-pagefind-ignore
-            aria-label="Previous and next (or use the arrow keys)"
-            className="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2"
-          >
-            {prev && (
-              <Link
-                href={prev.href}
-                className="group border border-border p-4 transition-colors hover:border-accent"
-              >
-                <span className="inst block text-dim">Previous · {prev.label}</span>
-                <span className="mt-1 block group-hover:text-accent">{prev.title}</span>
-              </Link>
-            )}
-            {next && (
-              <Link
-                href={next.href}
-                className="group border border-border p-4 text-right transition-colors hover:border-accent sm:col-start-2"
-              >
-                <span className="inst block text-dim">Next · {next.label}</span>
-                <span className="mt-1 block group-hover:text-accent">{next.title}</span>
-              </Link>
-            )}
-          </nav>
-        )}
+        <Pager prev={prev} next={next} />
       </div>
       {rail && (
         <aside data-pagefind-ignore className="hidden xl:block">
@@ -145,7 +113,6 @@ export async function DocArticle({
       <CopyCodeScript />
       <DiagramViewer />
       <CodeTabsScript />
-      <ChapterKeys prev={prev?.href} next={next?.href} />
     </article>
   );
 }

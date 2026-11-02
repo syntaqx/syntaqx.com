@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { project, type SceneState, type V2 } from "@/lib/scene/iso";
-import { HOT, LEVELS, WARN, levels, rasterize } from "@/lib/scene/raster";
+import { GOOD, HOT, LEVELS, ORANGE, WARN, levels, rasterize } from "@/lib/scene/raster";
 import { sceneAt, type SceneName } from "@/lib/scene/scenes";
 import { walk, type Ink, type Pen } from "@/lib/scene/walk";
 import { cn } from "@/lib/cn";
@@ -54,6 +54,8 @@ function palette() {
     ramp: [0.14, 0.3, 0.55, 0.85].map((t) => mix(bg, acc, light ? t * 0.8 : t)),
     hot: mix(acc, light ? bg : [255, 255, 255], 0.35),
     warn: (light ? [196, 55, 47] : [255, 93, 82]) as RGB,
+    good: (light ? [52, 128, 70] : [116, 194, 136]) as RGB,
+    orange: (light ? [190, 92, 60] : [217, 119, 87]) as RGB,
     inst: cs.getPropertyValue("--font-michroma").trim() || "sans-serif",
   };
 }
@@ -67,7 +69,7 @@ function canvasPen(
 ): Pen {
   const lw = Math.max(1, dpr * 0.9);
   const ink = (k: Ink) =>
-    k === "acc" ? pal.acc : k === "warn" ? pal.warn : k === "dim" ? pal.dim : pal.fg;
+    k === "acc" ? pal.acc : k === "warn" ? pal.warn : k === "good" ? pal.good : k === "orange" ? pal.orange : k === "dim" ? pal.dim : pal.fg;
   const trace = (pts: V2[], close: boolean) => {
     ctx.beginPath();
     pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
@@ -233,7 +235,7 @@ export function SceneArt({
       ctx.fillStyle = css(pal.bg);
       ctx.fillRect(0, 0, W, H);
       const size = (grain - (grain >= 5 ? 1 : 0.6)) * dpr;
-      const paths = Array.from({ length: WARN + 1 }, () => new Path2D());
+      const paths = Array.from({ length: ORANGE + 1 }, () => new Path2D());
       for (let y = 0; y < rows; y++)
         for (let x = 0; x < cols; x++) {
           const v = lv[y * cols + x];
@@ -247,6 +249,10 @@ export function SceneArt({
       ctx.fill(paths[HOT]);
       ctx.fillStyle = css(pal.warn, 0.85);
       ctx.fill(paths[WARN]);
+      ctx.fillStyle = css(pal.good, 0.85);
+      ctx.fill(paths[GOOD]);
+      ctx.fillStyle = css(pal.orange, 0.85);
+      ctx.fill(paths[ORANGE]);
 
       // Lines on their own layer, so occlusion only erases line work.
       if (layer.width !== W || layer.height !== H) {

@@ -266,6 +266,183 @@ const stack: SceneFn = (s) => {
   return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [3.4, 3.4, next + 3.2]], axes: ground() };
 };
 
+/** Stroke glyphs on a 1 × 1.6 cell, [u, v] with v up: just what the stamp's verdicts need. */
+const GLYPHS: Record<string, [number, number][][]> = {
+  L: [[[0, 1.6], [0, 0], [1, 0]]],
+  G: [[[1, 1.6], [0, 1.6], [0, 0], [1, 0], [1, 0.8], [0.5, 0.8]]],
+  T: [[[0, 1.6], [1, 1.6]], [[0.5, 1.6], [0.5, 0]]],
+  M: [[[0, 0], [0, 1.6], [0.5, 0.8], [1, 1.6], [1, 0]]],
+  "?": [[[0, 1.2], [0.15, 1.5], [0.5, 1.6], [0.85, 1.5], [1, 1.2], [0.9, 0.95], [0.5, 0.72], [0.5, 0.42]], [[0.5, 0.18], [0.5, 0]]],
+  "!": [[[0.5, 1.6], [0.5, 0.55]], [[0.5, 0.2], [0.5, 0]]],
+};
+
+type Ink = { accent?: boolean; good?: boolean; warn?: boolean; alpha?: number };
+
+/** Text lying flat on the ground plane: the baseline runs along +x, letters stand toward -y. */
+const floorText = (text: string, x: number, y: number, z: number, size: number, gap = 0.35, ink: Ink = { accent: true }): Part[] =>
+  [...text].flatMap((ch, i) =>
+    (GLYPHS[ch] ?? []).flatMap((stroke) =>
+      stroke.slice(1).flatMap((p, k): Part[] =>
+        // each stroke twice, a hair apart, so the letters carry some weight
+        [0, 0.05].map((w): Part => {
+          const at = ([u, v]: [number, number]): V3 => [x + (i * (1 + gap) + u) * size + w, y - v * size + w, z];
+          return { kind: "line", a: at(stroke[k]), b: at(p), ...ink };
+        }),
+      ),
+    ),
+  );
+
+/**
+ * We've Been Vibe Coding This Whole Time: the rubber stamp. Pull requests
+ * slide off the inbox one at a time onto the pad, a robot reviewer scans
+ * each one and picks a stamp. Two get a green LGTM and go to the merged
+ * pile; every third gets a red ?! and goes to the pile that needs a human.
+ * Every pile holds its height and each sheet lands flush on the last, so
+ * the loop has no seam.
+ */
+const stamp: SceneFn = (s) => {
+  const [A, B, t] = [3.1, 2.8, 0.12];
+  const inbox = { x: 0.2, y: 4.3, n: 8 };
+  const station = { x: 3.9, y: 4.3, z: 0.5 };
+  // most PRs merge, a few need a human, and the piles say so
+  const merged = { x: 8.6, y: 4.7, n: 11 };
+  const human = { x: 3.9, y: 8.1, n: 3 };
+  const pileTop = (n: number) => (n - 1) * t;
+  // three PRs a loop, the third flagged; offset so the resting frame (and the
+  // OG image) has the stamp back on its pad and a fresh LGTM on the paper
+  const T = 3.6;
+  const now = s.t + T * 0.76;
+  const flagged = Math.floor(now / T) % 3 === 2;
+  const ph = (now % T) / T;
+  const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+  const hop = (k: number) => Math.sin(Math.PI * k) * 0.7;
+  const to = flagged ? human : merged;
+  const travel = (from: { x: number; y: number }, fz: number, dest: { x: number; y: number }, dz: number, k: number): V3 => {
+    const e = ease(k);
+    return [lerp(from.x, dest.x, e), lerp(from.y, dest.y, e), lerp(fz, dz, e) + hop(k)];
+  };
+  const [sx, sy, sz] =
+    ph < 0.22
+      ? travel(inbox, pileTop(inbox.n), station, station.z, ph / 0.22)
+      : ph < 0.78
+        ? [station.x, station.y, station.z]
+        : travel(station, station.z, to, pileTop(to.n), (ph - 0.78) / 0.22);
+  // the robot reads the sheet, decides, then the stamp it picked comes down
+  const reading = ph >= 0.22 && ph < 0.38;
+  const decided = ph >= 0.38 && ph < 0.86;
+  const drop = ph < 0.4 ? 0 : ph < 0.52 ? ease((ph - 0.4) / 0.12) : ph < 0.58 ? 1 : ph < 0.74 ? 1 - ease((ph - 0.58) / 0.16) : 0;
+  const inked = ph >= 0.55;
+
+  // the verdict, centered on the sheet: LGTM in green, or a red ?! (the
+  // interrobang, spelled out so it reads at this size). The stamp's face is
+  // sized to the wider of the two.
+  const approve = { text: "LGTM", size: 0.36, ink: { good: true, alpha: 0.75 } as Ink };
+  const escalate = { text: "?!", size: 0.46, ink: { warn: true, alpha: 0.75 } as Ink };
+  const [bw, bh] = [approve.size * 4.9 + 0.3, escalate.size * 1.6 + 0.3];
+  const mark = (x: number, y: number, z: number, v: typeof approve): Part[] => {
+    const tw = v.size * (v.text.length * 1.3 - 0.3);
+    return floorText(v.text, x + A / 2 - tw / 2, y + B / 2 + (v.size * 1.6) / 2, z, v.size, 0.3, v.ink);
+  };
+  const verdict = flagged ? escalate : approve;
+  const sheet = (x: number, y: number, z: number, i = 0): Part => ({ kind: "box", box: box(x + ((i * 7) % 3) * 0.05, y - ((i * 5) % 3) * 0.05, z, A, B, t) });
+  const pile = (p: { x: number; y: number; n: number }) => Array.from({ length: p.n }, (_, i) => sheet(p.x, p.y, i * t, i));
+
+  // two stamps, one per verdict, each on its own ink pad behind the paper.
+  // The one the PR earns arcs over to the sheet and back; the other waits.
+  const inkZ = 0.32;
+  const paperZ = station.z + t;
+  const [px, py] = [station.x + A / 2, station.y + B / 2];
+  const pads = { warn: { cx: px - 2.7, cy: station.y - 2.1 }, good: { cx: px + 2.7, cy: station.y - 2.1 } };
+  const inkPad = (p: { cx: number; cy: number }, c: Ink): Part[] => [
+    { kind: "box", box: box(p.cx - bw / 2 - 0.45, p.cy - bh / 2 - 0.45, 0, bw + 0.9, bh + 0.9, inkZ) },
+    { kind: "box", box: box(p.cx - bw / 2 - 0.15, p.cy - bh / 2 - 0.15, inkZ, bw + 0.3, bh + 0.3, 0.02), ...c, soft: true },
+  ];
+  // the ink colors only the rubber face; the body and the knob stay plain
+  const stampAt = (cx: number, cy: number, z: number, c: Ink): Part[] => [
+    { kind: "box", box: box(cx - bw / 2 - 0.05, cy - bh / 2 - 0.05, z, bw + 0.1, bh + 0.1, 0.12), ...c, soft: true },
+    { kind: "box", box: box(cx - bw / 2 - 0.2, cy - bh / 2 - 0.2, z + 0.12, bw + 0.4, bh + 0.4, 0.5) },
+    { kind: "cyl", cx, cy, z: z + 0.62, r: 0.22, h: 0.95 },
+    { kind: "cyl", cx, cy, z: z + 1.57, r: 0.58, h: 0.42 },
+  ];
+  const red: Ink = { warn: true };
+  const green: Ink = { good: true };
+  const [use, idle] = flagged ? [pads.warn, pads.good] : [pads.good, pads.warn];
+  const cx = lerp(use.cx, px, drop);
+  const cy = lerp(use.cy, py, drop);
+  const pad = lerp(inkZ, paperZ, drop) + Math.sin(Math.PI * drop) * (2.2 + s.spread * 1.4);
+
+  // the reviewer: a little orange bot floating between the pads, facing the
+  // paper. It bobs, sweeps a beam from both eyes down the sheet, and its
+  // eyes take the verdict's color while the stamp it picked comes over.
+  const bot = { x: px - 0.85, y: station.y - 2.7, w: 1.7, d: 1, h: 1.25 };
+  const bc = bot.y + bot.d / 2;
+  const legH = 0.32;
+  const bodyZ = 1.85 + bob(s, 0.12) + s.spread * 0.6;
+  const top = bodyZ + bot.h;
+  const eyeY = bot.y + bot.d + 0.02;
+  const eyeZ = bodyZ + 0.72;
+  const look: Ink = decided ? (flagged ? red : green) : {};
+  const eyes: V3[] = [[px - 0.38, eyeY, eyeZ], [px + 0.38, eyeY, eyeZ]];
+  const scanY = station.y + 0.2 + (B - 0.4) * (reading ? (ph - 0.22) / 0.16 : 0);
+  // little legs hang under the body; nubs at its sides
+  const leg = (x: number, y: number): Part => ({ kind: "box", box: box(x, y, bodyZ - legH, 0.24, 0.24, legH), orange: true });
+  const nub = (side: -1 | 1): Part => ({ kind: "box", box: box(side < 0 ? bot.x - 0.2 : bot.x + bot.w, bc - 0.16, bodyZ + 0.32, 0.2, 0.32, 0.3), orange: true });
+  const robot: Part[] = [
+    // its shadow on the floor, so it reads as hovering
+    { kind: "plane", pts: quad(bot.x + 0.15, bot.y + 0.1, 0.01, bot.w - 0.3, bot.d - 0.2), v: 0.2, dashed: true },
+    leg(px - 0.72, bc - 0.4),
+    leg(px + 0.48, bc - 0.4),
+    leg(px - 0.72, bc + 0.16),
+    leg(px + 0.48, bc + 0.16),
+    nub(-1),
+    { kind: "box", box: box(bot.x, bot.y, bodyZ, bot.w, bot.d, bot.h), orange: true },
+    nub(1),
+    // eyes: small blocks set into the face, dark against the orange until
+    // the verdict colors them
+    ...eyes.map((e): Part => ({ kind: "box", box: box(e[0] - 0.08, bot.y + bot.d, e[2] - 0.2, 0.16, 0.05, 0.4), ...look })),
+  ];
+  const beam: Part[] = reading
+    ? // each eye casts its own edge of the beam
+      [station.x + 0.2, station.x + A - 0.2].map((x, i): Part => ({ kind: "line", a: eyes[i], b: [x, scanY, paperZ], accent: true, alpha: 0.45 }))
+        .concat({ kind: "line", a: [station.x + 0.2, scanY, paperZ + 0.01], b: [station.x + A - 0.2, scanY, paperZ + 0.01], accent: true, alpha: 0.9 })
+    : [];
+  // the stamps and the robot paint back to front by where they stand right
+  // now, so a stamp lifting off the far pad stays behind the robot until it
+  // swings out in front of it
+  const backRow = [
+    { depth: idle.cx + idle.cy, parts: stampAt(idle.cx, idle.cy, inkZ, flagged ? green : red) },
+    { depth: px + bot.y + bot.d / 2, parts: [...robot, ...beam] },
+    { depth: cx + cy, parts: stampAt(cx, cy, pad, flagged ? red : green) },
+  ]
+    .sort((a, b) => a.depth - b.depth)
+    .flatMap((p) => p.parts);
+
+  const mergedPile = [...pile(merged), ...mark(merged.x, merged.y, pileTop(merged.n) + t + 0.01, approve)];
+
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 12, 12), v: 0.09, grid: 12 },
+    ...pile(inbox),
+    ...inkPad(pads.warn, red),
+    ...inkPad(pads.good, green),
+    { kind: "box", box: box(station.x - 0.15, station.y - 0.15, 0, A + 0.3, B + 0.3, station.z), slots: true },
+    ...pile(human),
+    ...mark(human.x, human.y, pileTop(human.n) + t + 0.01, escalate),
+    // the merged pile is in front of the pad, but behind a sheet landing on it
+    ...(ph >= 0.78 ? mergedPile : []),
+    sheet(sx, sy, sz),
+    ...(inked ? mark(sx, sy, sz + t + 0.01, verdict) : []),
+    ...(ph < 0.78 ? mergedPile : []),
+    ...backRow,
+    // off the antenna and up, above the stamps rather than among them
+    { kind: "label", at: [px, bot.y + bot.d / 2, top], text: "reviewer", dx: -0.6, dy: -1.8, accent: true },
+    { kind: "label", at: [inbox.x, inbox.y + B, pileTop(inbox.n) / 2], text: "prs · 214", dx: -1.2, dy: 0.8 },
+    { kind: "label", at: [merged.x + A, merged.y + B, pileTop(merged.n) / 2], text: "merged", dx: 1.2, dy: 0.8 },
+    // labelled off its front-right corner, clear of the title over the left of the art
+    { kind: "label", at: [human.x + A, human.y + B, pileTop(human.n) / 2], text: "needs a human", dx: 1.2, dy: 0.8, accent: flagged && inked },
+  ];
+  return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [px, bot.y, top + 2.4]], axes: ground() };
+};
+
 /**
  * Projects: what I've built as modules on a grid (Flagon the tower, the
  * community the round one), wired together along the gutters, with the
@@ -1390,7 +1567,7 @@ const library: SceneFn = (s) => {
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len + t, y0, side]], axes: ground(10) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, stamp, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Book covers, one per book (written or Soon), never shared with a post or a page. */
@@ -1401,7 +1578,7 @@ export type BookSceneName = (typeof BOOK_SCENES)[number];
 export const BOOKS_INDEX_SCENE = "library" satisfies SceneName;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */
-export const POST_SCENES = ["loop", "weld", "scaffold", "stack"] as const satisfies readonly SceneName[];
+export const POST_SCENES = ["loop", "weld", "scaffold", "stack", "stamp"] as const satisfies readonly SceneName[];
 export type PostSceneName = (typeof POST_SCENES)[number];
 
 export const isPostScene = (name: unknown): name is PostSceneName =>
