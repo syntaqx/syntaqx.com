@@ -12,11 +12,9 @@ Andrej Karpathy coined "vibe coding" in [February 2025](https://x.com/karpathy/s
 
 Under the sneer is a real argument: if you didn't read every line, you shouldn't ship it. I've [made that argument on this exact blog](/posts/growing-together-in-the-age-of-llms). But the better the models get, the more I think about how every company I've worked at actually shipped software, long before any of us had a model to blame.
 
-Every promotion in this industry moves you further from the code, whether you want it to or not. A senior engineer reads most of it. A staff engineer reads the scary parts. Managers and directors read more Jira than code. A CTO reads dashboards. That's the job at any real scale. One person can barely keep up with twenty engineers. At fifty, forget it. At two hundred, or two thousand, it's impossible. Leadership sets direction, manages outcomes, and builds the guardrails that catch what nobody read.
+Every promotion in this industry moves you further from the code, whether you want it to or not. A junior engineer reads the code they write and whatever it touches. A senior reads that, plus their share of everyone else's in reviews. A staff engineer reads the scary parts. Managers and directors read more Jira than code. A CTO reads dashboards. That's the job at any real scale. One person can barely keep up with twenty engineers. At fifty, forget it. At two hundred, or two thousand, it's impossible. Leadership sets direction, manages outcomes, and builds the guardrails that catch what nobody read.
 
 The company shipped anyway. For decades. Some of that code is running your bank right now, and some of it was written at 4:55 on a Friday by someone who has since left to start a kombucha company.
-
-An agent isn't an engineer, and I'll get to where the comparison breaks. The point is how we oversee the work, not who's doing it.
 
 We've been vibe coding this whole time. We just called it delegation and drew it as an org chart.
 
