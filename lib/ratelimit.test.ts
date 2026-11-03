@@ -121,7 +121,10 @@ describe("redis store against a real Redis", () => {
     const third = await a.limit(key);
 
     expect([first.remaining, second.remaining, third.remaining]).toEqual([4999, 4998, 4997]);
-    expect(first.headers["X-RateLimit-Reset"]).toBe(third.headers["X-RateLimit-Reset"]);
+    // Same window: the reset is derived from the key's TTL and the current
+    // second, so calls that straddle a second boundary can differ by one.
+    const drift = Math.abs(Number(first.headers["X-RateLimit-Reset"]) - Number(third.headers["X-RateLimit-Reset"]));
+    expect(drift).toBeLessThanOrEqual(1);
     // Prove Redis did the counting, not the in-memory fallback.
     expect(await new Redis(LOCAL).get(`syntaqx:ratelimit:${key}`)).toBe(3);
   });
