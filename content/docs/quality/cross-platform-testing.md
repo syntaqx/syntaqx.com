@@ -79,6 +79,13 @@ Publish the tiers where support and sales can see them, and decide what the prod
 - **Make the build agree with the matrix.** [Browserslist](https://github.com/browserslist/browserslist) is the list your bundler, CSS tooling and polyfills read. Its `defaults` query is `> 0.5%, last 2 versions, Firefox ESR, not dead`, a reasonable start; once you have your own analytics, replace it with your own tiers so the build doesn't ship polyfills for browsers you don't support or drop syntax a supported one needs.
 - **Drop a browser on purpose.** When a version falls below the functional threshold, announce the date in the support policy, watch its share and any revenue tied to it until then, and ship the below-the-floor experience (plain page or clear message) rather than letting it quietly break.
 
+### Browserslist in Practice
+
+- **One list, one place.** Put the queries in the `browserslist` key of `package.json` or in a `.browserslistrc` file; the README's promise is that "all tools will find target browsers automatically" from there. A second target list in a bundler or transpiler config drifts from the first.
+- **Check what a query means.** `npx browserslist` prints the browsers a query resolves to, and `--coverage` reports the share of users it covers. Run both when you change the list and paste the output into the pull request, so a reviewer sees "these browsers" instead of a query string.
+- **Keep the data fresh.** Queries like `> 0.5%` and `last 2 versions` are resolved against a usage database that ships in a dependency. Update it with [`update-browserslist-db`](https://github.com/browserslist/update-db) on the same schedule as other dependencies (a Dependabot group works), or the build targets last year's browsers.
+- **Mirror the tiers.** Full and functional tiers belong in the query; best effort doesn't, since nobody promised it a polyfill. The test matrix and the build list then describe the same browsers.
+
 ## Real Devices, Emulators and Device Clouds
 
 - **Emulation in the browser** (Playwright's [device descriptors](https://playwright.dev/docs/emulation): viewport, user agent, touch, pixel ratio) is a desktop engine pretending. It's right for layout and responsive checks on every pull request and wrong for anything about the real device: performance, memory, keyboard behavior, safe areas, OS dialogs.
@@ -120,6 +127,19 @@ Native apps add a dimension the web mostly doesn't have: old versions of your ow
 - **Screen sizes and densities:** the smallest supported phone, a large phone, and a tablet if you support one. Small screens find most of the truncation and overlap bugs.
 - **Android fragmentation:** manufacturer skins, aggressive battery management and different WebView versions change behavior on the same OS version. Pick devices from your own install base by manufacturer, not just by OS version.
 - **Upgrade paths:** install the previous release, create data, upgrade, and check it survived. Fresh installs never find migration bugs.
+- **A support window, not a museum:** test the app versions inside the published window and nothing older. The window is what keeps the matrix (and the API) from carrying every version you've ever shipped; how it's enforced is below.
+
+### Retiring Old App Versions and APIs
+
+A web release replaces itself; a mobile release lives on until the user updates or the phone dies. Without a plan, the API ends up serving five generations of the app, each pinned to endpoints and fields nobody can remove. The pieces that prevent it already exist; they only work if they're tied together:
+
+1. **Publish a support window** for the app, such as the last 12 months of releases ([Mobile Releases](/docs/delivery/mobile-releases#minimum-supported-versions-and-forced-upgrades)). It's the number the API team designs against: what's inside must keep working, what's outside doesn't.
+2. **Send the app version on every request** and chart it. Removal decisions come from how many people are still on a version, not from how old it is.
+3. **Deprecate on the wire.** When an endpoint or field is going away, mark it with the [`Deprecation` and `Sunset` headers](/docs/api-design/versioning#deprecation-headers) and set the sunset date when deprecation starts.
+4. **Raise the minimum version before the sunset.** Move the minimum supported version past the last release that calls the old API, using the soft prompt first and the hard block only once the remaining share is small. The sunset date comes after that, never before, so nobody inside the window loses a feature to a removed endpoint.
+5. **Remove it.** After the sunset the endpoint answers `410 Gone` ([After the Sunset](/docs/api-design/versioning#after-the-sunset)), and the server code, the tests and the matrix row for that app version all go with it.
+
+The result is a rolling window instead of a growing pile: at any time the API supports the versions in the window, plus whatever is mid-sunset, and the test matrix covers the same set.
 
 ## Automated Accessibility Checks
 
@@ -151,7 +171,8 @@ Run the visual and functional suites in a pseudo-locale as well as the default o
 - [BrowserStack Local](https://www.browserstack.com/docs/automate/selenium/local-testing-introduction), reaching internal and private environments from the cloud
 - [Playwright: Parallelism](https://playwright.dev/docs/test-parallel), workers and sharding a suite across machines
 - [Baseline](https://web.dev/baseline), newly and widely available features across the core browsers
-- [Browserslist](https://github.com/browserslist/browserslist), the shared browser list and its `defaults` query
+- [Browserslist](https://github.com/browserslist/browserslist), the shared browser list, its `defaults` query and `--coverage`
+- [update-browserslist-db](https://github.com/browserslist/update-db), refreshing the browser usage data queries resolve against
 - [Chrome: A faster release cycle](https://developer.chrome.com/blog/faster-release-cycle), the move to a four-week stable cycle
 - [MDN: forced-colors](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors), detecting forced color palettes such as Windows High Contrast mode
 - [MDN: scrollbar-gutter](https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter), classic and overlay scrollbars and reserving the gutter

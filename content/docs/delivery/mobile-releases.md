@@ -83,7 +83,7 @@ Eventually a version has to stop working: a security fix that needs the client, 
 
 - **A version check at launch** against a server-provided policy: the minimum supported version (below it, block with an upgrade screen that links to the store) and a recommended version (below it, show a dismissible prompt).
 - **Use the hard block rarely.** It's mobile's only real rollback for a dangerous build: keep it for security and data-integrity problems, and versions that have shrunk to a sliver of users.
-- **Publish a support window,** such as "the last 12 months of releases," so the API team knows what must keep working.
+- **Publish a support window,** such as "the last 12 months of releases," so the API team knows what must keep working. It's also what lets old APIs go: raise the minimum past the releases that call one, then sunset it ([Retiring Old App Versions and APIs](/docs/quality/cross-platform-testing#retiring-old-app-versions-and-apis)).
 - **The block screen must work on every old version.** Its contract (an endpoint, a response shape) is the one API you can never change.
 
 ## Release Health Gates

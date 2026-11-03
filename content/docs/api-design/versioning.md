@@ -101,6 +101,7 @@ The subtle ones keep the same shape: a stricter validation rule, a different def
 - **At least 30 days between deprecation and sunset.** That's the floor, long enough for a team on a monthly release cycle to notice and ship a fix. APIs with many consumers should give far longer: GitHub supports a previous REST version for at least 24 months after its successor ships.
 - **The sunset date is set when deprecation starts,** and it never moves earlier. Clients plan around it; pulling it in breaks the plan.
 - **Nothing is deprecated until its replacement exists.** A deprecation with nowhere to go is just a removal with a delay.
+- **Mobile clients can't upgrade on your schedule.** An installed app keeps calling the old API until its user updates, so the sunset has to come after the app's minimum supported version moves past every release that uses it. The order of operations is in [Retiring Old App Versions and APIs](/docs/quality/cross-platform-testing#retiring-old-app-versions-and-apis).
 
 ## Deprecation Headers
 
