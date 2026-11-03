@@ -21,7 +21,7 @@ Incumbent cores document posting behavior to their customers, not publicly; the 
 | **Mambu** | Real-time posting | Card holds reduce available only, start `PENDING`, expire after 7 days by default (1 to 36,525, overridable per merchant category or per hold); holds placed by account ID never expire | Blocks reduce available, can exceed it, keep accruing interest on the total; seizure moves blocked funds out | Ordered daily job groups at midnight in the organization's time zone, with no downtime; hourly hold expiry |
 | **Apache Fineract** | Read, write and batch instance modes | Not covered here | Not covered here | Close-of-business jobs on batch instances, which can run on several batch instances |
 
-Three things carry across vendors. A hold is a reduction of available balance, never a ledger entry. Expiry is a scheduled job, so a hold is live until the job runs, not until its timestamp passes, unless reads enforce the timestamp themselves ([Expiry Is Enforced on Read](/docs/architecture/reservations-and-holds#expiry-is-enforced-on-read)). And the business day closes on a schedule the bank sets, with transactions after the cutoff belonging to the next day.
+Three things carry across vendors. A hold is a reduction of available balance, never a ledger entry. Expiry is a scheduled job, so a hold is live until the job runs, not until its timestamp passes, unless reads enforce the timestamp themselves ([Expiry Is Enforced on Read](/docs/building-blocks/reservations-and-holds#expiry-is-enforced-on-read)). And the business day closes on a schedule the bank sets, with transactions after the cutoff belonging to the next day.
 
 ## Memo Posting and Hard Posting
 
@@ -80,7 +80,7 @@ Mambu's documentation shows both mechanisms in one core. Card authorization hold
 The design rules:
 
 - **One table, typed.** Every hold and block is a row with a kind, an amount, a reason, who placed it, the transaction or case it belongs to, and either an expiry or a release condition. Available balance sums the live rows.
-- **Expiry is explicit.** A hold that "expires" leaves a record that it did, when, and by what job, and a later clearing posts against the ledger as a new debit ([Hold Lifetimes Are Policy](/docs/architecture/reservations-and-holds#hold-lifetimes-are-policy)).
+- **Expiry is explicit.** A hold that "expires" leaves a record that it did, when, and by what job, and a later clearing posts against the ledger as a new debit ([Hold Lifetimes Are Policy](/docs/building-blocks/reservations-and-holds#hold-lifetimes-are-policy)).
 - **Holds can exceed the balance.** A block for a $10,000 levy on a $3,000 account blocks $3,000 now and catches the next deposits; the record holds the target amount and the amount currently secured.
 - **Release is authorized.** Lifting a legal or fraud block is a permissioned action (Mambu's is `BLOCK_AND_SEIZE_FUNDS`), recorded with who and why.
 
@@ -105,7 +105,7 @@ The lesson the industry took is that posting order is a disclosed product term w
 
 Build posting order as configuration with a version, not code:
 
-- **Order by class, then within class.** A common shape is credits first, then debits the bank has already guaranteed (authorized card transactions, in authorization order), then other electronic debits, then checks; within a class, by timestamp or amount. Whatever the order, it's a ranked list of rules ([Stages and Ordered Rules](/docs/architecture/rules-as-data#stages-and-ordered-rules)).
+- **Order by class, then within class.** A common shape is credits first, then debits the bank has already guaranteed (authorized card transactions, in authorization order), then other electronic debits, then checks; within a class, by timestamp or amount. Whatever the order, it's a ranked list of rules ([Stages and Ordered Rules](/docs/building-blocks/rules-as-data#stages-and-ordered-rules)).
 - **The version that posted a day is recorded** on the run, so a complaint about a past day is answered with the rule in force then.
 - **Disclosure follows the rule.** The account agreement describes the order; a change to the order is a change in terms with notice ([Changing Terms on Existing Accounts](/books/banking-and-lending/product-configuration#changing-terms-on-existing-accounts)).
 
@@ -276,7 +276,7 @@ How it runs:
 
 ## Auditing
 
-Posting records answer complaints, Reg E claims, overdraft litigation and examiner sampling, and the question is always the same: what did the bank know and do, in what order, on that day. Beyond [Audit Trails](/docs/architecture/audit-trails):
+Posting records answer complaints, Reg E claims, overdraft litigation and examiner sampling, and the question is always the same: what did the bank know and do, in what order, on that day. Beyond [Audit Trails](/docs/building-blocks/audit-trails):
 
 - **Every hard post links to its memo post,** and every memo post ends as posted, reversed or expired, with the time and the job or person.
 - **The posting order in force for any past business date** is recoverable from the run, with the sequence each item posted in.

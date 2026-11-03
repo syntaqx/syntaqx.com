@@ -219,7 +219,7 @@ Notes on the sketch:
 - **Every port in and out,** with the letter of authorization, the submitted data, rejections and the completion time.
 - **Every number assignment and release,** because a reassigned number receives the previous holder's calls and texts.
 - **Recording policy changes and every compliance-recording failure.**
-- **Access to call records** by staff and by admins ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access to call records** by staff and by admins ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

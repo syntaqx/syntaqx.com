@@ -166,7 +166,7 @@ Design notes:
 
 - **Interchange is a forecast input and a reconciliation target.** The program computes what it expects from its own card transactions under the terms in force and the issuer's exemption for that date, and compares it with what the bank remits; a difference is a break, as in [Breaks](/books/payments/ledger-and-reconciliation#breaks).
 - **Liquidity products are accounts.** SpotMe-style overdraft, an advance or a credit-builder line is an `accounts` row of kind `line` (or `loan`) under its own product version, not a negative balance on the deposit account, so its losses, fees and disclosures are separable; the deposit account and the line are joined through `account_parties` on the same party.
-- **Revenue terms are effective-dated.** A renegotiated split, a new bank or a new cap is a new row ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)), so last year's statements still recompute under last year's terms.
+- **Revenue terms are effective-dated.** A renegotiated split, a new bank or a new cap is a new row ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)), so last year's statements still recompute under last year's terms.
 
 ## Auditing
 

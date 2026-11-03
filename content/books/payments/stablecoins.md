@@ -328,7 +328,7 @@ A sponsor bank, a state examiner or a MiCA supervisor asks the same questions of
 - **Blocked property:** any blocked tokens, the date of blocking, and the reports to OFAC within 10 business days and annually.
 - **Travel rule records** for every transfer over the applicable threshold, including incomplete or rejected messages and what was done with the funds.
 - **Daily reconciliation at a block height:** ledger balances against on-chain balances per wallet and asset, the ramp's statements against your transfers, and every break with its resolution.
-- **Key custody:** who can sign, the approval policy for large transfers, the withdrawal allowlist and every change to it, or the custodian's equivalent reports if you don't hold keys ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Key custody:** who can sign, the approval policy for large transfers, the withdrawal allowlist and every change to it, or the custodian's equivalent reports if you don't hold keys ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Payout address changes,** with the out-of-band verification and the first-payout hold, as for bank details.
 
 ## What This Means for the System You Build

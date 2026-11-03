@@ -120,7 +120,7 @@ An illustration of my own:
 - **Line decrease on an existing card account, July 10,** because a periodic soft review found new delinquencies elsewhere. The notice is due by **August 9**, and because a consumer report drove it, it carries the FCRA disclosures ([Credit Limits](/books/banking-and-lending/credit-cards#credit-limits) covers the over-limit protections).
 - **A notice sent July 1 gives the right to request reasons** instead of stating them; the applicant writes on August 20, inside the 60 days. The reasons are due by **September 19** (30 days after the request).
 
-Each date is a stored deadline on the notice, computed from its trigger ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+Each date is a stored deadline on the notice, computed from its trigger ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Timing and Delivery
 
@@ -208,11 +208,11 @@ CREATE TABLE reason_requests (               -- when the notice offered reasons 
 );
 ```
 
-The notice is created in the same transaction as the decision that owes it, with `due_on` computed and `status = 'pending'`, so a decision without its notice can't exist; a delivery job sends pending notices and a monitor alerts on any past `due_on` ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)). Reasons are computed once, from `decision_rule_results` for policy failures and from `model_outputs.contributions_ref` grouped through `feature_reason_map` for model declines, ranked, capped and stored in `notice_reasons` with the attribution that ranked them; the rendered document is a `disclosures` row. A counteroffer creates a `counteroffer` notice and a pending `adverse_action` notice due in 90 days, which is marked `not_required` if the applicant accepts. `notice_report_disclosures` lists every agency whose report contributed, so a decline that used a tri-merge names all three. The reason catalog is versioned and approved by compliance; changing a statement creates a new version and never edits one already sent ([Explanations and Appeals](/docs/architecture/risk-scoring#explanations-and-appeals)).
+The notice is created in the same transaction as the decision that owes it, with `due_on` computed and `status = 'pending'`, so a decision without its notice can't exist; a delivery job sends pending notices and a monitor alerts on any past `due_on` ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)). Reasons are computed once, from `decision_rule_results` for policy failures and from `model_outputs.contributions_ref` grouped through `feature_reason_map` for model declines, ranked, capped and stored in `notice_reasons` with the attribution that ranked them; the rendered document is a `disclosures` row. A counteroffer creates a `counteroffer` notice and a pending `adverse_action` notice due in 90 days, which is marked `not_required` if the applicant accepts. `notice_report_disclosures` lists every agency whose report contributed, so a decline that used a tri-merge names all three. The reason catalog is versioned and approved by compliance; changing a statement creates a new version and never edits one already sent ([Explanations and Appeals](/docs/building-blocks/risk-scoring#explanations-and-appeals)).
 
 ## Auditing
 
-Adverse action files are among the first things a fair lending or consumer compliance exam samples ([Audit Trails](/docs/architecture/audit-trails)). Make sure the record shows:
+Adverse action files are among the first things a fair lending or consumer compliance exam samples ([Audit Trails](/docs/building-blocks/audit-trails)). Make sure the record shows:
 
 - **Every notice owed,** with its trigger, rule, due date, sent date and the rendered document as delivered.
 - **The reasons as stated,** each traceable to the rule result or model attribution that produced it, under the model and reason catalog versions in force.

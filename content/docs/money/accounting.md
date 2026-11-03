@@ -111,9 +111,9 @@ CREATE TABLE recognition_entries (
 ```
 
 - **Entries are append-only.** A refund in March of an annual plan posts a negative entry in March; it never edits January's entry ([Append-Only Records](/docs/money/payment-states#append-only-records)).
-- **The policy version is on every entry,** like any rule's decision record ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). A method change produces a new version and, for closed periods, correcting entries in the open one.
+- **The policy version is on every entry,** like any rule's decision record ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)). A method change produces a new version and, for closed periods, correcting entries in the open one.
 - **The sum checks itself.** For every line, recognized entries plus remaining deferred equals the allocated amount; a nightly job asserts it and opens a break when it doesn't.
-- **Periods are dates in the business's reporting time zone,** assigned once when the entry is created, not recomputed on read ([Assign the Business Date Once](/docs/architecture/data-pipelines#assign-the-business-date-once)).
+- **Periods are dates in the business's reporting time zone,** assigned once when the entry is created, not recomputed on read ([Assign the Business Date Once](/docs/data/data-pipelines#assign-the-business-date-once)).
 
 Most businesses buy this instead of building it: billing platforms and dedicated revenue tools compute schedules from invoice data. The product's job is the same either way: lines with periods, allocated prices, delivery events and reversals, delivered completely.
 
@@ -194,7 +194,7 @@ The product supports both by keeping what each needs: receivables with original 
 
 ## Revenue Metrics Are Not Revenue
 
-Operational metrics such as monthly recurring revenue, bookings and billings are useful and are not recognized revenue. MRR, as Stripe defines it, is the monthly-normalized value of active and past-due subscriptions, so a yearly plan of 600 contributes 50 a month whether or not anyone has paid. Bookings are what was sold, billings what was invoiced, recognized revenue what was earned. Each is computed from the same ledger facts by one definition, in one place ([One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric)), and a dashboard that labels billings as revenue will eventually be quoted to someone who reads financial statements.
+Operational metrics such as monthly recurring revenue, bookings and billings are useful and are not recognized revenue. MRR, as Stripe defines it, is the monthly-normalized value of active and past-due subscriptions, so a yearly plan of 600 contributes 50 a month whether or not anyone has paid. Bookings are what was sold, billings what was invoiced, recognized revenue what was earned. Each is computed from the same ledger facts by one definition, in one place ([One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric)), and a dashboard that labels billings as revenue will eventually be quoted to someone who reads financial statements.
 
 ## Checklist
 

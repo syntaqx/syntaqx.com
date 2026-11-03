@@ -306,14 +306,14 @@ The partial unique index is the "paid once" rule in the database: a second attem
 
 ## Auditing
 
-Payables records are evidence in a business email compromise investigation, a vendor's claim it was never paid, an IRS notice and an unclaimed property audit. The general design is in [Audit Trails](/docs/architecture/audit-trails); for vendor payouts, make sure the record shows:
+Payables records are evidence in a business email compromise investigation, a vendor's claim it was never paid, an IRS notice and an unclaimed property audit. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for vendor payouts, make sure the record shows:
 
-- **Every change of payment details,** who requested it and through what channel, who verified it out of band and how, and the hold it triggered ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Every change of payment details,** who requested it and through what channel, who verified it out of band and how, and the hold it triggered ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Where each vendor detail came from,** including what an enrichment stage or outreach call found, and who accepted it.
 - **The approval chain for each bill,** with the thresholds in force when it was approved, so separation of duties can be shown rather than asserted.
 - **Every disbursement attempt and why the last one died:** the return, the expiry, the bank's stop confirmation, and the link from each reissue to the attempt it replaced.
 - **Escheatment outreach:** the notices sent to the payee for each outstanding check, and the report to the state.
-- **Who viewed a vendor's bank details, card or TIN,** because a fraudster's first step is often reading them ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who viewed a vendor's bank details, card or TIN,** because a fraudster's first step is often reading them ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

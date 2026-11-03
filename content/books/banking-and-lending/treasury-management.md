@@ -40,7 +40,7 @@ Business accounts are the target. FinCEN's February 2023 alert on mail theft-rel
 
 The exception workflow is the product. Bank of America's terms are typical: on the day the bank reports exceptions, the client "must notify Bank, by the deadline specified, which checks to pay or which to dishonor and return", and if it doesn't, the items "will be handled in accordance with the prescribed default procedure (Client may choose default procedure where the choice is available)". Regions publishes its clock: next-day positive pay exceptions load by 9:30 a.m. CT and must be decided by 2:00 p.m. CT, same-day exceptions load by 3:30 p.m. CT and are decided by 2:00 p.m. CT the next business day, with decisions of pay, pay and issue, or return (fraudulent or other). U.S. Bank's demo portal shows deadlines of 2 and 3 p.m. CT on different accounts, one defaulting to pay and one to return.
 
-Most large banks publish their deadlines only in client documentation, so a system serving several banks stores each account's cutoff and default as data and computes every exception's deadline from them ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). Default to return is the safe choice for fraud and the dangerous one for operations: a missed review returns the company's own payroll checks.
+Most large banks publish their deadlines only in client documentation, so a system serving several banks stores each account's cutoff and default as data and computes every exception's deadline from them ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). Default to return is the safe choice for fraud and the dangerous one for operations: a missed review returns the company's own payroll checks.
 
 ### Who Bears the Loss
 
@@ -277,7 +277,7 @@ RETURNING id, enrollment_id, item_ref, decision;
 Design notes:
 
 - **The default is a decision, recorded as one.** `decided_by = 'default'` is the record a loss dispute turns on, and an exception still undecided after its cutoff is a failed control, not a pending item.
-- **Deadlines are computed when the exception is created** from the enrollment's cutoff, time zone and the business calendar, and stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)); an enrollment change doesn't move a deadline already set.
+- **Deadlines are computed when the exception is created** from the enrollment's cutoff, time zone and the business calendar, and stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)); an enrollment change doesn't move a deadline already set.
 - **The analysis is reproducible from the ledger.** `avg_ledger` and `avg_float` are averages of `balance_snapshots` over the period, volumes are counts of `transactions` and service events, and prices come from the product fee version in force; the stored statement is what was issued, never recomputed ([Statements](/books/banking-and-lending/interest-and-statements#the-periodic-statement)).
 - **Earnings credit is not interest.** It posts nowhere as income to the customer; it offsets charges, so the settlement is one `fee_assessments` row for the net charge (or none), with the analysis as its trigger, and the GL books the waived portion by the bank's policy.
 - **Sweeps and ZBAs run in end of day in order,** after postings and before snapshots, each transfer a journal entry referencing its rule, so analysis and interest read post-sweep balances consistently ([End of Day and the Business Date](/books/banking-and-lending/posting-holds-and-balances#end-of-day-and-the-business-date)).
@@ -291,7 +291,7 @@ Treasury management records are read by the bank's operational risk and audit fu
 - **Every issue file and every exception,** with its deadline, default, decision, decider and the resulting posting or return.
 - **Every balance transfer rule version and the transfers it produced,** so a sub-account's history explains itself.
 - **Every analysis statement as issued,** with its lines, prices, ECR and the settlement charge, and the ECR history by account, because ECR changes are pricing changes clients and examiners ask about.
-- **Every report file sent,** with its control totals and the code mapping version that produced it ([Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident)).
+- **Every report file sent,** with its control totals and the code mapping version that produced it ([Make It Tamper-Evident](/docs/building-blocks/audit-trails#make-it-tamper-evident)).
 
 ## What This Means for the System You Build
 

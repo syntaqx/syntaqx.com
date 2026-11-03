@@ -167,7 +167,7 @@ The last constraint is the opt-in rule as a constraint: no fee on an ATM or one-
 
 Overdraft programs are examined for unfair and deceptive practices and for Regulation E and DD compliance, and they're the subject of class actions that recompute fees account by account. Keep:
 
-- **Every consent and revocation,** with the notice version, the channel, the confirmation sent, and the moment each took effect ([Typed Actors](/docs/architecture/audit-trails#typed-actors) for who acted).
+- **Every consent and revocation,** with the notice version, the channel, the confirmation sent, and the moment each took effect ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors) for who acted).
 - **Every overdraft decision with its inputs:** balance basis and value, the authorization flag, consent in force, policy version, outcome and fee, so any fee can be recomputed exactly.
 - **Posting order** applied to each day's items, as a recorded rule version, not an emergent property of a batch job.
 - **Waivers and refunds,** with who granted them and why, linked to the original fee.

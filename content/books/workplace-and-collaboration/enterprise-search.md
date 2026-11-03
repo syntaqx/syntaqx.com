@@ -269,7 +269,7 @@ The engine stores each document's grant and deny principals as two keyword field
 - **Source changes:** connections, scope changes, mode changes (index or federate), pauses and removals, with the admin who made them.
 - **ACL sync health:** each run's counts, failures and the age of the last complete ACL sync per source, kept long enough to answer "was this document findable by that person on that day".
 - **Discoverability controls:** site exclusions and restricted-discovery flags, set and cleared.
-- **Queries and result access** under the customer's retention settings, because an investigation of a leak starts with who searched for what and which results they opened ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)); keep them out of ranking pipelines beyond aggregate signals.
+- **Queries and result access** under the customer's retention settings, because an investigation of a leak starts with who searched for what and which results they opened ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)); keep them out of ranking pipelines beyond aggregate signals.
 - **Why a result matched:** the principal that granted access, recorded for sampled queries and on demand, so a bad grant can be traced to its source permission.
 - **Identity mapping changes,** since a wrong mapping gives one person another's access.
 

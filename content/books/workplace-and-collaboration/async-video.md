@@ -30,9 +30,9 @@ The standalone business-video platforms have consolidated. Vimeo, which describe
 
 The recorder is the product. It captures a screen, a window or a tab, overlays a camera bubble, mixes microphone and sometimes system audio, and lets the creator pause, redo and annotate. Microsoft's recorder lets a user "record your screen, webcam, and annotate with text, inking, & images" and can record a PowerPoint presentation with a teleprompter and a placed camera.
 
-The engineering problem is the moment recording stops. Async video only works if the link is ready immediately, because the creator pastes it into chat the second they finish. That rules out "record to disk, then upload": a ten-minute screen recording can run to hundreds of megabytes, and nobody waits for it. My default is to **upload while recording**, in chunks, to resumable direct-to-storage sessions, so that at stop the server already has all but the last few seconds ([Resumable Uploads](/docs/architecture/file-uploads#resumable-uploads), and [Resumable and Chunked Uploads](/books/user-generated-platforms/upload-path#resumable-and-chunked-uploads) for the consumer version). A local copy stays until the server confirms every chunk, so a dropped connection costs a retry, not a recording.
+The engineering problem is the moment recording stops. Async video only works if the link is ready immediately, because the creator pastes it into chat the second they finish. That rules out "record to disk, then upload": a ten-minute screen recording can run to hundreds of megabytes, and nobody waits for it. My default is to **upload while recording**, in chunks, to resumable direct-to-storage sessions, so that at stop the server already has all but the last few seconds ([Resumable Uploads](/docs/building-blocks/file-uploads#resumable-uploads), and [Resumable and Chunked Uploads](/books/user-generated-platforms/upload-path#resumable-and-chunked-uploads) for the consumer version). A local copy stays until the server confirms every chunk, so a dropped connection costs a retry, not a recording.
 
-Two more client decisions shape everything downstream. **Encode once, on the device, at a sensible mezzanine quality,** because the server will re-encode anyway and screen content compresses very differently from camera video ([Media Compression](/docs/architecture/media-compression#choosing-a-format-by-content-class)). And **capture what the user consented to share,** nothing more: a whole-screen recording catches notifications, other windows and other people's messages, which is why recorders default to a window or tab and show what's being captured.
+Two more client decisions shape everything downstream. **Encode once, on the device, at a sensible mezzanine quality,** because the server will re-encode anyway and screen content compresses very differently from camera video ([Media Compression](/docs/building-blocks/media-compression#choosing-a-format-by-content-class)). And **capture what the user consented to share,** nothing more: a whole-screen recording catches notifications, other windows and other people's messages, which is why recorders default to a window or tab and show what's being captured.
 
 ## Processing and Playback
 
@@ -160,7 +160,7 @@ Notes on the sketch:
 - **Every change to named-viewer settings,** with the admin and the notice text in force.
 - **Every time someone opens a named viewer list or exports view data,** since that's the monitoring use.
 - **Ownership transfers** of videos at offboarding.
-- **Deletions, retention purges and skipped purges under hold** for videos, as for any document ([Data Retention & Deletion](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+- **Deletions, retention purges and skipped purges under hold** for videos, as for any document ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 
 ## What This Means for the System You Build
 

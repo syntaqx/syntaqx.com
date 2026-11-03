@@ -11,7 +11,7 @@ Most managed services in this part are open-source software run by someone other
 
 This is the market's version of a long-running fight about what "open source" means, and it matters to every provider in this volume in two directions. A provider that resells an engine as a service has to know what license each version ships under, and what it allows. A provider that writes an engine has to choose a license knowing what the clouds did with each one. This chapter walks the license spectrum, the chronology case by case (MongoDB, Elastic, Redis, HashiCorp and the smaller ones), each side's stated arguments, the foundations that became the settlement, the choices a vendor has, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with license fields on `products`. The detail of Terraform, OpenTofu and Vault belongs to the Infrastructure as Code part ([Provisioning: Terraform, OpenTofu & the Alternatives](/books/hosting-and-cloud/terraform-and-opentofu); [Testing, Policy, Secrets & IaC Platforms](/books/hosting-and-cloud/iac-testing-policy-and-secrets)); the provider-side contract disputes (Microsoft and CISPE, Broadcom and VMware) are the [Licensing Disputes](/books/hosting-and-cloud/licensing-disputes) chapter.
 
-The engineering side of licenses (checking dependency licenses in CI, vetting what you add) is the playbook's [Dependencies & Upgrades](/docs/engineering/dependencies#adding-a-dependency).
+The engineering side of licenses (checking dependency licenses in CI, vetting what you add) is the playbook's [Dependencies & Upgrades](/docs/development/dependencies#adding-a-dependency).
 
 ## How the Providers Do It
 

@@ -214,11 +214,11 @@ Notes on the sketch:
 - **Attachments are media assets.** They pass through the same upload, scanning and hashing pipeline as post media ([The Upload Path](/books/user-generated-platforms/upload-path#scanning-before-publish)), which is what lets a known-image match work in a DM without reading text.
 - **Message requests gate the DM.** A DM channel between non-friends opens with its first message held in a request; the recipient's acceptance opens the channel, and ignoring it never notifies the sender. Rules for when a request is required read friendships, shared communities and their sizes, the recipient's settings and age band.
 - **Read states are hot.** They're updated on every scroll; batch them per session and write behind, and derive unread badges from `last_read_message_id` against the channel's latest id.
-- **Events:** `message.created`, `message.edited`, `message.deleted`, `message_request.created`, `message_request.accepted` and `channel.recipient_added` go to the gateway for fan-out, to the search indexer, to automod, and to notifications for offline recipients ([Notifications & Consent](/docs/architecture/notifications#push-notifications)).
+- **Events:** `message.created`, `message.edited`, `message.deleted`, `message_request.created`, `message_request.accepted` and `channel.recipient_added` go to the gateway for fan-out, to the search indexer, to automod, and to notifications for offline recipients ([Notifications & Consent](/docs/building-blocks/notifications#push-notifications)).
 
 ## Auditing
 
-- **Messages and revisions for the safety window,** with every moderator view of DM content logged and justified ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Messages and revisions for the safety window,** with every moderator view of DM content logged and justified ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Who could reach whom:** friendships, message requests and their outcomes, group-DM membership ranges and DM settings changes, because grooming and harassment investigations start there.
 - **Deletions with their actor** (author, moderator, automod, retention), so "who deleted this?" has an answer.
 - **Rate-limit and slowmode trips** as moderation signals with their thresholds.

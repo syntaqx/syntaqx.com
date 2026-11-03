@@ -1,8 +1,9 @@
 +++
 title = "File Uploads"
 description = "Uploads straight to storage on a scoped credential, resumable protocols, checks on what arrived, hostile files, and a gate before a file is usable."
-category = "Architecture"
-order = 415
+category = "Building Blocks"
+aliases = ["architecture/file-uploads"]
+order = 457
 tags = ["architecture", "uploads", "storage", "security", "mobile"]
 +++
 
@@ -58,7 +59,7 @@ Choosing between them:
 
 ## Uploads From a Phone
 
-On mobile, the upload outlives the screen that started it. Hand it to the platform's background transfer service: on iOS a background `URLSession` keeps transfers running while the app is suspended, but only uploads from a file survive the app exiting, so write the file to disk first; on Android, WorkManager persists work across restarts with constraints and backoff. Key the upload by content hash so a retry continues instead of duplicating, and let the record that references the file sync before the file does, marked pending until it arrives ([Attachments on a Separate Lane](/docs/architecture/offline-sync#attachments-on-a-separate-lane)).
+On mobile, the upload outlives the screen that started it. Hand it to the platform's background transfer service: on iOS a background `URLSession` keeps transfers running while the app is suspended, but only uploads from a file survive the app exiting, so write the file to disk first; on Android, WorkManager persists work across restarts with constraints and backoff. Key the upload by content hash so a retry continues instead of duplicating, and let the record that references the file sync before the file does, marked pending until it arrives ([Attachments on a Separate Lane](/docs/building-blocks/offline-sync#attachments-on-a-separate-lane)).
 
 ## Uploads by URL
 

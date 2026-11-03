@@ -170,7 +170,7 @@ WHERE m.service_tier = 'pass_through'
 Notes on the sketch:
 
 - **The tier lives on the resource,** because one account holds a hosted bucket and a proxied zone, and the same report category leads to different actions on each.
-- **The AUP is data.** Report categories, the clause a notice cites, the default action per tier, whether automation may act, and the DSA reporting category are one versioned row ([Rules as Data](/docs/architecture/rules-as-data#what-belongs-in-data)), so the desk, the notice and the transparency report agree.
+- **The AUP is data.** Report categories, the clause a notice cites, the default action per tier, whether automation may act, and the DSA reporting category are one versioned row ([Rules as Data](/docs/building-blocks/rules-as-data#what-belongs-in-data)), so the desk, the notice and the transparency report agree.
 - **Automation is marked.** `automated` on each mitigation separates machine actions from reviewed ones, for the transparency report and for audits of false positives.
 - **Exceptions are rare and recorded.** A termination outside the ladder needs a `termination_reviews` row with a threshold, a decider and the text that will be published.
 - **Events:** `abuse_mitigation.applied` (with tier and automated flag), `termination_review.decided` and `aup_category.versioned` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the edge and DNS control planes, support and the transparency job.

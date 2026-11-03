@@ -255,7 +255,7 @@ How the rows are used:
 - **Rollback** is a new `channel_releases` row pointing at a newer `release_manifests` row that references the old content, with `is_rollback` set and a reason, never an edit of history.
 - **Version checks** read the `client_version_policies` row in force now; the client compares its build and protocol version at startup and before queueing.
 
-Ranges keep history: the release a channel served at any moment, and the policy in force when a player was blocked, are both queries ([Temporal Data](/docs/database/temporal-data)). Every change to a channel or policy is an audited decision with an approver ([Audit Trails](/docs/architecture/audit-trails)).
+Ranges keep history: the release a channel served at any moment, and the policy in force when a player was blocked, are both queries ([Temporal Data](/docs/database/temporal-data)). Every change to a channel or policy is an audited decision with an approver ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## Auditing
 

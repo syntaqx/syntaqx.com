@@ -173,7 +173,7 @@ Design decisions:
 
 - **A hold without a determination can't exist.** The foreign key from `result_release_holds` to a determination is the rule in schema form: any delay in making a result or note available to the patient names the exception and condition it relies on, and the default is immediate release.
 - **Policies are documents, decisions are rows.** Organization-wide practices (a security policy that blocks unregistered apps, a preventing harm policy for certain results) point at the written policy; individual decisions record who decided and why, and for individual harm determinations that person is a licensed professional.
-- **Record the rule version.** The exceptions have changed with HTI-1 and HTI-3 and may change again with the pending HTI-5 provisions; a determination is judged against the text in force when it was made ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Record the rule version.** The exceptions have changed with HTI-1 and HTI-3 and may change again with the pending HTI-5 provisions; a determination is judged against the text in force when it was made ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Fees and manners are data.** The fee schedule version and the manner requested and provided are what an investigator compares, and the manner exception turns on whether the request was fulfilled as asked.
 - **Requests from apps are first-class.** A patient app's FHIR connection is an `ehi_requests` row the first time and an `integrations` row after; throttling it under the health IT performance exception is a determination with an end date, not a silent rate limit.
 

@@ -130,7 +130,7 @@ Clients can send `Content-Encoding: gzip` on a request body, and a JSON upload o
 - **Cap the decompressed size,** not just the bytes on the wire, and stop inflating the moment the cap is crossed, answering `413 Content Too Large`.
 - **Accept only the codings you need.** An unsupported coding gets `415 Unsupported Media Type` with an `Accept-Encoding` header listing the ones the server takes, as RFC 9110 specifies.
 - **Inflate in a streaming fashion,** never buffering the whole decoded body before checking it.
-- **Archives are uploads.** A zip or tarball is a file, not a content coding, and its decompressed size and entry count are checked as in [File Uploads](/docs/architecture/file-uploads#checking-what-arrived).
+- **Archives are uploads.** A zip or tarball is a file, not a content coding, and its decompressed size and entry count are checked as in [File Uploads](/docs/building-blocks/file-uploads#checking-what-arrived).
 
 ## Where Compression Runs
 

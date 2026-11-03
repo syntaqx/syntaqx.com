@@ -86,7 +86,7 @@ Documents expire. Fannie Mae requires that credit documents (credit reports, inc
 
 ## Documents and Verification Services
 
-The traditional file is paper or PDF: pay stubs, W-2s, tax returns, bank statements, a written verification of employment from the employer. Each document is uploaded, classified, read and checked against what the borrower stated ([File Uploads](/docs/architecture/file-uploads#checking-what-arrived)). Most of that has moved to data services that return verified facts from the source:
+The traditional file is paper or PDF: pay stubs, W-2s, tax returns, bank statements, a written verification of employment from the employer. Each document is uploaded, classified, read and checked against what the borrower stated ([File Uploads](/docs/building-blocks/file-uploads#checking-what-arrived)). Most of that has moved to data services that return verified facts from the source:
 
 | Verification | Sources | What it returns |
 | --- | --- | --- |
@@ -103,7 +103,7 @@ What the system has to keep for each verification: the provider, the product, th
 
 An application that stalls is still on Reg B's clock. Within 30 days after receiving an application that is incomplete, the creditor must either decide it (approve or take adverse action) or send a **notice of incompleteness**, in writing, that says what information is needed, gives a reasonable time to provide it, and says the application won't be considered further otherwise (12 CFR 1002.9(c)). If the applicant doesn't respond in time, the creditor has no further obligation; if they do, the creditor decides and notifies under the normal rules. A creditor may deny for incompleteness only if the missing information is actually needed; if it has enough to decide, incompleteness can't be the reason.
 
-This is the most common origination bug I'd look for in a new system: applications abandoned at the document stage that sit in a "pending documents" status forever, with no notice ever sent. The fix is a scheduled job that finds every application past day N without a decision or an incompleteness notice, and either sends one or escalates ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+This is the most common origination bug I'd look for in a new system: applications abandoned at the document stage that sit in a "pending documents" status forever, with no notice ever sent. The fix is a scheduled job that finds every application past day N without a decision or an incompleteness notice, and either sends one or escalates ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Worked Numbers: One File's Clocks
 
@@ -215,11 +215,11 @@ CREATE TABLE application_conditions (
 );
 ```
 
-The regulatory dates are computed when their triggering event lands and stored, not derived at read time: `trid_application_at` by the event that delivered the sixth item, `completed_at` by the underwriting policy's definition of complete for that product, and the two notice due dates from them ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). A nightly job reads every open application whose `incompleteness_notice_due` or `decision_notice_due` is near and either sends the notice or pages a human. Every AUS or decision engine run points at the `application_data_versions` row it read, so a decision can be replayed against exactly what it saw ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)). `verifications` stores the source's answer separately from what the borrower stated in `application_parties`, so a mismatch is a query. Conditions are cleared by pointing at evidence, and the check constraint makes an unsigned clearance impossible. Emit `application.stage_changed`, `application.completed` and `condition.cleared` through the outbox ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)); the borrower's status page, the pipeline report and the closing scheduler all subscribe.
+The regulatory dates are computed when their triggering event lands and stored, not derived at read time: `trid_application_at` by the event that delivered the sixth item, `completed_at` by the underwriting policy's definition of complete for that product, and the two notice due dates from them ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). A nightly job reads every open application whose `incompleteness_notice_due` or `decision_notice_due` is near and either sends the notice or pages a human. Every AUS or decision engine run points at the `application_data_versions` row it read, so a decision can be replayed against exactly what it saw ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)). `verifications` stores the source's answer separately from what the borrower stated in `application_parties`, so a mismatch is a query. Conditions are cleared by pointing at evidence, and the check constraint makes an unsigned clearance impossible. Emit `application.stage_changed`, `application.completed` and `condition.cleared` through the outbox ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)); the borrower's status page, the pipeline report and the closing scheduler all subscribe.
 
 ## Auditing
 
-Origination files are examined by regulators for fair lending and disclosure timing and by investors for eligibility, and both read the same record ([Audit Trails](/docs/architecture/audit-trails)). Make sure it shows:
+Origination files are examined by regulators for fair lending and disclosure timing and by investors for eligibility, and both read the same record ([Audit Trails](/docs/building-blocks/audit-trails)). Make sure it shows:
 
 - **Each regulatory moment:** when the request arrived, when TRID's sixth item arrived, when the application became complete, and the rule that defined each.
 - **The application data as each decision saw it,** version by version, with the reason for each resubmission.
@@ -228,7 +228,7 @@ Origination files are examined by regulators for fair lending and disclosure tim
 - **Every condition,** who imposed it, what cleared it, who signed it off, and any waiver with the waiver's authority.
 - **Every notice owed and sent,** incompleteness and decision, against its due date.
 - **Who took the application:** the loan officer, broker, dealer or correspondent, for licensing and for Reg B's third-party notice rules.
-- **Retention:** Reg B requires the application, the information used to evaluate it and the notices to be kept for 25 months after notice (12 months for most business credit), longer when an investigation or lawsuit is pending; investors and state law usually require longer ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+- **Retention:** Reg B requires the application, the information used to evaluate it and the notices to be kept for 25 months after notice (12 months for most business credit), longer when an investigation or lawsuit is pending; investors and state law usually require longer ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 
 ## What This Means for the System You Build
 

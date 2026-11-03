@@ -122,7 +122,7 @@ When a root program announces the distrust of a CA the host uses or whose certif
 4. **Stop new issuance from the CA before the earliest cutoff.** Switch the default CA for new orders and renewals to the target CA, with margin. A renewal that runs at the old CA after the cutoff produces a certificate that is distrusted from birth.
 5. **Check the target CA can issue.** Customers' CAA records that name only the old CA will block the new one; find them in the preflight, and tell those customers what to change, or publish the change where the host runs their DNS ([CAA](/books/hosting-and-cloud/web-pki#caa-the-domain-s-say)).
 6. **Reissue ahead of expiry, in batches.** Host-issued DV certificates that are trusted until expiry don't need replacing at once; replace them at their normal renewal time from the new CA, or earlier in small batches if the fleet is large, inside the rate limits of the new CA. Any certificate already distrusted somewhere is replaced first.
-7. **Notify customers who must act.** Imported certificates and OV or EV certificates bought from the distrusted CA can't be replaced by the host. Those customers need a notice that names the certificate, the browsers affected, the date, and what to do, re-checked before sending so a customer who already replaced it isn't told again ([One Outbound Gate](/docs/architecture/notifications#one-outbound-gate)).
+7. **Notify customers who must act.** Imported certificates and OV or EV certificates bought from the distrusted CA can't be replaced by the host. Those customers need a notice that names the certificate, the browsers affected, the date, and what to do, re-checked before sending so a customer who already replaced it isn't told again ([One Outbound Gate](/docs/building-blocks/notifications#one-outbound-gate)).
 8. **Verify and close.** Count certificates by CA and by distrust classification until no active certificate is distrusted in any program, then mark the CA `distrusted` and remove it from the list a customer can choose.
 
 The same playbook covers a CA that stops issuing (Buypass in October 2025), with no browser cutoff but the same switch-and-reissue steps, and a CA that is simply being replaced for commercial reasons.
@@ -256,7 +256,7 @@ The `source` and `validation_level` columns split the result into the two halves
 
 Notes on the sketch:
 
-- **The schedule is data, checked at issuance.** A requested or imported certificate whose validity exceeds `validity_schedule.max_validity` for its issuance time is rejected before deployment; the same rows tell the renewal planner how long validations can be reused ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **The schedule is data, checked at issuance.** A requested or imported certificate whose validity exceeds `validity_schedule.max_validity` for its issuance time is rejected before deployment; the same rows tell the renewal planner how long validations can be reused ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Replace, then revoke.** `replacement_order_id` makes the order explicit: for a key exposure the new certificate is deployed before the revocation is sent, so the 24-hour clock doesn't become an outage.
 - **Distrust events are versioned, never edited.** Chrome's Entrust cutoff moved after it was announced; `superseded_by` keeps both, and the inventory uses only the current one.
 - **`unknown_sct` is a finding.** A certificate whose SCTs were never parsed can't be classified against an SCT-keyed rule; the fix is to parse it, and the count of such certificates should be zero before a distrust ever happens.
@@ -266,7 +266,7 @@ Notes on the sketch:
 
 - **Every revocation, its trigger and its clock.** Who asked, why, which reason code was sent, when the CA confirmed, and whether it met the 24-hour or 5-day deadline, because a CA's incident report or a customer's dispute asks.
 - **Every distrust event as announced, and every change to it.** With the source URL, since the decision of which certificates to replace and when rests on it.
-- **The migration's progress, certificate by certificate.** Which certificates were reissued from which CA, when, and which customers were notified to replace their own, until the count of distrusted active certificates is zero ([What a Record Holds](/docs/architecture/audit-trails#what-a-record-holds)).
+- **The migration's progress, certificate by certificate.** Which certificates were reissued from which CA, when, and which customers were notified to replace their own, until the count of distrusted active certificates is zero ([What a Record Holds](/docs/building-blocks/audit-trails#what-a-record-holds)).
 - **The schedule rows and when they changed.** The validity and reuse limits in force at each issuance, so a certificate rejected or accepted can be explained later.
 
 ## What This Means for the System You Build

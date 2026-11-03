@@ -54,7 +54,7 @@ Figma's 2019 post on multiplayer is the clearest public description of how a des
 
 Sketch's real-time collaboration, by its own documentation, makes different trade-offs: collaborators see each other's changes when an action completes, not pixel by pixel; you can undo only your own actions, though an undo can override a collaborator's later edit to the same layer; offline changes are stored locally and synced on reconnect, and edits to an object someone else deleted can't be applied. Uploading a local copy over a Workspace document while others are active is blocked, and an update that could overwrite collaborators' edits asks for confirmation.
 
-The practical rule both designs share: **choose conflict granularity to match how people actually collide.** On a canvas people rarely edit the same property of the same object at the same moment, so per-property last-writer-wins at a server is enough and far simpler than merging. Text inside a layer is the exception both tolerate. A product whose users routinely co-type in the same paragraph (a document editor) needs the sequence algorithms covered in the [Real-Time Co-Editing](/books/workplace-and-collaboration/real-time-collaboration) chapter; the generic connection mechanics are the playbook's [Realtime Connections](/docs/architecture/realtime-connections#ordering-and-catch-up), and reconnect-and-reapply is [Offline Sync](/docs/architecture/offline-sync#conflicts-choosing-who-wins).
+The practical rule both designs share: **choose conflict granularity to match how people actually collide.** On a canvas people rarely edit the same property of the same object at the same moment, so per-property last-writer-wins at a server is enough and far simpler than merging. Text inside a layer is the exception both tolerate. A product whose users routinely co-type in the same paragraph (a document editor) needs the sequence algorithms covered in the [Real-Time Co-Editing](/books/workplace-and-collaboration/real-time-collaboration) chapter; the generic connection mechanics are the playbook's [Realtime Connections](/docs/architecture/realtime-connections#ordering-and-catch-up), and reconnect-and-reapply is [Offline Sync](/docs/building-blocks/offline-sync#conflicts-choosing-who-wins).
 
 ## Files, Versions and Branches
 
@@ -160,7 +160,7 @@ The rules that make it work:
 - **Per-property last-writer-wins.** Store changes as `(object_id, property, value, client_id, seq)`; fold them into a snapshot in the background and advance `snapshot_seq`. Clients load the snapshot and replay the tail.
 - **Client-scoped ids** so offline creation can't collide, and fractional indexes for sibling order, stored with the parent link.
 - **Checkpoints on a clock and on events:** every 30 minutes of activity, on disconnect, before a merge, on publish and on restore, each as an `item_versions` row. Restore writes a new checkpoint; it never rewinds history.
-- **Retention follows the plan,** with legal holds overriding it: a hold on a custodian keeps every checkpoint of their files ([Data Retention](/docs/architecture/data-retention) is the general rule; the [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold) chapter covers holds in this book).
+- **Retention follows the plan,** with legal holds overriding it: a hold on a custodian keeps every checkpoint of their files ([Data Retention](/docs/building-blocks/data-retention) is the general rule; the [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold) chapter covers holds in this book).
 - **Branches are files.** A branch is its own `design_files` row pointing at main; merging is a three-way comparison of main at `branched_at_seq`, main now and the branch, with conflicts presented per object and property. Publishing a library from a branch is refused.
 - **Render server-side with the client's engine** for thumbnails, exports and previews, so what search, chat unfurls and exports show matches the editor.
 
@@ -170,7 +170,7 @@ The rules that make it work:
 - **Sharing and access:** link setting changes, invites, guest additions and removals, and role changes at team, project and file level, so "who could see this file on March 3" has an answer.
 - **Branches:** creation, review requests and decisions, merges with the pre-merge checkpoint, and archive.
 - **Exports and downloads:** who exported or downloaded what, in which format, because a design file often holds unreleased product plans.
-- **Seat changes:** upgrade requests, approvals and downgrades with the approving admin, since each is a billing event ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Seat changes:** upgrade requests, approvals and downgrades with the approving admin, since each is a billing event ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

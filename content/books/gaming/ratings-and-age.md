@@ -202,7 +202,7 @@ A row back means the build adds something the ratings don't know about: a re-rat
 
 The playbook's `age_signals` and `parental_consents` tables apply to a game as written, with `tenant_id` added and `accounts` meaning the publisher account: signals are append-only, consents are per scope, and the effective band is derived from the signals with lowest-wins ([Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy#how-to-build-it)). The `age_band` column that [Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity#how-to-build-it) puts on `accounts` is a cache of that derivation, rewritten whenever a signal arrives and never set directly. In a game, the signals come from the platforms (Apple and Google signals, console child accounts), the game's own age screen, a parent's setting, and the moderation team when a player's behavior suggests they're younger than they said.
 
-The features that depend on the band are a short, stable list: **text chat, voice chat, user-generated content, friend requests from strangers, purchases, paid random items, ads and ad personalization, and data sharing with third parties.** For each, a rule keyed by jurisdiction, band and date gives a mode and the consent scope that unlocks it. Rules are effective-dated because the dates in this chapter keep moving ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)):
+The features that depend on the band are a short, stable list: **text chat, voice chat, user-generated content, friend requests from strangers, purchases, paid random items, ads and ad personalization, and data sharing with third parties.** For each, a rule keyed by jurisdiction, band and date gives a mode and the consent scope that unlocks it. Rules are effective-dated because the dates in this chapter keep moving ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)):
 
 ```sql
 CREATE TABLE feature_age_rules (            -- what each feature does for each band, where and when
@@ -254,7 +254,7 @@ The records a regulator, a parent or a platform will ask for:
 - **Every rating,** with the questionnaire answers and the build they described, and the release that changed the features.
 - **Default states over time.** The FTC's orders judge defaults, so keep the history of what each feature's default was, per band, and when it changed.
 
-Record structure is in [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions).
+Record structure is in [Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions).
 
 ## What This Means for the System You Build
 

@@ -153,7 +153,7 @@ Territory areas, memberships, crew rosters, shifts, credentials and capacity rul
 5. **Check capacity** in the relevant scope and slot.
 6. **Grade** the survivors with soft objectives (travel added, preferred technician, workload balance) and return them.
 
-Steps 1 to 5 are hard rules and should be the same code for every caller: the call center, the portal, the voice agent, the recurring scheduler and the optimizer's input builder. If the portal checks credentials and the voice agent doesn't, the voice agent will book a backflow test with a plumber who isn't certified for it. Step 6 is where callers legitimately differ: the portal may grade by earliest slot, the optimizer by route cost. The rules themselves (which work type needs which skill, which territories may borrow from which) are data, versioned like any other rule ([Rules as Data](/docs/architecture/rules-as-data)).
+Steps 1 to 5 are hard rules and should be the same code for every caller: the call center, the portal, the voice agent, the recurring scheduler and the optimizer's input builder. If the portal checks credentials and the voice agent doesn't, the voice agent will book a backflow test with a plumber who isn't certified for it. Step 6 is where callers legitimately differ: the portal may grade by earliest slot, the optimizer by route cost. The rules themselves (which work type needs which skill, which territories may borrow from which) are data, versioned like any other rule ([Rules as Data](/docs/building-blocks/rules-as-data)).
 
 A minimal data model, beside the canonical `properties` and `visits`:
 
@@ -185,7 +185,7 @@ Territory and capacity data decides who gets work and who gets paid for it:
 - **Capacity overrides and quota changes**: who forced a booking past a limit or changed a reservation, and why.
 - **Why an automated booking chose or rejected each candidate**, so "why didn't the portal offer Tuesday?" can be answered and an assignment can be shown not to be arbitrary.
 
-Shift records also feed wage-and-hour questions, so keep them beside the time records from [The Technician App](/books/field-operations/technician-app). The record structure, typed actors and retention are in [Audit Trails](/docs/architecture/audit-trails); field record types and retention periods are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+Shift records also feed wage-and-hour questions, so keep them beside the time records from [The Technician App](/books/field-operations/technician-app). The record structure, typed actors and retention are in [Audit Trails](/docs/building-blocks/audit-trails); field record types and retention periods are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

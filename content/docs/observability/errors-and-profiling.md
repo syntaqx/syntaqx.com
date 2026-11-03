@@ -97,7 +97,7 @@ Error events carry whatever was in scope: request bodies, headers, local variabl
 - **Scrub in the process first.** A `before_send` hook (or `beforeSend`) "can return a modified event object or `null`," so card numbers, tokens and free-text fields never leave the machine.
 - **Keep the SDK's PII collection off** unless a specific field is needed. Sentry's flag for this is moving from `sendDefaultPii` to a `data_collection` option whose defaults Sentry describes as "more permissive," so read the defaults when upgrading.
 - **Keep server-side scrubbing on as a second net.** Sentry's documentation says "Data scrubbing is enabled by default and we highly recommend you keep it that way"; it catches values that look like card numbers and keys named like secrets, which is a backstop, not a design.
-- **Identify users by an opaque ID,** never an email, so an erasure request is one lookup ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Identify users by an opaque ID,** never an email, so an erasure request is one lookup ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ### Volume
 

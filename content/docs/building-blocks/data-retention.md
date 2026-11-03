@@ -1,10 +1,10 @@
 +++
 title = "Data Retention & Deletion"
 description = "How long data is kept and how it is removed: soft vs hard delete, retention windows, GDPR erasure next to append-only financial records, and backups."
-category = "Architecture"
-order = 412
+category = "Building Blocks"
+order = 452
 tags = ["architecture", "privacy", "gdpr", "database"]
-aliases = ["data-retention"]
+aliases = ["architecture/data-retention", "data-retention"]
 +++
 
 Data you don't keep can't leak, can't be subpoenaed, and doesn't need migrating. The default in most systems is the opposite: everything is kept forever because nobody decided otherwise, and the cost shows up years later as a breach of records the business hadn't needed since 2019. So every kind of data gets a retention period on purpose, and deletion is a designed feature, not a `DELETE` someone runs by hand. This is the mechanics; [GDPR & Privacy](/docs/compliance/gdpr) covers the legal duties behind them.
@@ -37,14 +37,14 @@ The exact numbers come from legal and compliance, by jurisdiction. The engineeri
 
 ## Retention Schedules by Record Type
 
-Business records and [audit trails](/docs/architecture/audit-trails) are the hard case: kept for years, by rules that differ for every kind of record. Retention there isn't one number per table; it's a schedule keyed by **record type**, and one table can hold several types.
+Business records and [audit trails](/docs/building-blocks/audit-trails) are the hard case: kept for years, by rules that differ for every kind of record. Retention there isn't one number per table; it's a schedule keyed by **record type**, and one table can hold several types.
 
 - **Each type has a minimum, a rule and a trigger.** Rules start their clocks at different events, and rarely at the row's creation. In the US, FLSA payroll records are kept [at least 3 years from the last date of entry](https://www.law.cornell.edu/cfr/text/29/516.5); the IRS says to keep employment tax records [at least 4 years after the tax is due or paid, whichever is later](https://www.irs.gov/businesses/small-businesses-self-employed/how-long-should-i-keep-records); Regulation Z requires a lender to keep evidence of compliance [for 2 years after the date disclosures are required to be made or action is required to be taken](https://www.law.cornell.edu/cfr/text/12/1026.25). Store the trigger date on the record (`closed_on`, `last_activity_on`), not just `created_at`, so the purge job can compute expiry.
 - **The longest applicable rule wins.** A refund is a payment record, a tax record and possibly evidence in a dispute; it's kept until the last of those expires. Model it as a list of applicable rules per record, with expiry computed as the maximum, so adding a jurisdiction can only lengthen retention, never accidentally shorten it.
 - **Schedules are data, not code.** Legal owns the numbers and changes them; each change is versioned and audited, and the purge job reads the current schedule.
 - **Longer than the minimum is a choice.** Many businesses keep core records past every regulatory minimum to cover limitation periods for contract and consumer claims. That's counsel's call, so make it configurable per type.
 
-**Legal holds** override every schedule. Once litigation is reasonably anticipated, the duty to preserve applies, and under [Federal Rule of Civil Procedure 37(e)](https://www.law.cornell.edu/rules/frcp/rule_37), if electronically stored information is lost because a party failed to take reasonable steps to preserve it, a court can order measures to cure the prejudice, and, on finding intent to deprive the other party of it, presume the information was unfavorable, instruct the jury to, or dismiss the case or enter a default judgment. A hold is a record of its own (matter, scope by person, account, date range and record type, who placed it, when) that the purge job checks before every delete, in the database, the archive and the backups. Placing and releasing a hold are audit entries. [Audit Trails](/docs/architecture/audit-trails#producing-records) covers exporting what a hold preserves.
+**Legal holds** override every schedule. Once litigation is reasonably anticipated, the duty to preserve applies, and under [Federal Rule of Civil Procedure 37(e)](https://www.law.cornell.edu/rules/frcp/rule_37), if electronically stored information is lost because a party failed to take reasonable steps to preserve it, a court can order measures to cure the prejudice, and, on finding intent to deprive the other party of it, presume the information was unfavorable, instruct the jury to, or dismiss the case or enter a default judgment. A hold is a record of its own (matter, scope by person, account, date range and record type, who placed it, when) that the purge job checks before every delete, in the database, the archive and the backups. Placing and releasing a hold are audit entries. [Audit Trails](/docs/building-blocks/audit-trails#producing-records) covers exporting what a hold preserves.
 
 ## Erasure Requests
 
@@ -52,7 +52,7 @@ Under [GDPR Article 17](https://gdpr-info.eu/art-17-gdpr/), a person can ask for
 
 - **One erasure pipeline,** not a checklist. A request fans out as an [event](/docs/architecture/events), every service holding personal data handles it and reports back, and the request isn't complete until all of them have. A checklist is followed perfectly once and then drifts.
 - **Know where personal data lives.** Every field has a [classification](/docs/security/sensitive-data), so finding personal data is a query, not an archaeology project.
-- **Erase from derived stores too:** search indexes, caches, [analytics warehouses](/docs/architecture/data-pipelines), third-party processors. That's where erasure usually fails, because nobody thinks of a search index as a copy.
+- **Erase from derived stores too:** search indexes, caches, [analytics warehouses](/docs/data/data-pipelines), third-party processors. That's where erasure usually fails, because nobody thinks of a search index as a copy.
 - **Keep proof.** Record that the request was received and completed, without keeping the data that was erased.
 
 ## Erasure vs Append-Only Records

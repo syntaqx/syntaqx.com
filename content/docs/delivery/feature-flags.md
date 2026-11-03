@@ -93,7 +93,7 @@ Remote config is the same mechanism carrying values instead of booleans: timeout
 - **Applied at a defined moment.** Fetch and activate are separate steps. Activate at startup or a natural boundary (the next session, the next job, the start of a match), not mid-interaction; Firebase's own loading strategies include fetching now and activating on next load for exactly that reason. A value that changes halfway through a request or a user's checkout is the half-old, half-new behavior flags avoid by evaluating once.
 - **Reviewed like code for risky keys.** Changes to anything that moves money, safety or capacity need an approver, and a staged rollout to a percentage first, watched against the same abort criteria as a feature.
 
-Remote config is not a place for legal or dated business rules with sources and effective dates; those are [rules as data](/docs/architecture/rules-as-data). And it isn't a secret store: anything a client can fetch, a user can read ([Environments & Configuration](/docs/operations/environments#configuration)).
+Remote config is not a place for legal or dated business rules with sources and effective dates; those are [rules as data](/docs/building-blocks/rules-as-data). And it isn't a secret store: anything a client can fetch, a user can read ([Environments & Configuration](/docs/operations/environments#configuration)).
 
 ## Cleanup
 

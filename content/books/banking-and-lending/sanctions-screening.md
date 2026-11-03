@@ -295,9 +295,9 @@ Design notes:
 
 - **Screening is a gate in the posting path,** like an authorization: an outbound payment order can't post until its screening has no pending hits, and an account in sanctions review is `restricted` with only initial deposits allowed.
 - **A new list version is an event** (`sanctions_list.loaded`) that rescreens affected parties and pending payments, and re-evaluates suppressions whose entries changed.
-- **Record the matcher configuration as a version** with the threshold and normalization rules, so every past decision can be replayed ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Record the matcher configuration as a version** with the threshold and normalization rules, so every past decision can be replayed ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Blocked funds move by journal entry** into the blocked account's GL, and accrue interest like any deposit; release is another entry referencing the license.
-- **Retention is ten years** from the transaction, and for blocked property ten years after unblocking, so `retain_until` is computed per row, not from a global policy ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+- **Retention is ten years** from the transaction, and for blocked property ten years after unblocking, so `retain_until` is computed per row, not from a global policy ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 
 ## Auditing
 
@@ -310,7 +310,7 @@ Sanctions compliance is tested in every BSA/AML exam, by independent testing, by
 - **Tuning evidence:** the threshold per product, the test set and results that justified it, and retests after changes.
 - **Coverage:** customers and payment types in scope and proof each was screened, including rescreens after each list update.
 
-The mechanics (typed actors, append-only history, tamper evidence) are in [Audit Trails](/docs/architecture/audit-trails).
+The mechanics (typed actors, append-only history, tamper evidence) are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 ## What This Means for the System You Build
 

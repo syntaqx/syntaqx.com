@@ -85,7 +85,7 @@ My default design:
 
 ## Rules Engines: Pricing as Configuration
 
-Once a business has markets, member tiers, promotions and rep bands, pricing becomes a rules problem: the same mechanism with different numbers by market, plan and date. A **market** here is a pricing zone: a named group of territories that share a price list, resolved from the property's service territory on the pricing date ([Territories & Capacity](/books/field-operations/territories-and-capacity)), never typed on the estimate. I'd store it as `pricing_zone_id` on the territory, effective-dated like the rest of territory membership, and stamp the resolved zone on each priced estimate. The general design (rules as versioned rows with a source, fixed stages, declared stacking, final checks in code, and a decision record per price) is in [Rules as Data](/docs/architecture/rules-as-data). What follows is how it maps onto field pricing.
+Once a business has markets, member tiers, promotions and rep bands, pricing becomes a rules problem: the same mechanism with different numbers by market, plan and date. A **market** here is a pricing zone: a named group of territories that share a price list, resolved from the property's service territory on the pricing date ([Territories & Capacity](/books/field-operations/territories-and-capacity)), never typed on the estimate. I'd store it as `pricing_zone_id` on the territory, effective-dated like the rest of territory membership, and stamp the resolved zone on each priced estimate. The general design (rules as versioned rows with a source, fixed stages, declared stacking, final checks in code, and a decision record per price) is in [Rules as Data](/docs/building-blocks/rules-as-data). What follows is how it maps onto field pricing.
 
 **The price waterfall.** Salesforce CPQ describes a sequence where each price feeds the next, from list price through contracted, regular and customer prices to the **net price**, "what we actually ask the customer to pay." Field service needs the same idea with its own steps.
 
@@ -93,9 +93,9 @@ Once a business has markets, member tiers, promotions and rep bands, pricing bec
 
 The rules that transfer from CPQ to any field build:
 
-- **Fixed stages, ordered rules within a stage.** The stages are the waterfall (base, member or contract, promotion, rep discount, final checks). CPQ's own trap is the reason for the second half: within an evaluation event "every condition is evaluated before any actions are taken," so a rule that depends on a value another rule sets in the same stage may never fire. No rule reads what its own stage writes ([Rules as Data](/docs/architecture/rules-as-data#stages-and-ordered-rules)).
+- **Fixed stages, ordered rules within a stage.** The stages are the waterfall (base, member or contract, promotion, rep discount, final checks). CPQ's own trap is the reason for the second half: within an evaluation event "every condition is evaluated before any actions are taken," so a rule that depends on a value another rule sets in the same stage may never fire. No rule reads what its own stage writes ([Rules as Data](/docs/building-blocks/rules-as-data#stages-and-ordered-rules)).
 - **Quantity tiers are a declared choice.** CPQ distinguishes range schedules (one tier's rate for every unit) from slab schedules (each portion at its own tier's rate). Commercial work meets this: per-unit pricing for a 40-unit apartment complex or a 12-site restaurant chain's hood cleaning differs materially between the two, so the schedule says which.
-- **Final checks run last** and no rule can override them. CPQ's nearest equivalent is the validation product rule, which "shows a message to your sales reps about a problem they must fix before they're allowed to save the configuration or quote." What they check is the business's to define. They live in code, because they protect against bad rule data ([Rules as Data](/docs/architecture/rules-as-data#final-checks)).
+- **Final checks run last** and no rule can override them. CPQ's nearest equivalent is the validation product rule, which "shows a message to your sales reps about a problem they must fix before they're allowed to save the configuration or quote." What they check is the business's to define. They live in code, because they protect against bad rule data ([Rules as Data](/docs/building-blocks/rules-as-data#final-checks)).
 - **Effective-dated, versioned rules,** with each priced line recording the rule IDs and versions that touched it, and a **price trace** per line, so "why is this price $129?" is a lookup.
 
 A promotion rule in that shape, with its scope as conditions:
@@ -116,7 +116,7 @@ A promotion rule in that shape, with its scope as conditions:
 }
 ```
 
-One field-specific point the general chapter doesn't cover: **the same engine everywhere.** The office, the offline mobile app and the portal must compute identical prices, so ship the engine and the rule set to the device and version both ([Mobile Releases](/docs/delivery/mobile-releases), [Offline Sync](/docs/architecture/offline-sync)). If the device and server disagree at sync, my rule is that the server's result wins for new prices but the signed price stands, and the difference is flagged for review.
+One field-specific point the general chapter doesn't cover: **the same engine everywhere.** The office, the offline mobile app and the portal must compute identical prices, so ship the engine and the rule set to the device and version both ([Mobile Releases](/docs/delivery/mobile-releases), [Offline Sync](/docs/building-blocks/offline-sync)). If the device and server disagree at sync, my rule is that the server's result wins for new prices but the signed price stands, and the difference is flagged for review.
 
 ## Promotions
 
@@ -208,7 +208,7 @@ Prices produce disputes: a customer who was quoted less, a rep who says the syst
 - **Discounts and approvals**: who applied each discount and why, who approved, what they saw, from which device (online, push or manager code), and whether a later edit voided the approval.
 - **Financing presentment**: the disclosure template version shown and the lender's estimate inputs and outputs, per proposal and per marketing asset.
 
-Record structure, actors and retention follow [Audit Trails](/docs/architecture/audit-trails); the volume's field records are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+Record structure, actors and retention follow [Audit Trails](/docs/building-blocks/audit-trails); the volume's field records are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

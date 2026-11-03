@@ -1,15 +1,15 @@
 +++
 title = "Audit Trails"
 description = "Recording who did what, when and why: typed actors, before and after values, same-transaction capture, snapshots, tamper evidence, access logs and exports."
-category = "Architecture"
-order = 411
+category = "Building Blocks"
+order = 451
 tags = ["architecture", "audit", "compliance", "security", "records"]
-aliases = ["audit-trails", "audit-log"]
+aliases = ["architecture/audit-trails", "audit-trails", "audit-log"]
 +++
 
 Sooner or later someone asks a question about the past and won't take your word for the answer. A player says support took back the gems he paid for. An enterprise customer's security team asks who exported their user list last Tuesday. A bank examiner asks who reversed a fee and why. A homeowner says nobody came, and the card issuer deciding her dispute wants proof. Current state can't answer any of these: "the balance is 120" says nothing about how it got there, or who made it so. An audit trail can, if it was written at the time, by the system, in a form nobody could quietly change afterwards.
 
-This chapter is how to build one: what each record holds, how to capture it so nothing slips past, how to make it tamper-evident, and how to hand it over. How long to keep it is in [Data Retention & Deletion](/docs/architecture/data-retention#retention-schedules-by-record-type).
+This chapter is how to build one: what each record holds, how to capture it so nothing slips past, how to make it tamper-evident, and how to hand it over. How long to keep it is in [Data Retention & Deletion](/docs/building-blocks/data-retention#retention-schedules-by-record-type).
 
 ## Not Logs, Not Events
 
@@ -86,7 +86,7 @@ Two cases need both identities. **Support acting for someone** ("log in as this 
 | --- | --- | --- | --- |
 | **Application entries** | Code writes an audit row alongside each business action | Carries intent: the action name, reason, actor, ticket | Only as complete as the code paths that remember to write it |
 | **Database triggers** | A trigger copies old and new rows to a history table, as in PostgreSQL's [audit trigger example](https://www.postgresql.org/docs/current/plpgsql-trigger.html) | Nothing that writes the table can skip it, including a hand-run fix | Knows the row, not the intent; `current_user` is the app's database role, so the real actor must be passed in |
-| **Change data capture** | A reader such as [Debezium](https://debezium.io/documentation/reference/stable/features.html) streams the database's log, including deletes and, depending on configuration, prior row state and the transaction ID | No application changes; can feed a separate audit store | Same blind spot on intent; another system to run ([Data Pipelines](/docs/architecture/data-pipelines#change-data-capture)) |
+| **Change data capture** | A reader such as [Debezium](https://debezium.io/documentation/reference/stable/features.html) streams the database's log, including deletes and, depending on configuration, prior row state and the transaction ID | No application changes; can feed a separate audit store | Same blind spot on intent; another system to run ([Data Pipelines](/docs/data/data-pipelines#change-data-capture)) |
 | **Event sourcing** | The [event log is the source of truth](https://martinfowler.com/eaaDev/EventSourcing.html) and current state is derived from it | The history is the system, intent in every event, any past state rebuildable | A large architectural commitment, with old event schemas to carry forever |
 
 I default to two layers. **Application entries** are inserted in the **same transaction** as the change, so the change and its record commit together or not at all. Underneath, **row-level capture** (triggers or CDC) on the tables that matter catches anything the application forgot, including the direct database fix at 2 a.m. The two join on transaction ID, and a row change with no matching application entry is itself worth an alert.
@@ -179,13 +179,13 @@ At the database, PostgreSQL's [pgAudit](https://github.com/pgaudit/pgaudit) logs
 
 ## Privacy Erasure and the Audit Store
 
-A deletion request and a multi-year retention rule meet in the audit store. Keep identity out of audit records (an ID, never a name or email), so erasing the person's profile leaves facts without identity, and crypto-shred personal fields that can't be separated. [Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records) has the patterns and the GDPR exceptions that allow it. Record the erasure itself as an audit entry: what was removed, what was kept, and under which exception.
+A deletion request and a multi-year retention rule meet in the audit store. Keep identity out of audit records (an ID, never a name or email), so erasing the person's profile leaves facts without identity, and crypto-shred personal fields that can't be separated. [Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records) has the patterns and the GDPR exceptions that allow it. Record the erasure itself as an audit entry: what was removed, what was kept, and under which exception.
 
 ## Producing Records
 
 When a regulator, an auditor or opposing counsel asks, three things have to already work.
 
-- **Legal holds.** A hold stops every purge for the matching people, accounts, date ranges and record types, and placing and releasing it are audited. The cost of getting this wrong is in [Data Retention](/docs/architecture/data-retention#retention-schedules-by-record-type).
+- **Legal holds.** A hold stops every purge for the matching people, accounts, date ranges and record types, and placing and releasing it are audited. The cost of getting this wrong is in [Data Retention](/docs/building-blocks/data-retention#retention-schedules-by-record-type).
 - **Scoped exports.** Requests come by person, account, agent, date range or record type. Build those cuts ahead of time, in readable formats, with times rendered in the relevant local zone and the zone stated: a reader shown UTC will conclude the 7 p.m. call happened at 2 a.m.
 - **A manifest.** Every export carries who requested it, the query, the record count and a hash of each file, so you can later show exactly what you produced and that it hasn't changed. The export is an audit entry too.
 

@@ -273,21 +273,21 @@ Design notes:
 - **An unlabeled revision serves conservatively.** A new post or an edited one gets `limited` or none until a label exists for its revision; publishing never waits for the ad classifier.
 - **Labels and penalties are separate.** A demonetized channel is a penalty on the account ([Penalties and Escalation Ladders](/docs/security/trust-and-safety#penalties-and-escalation-ladders)); a limited video is a label. Lifting one doesn't touch the other.
 - **Ads and declared commercial content get flags, not new kinds.** A promoted post or a sponsored Pin is a content item with an ad campaign pointing at it; a creator's sponsored post is a content item with a declared commercial-communication flag (DSA Article 26(2)), labeled in the client from that flag.
-- **Deletion propagation is an event consumer.** `content.removed`, `account.closed` and new opt-out rows feed a per-license tombstone stream with a deadline computed from `deletion_propagation` ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored); [Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)); [Developer Platforms, APIs & Data Access](/books/user-generated-platforms/developer-platforms-and-apis#how-to-build-it) owns the delivery mechanics.
+- **Deletion propagation is an event consumer.** `content.removed`, `account.closed` and new opt-out rows feed a per-license tombstone stream with a deadline computed from `deletion_propagation` ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored); [Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)); [Developer Platforms, APIs & Data Access](/books/user-generated-platforms/developer-platforms-and-apis#how-to-build-it) owns the delivery mechanics.
 - **License revenue is a revenue program.** Fees post to the ledger under the program's terms, and a contributor pass-through like Shutterstock's is a second share in the same terms, paid as earnings ([Creator Monetization](/books/user-generated-platforms/creator-monetization#how-to-build-it); [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#how-to-build-it)).
 
 ## Auditing
 
 Advertisers, creators, regulators and licensees each ask for proof later:
 
-- **The label behind every impression.** Which content revision, which suitability row and community row, which framework version, and whether the decision was a model (with version and threshold), a human or a creator's self-certification ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)). That's what answers a verification vendor's report, an advertiser's complaint and a creator's appeal.
+- **The label behind every impression.** Which content revision, which suitability row and community row, which framework version, and whether the decision was a model (with version and threshold), a human or a creator's self-certification ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)). That's what answers a verification vendor's report, an advertiser's complaint and a creator's appeal.
 - **Every demonetization and its outcome,** with the notice sent, the review requested and the recomputed earnings if it was reversed.
 - **The targeting basis per impression,** contextual or profiled, the consent state and the viewer's age band as known, and for very large platforms the Article 39 repository fields kept until a year after the ad last ran.
 - **Ad review decisions and advertiser penalties,** in the same case model as content decisions.
 - **Every license delivery:** what was sent, under which license version, with which exclusions applied, and every deletion or opt-out notice sent to the licensee with its deadline and acknowledgment.
 - **Every opt-out** as dated rows, so the platform can show which opt-outs were in force when each delivery was built.
 
-The mechanics are in [Audit Trails](/docs/architecture/audit-trails); the ad repository and transparency counts are queries over these records ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting#the-dsa-reports)).
+The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); the ad repository and transparency counts are queries over these records ([Transparency Reporting](/books/user-generated-platforms/transparency-reporting#the-dsa-reports)).
 
 ## What This Means for the System You Build
 

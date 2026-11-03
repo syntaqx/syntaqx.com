@@ -123,15 +123,15 @@ My tiers:
 | ---- | ----- | --------- |
 | Hot, searchable | Everything at `INFO` and above | 14 to 30 days: long enough to investigate any incident and its postmortem |
 | Cheap or archived | Selected streams (security, access logs) | Months, per policy, queried rarely |
-| Audit store | Audit events, separately | As long as the obligation requires ([Audit Trails](/docs/architecture/audit-trails)) |
+| Audit store | Audit events, separately | As long as the obligation requires ([Audit Trails](/docs/building-blocks/audit-trails)) |
 
-Retention is also a privacy obligation: personal data in logs lives exactly as long as the logs do, so the retention period is part of the privacy notice, not just the bill ([Data Retention & Deletion](/docs/architecture/data-retention)). The vendor side of log pricing is in the Hosting & Cloud book's [Observability Platforms](/books/hosting-and-cloud/observability-platforms).
+Retention is also a privacy obligation: personal data in logs lives exactly as long as the logs do, so the retention period is part of the privacy notice, not just the bill ([Data Retention & Deletion](/docs/building-blocks/data-retention)). The vendor side of log pricing is in the Hosting & Cloud book's [Observability Platforms](/books/hosting-and-cloud/observability-platforms).
 
 ## Debug Logs Are Not Audit Logs
 
 Diagnostic logs and audit trails look alike (timestamped records of what happened) and are opposites in every property that matters. Diagnostic logs are sampled, rate-limited, rotated, redacted and free to change format between releases; an audit trail must be complete, append-only, retained for a set period and stable enough to show an auditor years later. Writing audit events to the application log fails on every count: the sampler drops one, the retention policy deletes them, and a log pipeline outage loses them silently.
 
-Audit events are written transactionally with the change they describe, to their own store ([Audit Trails](/docs/architecture/audit-trails)). They can carry the same `request_id` and `trace_id`, so an investigator can move from the audit record to the diagnostic logs; they never depend on them.
+Audit events are written transactionally with the change they describe, to their own store ([Audit Trails](/docs/building-blocks/audit-trails)). They can carry the same `request_id` and `trace_id`, so an investigator can move from the audit record to the diagnostic logs; they never depend on them.
 
 ## Checklist
 

@@ -1,10 +1,10 @@
 +++
 title = "Notifications & Consent"
 description = "Sending email, texts and push safely: a consent ledger per contact point and purpose, one outbound gate, send-time re-checks, templates, and the message log."
-category = "Architecture"
-order = 417
+category = "Building Blocks"
+order = 456
 tags = ["architecture", "notifications", "consent", "email", "sms", "push"]
-aliases = ["notifications"]
+aliases = ["architecture/notifications", "notifications"]
 +++
 
 Every product ends up talking to its users outside the product. A game tells a player their energy has refilled, a SaaS app emails an admin that a seat limit was hit, a marketplace texts a buyer that the seller shipped, a bank pushes a fraud alert, a field service business texts that the technician is ten minutes out. Each of those starts as one line of code in whatever service noticed the event, and that's the problem: five services, five ways of deciding whether someone wants a message, and an opt-out that only reaches the one that happened to receive it.
@@ -57,7 +57,7 @@ CREATE INDEX consent_events_tenant_id_contact_point_idx
 - **Keep the disclosure.** `disclosure_id` points at the exact consent text the person saw, versioned like any other legal text, because "I agreed to receive texts" means nothing without what they were told. The consent text is a `messaging_consent` row in the same versioned [disclosures](/docs/money/subscriptions#consent-and-reminders-as-data) table renewal terms use.
 - **One ledger for the whole platform.** The messaging service, the dialer, the marketing tool, the support inbox and any AI agent all read the same projection and append to the same ledger. A second opt-out list in a vendor tool is the classic failure: two systems texting one number, and a STOP that only reached one of them. If a vendor must keep its own list, sync both ways and treat a mismatch as an incident.
 - **Revocations come from everywhere.** A STOP reply, an unsubscribe click, an email that says "please stop texting me", a support agent noting a request on a call. Each becomes a `revoke` row with its method and evidence, written before anything acknowledges it.
-- **Erasure doesn't erase revocations.** When a person's data is deleted ([Data Retention & Deletion](/docs/architecture/data-retention)), keep a suppression for the contact point, ideally as a keyed hash, so they aren't re-added from an old import and messaged again.
+- **Erasure doesn't erase revocations.** When a person's data is deleted ([Data Retention & Deletion](/docs/building-blocks/data-retention)), keep a suppression for the contact point, ideally as a keyed hash, so they aren't re-added from an old import and messaged again.
 
 Channel preferences ("email for receipts, push for everything else") sit on top of consent as a separate, editable setting. Consent says what you may send; preferences say what the person would like.
 
@@ -147,7 +147,7 @@ Switching channels is never a way around a block: a text that can't be sent beca
 
 The message log is append-only, like the consent ledger, and records outcomes rather than just sends: scheduled, deferred (until when, why), suppressed (which check), dropped (stale), sent (provider, provider message ID, segments), delivered, failed (permanent or transient, the provider's code), opened or clicked where tracked.
 
-"Why didn't the customer get the reminder?" is answered by the suppression row. Tamper evidence and export are in [Audit Trails](/docs/architecture/audit-trails). Message bodies are personal data with an ordinary retention window; the consent ledger and suppression decisions are kept as long as anyone could bring a claim about them.
+"Why didn't the customer get the reminder?" is answered by the suppression row. Tamper evidence and export are in [Audit Trails](/docs/building-blocks/audit-trails). Message bodies are personal data with an ordinary retention window; the consent ledger and suppression decisions are kept as long as anyone could bring a claim about them.
 
 ## Email: Authentication and Streams
 

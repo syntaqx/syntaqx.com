@@ -48,7 +48,7 @@ Both terms describe moving quality work away from the single gate before release
 
 - **Testability in design.** Logic extracted into plain functions, dependencies injected, a clock you can control. Untestable code is a design defect, and it produces the [ice-cream cone](/docs/quality/testing#where-the-pyramid-goes-wrong).
 - **Static analysis.** Types, linters and security scanners on every change, before a human looks.
-- **Review.** A [reviewer](/docs/engineering/commits-and-reviews#reviewing) checks that the tests cover the risk, not just that tests exist.
+- **Review.** A [reviewer](/docs/development/commits-and-reviews#reviewing) checks that the tests cover the risk, not just that tests exist.
 - **Tests with the code.** In the same pull request, never "in a follow-up".
 
 **Shift right** accepts that production is the only environment that's really production, and tests there safely:
@@ -67,7 +67,7 @@ Not everything deserves the same depth. Testing effort should follow risk: how l
 - **Likelihood** goes up with complexity, churn, new technology, unclear requirements, many integrations, and code nobody on the team wrote.
 - **Impact** goes up with money, data loss or corruption, security and privacy, legal exposure, the number of users affected, and how hard the damage is to undo.
 
-My tiers, decided per feature or component and written down where the team can see them (the [service catalog](/docs/engineering/code-ownership#the-service-catalog) is a good home):
+My tiers, decided per feature or component and written down where the team can see them (the [service catalog](/docs/development/code-ownership#the-service-catalog) is a good home):
 
 | Tier | Examples | What it gets |
 | ---- | -------- | ------------ |

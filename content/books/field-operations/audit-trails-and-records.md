@@ -9,7 +9,7 @@ tags = ["field-operations", "compliance", "audit", "records", "retention"]
 
 A field operation runs on claims about the past. The technician says the treatment happened at 2:14 p.m. with this product at this rate. The customer says she cancelled on the second day. The office says the price went up with 30 days' notice. The rep says that sale was his. The technician says he worked through lunch and drove between six stops. Each claim eventually lands in front of someone who doesn't take the company's word for it: a card issuer deciding a dispute, a state pesticide inspector, an attorney general's investigator, a wage-and-hour plaintiff, a commission arbitrator, a judge. What wins is a record made at the time, by the system, that nobody could quietly change afterwards.
 
-That's harder in this industry than in most. The work happens offline, on phones, by people paid by the stop or the sale, with prices, product labels and licenses that change underneath the records that refer to them. The general design of an audit trail (what a record holds, typed actors, capture in the same transaction, amendments instead of edits, tamper evidence, access logging and production) is in [Audit Trails](/docs/architecture/audit-trails), and retention mechanics are in [Data Retention & Deletion](/docs/architecture/data-retention). This chapter applies them to field service: who asks for records, what the field platforms expose, which field records have which retention rules, what to snapshot, and how offline work and inspections change the details.
+That's harder in this industry than in most. The work happens offline, on phones, by people paid by the stop or the sale, with prices, product labels and licenses that change underneath the records that refer to them. The general design of an audit trail (what a record holds, typed actors, capture in the same transaction, amendments instead of edits, tamper evidence, access logging and production) is in [Audit Trails](/docs/building-blocks/audit-trails), and retention mechanics are in [Data Retention & Deletion](/docs/building-blocks/data-retention). This chapter applies them to field service: who asks for records, what the field platforms expose, which field records have which retention rules, what to snapshot, and how offline work and inspections change the details.
 
 ## Who Asks, and What They Ask For
 
@@ -50,11 +50,11 @@ When you buy rather than build, ask each vendor four questions: which entities a
 
 ## What a Field Audit Record Adds
 
-The record shape is the playbook's ([What a Record Holds](/docs/architecture/audit-trails#what-a-record-holds)): typed actor, before and after values, two timestamps, source, reason and the rules in force. Field work stresses three parts of it.
+The record shape is the playbook's ([What a Record Holds](/docs/building-blocks/audit-trails#what-a-record-holds)): typed actor, before and after values, two timestamps, source, reason and the rules in force. Field work stresses three parts of it.
 
 - **Where means GPS.** A field event carries the device's position and its accuracy, not just an IP address. "Were you even here?" is the first question in a service dispute, and a position with a 2,000-meter accuracy radius answers it differently from one at 8 meters.
 - **When means two clocks.** The device records when it happened; the server records when it arrived. Offline work makes them differ by hours, and both matter. Minnesota, for one, requires a structural pest control application record to be completed no later than five days after the application, so the clock starts at the application time the device recorded, and the server's arrival time shows whether the record made it.
-- **Who includes rules that ran.** FieldRoutes marks system changes with employee ID 0. Better is a typed actor that distinguishes a trigger rule, a scheduled job, an import, an AI agent and support staff acting for a user ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Who includes rules that ran.** FieldRoutes marks system changes with employee ID 0. Better is a typed actor that distinguishes a trigger rule, a scheduled job, an import, an AI agent and support staff acting for a user ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 
 A manager correcting a technician's clock-out, the edit that wage claims turn on:
 
@@ -81,15 +81,15 @@ The original clock-out was recorded by the technician's device with its own loca
 
 ## Capturing It, Offline Included
 
-Capture follows the playbook: an application audit entry in the same transaction as the change, row-level capture underneath for anything the application forgot, and a separate integration outbox that isn't the audit trail ([Capturing It](/docs/architecture/audit-trails#capturing-it), [Not Logs, Not Events](/docs/architecture/audit-trails#not-logs-not-events)).
+Capture follows the playbook: an application audit entry in the same transaction as the change, row-level capture underneath for anything the application forgot, and a separate integration outbox that isn't the audit trail ([Capturing It](/docs/building-blocks/audit-trails#capturing-it), [Not Logs, Not Events](/docs/building-blocks/audit-trails#not-logs-not-events)).
 
 ![Every write produces an audit record in the same transaction: the application writes the business change and an audit entry with actor and reason, while row-level capture records before and after values. Both feed an append-only audit store that chains each record to the previous one by hash, then a write-once archive with retention by record type and legal holds. Reads of sensitive data are logged into the same store, and exports for an inspection or lawsuit come from it with a manifest of hashes.](/diagrams/fo-audit-trails-and-records-capture.svg "Two capture layers, one append-only store. Application entries carry intent and actor; row-level capture guarantees nothing is missed; the archive makes the history tamper-evident and holdable.")
 
-The field-specific rule is that the technician app uploads its own events with `device_recorded_at`, a sequence number and location, and the server adds `received_at`; how sync and conflict resolution work is in [Offline-First Sync](/docs/architecture/offline-sync) and [The Technician App](/books/field-operations/technician-app).
+The field-specific rule is that the technician app uploads its own events with `device_recorded_at`, a sequence number and location, and the server adds `received_at`; how sync and conflict resolution work is in [Offline-First Sync](/docs/building-blocks/offline-sync) and [The Technician App](/books/field-operations/technician-app).
 
 ## Snapshot What Changes Underneath You
 
-A record that points at mutable data changes when the data does, so field records copy the values they used at the moment of the fact ([Audit Trails: Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you), [Temporal Data: Snapshots](/docs/database/temporal-data#snapshots)). The field cases:
+A record that points at mutable data changes when the data does, so field records copy the values they used at the moment of the fact ([Audit Trails: Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you), [Temporal Data: Snapshots](/docs/database/temporal-data#snapshots)). The field cases:
 
 - **Product labels.** A pesticide application records the product name, EPA registration number, active ingredient percentage and rate as applied, not only a foreign key to a product someone will edit when the label changes. Inspectors ask for the record as it was ([Regulated Materials](/books/field-operations/regulated-materials)).
 - **Licenses.** The applicator's and supervisor's license numbers and expiry on the day of service, so a renewal or lapse later doesn't rewrite history ([Licenses & Permits](/books/field-operations/licensing-and-permits)).
@@ -108,7 +108,7 @@ The evidence list for a signature (the document as presented and its hash, the c
 
 ## Retention by Record Type
 
-Retention is a schedule keyed by record type, with the longest applicable rule winning and clocks that start at different events; the mechanics (trigger dates, schedules as data, legal holds) are in [Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type). The field records and their federal and sample state minimums:
+Retention is a schedule keyed by record type, with the longest applicable rule winning and clocks that start at different events; the mechanics (trigger dates, schedules as data, legal holds) are in [Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type). The field records and their federal and sample state minimums:
 
 | Record | Minimum | Rule |
 | ------ | ------- | ---- |
@@ -135,22 +135,22 @@ Three cautions specific to the field. **State rules vary and are often longer:**
 
 ## Access, Privacy and Tamper Evidence
 
-**Log who looked, not just who changed.** Field data includes things worth stealing: gate codes, alarm instructions, lockbox combinations, when a house is empty, a customer list a departing rep would like to take. Dataverse can log reads and sign-ins separately from changes; ServiceM8 logs client list downloads with IP and location. At minimum, log every export, bulk download, view of access instructions or bank details, and support impersonation ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+**Log who looked, not just who changed.** Field data includes things worth stealing: gate codes, alarm instructions, lockbox combinations, when a house is empty, a customer list a departing rep would like to take. Dataverse can log reads and sign-ins separately from changes; ServiceM8 logs client list downloads with IP and location. At minimum, log every export, bulk download, view of access instructions or bank details, and support impersonation ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
-**Privacy deletion keeps the fact.** A customer exercising a deletion right and a state requiring five years of pesticide records collide in the audit store. The CCPA lets a business keep information needed to comply with a legal obligation, among other exceptions. The design separates identity from facts: the application record keeps product, rate, address and date, while the name, phone and email in the personal-data store are removed or pseudonymized, and the deletion is itself recorded with what was kept under which exception ([Privacy Erasure and the Audit Store](/docs/architecture/audit-trails#privacy-erasure-and-the-audit-store)). Dataverse's per-record audit deletion shows the opposite tradeoff: it answers the request by removing history, which also removes evidence.
+**Privacy deletion keeps the fact.** A customer exercising a deletion right and a state requiring five years of pesticide records collide in the audit store. The CCPA lets a business keep information needed to comply with a legal obligation, among other exceptions. The design separates identity from facts: the application record keeps product, rate, address and date, while the name, phone and email in the personal-data store are removed or pseudonymized, and the deletion is itself recorded with what was kept under which exception ([Privacy Erasure and the Audit Store](/docs/building-blocks/audit-trails#privacy-erasure-and-the-audit-store)). Dataverse's per-record audit deletion shows the opposite tradeoff: it answers the request by removing history, which also removes evidence.
 
-**Make it tamper-evident.** Append-only permissions, hash chains, write-once archives and alerts when logging stops are covered in [Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident). The commercial point for field vendors: eLogii's "cannot be deleted or altered" is a selling point to customers who've been through a dispute.
+**Make it tamper-evident.** Append-only permissions, hash chains, write-once archives and alerts when logging stops are covered in [Make It Tamper-Evident](/docs/building-blocks/audit-trails#make-it-tamper-evident). The commercial point for field vendors: eLogii's "cannot be deleted or altered" is a selling point to customers who've been through a dispute.
 
 ## Producing Records for an Inspection or a Lawsuit
 
-Legal holds, scoped exports and hash manifests are covered in [Producing Records](/docs/architecture/audit-trails#producing-records). What the field adds is the shape of the request.
+Legal holds, scoped exports and hash manifests are covered in [Producing Records](/docs/building-blocks/audit-trails#producing-records). What the field adds is the shape of the request.
 
 - **Inspector cuts.** Pesticide inspectors ask by applicator, product, date range, county or address; refrigerant questions come by appliance; labor investigators by employee and pay period; consumer investigators by rep, city and season. Build those exports before they're asked for, in readable formats (PDF for documents, CSV for records).
 - **Local time, stated.** Render every time in the property's time zone and say which zone. A regulator reading UTC timestamps will conclude an application happened at midnight.
 
 ## What Goes Wrong
 
-The general failures (partial field coverage, "system" as the actor, retention left in a vendor setting, purges that ignore holds) are listed in [Audit Trails](/docs/architecture/audit-trails#what-goes-wrong); in field work the missing field is usually the product rate or the clock-out time. What field records add:
+The general failures (partial field coverage, "system" as the actor, retention left in a vendor setting, purges that ignore holds) are listed in [Audit Trails](/docs/building-blocks/audit-trails#what-goes-wrong); in field work the missing field is usually the product rate or the clock-out time. What field records add:
 
 - **Server time only,** so offline work shows the sync time and a technician appears to treat six houses in the same minute.
 - **Foreign keys instead of snapshots,** so last year's application records change when this year's label or license does.
@@ -158,7 +158,7 @@ The general failures (partial field coverage, "system" as the actor, retention l
 
 ## Auditing
 
-The audit system's own record (schedule changes, holds, exports, chain checks, purges) is in [Auditing the Audit Trail](/docs/architecture/audit-trails#auditing-the-audit-trail). The field addition is the vendor side: when you mirror a vendor's change feed, record each sync's coverage and gaps, so you know which periods your copy can vouch for.
+The audit system's own record (schedule changes, holds, exports, chain checks, purges) is in [Auditing the Audit Trail](/docs/building-blocks/audit-trails#auditing-the-audit-trail). The field addition is the vendor side: when you mirror a vendor's change feed, record each sync's coverage and gaps, so you know which periods your copy can vouch for.
 
 ## What This Means for the System You Build
 

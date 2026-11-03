@@ -40,7 +40,7 @@ The federal rule most people assume covers delivery doesn't. The FTC's Rule on U
 The statutes differ in detail and agree on the shape: a fee the customer can't avoid must be visible before checkout, either inside the price or announced at the point the customer chooses a store or item, with an itemized subtotal before payment. What that means for the quote:
 
 - **Classify every charge.** Mandatory (delivery, service, small-order, regulatory fees), optional (tip, priority delivery), government (tax) and contingent. The displayed price at each step is computed from classes, never typed.
-- **Resolve the rule from the customer's and the location's jurisdiction,** on the order's date ([Rules as Data](/docs/architecture/rules-as-data)), defaulting to the strictest applicable.
+- **Resolve the rule from the customer's and the location's jurisdiction,** on the order's date ([Rules as Data](/docs/building-blocks/rules-as-data)), defaulting to the strictest applicable.
 - **Snapshot what was shown** at the store list, the item, the cart and checkout, because every one of these cases asks what the customer saw before paying.
 
 ## Merchant Commission Tiers

@@ -214,7 +214,7 @@ Design notes:
 - **Rate and base are snapshots.** Storing `tax_rate` with each line, applied to the `base_amount` column [Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law#how-to-build-it) already added to `order_charges`, lets a refund reverse exactly what was charged and lets an auditor recompute it, even after the engine's rates have moved on.
 - **Keep the engine's request and response.** `request_ref` points at the exchange as sent and received, the evidence in a dispute with the engine or an auditor about what was asked and answered.
 - **Registrations are effective-dated.** Whether tax should have been collected depends on whether a registration was in force on the order's date; `effective_during` answers it, and the threshold query above is what tells someone to add the next row before it is late.
-- **Thresholds are rules, not code.** The query measures; the comparison runs against each state's current threshold and measurement period held as data ([Rules as Data](/docs/architecture/rules-as-data)), because states keep changing them.
+- **Thresholds are rules, not code.** The query measures; the comparison runs against each state's current threshold and measurement period held as data ([Rules as Data](/docs/building-blocks/rules-as-data)), because states keep changing them.
 - **Certificates are documents first.** The signed certificate is a `documents` row, kept at least as long as the longest state retention period that applies; the certificate row is its parsed, enforceable form.
 
 ## Auditing

@@ -182,9 +182,9 @@ ALTER TABLE disclosures
 How it runs:
 
 1. **Intake opens the case at first contact,** in any channel, and a complaint intake checks for an error and opens the error case beside it. The `opened_at` is the contact time, never the time a form was completed.
-2. **The rule engine computes the deadlines** from the claim's flags (new account, point of sale, foreign) and the institution's business-day calendar, and writes them to `case_deadlines` with their inputs ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). The calendar is the one [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances) defines for the business date.
+2. **The rule engine computes the deadlines** from the claim's flags (new account, point of sale, foreign) and the institution's business-day calendar, and writes them to `case_deadlines` with their inputs ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). The calendar is the one [Posting, Holds & Balances](/books/banking-and-lending/posting-holds-and-balances) defines for the business date.
 3. **Provisional credit is automatic unless decided first:** a job credits every case whose `decide_or_credit` deadline is a business day away with no determination, posts the credit as a transaction with its journal entry against a dispute suspense GL account, writes the notice as a `disclosures` row, and supersedes the 10-day deadline with the 45- or 90-day one. Whoever funds it under the program agreement (a reserve, a program account) is a second entry, not a reason to wait.
-4. **The investigation records its evidence and decision** with who decided and why ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)); a fraud score is evidence, never the decision by itself.
+4. **The investigation records its evidence and decision** with who decided and why ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)); a fraud score is evidence, never the decision by itself.
 5. **The outcome posts and notifies.** An error found makes the credit final (or credits within one business day); no error writes the explanation, schedules the reversal with its notice, and sets `honor_until` so the overdraft engine pays and doesn't fee items it would otherwise have paid.
 6. **The network case runs beside it,** linked by `network_case_ref`, with its own ledger events ([Disputes in the Ledger](/books/payments/disputes-and-chargebacks#disputes-in-the-ledger)).
 
@@ -211,7 +211,7 @@ Error resolution is sampled in every consumer compliance exam and every sponsor 
 - **Every notice as sent,** from the provisional credit notice to the explanation and the reversal notice, as `disclosures` rows with their templates, so a vendor's generic template is visible before an examiner finds it.
 - **The investigation:** the evidence considered, the decision, the decider (person or model, with version) and the liability computation.
 
-The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/architecture/audit-trails).
+The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 ## What This Means for the System You Build
 

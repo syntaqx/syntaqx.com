@@ -188,11 +188,11 @@ How it runs:
 2. **Suppressions are read, not remembered.** A Regulation X notice of error, a death notice or a state rule writes a `furnishing_suppressions` row with its period; the run reads open rows and records which fields it withheld.
 3. **Disputes get two deadlines.** An ACDV's response is due before the bureau's 30-day reinvestigation ends, so the deadline is the bureau's receipt date plus the period less a safety margin, stored in `case_deadlines`; a direct dispute's deadline and its five-business-day frivolous notice are computed the same way.
 4. **Corrections go out immediately and next month.** A modified or deleted response updates the bureaus through e-OSCAR's response at once, and the next monthly file must agree with it, or the error returns; my rule is that every response writes the corrected value into the ledger or the profile it came from.
-5. **Root causes are reported.** Disputes resulting in modification or deletion are grouped by `root_cause` every month, and a code path with a cluster is fixed before the next run ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions) for who decided what).
+5. **Root causes are reported.** Disputes resulting in modification or deletion are grouped by `root_cause` every month, and a code path with a cluster is fixed before the next run ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions) for who decided what).
 
 ## Auditing
 
-Furnishing is examined against the written policies 1022.42 requires, and the general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Furnishing is examined against the written policies 1022.42 requires, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **Every file as sent,** per bureau and month, with expected, sent and accepted counts and the rejects worked.
 - **Every account's snapshot per run,** with the ledger state it was computed from.

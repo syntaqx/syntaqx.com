@@ -61,7 +61,7 @@ Identifiers from another system end in `_xid`: `google_place_xid`, `stripe_charg
 The rules behind the table:
 
 - **Timestamps are always `TIMESTAMPTZ`.** A `TIMESTAMP` without a zone is a number nobody can interpret correctly once servers or users span zones. See [Time & Date Formats](/docs/fundamentals/time).
-- **Every table has `created_at`, and `updated_at` when rows change.** One name everywhere, not `inserted_at` in some tables. Soft deletes are `deleted_at`, never a boolean, so you know when (see [Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Every table has `created_at`, and `updated_at` when rows change.** One name everywhere, not `inserted_at` in some tables. Soft deletes are `deleted_at`, never a boolean, so you know when (see [Data Retention & Deletion](/docs/building-blocks/data-retention)).
 - **Booleans are `NOT NULL`.** A nullable boolean has three values, and the third is always a bug.
 - **Prefer `TEXT` to `VARCHAR(255)`.** In Postgres they perform the same, and `255` is a habit inherited from other databases, not a real limit. When a value genuinely has a maximum length, say so with a named `CHECK` constraint.
 - **Money follows [Money & Amounts](/docs/money/amounts):** integer minor units in `BIGINT`, always with a currency beside it.

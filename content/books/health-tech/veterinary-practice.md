@@ -231,7 +231,7 @@ Design notes:
 
 - **Messaging groups by client, records stay per animal.** The reminder job selects due items per animal, then groups them by the client whose `patient_owners` row is active and whose contact allows the message, and skips every animal with `deceased_at` set.
 - **Deceased and transfers propagate as events.** `patient.deceased` and `patient.transferred` go out through the outbox to every vendor integration at high priority, and the engagement platform cancels queued messages on receipt.
-- **The VCPR rule is per state, as data.** Basis allowed, recency window and drug limits per state, versioned, so a prescription's check can be reproduced ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **The VCPR rule is per state, as data.** Basis allowed, recency window and drug limits per state, versioned, so a prescription's check can be reproduced ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Record releases are not HIPAA disclosures.** The core `disclosures` table is HIPAA's accounting, which doesn't apply to a clinic whose organization has `hipaa_role = 'not_covered'`; `record_releases` follows the state act instead, with the basis on each, and is the evidence a board asks for.
 
 ## Auditing

@@ -90,7 +90,7 @@ What the statute does to the system:
 
 - **High-volume status is computed, not declared.** It's a rolling query over the seller's completed on-platform sales of new or unused products in every 12-month window of the last 24 months, run daily. The date it first became true starts the 10-day clock.
 - **Condition is a listing field.** Only new or unused consumer products count, so the listing's condition and category feed the count; a used-goods platform still has sellers who sell new items.
-- **The clock is a deadline row.** Collection, verification, recertification and the 10-day notice before suspension are computed deadlines ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)), and suspension is an automated restriction on the seller role, recorded as a `penalties` row so it shows in standing and lifts when the seller complies.
+- **The clock is a deadline row.** Collection, verification, recertification and the 10-day notice before suspension are computed deadlines ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)), and suspension is an automated restriction on the seller role, recorded as a `penalties` row so it shows in standing and lifts when the seller complies.
 - **Data use is limited.** The statute limits use of the collected data to compliance; keep it in a store with its own access rules rather than copying it into marketing or analytics.
 
 ### DSA Trader Traceability
@@ -131,7 +131,7 @@ For stays the asset gate is the property's legal status: city registration, prim
 What the system does with asset rules:
 
 - **The asset is its own record.** A vehicle has a VIN, year, make, model, class, value, title status, registration and lienholder independent of any listing; a host can relist it, a second host can't list the same VIN at the same time, and a claim three years later needs the vehicle as it was. One asset, many listings over time.
-- **Eligibility is a check with a rule version.** Each listing is evaluated against the eligibility rules in force (value caps by plan and jurisdiction, age limits, title and inspection requirements), and the check records the rule set version, the inputs and the reasons ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). When the insurer changes a cap, the platform re-runs the checks and knows which listings fall out.
+- **Eligibility is a check with a rule version.** Each listing is evaluated against the eligibility rules in force (value caps by plan and jurisdiction, age limits, title and inspection requirements), and the check records the rule set version, the inputs and the reasons ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)). When the insurer changes a cap, the platform re-runs the checks and knows which listings fall out.
 - **Expiring evidence closes bookability, not the listing.** An inspection valid for 90 days before departure means the check is per trip: a booking whose departure is past the inspection's horizon gets a task for the host, not a silent failure at handoff.
 - **Recalls are a data feed.** A periodic check of every listed vehicle against a recall source is how "actual notice" becomes something the platform can show it acted on.
 
@@ -293,7 +293,7 @@ CREATE TABLE onboarding_disclosures (    -- what the supplier was told and ackno
 Design decisions behind it:
 
 - **One verifications table for every check about a person.** Driver's licenses, business registrations, TINs and bank accounts are verifications with a method, a verifier, an evidence reference and a validity range, so standing, badges, gates and erasure all read one model. The widening lives here once; the other marketplace chapters use the kinds.
-- **Trader data is per regime.** INFORM and the DSA ask for overlapping fields with different deadlines, display rules and retention, so each regime gets its own row with its own clock. `became_required_at` is when the threshold was crossed or the trader first offered to EU consumers; `collect_by` and `verify_by` are computed from the rule and stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Trader data is per regime.** INFORM and the DSA ask for overlapping fields with different deadlines, display rules and retention, so each regime gets its own row with its own clock. `became_required_at` is when the threshold was crossed or the trader first offered to EU consumers; `collect_by` and `verify_by` are computed from the rule and stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **High-volume status is a view.** It's derived from completed purchases of new or unused goods, never a counter, so a refund, a cancelled order or a recategorized listing changes the answer the next time it runs. The sketch shows the shape; at scale it's a daily job writing transitions, so the date the seller crossed is kept.
 - **Suspension is a penalty.** A seller suspended for missing trader data gets a `penalties` row with role `seller`, scoped to the regime's market, so standing explains it and it lifts on compliance without touching the account.
 - **Assets outlive listings.** The VIN is unique per asset, a listing points at its asset, and eligibility, inspections, recalls and claims all hang off the asset, so the vehicle's history survives a relist or a change of host.
@@ -308,7 +308,7 @@ Design decisions behind it:
 - **What buyers were shown:** the trader disclosure on each listing over time, and the reporting channel's presence, which was the issue in the first INFORM action.
 - **Asset eligibility over time:** each check with its rule version and inputs, inspections and recall checks, so an insurer's question after a claim, or a regulator's after an accident, has the record as it was.
 - **Disclosures acknowledged:** lienholder and personal-insurance notices, terms versions and the supplier's acknowledgement, per jurisdiction.
-- **Retention and erasure:** DSA trader data deleted six months after the relationship ends, and everything else under [Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type).
+- **Retention and erasure:** DSA trader data deleted six months after the relationship ends, and everything else under [Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type).
 
 ## What This Means for the System You Build
 

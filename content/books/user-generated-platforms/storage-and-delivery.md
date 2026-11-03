@@ -70,7 +70,7 @@ The rules I use:
 - **Variants are cheaper to delete than to tier.** A variant can be regenerated from the original, so a variant nobody has requested in months is deleted and rebuilt on demand ([Images at Scale](/books/user-generated-platforms/images-at-scale#variants-eager-or-on-demand)). The original can't be rebuilt, so it's the one that moves down the tiers.
 - **Retrieval fees are part of the price.** Warm and cold classes charge per GB read; a tier that's cheap to hold and expensive to read is wrong for anything a takedown sweep, an export or a re-encode will read back in bulk.
 
-Meta's other trick belongs here too: f4 encrypts every BLOB with its own key held in a database, and deleting the key deletes the BLOB without rewriting the coded volume. The same crypto-shredding pattern ([Encryption at Rest](/docs/security/encryption-at-rest#crypto-shredding)) is how a platform makes deletion of a file in immutable or erasure-coded storage real, and how it reaches copies in backups ([Data Retention & Deletion](/docs/architecture/data-retention#backups)).
+Meta's other trick belongs here too: f4 encrypts every BLOB with its own key held in a database, and deleting the key deletes the BLOB without rewriting the coded volume. The same crypto-shredding pattern ([Encryption at Rest](/docs/security/encryption-at-rest#crypto-shredding)) is how a platform makes deletion of a file in immutable or erasure-coded storage real, and how it reaches copies in backups ([Data Retention & Deletion](/docs/building-blocks/data-retention#backups)).
 
 ## CDN, Egress and the Delivery Bill
 
@@ -120,7 +120,7 @@ An orphan is stored data nothing points at, and a media pipeline makes them cons
 - **Variants of purged originals,** and variants of sizes a redesign no longer uses.
 - **Anonymous uploads.** Files with no owner account, which the core model marks with a null `owner_account_id`. Nobody can manage them, nobody can be notified, and they are the first purge candidates. Imgur's 2023 terms named exactly that set: "old, unused, and inactive content that is not tied to a user account."
 
-A retention purge is a rule applied by a job, not a script: which assets it targets, after how long, in what order, with what exemptions and notice, and what it skips because of a hold ([Data Retention & Deletion](/docs/architecture/data-retention#retention-windows); [Background Jobs](/docs/architecture/background-jobs)). The purge's cost lands off the platform. Pew Research found that 38% of web pages that existed in 2013 were no longer accessible a decade later and that 54% of Wikipedia pages had at least one reference link pointing to a page that no longer exists; an image host's purge turns tutorials, forum answers and reference pages that embedded its files into broken placeholders, which is what critics predicted of Imgur's change. Platforms can't avoid all of that, but they can soften it:
+A retention purge is a rule applied by a job, not a script: which assets it targets, after how long, in what order, with what exemptions and notice, and what it skips because of a hold ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-windows); [Background Jobs](/docs/architecture/background-jobs)). The purge's cost lands off the platform. Pew Research found that 38% of web pages that existed in 2013 were no longer accessible a decade later and that 54% of Wikipedia pages had at least one reference link pointing to a page that no longer exists; an image host's purge turns tutorials, forum answers and reference pages that embedded its files into broken placeholders, which is what critics predicted of Imgur's change. Platforms can't avoid all of that, but they can soften it:
 
 - **Purge what was never viewed first,** using measured last access, so the files embedded somewhere live are the last to go.
 - **Tell owners, and give them an export,** with a notice period long enough to act on; anonymous uploads can only be announced publicly.
@@ -144,7 +144,7 @@ Design rules from the cases:
 
 - **Cap what doesn't earn.** Twitch exempted clips and past broadcasts, which drive discovery, and capped highlights, which it said didn't; Flickr exempted Creative Commons work that others depend on.
 - **Block before deleting.** Stopping new uploads over the cap is reversible; deleting is not. Flickr did both, in that order, a month apart.
-- **Make the order explicit.** Oldest first and least viewed first remove different things; the rule is versioned data the platform can publish ([Rules as Data](/docs/architecture/rules-as-data)), not a constant in the purge job.
+- **Make the order explicit.** Oldest first and least viewed first remove different things; the rule is versioned data the platform can publish ([Rules as Data](/docs/building-blocks/rules-as-data)), not a constant in the purge job.
 - **Account for paid tiers.** A cap is usually also a pricing decision (Flickr said reducing free storage ensures it runs on subscriptions), so the rule reads the account's plan at the time it runs.
 
 The live-video version, with VOD expiry tiers by creator status and Twitch's cap in detail, is [Retention Tiers and Storage Caps](/books/user-generated-platforms/live-latency-and-vods#retention-tiers-and-storage-caps).
@@ -283,7 +283,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Every purge, asset by asset,** with the rule version, the notice sent, and anything skipped and why. "What did you delete, and under which policy" is the first question after any large purge.
-- **Every hold that stopped a purge,** linked to the case, request or report behind it, so evidence kept past a deletion is explainable ([Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records)).
+- **Every hold that stopped a purge,** linked to the case, request or report behind it, so evidence kept past a deletion is explainable ([Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records)).
 - **Every CDN purge with its confirmation time,** because the time a takedown took effect is the time the cached copies stopped serving, not the time the row changed. Legal clocks are measured against it.
 - **Every delivery restriction,** with countries, legal basis, source and dates, for transparency reports and for answering a regulator or court about what was withheld where.
 - **Key destruction for purged blobs,** logged with the key reference and time ([Logging Key Use](/docs/security/encryption-at-rest#logging-key-use)), as proof that a deleted file is unreadable everywhere it was stored.

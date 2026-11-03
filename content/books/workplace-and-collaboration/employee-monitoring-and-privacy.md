@@ -113,7 +113,7 @@ Across the vendors and regulators, five patterns let one product serve a US empl
 - **Separate the roles.** The IT admin who configures the tool isn't automatically able to read content; Purview's rule that Global Administrators have no Communication Compliance access by default is the pattern. Content access is a role of its own, ideally requiring a second approver.
 - **Record a reason for content access.** Each export of a person's messages or a private channel carries a purpose (investigation, legal hold, regulatory request), a requester, an approver and an expiry, which is what a works agreement, a DPIA or an NLRB charge will ask about.
 - **Notice as data.** Notices and acknowledgments per employee per jurisdiction, versioned, with New York's hiring timing and Delaware's daily or acknowledged options.
-- **Minimize retention of activity data.** The Amazon decision turned on 31 days of granular indicators; per-person activity metrics should roll up into aggregates quickly, and the raw rows should expire on a stated schedule ([Retention Windows](/docs/architecture/data-retention#retention-windows)).
+- **Minimize retention of activity data.** The Amazon decision turned on 31 days of granular indicators; per-person activity metrics should roll up into aggregates quickly, and the raw rows should expire on a stated schedule ([Retention Windows](/docs/building-blocks/data-retention#retention-windows)).
 
 ## How to Build It
 
@@ -187,7 +187,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Every identifiable view switched on,** by whom, under which agreement, and every report run while it was on.
-- **Every content access request,** its purpose, subjects, containers, date range, approver, fulfillment and expiry, retained longer than the content it reached ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every content access request,** its purpose, subjects, containers, date range, approver, fulfillment and expiry, retained longer than the content it reached ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Notice coverage:** employees in each jurisdiction without a current notice or required acknowledgment.
 - **Agreement drift:** features in use that no current works agreement or DPIA lists, per organization.
 - **Activity data age:** the oldest raw per-person activity row per workspace against its stated retention.

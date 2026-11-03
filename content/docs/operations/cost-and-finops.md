@@ -35,7 +35,7 @@ A handful of levers account for most savings. Work on them in order of size, not
 | **Rightsizing** | Most resources are provisioned for a peak that never comes | Do it from measured utilization, and keep headroom per [Load & Performance Testing](/docs/quality/load-testing) |
 | **Commitments vs on-demand** | Committed-use discounts are large; AWS advertises [Savings Plans](https://aws.amazon.com/savingsplans/) at up to 72% below on-demand | Commit only to the steady baseline you're confident in; commitments are the hardest decision to undo |
 | **Data transfer and egress** | Often invisible in design: cross-region or cross-zone chatter and internet egress are billed per GB | Draw where data flows in the design doc, not after the bill |
-| **Storage lifecycle** | Data accumulates forever by default: logs, backups, old artifacts | Retention rules per [Data Retention & Deletion](/docs/architecture/data-retention); move cold data to cheaper tiers |
+| **Storage lifecycle** | Data accumulates forever by default: logs, backups, old artifacts | Retention rules per [Data Retention & Deletion](/docs/building-blocks/data-retention); move cold data to cheaper tiers |
 | **Idle environments** | Preview, staging and load-test environments running nights and weekends | Make them ephemeral or scheduled ([Environments & Configuration](/docs/operations/environments)) |
 
 Rightsizing and idle environments are low-risk and fast. Commitments save the most but lock you in, so they come after rightsizing; committing to an oversized baseline locks in the waste.
@@ -46,7 +46,7 @@ Free tiers are a real strategy for small systems, and also a cliff: limits that,
 
 ## Cost in Design Reviews
 
-Every [design doc](/docs/engineering/design-docs) that adds infrastructure estimates its cost: what it runs on, at what scale, and how cost grows with usage. Rough is fine; the point is asking while the design can still change.
+Every [design doc](/docs/development/design-docs) that adds infrastructure estimates its cost: what it runs on, at what scale, and how cost grows with usage. Rough is fine; the point is asking while the design can still change.
 
 ## The FinOps Loop
 

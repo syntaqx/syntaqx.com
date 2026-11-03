@@ -200,7 +200,7 @@ Legal process records are evidence in the debtor's case, the creditor's case and
 - **The Part 212 review per account:** the review time against its deadline, the lookback dates, the benefit deposits found, the balance, the protected amount, and the notice as sent, for at least the two years 212.11 requires.
 - **Every hold, seizure, release and surrender,** with amounts, dates, the deadline it met and the journal entries.
 - **Fees charged** and the funds they came from, so a fee against protected funds is impossible to hide.
-- **For records requests,** the authority, the certificate or order relied on, what was produced, and the nondisclosure period, with access to the case itself logged ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **For records requests,** the authority, the certificate or order relied on, what was produced, and the nondisclosure period, with access to the case itself logged ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

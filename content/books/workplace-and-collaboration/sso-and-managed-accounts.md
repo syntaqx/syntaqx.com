@@ -200,7 +200,7 @@ Notes on the sketch:
 
 - **Domain proofs:** each verification and recheck, the method and the result, and who added or removed the domain.
 - **Claims:** every account claimed, released or replaced, with the proof and the notice given.
-- **SSO and policy changes:** connection activation, certificate changes, enforcement mode changes and policy assignments, with the before and after values ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **SSO and policy changes:** connection activation, certificate changes, enforcement mode changes and policy assignments, with the before and after values ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 - **Sign-ins and bypasses:** every sign-in that didn't go through the required identity provider, with an alert for break-glass use.
 - **Session revocations** with their reason.
 

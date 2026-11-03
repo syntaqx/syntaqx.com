@@ -115,7 +115,7 @@ The states that matter most for hosts are those with detailed, enforced laws. Tw
 | Annual reminder | For annual agreements, with the service, the amount and frequency, and how to cancel | No separate requirement |
 | Enforcement | Unconditional gift rule for goods (17603) and the state's remedies | Attorney General; civil penalties up to $100 per violation, $500 for multiple violations from one act, more if knowing |
 
-New York has a second statute aimed at business customers too: General Obligations Law 5-903 makes an automatic renewal clause in a contract for service, maintenance or repair of real or personal property unenforceable unless the provider gives written notice, personally or by certified mail, 15 to 30 days before the date the customer must give notice to terminate; it doesn't apply to renewal periods of a month or less. Whether a given hosting contract falls within it is for counsel; the system's job is being able to send a dated, delivered notice to a business account on that schedule. Other states have their own laws and windows, which is why the rules are rows, not code ([Rules as Data](/docs/architecture/rules-as-data)).
+New York has a second statute aimed at business customers too: General Obligations Law 5-903 makes an automatic renewal clause in a contract for service, maintenance or repair of real or personal property unenforceable unless the provider gives written notice, personally or by certified mail, 15 to 30 days before the date the customer must give notice to terminate; it doesn't apply to renewal periods of a month or less. Whether a given hosting contract falls within it is for counsel; the system's job is being able to send a dated, delivered notice to a business account on that schedule. Other states have their own laws and windows, which is why the rules are rows, not code ([Rules as Data](/docs/building-blocks/rules-as-data)).
 
 ### EU, Germany and the UK
 
@@ -288,10 +288,10 @@ ON CONFLICT (subscription_id, subscription_period_id, rule_id) DO NOTHING;
 
 Notes on the sketch:
 
-- **Rules are versioned like prices.** AB 2863's rows start on July 1, 2025 and apply to contracts "entered into, amended, or extended" from then, so the consent date, not today, picks the rule set for the disclosure, and the renewal date picks it for notices. `valid_during` and `source_ref` let an auditor see which text governed ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions); [Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Rules are versioned like prices.** AB 2863's rows start on July 1, 2025 and apply to contracts "entered into, amended, or extended" from then, so the consent date, not today, picks the rule set for the disclosure, and the renewal date picks it for notices. `valid_during` and `source_ref` let an auditor see which text governed ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions); [Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Anchor on the charge, not the expiry.** `charge_lead_days` on the plan version makes the early charge explicit, and every window is computed from it. Moving the charge earlier is a plan change that reschedules notices.
 - **Domains get two rule sets.** ERRP rows (`jurisdiction = 'ICANN'`) generate pre-expiry and post-expiry notices for the domain resource whether or not auto-renew is on, and are marked `not_required` once the name has renewed; consumer rows generate the renewal reminder. Both point at the same subscription.
-- **Reminders go on the transactional stream.** A marketing unsubscribe never suppresses them, and a bounced reminder is a fact to act on (a second channel), per [Purpose Decides Everything](/docs/architecture/notifications#purpose-decides-everything).
+- **Reminders go on the transactional stream.** A marketing unsubscribe never suppresses them, and a bounced reminder is a fact to act on (a second channel), per [Purpose Decides Everything](/docs/building-blocks/notifications#purpose-decides-everything).
 - **Cancellation writes once, effects follow.** A `cancellation_requests` row sets `subscriptions.cancel_at` (or ends it), cancels scheduled notices for later periods, and starts the data clock; the request is never edited, and an accepted save offer is a new plan version with its own consent.
 - **Events:** `renewal_notice.scheduled`, `renewal_notice.sent`, `renewal_notice.bounced`, `cancellation.received`, `cancellation.confirmed`, `subscription.auto_renew_disabled` and `subscription.renewed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, billing and the support console.
 
@@ -301,7 +301,7 @@ Notes on the sketch:
 - **Every notice owed and its fate.** For each renewal, which rules applied, the window computed, when the notice was sent, through which channel, whether it bounced, and the amount it quoted against the amount charged. A renewal charged without a sent notice inside its window is a finding.
 - **Every cancellation and how long it took.** `received_at` against `confirmed_at` and `effective_at`, the channel, any save offer shown and declined, and the refund computed. Voicemail requests answered within a business day, per California.
 - **ERRP compliance per name.** Pre-expiry notices inside 26 to 35 and 4 to 10 days, the post-expiry notice within five days, and the DNS interruption period, because ICANN Compliance asks registrars for exactly these.
-- **Rule versions.** Which `renewal_law_rules` rows were in force on each date, with their sources ([Audit Trails](/docs/architecture/audit-trails)).
+- **Rule versions.** Which `renewal_law_rules` rows were in force on each date, with their sources ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

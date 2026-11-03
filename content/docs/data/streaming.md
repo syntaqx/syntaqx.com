@@ -8,7 +8,7 @@ tags = ["data", "streaming", "kafka", "flink", "stream-processing"]
 
 [Events & Async Messaging](/docs/architecture/events) is about application events: one service telling others that a payment was captured, with an outbox, idempotent consumers and a schema each consumer depends on. This chapter is about the analytical side of the same infrastructure: high-volume streams of clicks, gameplay events, card authorizations, vehicle positions and log lines, read by jobs that count, join and aggregate them while they're still moving. The broker is often the same product. The questions are different: not "did the invoice service hear about it?" but "how many checkouts failed in the last five minutes, counted by when they happened rather than when they arrived?"
 
-[Data Pipelines & Analytics](/docs/architecture/data-pipelines) covers the batch path (CDC, raw, staging, marts) and the rules that make it replayable. Everything there still holds. A stream is a pipeline whose interval is very short and never closes, which is exactly why it's harder.
+[Data Pipelines & Analytics](/docs/data/data-pipelines) covers the batch path (CDC, raw, staging, marts) and the rules that make it replayable. Everything there still holds. A stream is a pipeline whose interval is very short and never closes, which is exactly why it's harder.
 
 ## When Streaming Beats Batch
 
@@ -60,7 +60,7 @@ Managed streaming SQL, warehouse-native streaming (materialized views over a str
 
 Every stream event has two times. **Event time** is "the time that each individual event occurred on its producing device"; **processing time** is "the system time of the machine that is executing the respective operation" ([Flink: Timely stream processing](https://nightlies.apache.org/flink/flink-docs-stable/docs/concepts/time/)). The gap between them is ordinary: a phone that was offline in a subway, a game client that batches events for a minute, a technician's tablet that syncs when it gets signal, a retry after a broker failover.
 
-Aggregate by processing time and the numbers depend on delivery, not on what happened: a backlog drained after an outage shows up as a spike that never occurred, and a replay produces different answers than the original run. Aggregate by event time and the numbers are reproducible, which is the same rule as partitioning batch data by event time in [Data Pipelines](/docs/architecture/data-pipelines#pipelines-must-be-replayable).
+Aggregate by processing time and the numbers depend on delivery, not on what happened: a backlog drained after an outage shows up as a spike that never occurred, and a replay produces different answers than the original run. Aggregate by event time and the numbers are reproducible, which is the same rule as partitioning batch data by event time in [Data Pipelines](/docs/data/data-pipelines#pipelines-must-be-replayable).
 
 My rule: **event time for anything reported, processing time only for operational signals about the pipeline itself** (throughput, lag). The event's own timestamp is set by the producer in [RFC 3339](/docs/fundamentals/time) and travels in the envelope (`ce-time` in [CloudEvents](/docs/architecture/events#envelope-cloudevents-binary-mode)); the arrival time is recorded separately, never in place of it.
 
@@ -130,7 +130,7 @@ The common thread: the engine can make its own state exact, and the edges are yo
 - **Lag is the SLO.** How far behind the newest event each consumer group is, in time, not in messages. A fraud job five minutes behind is a fraud job that isn't working. Alert on lag, and on the watermark falling behind wall-clock time.
 - **Plan replays before you need one.** Know your retention window, how to start a job from an earlier offset or timestamp, and where its output goes during a replay so it doesn't double-count into the live table.
 - **Partition keys are a design decision.** Pick the key that the aggregation and the ordering need (account, merchant, match, vehicle), check its skew (one enormous merchant is one hot partition), and write it down.
-- **Personal data streams too.** Topic retention and compaction are part of your [retention schedule](/docs/architecture/data-retention), and an erasure request has to reach a compacted topic (a tombstone for the key) and the raw store the stream lands in ([Data Governance & Access](/docs/data/data-governance)).
+- **Personal data streams too.** Topic retention and compaction are part of your [retention schedule](/docs/building-blocks/data-retention), and an erasure request has to reach a compacted topic (a tombstone for the key) and the raw store the stream lands in ([Data Governance & Access](/docs/data/data-governance)).
 - **Costs run all day.** A streaming job is billed every hour whether or not anyone looks at its output; review each one against the decision it feeds ([Cost & FinOps](/docs/operations/cost-and-finops)).
 
 ## Checklist

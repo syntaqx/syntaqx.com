@@ -79,9 +79,9 @@ The design rules follow from what can go wrong:
 - **Retrieval obeys the same filters as search.** The retriever runs with the viewer's visibility, blocks, age band and label preferences, over currently published items only. An answer composed from a removed comment is publishing it again.
 - **Every claim cites a thread.** Citations link to the items the answer drew on; an answer that can't cite is not shown. Store the cited item ids and revisions with the answer.
 - **Cached answers expire on removal.** Answers to popular questions are cached; any removal, deletion or label change on a cited item invalidates every cached answer that cites it.
-- **Health, legal and safety questions get guardrails.** Community advice on medication, self-harm, or legal emergencies is exactly where a fluent summary of strangers' opinions does harm; route those queries to curated resources and show the threads rather than a synthesized answer, the [AI Agents in the Product](/docs/architecture/ai-agents#emergencies-skip-the-model) principle that emergencies skip the model.
+- **Health, legal and safety questions get guardrails.** Community advice on medication, self-harm, or legal emergencies is exactly where a fluent summary of strangers' opinions does harm; route those queries to curated resources and show the threads rather than a synthesized answer, the [AI Agents in the Product](/docs/building-blocks/ai-agents#emergencies-skip-the-model) principle that emergencies skip the model.
 - **Attribution is part of the bargain.** Answers that keep readers off the threads reduce the visibility and votes that motivate the people who wrote them; the citation design (who is named, how prominent the link is) is a creator-relations decision as much as a UX one.
-- **Evaluate before and after launch** with question sets that include removed content, adversarial prompts and sensitive topics ([Evals](/docs/architecture/ai-agents#evals)).
+- **Evaluate before and after launch** with question sets that include removed content, adversarial prompts and sensitive topics ([Evals](/docs/building-blocks/ai-agents#evals)).
 
 AI-generated content labels, provenance and model training on community data are [AI on User-Generated Platforms](/books/user-generated-platforms/ai-on-user-generated-platforms)' subject.
 
@@ -95,7 +95,7 @@ For a community platform the mechanism is the same: a term list maintained with 
 
 A search history says what someone worried about, wanted, or was looking for at 3 a.m. Treat it accordingly:
 
-- **Keep raw queries briefly.** Ranking and spelling models need aggregates; raw query text tied to an account is kept for a short window, then aggregated or de-identified ([Data Retention & Deletion](/docs/architecture/data-retention#retention-windows)).
+- **Keep raw queries briefly.** Ranking and spelling models need aggregates; raw query text tied to an account is kept for a short window, then aggregated or de-identified ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-windows)).
 - **Separate safety logs.** Queries that matched a safety list are counted, and their retention follows the trust and safety policy rather than the analytics one.
 - **Expect legal requests.** Search history is among the records law enforcement asks for; what exists determines what can be disclosed, which is [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#the-us-framework)'s subject.
 - **Export and erase.** A user's search history is part of their data export and erasure scope under GDPR ([GDPR](/docs/compliance/gdpr#data-subject-rights)).

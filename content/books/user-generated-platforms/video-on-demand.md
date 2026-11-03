@@ -59,7 +59,7 @@ Apple calls these initial targets to evaluate against your content, makes the 2,
 
 **Per-title encoding** replaces the fixed table with one computed for each video. Netflix's December 2015 change is the reference case: under its fixed ladder, *BoJack Horseman*'s flat animation got 1,750 kbps for 480p, while the per-title ladder delivered 1080p at 1,540 kbps; live-action *Orange Is the New Black* got its top 1080p rung at 4,640 kbps instead of 5,800, about 20% less. The method generalizes as the **convex hull**: encode the video at many (resolution, quality) points, score each against the source with a perceptual metric, plot quality against bitrate, and keep only the points on the upper-left boundary, where no other encode gives better quality for fewer bits. Meta's Reels pipeline describes the search concretely: for a 1080p video, seven resolutions times five CRF values is 35 trial encodes, each upscaled back to the original resolution and scored on its own 0 to 100 quality metric, with rungs then picked off the hull by target quality or bitrate.
 
-The general mechanics underneath (inter-frame prediction, constant quality against target bitrate, perceptual metrics such as VMAF) are in [Media Compression](/docs/architecture/media-compression#rate-control-for-video).
+The general mechanics underneath (inter-frame prediction, constant quality against target bitrate, perceptual metrics such as VMAF) are in [Media Compression](/docs/building-blocks/media-compression#rate-control-for-video).
 
 The search is expensive, which is why the platforms ration it:
 
@@ -67,7 +67,7 @@ The search is expensive, which is why the platforms ration it:
 - **Sell it as a tier.** Mux's Basic level has a reduced ladder and no encoding charge; Plus adds "AI-powered per-title encoding"; Premium extends the ladder for sports and studio content at a higher per-minute price for encoding, storage and delivery.
 - **Rent the analysis.** MediaConvert's automated ABR chooses the number of renditions (3 to 15, default maximum 15), their resolutions and their bitrates between a floor and a ceiling (defaults 600 kbps and 8 Mbps), "eliminating renditions that increase bitrate without providing increased video quality," with every rung encoded in QVBR, its quality-defined variable bitrate mode.
 
-My rule: the ladder is versioned data, not code. Which rungs, which codecs, which bitrate ceilings and which watch-time thresholds apply to which kind of upload is a rule set with effective dates ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), and every variant records the ladder version that produced it, so a change to the ladder can be rolled across the catalog deliberately and an old video's renditions can still be explained.
+My rule: the ladder is versioned data, not code. Which rungs, which codecs, which bitrate ceilings and which watch-time thresholds apply to which kind of upload is a rule set with effective dates ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)), and every variant records the ladder version that produced it, so a change to the ladder can be rolled across the catalog deliberately and an old video's renditions can still be explained.
 
 ## The Codec Portfolio
 
@@ -279,7 +279,7 @@ Notes on the sketch:
 - **Which ladder and codec produced every rendition,** with the job, executor and quality score, so a quality complaint, a device bug or a vendor dispute resolves to a version and a job.
 - **Every job and its billed output,** reconciled monthly against the vendor's invoice, rendition by rendition.
 - **Every playback policy in force over time,** with its reason, so the platform can show who could watch a paid or restricted video at any moment, and when a DRM or token requirement started.
-- **Every track's source.** Which captions and audio were automatic, which the creator supplied and which a vendor produced, because an automatic caption or dub that misstates what someone said is a complaint about the platform's words, not the creator's ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every track's source.** Which captions and audio were automatic, which the creator supplied and which a vendor produced, because an automatic caption or dub that misstates what someone said is a complaint about the platform's words, not the creator's ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Every download by an author or viewer,** with the token or session behind it, for leak and scraping investigations.
 - **Delivery and license counts by country,** as the basis for the cost model, rights reporting and any territory restriction a rights holder or regulator asks about.
 

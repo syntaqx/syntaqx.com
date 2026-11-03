@@ -30,7 +30,7 @@ The CRM market changed hands in 2025. Veeva's 10-K: "Our agreement with Salesfor
 
 Pharma CRM is account management for prescribers: territories and call plans, call reports (who was visited, which products discussed, which approved materials shown), sample requests and signatures, event invitations, medical information requests routed to medical affairs (never answered by sales), consent to email, and multichannel engagement. What makes it different from ordinary CRM:
 
-- **The customer master is licensed.** Prescribers and organizations come from reference databases (Veeva OpenData, IQVIA's, others) keyed by NPI and state license, with specialty, affiliations and addresses; the company's CRM accounts are a crosswalk onto that master ([Licensed Data](/docs/architecture/record-linkage#licensed-data)).
+- **The customer master is licensed.** Prescribers and organizations come from reference databases (Veeva OpenData, IQVIA's, others) keyed by NPI and state license, with specialty, affiliations and addresses; the company's CRM accounts are a crosswalk onto that master ([Licensed Data](/docs/building-blocks/record-linkage#licensed-data)).
 - **Content is approved, versioned and expiring.** A representative may show only materials approved through medical, legal and regulatory review, consistent with the label; the CRM records which version was shown, and expired materials disappear.
 - **Promotion versus medical.** Sales may not promote off-label uses; an unsolicited request for off-label information becomes a medical information request handled by medical affairs and logged.
 - **License checks gate actions.** A sample may go only to a practitioner licensed to prescribe it in that state, so the CRM checks license status from the reference data at the moment of the request.
@@ -167,7 +167,7 @@ CREATE TABLE hub_cases (                 -- a patient's journey from prescriptio
 Design notes:
 
 - **The reference master is the identity.** CRM accounts, transfers of value and sample requests all resolve to an `hcp_profiles` row keyed to licensed reference data and the NPI, so Open Payments, state reporting and license checks agree.
-- **Compliance is a rule layer, not training.** Meal caps, venue limits, state gift bans, sample eligibility and speaker program limits are rules keyed by state and program, evaluated when the action is requested, with the rule recorded ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Compliance is a rule layer, not training.** Meal caps, venue limits, state gift bans, sample eligibility and speaker program limits are rules keyed by state and program, evaluated when the action is requested, with the rule recorded ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Sales and patient data are walled.** Hub cases live in the hub vendor's tenant; the manufacturer sees aggregates and de-identified program metrics unless the patient's authorization says otherwise, and sales never sees which prescriber's patients got assistance.
 - **Transparency is a query.** Every system that can spend on a covered recipient writes `transfers_of_value` at the time, with its source, so the annual Open Payments file and state reports are generated, attested and defensible.
 
@@ -177,7 +177,7 @@ Design notes:
 - **Transfers of value:** source evidence for each, the submission, attestation and dispute outcomes.
 - **Promotional content:** approval, version, expiry and every use in a call, email or ad.
 - **Hub and assistance programs:** eligibility decisions (government coverage exclusions), authorizations, and the data flows between hub, manufacturer and charity, showing the walls held.
-- **CRM history through migrations:** call reports and consents carried from Veeva CRM to Vault CRM or another platform with their original timestamps and actors ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **CRM history through migrations:** call reports and consents carried from Veeva CRM to Vault CRM or another platform with their original timestamps and actors ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 
 ## What This Means for the System You Build
 

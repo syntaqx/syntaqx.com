@@ -19,7 +19,7 @@ Not every change needs one; modeling a copy change teaches the team that threat 
 - **Touches authentication, authorization, money or personal data,** where a mistake is expensive by definition.
 - **Adds a third party:** a vendor API, an SDK, an AI model, an MCP server. You're extending trust to code you don't control.
 
-It lives in the [design doc](/docs/engineering/design-docs) as its own section and gets reviewed with the rest, so it happens before the code exists instead of after.
+It lives in the [design doc](/docs/development/design-docs) as its own section and gets reviewed with the rest, so it happens before the code exists instead of after.
 
 ## Four Questions
 

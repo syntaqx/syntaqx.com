@@ -44,7 +44,7 @@ My default is a modular monolith, peeling out only what has a genuinely differen
 
 - **The optimizer.** CPU-heavy and asynchronous at every vendor that documents it (Spoke, for one, returns a job ID and reports completion later). Run it as a queue-fed worker pool ([Route Optimization](/books/field-operations/route-optimization)).
 - **The messaging gateway,** with its own carriers, rate limits and consent rules ([Customer Communications](/books/field-operations/customer-communications)).
-- **Mobile sync, reporting and webhook delivery,** whose load follows technicians' days, month-end, and retry schedules rather than office traffic ([Data Pipelines & Analytics](/docs/architecture/data-pipelines)).
+- **Mobile sync, reporting and webhook delivery,** whose load follows technicians' days, month-end, and retry schedules rather than office traffic ([Data Pipelines & Analytics](/docs/data/data-pipelines)).
 
 Whatever the split, money and compliance records are written synchronously and append-only; everything else may be eventually consistent.
 
@@ -134,19 +134,19 @@ Technicians work in basements, crawl spaces and rural routes. The enterprise ven
 | Salesforce | Offline briefcase scoped to each worker's profile; critical changes every five minutes; auto-offline after 3 failed checks at 15-second intervals | Not published |
 | ServiceNow | Write-back actions queued in an outbox and replayed in order | A failed action is marked and not retried; conflicts are handled server side by administrators |
 
-The design (commands replayed in order, conflicts decided per command type) is in [Offline-First Sync](/docs/architecture/offline-sync#conflicts-choosing-who-wins), and the field rule for who wins is in [Conflicts in Field Work](/books/field-operations/technician-app#conflicts-in-field-work). At the platform layer, keep money server-authoritative and plan for [Mobile Releases](/docs/delivery/mobile-releases): old app versions keep syncing for months, so the server accepts every command version still in the field.
+The design (commands replayed in order, conflicts decided per command type) is in [Offline-First Sync](/docs/building-blocks/offline-sync#conflicts-choosing-who-wins), and the field rule for who wins is in [Conflicts in Field Work](/books/field-operations/technician-app#conflicts-in-field-work). At the platform layer, keep money server-authoritative and plan for [Mobile Releases](/docs/delivery/mobile-releases): old app versions keep syncing for months, so the server accepts every command version still in the field.
 
 ## Extensibility
 
 No two field businesses track exactly the same things, so every platform eventually grows three extension points:
 
-- **Custom fields.** Salesforce stores customer-defined objects and fields as metadata; Jobber offers property-level custom fields. The design (definitions, validation, indexing, and values that reach the API, exports, webhooks and the audit trail) is in [Custom Fields](/docs/architecture/custom-fields). In field work most of them land on the property and the visit (a gate code, a pool's volume, a commercial site's PO number), and the ones a technician fills in need to sync offline and validate on the device, not only on the server.
+- **Custom fields.** Salesforce stores customer-defined objects and fields as metadata; Jobber offers property-level custom fields. The design (definitions, validation, indexing, and values that reach the API, exports, webhooks and the audit trail) is in [Custom Fields](/docs/building-blocks/custom-fields). In field work most of them land on the property and the visit (a gate code, a pool's volume, a commercial site's PO number), and the ones a technician fills in need to sync offline and validate on the device, not only on the server.
 - **Workflows.** "When a termite inspection finds activity, create a treatment estimate." Run rules as asynchronous subscribers to your domain events, with budgets; Salesforce's governor limits show why customer logic on a shared platform needs them.
 - **Marketplaces.** A public API, OAuth app installs per tenant, webhooks, and a listing with a review process. Avoca describes itself as a ServiceTitan "Certified App" and appears on FieldRoutes' marketplace; simPRO lists partner apps on its own. Certification is where you enforce scopes, rate limits and data handling before a partner reaches customer data.
 
 ## Auditing
 
-The platform-level record is one layer every write passes through, with typed actors, before and after, and reasons ([Audit Trails](/docs/architecture/audit-trails)). What the field adds:
+The platform-level record is one layer every write passes through, with typed actors, before and after, and reasons ([Audit Trails](/docs/building-blocks/audit-trails)). What the field adds:
 
 - **The channel, including offline.** Web, mobile online, mobile offline (with device time, a sequence number and sync time), API app, webhook, AI agent. "The technician completed it at 2:10" and "the server heard at 5:05" are both facts.
 - **Optimizer runs as records:** inputs, settings, locks and the result, because "why did the route change" is a question a customer, a technician and a commission dispute will all ask. ServiceTitan writes an entry for each route optimization to the job's audit trail.

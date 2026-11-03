@@ -103,7 +103,7 @@ Once an instant payment settles, there is nothing to return. The controls that w
 - **Payee verification where it exists.** The US has no network-wide name check like the UK's Confirmation of Payee ([Confirmation of Payee](/books/payments/eu-and-uk#confirmation-of-payee)); account verification services from consortiums fill part of the gap for ACH and wires.
 - **Rail rules that push the same way.** Nacha's 2026 fraud monitoring rules require originators and receiving banks to monitor for entries authorized under false pretenses, and FedNow gives participants limits and negative lists ([Bank-Rail Fraud](/books/payments/fraud-and-risk#bank-rail-fraud)).
 
-Each intervention is a decision with a record: what triggered it, what the customer saw, what they did, and what happened next ([The Decision Record](/docs/architecture/risk-scoring#the-decision-record)). That record is what separates "the bank warned the customer and they proceeded" from "the bank never noticed" when the claim, the complaint or the lawsuit comes.
+Each intervention is a decision with a record: what triggered it, what the customer saw, what they did, and what happened next ([The Decision Record](/docs/building-blocks/risk-scoring#the-decision-record)). That record is what separates "the bank warned the customer and they proceeded" from "the bank never noticed" when the claim, the complaint or the lawsuit comes.
 
 ## Mules and the Receiving Side
 
@@ -256,7 +256,7 @@ Takeover and scam claims are sampled in consumer compliance exams (as Reg E erro
 - **Receiving-side actions:** reports received and sent, time to restrict, funds returned, and the AML referral.
 - **Elder exploitation handling:** trusted contacts and their consent, holds and their state-law basis, reports to APS or law enforcement with the reporter's training.
 
-Reg E's two-year retention applies to the error case ([Auditing](/books/banking-and-lending/deposit-errors-and-disputes#auditing)); SAR-related records follow the BSA's five years ([BSA/AML Programs](/books/banking-and-lending/bsa-aml#auditing)). The mechanics are in [Audit Trails](/docs/architecture/audit-trails), and decision records in [Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions).
+Reg E's two-year retention applies to the error case ([Auditing](/books/banking-and-lending/deposit-errors-and-disputes#auditing)); SAR-related records follow the BSA's five years ([BSA/AML Programs](/books/banking-and-lending/bsa-aml#auditing)). The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails), and decision records in [Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions).
 
 ## What This Means for the System You Build
 

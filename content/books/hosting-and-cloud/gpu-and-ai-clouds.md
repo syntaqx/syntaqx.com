@@ -244,7 +244,7 @@ For a provider building a GPU product, my default is to sell three shapes from d
 
 ## How to Build It
 
-The core model already has the pieces: `commitments` of kind `'resource'` for the promise to pay for capacity, SKUs with unit `'gpu_hour'`, and `usage_events` for what ran. [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#how-to-build-it) owns reservations: resources of kind `'capacity_reservation'` with the `capacity_reservations` side table. A GPU block, calendar booking or capacity contract is one of those reservations; this chapter extends that table with what GPUs add (the pool and fabric, the shape, the price at purchase, the partition key), and adds the capacity pools reservations draw from, and the meters. Reservations follow the playbook's [Reservations & Holds](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory) pattern for pooled inventory: a hold on a finite pool for a time range, checked atomically.
+The core model already has the pieces: `commitments` of kind `'resource'` for the promise to pay for capacity, SKUs with unit `'gpu_hour'`, and `usage_events` for what ran. [Regions, Zones, Cells & Quotas](/books/hosting-and-cloud/regions-zones-and-cells#how-to-build-it) owns reservations: resources of kind `'capacity_reservation'` with the `capacity_reservations` side table. A GPU block, calendar booking or capacity contract is one of those reservations; this chapter extends that table with what GPUs add (the pool and fabric, the shape, the price at purchase, the partition key), and adds the capacity pools reservations draw from, and the meters. Reservations follow the playbook's [Reservations & Holds](/docs/building-blocks/reservations-and-holds#counters-for-pooled-inventory) pattern for pooled inventory: a hold on a finite pool for a time range, checked atomically.
 
 ```sql
 CREATE TABLE gpu_capacity_pools (        -- what can be promised: one instance type in one fabric
@@ -286,7 +286,7 @@ ALTER TABLE virtual_machines
   ADD COLUMN capacity_reservation_id UUID REFERENCES resources (id);  -- kind = 'capacity_reservation'
 ```
 
-Selling a block is a check against everything already promised from the pool over the same dates, run under a lock on the pool row so two sales can't both take the last units ([Preventing Double-Booking](/docs/architecture/reservations-and-holds#preventing-double-booking)):
+Selling a block is a check against everything already promised from the pool over the same dates, run under a lock on the pool row so two sales can't both take the last units ([Preventing Double-Booking](/docs/building-blocks/reservations-and-holds#preventing-double-booking)):
 
 ```sql
 -- Units still free in a pool for a requested window. The pool row is locked FOR UPDATE

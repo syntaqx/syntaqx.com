@@ -18,7 +18,7 @@ Every fact about the past has two times, and confusing them is where most tempor
 
 Fowler's example is a salary: on March 15, HR reports that Sally got a raise effective February 15, so February's payroll was computed from a belief that has since changed. Actual history isn't append-only, because "we go back and make retroactive changes", while record history is ([Bitemporal History](https://martinfowler.com/articles/bitemporal-history.html)). A system that tracks both is **bitemporal**. SQL:2011 standardized both halves: application-time period tables for valid time, system-versioned tables for recorded time, and the two together as bitemporal tables ([SQL:2011](https://en.wikipedia.org/wiki/SQL:2011)).
 
-My default: **valid time on the handful of values that change on a schedule, recorded time from the [audit trail](/docs/architecture/audit-trails) for everything, and full bitemporal tables only where a retroactive correction changes money already computed.** Fowler agrees that if you can avoid bitemporal history, "that's usually preferable." Payroll, interest accrual, insurance premiums and commissions are where you can't.
+My default: **valid time on the handful of values that change on a schedule, recorded time from the [audit trail](/docs/building-blocks/audit-trails) for everything, and full bitemporal tables only where a retroactive correction changes money already computed.** Fowler agrees that if you can avoid bitemporal history, "that's usually preferable." Payroll, interest accrual, insurance premiums and commissions are where you can't.
 
 ## Effective-Dated Rows
 
@@ -101,7 +101,7 @@ VALUES ($1, $2, 1499, 'USD', tstzrange($4, NULL));
 COMMIT;
 ```
 
-If a later row already exists (a sale price scheduled for next week), the new row ends where that one starts instead of running open-ended; the exclusion constraint rejects the insert otherwise, which is the point. Run the change at an isolation level that can't interleave with another editor ([Transactions & Concurrency](/docs/database/transactions-and-concurrency)), and write an [audit entry](/docs/architecture/audit-trails) in the same transaction with who changed it and why.
+If a later row already exists (a sale price scheduled for next week), the new row ends where that one starts instead of running open-ended; the exclusion constraint rejects the insert otherwise, which is the point. Run the change at an isolation level that can't interleave with another editor ([Transactions & Concurrency](/docs/database/transactions-and-concurrency)), and write an [audit entry](/docs/building-blocks/audit-trails) in the same transaction with who changed it and why.
 
 Rows whose period has started are history. Fixing a past value in place, without recorded time, is how a disputed invoice ends up "proving" a price nobody charged. A correction to the past is either a new effective-dated change plus an audit entry that says it was retroactive, or, where money was already computed from the old value, a bitemporal correction.
 
@@ -144,7 +144,7 @@ CREATE TABLE plan_versions (
 
 Fowler's **snapshot** is "a view of an object at a point in time" ([Snapshot](https://martinfowler.com/eaaDev/Snapshot.html)). In a schema, it's copying the values you used at the moment of the fact, rather than pointing at something that can change.
 
-Reference a version ID when the version is immutable and yours. Copy the values when the source is mutable or someone else's: a tax rate from a provider, an exchange rate, a vendor's product label, a credential that will be renewed. And copy anyway for documents that stand on their own: an invoice line carries its amount, currency, discount and tax even though it also names the price version, because the invoice is what the customer received. [Audit Trails](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you) covers what to snapshot and storing documents once by content hash.
+Reference a version ID when the version is immutable and yours. Copy the values when the source is mutable or someone else's: a tax rate from a provider, an exchange rate, a vendor's product label, a credential that will be renewed. And copy anyway for documents that stand on their own: an invoice line carries its amount, currency, discount and tax even though it also names the price version, because the invoice is what the customer received. [Audit Trails](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you) covers what to snapshot and storing documents once by content hash.
 
 ## Recorded Time and Corrections
 

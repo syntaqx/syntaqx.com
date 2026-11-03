@@ -44,7 +44,7 @@ Field service adds a channel software companies lack: **the technician**, who se
 - **The technician isn't a debt collector.** The prompt is "there's a balance on the account; want to take care of it now?", not pressure at the door. Scripted wording, no threats about stopping service unless the policy says so, and nothing collected in cash without a receipt.
 - **Commercial accounts are different.** A facilities client paying net 30 through its accounts-payable portal isn't delinquent on day 31; dunning for commercial accounts follows the purchase order's terms and goes to the AP contact, not the site manager the technician meets.
 
-Notices go out through the outbound gate under the `collections` purpose ([Notifications & Consent](/docs/architecture/notifications#purpose-decides-everything)), which keeps them separate from marketing opt-outs; calling hours and consent are in [Calls, Texts & Email](/docs/compliance/consumer-contact). A business collecting its own debt in its own name is generally not a federal "debt collector" (below), but borrowing Regulation F's conventions costs nothing, and state collection laws don't always follow the federal definition. California's Rosenthal Act is the usual example: it defines a debt collector as anyone who regularly collects debts "on behalf of that person or others," so a business collecting its own residential accounts in California is a debt collector under it.
+Notices go out through the outbound gate under the `collections` purpose ([Notifications & Consent](/docs/building-blocks/notifications#purpose-decides-everything)), which keeps them separate from marketing opt-outs; calling hours and consent are in [Calls, Texts & Email](/docs/compliance/consumer-contact). A business collecting its own debt in its own name is generally not a federal "debt collector" (below), but borrowing Regulation F's conventions costs nothing, and state collection laws don't always follow the federal definition. California's Rosenthal Act is the usual example: it defines a debt collector as anyone who regularly collects debts "on behalf of that person or others," so a business collecting its own residential accounts in California is a debt collector under it.
 
 ## Holding Service for Non-Payment
 
@@ -111,7 +111,7 @@ Saves must be recorded as carefully as sales: the request, the offer, who made i
 
 **Win-back** is selling to former customers. Keeping the ended record makes it measurable: ServiceTitan keeps a canceled membership on file so it can be reactivated if the customer returns, FieldRoutes reports reinstated subscriptions with the days between cancellation and return, and Jobber lists a client re-engagement report among its client reports.
 
-Win-back campaigns are marketing, so they need consent under the `marketing` purpose ([Notifications & Consent](/docs/architecture/notifications#the-consent-ledger)), and a former customer who said stop must not be messaged. Segment by reason: a customer who left over price can take an offer; one who left over a damaged lawn needs an apology first; one who moved is a lead at the property they left, whose new owner the platform can reach ([Customers, Accounts & Properties](/books/field-operations/customers-and-properties)). A reinstatement should link to the original customer and its history rather than create a new account, so retention reports see a return, not a new sale. Win-back is one of the existing-customer campaigns in [Marketing to Existing Customers](/books/field-operations/marketing-and-lead-sources#marketing-to-existing-customers), which covers suppression and attributing them as retention.
+Win-back campaigns are marketing, so they need consent under the `marketing` purpose ([Notifications & Consent](/docs/building-blocks/notifications#the-consent-ledger)), and a former customer who said stop must not be messaged. Segment by reason: a customer who left over price can take an offer; one who left over a damaged lawn needs an apology first; one who moved is a lead at the property they left, whose new owner the platform can reach ([Customers, Accounts & Properties](/books/field-operations/customers-and-properties)). A reinstatement should link to the original customer and its history rather than create a new account, so retention reports see a return, not a new sale. Win-back is one of the existing-customer campaigns in [Marketing to Existing Customers](/books/field-operations/marketing-and-lead-sources#marketing-to-existing-customers), which covers suppression and attributing them as retention.
 
 ## Churn Metrics
 
@@ -119,7 +119,7 @@ Churn definitions (logo and agreement churn, cohorts, the churn types and what's
 
 ## How to Build It
 
-Model delinquency on the account, not on each invoice, with an explicit state machine. The policy days (past due to hold, hold to write-off, write-off to placement), late fee rules and "collect before service" are per-tenant rules with effective dates, stored as data ([Rules as Data](/docs/architecture/rules-as-data)). The tables extend the canonical `accounts` and `agreements` from [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model):
+Model delinquency on the account, not on each invoice, with an explicit state machine. The policy days (past due to hold, hold to write-off, write-off to placement), late fee rules and "collect before service" are per-tenant rules with effective dates, stored as data ([Rules as Data](/docs/building-blocks/rules-as-data)). The tables extend the canonical `accounts` and `agreements` from [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model):
 
 ```sql
 CREATE TABLE account_collections (
@@ -166,7 +166,7 @@ Build or buy: retries and dunning emails come almost free from the processor or 
 
 ## Auditing
 
-Collections and cancellations are where consumer complaints, regulator inquiries and lawsuits start, and the record is the defense. The general design is in [Audit Trails](/docs/architecture/audit-trails), and field records are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). For field collections, make sure the record shows:
+Collections and cancellations are where consumer complaints, regulator inquiries and lawsuits start, and the record is the defense. The general design is in [Audit Trails](/docs/building-blocks/audit-trails), and field records are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). For field collections, make sure the record shows:
 
 - **Every collection-state transition** with the rule version or person that caused it and the balance at that moment, including the notices sent before service was held. That's the proof the customer was told before the truck stopped coming.
 - **Collection stops** (dispute, bankruptcy notice) with the document received, who set and cleared the stop, and every path that honored it.

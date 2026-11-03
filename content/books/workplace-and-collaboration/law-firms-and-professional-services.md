@@ -196,9 +196,9 @@ CREATE TABLE timekeeper_rates (               -- most specific row wins: matter,
 How it runs:
 
 1. **Every matter row has a container,** created in the same transaction, so permissions, retention and audit work on matters with no special cases. Matter-specific screens and closing rules come from the next chapter.
-2. **Parties are the firm's universe,** not just clients: adverse parties, related companies and opposing counsel all get rows, because conflict search runs over them. Duplicates are merged with a recorded, reversible merge ([Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible)).
+2. **Parties are the firm's universe,** not just clients: adverse parties, related companies and opposing counsel all get rows, because conflict search runs over them. Duplicates are merged with a recorded, reversible merge ([Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible)).
 3. **A timekeeper is not a member.** A contract attorney or an expert billed through the firm can be a timekeeper without an account; a member who leaves keeps their timekeeper history.
-4. **Rates are dated rows** resolved at the time the work was done, never the rate in effect when the bill is printed ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)). Money is integer minor units ([Integer Minor Units](/docs/money/amounts#integer-minor-units)).
+4. **Rates are dated rows** resolved at the time the work was done, never the rate in effect when the bill is printed ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)). Money is integer minor units ([Integer Minor Units](/docs/money/amounts#integer-minor-units)).
 5. **Matter status changes are audit events** with the actor and the reason, because opening and closing a matter have legal effect.
 
 ## Auditing
@@ -206,7 +206,7 @@ How it runs:
 - **Matter lifecycle.** Who opened, who approved, when, linked to the conflict check that cleared it; who closed it and which retention policy it went under.
 - **Client and party changes.** Merges and renames of parties, with the before and after, because a conflict check's result depends on the party data at the time it ran.
 - **Rate changes.** Every new rate row, who entered it, and whether the change was communicated to the client (Model Rule 1.5(b) requires changes in the basis or rate to be communicated).
-- **Vendor and subprocessor decisions.** The firm's record of which systems hold client information and the review done before adopting them, which is the evidence a firm needs under Rules 1.6(c) and 5.3 ([Audit Trails](/docs/architecture/audit-trails#what-a-record-holds)).
+- **Vendor and subprocessor decisions.** The firm's record of which systems hold client information and the review done before adopting them, which is the evidence a firm needs under Rules 1.6(c) and 5.3 ([Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds)).
 
 ## What This Means for the System You Build
 

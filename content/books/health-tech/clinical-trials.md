@@ -161,7 +161,7 @@ Design notes:
 - **The subject number is the boundary.** Sponsors, CROs and EDC see `subject_number`; only the site's tenant maps it to `patient_id`. A platform serving both sides keeps the link in the site's tenant and never lets the sponsor tenant join to it ([Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies)).
 - **Consent is versioned and gating.** No study procedure may be recorded for a subject before a signed main consent on the IRB-approved version current at the time; a reconsent requirement blocks visits until it is signed.
 - **Obligations are data.** Who registers, who reports safety, who monitors: stored per study from the transfer-of-obligations document, so reminders and audits route to the right party.
-- **Deadlines are computed.** Registration (21 days after first enrollment), results (1 year after primary completion), IND annual reports (60 days after the anniversary) and retention (2 years after approval or discontinuation) are stored with the rule that set them ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Deadlines are computed.** Registration (21 days after first enrollment), results (1 year after primary completion), IND annual reports (60 days after the anniversary) and retention (2 years after approval or discontinuation) are stored with the rule that set them ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Auditing
 
@@ -171,7 +171,7 @@ FDA inspects sites (bioresearch monitoring) and sponsors; the questions are alwa
 - **Delegation and qualification:** the 1572, the delegation of authority log, training records and CVs for everyone who performed study tasks, including decentralized vendors.
 - **IRB history:** approvals, amendments, continuing reviews and the documents approved.
 - **Registration and results:** what was posted to ClinicalTrials.gov and when, against the deadlines.
-- **Retention:** trial records held until the retention clock has run, regardless of the site's ordinary medical record schedule ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+- **Retention:** trial records held until the retention clock has run, regardless of the site's ordinary medical record schedule ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 
 ## What This Means for the System You Build
 

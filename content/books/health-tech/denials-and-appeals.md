@@ -247,7 +247,7 @@ WHERE c.organization_id = $1
 
 Design notes:
 
-- **Every deadline is computed once and stored** with the rule that produced it: appeal windows from receipt dates, records request due dates, overpayment suspension and return dates ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Every deadline is computed once and stored** with the rule that produced it: appeal windows from receipt dates, records request due dates, overpayment suspension and return dates ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Appeals chain.** Each level points to the next, so a claim's whole dispute history is one walk, and the evidence submitted at each level is fixed.
 - **Classification is data:** CARC, RARC and group to category and stage, dated, so the categories can be tuned without code changes.
 - **Recoupments and denials share the appeal path,** since both are appealable payer decisions.

@@ -40,7 +40,7 @@ A budget turns "keep it fast" into a check that fails:
 
 - **JavaScript size** per route, compressed. The first budget to set, because it's the most common regression.
 - **Lab metrics** on key pages with [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci), asserting LCP, CLS and total blocking time stay under thresholds.
-- **A new dependency** has to fit the budget, or something else gets removed. See [Dependencies & Upgrades](/docs/engineering/dependencies).
+- **A new dependency** has to fit the budget, or something else gets removed. See [Dependencies & Upgrades](/docs/development/dependencies).
 
 Set budgets from where you are today, then tighten them. A budget nobody can meet gets ignored.
 

@@ -127,7 +127,7 @@ CREATE TABLE match_interventions (
 );
 ```
 
-`inputs` needs a deterministic simulation and its build; `state` is the snapshot stream a non-deterministic server sends a spectator, larger but replayable after a patch; `video` survives everything and can't be explored. The replay columns an input recording needs (seed, keyframes, checksums, verification) are added in [Replays and Spectating](/books/gaming/determinism-and-rollback#replays-and-spectating). My rule: a match has one recordings table, whoever reads it (support, moderation, telemetry, esports), and its retention is set per kind and purpose ([Data Retention](/docs/architecture/data-retention)).
+`inputs` needs a deterministic simulation and its build; `state` is the snapshot stream a non-deterministic server sends a spectator, larger but replayable after a patch; `video` survives everything and can't be explored. The replay columns an input recording needs (seed, keyframes, checksums, verification) are added in [Replays and Spectating](/books/gaming/determinism-and-rollback#replays-and-spectating). My rule: a match has one recordings table, whoever reads it (support, moderation, telemetry, esports), and its retention is set per kind and purpose ([Data Retention](/docs/building-blocks/data-retention)).
 
 ## Broadcast and Remote Production
 
@@ -162,7 +162,7 @@ A publisher decides who may run tournaments for its game and on what terms. Valv
 - **Publication.** Prize pools, all other compensation and disqualification rules are published, on a platform that preserves edit history or is independently archived, with announcement deadlines (for Tier 1 events after 2026, at least 22 months before the main event).
 - **Conflicts of interest.** Operators and their staff may not have business relationships with participants (shared ownership, management, licensing, loans) unless Valve approves and the relationship is publicly disclosed.
 
-Every one of those rules is checkable from data, which is the design point: an operator platform that stores rosters with membership history ([Temporal Data](/docs/database/temporal-data)), invites with the standings version they were issued from, prize tables, published rule versions with their archive links, and disclosed relationships can produce a compliance report on demand. Rules change between seasons, so keep them as versioned data with effective dates ([Rules as Data](/docs/architecture/rules-as-data)), and record which version governed each event.
+Every one of those rules is checkable from data, which is the design point: an operator platform that stores rosters with membership history ([Temporal Data](/docs/database/temporal-data)), invites with the standings version they were issued from, prize tables, published rule versions with their archive links, and disclosed relationships can produce a compliance report on demand. Rules change between seasons, so keep them as versioned data with effective dates ([Rules as Data](/docs/building-blocks/rules-as-data)), and record which version governed each event.
 
 ```sql
 CREATE TABLE tournaments (
@@ -210,7 +210,7 @@ Two published programs describe the second half, one run by a publisher and one 
 
 The parts a platform builds:
 
-- **Undelayed information is controlled.** Live observer feeds, undelayed data and venue networks are restricted to named people, and access is logged ([Audit Trails](/docs/architecture/audit-trails)). Knowing something before the market does is the raw material of betting corruption, which is why ESIC's code makes misusing or passing on inside information an offence of its own.
+- **Undelayed information is controlled.** Live observer feeds, undelayed data and venue networks are restricted to named people, and access is logged ([Audit Trails](/docs/building-blocks/audit-trails)). Knowing something before the market does is the raw material of betting corruption, which is why ESIC's code makes misusing or passing on inside information an offence of its own.
 - **Signals from the game.** Outcome-relevant actions that are statistically unusual for a player (economy decisions, deliberate deaths, a collapse in performance in one match) are flagged for investigators, the same way behavior systems flag intentional feeding in online play ([Player Behavior & Moderation](/books/gaming/player-behavior)). Flags start an investigation; they never decide one.
 - **Rulings are records.** Each ruling names the rule broken, the evidence (recordings, logs, external reports), the sanction, provisional or final status and the publication link. A competitive ruling can fall on a coach, an organization or a team, which the core `penalties` table (sanctions on an account) can't hold, so rulings get their own table and link to a penalty only when a player's account is also restricted.
 - **Disclosures are data.** Ownership, sponsorship and financial ties between operators, teams and staff are recorded with dates, because rules like Valve's make them conditions of running an event.
@@ -234,14 +234,14 @@ CREATE TABLE competitive_rulings (
 );
 ```
 
-A provisional suspension is a row with an open-ended range; the final ruling closes the range or marks the row overturned, and the history stays ([Audit Trails](/docs/architecture/audit-trails)).
+A provisional suspension is a row with an open-ended range; the final ruling closes the range or marks the row overturned, and the history stays ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## Auditing
 
 Competitive integrity is decided on records, and the records are asked for by officials, teams, publishers, betting integrity units and sometimes courts:
 
 - **Every intervention** (pause, restore, remake) is a `match_interventions` row with the official, the reason and the restore point, so a disputed restore can be replayed against the recording.
-- **Every ruling** is a `competitive_rulings` row with the rule and ruleset version, the evidence references and the status history; a provisional ruling is closed or overturned, never edited ([Audit Trails](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Every ruling** is a `competitive_rulings` row with the rule and ruleset version, the evidence references and the status history; a provisional ruling is closed or overturned, never edited ([Audit Trails](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Recordings that support a ruling** are flagged `is_retained_for_ruling`, hashed at capture (`content_sha256`), and exempt from expiry until the ruling is final, with the build kept runnable or the match converted to video.
 - **Who saw what, when.** `spectator_grants` and the `delay_seconds` and fog setting of the stream each grant was for show whether an observer or a broadcast feed could have seen information a team couldn't, which is the first question in a ghosting dispute.
 - **Data feeds** carry the match, server frame and sequence number of each event, with corrections as new events, so a betting partner's dispute about a result is answered from the same record the officials used ([Official Data Feeds](#official-data-feeds)).

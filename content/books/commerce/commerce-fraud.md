@@ -9,7 +9,7 @@ tags = ["commerce", "fraud", "bots", "account-takeover", "chargebacks"]
 
 A store is a machine that hands out goods, discounts, credits and refunds by rule, and every rule is something an attacker can run at scale. Stolen cards are the old problem and the Payments volume's subject. The commerce problems sit around the card: scripts that test card numbers through a checkout, bots that buy every pair of a limited sneaker or sit on the stock in carts so nobody else can, accounts created by the thousand to farm a first-order discount, logins stuffed with leaked passwords to drain loyalty points and gift card balances, returns of empty boxes, and real customers who keep the goods and tell their bank they never ordered them.
 
-This chapter covers those attacks and the store's defenses: card testing and how platforms throttle it, bots and inventory hoarding, sneaker and reseller bots and the BOTS Act's ticketing scope, promotion abuse, account takeover, refund and return fraud, friendly fraud, the fraud vendors as their own documentation describes them, and one decision service across the store's checkpoints. The models, signals and decision mechanics are the Payments volume's [Fraud & Risk](/books/payments/fraud-and-risk) and the playbook's [Risk Scoring](/docs/architecture/risk-scoring); chargebacks and their evidence are [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks); bot management at the edge is the Hosting & Cloud volume's [WAF, Bots & Rate Limits](/books/hosting-and-cloud/waf-bots-and-rate-limits). The chargeback guarantee at checkout is [Taking Payment in Commerce](/books/commerce/taking-payment#fraud-screening-and-chargeback-guarantees). It extends `orders` and `identity_links` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#how-to-build-it), extends the playbook's `risk_decisions`, and adds `bot_signals` and `risk_labels`.
+This chapter covers those attacks and the store's defenses: card testing and how platforms throttle it, bots and inventory hoarding, sneaker and reseller bots and the BOTS Act's ticketing scope, promotion abuse, account takeover, refund and return fraud, friendly fraud, the fraud vendors as their own documentation describes them, and one decision service across the store's checkpoints. The models, signals and decision mechanics are the Payments volume's [Fraud & Risk](/books/payments/fraud-and-risk) and the playbook's [Risk Scoring](/docs/building-blocks/risk-scoring); chargebacks and their evidence are [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks); bot management at the edge is the Hosting & Cloud volume's [WAF, Bots & Rate Limits](/books/hosting-and-cloud/waf-bots-and-rate-limits). The chargeback guarantee at checkout is [Taking Payment in Commerce](/books/commerce/taking-payment#fraud-screening-and-chargeback-guarantees). It extends `orders` and `identity_links` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and [Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#how-to-build-it), extends the playbook's `risk_decisions`, and adds `bot_signals` and `risk_labels`.
 
 ## How the Vendors Do It
 
@@ -64,7 +64,7 @@ How the platforms throttle it: Shopify Payments has integrated card testing prot
 
 ## Bots and Inventory Hoarding
 
-Inventory hoarding uses the store's own fairness against it. If stock is reserved when it enters a cart, a bot that adds the last thousand units to a thousand carts has made them unavailable to everyone else for as long as the reservation lasts, then lets them go (or doesn't, and renews them). The rule from [Reservations](/books/commerce/inventory#reservations) is the defense: no reservation in the cart, a short one at checkout with an expiry enforced on read, and commitment at order. Where a reservation is necessary, the playbook's caps apply: a limit per customer, device and payment fingerprint on concurrent holds, and holds that can't be renewed indefinitely ([Caps and Abuse](/docs/architecture/reservations-and-holds#caps-and-abuse)).
+Inventory hoarding uses the store's own fairness against it. If stock is reserved when it enters a cart, a bot that adds the last thousand units to a thousand carts has made them unavailable to everyone else for as long as the reservation lasts, then lets them go (or doesn't, and renews them). The rule from [Reservations](/books/commerce/inventory#reservations) is the defense: no reservation in the cart, a short one at checkout with an expiry enforced on read, and commitment at order. Where a reservation is necessary, the playbook's caps apply: a limit per customer, device and payment fingerprint on concurrent holds, and holds that can't be renewed indefinitely ([Caps and Abuse](/docs/building-blocks/reservations-and-holds#caps-and-abuse)).
 
 Bots that do buy are a traffic problem first. Nike says bot attacks "can make up about 10%-50% of all entries" on a popular SNKRS launch and that it stops as many as 12 billion bot calls a month. Shopify's checkout bot protection, a "fairness control" that blocks known bots, shows what a platform offers: the merchant picks reCAPTCHA or hCaptcha, the setting that stops bots auto-completing checkout is on by default, and a scheduled protection event (up to 60 minutes, all products or up to 500 selected) can run with a flash sale; it is available only on Shopify Plus, through Plus Support. Its flash sale guidance adds an operational point: shipping apps "typically perform poorly during extremely high volume events," so flat rates replace live rate calls for the sale.
 
@@ -88,7 +88,7 @@ Enforcement has grown from a first case to a priority:
 For sneakers, consoles, graphics cards and collectibles there is no federal equivalent as of October 2026: the bill to extend the BOTS Act's approach to retail goods, the Stopping Grinch Bots Act of 2025 (H.R. 6822 and S. 3516, both introduced December 17, 2025), was referred to committee in each chamber with no further action as of October 2026. A retailer's purchase limit is therefore a term of sale it enforces itself, which shapes the system:
 
 - **Publish the limit and the consequence.** "Two per customer; orders over the limit or placed by automated means may be cancelled" in the product's terms is what makes a cancellation a policy decision rather than an unexplained refusal ([Online Consumer Protection](/books/commerce/online-consumer-protection)).
-- **Count against people, not accounts.** A limit per account is a limit per email address; the check reads `identity_links` (shared cards, addresses, devices, phones) so 49 accounts at one address are one buyer ([Record Linkage](/docs/architecture/record-linkage)).
+- **Count against people, not accounts.** A limit per account is a limit per email address; the check reads `identity_links` (shared cards, addresses, devices, phones) so 49 accounts at one address are one buyer ([Record Linkage](/docs/building-blocks/record-linkage)).
 - **Decide before shipping.** A limit violation found after the order is a cancellation and a refund inside the authorization window, not a recall of a shipped parcel.
 
 ## Promotion Abuse
@@ -119,7 +119,7 @@ What a store-wide fraud system adds is one decision at each refund point, made o
 
 - **At the return request:** the customer's return rate and value, linked accounts' history, the item's category and the policy, banded into instant refund, refund on first scan, refund on receipt, or refund after inspection ([Returns & Exchanges](/books/commerce/returns-and-exchanges#how-to-build-it) stores the decision on `returns.risk_decision_id`).
 - **At a "not received" or "missing item" claim:** the carrier's delivery scan and photo, the address's claim history and the customer's, before a replacement or refund ([Refunds, Missing Items & Fraud](/books/commerce/refunds-and-delivery-fraud#how-to-build-it) stores it on `order_issues.risk_decision_id`).
-- **At inspection:** a mismatch is the label, arriving days or weeks later, for both the return model and the customer's history ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)).
+- **At inspection:** a mismatch is the label, arriving days or weeks later, for both the return model and the customer's history ([Labels Arrive Late](/docs/building-blocks/risk-scoring#labels-arrive-late)).
 
 Limiting serial abusers is a published policy with consumer-law exposure, not a silent decline; the decision record and the policy version are what make it defensible.
 
@@ -137,20 +137,20 @@ For the system, friendly fraud defense is evidence kept from the start: the logi
 
 ## Decisions Across the Store
 
-A store has more checkpoints than a payment does, and each is the same kind of decision with the same outcomes (allow, challenge, review, block) and the same record ([The Decision Record](/docs/architecture/risk-scoring#the-decision-record)):
+A store has more checkpoints than a payment does, and each is the same kind of decision with the same outcomes (allow, challenge, review, block) and the same record ([The Decision Record](/docs/building-blocks/risk-scoring#the-decision-record)):
 
 | Checkpoint | Typical signals | Typical outcomes | Fails |
 | --- | --- | --- | --- |
 | Account creation | Device, email and phone reputation, velocity from one cluster | Allow; challenge; block | Open, with offers withheld until a first good order |
 | Login | Device, IP, breached credential, velocity | Allow; step-up; block | Open with step-up |
 | Add payment method, card setup | Card testing velocity, account age | Allow; CAPTCHA; block | Closed (setup can wait) |
-| Checkout, before authorization | The payment volume's signals, order shape, linked identities, purchase limits | Allow; 3-D Secure; review; block | Open with local rules for low value ([When the Scorer Is Down](/docs/architecture/risk-scoring#when-the-scorer-is-down)) |
+| Checkout, before authorization | The payment volume's signals, order shape, linked identities, purchase limits | Allow; 3-D Secure; review; block | Open with local rules for low value ([When the Scorer Is Down](/docs/building-blocks/risk-scoring#when-the-scorer-is-down)) |
 | Before capture or release to the warehouse | Issuer results, address change since screening, guarantee vendor's decision | Release; hold; cancel | Hold |
 | Promotion redemption | Linked identities, prior redemptions | Grant; deny | Deny the offer, keep the order |
 | Return request, refund | Return and claim history, linked accounts, item value | Instant; on scan; on receipt; after inspection | Slowest band |
 | Gift card balance check, redemption | Velocity per session and card range | Allow; challenge; block | Closed |
 
-Two design rules come from running these together. **One identity graph:** `identity_links` is shared by every checkpoint, so a device that farmed a promotion is known at checkout and at the returns portal. **One label stream:** chargebacks, early fraud warnings, return inspection mismatches, issue disputes won by the merchant and customer takeover reports all land as labels on the decisions they judge, so each model learns from every outcome, late ([Holdouts](/docs/architecture/risk-scoring#holdouts) keeps a sample of borderline traffic unblocked so blocked decisions get labels too).
+Two design rules come from running these together. **One identity graph:** `identity_links` is shared by every checkpoint, so a device that farmed a promotion is known at checkout and at the returns portal. **One label stream:** chargebacks, early fraud warnings, return inspection mismatches, issue disputes won by the merchant and customer takeover reports all land as labels on the decisions they judge, so each model learns from every outcome, late ([Holdouts](/docs/building-blocks/risk-scoring#holdouts) keeps a sample of borderline traffic unblocked so blocked decisions get labels too).
 
 ## How to Build It
 
@@ -236,7 +236,7 @@ Design notes:
 - **Bot signals are observations, not verdicts.** The edge's score, a CAPTCHA pass, a queue token and a velocity hit are inputs a decision reads; storing them per session lets a later chargeback be traced back to a session that looked like a script.
 - **Labels are typed.** Fraud, abuse, first-party misuse and legitimate are different outcomes; collapsing them makes a card-fraud model decline friendly-fraud customers it should have challenged.
 - **Hash what you only match.** Card fingerprints, addresses, devices and phones are compared for equality, so `identity_links` and `bot_signals` store hashes, which keeps them out of card data scope ([Sensitive Payment Data](/docs/security/sensitive-data)).
-- **Limits are rules with a policy reference.** The purchase limit and its window are versioned rules ([Rules as Data](/docs/architecture/rules-as-data)), and a cancellation for a limit violation records the policy text it enforced.
+- **Limits are rules with a policy reference.** The purchase limit and its window are versioned rules ([Rules as Data](/docs/building-blocks/rules-as-data)), and a cancellation for a limit violation records the policy text it enforced.
 
 ## Auditing
 

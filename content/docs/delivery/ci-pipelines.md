@@ -27,7 +27,7 @@ Parallelism costs setup: every job installs dependencies on its own, so splittin
 ## Secure
 
 - **Least privilege.** Workflows default to `permissions: contents: read` and request more per job.
-- **Third-party actions pinned to a full commit SHA,** because a tag can be moved by whoever compromises its owner. See [Dependencies & Upgrades](/docs/engineering/dependencies#supply-chain).
+- **Third-party actions pinned to a full commit SHA,** because a tag can be moved by whoever compromises its owner. See [Dependencies & Upgrades](/docs/development/dependencies#supply-chain).
 - **No secrets for fork pull requests.** A fork's PR runs code anyone wrote; `pull_request_target` checking out the fork's branch with your secrets is the classic ["pwn request"](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/). Jobs that need secrets run only on trusted events, with secrets scoped per [environment](/docs/operations/environments).
 
 ## Delivery vs. Deployment
@@ -46,7 +46,7 @@ One change per deploy means one place to look and a revert that undoes exactly o
 
 Deploying puts code in production; releasing puts a feature in front of users. "This feature isn't ready" isn't an objection, because unready code can be in production as long as nobody can reach it: it ships dark behind a [feature flag](/docs/delivery/feature-flags) and rolls out progressively, and [schema changes stay backward compatible](/docs/database/zero-downtime-migrations) so each deploy works alongside the previous one.
 
-Continuous deployment is the result of good practice, not a substitute for it. Before turning it on you need: CI you trust; small pull requests on short-lived branches ([Commits, PRs & Code Review](/docs/engineering/commits-and-reviews)); a preview deployment of every change; [observability](/docs/observability/overview) that alerts on its own; and a one-step rollback that's been practiced.
+Continuous deployment is the result of good practice, not a substitute for it. Before turning it on you need: CI you trust; small pull requests on short-lived branches ([Commits, PRs & Code Review](/docs/development/commits-and-reviews)); a preview deployment of every change; [observability](/docs/observability/overview) that alerts on its own; and a one-step rollback that's been practiced.
 
 Some releases genuinely need a human gate: app store submissions ([Mobile Releases](/docs/delivery/mobile-releases)), software on customers' machines, regulated changes needing a recorded sign-off. You can't take those back quickly, or someone outside the team must approve. Use continuous delivery there, with the gate as thin as the rules allow. For a web service you run yourself, a manual gate mostly adds a person who can't tell a safe change from an unsafe one any better than the tests can. [Release Readiness](/docs/quality/release-readiness) covers what those gates check.
 

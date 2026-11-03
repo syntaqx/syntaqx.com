@@ -90,7 +90,7 @@ The old system's data is still a medical record, and how long it must be kept is
 - **States set record retention, and it varies.** Florida, for example, requires a physician to keep records at least five years from the last patient contact and, on closing or relocating a practice, to publish notice for four consecutive weeks of where records can be obtained (Fla. Admin. Code 64B8-10.002). Dental, optometry, therapy and veterinary boards each set their own periods, and rules for minors' records may run longer.
 - **Federal programs add theirs.** Hospitals participating in Medicare keep records "for a period of at least 5 years" (42 CFR 482.24(b)(1)); payer contracts and Medicare Advantage participation can require longer.
 - **Access rights reach the archive.** Records maintained "by or for" the practice remain in the designated record set, so a patient's request for their records includes what's still in the old system, and the practice has to be able to produce it within the right of access deadlines ([HIPAA in Practice](/books/health-tech/hipaa-in-practice#the-right-of-access) covers them).
-- **The longest applicable period wins,** per record type, as in [Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type).
+- **The longest applicable period wins,** per record type, as in [Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type).
 
 ## Archives
 
@@ -177,7 +177,7 @@ Design notes:
 - **The gap list is signed before the final.** `gaps_acknowledged_by` and the source pipeline's published list are what a later dispute is settled against.
 - **`ledger_entries.migration_batch_id`** is a column this check assumes on the core model's ledger, so converted opening balances are distinguishable from live postings for as long as the account exists.
 - **Retention dates are computed, not typed.** `retain_until` comes from the retention rules for each location's state and record type, and the latest date of service; an archive for a pediatric practice runs longer than one for an adult practice.
-- **Destruction is two steps.** An archive reaches `retain_until`, a person approves destruction, and the destruction is recorded; nothing deletes on a timer alone ([Retention Windows](/docs/architecture/data-retention#retention-windows)).
+- **Destruction is two steps.** An archive reaches `retain_until`, a person approves destruction, and the destruction is recorded; nothing deletes on a timer alone ([Retention Windows](/docs/building-blocks/data-retention#retention-windows)).
 - **Emit `conversion.test_ready`, `conversion.live`, `conversion.reconciled` and `legacy_archive.destroyed`.**
 
 ## Auditing

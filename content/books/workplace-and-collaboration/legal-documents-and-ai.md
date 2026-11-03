@@ -118,7 +118,7 @@ For a product, the lesson is that verification is a feature:
 - **Every citation in generated text links to the source** in the tool's corpus, and a citation that doesn't resolve is marked unverified, not silently dropped.
 - **Quoted language is checked against the source** text, because Mata's fake opinions came with fake quotes.
 - **A filing workflow records verification:** who checked each authority, against what, when. That record is the evidence of the "gatekeeping role" the court described.
-- **Model output is labeled** as generated in the document's history, so a reviewer knows which passages need checking ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Model output is labeled** as generated in the document's history, so a reviewer knows which passages need checking ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 
 ## Privilege
 
@@ -240,7 +240,7 @@ How it runs:
 
 ## Auditing
 
-- **Document access:** every open, download, share and export of a matter document, by whom and through which client (web, desktop, API, AI tool), with walled-matter access attempts called out ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Document access:** every open, download, share and export of a matter document, by whom and through which client (web, desktop, API, AI tool), with walled-matter access attempts called out ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Email filing:** what was filed where, by whom, by which method, and corrections of misfiled messages.
 - **AI use:** the tool, the user, the matter, the documents retrieved, whether consent or a prohibition applied, and the output stored, so the firm can show its supervision under Opinion 512.
 - **Citation verification:** each authority in a generated draft, its resolution and who checked it before filing.

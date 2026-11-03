@@ -11,7 +11,7 @@ Most products that children can reach never set out to serve them. A game is rat
 
 Three ideas run through every regime in this chapter. **Know enough about age to apply the right rules,** and no more. **Get a parent involved before the risky things happen,** not after. **Collect and keep less from children** than you would from adults, with protective settings on by default. The rest is detail, and the detail changes: the US children's privacy rule was amended in 2025, the UK's age-check duties came into force in 2025, and US states began imposing age checks on app stores in 2026. Dates below are as of October 2026.
 
-This describes how the rules shape a system. It isn't legal advice; which rules reach your product depends on its audience, features and markets, which is a question for counsel. The general privacy machinery (lawful bases, data subject rights, erasure) is in [GDPR & Privacy](/docs/compliance/gdpr) and [Data Retention & Deletion](/docs/architecture/data-retention); this chapter covers what changes when the person is a child.
+This describes how the rules shape a system. It isn't legal advice; which rules reach your product depends on its audience, features and markets, which is a question for counsel. The general privacy machinery (lawful bases, data subject rights, erasure) is in [GDPR & Privacy](/docs/compliance/gdpr) and [Data Retention & Deletion](/docs/building-blocks/data-retention); this chapter covers what changes when the person is a child.
 
 ## Which Rules Apply
 
@@ -169,7 +169,7 @@ Children's data is a liability with a clock on it. The rules converge on the sam
 - **Defaults off.** Profiling, precise geolocation, public profiles and open chat with strangers start off for children (the Children's Code; the DSA guidelines' "private by default"). The FTC's orders in games went further and required chat to be off by default for children and teens ([Ratings, Age & Children](/books/gaming/ratings-and-age)).
 - **No behavioral ads.** Contextual ads and frequency capping fall within COPPA's internal operations; behavioral ads to a known child need separate consent, and the DSA bars profiling-based ads to known minors. In practice, ad stacks for child users should be contextual only, configured per user, not per app.
 - **Keep the outcome, delete the evidence.** COPPA's ID and photo-ID consent methods require deleting the ID and images promptly after verification. Apply that to every age check: keep the band, method, vendor reference and date; delete the selfie, the document image and the raw birth date if you only need a band.
-- **A retention schedule per data type,** published, with automatic deletion ([Data Retention & Deletion](/docs/architecture/data-retention#retention-schedules-by-record-type)). "Until the account is closed" is not a schedule for a child who stops playing at nine and never closes the account; inactive child accounts need their own clock.
+- **A retention schedule per data type,** published, with automatic deletion ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-schedules-by-record-type)). "Until the account is closed" is not a schedule for a child who stops playing at nine and never closes the account; inactive child accounts need their own clock.
 - **Third parties under contract.** COPPA requires written assurances from service providers that receive children's data (312.8(c)); an SDK you embed is a service provider or a third party, and you need to know which.
 
 ## How to Build It
@@ -211,10 +211,10 @@ Decisions behind it:
 
 - **Consent is per scope.** COPPA separates collection from third-party disclosure; Utah separates downloads and purchases from significant changes; products separate chat. A single "parent approved" flag can't express "yes to the account, no to advertisers," and that's the combination the 2025 amendments are built around.
 - **The method is recorded** so you can show the consent was verifiable, and so a method that loses its eligibility (email plus, once you start disclosing data) can be found and re-consented.
-- **Revocation ends the range, it doesn't delete the row.** Apple's `RESCIND_CONSENT`, a parent's request through support and an operator's own decision all close `valid_during` with who did it. The consent record itself is evidence you'll need later ([Audit Trails](/docs/architecture/audit-trails)).
+- **Revocation ends the range, it doesn't delete the row.** Apple's `RESCIND_CONSENT`, a parent's request through support and an operator's own decision all close `valid_during` with who did it. The consent record itself is evidence you'll need later ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **The band is derived, not stored on the account.** A view or service computes the effective band from the latest signals with the lowest-wins rule, and every decision records which signals it used.
 
-The policy is data, not code: a table of rules keyed by jurisdiction and band, effective-dated, that say what each feature does (off, on with consent, on), because the dates in this chapter will keep moving ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)). A sketch of the evaluation:
+The policy is data, not code: a table of rules keyed by jurisdiction and band, effective-dated, that say what each feature does (off, on with consent, on), because the dates in this chapter will keep moving ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)). A sketch of the evaluation:
 
 ```text
 can_use(account, feature, now):
@@ -232,7 +232,7 @@ Treating "unknown" as the youngest band is what makes the gate fail safe: a miss
 Three flows need care:
 
 1. **Significant changes.** Adding purchases, ads, chat or new data collection is a significant change under Utah's definition, and a material change requiring fresh consent under COPPA. Make it a release checklist item that creates a consent requirement, so the feature stays off for child accounts until consent arrives, rather than a legal review after launch.
-2. **Revocation and deletion.** When consent is revoked, stop the processing it covered, and if the parent asks, delete the child's data, including in analytics, backups on their schedule and any third party you disclosed to ([Data Retention & Deletion](/docs/architecture/data-retention#erasure-requests)).
+2. **Revocation and deletion.** When consent is revoked, stop the processing it covered, and if the parent asks, delete the child's data, including in analytics, backups on their schedule and any third party you disclosed to ([Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-requests)).
 3. **Aging up.** A child turns 13, 16 or 18. Re-evaluate on the date, offer the new choices to the user (and in some regimes the parent), and don't silently switch on what was off: the defaults that protected them are now their own settings to change.
 
 ## Checklist

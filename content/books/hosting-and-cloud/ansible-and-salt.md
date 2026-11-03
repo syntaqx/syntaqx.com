@@ -149,7 +149,7 @@ HAVING MAX(cr.started_at) IS NULL OR MAX(cr.started_at) < NOW() - INTERVAL '7 da
 
 ## Auditing
 
-- **Who ran what against which machines.** Every job with its actor, playbook or state commit, execution environment, inventory and target pattern, and every host's result; for event-driven runs, the event that triggered it ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Who ran what against which machines.** Every job with its actor, playbook or state commit, execution environment, inventory and target pattern, and every host's result; for event-driven runs, the event that triggered it ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 - **Ad hoc commands.** `ansible` and `salt` one-liners change machines as surely as playbooks do; run them through the platform so they are recorded, or treat a host touched outside it as drifted.
 - **Check-mode evidence.** A check run's output before a change, and the real run's after, kept with the change request.
 - **Key acceptance.** Every Salt minion key accepted, by whom or by which reactor, and when; a key accepted by a rule is a machine trusted by a rule.

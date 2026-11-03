@@ -216,7 +216,7 @@ Unclaimed property audits look back many years, often across every state at once
 - **Every closure's reason code, policy, decider and notice,** with confidential reasons access-controlled and still retained.
 - **The dates of death, knowledge and agency notice,** and every reclamation with the balance on receipt, the amount returned and the certifications.
 
-The general retention and append-only rules are in [Data Retention](/docs/architecture/data-retention#retention-schedules-by-record-type) and [Audit Trails](/docs/architecture/audit-trails#amend-don-t-overwrite).
+The general retention and append-only rules are in [Data Retention](/docs/building-blocks/data-retention#retention-schedules-by-record-type) and [Audit Trails](/docs/building-blocks/audit-trails#amend-don-t-overwrite).
 
 ## What This Means for the System You Build
 

@@ -266,7 +266,7 @@ CREATE TABLE employee_repayments (         -- money the employee owes back
 Design notes:
 
 - **Resolve rates by the date of travel, store the result.** A mileage trip records the rate row it used and both the paid and standard per-mile figures, so a 2026 audit can see 72.5 cents on June 24 and 76 cents on July 14 without replaying the rate table. A rate table correction is a new row, never an update to an old one.
-- **Clocks are columns.** Substantiate-by and return-by dates are computed from the plan when an item is created and stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)); a nightly job moves items past their dates to taxable and emits `reimbursement.taxable_due` to the payroll export.
+- **Clocks are columns.** Substantiate-by and return-by dates are computed from the plan when an item is created and stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)); a nightly job moves items past their dates to taxable and emits `reimbursement.taxable_due` to the payroll export.
 - **Accountable and taxable are separate amounts on every item.** The payroll route gets both, the ACH route only the accountable part, and year-end W-2 inputs are a sum over `reimbursement_items.taxable` by employee and year, which already includes each trip's and day's taxable excess.
 - **Paid once.** The partial unique index stops an expense (and so the trips and per diem days behind it) from appearing on two payouts, and moves the expense to `reimbursed`, and the payout's idempotency key (employee, run, attempt) stops a retried ACH from sending twice ([Idempotency](/docs/requests/idempotency)). A returned ACH reopens the expenses for the next run instead of creating new ones.
 - **The per diem method lives on the plan year.** `accountable_plans.per_diem_method` and `q4_rates` enforce section 5.03 and 5.04: an employee's claims in a year all use the plan's method, and the October to December rows use the prior or updated table as the plan says.
@@ -274,13 +274,13 @@ Design notes:
 
 ## Auditing
 
-Reimbursement records answer an IRS employment tax examination (were these amounts wages?), an employee's wage claim, a fraud investigation and the business's own auditors. The general rules are in [Audit Trails](/docs/architecture/audit-trails); make sure the record shows:
+Reimbursement records answer an IRS employment tax examination (were these amounts wages?), an employee's wage claim, a fraud investigation and the business's own auditors. The general rules are in [Audit Trails](/docs/building-blocks/audit-trails); make sure the record shows:
 
 - **The plan in force,** its written policy document and its terms for each year, because accountable status depends on how the arrangement was designed, not only how one item was paid.
 - **For each mileage trip,** date, origin, destination, purpose and miles, how the miles were produced, any override of a computed route and who made it, and the rate applied.
 - **For each per diem day,** the locality, the rate row and method, the partial-day rule, and when the time, place and purpose were substantiated.
 - **Every clock and its outcome:** when each item was substantiated or returned, against its dates, and every amount moved to taxable and the payroll export that carried it.
-- **Every payout,** with its route, destination as of that moment, approvals, the funding debit, the outbound credit and any return, and every change to an employee's payment destination with its verification ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Every payout,** with its route, destination as of that moment, approvals, the funding debit, the outbound credit and any return, and every change to an employee's payment destination with its verification ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Every repayment and deduction,** with the employee's authorization where payroll was used.
 
 ## What This Means for the System You Build

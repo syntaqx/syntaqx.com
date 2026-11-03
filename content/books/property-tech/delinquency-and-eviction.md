@@ -34,12 +34,12 @@ A notice to pay or quit is the hinge of the process: get it wrong and the case i
 | **Texas** (Property Code 24.005) | Three days' notice to vacate, unless the lease sets another period | From the day the notice is delivered | May include a demand to pay or vacate if the landlord gave a prior written notice that rent was due |
 | **Covered federal properties** (CARES Act, 15 U.S.C. 9058(c)) | Thirty days before the tenant must vacate | | Applies to properties in covered federal housing programs or with federally backed mortgage loans, including Fannie Mae and Freddie Mac loans |
 
-Federal program rules sit on top and are in motion. HUD's December 2024 final rule required public housing agencies and owners of project-based rental assistance properties to give tenants written notice 30 days before filing an eviction for nonpayment. On February 26, 2026 HUD published an interim final rule revoking that requirement (returning to pre-2021 periods of 5 to 30 days by program and state law), then on March 13, 2026 delayed its March 30 effective date indefinitely, pending a final rule, and said it would treat the interim rule as a proposed one. As of October 2026 I found no later final rule, so the 2024 requirement still governs those properties. USDA's Rural Housing Service, separately, published a rule on February 25, 2026 rescinding its own 30-day notice requirement for Section 515 and 514 properties. Federal-program notice periods are the clearest case in this book for keeping rules as effective-dated data ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)): the right answer changed three times in fifteen months.
+Federal program rules sit on top and are in motion. HUD's December 2024 final rule required public housing agencies and owners of project-based rental assistance properties to give tenants written notice 30 days before filing an eviction for nonpayment. On February 26, 2026 HUD published an interim final rule revoking that requirement (returning to pre-2021 periods of 5 to 30 days by program and state law), then on March 13, 2026 delayed its March 30 effective date indefinitely, pending a final rule, and said it would treat the interim rule as a proposed one. As of October 2026 I found no later final rule, so the 2024 requirement still governs those properties. USDA's Rural Housing Service, separately, published a rule on February 25, 2026 rescinding its own 30-day notice requirement for Section 515 and 514 properties. Federal-program notice periods are the clearest case in this book for keeping rules as effective-dated data ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)): the right answer changed three times in fifteen months.
 
 Notices are generated, not typed:
 
 - **The amount is computed at generation time** from the ledger, and includes only what the jurisdiction allows a nonpayment notice to demand. In Washington, possession can be conditioned only on rent; in Colorado and Oregon, unpaid late fees can't support a nonpayment termination; Oregon allows a fee on the notice only if the tenant is told they can cure by paying rent alone ([Late Fees](/books/property-tech/charges-and-resident-ledgers#late-fees)). The notice generator uses each charge code's "counts as rent" resolution for the lease and jurisdiction, and the subsidy portion of an assisted lease is never demanded from the household ([Subsidized & Affordable Housing](/books/property-tech/affordable-housing#the-owner-side)).
-- **The deadline is computed and stored,** counting the jurisdiction's way (court days, calendar days, from delivery), with the property's holiday calendar ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **The deadline is computed and stored,** counting the jurisdiction's way (court days, calendar days, from delivery), with the property's holiday calendar ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Content comes from versioned templates per jurisdiction,** including required statements (payment instructions in California, the Good Cause statement in New York, federal notices for covered properties), with the template version recorded.
 - **Service is evidence.** Who served it, how (personal delivery, posting and mailing, electronic where allowed), when, and the proof (a signed declaration, photos, tracking). Without it, the notice didn't happen.
 - **Every notice goes to every adult the lease names,** in the language the jurisdiction requires.
@@ -55,7 +55,7 @@ For the platform:
 - **The plan is its own record** with installments, each matched to payments as they arrive, and a status (offered, active, completed, broken, cancelled), with each installment paid or missed.
 - **It changes payment acceptance.** A lease under a plan accepts partial payments again; a broken plan returns to the state the case was in ([Payment Blocking](/books/property-tech/collecting-rent#payment-blocking)).
 - **It pauses the clock it should pause,** and only that: late fees on the planned balance per the agreement and law, notices and filing if the agreement says so.
-- **AI agents can offer plans only inside policy.** An agent that offers a payment plan is making the business's promise ([The AI's Promises Are the Business's Promises](/docs/architecture/ai-agents#the-ai-s-promises-are-the-business-s-promises)): the terms it may offer are data the operator sets, and anything outside them goes to a person.
+- **AI agents can offer plans only inside policy.** An agent that offers a payment plan is making the business's promise ([The AI's Promises Are the Business's Promises](/docs/building-blocks/ai-agents#the-ai-s-promises-are-the-business-s-promises)): the terms it may offer are data the operator sets, and anything outside them goes to a person.
 
 ## Eviction Filings
 
@@ -217,11 +217,11 @@ Decisions behind it:
 
 ## Auditing
 
-- **The full timeline per case:** every message sent (by staff or an agent), notice served, payment accepted or refused, plan offered and signed, filing event and hold, with actors and timestamps ([Audit Trails](/docs/architecture/audit-trails)).
+- **The full timeline per case:** every message sent (by staff or an agent), notice served, payment accepted or refused, plan offered and signed, filing event and hold, with actors and timestamps ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Every notice's legal basis:** the rule version, the template, the computed amount and deadline, and proof of service.
 - **Every hold and how fast it took effect,** because the gap between a bankruptcy filing or a servicemember's request and the last automated action is what a court examines.
 - **Collection activity by actor and state,** including any vendor-sent messages, for licensing and Regulation F review.
-- **Sealed records' access,** logged, since restricting who sees them only matters if you can prove it ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Sealed records' access,** logged, since restricting who sees them only matters if you can prove it ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

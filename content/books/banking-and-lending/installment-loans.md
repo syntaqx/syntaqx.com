@@ -120,7 +120,7 @@ Banks lending across state lines export their home state's rate, a state can opt
 
 - **Store each cap as a rule with its source:** jurisdiction, license type or lender type, amount band, term limits, the formula (a fixed rate, an index plus a margin, or a tiered schedule), which fees count, and effective dates.
 - **Evaluate the cap on the borrower's jurisdiction and the lender of record,** not the platform's location.
-- **Check the computed APR or MAPR against every applicable cap** before showing an offer, and record which rule bound it ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Check the computed APR or MAPR against every applicable cap** before showing an offer, and record which rule bound it ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Treat "not offered here" as a rule too:** Enova's 13 states without consumer loans are the clearest public example that some caps close a market rather than reprice it.
 
 ## How to Build It
@@ -204,11 +204,11 @@ CREATE TABLE payment_transfer_attempts (     -- 12 CFR 1041.8 for covered loans;
 );
 ```
 
-The schedule is generated once at origination by the same function that produces the disclosure, stored as `schedule_installments`, and replaced only by a new `payment_schedules` version with a reason (modification, deferral, re-amortization after a partial prepayment). For `daily_simple_interest` loans, a nightly job posts `interest_accruals` from the principal balance and the product version's day count, and each payment's allocation reads the accrued interest as of its effective date, so a backdated payment correctly reverses and reposts the days after it ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)). The disbursement rows must sum to the principal, with the withheld fee as its own row, so the amount financed on the disclosure is a query, not a separate number. Before any debit on a covered loan, the collection job reads the latest `consecutive_nsf`; at two, it stops and requires a new authorization. `rate_cap_rules` is reference data with its citation on every row; `rate_cap_evaluations` records every rule checked for every offer, including the ones that passed, because the examiner's question is "show me that you checked."
+The schedule is generated once at origination by the same function that produces the disclosure, stored as `schedule_installments`, and replaced only by a new `payment_schedules` version with a reason (modification, deferral, re-amortization after a partial prepayment). For `daily_simple_interest` loans, a nightly job posts `interest_accruals` from the principal balance and the product version's day count, and each payment's allocation reads the accrued interest as of its effective date, so a backdated payment correctly reverses and reposts the days after it ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)). The disbursement rows must sum to the principal, with the withheld fee as its own row, so the amount financed on the disclosure is a query, not a separate number. Before any debit on a covered loan, the collection job reads the latest `consecutive_nsf`; at two, it stops and requires a new authorization. `rate_cap_rules` is reference data with its citation on every row; `rate_cap_evaluations` records every rule checked for every offer, including the ones that passed, because the examiner's question is "show me that you checked."
 
 ## Auditing
 
-Installment loans are examined file by file, and the general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Installment loans are examined file by file, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **The disclosure as delivered,** its version, its delivery and the inputs behind each figure, reproducible from the schedule.
 - **The schedule's versions,** each with its reason and the event that triggered it.

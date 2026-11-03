@@ -91,7 +91,7 @@ A platform's controls exist for good reasons: reliability, safety, fraud, servic
 | **Exclusivity or limits on multi-apping** | Supply guarantees | Prop 22 section 7451(c) |
 | **Automated deactivation** | Fraud and safety at scale | Seattle, Minnesota and NYC procedures; EU Article 10(5): decisions to restrict, suspend or terminate "shall be taken by a human being" |
 
-Platforms have moved in the direction this table implies. DoorDash shows an acceptance rate but states there's "no minimum acceptance rate requirement," using it instead toward a rewards tier; Uber and Lyft show the destination on the offer; and the Earn by Time mode that limits declines to one an hour is an opt-in mode the Dasher chooses, alongside the default per-offer pay. Whether those choices are enough under any given test is for counsel; what the system owes counsel is a record of exactly what the control did, to whom, when and in which jurisdiction ([Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided)).
+Platforms have moved in the direction this table implies. DoorDash shows an acceptance rate but states there's "no minimum acceptance rate requirement," using it instead toward a rewards tier; Uber and Lyft show the destination on the offer; and the Earn by Time mode that limits declines to one an hour is an opt-in mode the Dasher chooses, alongside the default per-offer pay. Whether those choices are enough under any given test is for counsel; what the system owes counsel is a record of exactly what the control did, to whom, when and in which jurisdiction ([Rules as Data](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 
 ## Minimum Pay Standards
 
@@ -115,7 +115,7 @@ The standards look alike and measure different clocks, which is the engineering 
 - **Seattle** pays per offer: the per-minute and per-mile amounts for the offer, or the per-offer minimum if greater.
 - **Minnesota** counts only time and miles with a passenger in the vehicle.
 
-So a minimum pay engine needs, per worker, a timeline of states (offline, online and available, en route to pickup, with passenger or order, completed or cancelled) with timestamps and distances, from which each jurisdiction's clock is a query. It computes the floor per period and per standard, compares it with what the worker earned under the standard's own definition of earnings, and pays a top-up line that names the standard it satisfies. The rates are effective-dated data ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)): California's mileage figure changes every January, New York City announces its rate by February 1 for April, and Seattle's and Minnesota's index on their own schedules.
+So a minimum pay engine needs, per worker, a timeline of states (offline, online and available, en route to pickup, with passenger or order, completed or cancelled) with timestamps and distances, from which each jurisdiction's clock is a query. It computes the floor per period and per standard, compares it with what the worker earned under the standard's own definition of earnings, and pays a top-up line that names the standard it satisfies. The rates are effective-dated data ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)): California's mileage figure changes every January, New York City announces its rate by February 1 for April, and Seattle's and Minnesota's index on their own schedules.
 
 ## Offers and Pay Transparency
 
@@ -164,7 +164,7 @@ Chapter III of Directive 2024/2831 governs automated monitoring and decision-mak
 - **Explanation and review (Article 11).** Workers can obtain an explanation of any decision taken or supported by automated systems, and a written statement of reasons for restrictions, suspensions and terminations.
 - **Health and safety (Article 12).** For platform workers, automated systems may not be used in a way that puts undue pressure on them or endangers their health.
 
-Two of these reach directly into design. Article 7(1)(c) means location and activity tracking stops when the worker is offline, which is a collection rule in the app, not a retention rule on the server. Article 9 and Article 11 mean every automated decision about a worker (an offer's pay, a priority tier, a warning, a flag for review) must be traceable to a named system, version and main parameters, which is the [Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions) record with a worker-facing explanation on top.
+Two of these reach directly into design. Article 7(1)(c) means location and activity tracking stops when the worker is offline, which is a collection rule in the app, not a retention rule on the server. Article 9 and Article 11 mean every automated decision about a worker (an offer's pay, a priority tier, a warning, a flag for review) must be traceable to a named system, version and main parameters, which is the [Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions) record with a worker-facing explanation on top.
 
 ## Worker Identity and Account Renting
 
@@ -363,7 +363,7 @@ Design decisions behind it:
 - **Tips are a line and a history.** A tip is its own `worker_earnings` line, never netted against base pay, and every change after the offer is a dated row.
 - **Controls are versioned decisions.** `worker_controls` records each control that bears on classification with its purpose, parameters, jurisdictions and approver, so the answer to "what did the app require of drivers in California in March?" is a query.
 - **Restrictions need a person.** A penalty linked to an automated decision requires a human reviewer, which is EU Article 10(5) as a constraint rather than a policy.
-- **Deactivation is a penalty with a procedure.** The jurisdiction's rule sets the notice, appeal and records deadlines, computed and stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)), with reinstatement and back pay as outcomes.
+- **Deactivation is a penalty with a procedure.** The jurisdiction's rule sets the notice, appeal and records deadlines, computed and stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)), with reinstatement and back pay as outcomes.
 - **Classification is effective-dated per jurisdiction.** The same account can be a statutory contractor in California, a worker in London and presumed an employee in Spain.
 - **Events:** `worker.state_changed`, `offer.shown`, `offer.responded`, `job.completed`, `tip.changed`, `pay_floor.checked`, `deactivation.issued` and `deactivation.appealed` drive payroll, notices and reporting through the outbox ([Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)).
 

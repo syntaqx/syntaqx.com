@@ -9,7 +9,7 @@ tags = ["payments", "ai", "fraud", "agentic-commerce", "model-risk", "compliance
 
 Payments ran on machine learning long before the word AI was on every product page. An online card authorization is typically scored more than once before the issuer answers: by the merchant's provider, and by the network on the issuer's behalf. What changed by 2026 is reach. Models now rewrite authorization messages to win approvals, assemble dispute evidence, read onboarding documents, answer merchants' support questions and, newest of all, act for consumers as **agents** that find a product and pay for it. Each of those moves a model closer to deciding who gets money and who doesn't, which is the part of payments the law watches most closely. The merchant's side of agent shopping (the checkout protocols, product data for agents, agent identity) is the Commerce volume's [Agentic Checkout Protocols](/books/commerce/agentic-commerce#agentic-checkout-protocols), and AI across the rest of a store is its [AI in Commerce](/books/commerce/ai-in-commerce).
 
-The general engineering of an agent that acts (narrow tools, typed results, decisions in code, identity before account actions, evals, an audit trail) is in [AI Agents in the Product](/docs/architecture/ai-agents), and defending one against manipulation is in [AI & LLM Security](/docs/security/ai-security). Scoring, thresholds and feedback loops in general are in [Risk Scoring](/docs/architecture/risk-scoring), and the payments decisions they feed are in [Fraud & Risk](/books/payments/fraud-and-risk). This chapter is what payments adds: which models already decide, what the vendors and networks ship, how an agent may be allowed to pay, and the model risk, fair lending and explanation rules that apply when a model says no.
+The general engineering of an agent that acts (narrow tools, typed results, decisions in code, identity before account actions, evals, an audit trail) is in [AI Agents in the Product](/docs/building-blocks/ai-agents), and defending one against manipulation is in [AI & LLM Security](/docs/security/ai-security). Scoring, thresholds and feedback loops in general are in [Risk Scoring](/docs/building-blocks/risk-scoring), and the payments decisions they feed are in [Fraud & Risk](/books/payments/fraud-and-risk). This chapter is what payments adds: which models already decide, what the vendors and networks ship, how an agent may be allowed to pay, and the model risk, fair lending and explanation rules that apply when a model says no.
 
 ## Where Models Decide
 
@@ -22,7 +22,7 @@ The general engineering of an agent that acts (narrow tools, typed results, deci
 | **Support** | Providers and platforms | Answers and summaries | Refunds, payout changes and anything that moves money |
 | **Agentic commerce** | Consumers' agents, with network credentials | What to buy and when to pay | The mandate: merchant, amount, expiry, revocation |
 
-The pattern across all of them is the one in [Decide in Code](/docs/architecture/ai-agents#decide-in-code): the model scores, drafts or proposes, and code that the business can read and change decides what happens. In payments the line is drawn by money: a model may recommend a refund, never issue one on its own judgment.
+The pattern across all of them is the one in [Decide in Code](/docs/building-blocks/ai-agents#decide-in-code): the model scores, drafts or proposes, and code that the business can read and change decides what happens. In payments the line is drawn by money: a model may recommend a refund, never issue one on its own judgment.
 
 ## How the Platforms Do It
 
@@ -43,7 +43,7 @@ Read the table for what it implies. **Networks score for issuers, providers scor
 
 ## Fraud Scoring
 
-A card-not-present payment is scored by the merchant's provider before it's sent, and by the network for the issuer while it's in flight; the issuer decides with both. The merchant or platform adds its own layer where it knows something the others don't: account history, order contents, delivery address, device. How the layers combine, and the rules that act on a score, are in [Fraud & Risk](/books/payments/fraud-and-risk#rules-models-and-decisions); thresholds, calibration and the cost of each error are in [Risk Scoring](/docs/architecture/risk-scoring).
+A card-not-present payment is scored by the merchant's provider before it's sent, and by the network for the issuer while it's in flight; the issuer decides with both. The merchant or platform adds its own layer where it knows something the others don't: account history, order contents, delivery address, device. How the layers combine, and the rules that act on a score, are in [Fraud & Risk](/books/payments/fraud-and-risk#rules-models-and-decisions); thresholds, calibration and the cost of each error are in [Risk Scoring](/docs/building-blocks/risk-scoring).
 
 Three things are specific to payments.
 
@@ -84,7 +84,7 @@ What a model may do here, and what it may not:
 
 **Support.** Merchants and payers ask where a payout is, why a payment declined and what a fee was. A support model can answer from the ledger, the payment's history and the decline code, through tools that return exact records. The CFPB's 2023 review of chatbots in consumer finance named the risks: noncompliance with consumer financial law, "doom loops" with no path to a human, and harm when the bot gets it wrong. Its spotlight estimated that about 37% of the US population interacted with a bank's chatbot in 2022. The payments-specific rules:
 
-- **Identity before account actions,** proportional to what the action moves ([Identity Before Account Actions](/docs/architecture/ai-agents#identity-before-account-actions)).
+- **Identity before account actions,** proportional to what the action moves ([Identity Before Account Actions](/docs/building-blocks/ai-agents#identity-before-account-actions)).
 - **Money moves only through the console's named actions,** with the same approvals a person would need ([The Internal Console](/books/payments/operating-the-platform#the-internal-console)).
 - **Error claims start a clock.** A consumer reporting an unauthorized bank debit to a chatbot may well have given notice under Regulation E, so my rule is that the bot's intake creates the error case with its deadlines ([Complaints and Error Resolution](/books/payments/operating-the-platform#complaints-and-error-resolution)).
 - **The model never hears a card number.** Payment collection goes through a link or a secure field, as in [Speech, Transcripts and AI](/books/payments/phone-payments#speech-transcripts-and-ai).
@@ -118,7 +118,7 @@ Every scheme above converges on the same authorization model: the user grants an
 - **Revocation.** The user can revoke at any time, and revocation takes effect before the next attempt, not at the next sync.
 - **Evidence.** The signed mandate, the exact terms shown, the agent's identity and the user's authentication, kept like the consent record of a stored credential ([The Credential Record](/books/payments/stored-credentials#the-credential-record)), because it's what answers a dispute.
 
-Who carries the loss when an agent buys the wrong thing is not settled. A law firm's April 2026 analysis noted that "it is currently unresolved whether a consumer granting an AI agent access" to an account satisfies Regulation E's authorization concept, and that Regulation E "leaves open what happens if an AI agent violates the consumer's instructions." Amex's Agent Purchase Protection is one issuer's answer for its cards. Until rules settle, my default is to treat any payment outside the mandate's scope as unauthorized: refuse it in code before it's sent, and if one gets through, refund it rather than litigate whether the agent's mistake bound the user. [AI Agents in the Product](/docs/architecture/ai-agents#the-ai-s-promises-are-the-business-s-promises) covers what an agent's promises commit the business to in general.
+Who carries the loss when an agent buys the wrong thing is not settled. A law firm's April 2026 analysis noted that "it is currently unresolved whether a consumer granting an AI agent access" to an account satisfies Regulation E's authorization concept, and that Regulation E "leaves open what happens if an AI agent violates the consumer's instructions." Amex's Agent Purchase Protection is one issuer's answer for its cards. Until rules settle, my default is to treat any payment outside the mandate's scope as unauthorized: refuse it in code before it's sent, and if one gets through, refund it rather than litigate whether the agent's mistake bound the user. [AI Agents in the Product](/docs/building-blocks/ai-agents#the-ai-s-promises-are-the-business-s-promises) covers what an agent's promises commit the business to in general.
 
 On the merchant side, an agent is a new kind of customer to verify. Visa's Trusted Agent Protocol relies on agents signing their requests so a merchant can tell a registered agent from a bot. Treat a verified agent as a signal in the risk check, not a pass: the card-testing defenses in [Fraud & Risk](/books/payments/fraud-and-risk#card-testing) still apply to traffic that arrives with a signature.
 
@@ -194,7 +194,7 @@ ALTER TABLE payment_attempts
 
 ## Auditing
 
-Record each model and agent as its own actor, with its version, every tool call including the ones it was refused, and the person who approved anything above its authority, as [Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions) describes. What payments adds:
+Record each model and agent as its own actor, with its version, every tool call including the ones it was refused, and the person who approved anything above its authority, as [Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions) describes. What payments adds:
 
 - **A model inventory the sponsor bank can read.** Every model that touches payments, merchants or credit: use, owner, vendor or in-house, version history, validation results and monitoring metrics.
 - **Vendor scores kept as received.** The provider's or network's score and the version it reports, beside your own decision, so a change in a vendor model is visible in your data.

@@ -175,7 +175,7 @@ Design decisions:
 - **Every outbound query:** purpose, requester, treating clinician, demographics sent, every responder's outcome and every document retrieved.
 - **Every inbound request:** requester, purpose, match decision, what was released, and any consent or purpose that caused a decline.
 - **Individual access:** the IAL2 claims token reference, the demographics double-check result and what was returned to the person's app.
-- **Membership terms:** which network agreements and SOP versions governed each query, since purposes and obligations change by version ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Membership terms:** which network agreements and SOP versions governed each query, since purposes and obligations change by version ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 
 ## What This Means for the System You Build
 

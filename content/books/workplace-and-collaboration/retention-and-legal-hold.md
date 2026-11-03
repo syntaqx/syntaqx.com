@@ -16,7 +16,7 @@ The duties are inverted from a consumer platform. The vendor doesn't decide how 
 - **Users can delete and edit.** A hold that preserves the current message but not the version before an edit, or the message a user deleted, preserves the wrong thing.
 - **Ephemeral modes.** Chat history off, disappearing messages, encrypted chat: features users like and courts have punished companies for leaving on under a hold.
 
-The generic machinery (soft and hard delete, windows, schedules, erasure) is the playbook's [Data Retention](/docs/architecture/data-retention). This chapter is what retention and hold mean in collaboration products and in US litigation. Getting the preserved content out (collection, review, export) is [eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export); broker-dealer and other regulated recordkeeping is [Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications#the-us-recordkeeping-rules), later in this part. This isn't legal advice.
+The generic machinery (soft and hard delete, windows, schedules, erasure) is the playbook's [Data Retention](/docs/building-blocks/data-retention). This chapter is what retention and hold mean in collaboration products and in US litigation. Getting the preserved content out (collection, review, export) is [eDiscovery & Export](/books/workplace-and-collaboration/ediscovery-and-export); broker-dealer and other regulated recordkeeping is [Regulated Communications & Archiving](/books/workplace-and-collaboration/regulated-communications#the-us-recordkeeping-rules), later in this part. This isn't legal advice.
 
 ## How the Platforms Do It
 
@@ -63,7 +63,7 @@ What a builder takes from this:
 
 - **Separate the user's view from the compliance store.** Teams removes a message from the app while a copy waits in a hidden folder; that separation is what lets a hold work without users noticing. A product with one copy of each message can't both honor a user's delete and preserve under a hold.
 - **Publish the timeline.** Customers write records schedules and answer regulators; "deleted within 16 days of expiry" is a commitment they can use, "deleted" isn't.
-- **Backups are part of deletion.** A deleted message still sitting in last month's backup is not deleted for an erasure request and is still evidence for a hold ([Backups](/docs/architecture/data-retention#backups); the vendor's restore tools are in [Backups, Restores and Shared Responsibility](/books/workplace-and-collaboration/reliability-and-outages#backups-restores-and-shared-responsibility)).
+- **Backups are part of deletion.** A deleted message still sitting in last month's backup is not deleted for an erasure request and is still evidence for a hold ([Backups](/docs/building-blocks/data-retention#backups); the vendor's restore tools are in [Backups, Restores and Shared Responsibility](/books/workplace-and-collaboration/reliability-and-outages#backups-restores-and-shared-responsibility)).
 
 ## Edits and Deletions
 
@@ -152,7 +152,7 @@ Every one of these cases turns on a setting the employee controlled and the empl
 
 ## Retention Against Privacy Law
 
-Retention has a second master. GDPR's storage limitation pushes toward deleting personal data once its purpose is served, and employees, customers and guests in a workspace can ask for erasure. A hold and a retention requirement are reasons to keep data despite such a request, but they have to be specific (a matter, a regulation) and recorded, and the data must be deleted when they end ([Erasure Requests](/docs/architecture/data-retention#erasure-requests), [Data Subject Rights](/docs/compliance/gdpr#data-subject-rights)). In the customer-controlled model the employer is the controller and decides; the vendor executes and records which rule kept which item. Cross-border holds and the transfer of held data to US litigation are [Cross-Border Discovery](/books/workplace-and-collaboration/ediscovery-and-export#cross-border-discovery).
+Retention has a second master. GDPR's storage limitation pushes toward deleting personal data once its purpose is served, and employees, customers and guests in a workspace can ask for erasure. A hold and a retention requirement are reasons to keep data despite such a request, but they have to be specific (a matter, a regulation) and recorded, and the data must be deleted when they end ([Erasure Requests](/docs/building-blocks/data-retention#erasure-requests), [Data Subject Rights](/docs/compliance/gdpr#data-subject-rights)). In the customer-controlled model the employer is the controller and decides; the vendor executes and records which rule kept which item. Cross-border holds and the transfer of held data to US litigation are [Cross-Border Discovery](/books/workplace-and-collaboration/ediscovery-and-export#cross-border-discovery).
 
 ## How to Build It
 

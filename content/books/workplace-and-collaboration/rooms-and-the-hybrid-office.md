@@ -74,13 +74,13 @@ Two kinds of data come out of a smart room, and they need different treatment. *
 
 ## Booking Rooms and Desks
 
-Booking is a reservation problem: one room, one time slot, no double booking, and the playbook's [Exclusion Constraints for Time](/docs/architecture/reservations-and-holds#exclusion-constraints-for-time) is the core technique. The workplace-specific problem is the **ghost meeting**: a recurring booking that nobody attends, holding a room all quarter. The vendors solve it with two opposite kinds of evidence.
+Booking is a reservation problem: one room, one time slot, no double booking, and the playbook's [Exclusion Constraints for Time](/docs/building-blocks/reservations-and-holds#exclusion-constraints-for-time) is the core technique. The workplace-specific problem is the **ghost meeting**: a recurring booking that nobody attends, holding a room all quarter. The vendors solve it with two opposite kinds of evidence.
 
 **Release on absence (check-in).** Microsoft Places releases a room automatically "if no one checks in within a configurable time window," 10 minutes by default (`Set-CalendarProcessing -EnableAutoRelease $true -PostReservationMaxClaimTimeInMinutes 20` makes it 20). Attendees check in on the Teams panel outside the room, by joining from the Teams Rooms console, through the meeting chat, or by email when chat isn't available. Microsoft recommends enabling auto-release only where rooms have panels or room systems "to ensure that all users have a way to check in," notes that setting changes take up to 48 hours, and as of October 2026 ties eligibility to Teams Premium licenses bought before April 1, 2026 or to rooms with a Teams Rooms or Shared Space license.
 
 **Release on intent (declines).** Google Calendar can "release booked meeting rooms when all but one person declines the meeting," and fences it carefully: no release for declines less than 10 minutes before start, for meetings starting within 30 minutes, for meetings longer than four hours, for rooms holding 20 or more people, for meetings with external guests or no guests besides the organizer, or for rooms booked directly on the room's calendar or from a secondary calendar; Google adds that the list isn't complete and the logic may change. The feature is limited to the Enterprise Standard and Plus, Education Fundamentals, Standard and Plus, and legacy G Suite Business editions. Admins can exempt rooms and user groups (Google suggests executives and business-critical rooms), and the organizer gets an email when a room is released.
 
-Each design fails differently. Check-in releases a room when the meeting is real but people are late or forget to tap the panel; declines miss the meeting where nobody declined and nobody came. The general rule from the playbook applies: hold lifetimes are policy, and releases must be visible to the person who lost the hold ([Releasing on Abandonment](/docs/architecture/reservations-and-holds#releasing-on-abandonment)).
+Each design fails differently. Check-in releases a room when the meeting is real but people are late or forget to tap the panel; declines miss the meeting where nobody declined and nobody came. The general rule from the playbook applies: hold lifetimes are policy, and releases must be visible to the person who lost the hold ([Releasing on Abandonment](/docs/building-blocks/reservations-and-holds#releasing-on-abandonment)).
 
 Desks extend the same model. Places supports desk pools and individual desk accounts, and can reserve a desk automatically when a user's laptop connects to a peripheral at it: the admin maps each monitor or device to a desk by product ID, vendor ID and serial number, and when the user plugs in with Teams running, the desk is booked, a calendar entry appears and an activity notification says "The [space or desk] is reserved and ready for you." Desk usage reports follow from the same events.
 
@@ -229,7 +229,7 @@ Notes on the sketch:
 - **Room and device configuration changes,** including third-party join, calendar processing settings and licenses.
 - **Changes to work location policy** (off, inform, ask) and to which networks and peripherals map to buildings.
 - **Visitor records, signed documents and blocklist entries,** with who added them and why, and their purge.
-- **Every export of occupancy data and every change to the minimum group size,** since those are the points where space analytics could become monitoring ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every export of occupancy data and every change to the minimum group size,** since those are the points where space analytics could become monitoring ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

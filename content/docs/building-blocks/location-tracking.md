@@ -1,10 +1,10 @@
 +++
 title = "Location Tracking & Geofences"
 description = "Positions with accuracy, mobile sampling limits, geofence arrival with dwell and hysteresis, ETAs, safe tracking links, and consent and retention."
-category = "Architecture"
-order = 419
+category = "Building Blocks"
+order = 460
 tags = ["architecture", "location", "geofencing", "mobile", "privacy"]
-aliases = ["location-tracking"]
+aliases = ["architecture/location-tracking", "location-tracking"]
 +++
 
 A courier's van, a technician's phone, a rideshare driver, a rental scooter, a delivery robot, a nurse on home visits: once a product knows where something is, it can tell a customer "22 minutes away," mark an arrival nobody tapped, prove a visit happened and plan the next one. It's also the most sensitive data most products ever collect about the people doing the work, and it arrives as a stream of noisy points from devices that the operating system is actively trying to keep asleep.
@@ -35,7 +35,7 @@ CREATE TABLE positions (
 ```
 
 - **Accuracy is part of the point.** The W3C Geolocation API defines `accuracy` as "the 95% confidence level in meters," and mobile platforms report the same kind of radius. A point 15 meters from a house with 10 meters of accuracy is consistent with being there; the same point with 400 meters of accuracy proves little. Store it, use it in every decision below, and show it wherever a person judges a position.
-- **Two clocks.** Order and reason by `device_time` (when it was measured), and keep `received_at` (when you learned about it). Phones batch uploads and replay hours of points after a dead zone; telematics feeds retry. Sorting by arrival puts a truck in two places at once ([Offline-First Sync](/docs/architecture/offline-sync#two-clocks)).
+- **Two clocks.** Order and reason by `device_time` (when it was measured), and keep `received_at` (when you learned about it). Phones batch uploads and replay hours of points after a dead zone; telematics feeds retry. Sorting by arrival puts a truck in two places at once ([Offline-First Sync](/docs/building-blocks/offline-sync#two-clocks)).
 - **Positions belong to a device or vehicle, not a person.** People swap phones and trucks. Join a position to a person through an effective-dated assignment (who held which device or drove which vehicle, when), as in [Temporal Data](/docs/database/temporal-data#effective-dated-rows). That join is also where privacy rules apply: only positions inside a working assignment are attributed to anyone.
 - **Ingest idempotently.** Providers resend, so the unique key on source, subject and measurement time makes a duplicate a no-op ([Webhooks](/docs/api-design/webhooks#consumer-expectations)).
 
@@ -52,7 +52,7 @@ The design that follows from those limits:
 
 - **Sample by need, not by clock.** High frequency (every few seconds) only while it matters: en route to a customer, during an active delivery. Low frequency or significant-change while idle. Nothing outside working time.
 - **Make tracking a visible mode.** "On shift" or "en route" in the app maps directly to a foreground service on Android and an active background session on iOS, and the user sees why location is on.
-- **Batch uploads.** Collect points locally and send them in batches over the [device outbox](/docs/architecture/offline-sync#the-device-outbox), which also survives dead zones. Upload more often only while a customer is watching a live map.
+- **Batch uploads.** Collect points locally and send them in batches over the [device outbox](/docs/building-blocks/offline-sync#the-device-outbox), which also survives dead zones. Upload more often only while a customer is watching a live map.
 - **Expect gaps.** Background limits, force-quits, battery savers and airplane mode all produce holes. A missing point means "unknown," never "stationary."
 
 Vehicles don't have these problems. A telematics unit is wired to power and reports on its own schedule, which is why it's the better source for anything that drives (below).
@@ -104,7 +104,7 @@ Use a larger exit fence than entry fence. A truck parked on the boundary of a si
 
 ### Evidence, Not Truth
 
-A geofence arrival is evidence alongside the worker's tap and the vehicle's stop, not a replacement for any of them. Store every arrival and departure with its source, the points that triggered it and their accuracy. Time on site computed from these feeds pay, time-and-materials billing and disputes about whether anyone came, so it has to be explainable from the record ([Audit Trails](/docs/architecture/audit-trails#what-a-record-holds)).
+A geofence arrival is evidence alongside the worker's tap and the vehicle's stop, not a replacement for any of them. Store every arrival and departure with its source, the points that triggered it and their accuracy. Time on site computed from these feeds pay, time-and-materials billing and disputes about whether anyone came, so it has to be explainable from the record ([Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds)).
 
 ## ETAs
 
@@ -113,7 +113,7 @@ An ETA a customer sees is a promise, recomputed many times.
 - **ETA is travel time plus remaining work.** Travel time from the current position through a routing engine with traffic, plus the remaining time on the current job if the worker isn't yet en route to this customer, plus any stops in between.
 - **Recompute on meaningful change,** not on every point: a new position more than some distance from the last computation, a stop completed, a route change. Routing calls cost money and rate limits.
 - **Smooth what you show.** An ETA that jumps from 12 to 19 to 11 minutes is worse than a slightly stale one. Change the displayed value only when the new estimate differs by more than a threshold, and prefer showing a short range to false precision.
-- **Lateness is computed, not reported.** When the ETA passes the end of the promised window by more than a threshold, flag it and send one "running late" message with the new estimate, before the customer has to ask, through the [outbound gate](/docs/architecture/notifications#one-outbound-gate).
+- **Lateness is computed, not reported.** When the ETA passes the end of the promised window by more than a threshold, flag it and send one "running late" message with the new estimate, before the customer has to ask, through the [outbound gate](/docs/building-blocks/notifications#one-outbound-gate).
 
 ## Shareable Tracking Links
 
@@ -131,8 +131,8 @@ Tracking a vehicle or a work phone is tracking the person using it, and in many 
 - **Tell people, in writing, before you track them.** New Jersey, for example, subjects an employer who knowingly uses a tracking device in a vehicle used by an employee without providing written notice to civil penalties of up to $1,000 for a first violation and up to $2,500 for each subsequent one (P.L.2021, c.449). Other jurisdictions have their own rules; written notice everywhere is my baseline, and the law in each place you operate decides the rest.
 - **Be ready to justify it.** In the UK, the ICO's guidance on monitoring workers says that for driver monitoring "You must carry out a DPIA as this type of processing would be considered high risk," that employers should consider "whether less intrusive methods could achieve your purpose," and that during private use of a work vehicle "you will rarely be able to justify monitoring." Its model example is a tracker the driver can disable outside working time. That's a sound default anywhere: a working-time mode, enforced in the app and on the server.
 - **Customers' location is personal data too.** A customer sharing their location to meet a driver, or an address history that reveals routines, gets the same purpose limitation and access controls ([GDPR](/docs/compliance/gdpr#privacy-by-design-and-by-default)).
-- **Keep raw tracks briefly and derived facts longer.** Breadcrumb trails are useful for days or weeks (disputes, route review) and dangerous after that. Arrival and departure events, time on site and mileage are business records with their own, longer retention. Set both windows explicitly, delete raw points on schedule, and restrict who can query a person's history ([Data Retention](/docs/architecture/data-retention#retention-schedules-by-record-type)).
-- **Log who looked.** Viewing where a named person was last Tuesday is an access worth auditing ([Audit Trails](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Keep raw tracks briefly and derived facts longer.** Breadcrumb trails are useful for days or weeks (disputes, route review) and dangerous after that. Arrival and departure events, time on site and mileage are business records with their own, longer retention. Set both windows explicitly, delete raw points on schedule, and restrict who can query a person's history ([Data Retention](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
+- **Log who looked.** Viewing where a named person was last Tuesday is an access worth auditing ([Audit Trails](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## Checklist
 

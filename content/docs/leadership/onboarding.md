@@ -16,7 +16,7 @@ Accounts, laptop, repository access, chat, the on-call tool, the cloud console w
 
 ## One Command to Run It
 
-The README should take someone from a fresh clone to a running system with one command, as [Code Ownership](/docs/engineering/code-ownership) requires. If setup is ten manual steps in a wiki, the first job of the new hire, with a buddy, is to fix that. It's the most valuable onboarding task there is: they're the only person on the team who can still see what's confusing.
+The README should take someone from a fresh clone to a running system with one command, as [Code Ownership](/docs/development/code-ownership) requires. If setup is ten manual steps in a wiki, the first job of the new hire, with a buddy, is to fix that. It's the most valuable onboarding task there is: they're the only person on the team who can still see what's confusing.
 
 ## A Buddy, Not Just a Manager
 

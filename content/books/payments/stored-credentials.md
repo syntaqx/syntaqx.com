@@ -175,12 +175,12 @@ The primary key on `balance_runs` is the one-run-per-period guarantee, and `atte
 
 ## Auditing
 
-Stored-credential records are evidence in "I never agreed to this" disputes, regulators' questions about cancellation and renewal notices, and network reviews of excessive retries. The general design is in [Audit Trails](/docs/architecture/audit-trails); for stored credentials, make sure the record shows:
+Stored-credential records are evidence in "I never agreed to this" disputes, regulators' questions about cancellation and renewal notices, and network reviews of excessive retries. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for stored credentials, make sure the record shows:
 
-- **The consent as it was given:** the terms text version, the disclosure shown, the time and the channel, snapshotted so a later edit to the terms doesn't rewrite it ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **The consent as it was given:** the terms text version, the disclosure shown, the time and the channel, snapshotted so a later edit to the terms doesn't rewrite it ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Every notice sent:** trial reminders, varying-amount notices and price-change notices, with what they said and when, since the rules are about timing.
 - **Every attempt on a credential,** with the decline code, MAC and the rule that chose to retry or stop, so the retry count can be proven to a network.
-- **Credential changes from updaters and token lifecycles,** recorded as amendments with the source, never as a silent overwrite of the card on file ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Credential changes from updaters and token lifecycles,** recorded as amendments with the source, never as a silent overwrite of the card on file ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Cancellations and revocations,** who asked, through which channel, and when charges stopped.
 
 ## What This Means for the System You Build

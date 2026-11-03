@@ -173,7 +173,7 @@ A drop table is the list of possible outcomes of a draw with their probabilities
 
 ### Odds as Data
 
-Store probabilities as **integer weights** over a fixed total, chosen so that every probability is exact at the precision you display. With a total of 10,000, each unit is 0.01%, and a table that displays two decimals sums to exactly 100.00; with floats or with weights over an arbitrary total, rounding makes the published table sum to 99.99 and someone will screenshot it. Tables are versioned and effective-dated, and a published version is immutable: changing odds means publishing a new version, with a start time, which is also when the disclosure changes ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+Store probabilities as **integer weights** over a fixed total, chosen so that every probability is exact at the precision you display. With a total of 10,000, each unit is 0.01%, and a table that displays two decimals sums to exactly 100.00; with floats or with weights over an arbitrary total, rounding makes the published table sum to 99.99 and someone will screenshot it. Tables are versioned and effective-dated, and a published version is immutable: changing odds means publishing a new version, with a start time, which is also when the disclosure changes ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 The tables extend the volume's core model ([The Games Business](/books/gaming/games-business#the-core-data-model)); `tenant_id` is the studio, as there:
 
@@ -237,7 +237,7 @@ Pity counters are per player profile and per pity pool, derived from openings (t
 
 An odds audit compares what happened with what was published. For each live version, a daily job counts openings and outcomes per entry and tier, excluding pity-triggered results for the base-rate check, and tests each observed rate against the disclosed one. With a published 1.00% and 100,000 non-pity openings, the standard error is √(0.01 × 0.99 / 100,000) = 0.031 percentage points, so an observed rate between about 0.91% and 1.09% is within three standard errors; with dozens of entries checked daily, set the alarm threshold wider (four standard errors or a multiple-comparison correction) so it fires on real faults and not on noise. A second check compares observed draws per top-tier result with the consolidated rate, which catches a broken pity counter that a base-rate check can't see.
 
-Keep the audit's inputs: the version, the counts, the test and the result, per day. When a regulator, a platform or a player asks whether the odds are real, the answer is a query, not an investigation ([Telemetry & Analytics](/books/gaming/telemetry) carries the events; [Audit Trails](/docs/architecture/audit-trails) the record).
+Keep the audit's inputs: the version, the counts, the test and the result, per day. When a regulator, a platform or a player asks whether the odds are real, the answer is a query, not an investigation ([Telemetry & Analytics](/books/gaming/telemetry) carries the events; [Audit Trails](/docs/building-blocks/audit-trails) the record).
 
 ### Gates Around the Draw
 

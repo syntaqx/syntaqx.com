@@ -77,7 +77,7 @@ So every mobile game has to assume that leaving the foreground may be the last t
 - **Save continuously for anything that costs money or time.** A purchase, a reward claim, a completed level: the server records it when it happens, so a kill loses at most the last few seconds of local state.
 - **Pause, don't simulate.** A single-player game pauses on background. An online match can't: the server keeps simulating, and the client that comes back after thirty seconds has to reconnect and resync, or be replaced by a bot, under the same rules as any disconnect ([Netcode Fundamentals](/books/gaming/netcode)).
 - **Resume is a restart that looks like a resume.** After a kill, the player opens the app and expects to be where they were. Restore from the last save and the server state, and re-validate the session token, which may have expired while the process was gone.
-- **Background downloads are the OS's, not the game's.** Large content downloads go through the platform's asset delivery (below) rather than a game loop that dies on suspend; [Background Execution Is Rationed](/docs/architecture/offline-sync#background-execution-is-rationed) covers why.
+- **Background downloads are the OS's, not the game's.** Large content downloads go through the platform's asset delivery (below) rather than a game loop that dies on suspend; [Background Execution Is Rationed](/docs/building-blocks/offline-sync#background-execution-is-rationed) covers why.
 
 ## App Review and Store Rules
 
@@ -303,7 +303,7 @@ The disputes in mobile are about money moving between the studio and its partner
 
 - **Spend and attribution.** Every spend row's source (network report or MMP), import time and currency, and every attribution row's source and window, so a network's invoice can be reconciled against installs it claimed, and a re-attribution is visible rather than silent.
 - **Reward callbacks.** Every callback received, its signature result, and the grant it produced or why it didn't, so "I watched the ad and got nothing" has an answer and a farm of fake callbacks shows up as a pattern.
-- **Tier and consent decisions.** Which tier rules version a device ran, and which consent state governed tracking and ad personalization at each session; regulators ask about the second ([Audit Trails](/docs/architecture/audit-trails)).
+- **Tier and consent decisions.** Which tier rules version a device ran, and which consent state governed tracking and ad personalization at each session; regulators ask about the second ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Store requirement compliance.** Target API level, page-size support, privacy manifests and data safety declarations per build, recorded with the build ([Recording Builds](/books/gaming/production-pipelines#recording-builds)).
 
 ## What This Means for the System You Build

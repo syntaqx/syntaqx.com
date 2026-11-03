@@ -105,7 +105,7 @@ Every product keeps page history, and they differ on how long, who can see it, a
 
 Three rules for a version store in a workplace product:
 
-- **Restore is a forward edit.** It writes a new version whose content equals an old one, attributed to the person who restored it. Nothing in history is overwritten, which is what makes history usable as evidence ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Restore is a forward edit.** It writes a new version whose content equals an old one, attributed to the person who restored it. Nothing in history is overwritten, which is what makes history usable as evidence ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Version retention is the customer's policy, bounded by holds.** The plan sets a default window; an admin's retention policy can lengthen or shorten it; a legal hold freezes it. Microsoft's SharePoint versioning is the clearest public statement of that precedence: items under a retention policy or eDiscovery hold ignore library version limits until the hold is released ([Files, Sync & Storage](/books/workplace-and-collaboration/files-and-sync#versions-deletes-and-ransomware)). Retention policies and holds as a system are the subject of [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
 - **Snapshot the rendered result, not just the operations.** A block tree's history is a stream of operations; reconstructing a page as of a date by replaying them is slow and breaks when the schema evolves. Periodic full snapshots plus the operations between them make "show me this page on March 3" a bounded read.
 
@@ -235,7 +235,7 @@ Docs are records the customer may have to produce, so the audit trail (core `aud
 - **Ownership:** owner changed (by whom, from whom, why: transfer, offboarding, bulk admin action), verification set, renewed and expired.
 - **Admin policy:** publishing allowed or disabled, live docs enabled per space, retention window changed, template published.
 
-Page views are personal data about employees and belong to a separate, shorter-lived analytics store with its own access controls; [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy) covers what admins may see. [Audit Trails](/docs/architecture/audit-trails#what-a-record-holds) has the record format.
+Page views are personal data about employees and belong to a separate, shorter-lived analytics store with its own access controls; [Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy) covers what admins may see. [Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds) has the record format.
 
 ## What This Means for the System You Build
 

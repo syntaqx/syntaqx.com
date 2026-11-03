@@ -194,7 +194,7 @@ Notes on the sketch:
 - **Every block** with its evidence and how long it was in force.
 - **Alerts sent and when,** to show the customer was told.
 - **Usage to blocked or high-risk destinations** before and after detection, for the forgiveness decision and for disputes with the carrier chain.
-- **Staff access to customer accounts and admin tools,** because the platform's own breach is the largest fraud exposure it has ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Staff access to customer accounts and admin tools,** because the platform's own breach is the largest fraud exposure it has ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 
 ## What This Means for the System You Build
 

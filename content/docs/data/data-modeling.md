@@ -2,11 +2,11 @@
 title = "Modeling Analytical Data"
 description = "Shaping warehouse data people can trust: grain, facts and dimensions, conformed dimensions, slowly changing history, dbt layers, semantic layers and tests."
 category = "Data Platforms"
-order = 1276
+order = 1277
 tags = ["data", "analytics", "data-modeling", "dbt", "warehouse"]
 +++
 
-[Data Pipelines & Analytics](/docs/architecture/data-pipelines) gets data into the warehouse and through raw, staging and marts, with tests and contracts. This chapter is about the shape of what you build there: which tables exist, what one row in each means, and how history and definitions are kept straight. A pipeline can be flawless and still produce marts nobody can use, because every analyst has to rediscover which join double-counts and which status column means "paid".
+[Data Pipelines & Analytics](/docs/data/data-pipelines) gets data into the warehouse and through raw, staging and marts, with tests and contracts. This chapter is about the shape of what you build there: which tables exist, what one row in each means, and how history and definitions are kept straight. A pipeline can be flawless and still produce marts nobody can use, because every analyst has to rediscover which join double-counts and which status column means "paid".
 
 The model is the interface between data engineering and everyone else. A good one makes the common question a short query, makes the wrong query hard to write, and survives the next five product launches without a rewrite.
 
@@ -54,7 +54,7 @@ The value of a warehouse is joining processes: orders with support tickets, visi
 
 Two teams each building a customer table is how "customers in Germany" ends up meaning a billing address in one report and a shipping address in another. The tool Kimball uses to prevent it is the bus matrix: processes as rows, dimensions as columns, a mark where a process uses a dimension ([Kimball: Bus matrix](https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/kimball-techniques/dimensional-modeling-techniques/enterprise-data-warehouse-bus-matrix)). I keep one in the repository next to the models. It's the cheapest architecture document there is, and it shows at a glance which dimension a new fact must reuse.
 
-Identity is the hard part of conforming. A customer who signed up twice, a player with accounts on three platforms, a property known by two addresses: the conformed dimension carries the resolved identity, and the rules that resolved it are their own reviewed model ([Matching & Merging](/docs/architecture/record-linkage)).
+Identity is the hard part of conforming. A customer who signed up twice, a player with accounts on three platforms, a property known by two addresses: the conformed dimension carries the resolved identity, and the rules that resolved it are their own reviewed model ([Matching & Merging](/docs/building-blocks/record-linkage)).
 
 ## Slowly Changing Dimensions
 
@@ -76,7 +76,7 @@ CREATE TABLE dim_customers (
 );
 ```
 
-The columns follow [Effective Dating & History](/docs/database/temporal-data#one-naming-standard-range-columns): closed-open intervals, a null end for "current", no `9999-12-31` sentinels. When the source system already keeps effective-dated history, model from it; when it doesn't, you have to capture changes yourself. dbt snapshots do that: they "implement type-2 Slowly Changing Dimensions over mutable source tables," detecting changes with an `updated_at` column (the `timestamp` strategy) or by comparing columns (`check`), and hard deletes are ignored unless you configure `hard_deletes` ([dbt: Snapshots](https://docs.getdbt.com/docs/build/snapshots)). A snapshot only sees the states that existed when it ran, so changes between runs are lost; log-based capture from [CDC](/docs/architecture/data-pipelines#change-data-capture) sees every one.
+The columns follow [Effective Dating & History](/docs/database/temporal-data#one-naming-standard-range-columns): closed-open intervals, a null end for "current", no `9999-12-31` sentinels. When the source system already keeps effective-dated history, model from it; when it doesn't, you have to capture changes yourself. dbt snapshots do that: they "implement type-2 Slowly Changing Dimensions over mutable source tables," detecting changes with an `updated_at` column (the `timestamp` strategy) or by comparing columns (`check`), and hard deletes are ignored unless you configure `hard_deletes` ([dbt: Snapshots](https://docs.getdbt.com/docs/build/snapshots)). A snapshot only sees the states that existed when it ran, so changes between runs are lost; log-based capture from [CDC](/docs/data/data-pipelines#change-data-capture) sees every one.
 
 My default is type 2 for anything a report groups by and a person can change (segment, plan, region, branch, owner, price tier), type 1 for everything else, and a written note per attribute saying which. Reports that need "as it is today" join on `is_current`; reports that need "as it was" join on the surrogate key in the fact.
 
@@ -91,7 +91,7 @@ What I do: **the star is the model of record, and wide tables are built from it.
 
 ## Layers in dbt
 
-The layering in [Data Pipelines](/docs/architecture/data-pipelines#elt-not-etl) is raw, staging and marts. dbt's guide adds an intermediate layer and gives each a job ([dbt: How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)):
+The layering in [Data Pipelines](/docs/data/data-pipelines#elt-not-etl) is raw, staging and marts. dbt's guide adds an intermediate layer and gives each a job ([dbt: How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)):
 
 - **Staging** creates "our atoms," one model per source table, named `stg_[source]__[entity]s`. Renaming, type casting, unit conversion and categorizing belong here; joins and aggregations don't, because changing the grain here loses source data you'll need later. dbt suggests views ([dbt: Staging](https://docs.getdbt.com/best-practices/how-we-structure/2-staging)).
 - **Intermediate** models stack logic with "clear and specific purposes," named with verbs (`int_order_items_summed_to_orders`), and "should generally not be exposed in the main production schema"; ephemeral or views in a restricted schema ([dbt: Intermediate](https://docs.getdbt.com/best-practices/how-we-structure/3-intermediate)).
@@ -116,7 +116,7 @@ I'd consider it for an organization with many overlapping source systems and str
 
 ## Semantic Layers
 
-A [single definition per metric](/docs/architecture/data-pipelines#one-definition-per-metric) needs a home. A semantic layer is that home: metrics, the entities they join on and the dimensions they can be sliced by, declared once in code and compiled into SQL for every consumer.
+A [single definition per metric](/docs/data/data-pipelines#one-definition-per-metric) needs a home. A semantic layer is that home: metrics, the entities they join on and the dimensions they can be sliced by, declared once in code and compiled into SQL for every consumer.
 
 - **dbt MetricFlow** "is a SQL query generation tool"; metrics and semantic models are declared in YAML, with entities ("the join keys of your semantic model") and dimensions ("the ways you want to group or slice/dice your metrics"). It's distributed under the Apache 2.0 license ([dbt: About MetricFlow](https://docs.getdbt.com/docs/build/about-metricflow)).
 - **Cube** models "business entities" as cubes that "define measures, dimensions, and joins," exposes them through a Postgres-compatible SQL API and REST and GraphQL APIs, caches with pre-aggregations, and applies access control "at the semantic layer, so the same policies apply to every consumer" ([Cube: Introduction](https://docs.cube.dev/docs/introduction)).
@@ -134,7 +134,7 @@ The semantic layer earns its place when more than one tool reads the same metric
 
 ## Testing Models
 
-Tests are how a model keeps its promises after the person who wrote it moves on. [Data Pipelines](/docs/architecture/data-pipelines#transformations-are-code) lists the baseline; for modeling, the tests that matter most are about grain and keys:
+Tests are how a model keeps its promises after the person who wrote it moves on. [Data Pipelines](/docs/data/data-pipelines#transformations-are-code) lists the baseline; for modeling, the tests that matter most are about grain and keys:
 
 - **The grain is unique and complete.** A uniqueness test on the grain columns of every fact, and `not_null` on each. A failed uniqueness test is a join that fanned out, the most common silent error in analytics.
 - **Every foreign key resolves.** A `relationships` test from each fact key to its dimension. For type 2 dimensions, test that exactly one row per business key has `is_current`, and that versions don't overlap.

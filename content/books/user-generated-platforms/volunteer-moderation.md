@@ -62,7 +62,7 @@ The design lessons from both:
 - **Show who acted.** An automated removal is attributed to the rule and the moderator who last changed it, so the mod log and the author's notice say "removed by AutoMod under rule X" rather than leaving a mystery.
 - **Platform presets are the platform's policy.** A preset list of slurs is maintained by the platform, versioned, and applied identically everywhere it's enabled; communities choose to enable it, not edit it.
 
-Rules engines in general (versioned rules, effective dates, recording which rule decided) are the playbook's [Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided); automod is that pattern handed to non-engineers, which is why the limits and the attribution matter more than the expressiveness.
+Rules engines in general (versioned rules, effective dates, recording which rule decided) are the playbook's [Rules as Data](/docs/building-blocks/rules-as-data#record-which-rule-decided); automod is that pattern handed to non-engineers, which is why the limits and the attribution matter more than the expressiveness.
 
 ## Queues, Logs and Mail
 

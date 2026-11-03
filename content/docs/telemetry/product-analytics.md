@@ -30,7 +30,7 @@ My rule: **active means performed a value event, from a named list in the defini
 
 **Stickiness** is DAU divided by MAU: the share of the month's users who show up on a typical day. A messaging app may run high; a tax app is low by nature and that's fine. Two cautions. A wave of new users inflates DAU and MAU together and can hide churn, so read stickiness next to the share of actives who are new. And the tools use the word for a different chart: Amplitude's Stickiness chart shows "how often users fire specific events over a given time period," and PostHog's shows "how many times users perform an event within a specific time period," a distribution of days active, not the ratio. The distribution is the more useful view: it shows whether the product has a core of daily users or a long tail of occasional ones.
 
-Name the **unit** in every definition: a person, an account, a device, a workspace or a household. One person on a phone and a laptop is two devices and one account. A B2B product usually wants both "active users" and "active accounts," and never divides one by the other by accident. For merging identities across devices and logins, see [Matching & Merging](/docs/architecture/record-linkage).
+Name the **unit** in every definition: a person, an account, a device, a workspace or a household. One person on a phone and a laptop is two devices and one account. A B2B product usually wants both "active users" and "active accounts," and never divides one by the other by accident. For merging identities across devices and logins, see [Matching & Merging](/docs/building-blocks/record-linkage).
 
 ## Funnels
 
@@ -110,13 +110,13 @@ There are two architectures, and most companies end up with some of both.
 | Heap | Autocapture of interactions "with one snippet of code," and virtual events defined later that reach "back to the moment Heap was installed" |
 | Google Analytics 4 | Web and app measurement with total, new and active users, engaged sessions, and attribution models |
 
-**Warehouse-native analytics** keeps events in your own warehouse, models them with dbt, and charts them in a BI tool. The pipeline is the one in [Data Pipelines & Analytics](/docs/architecture/data-pipelines): raw events, staging, marts, tested transformations.
+**Warehouse-native analytics** keeps events in your own warehouse, models them with dbt, and charts them in a BI tool. The pipeline is the one in [Data Pipelines & Analytics](/docs/data/data-pipelines): raw events, staging, marts, tested transformations.
 
 My default: **the warehouse is the source of truth for every metric that leaves the product team** (anything in a board deck, a finance report, a payout or a partner statement), because only there can events be joined to orders, subscriptions, refunds and support tickets and reconciled to the ledger. A vendor tool is worth it for self-serve exploration when it saves real time, with two conditions: events go to the warehouse too (from your own collection, or the vendor's export), and money never comes from a client event. Autocapture is useful for discovery and dangerous as a source of truth: a renamed button silently ends a metric.
 
 ## Metric Definitions as Code
 
-The way out of "my retention doesn't match yours" is the one in [One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric): each metric is defined once, in version control, with a unit, numerator, denominator, inclusion rules, a clock and an owner, and every chart reads that definition. The dbt Semantic Layer is one way to do it: MetricFlow lets you "define metrics using YAML abstractions," so downstream tools query a metric instead of reimplementing its SQL.
+The way out of "my retention doesn't match yours" is the one in [One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric): each metric is defined once, in version control, with a unit, numerator, denominator, inclusion rules, a clock and an owner, and every chart reads that definition. The dbt Semantic Layer is one way to do it: MetricFlow lets you "define metrics using YAML abstractions," so downstream tools query a metric instead of reimplementing its SQL.
 
 ```yaml
 # metrics/weekly_active_accounts.yml, owned by product analytics

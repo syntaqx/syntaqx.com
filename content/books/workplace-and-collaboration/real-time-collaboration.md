@@ -11,7 +11,7 @@ Co-editing is the feature that made browser documents replace emailed attachment
 
 There are two families of solutions and a pragmatic middle. **Operational transformation (OT)** sends operations through a central server that orders them and transforms each against the ones it crossed; Google Docs is the reference implementation. **Conflict-free replicated data types (CRDTs)** give every element a stable identity so concurrent operations commute and replicas converge without a central order; Yjs and Automerge are the widely used libraries. **Server-authoritative object sync**, which Figma described in 2019, takes CRDT ideas but lets one server per document decide order, which removes most of the CRDT overhead for data that isn't long runs of text.
 
-The generic transport (WebSockets, fan-out, ordering and catch-up, reconnect) is [Realtime Connections](/docs/architecture/realtime-connections); offline queues and conflict policy for business records are [Offline Sync](/docs/architecture/offline-sync). This chapter covers what document co-editing adds: the merge algorithms, rich text, presence, undo, offline merges, size limits, and the records a workplace product must keep. The page and block models being edited are [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis); design-canvas specifics are in [Design Tools](/books/workplace-and-collaboration/design-tools#multiplayer) and [Whiteboards & Diagrams](/books/workplace-and-collaboration/whiteboards-and-diagrams#sync-and-storage).
+The generic transport (WebSockets, fan-out, ordering and catch-up, reconnect) is [Realtime Connections](/docs/architecture/realtime-connections); offline queues and conflict policy for business records are [Offline Sync](/docs/building-blocks/offline-sync). This chapter covers what document co-editing adds: the merge algorithms, rich text, presence, undo, offline merges, size limits, and the records a workplace product must keep. The page and block models being edited are [Docs & Wikis](/books/workplace-and-collaboration/docs-and-wikis); design-canvas specifics are in [Design Tools](/books/workplace-and-collaboration/design-tools#multiplayer) and [Whiteboards & Diagrams](/books/workplace-and-collaboration/whiteboards-and-diagrams#sync-and-storage).
 
 ## How the Platforms Do It
 
@@ -118,7 +118,7 @@ Convergence isn't the same as a good result. Two people rewriting the same parag
 - **Flag** a region edited concurrently by two offline sessions beyond a size threshold, with both authors notified.
 - **Fork** when the divergence is large: keep the merged document and save each side's offline version as a named version, so nothing is lost. Dropbox's "conflicted copy" ([Files, Sync & Storage](/books/workplace-and-collaboration/files-and-sync#conflicts)) is the file-level version of the same decision.
 
-Permissions change while people are offline, and that's the workplace twist. An editor demoted to viewer, or a member offboarded, while their laptop was on a plane, will reconnect with queued edits. The server must re-check each queued operation against current access and reject what's no longer allowed, keep the rejected edits retrievable for the author (or for an admin, if the author was offboarded), and log the rejection. [Conflicts: Choosing Who Wins](/docs/architecture/offline-sync#conflicts-choosing-who-wins) has the general policy; the document rule is that access is always evaluated at the server's commit time, never at the client's edit time.
+Permissions change while people are offline, and that's the workplace twist. An editor demoted to viewer, or a member offboarded, while their laptop was on a plane, will reconnect with queued edits. The server must re-check each queued operation against current access and reject what's no longer allowed, keep the rejected edits retrievable for the author (or for an admin, if the author was offboarded), and log the rejection. [Conflicts: Choosing Who Wins](/docs/building-blocks/offline-sync#conflicts-choosing-who-wins) has the general policy; the document rule is that access is always evaluated at the server's commit time, never at the client's edit time.
 
 ## Document Size Limits
 
@@ -196,7 +196,7 @@ Per-keystroke audit is noise; per-session audit is too coarse for disputes. What
 - **Version events**: snapshot cut, named version created, restore performed.
 - **Compaction**: the range of ops deleted, so a gap in history is explained rather than suspicious.
 
-Edits by apps and AI assistants are attributed to the app installation and the member who invoked it, never just to the member ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+Edits by apps and AI assistants are attributed to the app installation and the member who invoked it, never just to the member ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 
 ## What This Means for the System You Build
 

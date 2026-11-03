@@ -203,7 +203,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **What ran and how it was billed.** The code digest per version, and each invocation's meters with phase and cold-start flags, so a disputed bill can be traced to the INIT time or concurrency that produced it ([Audit Trails](/docs/architecture/audit-trails)).
+- **What ran and how it was billed.** The code digest per version, and each invocation's meters with phase and cold-start flags, so a disputed bill can be traced to the INIT time or concurrency that produced it ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Limit and price changes.** The limits and meters in force for each product over time, with notice dates, because a change like 1 ms billing or INIT billing changes every customer's invoice at once.
 - **Throttling decisions.** When an account hit its concurrency limit or a risk quota, and who raised or lowered it, since throttles on free accounts are an anti-abuse control that customers also experience as an outage.
 - **Snapshot use.** Which versions ran from snapshots, for the uniqueness failures that snapshotting can cause.

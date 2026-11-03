@@ -227,7 +227,7 @@ Design notes:
 - **The script inventory over time,** with each script's justification, authorizer and removal, as the 6.4.3 evidence an assessor asks for.
 - **Every tamper check and its result,** including runs that found nothing, with dispositions for every change, as the 11.6.1 evidence.
 - **Provider confirmations,** where SAQ A eligibility relies on the provider's written statement about its embedded form, stored as documents with their dates.
-- **Every admin grant, use and revocation,** with MFA status, approver and the actions taken under it ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every admin grant, use and revocation,** with MFA status, approver and the actions taken under it ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Every security patch,** with its release date, the date applied, and any key rotation it required.
 
 ## What This Means for the System You Build

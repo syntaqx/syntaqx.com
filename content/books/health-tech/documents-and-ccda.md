@@ -172,7 +172,7 @@ CREATE TABLE imaging_studies (                -- a pointer to images held elsewh
 
 Design decisions:
 
-- **Bytes go to object storage, hashes stay in the row.** A document's content is immutable once stored; a corrected document is a new row. The hash proves which file a clinician saw or a disclosure sent ([Keep Bytes Off the Application](/docs/architecture/file-uploads#keep-bytes-off-the-application)).
+- **Bytes go to object storage, hashes stay in the row.** A document's content is immutable once stored; a corrected document is a new row. The hash proves which file a clinician saw or a disclosure sent ([Keep Bytes Off the Application](/docs/building-blocks/file-uploads#keep-bytes-off-the-application)).
 - **Every document records how it arrived.** `received_via` and `source_organization_id` decide trust, reconciliation and, for a disclosure accounting, where the information came from.
 - **C-CDA is stored as received.** Template ids and validation results are kept with the original XML; `ccda_sections` indexes what each section holds (and says when the sender sent a null flavor rather than data), and parsed entries become imported clinical rows with the document as their source, never replacements for it.
 - **Filing is reversible and audited.** Unfiled documents sit in a queue, and moving a document between charts writes `document_filing_history`, because a misfile is an incident that someone will investigate.
@@ -185,7 +185,7 @@ Design decisions:
 - **Misfiles and moves,** with who moved a document, from which chart, and who viewed it before it moved, because that list is the scope of a privacy incident.
 - **Direct traffic:** messages sent and received, recipients, attachments by hash and delivery notifications.
 - **Document disclosures:** which documents left the organization, to whom, by which channel, feeding the accounting of disclosures where it applies ([HIPAA in Practice](/books/health-tech/hipaa-in-practice#the-other-rights-a-product-handles) in Part 3).
-- **Image access** through your product, even when the pixels live in another system ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Image access** through your product, even when the pixels live in another system ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

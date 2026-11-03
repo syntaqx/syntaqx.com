@@ -49,8 +49,8 @@ Three connection styles coexist, often for the same practice:
 Building it in:
 
 - **The compendium is data per lab, versioned.** Orderable tests, their codes, required questions, specimen types and container rules change; an order built from a stale compendium is rejected or drawn in the wrong tube.
-- **Map result codes, don't trust names.** The lab's local code maps to LOINC where the lab provides it; a result arriving without a known code is queued for mapping, not filed under a guess ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)).
-- **Unsolicited results are normal.** A result with no matching order goes to a match queue keyed on patient identifiers and the lab's numbers, never auto-filed to a likely patient ([Match Before Create](/docs/architecture/record-linkage#match-before-create)). Patient matching across organizations is [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity)'s subject.
+- **Map result codes, don't trust names.** The lab's local code maps to LOINC where the lab provides it; a result arriving without a known code is queued for mapping, not filed under a guess ([Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids)).
+- **Unsolicited results are normal.** A result with no matching order goes to a match queue keyed on patient identifiers and the lab's numbers, never auto-filed to a likely patient ([Match Before Create](/docs/building-blocks/record-linkage#match-before-create)). Patient matching across organizations is [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity)'s subject.
 - **Billing follows the order.** Who bills the test (the lab bills the payer, the practice is billed by the lab, or the patient pays the lab) is decided at order time from the coverage and the lab's contracts, and recorded on the order.
 
 ## CLIA
@@ -218,7 +218,7 @@ Design decisions:
 - **Order to result.** For every order, its numbers, specimens, each report version, who reviewed it and when, and what was released to the patient and when; unreviewed results by age are a daily report, not an audit finding.
 - **Corrections.** Each corrected or amended result with the version it replaced, whether a clinician had acted on the earlier one, and who was notified of the change.
 - **Critical values.** Receipt, assignment, acknowledgment time against the deadline, escalations and action, because a missed critical value is a patient safety event and a liability claim.
-- **Release decisions.** Every hold with its kind, author, reason and duration, and the share of results released immediately, which is the number an information blocking complaint will test ([Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Release decisions.** Every hold with its kind, author, reason and duration, and the share of results released immediately, which is the number an information blocking complaint will test ([Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Mapping changes.** Who changed a local-to-LOINC mapping and when, since one wrong mapping reclassifies every result filed under it.
 
 ## What This Means for the System You Build

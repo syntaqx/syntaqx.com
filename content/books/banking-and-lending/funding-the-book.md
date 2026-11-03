@@ -110,7 +110,7 @@ When a loan is approved, something decides which capital takes it: the balance s
 3. **Concentration.** Whether adding the loan pushes any limit over: a state cap in the warehouse, a grade mix in a buyer's agreement, a merchant concentration (Affirm's top five merchants and platform partners were 44% of its fiscal 2026 GMV, the kind of concentration every funder caps).
 4. **Priority.** The lender's preference among the eligible vehicles with room, usually by cost and by contract (a committed buyer that must receive its volume before an uncommitted one).
 
-The allocation is a decision record like a credit decision: the loan, the vehicle, the rule version, the vehicles considered and why each was or wasn't eligible, and the time ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). It changes later: a warehouse loan moves into a securitization, an ineligible loan is repurchased out of a sold pool, a forward flow buyer's commitment ends. Each move is a new allocation with a validity range, never an update, so the question "who funded this loan on March 31" has one answer from the records.
+The allocation is a decision record like a credit decision: the loan, the vehicle, the rule version, the vehicles considered and why each was or wasn't eligible, and the time ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)). It changes later: a warehouse loan moves into a securitization, an ineligible loan is repurchased out of a sold pool, a forward flow buyer's commitment ends. Each move is a new allocation with a validity range, never an update, so the question "who funded this loan on March 31" has one answer from the records.
 
 Allocation rules are also where a bank partnership's terms bite. Partner criteria decide which loans a bank will originate and keep, and loans a bank sells must go to buyers its agreement allows; [The Lending Business](/books/banking-and-lending/lending-business#how-to-build-it) stores those criteria on the pricing grid, and the allocation engine reads the same reference.
 
@@ -254,7 +254,7 @@ Design notes:
 - **Ownership is derived from transfers.** `loans.owner` is the current value for fast reads; the truth is the sequence of `loan_transfers`, and each sale, participation or repurchase closes one owner row in Loan Servicing's `loan_roles_history` and opens the next, whose `source_ref` cites the transfer. A sale with servicing released also opens a `servicing_transfers` batch there. A sale, a participation, a pledge and a repurchase are different events with different accounting, so `kind` is never inferred from a price.
 - **Allocation is a decision with a version.** The engine evaluates every vehicle's rules as of the decision time, writes the candidates and the winner, and emits `loan.allocated`; reallocation closes the old range and opens a new one ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
 - **A pledge isn't a sale.** A warehouse pledge is a `loan_transfers` row of kind `pledge` to the SPV and an allocation to the warehouse, while `loans.owner` stays the lender; a sale moves the owner and posts a journal entry for the price, the carrying amount and the gain or loss.
-- **Rules come from clauses.** Every `funding_vehicle_rules` row cites the agreement section it encodes, because when a funder disputes an eligibility call the conversation is about the clause, not the code ([Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule)).
+- **Rules come from clauses.** Every `funding_vehicle_rules` row cites the agreement section it encodes, because when a funder disputes an eligibility call the conversation is about the clause, not the code ([Rules as Data](/docs/building-blocks/rules-as-data#the-shape-of-a-rule)).
 - **Reports are reproducible.** `investor_reports` stores the delivered file and its totals; the job that builds it reads the period's `payment_allocations` and transfers, so rerunning it for a closed period must produce the same file, and a correction is a new report, not an edit ([Closed Periods Stay Closed](/docs/money/accounting#closed-periods-stay-closed)).
 - **Retained interests are positions.** A risk retention piece or a residual certificate is an asset with a holding restriction; track it with the vehicle and its release date rather than as a loan.
 - **Funding cost flows to the loan.** Interest on a facility, allocated to the loans it funds by balance and days, is what fills `loan_economics_monthly.funding_cost`, so a loan's economics reflect the money that actually paid for it.
@@ -270,7 +270,7 @@ Funders, auditors, the originating bank and regulators each ask "who owns this l
 - **Retained risk:** each risk retention interest held, its form (vertical or horizontal) and its hold period.
 - **Facility rules as agreed:** each rule version with the agreement section and amendment it came from.
 
-The audit store design is in [Audit Trails](/docs/architecture/audit-trails#what-a-record-holds).
+The audit store design is in [Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds).
 
 ## What This Means for the System You Build
 

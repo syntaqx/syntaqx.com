@@ -224,7 +224,7 @@ Contact center records answer a customer ("I called three times"), a recording c
 - **Scorecard versions, scores and the scorer,** human or model, with calibration results.
 - **Outbound calls with the consent check that cleared them,** from the outbound gate's log.
 
-Record mechanics are in [Audit Trails](/docs/architecture/audit-trails); retention and production of field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+Record mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); retention and production of field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

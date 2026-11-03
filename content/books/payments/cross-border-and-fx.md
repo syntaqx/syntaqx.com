@@ -257,7 +257,7 @@ How it runs:
 
 ## Auditing
 
-Cross-border payments are where examiners, network auditors and merchants with a currency complaint all look. The general design is in [Audit Trails](/docs/architecture/audit-trails); keep, for every cross-border payment and payout:
+Cross-border payments are where examiners, network auditors and merchants with a currency complaint all look. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); keep, for every cross-border payment and payout:
 
 - **The country determination:** issuer country with the BIN table version, the merchant account and outlet country used, and why the router chose it.
 - **Every conversion:** quoted rate, reference rate and source, markup, quote creation and expiry, executed rate and counterparty, so the spread on any conversion can be recomputed.

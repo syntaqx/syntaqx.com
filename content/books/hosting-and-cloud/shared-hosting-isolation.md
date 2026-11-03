@@ -194,7 +194,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Which limits applied when.** Every change to an account's limits with its source and actor, because a customer disputing an outage or a suspension asks what the server allowed at the time ([Audit Trails](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Which limits applied when.** Every change to an account's limits with its source and actor, because a customer disputing an outage or a suspension asks what the server allowed at the time ([Audit Trails](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Every limit incident.** What was hit, the snapshot, what the customer saw and what the provider did, so "the host throttled my site" can be answered with facts.
 - **Isolation configuration per server.** Handler, limit engine and filesystem isolation per server and per account over time, because after a cross-account compromise the first question is which walls were up.
 - **Abuse actions taken through limits.** Lowering a compromised account's limits is a mitigation and belongs in the abuse case, not only in the server's configuration.

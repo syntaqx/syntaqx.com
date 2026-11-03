@@ -137,7 +137,7 @@ The cheapest lead is a customer the business already serves. The campaigns are f
 
 Three rules keep them from going wrong:
 
-- **Consent by purpose.** A service reminder that adds an offer is marketing and needs marketing consent; the rule and the outbound gate are in [Contacting Customers From the Field](/books/field-operations/consumer-protection#contacting-customers-from-the-field), and the ledger in [The Consent Ledger](/docs/architecture/notifications#the-consent-ledger).
+- **Consent by purpose.** A service reminder that adds an offer is marketing and needs marketing consent; the rule and the outbound gate are in [Contacting Customers From the Field](/books/field-operations/consumer-protection#contacting-customers-from-the-field), and the ledger in [The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger).
 - **Suppression.** Don't send a membership offer to a member, a tune-up offer to a property with a tune-up already booked, or anything promotional to an account in collections or with an open complaint.
 - **Attribution as its own source.** Revenue from existing-customer campaigns is reported as retention and expansion, not acquisition, so acquisition ROI stays honest.
 
@@ -250,7 +250,7 @@ Marketing records are asked for by finance (where did the money go), by a lead s
 - **Source edits:** who changed a lead's or customer's source, from what to what. Re-sourcing a customer moves credit, and sometimes pay ([Sales Teams & Commissions](/books/field-operations/sales-teams-and-commissions)).
 - **Attribution model versions** and the outputs they produced for each closed month.
 
-The record mechanics are in [Audit Trails](/docs/architecture/audit-trails); retention is in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+The record mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); retention is in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

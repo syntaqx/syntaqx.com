@@ -365,7 +365,7 @@ Design notes:
 - **Sharing.** Every account, organization or public grant on an image, because a shared image is a copy of its contents in someone else's hands.
 - **Retirement.** Deprecation and deregistration dates, against the instances still running each image.
 
-Image metadata is kept for as long as any instance launched from the image might be investigated, which outlives the image itself ([Data Retention & Deletion](/docs/architecture/data-retention)).
+Image metadata is kept for as long as any instance launched from the image might be investigated, which outlives the image itself ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ## What This Means for the System You Build
 

@@ -82,7 +82,7 @@ New construction, new streets, rural routes and private roads fail validation fo
 - **A location you can reach:** a pin from the customer, a driver or the office, stored as a person-sourced point.
 - **Evidence when the address has legal weight** (a KYC file, a permit, a warranty): a utility bill, closing documents, a parcel number.
 - **Tell the vendor which version you used.** Google's [`provideValidationFeedback`](https://developers.google.com/maps/documentation/address-validation/reference/rest/v1/TopLevel/provideValidationFeedback) takes the `responseId` from the first validation call and a conclusion: `VALIDATED_VERSION_USED`, `USER_VERSION_USED`, `UNVALIDATED_VERSION_USED` or `UNUSED`.
-- **Re-check on a schedule** until a vendor confirms it, then retire the flag the way any override retires ([Matching, Merging & Many Sources](/docs/architecture/record-linkage#overrides-that-retire)).
+- **Re-check on a schedule** until a vendor confirms it, then retire the flag the way any override retires ([Matching, Merging & Many Sources](/docs/building-blocks/record-linkage#overrides-that-retire)).
 
 ## Postal City, Service Point, Jurisdiction
 
@@ -103,7 +103,7 @@ An address in the future (a delivery window, an appointment, a statement date) n
 
 ## Many Sources
 
-Over the years an address arrives from autocomplete, a partner's import, a parcel dataset, a different geocoder, an acquired company's database and a person's pin, and they disagree at the edges. Don't let the last writer win. Keep each source's answer as an observation with its key and license, choose each field by written rules, and match before creating a new record: [Matching, Merging & Many Sources](/docs/architecture/record-linkage) is the general practice, and [Customers, Accounts & Properties](/books/field-operations/customers-and-properties) applies it to service locations in one industry.
+Over the years an address arrives from autocomplete, a partner's import, a parcel dataset, a different geocoder, an acquired company's database and a person's pin, and they disagree at the edges. Don't let the last writer win. Keep each source's answer as an observation with its key and license, choose each field by written rules, and match before creating a new record: [Matching, Merging & Many Sources](/docs/building-blocks/record-linkage) is the general practice, and [Customers, Accounts & Properties](/books/field-operations/customers-and-properties) applies it to service locations in one industry.
 
 ## Checklist
 

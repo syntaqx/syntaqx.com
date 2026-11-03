@@ -178,11 +178,11 @@ The available balance is a query, not a column: posted entries whose payments ar
 
 ## Auditing
 
-Payout records are evidence when a merchant disputes a hold, when a takeover redirects a payout, and when a sponsor bank or examiner asks why money left. The general design is in [Audit Trails](/docs/architecture/audit-trails); for payouts, make sure the record shows:
+Payout records are evidence when a merchant disputes a hold, when a takeover redirects a payout, and when a sponsor bank or examiner asks why money left. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for payouts, make sure the record shows:
 
-- **Every hold and reserve with who set it and why,** the risk score or rule behind it, and its release date, so a merchant's complaint has an answer ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every hold and reserve with who set it and why,** the risk score or rule behind it, and its release date, so a merchant's complaint has an answer ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Every change of payout account,** with the verification performed, the hold it triggered and who released it.
-- **The schedule and policy in force for each payout,** captured when it was created, not looked up later ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **The schedule and policy in force for each payout,** captured when it was created, not looked up later ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Returns and clawbacks linked to their causes:** the raw return code, the payment that caused a clawback, and the recovery step each one reached.
 
 ## What This Means for the System You Build

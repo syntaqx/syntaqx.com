@@ -1,8 +1,9 @@
 +++
 title = "Rules as Data"
 description = "Policies that vary by jurisdiction, channel and date as versioned, sourced data: stages, final checks, precedence, stored deadlines and decision records."
-category = "Architecture"
-order = 410
+category = "Building Blocks"
+aliases = ["architecture/rules-as-data"]
+order = 454
 tags = ["architecture", "rules", "compliance", "configuration"]
 +++
 
@@ -55,7 +56,7 @@ CREATE TABLE contact_rules (
 - **The scope is columns,** not a free-text description, so resolution is a query. Jurisdictions are hierarchical codes (country, state, city); [Multi-Tenancy](/docs/architecture/multi-tenancy) adds a tenant column when each customer of a platform sets its own policy.
 - **The value is typed per rule key.** `jsonb` keeps one table for many rule kinds, and a JSON Schema per `rule_key`, checked on write and in CI, keeps it honest. A rule kind that's queried heavily earns its own table.
 - **Dates are dates.** Laws take effect on a calendar day, in the jurisdiction's time zone, not at midnight UTC ([Time & Date Formats](/docs/fundamentals/time#dates-without-times)). `valid_during` is a closed-open `DATERANGE`, per [Effective Dating & History](/docs/database/temporal-data), and the exclusion constraint means two rows for the same scope can never overlap in time.
-- **Every row has a source.** A rule nobody can trace to a statute, a platform policy or a signed decision is an opinion, and in a dispute it reads like one. For internal policy, the source is the decision record ([Decisions & Design Docs](/docs/engineering/design-docs)).
+- **Every row has a source.** A rule nobody can trace to a statute, a platform policy or a signed decision is an opinion, and in a dispute it reads like one. For internal policy, the source is the decision record ([Decisions & Design Docs](/docs/development/design-docs)).
 - **Editing is a permission.** The people who own the policy (counsel, pricing, operations) change rows through a reviewed workflow with an approver, not through a database console.
 
 ## Effective Dates and Versions

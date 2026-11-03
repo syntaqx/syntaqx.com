@@ -184,7 +184,7 @@ A **holdout** keeps a small share of users on the old experience across many lau
 
 Games often use their backend's built-in experiments; PlayFab's are an example ([Live Operations](/books/gaming/live-operations#experiments)).
 
-Buy or build, the same split as product analytics applies. Assignment belongs in the flag system the product already uses. Analysis belongs where the metric definitions live, which for most companies past the first year is the warehouse ([One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric)), so an experiment's "revenue" is finance's revenue. The warehouse-native tools exist for exactly that reason.
+Buy or build, the same split as product analytics applies. Assignment belongs in the flag system the product already uses. Analysis belongs where the metric definitions live, which for most companies past the first year is the warehouse ([One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric)), so an experiment's "revenue" is finance's revenue. The warehouse-native tools exist for exactly that reason.
 
 ## Ethics and Consent
 

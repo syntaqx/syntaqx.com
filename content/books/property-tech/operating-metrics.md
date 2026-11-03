@@ -9,7 +9,7 @@ tags = ["property-tech", "metrics", "occupancy", "noi", "benchmarking", "antitru
 
 Property management runs on a dozen numbers, and every one of them has at least two definitions in common use. Occupancy is physical or economic, a point in time or a daily average, divided by total units or by rentable units, counted by unit or by bed or by square foot. Trade-out is new leases or renewals or blended, gross or net of concessions. Turnover is move-outs over units, or over expiring leases. An owner comparing two managers, a lender testing a covenant, an asset manager reading a reforecast and a site team chasing a bonus all read the same words and compute different things, and the platform is usually where the difference is created: one report uses rentable units, another total units, a third the snapshot from the first of the month. A store's numbers have the same problem, in the Commerce volume's [Commerce Metrics](/books/commerce/commerce-metrics).
 
-This chapter owns the volume's metric definitions. Earlier chapters store the inputs (leases and unit status periods, renewal offers, guest cards, turns, work orders, utility billing runs) and point here for the formulas. The general practice for metric definitions (one definition per metric with its version, grain and business date, frozen periods, reconciliation to source) is in [One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric); RealPage states the same principle for its AI suite as "every metric carries one governed definition." What follows is the property-specific content: the definitions, where the industry disagrees, and why sharing these numbers with competitors is an antitrust question.
+This chapter owns the volume's metric definitions. Earlier chapters store the inputs (leases and unit status periods, renewal offers, guest cards, turns, work orders, utility billing runs) and point here for the formulas. The general practice for metric definitions (one definition per metric with its version, grain and business date, frozen periods, reconciliation to source) is in [One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric); RealPage states the same principle for its AI suite as "every metric carries one governed definition." What follows is the property-specific content: the definitions, where the industry disagrees, and why sharing these numbers with competitors is an antitrust question.
 
 ## Why the Same Metric Disagrees
 
@@ -20,7 +20,7 @@ Four choices change every number in this chapter, and each definition below stat
 - **The basis: units, beds, square feet or dollars.** Physical occupancy counts space; economic occupancy counts money. Student housing counts beds, storage counts square feet, senior living counts residents as well as units ([Census](/books/property-tech/senior-living#census)).
 - **The population.** All properties, or a same-store set owned and stabilized for both periods compared. MAA calls a community stabilized when "achieving 90% average physical occupancy for 90 days"; a lease-up in the average drags every number.
 
-My rule: a metric definition is a row with its formula, denominator, basis, timing and population, versioned; every report and every data share names the definition and version it used; and a period that has been reported to an owner or a lender is frozen as reported, with restatements as new versions ([Versions, Stamps and Frozen Periods](/docs/architecture/data-pipelines#versions-stamps-and-frozen-periods)).
+My rule: a metric definition is a row with its formula, denominator, basis, timing and population, versioned; every report and every data share names the definition and version it used; and a period that has been reported to an owner or a lender is frozen as reported, with restatements as new versions ([Versions, Stamps and Frozen Periods](/docs/data/data-pipelines#versions-stamps-and-frozen-periods)).
 
 ## How the Platforms Report
 
@@ -244,7 +244,7 @@ Design decisions behind it:
 
 - **Definitions are rows with versions,** and a tenant may adopt a variant (an owner's lender wants total units) as its own version, never by editing the platform's.
 - **Values are frozen when reported.** An owner statement or lender report points at `metric_values` rows, and a late correction to a lease or a unit status creates a restatement row that supersedes the old one, keeping both ([Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections)).
-- **Every input carries the property's business date,** assigned once, so a move-out at 11 PM local time lands on the right day in every metric ([Assign the Business Date Once](/docs/architecture/data-pipelines#assign-the-business-date-once)).
+- **Every input carries the property's business date,** assigned once, so a move-out at 11 PM local time lands on the right day in every metric ([Assign the Business Date Once](/docs/data/data-pipelines#assign-the-business-date-once)).
 - **Benchmarks carry provenance and allowed uses,** and pooled nonpublic data can't be marked for pricing.
 - **Response time is a fact, not a status.** `first_responded_at` is set by the first contact event, so response SLAs are measured from records rather than from when someone moved a status.
 

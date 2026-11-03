@@ -1,10 +1,10 @@
 +++
 title = "Reservations & Holds"
 description = "Selling scarce slots and inventory: holds that expire on read, caps per holder, idempotent confirmation, and a database that refuses double-booking."
-category = "Architecture"
-order = 420
+category = "Building Blocks"
+order = 461
 tags = ["architecture", "reservations", "booking", "inventory", "concurrency", "postgres"]
-aliases = ["reservations-and-holds"]
+aliases = ["architecture/reservations-and-holds", "reservations-and-holds"]
 +++
 
 Anything scarce that people pick before they pay works the same way: an appointment slot, a hotel room, a concert seat, a rental car, the last unit of a product, a court booking, a technician's Thursday morning. Between "I want that one" and "it's mine" there are minutes of form-filling, card entry, a contract signature or a phone call, and during those minutes two things must stay true. Nobody else can take what this person is about to buy, and if they walk away, it goes back on sale without anyone having to notice.
@@ -55,7 +55,7 @@ The one place a stale `held` row still matters is the conflict constraint, which
 
 How long a hold lasts is a business rule, and it differs by channel. A web checkout needs minutes. A rep finishing a contract on a doorstep, a buyer waiting on a purchase order, or a group booking that needs a deposit needs much longer. Payment providers bound this for you when the hold rides on their checkout: Stripe Checkout sessions expire between 30 minutes and 24 hours after creation (24 hours by default), and Stripe's guide to limited inventory expires the session early and returns the items when the `checkout.session.expired` event arrives.
 
-- **Store the expiry per hold,** computed from a per-channel policy held as configuration ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), never a constant in code.
+- **Store the expiry per hold,** computed from a per-channel policy held as configuration ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)), never a constant in code.
 - **Show the countdown.** The customer should see that the seat is held for 10 more minutes, and the client should warn before it lapses.
 - **Extend only on progress.** Starting payment can extend a hold once, to cover a slow 3-D Secure challenge; idling on the page doesn't.
 - **Never let a hold outlive the payment window.** If your hold is 15 minutes and the payment session is 30, a customer can pay for something that's already been released. Make the payment session's expiry no later than the hold's, or extend the hold when payment begins.
@@ -205,7 +205,7 @@ Bookings are promises, and they end up in disputes and chargebacks. Record:
 - **Conflicts refused,** at least as counts per resource and channel. A rising conflict rate means availability shown to customers is stale, which is a bug even when the constraint saves you.
 - **Overbooking decisions:** the capacity set and by whom, and every customer moved or denied with what they were offered.
 
-Record structure and typed actors are in [Audit Trails](/docs/architecture/audit-trails#what-a-record-holds).
+Record structure and typed actors are in [Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds).
 
 ## Checklist
 

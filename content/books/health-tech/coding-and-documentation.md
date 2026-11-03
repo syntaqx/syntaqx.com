@@ -52,7 +52,7 @@ Clinical documentation integrity (CDI, also clinical documentation improvement) 
 
 The rule for queries is that they must not lead. A query presents the clinical indicators in the record and asks the clinician to document a conclusion, with options including "other" and "unable to determine," never a suggestion of the code that pays more. For software:
 
-- **Queries are records,** with the indicators shown, the options offered, the clinician's answer and the resulting documentation amendment, linked to the note ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Queries are records,** with the indicators shown, the options offered, the clinician's answer and the resulting documentation amendment, linked to the note ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **AI suggestions are queries, not edits.** A model that finds an undocumented condition in the chart produces a question for the clinician with its evidence, never a diagnosis added to the claim. The rules for AI-generated documentation are Part 10's [AI in Health Tech](/books/health-tech/ai-in-health-tech#ambient-scribes) chapter.
 - **Diagnoses drive risk payments.** In Medicare Advantage and value-based contracts, diagnoses raise payments directly, so CDI in those settings is a compliance focus of its own ([Risk Adjustment](/books/health-tech/value-based-care#medicare-advantage-and-risk-adjustment)).
 

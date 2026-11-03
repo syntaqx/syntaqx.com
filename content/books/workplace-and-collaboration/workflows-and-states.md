@@ -11,7 +11,7 @@ A work item's status is the one field everyone reads: the board column it sits i
 
 The difficulty is that the workflow is shared configuration with local meanings. A status called "Done" has to mean done to the board, the sprint report, the velocity chart, the automation that notifies the customer and the portfolio rollup three levels up, even when one team's "Done" means merged and another's means shipped. The products handle this by separating the status a team sees from a small fixed set of categories the product understands, and they differ in how much of the rest a customer may define. The customer's admins own the machine: which statuses exist, who may transition, which rules gate a move. The vendor owns the categories and the guarantees that reports depend on.
 
-This chapter covers statuses and categories, transitions and their rules, resolutions, shared versus team-owned workflows, and how to store a workflow as data. Items themselves are [Work Items, Hierarchies & Fields](/books/workplace-and-collaboration/work-items-and-fields); how statuses become board columns is [Boards, Sprints & Cycles](/books/workplace-and-collaboration/boards-sprints-and-cycles#columns-are-mapped-statuses); rules that run on transitions without a human are [Automation Rules](/books/workplace-and-collaboration/automation-rules). The general case for configuration as data, with versions and a record of which rule decided, is the playbook's [Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule).
+This chapter covers statuses and categories, transitions and their rules, resolutions, shared versus team-owned workflows, and how to store a workflow as data. Items themselves are [Work Items, Hierarchies & Fields](/books/workplace-and-collaboration/work-items-and-fields); how statuses become board columns is [Boards, Sprints & Cycles](/books/workplace-and-collaboration/boards-sprints-and-cycles#columns-are-mapped-statuses); rules that run on transitions without a human are [Automation Rules](/books/workplace-and-collaboration/automation-rules). The general case for configuration as data, with versions and a record of which rule decided, is the playbook's [Rules as Data](/docs/building-blocks/rules-as-data#the-shape-of-a-rule).
 
 ## How the Platforms Do It
 
@@ -73,7 +73,7 @@ Four design rules come from the two products:
 - **Enforce on every write path.** A rule the UI checks and the API skips is a suggestion. Azure's "always enforced" is the right default, and the bypass is a named permission, not a missing check.
 - **Keep the order fixed:** condition, then validator, then the state change, then post functions. A post function that fails after the status changed must not leave the item half-moved; it either runs in the same transaction or is an at-least-once job with its own retries ([Background Jobs](/docs/architecture/background-jobs#retries-and-dead-letters)).
 - **Separate gates from side effects.** Conditions and validators belong in the workflow; notifications, field copies and webhooks increasingly belong in automation, where they have their own audit, limits and loop protection ([Automation Rules](/books/workplace-and-collaboration/automation-rules#loops-and-runaway-rules)).
-- **Record which rule decided.** A rejected transition should say which condition or validator failed, and a bypass should be logged with its actor ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Record which rule decided.** A rejected transition should say which condition or validator failed, and a bypass should be logged with its actor ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 
 ## Resolutions
 
@@ -101,7 +101,7 @@ A shared workflow change touches every item in every project on it. The products
 
 ## Workflows as Data
 
-A workflow is a graph with attached rules, and storing it as data rather than code buys versioning, diffing, per-tenant variation and the ability to answer "what rules applied when this item moved last March." The playbook's [Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions) covers the general case. The work management specifics:
+A workflow is a graph with attached rules, and storing it as data rather than code buys versioning, diffing, per-tenant variation and the ability to answer "what rules applied when this item moved last March." The playbook's [Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions) covers the general case. The work management specifics:
 
 - **Version the whole workflow**, not individual edges, and stamp each status change with the version in force. A transition's validity is a property of the version, and an auditor's question is always about a point in time.
 - **Statuses are workspace objects; workflows reference them.** Two workflows sharing "In Review" lets cross-project boards and queries treat it as one status.
@@ -224,7 +224,7 @@ GROUP BY item_id;
 - **Every scheme change**, because moving a project to a different workflow changes which gates its items pass.
 - **Every bypass**: a transition with `bypassed_rules`, the permission that allowed it and the actor, as Azure's bypass permission implies.
 - **Rejected transitions** in a short-retention log, with the failing rule, which answers "why can't I close this" without a support ticket.
-- **Who moved it, typed:** member, automation, integration or agent, never "system" ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Who moved it, typed:** member, automation, integration or agent, never "system" ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 
 ## What This Means for the System You Build
 

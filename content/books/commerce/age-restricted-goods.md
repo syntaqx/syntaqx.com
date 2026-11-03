@@ -113,7 +113,7 @@ Rules for the system:
 
 - **The check at the door is the one that counts.** A checkout check proves who ordered; only the delivery check proves who received. For alcohol by carrier and tobacco, the shipment must use the adult-signature service, chosen by the system from the items, never left to the warehouse.
 - **A failed check has a path.** A courier who can't verify age returns the order; a parcel carrier that can't get an adult signature holds or returns it. The return has its own reason code, and the customer may owe a fee under the store's terms ([Return Fees and Restocking](/books/commerce/returns-and-exchanges#return-fees-and-restocking)).
-- **Store the result, not the document.** A verification record says which method, which vendor, the outcome, a reference and when; an ID image is sensitive personal data with a short retention, if it's kept at all ([Vendor Risk](/books/user-generated-platforms/minors-and-age-assurance#vendor-risk), [Retention Windows](/docs/architecture/data-retention#retention-windows)).
+- **Store the result, not the document.** A verification record says which method, which vendor, the outcome, a reference and when; an ID image is sensitive personal data with a short retention, if it's kept at all ([Vendor Risk](/books/user-generated-platforms/minors-and-age-assurance#vendor-risk), [Retention Windows](/docs/building-blocks/data-retention#retention-windows)).
 - **Express checkouts can't skip the rule.** Accelerated checkout buttons start a checkout that bypasses the storefront's steps, so the age and eligibility checks must run in the checkout itself ([Cart & Checkout](/books/commerce/cart-and-checkout)).
 
 ## How to Build It
@@ -217,17 +217,17 @@ WHERE ol.cart_id = $1;
 
 Design notes:
 
-- **Categories, not flags.** An item can be wine and a gift set; a vape kit can be a tobacco product and contain a lithium battery. Categories with a hierarchy and attributes (ABV, volume, FDA marketing order) let rules match at the right level ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Categories, not flags.** An item can be wine and a gift set; a vape kit can be a tobacco product and contain a lithium battery. Categories with a hierarchy and attributes (ABV, volume, FDA marketing order) let rules match at the right level ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **A missing rule means no.** The eligibility query treats a restricted line with no allowing rule as ineligible; a new state or category is closed until someone adds the rule with its source.
 - **Volume caps count history.** A cap per consumer per period is a sum over that customer's prior shipments of that category into that state, computed at checkout and again at shipment; identity merges across accounts matter here ([Customers, Accounts & Privacy](/books/commerce/customers-and-accounts)).
 - **The delivery check is copied onto the fulfillment.** The rule in force when the fulfillment was created decides the carrier service, and the label purchase refuses a service that doesn't provide it ([Labels](/books/commerce/shipping-and-carriers#labels)).
-- **Reports are generated from shipments.** The PACT report for a state and month is a query over delivered and shipped fulfillments with tobacco lines, stored as filed, with its due date computed and tracked ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Reports are generated from shipments.** The PACT report for a state and month is a query over delivered and shipped fulfillments with tobacco lines, stored as filed, with its due date computed and tracked ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Order holds for compliance.** An order that needs a person (an FFL license not yet verified, a failed database match) goes on a compliance hold rather than failing silently ([Order Management](/books/commerce/order-management)).
 
 ## Auditing
 
 - **Every age verification,** with the moment, method, vendor reference, result and rule, for every order with a restricted line.
-- **The eligibility decision for each restricted order:** the destination, the rule that allowed it and its version, and the license relied on ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **The eligibility decision for each restricted order:** the destination, the rule that allowed it and its version, and the license relied on ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Every shipment of tobacco or vapes** with the PACT fields (recipient, brand, quantity, carrier) and the monthly report it went into.
 - **Every firearm order's transfer:** the receiving FFL, its license verification and the outcome at the counter.
 - **License and permit history** per jurisdiction, with expiry alerts, because shipping on an expired permit is shipping without one.

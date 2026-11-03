@@ -137,7 +137,7 @@ These products are examined as credit (Regulation Z, UDAP, fair lending) and as 
 - **First-year fees** against the 25% cap, with the opening limit and whether any deposit was charged to the account.
 - **Every graduation review,** with its decision record and any notice.
 - **Every release of collateral,** amount, timing and destination, matched to the account's closure or graduation; an unreturned deposit is the common complaint.
-- **The reporting profile in force** for each month furnished, so a disputed tradeline can be explained field by field ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **The reporting profile in force** for each month furnished, so a disputed tradeline can be explained field by field ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Consent records** for consumer-permissioned bill reporting, including removal.
 
 ## What This Means for the System You Build

@@ -112,7 +112,7 @@ Three design consequences:
 - **The form expires and changes.** W-8 forms lapse and claims change when a payee moves; a payee whose form lapses falls back to the default rate until they re-certify. The tax profile is effective-dated, and each withholding records which profile applied.
 - **Withholding is a ledger movement.** The withheld amount moves to a tax liability account and is remitted on the tax calendar; the payee's statement and the year-end form show it.
 
-Other countries withhold too. Italy's 2017 law requires short-term rental platforms that process payments to withhold and remit host income tax, and Airbnb Ireland began withholding on host payments for Italian listings in 2024 after settling audits for 2017 to 2023. A withholding regime is a rule keyed by the listing's or payee's jurisdiction, resolved like any other ([Rules as Data](/docs/architecture/rules-as-data)).
+Other countries withhold too. Italy's 2017 law requires short-term rental platforms that process payments to withhold and remit host income tax, and Airbnb Ireland began withholding on host payments for Italian listings in 2024 after settling audits for 2017 to 2023. A withholding regime is a rule keyed by the listing's or payee's jurisdiction, resolved like any other ([Rules as Data](/docs/building-blocks/rules-as-data)).
 
 ## Information Returns: 1099-K, 1099-MISC and 1042-S
 
@@ -296,7 +296,7 @@ Payee records are what tax authorities, payees and courts ask for:
 - **Reports and corrections.** Every 1099, 1042-S, DAC7 and UK report as filed and furnished, with corrections linked to what they corrected, and the seller notices DAC7 requires.
 - **Payout account changes.** Who changed the bank account, the verification and the hold it triggered.
 
-The mechanics (append-only history, typed actors, snapshots) are in [Audit Trails](/docs/architecture/audit-trails); retention against deletion requests in [Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records).
+The mechanics (append-only history, typed actors, snapshots) are in [Audit Trails](/docs/building-blocks/audit-trails); retention against deletion requests in [Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records).
 
 ## What This Means for the System You Build
 

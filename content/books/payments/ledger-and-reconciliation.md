@@ -341,12 +341,12 @@ How it runs:
 
 ## Auditing
 
-Reconciliation records are what an examiner, an auditor or a sponsor bank reads to decide whether to trust everything else, so they need the properties [Audit Trails](/docs/architecture/audit-trails) describes, and a few specific to money:
+Reconciliation records are what an examiner, an auditor or a sponsor bank reads to decide whether to trust everything else, so they need the properties [Audit Trails](/docs/building-blocks/audit-trails) describes, and a few specific to money:
 
 - **Every match is explainable:** the rule and version that made it, the run, and the members on each side, with unmatching recorded rather than deleted.
 - **Every break's life is kept:** when it opened, who owned it, what was done, and the transaction that resolved it. A break closed without a resolving entry or a written reason is a finding.
 - **Every manual adjustment and write-off** shows who proposed it, who approved it, the evidence attached and the threshold that required the approval.
-- **Original files are immutable and hashed,** and every external record points to its file and raw row, so a number in a report can be walked back to the bytes the bank sent ([Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident)).
+- **Original files are immutable and hashed,** and every external record points to its file and raw row, so a number in a report can be walked back to the bytes the bank sent ([Make It Tamper-Evident](/docs/building-blocks/audit-trails#make-it-tamper-evident)).
 - **Each close stores its checks and their results,** so the state of reconciliation on any past day is shown as it was, not recomputed.
 - **Per-owner balance files are retained** with the reconciliation that proved their sum.
 

@@ -60,7 +60,7 @@ The browser upgrade was the biggest single lever: the client had sat on CEF 74 s
 
 ![Two timeline plan views. The first, at 1 second to 20 pixels, shows Riot's published League client bootstrap times: B0 of 29.5 seconds at the start of 2020 and B1 of 16.0 seconds for 90 percent of players as reported in February 2021, with a goal line G1 at 15 seconds, 1.0 second short of B1. The second, at 1 second to 40 pixels, splits an illustrative 15-second budget into seven parts: process start and self-update check 1.00, session restore 2.00, local services ready 1.50, boot-set plugins 4.50, first data 3.00, home screen 1.50 and headroom 1.50, summing to 15.00. A variable table defines each code.](/diagrams/gm-client-startup.svg "Startup as a budget. The published numbers are Riot's; the split of the 15-second goal is illustrative, and it only holds if everything outside the boot set waits until the home screen is usable.")
 
-Read together, these are a checklist. Startup cost grows with what loads at boot, so the boot set needs an owner and a test. An embedded browser is a dependency like any other, so schedule its upgrades instead of waiting for them to become a project ([Dependencies](/docs/engineering/dependencies)). Count crashes and errors per release, check the counting, and publish targets in percentiles, because the slowest tenth of machines is where a client's reputation is made.
+Read together, these are a checklist. Startup cost grows with what loads at boot, so the boot set needs an owner and a test. An embedded browser is a dependency like any other, so schedule its upgrades instead of waiting for them to become a project ([Dependencies](/docs/development/dependencies)). Count crashes and errors per release, check the counting, and publish targets in percentiles, because the slowest tenth of machines is where a client's reputation is made.
 
 ## One Client for Every Game: The Riot Client
 
@@ -138,7 +138,7 @@ Local services need a local API, and a local API is an attack surface: other pro
 A plugin system pays off when many teams ship into one client, and it needs four rules to stay healthy:
 
 - **A build is a manifest:** plugin names, exact versions and declared dependencies, resolved at build time so a broken combination never ships. Riot's JSON plugin list is the public example.
-- **Every plugin has an owning team** and a load phase: boot, deferred until the home screen is usable, or on demand when a screen opens ([Code Ownership](/docs/engineering/code-ownership)).
+- **Every plugin has an owning team** and a load phase: boot, deferred until the home screen is usable, or on demand when a screen opens ([Code Ownership](/docs/development/code-ownership)).
 - **The boot set is tested in CI.** Fail the build when a plugin enters the boot set without approval, or when boot-time cost per plugin passes its share of the budget. The broken Affinity mechanism is what happens without this.
 - **Shared code is shared once:** one copy of each framework version, one component library, a short list of supported versions, retired before new ones are added.
 

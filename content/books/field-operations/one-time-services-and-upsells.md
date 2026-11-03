@@ -245,7 +245,7 @@ Upsells and conversions produce familiar disputes: "the technician said I needed
 - **Amendments:** each terms version with its effective date, the proration inputs and result, and whether a signature or an approved estimate authorized it.
 - **Credits:** the one-time invoice credited, the rule version and window that allowed it, and the activation that posted it.
 
-Record shape and capture are in [Audit Trails](/docs/architecture/audit-trails); retention for field records is in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+Record shape and capture are in [Audit Trails](/docs/building-blocks/audit-trails); retention for field records is in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

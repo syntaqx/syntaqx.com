@@ -119,9 +119,9 @@ The same three questions apply to all of them: where can the clear key exist, wh
 
 ## Auditing
 
-Key records are evidence in a PCI DSS or PCI PIN assessment, in a network's review of a new connection, and in any investigation of a suspected compromise. The general design is in [Audit Trails](/docs/architecture/audit-trails), and [Logging Key Use](/docs/security/encryption-at-rest#logging-key-use) covers what a KMS records; for payment keys, make sure the record shows:
+Key records are evidence in a PCI DSS or PCI PIN assessment, in a network's review of a new connection, and in any investigation of a suspected compromise. The general design is in [Audit Trails](/docs/building-blocks/audit-trails), and [Logging Key Use](/docs/security/encryption-at-rest#logging-key-use) covers what a KMS records; for payment keys, make sure the record shows:
 
-- **The key inventory as it stood on any date.** Each key's purpose, algorithm, strength, key block attributes, check value, cryptoperiod and status, versioned so an assessor can see what was live last March, not just today. That's the documented architecture 3.6.1.1 asks of service providers, kept as a series of snapshots ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **The key inventory as it stood on any date.** Each key's purpose, algorithm, strength, key block attributes, check value, cryptoperiod and status, versioned so an assessor can see what was live last March, not just today. That's the documented architecture 3.6.1.1 asks of service providers, kept as a series of snapshots ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Every ceremony, signed.** The script, the custodians and witnesses present, each component's and the final key's check values, and anything that deviated from the script, kept with the signatures that make it a record rather than a note.
 - **Who held what.** Custodian assignments per component over time, so split knowledge can be shown to have held, including when a custodian left and the component was replaced.
 - **Rotations and revocations with their reasons.** When each key was replaced, why (end of cryptoperiod or suspected compromise), and which partners confirmed the new key.

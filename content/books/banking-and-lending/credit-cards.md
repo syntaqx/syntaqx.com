@@ -119,7 +119,7 @@ A penalty fee (late payment, returned payment, over-limit) is allowed only if it
 
 The CFPB's **Credit Card Penalty Fees final rule** (issued March 5, 2024; published March 15, 2024 at 89 FR 19128; effective May 14, 2024) would have cut the late fee safe harbor to **$8** for issuers that, with their affiliates, have one million or more open accounts, removed the annual inflation adjustment for that amount, and set the other safe harbors at $32 and $43. It never took effect: the rule was stayed in litigation brought by the U.S. Chamber of Commerce, the American Bankers Association, the Consumer Bankers Association and others in the Northern District of Texas (*Chamber of Commerce v. CFPB*, No. 4:24-cv-00213-P), and on **April 15, 2025** Judge Mark Pittman vacated it on the parties' joint motion for a consent judgment, in which the Bureau agreed the rule violated the CARD Act. Issuers continue to charge under the framework that existed before it, whose safe harbors the 2024 rule describes as $30 for a first late payment and $41 for a later one within the next six cycles. <!-- source-gap: card-safe-harbor-2026 | missing | the late fee safe harbor amounts in force for 2026 after the vacatur | closes with: the CFPB's 2025 or 2026 Regulation Z annual adjustment notice stating the 1026.52(b)(1)(ii) amounts | checked: 2026-11-01 --> The 2026 annual adjustment notice sets other Regulation Z thresholds and doesn't mention the penalty fee amounts, the CFPB's own adjustment page stops at 2021, and Cornell LII's copy of 1026.52 still prints the vacated rule's $8, $32 and $43 text as of October 2026. So don't read the amounts off the codified text: treat them as configuration with a source document, not a constant. As of July 2026, the CFPB had sent a request for information titled "Credit Card Late Fees and Late Payments" to OIRA for review, with no proposed rule announced.
 
-For the system, the late fee is a rule with versions: the amount (cost-justified or safe harbor), the cap at the minimum due, the one-per-event check, and the effective date of each change, with the cost analysis kept as the evidence ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+For the system, the late fee is a rule with versions: the amount (cost-justified or safe harbor), the cap at the minimum due, the one-per-event check, and the effective date of each change, with the cost analysis kept as the evidence ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## Credit Limits
 
@@ -230,7 +230,7 @@ The cycle-close job is the heart of it: for each segment it sums `segment_daily_
 
 ## Auditing
 
-Card credit is examined account by account, and the general design is in [Audit Trails](/docs/architecture/audit-trails). For card accounts, make sure the record shows:
+Card credit is examined account by account, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). For card accounts, make sure the record shows:
 
 - **The interest on every statement, reproducible:** daily balances per segment, the rate and method in force, and the rounding, so the "Balance Subject to Interest Rate" can be rebuilt.
 - **Grace decisions per cycle:** whether grace applied and why, with the payment that kept or lost it.

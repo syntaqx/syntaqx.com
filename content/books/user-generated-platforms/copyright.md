@@ -87,7 +87,7 @@ How platforms implement it varies at the edges:
 - **YouTube** lets a user resolve a strike by counter-notification, by retraction from the claimant, or by Copyright School and 90 days.
 - **Reddit** received 430 appeals including counter-notices in H2 2025; 34 were valid and restored 116 items, and five withdrawals restored five more.
 
-Three design rules come from the statute. **The window is business days,** so it needs a holiday calendar and a time zone, stored with the computed earliest and latest restore moments (the clock rule in [Legal Clocks](/books/user-generated-platforms/hosting-liability#legal-clocks)). **Restoration needs the content,** so removal for a notice is a state change with the media kept, not a purge, until the window and any suit are resolved ([Data Retention & Deletion](/docs/architecture/data-retention#retention-windows)). **The counter-notice is a notice,** with its own validity check and clock, linked to the takedown it answers.
+Three design rules come from the statute. **The window is business days,** so it needs a holiday calendar and a time zone, stored with the computed earliest and latest restore moments (the clock rule in [Legal Clocks](/books/user-generated-platforms/hosting-liability#legal-clocks)). **Restoration needs the content,** so removal for a notice is a state change with the media kept, not a purge, until the window and any suit are resolved ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-windows)). **The counter-notice is a notice,** with its own validity check and clock, linked to the takedown it answers.
 
 ## Repeat Infringers
 

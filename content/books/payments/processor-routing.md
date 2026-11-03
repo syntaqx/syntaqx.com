@@ -160,7 +160,7 @@ Count reattempts per card from `payment_attempts` joined through `payment_method
 
 ## Auditing
 
-Routing decisions are evidence when a processor questions a retry pattern, a network assesses excessive-retry fees, a merchant disputes a duplicate charge, or finance asks why costs moved. The general design is in [Audit Trails](/docs/architecture/audit-trails); for routing, make sure the record shows:
+Routing decisions are evidence when a processor questions a retry pattern, a network assesses excessive-retry fees, a merchant disputes a duplicate charge, or finance asks why costs moved. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for routing, make sure the record shows:
 
 - **Every rule set, versioned and approved.** Who changed the routing configuration, who approved it, and when it took effect, so any past payment's route can be explained by the rules live at the time.
 - **Every attempt's reason.** The rule that chose the route, the attempt kind (first, failover, cascade, retry), the attempt it followed, and the raw processor, issuer and advice codes that justified the next one.

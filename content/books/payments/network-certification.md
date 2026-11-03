@@ -78,11 +78,11 @@ Certification goes well when it's the last run of tests you already have, rather
 - **Turn every certification script into an automated test.** Each scripted case becomes a [contract test](/docs/quality/testing) against a recorded or simulated host, with the expected message asserted field by field. Then recertifying after a change is a test run, not a project.
 - **Deterministic test fixtures.** Certification hosts react to specific test card numbers and amounts (one amount approves, another declines with a given code). Keep them in fixtures, never in someone's notes.
 - **A certification environment that can replay.** A build that passed certification must be reproducible. Record the exact message traffic of every certification run and keep it, because the next question from the processor or the network will be "what did you send on the 14th?"
-- **Changes that touch messages get flagged in review.** A change to a field mapping, an indicator or a transaction type is a certification event. Code ownership on the message layer ([Code Ownership](/docs/engineering/code-ownership)) puts the people who know that in front of it.
+- **Changes that touch messages get flagged in review.** A change to a field mapping, an indicator or a transaction type is a certification event. Code ownership on the message layer ([Code Ownership](/docs/development/code-ownership)) puts the people who know that in front of it.
 
 ## Auditing
 
-Certification records are evidence twice: when a network or processor asks what you sent, and when a mandate date passes and someone asks whether you were ready. The general design is in [Audit Trails](/docs/architecture/audit-trails); for certification, make sure the record shows:
+Certification records are evidence twice: when a network or processor asks what you sent, and when a mandate date passes and someone asks whether you were ready. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for certification, make sure the record shows:
 
 - **Every certification run, kept whole.** The build, the message specification version, the test plan and its cases, the recorded traffic, and the result, so "what did you send on the 14th?" is a lookup.
 - **Every approval with what it covered.** The letter or confirmation (Mastercard's Testing Acknowledgement Notification, Visa's reporting tool confirmation, a processor's sign-off), stored with the transaction types, entry modes, terminals and kernels it approved, because adding anything outside that scope means testing again.

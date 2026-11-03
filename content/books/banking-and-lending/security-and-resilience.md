@@ -231,7 +231,7 @@ Design notes:
 
 - **Regimes are rows, so new ones are inserts.** A state amends its breach law, NCUA changes its rule, a program enters the EU: a new `notification_regimes` row with its definition, deadline and start, and the incident workflow picks it up.
 - **Determinations are re-evaluated.** Each new fact re-runs every regime that doesn't yet apply; a regime that starts applying gets a new row with its own determination time, and the earlier "doesn't apply" stays as it was decided.
-- **The incident record is evidence.** Who knew what and when, written as it happens, is what an examiner, a DFS certification and a court will read; reconstructing it afterward from chat logs is how timelines turn out wrong ([What a Record Holds](/docs/architecture/audit-trails#what-a-record-holds)).
+- **The incident record is evidence.** Who knew what and when, written as it happens, is what an examiner, a DFS certification and a court will read; reconstructing it afterward from chat logs is how timelines turn out wrong ([What a Record Holds](/docs/building-blocks/audit-trails#what-a-record-holds)).
 - **The asset inventory feeds the map.** Part 500's inventory fields (owner, classification, support end, recovery objective) are the same facts `critical_operations` needs; one inventory serves both, kept in the platform's configuration system with these tables as its banking view.
 - **Emit events:** `incident.opened`, `incident.provider_notice_received`, `notification.determined`, `notification.due_soon`, `notification.sent`, `operation.degraded`.
 

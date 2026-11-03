@@ -10,7 +10,7 @@ tags = ["commerce", "delivery", "refunds", "fraud", "risk", "disputes"]
 
 Something goes wrong with a meaningful share of delivery orders: a drink left off, the wrong burger, a bag delivered to the neighbor, an order marked delivered that never arrived. The customer reports it in the app, usually with no evidence beyond their word and maybe a photo, and expects money back in minutes. The platform has to decide whether to believe them, how much to give back and in what form, and who pays for it: the merchant who packed the bag, the courier who carried it, or the platform itself. Every one of those decisions is also an attack surface. Customers learn which reports are refunded without question, couriers learn which orders can be marked delivered and kept, attackers take over accounts with stored cards and credits, and promotion budgets are drained by people with many accounts.
 
-This chapter covers how the platforms handle missing and wrong items, who pays for an error, merchant error charges and their disputes, and the fraud each side commits: refund abuse by customers, fraud by couriers and insiders, account takeover, and promotion abuse. It extends `orders`, `order_lines` and `customers` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). Card fraud and chargebacks are the Payments volume's [Fraud & Risk](/books/payments/fraud-and-risk) and [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks); the scoring machinery is the playbook's [Automated Risk Decisions](/docs/architecture/risk-scoring).
+This chapter covers how the platforms handle missing and wrong items, who pays for an error, merchant error charges and their disputes, and the fraud each side commits: refund abuse by customers, fraud by couriers and insiders, account takeover, and promotion abuse. It extends `orders`, `order_lines` and `customers` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model). Card fraud and chargebacks are the Payments volume's [Fraud & Risk](/books/payments/fraud-and-risk) and [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks); the scoring machinery is the playbook's [Automated Risk Decisions](/docs/building-blocks/risk-scoring).
 
 ## How the Platforms Do It
 
@@ -70,9 +70,9 @@ Most false reports are individuals claiming a missing item that wasn't missing; 
 The defenses are the same machinery as payments fraud, applied to issue reports:
 
 - **History over the single report.** Refund rate per customer, per address, per device and per payment instrument, compared with the location's error rate. A customer reporting missing items from many unrelated restaurants is a different signal from a restaurant with many reports from unrelated customers.
-- **Friction by band.** Instant refund for low-risk reports, a photo requirement or credit-only for medium risk, manual review for high risk, as DoorDash describes for flagged customers ([Scores, Bands and the Human Middle](/docs/architecture/risk-scoring#scores-bands-and-the-human-middle)).
+- **Friction by band.** Instant refund for low-risk reports, a photo requirement or credit-only for medium risk, manual review for high risk, as DoorDash describes for flagged customers ([Scores, Bands and the Human Middle](/docs/building-blocks/risk-scoring#scores-bands-and-the-human-middle)).
 - **Linked identities.** Refund services and multi-accounting reuse devices, addresses and cards; linking them is what turns one refund at a time into a ring (see [Promotion Abuse](#promotion-abuse)).
-- **Outcomes as labels.** A refund later reversed by a chargeback, a merchant dispute won with a photo of the packed bag, or a courier's delivery photo showing the item are the labels a model learns from, and they arrive late ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)).
+- **Outcomes as labels.** A refund later reversed by a chargeback, a merchant dispute won with a photo of the packed bag, or a courier's delivery photo showing the item are the labels a model learns from, and they arrive late ([Labels Arrive Late](/docs/building-blocks/risk-scoring#labels-arrive-late)).
 
 ## Courier and Insider Fraud
 
@@ -92,11 +92,11 @@ The pattern for both sides: a sign-in from a new device is scored; a change to w
 
 ## Promotion Abuse
 
-New-customer discounts and referral credits are paid per account, so creating accounts is the attack. DoorDash's promotional terms limit "one Offer per person as determined by DoorDash in its sole discretion," cap credits at "$500 per person per year," and void new-customer offers if the name, email, phone or card links to "an existing active or inactive DoorDash account." The terms define the rule; enforcing it is identity linking: devices, payment fingerprints, addresses and phone numbers shared across accounts, resolved into one person or household before an offer is granted ([Record Linkage](/docs/architecture/record-linkage)).
+New-customer discounts and referral credits are paid per account, so creating accounts is the attack. DoorDash's promotional terms limit "one Offer per person as determined by DoorDash in its sole discretion," cap credits at "$500 per person per year," and void new-customer offers if the name, email, phone or card links to "an existing active or inactive DoorDash account." The terms define the rule; enforcing it is identity linking: devices, payment fingerprints, addresses and phone numbers shared across accounts, resolved into one person or household before an offer is granted ([Record Linkage](/docs/building-blocks/record-linkage)).
 
 Two design rules follow. **Decide eligibility at redemption against the linked identity,** not at sign-up against the account, because the abuse shows up as the second account's first order. **Record every redemption with the identity links that were checked,** because a customer denied an offer, or a promotion budget audited, needs the evidence.
 
-Detection systems for all of this combine rules and models. Uber's Mastermind was a rules engine that "can detect highly evolved forms of fraud in a fraction of a second"; its later RADAR system "detects the start of a fraud attack, and generates a rule to stop it," with analysts approving rules, treating an attack as a time series anomaly. [Rules and Models Together](/docs/architecture/risk-scoring#rules-and-models-together) is the general pattern.
+Detection systems for all of this combine rules and models. Uber's Mastermind was a rules engine that "can detect highly evolved forms of fraud in a fraction of a second"; its later RADAR system "detects the start of a fraud attack, and generates a rule to stop it," with analysts approving rules, treating an attack as a time series anomaly. [Rules and Models Together](/docs/building-blocks/risk-scoring#rules-and-models-together) is the general pattern.
 
 ## How to Build It
 
@@ -188,7 +188,7 @@ HAVING COUNT(DISTINCT o.location_id) >= 5;
 Design notes:
 
 - **Issue, resolution, charge and dispute are separate rows.** The customer's refund doesn't wait for the merchant's dispute, and reversing a merchant charge doesn't claw back the customer's refund.
-- **Charges carry their dispute deadline,** computed when charged ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Charges carry their dispute deadline,** computed when charged ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Identity links are hashed.** Matching needs equality, not the raw card number or phone, which keeps the linking table out of card data scope ([Sensitive Payment Data](/docs/security/sensitive-data)).
 - **Restrict backward transitions.** Moving an order out of `fulfilled`, or a fulfillment out of `delivered`, goes through a privileged path that records the employee and reason and alerts on repetition, closing the gap the insider scheme used.
 

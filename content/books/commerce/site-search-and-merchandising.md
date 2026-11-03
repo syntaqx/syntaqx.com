@@ -63,7 +63,7 @@ Three techniques extend the basics:
 - **Learning to rank.** OpenSearch's plugin "enables you to use machine learning (ML) and behavioral data to fine-tune the relevance of documents," with "models from the XGBoost and RankLib libraries" that "rescore the search results": the engine retrieves candidates, and a model trained on clicks and purchases reorders the top of the list.
 - **Behavior from the vendor.** Constructor and Bloomreach do the same learning as a service, on the events the storefront sends them.
 
-The general pattern of scoring candidates and folding several objectives into one order is the playbook's [Weighing Objectives](/docs/architecture/weighing-objectives); the marketplace version, with seller quality and promoted listings, is [Ranking Signals](/books/user-generated-platforms/listings-search-and-ranking#ranking-signals). My default for a store: lexical relevance with identifier fields, business signals as bucketed tie-breakers, out-of-stock items demoted (not hidden, unless the merchant decides), and learning to rank only once there are enough search sessions to train and evaluate on.
+The general pattern of scoring candidates and folding several objectives into one order is the playbook's [Weighing Objectives](/docs/building-blocks/weighing-objectives); the marketplace version, with seller quality and promoted listings, is [Ranking Signals](/books/user-generated-platforms/listings-search-and-ranking#ranking-signals). My default for a store: lexical relevance with identifier fields, business signals as bucketed tie-breakers, out-of-stock items demoted (not hidden, unless the merchant decides), and learning to rank only once there are enough search sessions to train and evaluate on.
 
 ## Synonyms, Spelling and Query Understanding
 
@@ -141,7 +141,7 @@ Personalization still has rules of its own:
 
 ## Measuring Search
 
-Search earns its budget through a handful of measures, each defined once and computed from search events ([One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric)):
+Search earns its budget through a handful of measures, each defined once and computed from search events ([One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric)):
 
 - **Zero-result rate:** searches returning nothing, as a share of searches; the list of those queries is the synonym and catalog backlog.
 - **Click-through rate and position of first click:** whether the top of the page is right.
@@ -149,7 +149,7 @@ Search earns its budget through a handful of measures, each defined once and com
 - **Refinement rate:** how often shoppers reformulate or add filters, a sign the first results missed.
 - **Exit rate from search:** sessions that searched and left.
 
-Changes to ranking, synonyms or rules are tested against these, ideally as A/B tests with the arm recorded on each search event, and replayed against saved queries before release ([Replay and Shadow Testing](/docs/architecture/weighing-objectives#replay-and-shadow-testing)). Vendor claims of conversion lifts (Constructor quotes a customer's "13% lift in ecommerce conversions") are each vendor's own measurement and are the case for running the test yourself.
+Changes to ranking, synonyms or rules are tested against these, ideally as A/B tests with the arm recorded on each search event, and replayed against saved queries before release ([Replay and Shadow Testing](/docs/building-blocks/weighing-objectives#replay-and-shadow-testing)). Vendor claims of conversion lifts (Constructor quotes a customer's "13% lift in ecommerce conversions") are each vendor's own measurement and are the case for running the test yourself.
 
 ## How to Build It
 
@@ -240,7 +240,7 @@ Design notes:
 - **Which rules, synonyms and boosts were active when,** with owners and versions, so "why did this product disappear from search" has an answer.
 - **Paid placements** with their funding agreement and the label shown, because a supplier, an auditor or a regulator may ask which results were ads.
 - **Search and recommendation decisions for a session,** kept for the measurement window and then aggregated, including the model or ranking version.
-- **Exclusions** (recalled, restricted, out-of-market items) and when they took effect in the index ([Audit Trails](/docs/architecture/audit-trails)).
+- **Exclusions** (recalled, restricted, out-of-market items) and when they took effect in the index ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

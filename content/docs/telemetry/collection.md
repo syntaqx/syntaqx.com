@@ -19,7 +19,7 @@ Every serious analytics SDK has the same shape: `track()` appends to a local que
 - **Batch to the collector's limits.** Segment's HTTP API takes a maximum of 32 KB per event and 500 KB per batch request, and answers oversized payloads with `400`. Size batches below the limit and split rather than fail.
 - **Bound the queue.** A device offline for a week shouldn't fill the disk. Cap the queue by count or bytes, drop the oldest low-value events first, and count what was dropped in a field on the next batch, so the loss is visible in the data instead of silent.
 
-An analytics queue is not the same thing as a sync outbox. The [device outbox](/docs/architecture/offline-sync#the-device-outbox) for business commands must never lose an entry; an analytics queue may drop a scroll event under pressure and say so. That's another reason facts that count (orders, payments, completed jobs) come from the server ([Event Design & Instrumentation](/docs/telemetry/event-design#server-side-or-client-side)), not from the analytics queue.
+An analytics queue is not the same thing as a sync outbox. The [device outbox](/docs/building-blocks/offline-sync#the-device-outbox) for business commands must never lose an entry; an analytics queue may drop a scroll event under pressure and say so. That's another reason facts that count (orders, payments, completed jobs) come from the server ([Event Design & Instrumentation](/docs/telemetry/event-design#server-side-or-client-side)), not from the analytics queue.
 
 ## Retries Without Double Counting
 
@@ -33,7 +33,7 @@ Uploads fail, so the SDK retries, and a retry after a lost response sends events
 
 ## Two Clocks
 
-Every client event has at least two times: when the device says it happened and when your server received it. Keep both, name them for what they are, and never let one overwrite the other ([Offline-First Sync](/docs/architecture/offline-sync#two-clocks) makes the same rule for commands).
+Every client event has at least two times: when the device says it happened and when your server received it. Keep both, name them for what they are, and never let one overwrite the other ([Offline-First Sync](/docs/building-blocks/offline-sync#two-clocks) makes the same rule for commands).
 
 Device clocks are wrong often enough to matter: dead batteries, manual changes, a game player winding the clock forward for a daily reward. The fix both major event pipelines use is to send a third time, when the batch was sent, and let the skew cancel out. Segment calculates `timestamp = receivedAt - (sentAt - originalTimestamp)`. Snowplow's `derived_tstamp` is "`collector_tstamp` minus the difference between the `dvce_sent_tstamp` and the `dvce_created_tstamp`," and Snowplow recommends it for reporting.
 
@@ -63,7 +63,7 @@ Browsers don't promise to run your code when a page goes away. Chrome's Page Lif
 - **Use `navigator.sendBeacon()`** (or `fetch()` with `keepalive: true`) for that final flush. It queues a small POST that survives the page going away, and its queued data is limited to 64 KiB, so the final batch has to be small. A `true` return means the browser queued it, not that the server got it. Performance beacons follow the same rules ([Real-User Monitoring](/docs/observability/frontend-and-synthetic#real-user-monitoring)).
 - **Don't count on a session-end event.** Sessions end by timeout in the pipeline after a period of inactivity you choose per product, not by a final event the browser may never send.
 
-Mobile is stricter. iOS and Android suspend backgrounded apps and ration background work ([Offline-First Sync](/docs/architecture/offline-sync#background-execution-is-rationed)), so the SDK flushes when the app goes to the background, persists everything else, and drains on the next launch. Some users are on metered connections: batch larger and less often on cellular, and never upload bulky diagnostics outside Wi-Fi without the user's say.
+Mobile is stricter. iOS and Android suspend backgrounded apps and ration background work ([Offline-First Sync](/docs/building-blocks/offline-sync#background-execution-is-rationed)), so the SDK flushes when the app goes to the background, persists everything else, and drains on the next launch. Some users are on metered connections: batch larger and less often on cellular, and never upload bulky diagnostics outside Wi-Fi without the user's say.
 
 ## Ad Blockers and First-Party Collection
 
@@ -86,7 +86,7 @@ Server-side SDKs are also where backend events enter: the order service emitting
 
 ## From Collector to Warehouse
 
-The ingestion path follows the [Data Pipelines & Analytics](/docs/architecture/data-pipelines) layers, with an event stream in front:
+The ingestion path follows the [Data Pipelines & Analytics](/docs/data/data-pipelines) layers, with an event stream in front:
 
 1. **Collector.** A stateless HTTP endpoint that authenticates the source (a write key for clients, credentials for servers), stamps the receive time, enforces size limits and writes the raw batch somewhere durable before acknowledging. Snowplow's collector "saves the raw events to storage" before anything else; that raw copy is what lets you rebuild after a bug.
 2. **Validate and enrich.** Each event is checked against its schema; failures go to a failed-events stream to be fixed and replayed, never dropped. Enrichment adds what the client shouldn't be trusted with: the derived timestamp, a coarse location from the IP (after which the IP itself can be truncated or discarded), bot flags.
@@ -103,7 +103,7 @@ For analytics I choose the policy deliberately:
 
 - **Partition by event time,** the derived timestamp, not by load time, so a late event lands in the day it belongs to.
 - **Rebuild a trailing window** of recent days on every run, sized from the lateness you measure (below), so late events are picked up without a manual backfill.
-- **Close periods that money depends on.** Once a month's numbers feed an invoice, a revenue share or a commission, they're frozen; a late event updates the next open period as an adjustment ([Data Pipelines & Analytics](/docs/architecture/data-pipelines#versions-stamps-and-frozen-periods)).
+- **Close periods that money depends on.** Once a month's numbers feed an invoice, a revenue share or a commission, they're frozen; a late event updates the next open period as an adjustment ([Data Pipelines & Analytics](/docs/data/data-pipelines#versions-stamps-and-frozen-periods)).
 - **Reject the implausible.** An event dated years ago or in the future is a broken clock, not a late arrival; quarantine it rather than letting it create a phantom day in a chart.
 - **Measure lateness.** The distribution of receive time minus event time, by platform and app version, tells you how long the trailing window needs to be and when a release broke the uploader.
 
@@ -115,7 +115,7 @@ Analytics cost grows with users times events per user times bytes per event, and
 - **Aggregate on the device.** One `video_watched` with a duration beats sixty `video_heartbeat` events; a histogram of frame times beats every frame.
 - **Sample** the high-volume, low-value families, with the rate recorded.
 - **Trim properties.** Context sent once per session instead of on every event, and no large blobs (full URLs with query strings, stack traces) in product events.
-- **Tier retention.** Raw events for a defined window, aggregates for longer ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Tier retention.** Raw events for a defined window, aggregates for longer ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 - **Kill switches** for every event family from remote configuration, because the day a release floods the pipeline is the day nobody can ship a fix quickly.
 - **Report cost per thousand active users** beside the pipeline's own metrics, so a feature that doubles the bill is visible the week it ships ([Cost & FinOps](/docs/operations/cost-and-finops)).
 

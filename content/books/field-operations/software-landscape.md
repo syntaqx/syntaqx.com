@@ -155,7 +155,7 @@ A landscape of connected systems needs auditing across the joins, not just insid
 - **Know what each vendor keeps and for how long.** Jobber's activity feed keeps notifications up to a year; Dataverse audit retention defaults to forever; ServiceM8's account activity log keeps 90 days and can't be exported. If a regulator or a lawsuit needs seven years, the vendor's log isn't your archive.
 - **Keep integration payloads** for the window disputes arise in, because "the AI booked it" and "the canvassing app said it was signed" are claims you'll need to prove.
 
-The mechanics are in [Audit Trails](/docs/architecture/audit-trails), and the field records regulators ask for in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails), and the field records regulators ask for in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

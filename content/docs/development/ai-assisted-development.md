@@ -1,7 +1,8 @@
 +++
 title = "AI-Assisted Development"
 description = "Working with AI coding agents: a person owns every change, review follows measured risk, standards live in the repo, CI enforces them, nothing ships unverified."
-category = "Engineering Practice"
+category = "Development"
+aliases = ["engineering/ai-assisted-development"]
 order = 1026
 tags = ["ai", "agents", "process", "security"]
 +++
@@ -14,8 +15,8 @@ Ownership never moves to the agent. Every change has a person who owns it exactl
 
 - **Read the diff where it matters.** Anything on the one-way-door list (billing, auth, data deletion, migrations, public APIs) and any area where agent changes fail often gets a person's review like a teammate's: read it, question it, reject what you don't understand.
 - **Let low-risk changes merge on green, once the numbers say so.** A dependency patch, or a small fix with a test that failed before and passes after, can merge on an independent review by a different model in a different session and a green pipeline. That permission is earned per area, from the track record below.
-- **Keep changes small enough to review.** An agent will happily produce a 3,000-line diff. Ask for the same work in steps instead. See [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews).
-- **Decisions stay human.** Agents can draft a [design doc or ADR](/docs/engineering/design-docs) and lay out the tradeoffs; people choose. A change that alters what a customer sees waits for a person, with a [preview environment](/docs/operations/environments), before it merges.
+- **Keep changes small enough to review.** An agent will happily produce a 3,000-line diff. Ask for the same work in steps instead. See [Commits, PRs & Code Review](/docs/development/commits-and-reviews).
+- **Decisions stay human.** Agents can draft a [design doc or ADR](/docs/development/design-docs) and lay out the tradeoffs; people choose. A change that alters what a customer sees waits for a person, with a [preview environment](/docs/operations/environments), before it merges.
 
 ## Measure Agents Like Any Contributor
 
@@ -38,7 +39,7 @@ An agent only follows rules it can read. Write them down where it looks:
 
 - **An agent instructions file** ([`AGENTS.md`](https://agents.md/), or a tool-specific one like `CLAUDE.md`) with the project's commands, conventions and hard constraints: what not to reintroduce, what needs a human, how to verify.
 - **The playbook and ADRs** in or linked from the repository. A written playbook pays off twice: the agent follows the defaults without being told, and the short list of ADRs tells it exactly where this codebase departs from them.
-- **Escalation rules.** Which paths (the `CODEOWNERS` file), which kinds of change and which [one-way doors](/docs/engineering/design-docs) need a person, and what counts as customer-visible. A rule that lives in someone's head as a vague sense of unease doesn't reach the agent.
+- **Escalation rules.** Which paths (the `CODEOWNERS` file), which kinds of change and which [one-way doors](/docs/development/design-docs) need a person, and what counts as customer-visible. A rule that lives in someone's head as a vague sense of unease doesn't reach the agent.
 - **The architecture.** Module boundaries, where new code goes, and the rule that a new service, datastore or deployment target starts with a design doc. Left alone, an agent will build a feature as its own app with its own database, or give every handler its own function; see [Service Boundaries](/docs/architecture/service-boundaries).
 - **Correct the instructions, not just the output.** When an agent gets something wrong twice, the fix is a sentence in the instructions file, so every future session gets it right. When the mistake matters, the fix is a check that makes it impossible.
 
@@ -62,7 +63,7 @@ The most common agent failure is claiming success without checking. Every change
 Models produce code that looks right and isn't. The usual suspects:
 
 - **APIs that don't exist,** or existed two versions ago. Check the docs for the version you actually have installed.
-- **Packages that don't exist.** This happens often enough to be an attack surface. A [USENIX Security 2025 study](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen) of 16 code models found hallucinated package names in at least 5.2% of commercial models' suggestions and 21.7% of open-source models', over 200,000 unique fake names in all. Because models repeat the same inventions, attackers can register those names with malicious code and wait, an attack known as [slopsquatting](https://www.socket.dev/blog/slopsquatting-how-ai-hallucinations-are-fueling-a-new-class-of-supply-chain-attacks). Every new dependency is [vetted by a person](/docs/engineering/dependencies#adding-a-dependency).
+- **Packages that don't exist.** This happens often enough to be an attack surface. A [USENIX Security 2025 study](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen) of 16 code models found hallucinated package names in at least 5.2% of commercial models' suggestions and 21.7% of open-source models', over 200,000 unique fake names in all. Because models repeat the same inventions, attackers can register those names with malicious code and wait, an attack known as [slopsquatting](https://www.socket.dev/blog/slopsquatting-how-ai-hallucinations-are-fueling-a-new-class-of-supply-chain-attacks). Every new dependency is [vetted by a person](/docs/development/dependencies#adding-a-dependency).
 - **Insecure defaults:** string-built SQL, disabled certificate checks, secrets in code, permissive CORS. Public code is full of these, so the most common pattern in training isn't the safe one. [OWASP](https://genai.owasp.org/llmrisk/llm092025-misinformation/) lists unsafe code generation as a consequence of over-relying on model output.
 - **Licensing and provenance.** Generated code that closely mirrors an existing project carries that project's license. Treat long verbatim-looking blocks with suspicion.
 

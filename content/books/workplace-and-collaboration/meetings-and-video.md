@@ -66,7 +66,7 @@ At the minimum, video is up to 240p and screen sharing runs at 1.875 to 7.5 fram
 
 WebRTC fixed a floor so that any two browsers can talk. [RFC 7874](https://www.rfc-editor.org/rfc/rfc7874) requires every WebRTC endpoint to implement Opus and G.711 for audio; [RFC 7742](https://www.rfc-editor.org/rfc/rfc7742) requires browsers to implement VP8 and H.264 Constrained Baseline for video. The floor shows up in odd places: Microsoft notes that Firefox users need the OpenH264 plugin for full Teams meeting support.
 
-Above the floor, vendors move to newer codecs for the bad-network case. Google reported in 2023 that Meet "has tested AV1 successfully in extremely low bandwidth conditions, down to 40 kbps," and that Chrome's AV1 encoder at its real-time speed setting gave 12% better quality than VP9 at the same bandwidth while running 25% faster on desktops, and 45% better compression for screen content. The catch is decode and encode cost on old hardware without AV1 acceleration, which is why codec choice is negotiated per participant and the SFU forwards each receiver a stream it can decode. Codec families and rate control in general are [Media Compression](/docs/architecture/media-compression#rate-control-for-video).
+Above the floor, vendors move to newer codecs for the bad-network case. Google reported in 2023 that Meet "has tested AV1 successfully in extremely low bandwidth conditions, down to 40 kbps," and that Chrome's AV1 encoder at its real-time speed setting gave 12% better quality than VP9 at the same bandwidth while running 25% faster on desktops, and 45% better compression for screen content. The catch is decode and encode cost on old hardware without AV1 acceleration, which is why codec choice is negotiated per participant and the SFU forwards each receiver a stream it can decode. Codec families and rate control in general are [Media Compression](/docs/building-blocks/media-compression#rate-control-for-video).
 
 ## Encryption
 
@@ -256,7 +256,7 @@ Notes on the sketch:
 - **Every removal and every lock** of a meeting, with the actor.
 - **Encryption state per session,** so what the vendor could have seen is a recorded fact, not a reconstruction.
 - **Every app, gateway and bot that joined,** with the app installation and the admin consent behind it.
-- **Attendance** for meetings whose attendance has legal weight (training completion, board meetings, regulated client calls), retained per the customer's policy rather than the vendor's. The audit store's design is [Audit Trails](/docs/architecture/audit-trails#what-a-record-holds); retention of these records is [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
+- **Attendance** for meetings whose attendance has legal weight (training completion, board meetings, regulated client calls), retained per the customer's policy rather than the vendor's. The audit store's design is [Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds); retention of these records is [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
 
 ## What This Means for the System You Build
 

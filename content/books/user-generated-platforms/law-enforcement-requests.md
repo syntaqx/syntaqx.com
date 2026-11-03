@@ -91,15 +91,15 @@ The data model consequence, already set in [Accounts, Identity & Standing](/book
 
 A user's privacy rights and a request's holds meet in four places:
 
-- **Erasure.** A user can ask for deletion while a preservation request or litigation hold covers their account. GDPR Article 17(3) excepts processing needed "for compliance with a legal obligation" and "for the establishment, exercise or defence of legal claims," and US preservation is a legal obligation. The erasure job skips records under a `legal_holds` row in force and erases the rest, as [Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records) describes; when the hold ends, it runs again.
+- **Erasure.** A user can ask for deletion while a preservation request or litigation hold covers their account. GDPR Article 17(3) excepts processing needed "for compliance with a legal obligation" and "for the establishment, exercise or defence of legal claims," and US preservation is a legal obligation. The erasure job skips records under a `legal_holds` row in force and erases the rest, as [Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records) describes; when the hold ends, it runs again.
 - **Access.** A data access request returns the user's data; Article 23 lets EU or member state law restrict rights to protect the "prevention, investigation, detection or prosecution of criminal offences," and US nondisclosure orders forbid revealing the request. The export excludes holds and request records flagged for no notice ([Data Subject Rights](/docs/compliance/gdpr#data-subject-rights)). Reddit received 33,135 access requests in the second half of 2025, which shows the two flows run at comparable scale.
-- **Retention limits.** Data the platform doesn't keep can't be produced: Reddit says it collects and retains limited information by default, and preservation can't recreate data already gone. A short retention period for IP logs is a privacy decision with law enforcement consequences, and the retention schedule should say so ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+- **Retention limits.** Data the platform doesn't keep can't be produced: Reddit says it collects and retains limited information by default, and preservation can't recreate data already gone. A short retention period for IP logs is a privacy decision with law enforcement consequences, and the retention schedule should say so ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 - **Who holds the data.** The entity that controls the data decides which law governs a request (Google LLC under US law, Google Ireland under Irish and EU law; Discord Netherlands B.V. for the EEA). The controller is a property of the account's data, recorded where the user is served from.
 
 ## The Operating Model
 
 1. **Intake.** One channel (a portal, or a verified address for requesters without access), with the requester's identity, agency, jurisdiction, case number and the legal document as a non-editable file. Each request gets a reference the requester must quote on follow-ups (Discord's preserved-data reference is the pattern).
-2. **Classify.** Process type (subpoena, 2703(d) order, warrant, pen register order, preservation, emergency, MLAT, CLOUD Act order, European Production or Preservation Order, civil subpoena, nondisclosure order), issuing country and authority, data categories requested, and deadlines computed and stored at receipt ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+2. **Classify.** Process type (subpoena, 2703(d) order, warrant, pen register order, preservation, emergency, MLAT, CLOUD Act order, European Production or Preservation Order, civil subpoena, nondisclosure order), issuing country and authority, data categories requested, and deadlines computed and stored at receipt ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 3. **Verify.** The requester, and for emergencies the emergency.
 4. **Resolve identifiers.** The request names a handle, an email, a phone number, a message link or a community; resolve each to account ids as of the date in question (handles change: [Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#auditing) keeps every handle an account has held).
 5. **Preserve first.** Place `legal_holds` on the named accounts' records before review completes, with notice suppressed if the requester or law requires.
@@ -180,7 +180,7 @@ CREATE TABLE legal_request_productions ( -- exactly what left the platform
 
 Notes on the sketch:
 
-- **Process type gates categories.** A check in the production job (and a constraint where practical) refuses `content` unless the process is a warrant, a CLOUD Act or European production order covering content, or an emergency with a recorded basis; `subscriber` alone for a subpoena. The ladder lives in data, keyed by country and process type, because it differs by jurisdiction ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Process type gates categories.** A check in the production job (and a constraint where practical) refuses `content` unless the process is a warrant, a CLOUD Act or European production order covering content, or an emergency with a recorded basis; `subscriber` alone for a subpoena. The ladder lives in data, keyed by country and process type, because it differs by jurisdiction ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **Preservation is a hold.** A preservation request creates `legal_holds` rows with reason `preservation_request` for each resolved subject's records, with `valid_during` set to 90 days (or 60 under the EU regime) and extended on renewal; the erasure job skips them, and expiry releases them unless process arrived ([Accounts, Identity & Standing](/books/user-generated-platforms/accounts-and-identity#how-to-build-it)).
 - **Notice is scheduled.** `nondisclosure_until` sets the hold's `notify_user = false` and each subject's `notice_due_at`; a [background job](/docs/architecture/background-jobs) sends notices when they come due, and indefinite orders are flagged for counsel to challenge, as Discord and Reddit do.
 - **Identifiers resolve as of a date.** A handle in a request maps through `account_handles` history to the account that held it at the time, and an unmatched identifier is recorded, not dropped, so the response can say "no such account."
@@ -195,7 +195,7 @@ Notes on the sketch:
 - **Every emergency disclosure's basis,** written at the time: the good-faith belief is the legal defense.
 - **Every hold** created by a request, and when and why it was released.
 - **Every user notice,** sent or suppressed, with the order that suppressed it and its end date.
-- **Every access** by the legal response team to user data, logged as [Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes) requires.
+- **Every access** by the legal response team to user data, logged as [Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes) requires.
 
 ## What This Means for the System You Build
 

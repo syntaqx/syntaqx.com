@@ -8,7 +8,7 @@ tags = ["telemetry", "analytics", "privacy", "consent", "gdpr", "ccpa"]
 
 Analytics is the part of a product most likely to collect personal data nobody decided to collect. An SDK added for one funnel sets an identifier on every visitor before the cookie banner has rendered. A page URL carries an email address in its query string into every event. A support tool's session replay records a bank customer typing their account number. A game's analytics SDK sends a device ID for a nine-year-old player to an ad network. Each was one line of code, and each is the kind of thing regulators write about.
 
-The rules aren't vague about telemetry; they're just spread across several laws, and they ask different questions. This chapter is how I build analytics so it's on the right side of them by construction: what needs consent before anything runs, how SDKs are gated, how opt-out signals are honored, what changes for children, and how minimization, pseudonymous IDs, retention and deletion work in an event pipeline. [GDPR & Privacy](/docs/compliance/gdpr) covers the law in general and [Data Retention & Deletion](/docs/architecture/data-retention) the deletion mechanics; this is the telemetry-specific part. It describes how the rules shape the system, not legal advice for your product, which is a question for counsel.
+The rules aren't vague about telemetry; they're just spread across several laws, and they ask different questions. This chapter is how I build analytics so it's on the right side of them by construction: what needs consent before anything runs, how SDKs are gated, how opt-out signals are honored, what changes for children, and how minimization, pseudonymous IDs, retention and deletion work in an event pipeline. [GDPR & Privacy](/docs/compliance/gdpr) covers the law in general and [Data Retention & Deletion](/docs/building-blocks/data-retention) the deletion mechanics; this is the telemetry-specific part. It describes how the rules shape the system, not legal advice for your product, which is a question for counsel.
 
 ## Two Rules, Two Questions
 
@@ -37,7 +37,7 @@ Where consent is required, it has to come first. The ICO puts it plainly: "If no
 - **Withdrawal is as easy as giving consent,** and stops the technology.
 - **You can prove it.** Keep a record of what was chosen, when and against which version of the notice.
 
-That last point is the same design as the [consent ledger for notifications](/docs/architecture/notifications#the-consent-ledger): an append-only record of grants and withdrawals per purpose, keyed by the anonymous ID (and the user ID once known), with the version of the text shown. A boolean in a cookie is the current state; the ledger is the evidence.
+That last point is the same design as the [consent ledger for notifications](/docs/building-blocks/notifications#the-consent-ledger): an append-only record of grants and withdrawals per purpose, keyed by the anonymous ID (and the user ID once known), with the version of the text shown. A boolean in a cookie is the current state; the ledger is the evidence.
 
 ## Gating SDKs
 
@@ -89,7 +89,7 @@ The engineering consequence is a **restricted mode** decided by the age signal t
 
 ## Collect Less
 
-The cheapest privacy control is the field you never collected. Data minimization is a GDPR principle ([Data Retention & Deletion](/docs/architecture/data-retention)), and in telemetry it's mostly a set of defaults in the SDK wrapper and the collector:
+The cheapest privacy control is the field you never collected. Data minimization is a GDPR principle ([Data Retention & Deletion](/docs/building-blocks/data-retention)), and in telemetry it's mostly a set of defaults in the SDK wrapper and the collector:
 
 - **No direct identifiers in events.** The user is an opaque user ID ([Event Design & Instrumentation](/docs/telemetry/event-design#properties-and-context)); names, emails and phone numbers stay in the systems that need them.
 - **Strip URLs.** Query strings and fragments carry tokens, emails and search terms. Send the route template (`/orders/{id}`) or an allow-listed set of parameters, never the raw URL.
@@ -114,14 +114,14 @@ Pseudonymization is still worth doing. The EDPB notes that the risk reduction it
 
 Raw events are the most detailed record of behavior a company holds, and they don't need to live forever. My defaults:
 
-- **Raw events have a fixed window,** long enough to rebuild models after a bug and short enough to explain, partitioned by event date so expiring a day is dropping a partition ([Data Retention & Deletion](/docs/architecture/data-retention#retention-windows)).
+- **Raw events have a fixed window,** long enough to rebuild models after a bug and short enough to explain, partitioned by event date so expiring a day is dropping a partition ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-windows)).
 - **Aggregates outlive raw data.** Daily counts by dimension, cohort tables and metric snapshots keep the history the business needs without the individual trail.
 - **Identifiers expire on the device too.** A first-party analytics identifier gets a lifetime (the CNIL's 13 months is a sensible ceiling) and is regenerated after it.
 - **Vendor copies have the same windows.** Set data retention in every analytics tool to match yours; a vendor holding five years of events you deleted after one is your problem, not theirs.
 
 ## Deletion Reaches the Analytics Tools
 
-An erasure request ([GDPR & Privacy](/docs/compliance/gdpr#data-subject-rights)) has to reach every copy, and analytics creates many: the raw store, the warehouse, the stream's retention, and every vendor the events were forwarded to. [Data Retention & Deletion](/docs/architecture/data-retention#erasure-requests) describes the erasure pipeline; for telemetry, three details decide whether it works.
+An erasure request ([GDPR & Privacy](/docs/compliance/gdpr#data-subject-rights)) has to reach every copy, and analytics creates many: the raw store, the warehouse, the stream's retention, and every vendor the events were forwarded to. [Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-requests) describes the erasure pipeline; for telemetry, three details decide whether it works.
 
 **Delete by every identifier.** Events are keyed by anonymous IDs as well as user IDs, so the request resolves the user ID to every linked anonymous ID through the identity links and deletes by all of them.
 

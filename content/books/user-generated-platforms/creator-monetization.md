@@ -320,10 +320,10 @@ ORDER BY 1;
 
 Creator earnings are income someone will dispute, report to a tax authority and compare with a competitor's terms. The record has to show:
 
-- **Every earning back to its payment or allocation,** with the program terms in force, the base and both shares, so a creator's statement can be rebuilt line by line ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Every earning back to its payment or allocation,** with the program terms in force, the base and both shares, so a creator's statement can be rebuilt line by line ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Every pool's inputs,** per country and period: revenue, deductions, eligible views, each creator's share and the exclusions applied, kept as long as the earnings are.
 - **Every tier and program decision,** with the points or criteria that produced it and the date it took effect, because a creator who missed the 70% tier by two points will ask.
-- **Every price and split change,** with its effective date and the notice given to subscribers and creators ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Every price and split change,** with its effective date and the notice given to subscribers and creators ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Every reversal linked to its cause:** the refund, chargeback, invalid-traffic finding or program termination, and the earnings it reversed.
 - **Disclosure declarations** on sponsored content, with the revision they applied to.
 

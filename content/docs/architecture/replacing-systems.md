@@ -2,7 +2,7 @@
 title = "Replacing a System"
 description = "Moving off a legacy system or vendor: Strangler Fig, cutover options, crosswalks, suppressed side effects, reconciliation, rollback windows and exit plans."
 category = "Architecture"
-order = 424
+order = 409
 tags = ["architecture", "migration", "cutover", "legacy", "data-portability", "reconciliation"]
 +++
 
@@ -38,7 +38,7 @@ My default: phase by cohort, run each cohort through a comparison cycle before i
 
 ## Crosswalks and ID Mapping
 
-Every record you migrate needs a permanent link back to where it came from. Put that link in a crosswalk of external IDs, one row per source key, rather than a `legacy_id` column on each table; the shape and its rules (IDs stored as text with leading zeros intact, links dated rather than deleted, one open link per source key) are in [Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids). A migration adds one column to it, the batch that created each link:
+Every record you migrate needs a permanent link back to where it came from. Put that link in a crosswalk of external IDs, one row per source key, rather than a `legacy_id` column on each table; the shape and its rules (IDs stored as text with leading zeros intact, links dated rather than deleted, one open link per source key) are in [Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids). A migration adds one column to it, the batch that created each link:
 
 ```sql
 CREATE TABLE migration_batches (
@@ -79,7 +79,7 @@ CREATE UNIQUE INDEX account_external_ids_open_idx
 - **Vendor mapping files land here too.** When a processor imports stored cards it returns a file linking the previous processor's customer and card IDs to new ones ([Stripe: Import payment data](https://docs.stripe.com/get-started/data-migrations/pan-import)); load it into the payment method crosswalk with the old processor as its source.
 - **Keep your own primary keys.** The crosswalk maps their IDs to yours; your IDs never change because a source did. That one decision is what lets the next migration happen without rewriting every foreign key.
 
-Deduplicate before you load, with rules the business agrees to, not inside the loader. Migrations surface every duplicate the old system tolerated; route candidates to a review queue with thresholds as in [Review Bands](/docs/architecture/record-linkage#review-bands), and keep every source ID on the survivor of a merge so history from both lands in one place. Never auto-merge two records that both have active contracts or stored payment methods.
+Deduplicate before you load, with rules the business agrees to, not inside the loader. Migrations surface every duplicate the old system tolerated; route candidates to a review queue with thresholds as in [Review Bands](/docs/building-blocks/record-linkage#review-bands), and keep every source ID on the survivor of a merge so history from both lands in one place. Never auto-merge two records that both have active contracts or stored payment methods.
 
 ## Load With Side Effects Off
 
@@ -87,8 +87,8 @@ A bulk load looks exactly like a burst of real activity to the rest of the syste
 
 **Every outbound side effect is suppressed for migrated records until their cohort goes live.** Messages, charges, receipts, outbound webhooks, partner notifications, scheduled jobs: none of them run for a record whose cohort isn't live. Two ways to build it, and I use both:
 
-- **A cohort flag checked at the gate.** If outbound messages already pass through one gate ([One Outbound Gate](/docs/architecture/notifications#one-outbound-gate)) and charges through one payment service, the check is one line in each: is this record's cohort live? Blocked sends are logged with a reason, like any other suppression, so you can prove nothing went out.
-- **A migration actor on every write.** The loader writes with a typed actor (`migration:<batch_id>`), and event consumers that would trigger side effects ignore events from that actor ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **A cohort flag checked at the gate.** If outbound messages already pass through one gate ([One Outbound Gate](/docs/building-blocks/notifications#one-outbound-gate)) and charges through one payment service, the check is one line in each: is this record's cohort live? Blocked sends are logged with a reason, like any other suppression, so you can prove nothing went out.
+- **A migration actor on every write.** The loader writes with a typed actor (`migration:<batch_id>`), and event consumers that would trigger side effects ignore events from that actor ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 
 Imported state must carry its history, not start today. A contract keeps its original sale date, its paid-through date, its next bill and service dates, and its remaining entitlements; an open invoice keeps its original date, due date and lines so aging continues across the switch. Stripe's subscription import guidance states the continuity rule directly: if a customer has six months left on a yearly subscription, the imported `billing_cycle_anchor` and `start_date` must reflect that mid-cycle term, and scheduling imported subscriptions to start in the future lets you "review the import before you start to bill your customers in production" ([Stripe: Migrate subscriptions using the APIs](https://docs.stripe.com/billing/subscriptions/import-subscriptions)). Anything imported "starting today" double-bills prepaid customers and resets every renewal notice. Dates follow [Time](/docs/fundamentals/time): a one-day shift across thousands of contracts is a time zone or end-of-month bug, not noise.
 
@@ -133,7 +133,7 @@ The rollback window is a number written down before cutover, long enough to cove
 
 Not everything migrates, and some of what doesn't is a record you're obliged to keep: regulated records, signed documents, history a court or auditor may ask for. Exports also lose detail: a service history may come across as job rows with dates and totals while the regulated detail inside them stays behind.
 
-- **Keep every original export unchanged,** with checksums, encrypted at rest, for the longest retention period of anything in it ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)). Card numbers never land here; they move processor to processor.
+- **Keep every original export unchanged,** with checksums, encrypted at rest, for the longest retention period of anything in it ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)). Card numbers never land here; they move processor to processor.
 - **Make the archive retrievable** by the keys people will ask with (customer, address, document number, date), not a bucket of files only one engineer can search. A crosswalk row pointing from the new record to the archived source record is the cheapest index there is.
 - **Export the old audit trail before you leave.** Activity logs are the data least likely to migrate and the most likely to be asked for later; some vendors keep them for a limited period and don't export them at all. Pull every change log the old system offers while you still have access.
 - **Read-only means read-only.** If the old system stays up for lookups, revoke write access for everyone, including administrators, and turn off its scheduled jobs and integrations. An old system that can still send a reminder will eventually send one.

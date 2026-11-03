@@ -68,7 +68,7 @@ Several rules constrain the order:
 - **Card payments follow their own law.** Amounts above a card's minimum go to the highest-APR balance first (1026.53), which is the revolving engine in [Credit Cards as Credit](/books/banking-and-lending/credit-cards#balance-segments-and-aprs), not this one.
 - **The investor's waterfall.** A loan sold to an investor may carry its servicing guide's order (for example, how curtailments and unapplied funds are treated), so the allocation rule is a property of the loan's owner and product, versioned.
 
-The allocation is stored, never recomputed on read: `payment_allocations` records each bucket, the installment it satisfied and the rule version that decided it ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). When an earlier payment is reversed (an ACH return, a backdated correction), the servicer reverses the later allocations and replays them under the rules in force, as new rows, so the history the borrower saw on each statement stays intact ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+The allocation is stored, never recomputed on read: `payment_allocations` records each bucket, the installment it satisfied and the rule version that decided it ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)). When an earlier payment is reversed (an ACH return, a backdated correction), the servicer reverses the later allocations and replays them under the rules in force, as new rows, so the history the borrower saw on each statement stays intact ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 
 ## Worked Numbers: Daily Simple Interest Allocation
 
@@ -215,7 +215,7 @@ How it runs:
 
 ## Auditing
 
-Servicing is examined loan by loan, usually starting from a complaint, and the general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Servicing is examined loan by loan, usually starting from a complaint, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **Boarding against origination:** the expected and boarded figures, any exception and who cleared it.
 - **Every payment's three dates** (received, effective, posted), its allocation by bucket and the rule version that applied.

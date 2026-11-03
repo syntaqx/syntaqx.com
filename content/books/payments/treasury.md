@@ -143,10 +143,10 @@ Each `bank_transfers` row posts its ledger transaction when it's sent, and its `
 
 ## Auditing
 
-Treasury records are evidence in sponsor bank reviews, examinations, a safeguarding audit, and, if the bank or the provider fails, the claims process that decides who gets paid. The general design is in [Audit Trails](/docs/architecture/audit-trails); for treasury, make sure the record shows:
+Treasury records are evidence in sponsor bank reviews, examinations, a safeguarding audit, and, if the bank or the provider fails, the claims process that decides who gets paid. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for treasury, make sure the record shows:
 
-- **Who created and who released every transfer,** with the approval thresholds in force at the time, as separate typed actors ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
-- **Beneficiary and bank-detail changes as their own approved events,** with the old and new values and the out-of-band verification, never an edited row ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Who created and who released every transfer,** with the approval thresholds in force at the time, as separate typed actors ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
+- **Beneficiary and bank-detail changes as their own approved events,** with the old and new values and the out-of-band verification, never an edited row ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **The original bank files,** hashed and archived as received, alongside what was parsed from them, so an examiner can check the parse.
 - **Every break and its resolution:** who explained it, the correcting entry, and the payout run it held.
 - **The daily per-owner balance file** as sent to the bank, so "what did your records say on the day the bank failed" has an exact answer.

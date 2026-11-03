@@ -132,11 +132,11 @@ Detection draws on every layer of the stack:
 
 ### Models and Review
 
-Statistical detection compares a player with the population at their skill level; a top player's numbers look impossible next to an average one's. Machine-learned models do the same with more features, trained on labeled cases (confirmed cheaters from signature bans and reviewed cases, and a sample of clean players). The general rules (rules and models together, bands with a human middle, decision records, late labels and holdouts) are in [Automated Risk Decisions](/docs/architecture/risk-scoring); what cheating adds:
+Statistical detection compares a player with the population at their skill level; a top player's numbers look impossible next to an average one's. Machine-learned models do the same with more features, trained on labeled cases (confirmed cheaters from signature bans and reviewed cases, and a sample of clean players). The general rules (rules and models together, bands with a human middle, decision records, late labels and holdouts) are in [Automated Risk Decisions](/docs/building-blocks/risk-scoring); what cheating adds:
 
-- **Precision first, because the error is public.** Banning an innocent competitive player costs more than letting a cheater play another day, so the automatic band is narrow and the middle band goes to review with the replay, the aim traces and the signals attached ([Scores, Bands and the Human Middle](/docs/architecture/risk-scoring#scores-bands-and-the-human-middle)).
+- **Precision first, because the error is public.** Banning an innocent competitive player costs more than letting a cheater play another day, so the automatic band is narrow and the middle band goes to review with the replay, the aim traces and the signals attached ([Scores, Bands and the Human Middle](/docs/building-blocks/risk-scoring#scores-bands-and-the-human-middle)).
 - **Score cases, not events.** One suspicious flick is a highlight; a hundred across fifty matches is a pattern. Accumulate signals per account into a case with a score.
-- **The adversary retrains too.** Cheats change with every detection, so a model validated on last quarter's cheats overstates its accuracy on next quarter's; validate on a test set from after the training window ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)).
+- **The adversary retrains too.** Cheats change with every detection, so a model validated on last quarter's cheats overstates its accuracy on next quarter's; validate on a test set from after the training window ([Labels Arrive Late](/docs/building-blocks/risk-scoring#labels-arrive-late)).
 - **Keep models out of the client.** Anything shipped to the client can be studied; scoring runs on the backend.
 
 ### Timing
@@ -217,7 +217,7 @@ How a case moves:
 4. **Enforce.** Actioning records the decision as the playbook's [moderation decision](/docs/security/trust-and-safety#auditing-moderation-decisions) (on a moderation case of category `cheating` whose evidence points at the cheat case), then writes the penalty against it, with `enforce_after` set when the enforcement is held back for a batch, and voids the ranked matches the case covers from the first confirmed signal on.
 5. **Appeal.** An upheld appeal leaves the case `actioned`; an overturned one moves it to `overturned`, ends the penalty through `revoked_at`, revokes any device ban it created, and restores what the penalty took. Nothing is deleted; the case history is the explanation.
 
-Every automated decision records the model version, threshold and policy version that made it ([Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions)), so an overturned ban can be traced to its cause and a bad model version can be found and its bans reviewed in bulk.
+Every automated decision records the model version, threshold and policy version that made it ([Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions)), so an overturned ban can be traced to its cause and a bad model version can be found and its bans reviewed in bulk.
 
 ## Linux, Steam Deck and Other Platforms
 

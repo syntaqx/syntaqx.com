@@ -2,8 +2,9 @@
 title = "Matching, Merging & Many Sources"
 nav_title = "Record Linkage"
 description = "Reconciling one real thing reported by many sources: observations, per-field survivorship, crosswalks, match-before-create, reversible merges and overrides."
-category = "Architecture"
-order = 413
+category = "Building Blocks"
+aliases = ["architecture/record-linkage"]
+order = 455
 tags = ["architecture", "data-modeling", "record-linkage", "deduplication", "data-quality"]
 +++
 
@@ -182,7 +183,7 @@ So the license is a property of each observation, not of the entity:
 
 - **Every imported row carries its source and license,** and a `license_expires_at` where the terms set one.
 - **A scheduled job refreshes or drops** observations whose license has lapsed, then recomputes survivorship. What you own (a customer's own entry, a measurement your staff took, a seller's correction, a reviewer's decision) is untouched.
-- **Survivorship can't pick what you may not use.** If a field's only source is an observation licensed for internal use, it doesn't flow into an export, a partner feed or a [data pipeline](/docs/architecture/data-pipelines) that leaves the company.
+- **Survivorship can't pick what you may not use.** If a field's only source is an observation licensed for internal use, it doesn't flow into an export, a partner feed or a [data pipeline](/docs/data/data-pipelines) that leaves the company.
 - **Ending a contract is a data event.** Know before signing which observations disappear with the vendor, and what replaces them.
 
 ## Checklist

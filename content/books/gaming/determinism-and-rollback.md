@@ -168,7 +168,7 @@ ALTER TABLE match_recordings
 
 A recording that has never been replayed is a hope, not a replay; verify a sample on the build that made it, and every one you keep for a ruling.
 
-Recordings capture everything every player did in the match, so their retention is a policy decision, not a default ([Data Retention](/docs/architecture/data-retention)). They're also evidence: a recording replayed on a server is how reports of cheating or abuse can be reviewed ([Player Behavior & Moderation](/books/gaming/player-behavior)).
+Recordings capture everything every player did in the match, so their retention is a policy decision, not a default ([Data Retention](/docs/building-blocks/data-retention)). They're also evidence: a recording replayed on a server is how reports of cheating or abuse can be reviewed ([Player Behavior & Moderation](/books/gaming/player-behavior)).
 
 ## Choosing a Model
 

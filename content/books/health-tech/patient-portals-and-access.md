@@ -51,7 +51,7 @@ Proxy access is one person using a portal for another: a parent for a child, an 
 
 - **Separate logins, never shared credentials.** The proxy has their own account and a grant to the patient's record; a parent logging in with a child's password is the failure the grant exists to prevent, because it leaves no record of who acted.
 - **Scope by function.** Billing and scheduling without clinical notes, or results without messaging, are common grants; each portal function checks the grant's scopes.
-- **Age transitions are dated events.** Adolescent confidentiality rules change what a parent proxy may see at an age set by state law, and full adulthood ends parental access unless the adult grants it again. These are computed from the patient's birth date and the state's rule and stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Age transitions are dated events.** Adolescent confidentiality rules change what a parent proxy may see at an age set by state law, and full adulthood ends parental access unless the adult grants it again. These are computed from the patient's birth date and the state's rule and stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Show the patient who has access.** The patient (or their representative) sees every active proxy and can revoke where the law allows, and every proxy action is logged as that proxy.
 
 ## The Payer Patient Access API
@@ -104,7 +104,7 @@ Building it in:
 - **A message thread can become an episode.** When a clinician decides a thread is evaluation and management, the system opens an e-visit episode on that date, counts the clinician's time on the thread for 7 days, and produces the charge at close with the code the time supports.
 - **Not every message is billable.** Scheduling, refill requests, results questions and follow-ups within a visit's window are triaged by staff and never become episodes; the triage decision is recorded.
 - **Tell the patient before they're billed.** The portal states, when a message is sent, that a clinical question may be billed, with the patient's choice to request a visit instead, and the notice shown is recorded with the message ([Consent and Reminders as Data](/docs/money/subscriptions#consent-and-reminders-as-data) is the same pattern for subscriptions).
-- **Response expectations are policy, not promises.** The portal shows the practice's stated response time and routes urgent symptoms to a call or emergency message rather than an inbox ([Emergencies Skip the Model](/docs/architecture/ai-agents#emergencies-skip-the-model) applies to AI triage of the same inbox).
+- **Response expectations are policy, not promises.** The portal shows the practice's stated response time and routes urgent symptoms to a call or emergency message rather than an inbox ([Emergencies Skip the Model](/docs/building-blocks/ai-agents#emergencies-skip-the-model) applies to AI triage of the same inbox).
 
 ## CMS's Health Tech Ecosystem
 
@@ -173,7 +173,7 @@ ALTER TABLE portal_messages
   ADD FOREIGN KEY (e_visit_id) REFERENCES e_visits (id);
 ```
 
-Every portal read of a patient's record writes an `audit_events` row naming the account, the patient and the basis (self or proxy), because a proxy reading an adolescent's note is exactly the access a patient will ask about ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+Every portal read of a patient's record writes an `audit_events` row naming the account, the patient and the basis (self or proxy), because a proxy reading an adolescent's note is exactly the access a patient will ask about ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 Design decisions:
 
@@ -190,7 +190,7 @@ Design decisions:
 - **Grants over time.** Every proxy access row and app grant with its dates, scopes and the event that ended it.
 - **Release timing.** For each result and note, when it was available in the portal and through the API, matched to the release decisions in [Labs, Imaging & Diagnostics](/books/health-tech/labs-and-diagnostics#auditing).
 - **Message handling.** Received, routed, triaged, responded, with times; e-visits with their windows, minutes, codes, notices and charges.
-- **Records requests.** Each download or send-to request with its fulfillment time against HIPAA's 30-day limit and what was sent ([Audit Trails](/docs/architecture/audit-trails#producing-records)).
+- **Records requests.** Each download or send-to request with its fulfillment time against HIPAA's 30-day limit and what was sent ([Audit Trails](/docs/building-blocks/audit-trails#producing-records)).
 
 ## What This Means for the System You Build
 

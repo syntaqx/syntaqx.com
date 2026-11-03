@@ -45,7 +45,7 @@ Mambu's published deposit product configuration is a working example of the list
 Two boundaries keep a product factory sane:
 
 - **Product terms and account terms are different layers.** The product says what an account gets by default; an account can hold an override (a negotiated rate on a commercial money market, a fee waiver for an employee). Overrides are stored on the account with a reason, an approver and an end date, never as a private copy of the product.
-- **Terms are data, behavior is code.** "Monthly fee of $12, waived at a $1,500 minimum daily balance" is data. "Waive the fee if the customer has a mortgage with us" is a rule over data from another system; model it as a named, versioned rule the fee references, not as a free-form expression in the product ([What Belongs in Data](/docs/architecture/rules-as-data#what-belongs-in-data)). The smart-contract approach goes further and makes the whole product code, which buys flexibility at the price of testing every product like software.
+- **Terms are data, behavior is code.** "Monthly fee of $12, waived at a $1,500 minimum daily balance" is data. "Waive the fee if the customer has a mortgage with us" is a rule over data from another system; model it as a named, versioned rule the fee references, not as a free-form expression in the product ([What Belongs in Data](/docs/building-blocks/rules-as-data#what-belongs-in-data)). The smart-contract approach goes further and makes the whole product code, which buys flexibility at the price of testing every product like software.
 
 ## Rates, Tiers and Promotions
 
@@ -75,7 +75,7 @@ Each assessment records the fee definition and version that produced it, the tri
 
 Model every product as a sequence of immutable **versions**, each effective from a date, and pin every account to the version it holds. [The Core Data Model](/books/banking-and-lending/banking-business#the-core-data-model) already does: each `products` row is one version of a product code, and `accounts.product_id` names the exact one.
 
-- **A change creates a version.** The new version has its own effective date and the change that produced it. Nothing about a past version changes after it has been used, so an account's interest, fees and disclosures for any past date are computed from the terms in force then ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **A change creates a version.** The new version has its own effective date and the change that produced it. Nothing about a past version changes after it has been used, so an account's interest, fees and disclosures for any past date are computed from the terms in force then ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Accounts point to versions, and move between them only by an event.** Opening pins an account to the current version. A change in terms moves a defined set of accounts to a new version on its effective date, as a recorded event per account. An account that wasn't moved keeps its version, which is what grandfathering is.
 - **Disclosures are generated from versions.** The account-opening disclosure, the fee schedule and the APY a customer saw are rendered from the version and stored with it, so "what did we tell this customer" is a join from the account to the version to the disclosure record (see How to Build It below).
 - **Effective dates are business dates.** A version effective December 1 takes effect at the start of that business day in the core, and accruals for November 30 use the old terms, whatever time the batch runs.
@@ -107,7 +107,7 @@ A change in terms is therefore a workflow with dates, not a configuration save:
 
 1. **Draft the new version** and classify the change: adverse to the consumer or not, which regulation governs each affected product, and the notice period that results.
 2. **Select the affected accounts** as of a date: every account on the old version, or a segment (by state, by program, by opening date).
-3. **Compute the notice deadline** from the effective date and the longest notice period that applies, and refuse an effective date that can't be met ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+3. **Compute the notice deadline** from the effective date and the longest notice period that applies, and refuse an effective date that can't be met ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 4. **Generate and send the notices,** each recorded as a disclosure with its version, channel and delivery time, and track failures (returned mail, bounced email) per account.
 5. **On the effective date, migrate** the accounts that were noticed in time to the new version, and only those; accounts whose notice failed or went late stay on the old version until they can be noticed properly.
 6. **For credit card accounts, honor rejections:** an account whose holder rejected the change stays on the old terms under the rules in [Credit Cards as Credit](/books/banking-and-lending/credit-cards).
@@ -262,7 +262,7 @@ How it runs:
 
 ## Auditing
 
-Product records answer the examiner's Truth in Savings questions (were the terms disclosed, were changes noticed, did the account get what it was promised) and the customer's. Beyond [Audit Trails](/docs/architecture/audit-trails):
+Product records answer the examiner's Truth in Savings questions (were the terms disclosed, were changes noticed, did the account get what it was promised) and the customer's. Beyond [Audit Trails](/docs/building-blocks/audit-trails):
 
 - **Every product version,** who drafted and approved it, its effective date, and the disclosures rendered from it, kept for as long as any account held it plus the retention period.
 - **Every account's terms history:** which version it held over which dates, why it moved, and the change or renewal that moved it.

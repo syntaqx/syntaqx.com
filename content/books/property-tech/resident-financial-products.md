@@ -53,7 +53,7 @@ Move-in is when a household chooses internet, energy (in deregulated markets), m
 
 The model is referral commerce. The partner sells to the resident; the platform (and sometimes the operator) earns a referral or affiliate fee. Three design points follow:
 
-- **The resident's relationship is with the partner.** Their contract, their bill and their support; the platform passes a lead or an enrollment, with consent to share the data it sends ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)). A move-in checklist that pre-fills a partner's form with the lease's data is sharing personal information with a third party, which state privacy laws and [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#state-privacy-laws) govern.
+- **The resident's relationship is with the partner.** Their contract, their bill and their support; the platform passes a lead or an enrollment, with consent to share the data it sends ([The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger)). A move-in checklist that pre-fills a partner's form with the lease's data is sharing personal information with a third party, which state privacy laws and [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#state-privacy-laws) govern.
 - **Recommendations are advertising.** A "recommended" provider that pays the platform is a paid placement, and saying so plainly is the low-cost answer to every unfair-practices theory.
 - **Some services become lease charges.** When the operator buys a service in bulk (valet trash, pest control, a package locker program, a "resident benefit package") and charges every household, it's no longer a marketplace product: it's a mandatory fee in the [charge catalog](/books/property-tech/charges-and-resident-ledgers#the-charge-catalog), with all-in pricing consequences.
 
@@ -176,7 +176,7 @@ Decisions behind it:
 - **Every enrollment's consent,** with the exact offer and price shown, and every cancellation with its date and reason; for opt-out designs, the notice and the opportunity to opt out.
 - **Every bureau submission** and every dispute's investigation and outcome, retained for the period the FCRA and the furnishing agreement require.
 - **Every revenue dollar** tied to an agreement, a property and a recipient, reconcilable to the counterparty's statements.
-- **Every disclosure version** residents were shown, so the platform can prove what a resident saw on the day they enrolled ([Audit Trails](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Every disclosure version** residents were shown, so the platform can prove what a resident saw on the day they enrolled ([Audit Trails](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 
 ## What This Means for the System You Build
 

@@ -57,7 +57,7 @@ A private education loan is made by a bank, credit union or other lender for pos
 - **The self-certification form:** before consummation the lender must obtain ED's form, signed by the borrower, which shows the cost of attendance and the aid already received.
 - **Co-branding limits** on implying the school endorses the lender, and preferred-lender information to schools each year.
 
-These are clocks, and the system treats them as gates: an approval that expires, an acceptance that opens the final disclosure, and a cancellation period that holds the disbursement ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+These are clocks, and the system treats them as gates: an approval that expires, an acceptance that opens the final disclosure, and a cancellation period that holds the disbursement ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## The Federal Servicing System
 
@@ -249,11 +249,11 @@ CREATE TABLE loan_discharges (
 );
 ```
 
-A borrower's payment is computed by a versioned function of the enrollment's plan and its income certification, and `computation` stores the inputs it used (the band, the percentage, the poverty guideline year, the dependents, any cap), so a recalculation after a rule change is a new enrollment row with `reason = 'statutory_migration'`, never an edit ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)). Each on-time RAP payment allocates to interest, fees and principal in `payment_allocations` and, where the statute applies, posts its interest waiver and principal match to `subsidy_postings` with their own journal entries, so the subsidy is visible in the ledger and to the owner. `qualifying_months` is derived nightly from payments, pauses and employer certifications but stored, because it's the record a borrower's forgiveness date rests on and must travel intact in a servicer transfer; its row count by program is the counter. Statutory dates (July 1, 2026, July 1, 2027, June 30, 2028) live in rule tables, not code, and the forbearance limit is a check against `payment_pauses` over a rolling 24 months. For private loans, the acceptance window, cancellation period and self-certification are gates on disbursement, read from `disclosures` delivery times.
+A borrower's payment is computed by a versioned function of the enrollment's plan and its income certification, and `computation` stores the inputs it used (the band, the percentage, the poverty guideline year, the dependents, any cap), so a recalculation after a rule change is a new enrollment row with `reason = 'statutory_migration'`, never an edit ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)). Each on-time RAP payment allocates to interest, fees and principal in `payment_allocations` and, where the statute applies, posts its interest waiver and principal match to `subsidy_postings` with their own journal entries, so the subsidy is visible in the ledger and to the owner. `qualifying_months` is derived nightly from payments, pauses and employer certifications but stored, because it's the record a borrower's forgiveness date rests on and must travel intact in a servicer transfer; its row count by program is the counter. Statutory dates (July 1, 2026, July 1, 2027, June 30, 2028) live in rule tables, not code, and the forbearance limit is a check against `payment_pauses` over a rolling 24 months. For private loans, the acceptance window, cancellation period and self-certification are gates on disbursement, read from `disclosures` delivery times.
 
 ## Auditing
 
-Federal servicing is audited by ED, its inspector general and the CFPB, and private lending by bank examiners; the general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Federal servicing is audited by ED, its inspector general and the CFPB, and private lending by bank examiners; the general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **Each loan's program, award year, rate row and fee,** and whether it's on the new terms and why.
 - **Every school certification and disbursement,** and for private loans the self-certification form, the three disclosures, the acceptance date and the cancellation period.

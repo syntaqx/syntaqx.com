@@ -12,7 +12,7 @@ A work item is the unit every work management product is built on: a row that sa
 
 The hard part is the long tail. Every customer wants its own fields, its own types and its own hierarchy, and the product has to store, validate, index, query, report on and export all of them without one tenant's schema slowing another tenant's search. The vendors split on how much of that freedom to give away: Jira and Azure Boards let administrators define almost anything and publish limits and performance warnings to match; Linear fixes most of the model and lets teams configure inside it. Who owns the schema is the first place the book's [inversion](/books/workplace-and-collaboration/workplace-business#the-inversion) shows up in work management: the customer's admin, not the vendor, decides what a "Bug" is, which fields it has and who may change them.
 
-This chapter covers the item, its types and hierarchy, custom fields, and links and dependencies. Statuses and transitions are [Workflows & Status Machines](/books/workplace-and-collaboration/workflows-and-states); searching over items is [Queries, Views & Dashboards](/books/workplace-and-collaboration/queries-views-and-dashboards); the generic engineering of user-defined fields is the playbook's [Custom Fields](/docs/architecture/custom-fields#three-storage-models). The tables extend the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model): a work item is a row in `items` with `kind = 'work_item'`, extended by `work_items`, and it lives in a `containers` row of kind `project`.
+This chapter covers the item, its types and hierarchy, custom fields, and links and dependencies. Statuses and transitions are [Workflows & Status Machines](/books/workplace-and-collaboration/workflows-and-states); searching over items is [Queries, Views & Dashboards](/books/workplace-and-collaboration/queries-views-and-dashboards); the generic engineering of user-defined fields is the playbook's [Custom Fields](/docs/building-blocks/custom-fields#three-storage-models). The tables extend the [core data model](/books/workplace-and-collaboration/workplace-business#the-core-data-model): a work item is a row in `items` with `kind = 'work_item'`, extended by `work_items`, and it lives in a `containers` row of kind `project`.
 
 ## How the Platforms Do It
 
@@ -61,7 +61,7 @@ Jira's warning that a hierarchy change can't be undone is a data problem, not a 
 
 ## Custom Fields
 
-Custom fields are the reason enterprise customers choose configurable trackers and the reason those trackers slow down. The playbook's [Custom Fields](/docs/architecture/custom-fields#the-definitions-table) covers the storage models, definitions table, validation and indexing in general; the work management twist is the scale and the number of places a field goes.
+Custom fields are the reason enterprise customers choose configurable trackers and the reason those trackers slow down. The playbook's [Custom Fields](/docs/building-blocks/custom-fields#the-definitions-table) covers the storage models, definitions table, validation and indexing in general; the work management twist is the scale and the number of places a field goes.
 
 **Azure Boards publishes the most complete set of limits** as of October 2026: 1,024 fields per process, 8,192 per organization, 1,024 fields per work item type, 2,048 picklist items per list, 1,024 rules per work item type, 1,000 links per work item, 100 tags per work item, a 1-million-character long text field, and a 10,000-revision limit on updates through the REST API (after which Microsoft suggests creating a new work item). It then adds "practical limits": "Limit the number of custom fields you define," limit rules per type, limit custom types. The reason is stated in the same page: a single SQL expression per project validates every work item on save, it grows with every rule, and "once the expression reaches a certain size or complexity, SQL can no longer evaluate it efficiently and might generate an error."
 
@@ -80,12 +80,12 @@ Custom fields are the reason enterprise customers choose configurable trackers a
 A custom field is cheap to create and expensive to carry. Each one has to be:
 
 - **Validated** on every write from the UI, API, imports and automation, against a definition that can change.
-- **Indexed** for search, because a field nobody can filter on is a field nobody uses ([Indexing and Querying](/docs/architecture/custom-fields#indexing-and-querying)).
+- **Indexed** for search, because a field nobody can filter on is a field nobody uses ([Indexing and Querying](/docs/building-blocks/custom-fields#indexing-and-querying)).
 - **Rendered** on create screens, detail views, boards, list columns and exports.
 - **Exported** in CSV, API responses, webhooks and migrations to other tools, with a stable key even after the label changes.
 - **Permissioned** where the product supports field-level security, and **retained** under the item's retention policy.
 
-The vendors' limits are the visible part of that cost; the invisible part is that every field multiplies the size of the search index and the work of every view. My rule is that limits are per tenant and published, as Azure does, with a usage counter the admin can see before they hit the ceiling ([Limits Per Tenant](/docs/architecture/custom-fields#limits-per-tenant)).
+The vendors' limits are the visible part of that cost; the invisible part is that every field multiplies the size of the search index and the work of every view. My rule is that limits are per tenant and published, as Azure does, with a usage counter the admin can see before they hit the ceiling ([Limits Per Tenant](/docs/building-blocks/custom-fields#limits-per-tenant)).
 
 ### Field Sprawl Is an Admin Problem
 

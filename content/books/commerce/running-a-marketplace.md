@@ -90,7 +90,7 @@ The operator's revenue is a commission on each sale, sometimes with subscription
 - **A base.** Item price only, or including shipping (Marketplacer's `appliesToPostage`), before or after operator-funded discounts, excluding tax. The base is the most common source of disputes.
 - **Thresholds and minimums.** A different rate above a price (Marketplacer's `thresholdPrice` and `overThresholdRate`), or a minimum fee per item.
 - **Reversal on refund.** A refunded line returns its commission, in full or less a retained fee, by rule.
-- **Effective dates.** A rate change applies to orders placed after it, never to orders in flight ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Effective dates.** A rate change applies to orders placed after it, never to orders in flight ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 Each order's commission is an `order_charges` row (`kind = 'commission'`, payer the seller, payee the platform) with the rule that computed it, the same pattern the delivery part uses for restaurant commissions ([Fees, Commissions & the Law](/books/commerce/delivery-fees-and-the-law#how-to-build-it)), whose `commission_plans` are flat rates per plan; marketplace rules add the category and seller dimensions.
 
@@ -214,8 +214,8 @@ Design notes:
 
 - **A seller is a merchant with an operator.** Sellers get the whole core model (locations, items, orders, fulfillments, returns) by being `merchants` rows with `operator_id` set; the operator's own retail business is a merchant without one. Multi-tenancy for seller admins follows [Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies).
 - **Offers point at the operator's items.** The catalog item is the operator's (one product page); the offer is the seller's row against it. When an order is placed, the order line's `item_id` is the catalog item and the seller order's location says whose offer it was, with price and SKU snapshotted on the line ([Snapshots on the line](/books/commerce/commerce-business#the-core-data-model)).
-- **Seller stock is reported, not counted.** `seller_offers.quantity` is the seller's claim; reservations against it at checkout follow [Reservations & Holds](/docs/architecture/reservations-and-holds), and the acceptance step is where a wrong claim surfaces.
-- **Commission is computed once, at the order, from a versioned rule,** and recorded on the charge with the rule's ID ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)); a statement recomputed later from current rules will disagree with what was paid.
+- **Seller stock is reported, not counted.** `seller_offers.quantity` is the seller's claim; reservations against it at checkout follow [Reservations & Holds](/docs/building-blocks/reservations-and-holds), and the acceptance step is where a wrong claim surfaces.
+- **Commission is computed once, at the order, from a versioned rule,** and recorded on the charge with the rule's ID ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)); a statement recomputed later from current rules will disagree with what was paid.
 - **Verification gates are enforced in code.** An offer can't go active, and a payout can't release, while a required `seller_verifications` row isn't `verified`; suspension under INFORM or the DSA flips the seller's offers to `suppressed` and records why.
 - **Removal orders and recalls are queries plus clocks.** A GPSR removal order or a DSA illegal-product finding suppresses every offer for the item and, for Article 32, finds buyers of the last six months from `order_lines`.
 

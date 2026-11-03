@@ -38,7 +38,7 @@ The unit of pricing is a **quote**: one unit, one lease term, one move-in date, 
 
 **Exposure** drives most of it: the units vacant or on notice and not yet leased over a horizon of weeks, as [Occupancy, Leased and Exposure](/books/property-tech/operating-metrics#occupancy-leased-and-exposure) defines it. When exposure rises, recommended prices fall; when a floor plan is nearly full, they rise. That forecast is also what marketing uses to decide where to spend ([Exposure-Driven Spend](/books/property-tech/listings-and-marketing#exposure-driven-spend)), and it is the same model, under the same data rules, whichever team reads it.
 
-A quote is a hold-like promise: an agent quotes a price, the prospect applies two days later, and the application's income test is a ratio to that rent. My rule: the quote is a row with an expiry, and the application and the lease carry its id, so "what were they quoted, and was it still valid" is a join, not a recollection ([Reservations & Holds](/docs/architecture/reservations-and-holds#hold-lifetimes-are-policy)).
+A quote is a hold-like promise: an agent quotes a price, the prospect applies two days later, and the application's income test is a ratio to that rent. My rule: the quote is a row with an expiry, and the application and the lease carry its id, so "what were they quoted, and was it still valid" is a join, not a recollection ([Reservations & Holds](/docs/building-blocks/reservations-and-holds#hold-lifetimes-are-policy)).
 
 ## Renewal Pricing
 
@@ -135,7 +135,7 @@ Legislatures moved faster than courts. As of October 2026:
 
 New York's law is the one to watch for design. RealPage sued in the Southern District of New York (No. 1:25-cv-9847), and in late September 2026 the court granted a preliminary injunction, finding that algorithmically informed price recommendations are commercial speech and that the law "expressly" regulates their communication, and denied the state's motion to dismiss; the First Amendment challenge continues. RealPage's First Amendment suit against Berkeley ended in a voluntary dismissal with prejudice on January 14, 2026. Colorado's governor vetoed a statewide ban in May 2025. Private suits under the ordinances are already pending in San Francisco, San Diego, Seattle and Philadelphia, and Providence brought the first city enforcement action under its ordinance.
 
-The laws vary along four axes, and each is a column in the platform's rules, not a branch in code ([Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule)):
+The laws vary along four axes, and each is a column in the platform's rules, not a branch in code ([Rules as Data](/docs/building-blocks/rules-as-data#the-shape-of-a-rule)):
 
 1. **Public versus nonpublic.** San Francisco, Minneapolis, Connecticut and the Final Judgment reach nonpublic data; California's AB 325 and New York's S.7882 don't distinguish. A feature that scrapes public comparables can be lawful in one city and not the next, which is AppFolio's "not available in all jurisdictions."
 2. **What is regulated.** Using software, selling it, or coordinating: some laws bind landlords, some vendors, some both; Rockville and Hoboken reach fees, lease terms and occupancy as well as rent.
@@ -377,7 +377,7 @@ Design decisions behind it:
 - **Auto-accept is a setting with an owner.** An auto-accepted decision points at the settings row that allowed it; changing auto-accept is a new effective-dated row, so the history of who turned it on, where and when is intact.
 - **Recommendations and decisions are separate rows.** The recommendation is the engine's; the decision is a person's. Override rates per property and per user come from `price_decisions`, and nothing downstream reads them as a performance measure for staff.
 - **The cap is enforced in the schema.** `renewal_offers.offered_rent <= limit_amount` is a constraint, and the recommendation records that it was clamped, so the engine can't silently produce an unlawful offer.
-- **Restrictions are dated data.** An injunction, a new ordinance or a repeal is a row with a `valid_during`, resolved from the property's jurisdiction; the code never names a city ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Restrictions are dated data.** An injunction, a new ordinance or a repeal is a row with a `valid_during`, resolved from the property's jurisdiction; the code never names a city ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Limits and restrictions are slices of the shared rules catalog.** Each `rent_limits` and `pricing_restrictions` row belongs to an approved `legal_rules` row ([Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it)), which carries the source, the two-person review and the version history; the slice adds the typed columns the pricing engine and its constraints read.
 - **Events.** `price.recommended`, `price.decided`, `quote.issued`, `renewal_offer.sent` and `renewal_offer.accepted` feed listings, the leasing screen, notices and metrics ([Events & Async Messaging](/docs/architecture/events)).
 
@@ -385,7 +385,7 @@ Design decisions behind it:
 
 Pricing records get read by monitors, attorneys general, class counsel and city enforcement, often years after the fact:
 
-- **Lineage of every price.** For any quote or renewal offer: the recommendation, its models and versions, its runtime sources, the settings in force, the decision and who made it. This is the automated-decision record of [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions), applied to rent.
+- **Lineage of every price.** For any quote or renewal offer: the recommendation, its models and versions, its runtime sources, the settings in force, the decision and who made it. This is the automated-decision record of [Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions), applied to rent.
 - **Training runs.** For each model version: the data sources, the cutoff date, the geography, the feature list and the approval, retained for the life of any decree or settlement plus its tail.
 - **Settings history.** Bands, auto-accept, allowed sources and strategy changes per property, effective-dated, with the user. Per-unit-per-month remedies make the dates as important as the values.
 - **Overrides and acceptance.** Override counts and reasons, kept as records, with commission and incentive plans retained beside them to show that nothing rewarded acceptance.

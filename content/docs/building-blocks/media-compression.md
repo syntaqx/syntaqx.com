@@ -1,8 +1,9 @@
 +++
 title = "Media Compression"
 description = "Lossless and lossy coding, the pipeline image and video codecs share, generation loss, formats by content class, perceptual metrics, and what encoding costs."
-category = "Architecture"
-order = 416
+category = "Building Blocks"
+aliases = ["architecture/media-compression"]
+order = 458
 tags = ["architecture", "images", "video", "compression", "performance"]
 +++
 
@@ -43,7 +44,7 @@ My rules:
 
 - **Keep the original (the mezzanine) and derive every output from it,** never from a previous output. A thumbnail comes from the original, not from the large variant; a new format added next year is encoded from the original, not transcoded from today's WebP.
 - **Transcode once per output.** Do every resize, crop, rotation and color conversion on decoded pixels, then encode once at the end.
-- **Store the mezzanine at the quality you received it,** or losslessly if you must normalize it. The original is also the file you go back to when an encoder improves, a format arrives, or a bug in a variant needs regenerating ([Checking What Arrived](/docs/architecture/file-uploads#checking-what-arrived) covers keeping it private).
+- **Store the mezzanine at the quality you received it,** or losslessly if you must normalize it. The original is also the file you go back to when an encoder improves, a format arrives, or a bug in a variant needs regenerating ([Checking What Arrived](/docs/building-blocks/file-uploads#checking-what-arrived) covers keeping it private).
 - **Treat lossless-to-lossless as free and lossy-to-lossy as a cost.** One exception is worth knowing: JPEG XL can recompress an existing JPEG losslessly and restore the exact original JPEG, so it doesn't count as a generation.
 
 ## Choosing a Format by Content Class
@@ -56,7 +57,7 @@ A format is a choice per kind of picture, not per site. MDN's guidance and the f
 | **Screenshots, text, line art, UI** | PNG or lossless WebP; near-lossless WebP where the bytes matter | MDN: blurring and colored fringes around text and sharp edges are very visible under lossy coding, and 4:2:0 smears colored text |
 | **Transparency** | PNG, WebP, AVIF or JPEG XL | JPEG has no alpha channel; AVIF stores alpha as an auxiliary image at the main image's bit depth |
 | **Animation** | Video (MP4 or WebM), or animated AVIF or WebP | GIF is 8-bit indexed color and compresses animation poorly; web.dev's example turns a 3.7 MB GIF into a 551 KB MP4 and a 341 KB WebM |
-| **Diagrams and icons that must scale** | SVG | Vector content is drawn exactly at any size; but SVG is active content: rasterize user-supplied SVG or serve it from a separate cookieless origin ([Checking What Arrived](/docs/architecture/file-uploads#checking-what-arrived)) |
+| **Diagrams and icons that must scale** | SVG | Vector content is drawn exactly at any size; but SVG is active content: rasterize user-supplied SVG or serve it from a separate cookieless origin ([Checking What Arrived](/docs/building-blocks/file-uploads#checking-what-arrived)) |
 | **HDR and wide gamut** | AVIF (8, 10 or 12 bits, HDR and wide color gamut), JPEG XL, or PNG with a `cICP` chunk | JPEG is 8 bits per component; lossy WebP is 8-bit only |
 
 Notes on the edges of the table:

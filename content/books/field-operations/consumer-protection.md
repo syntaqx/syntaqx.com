@@ -11,7 +11,7 @@ A recurring home-service agreement runs into more consumer law than almost any o
 
 What makes this hard for software is that it's local and arithmetic. A three-business-day window depends on the state, the calendar, the type of job and sometimes the buyer's age; whether the window applies at all depends on who initiated the visit and what kind of property the work touches. And nearly every rule is enforced after the fact, from records: a regulator, a class-action lawyer or the customer's card issuer asks the business to prove it gave the notice, honored the cancellation or held the charge.
 
-This chapter covers what's specific to field service: the door, the home, the trades' renewal habits and the data a field business collects. The general machinery is in [Calls, Texts & Email](/docs/compliance/consumer-contact), [Notifications & Consent](/docs/architecture/notifications), [Subscriptions](/docs/money/subscriptions) and [Rules as Data](/docs/architecture/rules-as-data). None of it is legal advice: counsel decides which rules apply, and the system makes those decisions enforceable and provable.
+This chapter covers what's specific to field service: the door, the home, the trades' renewal habits and the data a field business collects. The general machinery is in [Calls, Texts & Email](/docs/compliance/consumer-contact), [Notifications & Consent](/docs/building-blocks/notifications), [Subscriptions](/docs/money/subscriptions) and [Rules as Data](/docs/building-blocks/rules-as-data). None of it is legal advice: counsel decides which rules apply, and the system makes those decisions enforceable and provable.
 
 ## How the Platforms Handle It
 
@@ -73,7 +73,7 @@ ALTER TABLE agreements
 
 `sold_via` is the channel (a technician selling an add-on on a service visit is `technician`), `sold_by_staff_member_id` the rep or technician who made the sale, and `signed_via` whose device the packet was signed on ([Signing the Agreement](/books/field-operations/signing-the-agreement#embedded-or-remote-whose-device)); `sale_location_kind` is where the buyer agreed, which is what the rule's $25 and $130 thresholds turn on. A technician sale in the kitchen is `technician` and `buyer_home`, and it's a door-to-door sale like any other.
 
-Which rule applies is then a decision made from those facts by rules counsel maintains ([Rules as Data](/docs/architecture/rules-as-data)), recorded with the rule version, not a default baked into the signing screen.
+Which rule applies is then a decision made from those facts by rules counsel maintains ([Rules as Data](/docs/building-blocks/rules-as-data)), recorded with the rule version, not a default baked into the signing screen.
 
 ### Charging Inside the Window
 
@@ -85,7 +85,7 @@ Service inside the window is a related choice: a customer who wants the first la
 
 ### State Home-Solicitation Laws
 
-**State home-solicitation laws** layer on top, and they're often longer. California's Civil Code 1689.6 gives three business days generally and five for a senior citizen, and a home solicitation contract to repair or restore residential premises damaged by a disaster can be cancelled until midnight of the seventh business day after the buyer signs and dates it. Several states require a solicitor ID, define business days their own way or prescribe their own notice wording. That's why the cancellation deadline can't be a constant: it's a function of jurisdiction, sale type, buyer attributes and a holiday calendar, computed once at signing and stored with its inputs ([Rules as Data](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). Collecting a buyer's age to apply a senior window is itself personal data, so ask only where a rule needs it and record why.
+**State home-solicitation laws** layer on top, and they're often longer. California's Civil Code 1689.6 gives three business days generally and five for a senior citizen, and a home solicitation contract to repair or restore residential premises damaged by a disaster can be cancelled until midnight of the seventh business day after the buyer signs and dates it. Several states require a solicitor ID, define business days their own way or prescribe their own notice wording. That's why the cancellation deadline can't be a constant: it's a function of jurisdiction, sale type, buyer attributes and a holiday calendar, computed once at signing and stored with its inputs ([Rules as Data](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). Collecting a buyer's age to apply a senior window is itself personal data, so ask only where a rule needs it and record why.
 
 ## Before the Sale: Knocking
 
@@ -110,11 +110,11 @@ Neither is wrong. My default for residential plans is automatic renewal with an 
 
 ## Contacting Customers From the Field
 
-The law of calls, texts, AI voices, recording and email is in [Calls, Texts & Email](/docs/compliance/consumer-contact), and consent, quiet hours and the outbound gate are in [Notifications & Consent](/docs/architecture/notifications#one-outbound-gate). What follows is how it lands on a field operation.
+The law of calls, texts, AI voices, recording and email is in [Calls, Texts & Email](/docs/compliance/consumer-contact), and consent, quiet hours and the outbound gate are in [Notifications & Consent](/docs/building-blocks/notifications#one-outbound-gate). What follows is how it lands on a field operation.
 
 ![Every outbound message, call or AI call passes one gate. It checks consent for the channel and purpose, then do-not-call and opt-out status, then quiet hours in the recipient's local time, then frequency caps; any failure blocks or defers with a reason. AI voice and recording add disclosure checks before sending, and every decision is written to the audit log.](/diagrams/fo-consumer-protection-contact-gate.svg "One gate for all outbound contact. Each check either passes, defers to a lawful time, or blocks with a reason, and the decision itself is logged.")
 
-**Most field messages are informational, until they aren't.** Appointment reminders, on-my-way texts, service reports and payment reminders are informational. A completion text that adds "ask about our mosquito add-on" is marketing and needs the stronger consent. Set the purpose on the template, never at send time, and record consent per purpose ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)). How far a STOP reaches is in [Revoking Consent](/docs/compliance/consumer-contact#revoking-consent); if the business treats any STOP as stopping everything, it needs another lawful channel for the notices it must still send, such as a renewal reminder by email.
+**Most field messages are informational, until they aren't.** Appointment reminders, on-my-way texts, service reports and payment reminders are informational. A completion text that adds "ask about our mosquito add-on" is marketing and needs the stronger consent. Set the purpose on the template, never at send time, and record consent per purpose ([The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger)). How far a STOP reaches is in [Revoking Consent](/docs/compliance/consumer-contact#revoking-consent); if the business treats any STOP as stopping everything, it needs another lawful channel for the notices it must still send, such as a renewal reminder by email.
 
 **Shared phone numbers are normal.** A landlord's number sits on twenty rentals, a property manager's on two hundred. Consent belongs to the contact point and purpose, not the account, so an opt-out on one account suppresses the number everywhere.
 
@@ -155,7 +155,7 @@ Consumer-law disputes are won on records: a customer says she cancelled on day t
 - **Recording announcements and AI greetings** for in-home and phone recordings, with time, location and the greeting version.
 - **List imports** with source and license, and every privacy request with what was deleted and what was kept under which exception.
 
-Consent and contact decisions are kept by the notifications system ([Notifications & Consent](/docs/architecture/notifications#the-message-log)). The record structure, typed actors and tamper evidence are in [Audit Trails](/docs/architecture/audit-trails), and field record types and retention periods are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+Consent and contact decisions are kept by the notifications system ([Notifications & Consent](/docs/building-blocks/notifications#the-message-log)). The record structure, typed actors and tamper evidence are in [Audit Trails](/docs/building-blocks/audit-trails), and field record types and retention periods are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

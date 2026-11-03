@@ -25,7 +25,7 @@ The features that differ are whether budgets are driven by the property's own le
 
 ## The Budget Cycle
 
-The management agreement sets the calendar. In the 2010 Bell Partners agreement filed with the SEC, the manager submits next year's budget no later than 90 days before the fiscal year, the owner approves it before December 31, spending above the approved budget is capped at 5% in aggregate (taxes, insurance and utilities excepted), and substantial variances are explained within 15 days of month end. The 2020 AIR agreement requires the owner's prior written approval for any cost outside the budget, except emergencies. Those terms become dates and checks ([Rules as Data](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)):
+The management agreement sets the calendar. In the 2010 Bell Partners agreement filed with the SEC, the manager submits next year's budget no later than 90 days before the fiscal year, the owner approves it before December 31, spending above the approved budget is capped at 5% in aggregate (taxes, insurance and utilities excepted), and substantial variances are explained within 15 days of month end. The 2020 AIR agreement requires the owner's prior written approval for any cost outside the budget, except emergencies. Those terms become dates and checks ([Rules as Data](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)):
 
 1. **Draft** at the property, built from drivers (below), in August or September for a calendar year.
 2. **Review** by the regional manager and the manager's finance team.

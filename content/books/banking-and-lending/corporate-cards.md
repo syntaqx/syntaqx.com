@@ -216,13 +216,13 @@ CREATE TABLE card_receivable_participations (  -- the daily purchase from the is
 Design notes:
 
 - **Terms are effective-dated.** Moving a company from monthly to daily, or from combined to corporate liability, closes one `corporate_card_terms` row and opens another, so a statement, a failed pull or a default is judged under the terms in force that day.
-- **Every evaluation is kept.** `limit_evaluations` stores the inputs and the computed result even when nothing changes, so the program can show why a limit held or moved, and a recalculation that cuts a limit on credit grounds can't be applied without its notice decision (`adverse_action`, `decision_notice_id`). Model and policy changes are tested by rerunning stored inputs ([Testing Rules](/docs/architecture/rules-as-data#testing-rules)).
+- **Every evaluation is kept.** `limit_evaluations` stores the inputs and the computed result even when nothing changes, so the program can show why a limit held or moved, and a recalculation that cuts a limit on credit grounds can't be applied without its notice decision (`adverse_action`, `decision_notice_id`). Model and policy changes are tested by rerunning stored inputs ([Testing Rules](/docs/building-blocks/rules-as-data#testing-rules)).
 - **The waterfall is data.** Autopay tries funding sources in priority order; each has a `control_basis`, so the collections team knows which balances it can take and which it can only ask for.
 - **Participations reconcile daily.** The sum of a program's `purchase_amount` less collections equals the program's share of the bank's receivable balance on that date, matched to the bank's file the way a program ledger is matched to the omnibus account ([Daily Reconciliation](/books/banking-and-lending/program-ledgers#daily-reconciliation)).
 
 ## Auditing
 
-The issuing bank, its examiners, the facility lenders and fair lending reviewers each read a corporate card program's credit records. The general design is in [Audit Trails](/docs/architecture/audit-trails) and [Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions). Make sure the record shows:
+The issuing bank, its examiners, the facility lenders and fair lending reviewers each read a corporate card program's credit records. The general design is in [Audit Trails](/docs/building-blocks/audit-trails) and [Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions). Make sure the record shows:
 
 - **Each origination decision** with its KYB results, the data pulled, the policy and model versions, and the limit and cadence granted.
 - **Every limit evaluation,** applied or not, with its inputs, and for every credit-based decrease the adverse action determination and the notice sent under the right revenue band.

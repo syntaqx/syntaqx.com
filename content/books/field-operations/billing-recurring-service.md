@@ -116,7 +116,7 @@ Recurring billing produces its own vocabulary. **MRR** (the monthly-normalized v
 - **Billed versus performed.** For fixed billing, the gap between what was invoiced and what was serviced is a liability (visits owed) or a dispute waiting to happen.
 - **Deferred revenue** from prepayments and install deposits, released as it's earned. When that is, is an accounting judgment, not a system default: a plan whose promise is a set number of visits may release a share per completed visit, while a plan that promises unlimited reservices between visits can be a stand-ready promise recognized evenly over the term. Your accountant decides; the system keeps both the completed visits and the term dates so either method can be computed ([Recognition Schedules](/docs/money/accounting#recognition-schedules)), and install deposits release by stage.
 
-Collecting what was billed is [Collections & Retention](/books/field-operations/collections-and-retention); AR aging and the other definitions are in [Operating Metrics](/books/field-operations/operating-metrics#receivables), with one definition per metric ([Data Pipelines](/docs/architecture/data-pipelines#one-definition-per-metric)); the billing system's job is to keep the events those metrics are computed from.
+Collecting what was billed is [Collections & Retention](/books/field-operations/collections-and-retention); AR aging and the other definitions are in [Operating Metrics](/books/field-operations/operating-metrics#receivables), with one definition per metric ([Data Pipelines](/docs/data/data-pipelines#one-definition-per-metric)); the billing system's job is to keep the events those metrics are computed from.
 
 ## How to Build It
 
@@ -218,7 +218,7 @@ What's genuinely hard:
 
 ## Auditing
 
-Billing records are evidence in disputes, chargebacks, tax audits and commission arguments. The general design is in [Audit Trails](/docs/architecture/audit-trails), and field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). For field billing, make sure the record shows:
+Billing records are evidence in disputes, chargebacks, tax audits and commission arguments. The general design is in [Audit Trails](/docs/building-blocks/audit-trails), and field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). For field billing, make sure the record shows:
 
 - **Each billing run's selections,** including periods skipped because the agreement wasn't `active`, and each charge outcome with the processor's response code.
 - **The service balance behind every true-up,** credit and refund at termination, so the amount can be recomputed.

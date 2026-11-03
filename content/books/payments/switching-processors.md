@@ -150,7 +150,7 @@ If you are the provider, the same plan is a product feature. A merchant that kno
 
 ## How to Build It
 
-The [core data model](/books/payments/card-payments#the-core-data-model) has payment methods, payments and their attempts, and [Stored Cards & Recurring Billing](/books/payments/stored-credentials#how-to-build-it) adds the agreement behind each stored method (with its initial network transaction ID) and the token requestor. A migration adds a crosswalk from each processor's references to yours, the batch that created each link, the processor that holds each credential, and the cohort that decides who charges it. The crosswalk follows the general shape in [Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids):
+The [core data model](/books/payments/card-payments#the-core-data-model) has payment methods, payments and their attempts, and [Stored Cards & Recurring Billing](/books/payments/stored-credentials#how-to-build-it) adds the agreement behind each stored method (with its initial network transaction ID) and the token requestor. A migration adds a crosswalk from each processor's references to yours, the batch that created each link, the processor that holds each credential, and the cohort that decides who charges it. The crosswalk follows the general shape in [Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids):
 
 ```sql
 CREATE TABLE migration_batches (
@@ -201,7 +201,7 @@ A migration rewrites who can charge every customer at once, so it's the event mo
 - **The mandate trail.** For each migrated bank account, the authorization text and acceptance evidence, and any re-confirmation sent during migration.
 - **The old processor's records, exported before access ends.** Transaction history, dispute history and reports the new processor will never have, archived for the longest retention period that applies ([How Long to Keep What](/books/payments/operating-the-platform#how-long-to-keep-what)).
 
-The audit record itself is in [Audit Trails](/docs/architecture/audit-trails).
+The audit record itself is in [Audit Trails](/docs/building-blocks/audit-trails).
 
 ## What This Means for the System You Build
 

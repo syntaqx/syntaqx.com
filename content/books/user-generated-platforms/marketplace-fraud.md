@@ -9,7 +9,7 @@ tags = ["marketplaces", "fraud", "risk-scoring", "identity-verification", "sanct
 
 A marketplace is a fraud target from both sides and from outside. Guests use stolen cards, book homes for parties they promised not to throw, drive cars across borders and don't bring them back. Hosts list properties they don't own, take deposits by wire and vanish, file claims for damage that was already there. Sellers ship empty boxes and buyers claim the box was empty. Outsiders copy real listings to fake websites and message real guests with fake payment links. And because every transaction pays someone, every fraud pattern on a marketplace ends at a payout or a refund.
 
-The marketplace's advantage is that it sees both sides of every transaction, keeps the conversation, and knows the history of every account, card, device and listing involved. Its constraint is that most of its users are honest and impatient: every check costs conversion, every false positive is a guest who booked elsewhere, and every block is a decision about a person that may have to be explained. This chapter covers guest and driver verification, reservation risk scoring and booking restrictions, linked accounts, takeover of host and seller accounts, fake and hijacked listings, payment diversion and off-platform scams, goods fraud, host and seller fraud, and sanctions screening and background checks. It extends `bookings` and `listings` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model) and uses the playbook's [Automated Risk Decisions](/docs/architecture/risk-scoring) for scoring machinery and the Payments volume's [Fraud & Risk](/books/payments/fraud-and-risk) for card fraud.
+The marketplace's advantage is that it sees both sides of every transaction, keeps the conversation, and knows the history of every account, card, device and listing involved. Its constraint is that most of its users are honest and impatient: every check costs conversion, every false positive is a guest who booked elsewhere, and every block is a decision about a person that may have to be explained. This chapter covers guest and driver verification, reservation risk scoring and booking restrictions, linked accounts, takeover of host and seller accounts, fake and hijacked listings, payment diversion and off-platform scams, goods fraud, host and seller fraud, and sanctions screening and background checks. It extends `bookings` and `listings` from [The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model) and uses the playbook's [Automated Risk Decisions](/docs/building-blocks/risk-scoring) for scoring machinery and the Payments volume's [Fraud & Risk](/books/payments/fraud-and-risk) for card fraud.
 
 ## How the Platforms Do It
 
@@ -46,7 +46,7 @@ A reservation score estimates the chance that a booking ends in a loss: fraud (s
 
 The published features for party risk give the flavor: Airbnb's screening weighs the guest's history of positive reviews, how long they've been on Airbnb, the trip's length, the distance to the listing, whether it's a weekend, and the listing's size, among many others. Airbnb reported that its restriction on certain local entire-home bookings by US and Canadian guests under 25 blocked over 770,000 reservation attempts in the two countries, a same-city, short-notice restriction blocked over 170,000, and nearly 9,000 high-risk reservations were cancelled proactively.
 
-Three marketplace specifics on top of the general machinery ([Scores, Bands and the Human Middle](/docs/architecture/risk-scoring#scores-bands-and-the-human-middle); [More Outcomes Than Yes and No](/docs/architecture/risk-scoring#more-outcomes-than-yes-and-no)):
+Three marketplace specifics on top of the general machinery ([Scores, Bands and the Human Middle](/docs/building-blocks/risk-scoring#scores-bands-and-the-human-middle); [More Outcomes Than Yes and No](/docs/building-blocks/risk-scoring#more-outcomes-than-yes-and-no)):
 
 - **Score at several checkpoints.** At the booking request (before the host sees it, so a blocked request never reaches them), at confirmation, before the trip (new facts: a changed driver, a card that started failing), at payout release, and on claims ([Handoffs, Damage & Claims](/books/user-generated-platforms/damage-and-claims)).
 - **Restrict, don't just block.** Airbnb's under-25 rule blocks entire homes but not private rooms or hotel rooms; a risky guest may still book where a host is present. Outcomes include requiring a higher deposit, a verified second driver, a higher protection tier, host approval instead of instant book, or a shorter booking window.
@@ -54,7 +54,7 @@ Three marketplace specifics on top of the general machinery ([Scores, Bands and 
 
 ![Five scoring checkpoints along a booking: the booking request, before the host sees it; confirmation; before the trip, when a new driver or a failing card appears; payout release; and the claim. Accented lines from all five join into one score feeding the risk_decisions record, which keeps inputs, versions and outcome. Late labels, drawn dashed, a claim weeks later and a chargeback months later, are joined back into the record. The record leads to outcomes that restrict rather than only block: a higher deposit, a second driver, a protection tier, host approval and a shorter booking window.](/diagrams/ugp-marketplace-fraud-checkpoints.svg "Score at every checkpoint into one decision record, and let late labels find it. Most outcomes restrict the booking rather than refuse it.")
 
-Every score is a `risk_decisions` row with its inputs, versions and outcome ([The Decision Record](/docs/architecture/risk-scoring#the-decision-record)); labels arrive late (a claim three weeks after the trip, a chargeback two months later), and the training data must join them back ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)).
+Every score is a `risk_decisions` row with its inputs, versions and outcome ([The Decision Record](/docs/building-blocks/risk-scoring#the-decision-record)); labels arrive late (a claim three weeks after the trip, a chargeback two months later), and the training data must join them back ([Labels Arrive Late](/docs/building-blocks/risk-scoring#labels-arrive-late)).
 
 ## Linked Accounts
 
@@ -67,7 +67,7 @@ Airbnb describes an identity graph of about 7 billion nodes and 11 billion edges
 - **Rings:** many accounts sharing few devices or cards, booking or listing in a pattern.
 - **Payout concentration:** many hosts paid to one bank account.
 
-Link with evidence and review the uncertain middle; never merge two people because they share a household router ([Review Bands](/docs/architecture/record-linkage#review-bands); [Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible)). The account link records themselves are owned by [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#how-to-build-it), which covers detection across the platform; this chapter reads them.
+Link with evidence and review the uncertain middle; never merge two people because they share a household router ([Review Bands](/docs/building-blocks/record-linkage#review-bands); [Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible)). The account link records themselves are owned by [Spam, Bots & Inauthentic Behavior](/books/user-generated-platforms/spam-and-bots#how-to-build-it), which covers detection across the platform; this chapter reads them.
 
 ## Takeover of Hosts and Sellers
 
@@ -206,7 +206,7 @@ CREATE TABLE sanctions_screenings (
 
 Design decisions behind it:
 
-- **Reservation risk uses the playbook's decision record.** `risk_decisions` gains a booking and a listing reference and the marketplace checkpoints; inputs, versions, outcome and supersession are already there ([The Decision Record](/docs/architecture/risk-scoring#the-decision-record)).
+- **Reservation risk uses the playbook's decision record.** `risk_decisions` gains a booking and a listing reference and the marketplace checkpoints; inputs, versions, outcome and supersession are already there ([The Decision Record](/docs/building-blocks/risk-scoring#the-decision-record)).
 - **Published restrictions are rules, not model outputs.** `booking_restrictions` holds the age, locality and notice rules a platform states in its policy, versioned, so a blocked guest can be told the rule; model-driven outcomes point at a risk decision instead.
 - **Effects are recorded on the booking.** `booking_risk_outcomes` says what each decision or rule did (blocked, raised the deposit, adjusted the fee, required approval), which is what a guest's appeal, a host's question and a discrimination review all need.
 - **Listing fraud is an investigation linked to a case,** with the matched listing, so duplicates, hijacks and prohibited items run through the same moderation pipeline as any content.
@@ -217,12 +217,12 @@ Design decisions behind it:
 
 ## Auditing
 
-- **Every risk decision and its effect** on a booking, listing, claim or payout, with inputs and versions, so a blocked guest's appeal and a regulator's discrimination question can both be answered ([Explanations and Appeals](/docs/architecture/risk-scoring#explanations-and-appeals)).
+- **Every risk decision and its effect** on a booking, listing, claim or payout, with inputs and versions, so a blocked guest's appeal and a regulator's discrimination question can both be answered ([Explanations and Appeals](/docs/building-blocks/risk-scoring#explanations-and-appeals)).
 - **Published restrictions** with their versions and effective dates, and counts of what each blocked.
 - **Verification records** for every guest, driver, host and seller, with vendor references, and their retention and erasure.
 - **Listing investigations and scam reports** with outcomes, linked cases and the accounts involved.
 - **Sanctions screenings** by trigger and list version, every potential match's review, and blocked-property reports.
-- **Labels joined to decisions:** which blocked or allowed bookings later produced claims, chargebacks or scam reports, for measuring the model and the rules ([Measuring It](/docs/architecture/risk-scoring#measuring-it)).
+- **Labels joined to decisions:** which blocked or allowed bookings later produced claims, chargebacks or scam reports, for measuring the model and the rules ([Measuring It](/docs/building-blocks/risk-scoring#measuring-it)).
 
 ## What This Means for the System You Build
 

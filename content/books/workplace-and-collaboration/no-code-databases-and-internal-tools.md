@@ -12,7 +12,7 @@ Every company runs on spreadsheets that outgrew themselves. The hiring tracker w
 
 The schema belongs to the user. A member can add a field, change its type, rename it or delete it at any moment, and every view, formula, automation, integration and API client built on it has to cope. The data is the customer's business records, sometimes personal data and sometimes regulated, held in a tool the customer's admins may not know exists. And the apps connect to everything, which is where data leaks: a flow that copies the CRM into a personal spreadsheet is two connectors and a trigger. The inversion is sharper here than anywhere in the book: the vendor provides a database engine and an app runtime, and the customer's makers design the schema while the customer's admins have to govern applications they didn't commission.
 
-This chapter covers the platforms, the user-defined schema, formulas and computed fields, limits, the gap between a database and an app, and governance of what the book calls shadow apps. Custom fields as a general engineering pattern are [Custom Fields](/docs/architecture/custom-fields); triggers and actions inside work tools are [Automation Rules](/books/workplace-and-collaboration/automation-rules); cross-tool integration platforms (Zapier, Make, Power Automate as an iPaaS) are [Integration Platforms & Workflow Builders](/books/workplace-and-collaboration/integration-platforms).
+This chapter covers the platforms, the user-defined schema, formulas and computed fields, limits, the gap between a database and an app, and governance of what the book calls shadow apps. Custom fields as a general engineering pattern are [Custom Fields](/docs/building-blocks/custom-fields); triggers and actions inside work tools are [Automation Rules](/books/workplace-and-collaboration/automation-rules); cross-tool integration platforms (Zapier, Make, Power Automate as an iPaaS) are [Integration Platforms & Workflow Builders](/books/workplace-and-collaboration/integration-platforms).
 
 ## How the Platforms Do It
 
@@ -40,7 +40,7 @@ In a no-code database the field definitions are data. That has consequences an e
 - **Deleting a field is deleting data.** It needs the same trash, restore window and audit as deleting records.
 - **Links are relations.** A linked-record field is a foreign key the user created, often many-to-many, and its integrity (what happens to links when a record is deleted) must be defined by the product, because the user won't define it.
 
-The storage model behind this is the one [Three Storage Models](/docs/architecture/custom-fields#three-storage-models) describes: typed values keyed by field ID (an entity-attribute-value or JSONB shape) with per-tenant indexes for the fields people filter on. The no-code twist is scale and volatility: thousands of tenants each with hundreds of tables whose schemas change daily.
+The storage model behind this is the one [Three Storage Models](/docs/building-blocks/custom-fields#three-storage-models) describes: typed values keyed by field ID (an entity-attribute-value or JSONB shape) with per-tenant indexes for the fields people filter on. The no-code twist is scale and volatility: thousands of tenants each with hundreds of tables whose schemas change daily.
 
 ## Formulas and Computed Fields
 
@@ -69,7 +69,7 @@ Enterprise Scale limits aren't published; Airtable's sales team sets them. The A
 
 Read the table as engineering: records are capped **per base** because a base is the unit loaded, indexed and computed together; automation runs and API calls are metered **per workspace per month** because they're the cost drivers; attachments are capped separately because they're blob storage, not database rows. Microsoft Lists inherits SharePoint's platform limits instead: 30 million items per list, 250 MB per attachment on a list item, and no breaking permission inheritance once a list passes 100,000 items. Notion's API caps per-request arrays (100 related pages per relation request) rather than database size.
 
-My rule, from [Limits Per Tenant](/docs/architecture/custom-fields#limits-per-tenant): **publish every limit, enforce it at write time with a clear error, show usage against it in the admin console, and warn well before it's reached.** A base that silently stops accepting form submissions at 50,000 records is an outage the customer discovers from its own customers.
+My rule, from [Limits Per Tenant](/docs/building-blocks/custom-fields#limits-per-tenant): **publish every limit, enforce it at write time with a clear error, show usage against it in the admin console, and warn well before it's reached.** A base that silently stops accepting form submissions at 50,000 records is an outage the customer discovers from its own customers.
 
 ## From Database to App
 
@@ -191,7 +191,7 @@ The audit trail (core `audit_events`) needs schema and policy events as well as 
 - **Sharing**: base or app shared, public form enabled, interface published.
 - **Policy**: data policy versions, connector reclassifications, apps suspended by a policy change.
 
-Per-record edit history belongs in `item_versions`; the audit log records who did bulk and structural things. [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions) covers attributing automated actions.
+Per-record edit history belongs in `item_versions`; the audit log records who did bulk and structural things. [Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions) covers attributing automated actions.
 
 ## What This Means for the System You Build
 

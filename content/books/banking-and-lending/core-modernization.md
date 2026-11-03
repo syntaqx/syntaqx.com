@@ -255,7 +255,7 @@ How it runs:
 
 ## Auditing
 
-A conversion is an examination topic before and after the weekend, and its records answer the customer complaints that follow. Beyond [Audit Trails](/docs/architecture/audit-trails):
+A conversion is an examination topic before and after the weekend, and its records answer the customer complaints that follow. Beyond [Audit Trails](/docs/building-blocks/audit-trails):
 
 - **Each run's controls and differences,** with explanations, and the go/no-go decision with its evidence and decision-maker, retained as they were on the night.
 - **The crosswalk,** permanently, so any old account number, card or case reference resolves to the new record years later.

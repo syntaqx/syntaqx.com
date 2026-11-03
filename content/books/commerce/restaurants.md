@@ -110,7 +110,7 @@ A tip and a service charge look alike on a receipt and are treated completely di
 For the system, the rules become three:
 
 - **Tips and service charges are different charge kinds.** A tip is an `order_charges` row with `kind = 'tip'`, payer customer, payee staff; a service charge is `kind = 'service_charge'`, payee merchant, with a flag for whether it's distributed to staff. They never share a column, because they go to different ledger accounts, different tax reports and different paychecks ([A Chart of Accounts](/docs/money/payment-states#a-chart-of-accounts)).
-- **The disclosure is part of the charge.** A mandatory service charge carries the rule that requires its disclosure and the text shown wherever prices appear (menu, online ordering, receipt), resolved by the location's jurisdiction ([Rules as Data](/docs/architecture/rules-as-data)).
+- **The disclosure is part of the charge.** A mandatory service charge carries the rule that requires its disclosure and the text shown wherever prices appear (menu, online ordering, receipt), resolved by the location's jurisdiction ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **Tip suggestions are configuration, and the tip base is a decision.** Whether suggested percentages apply to the pre-tax or post-tax total, before or after discounts, is something the guest sees and the merchant chooses; store which base was used on the charge.
 
 ## Tip Pools
@@ -277,7 +277,7 @@ Design notes:
 - **Tips can't be pooled with managers.** A distribution's eligibility check runs against the pool's roles and the staff member's role assignment on that shift ([Staff, Roles and Permissions](/books/commerce/store-operations#staff-roles-and-permissions)); a role flagged as a manager or supervisor is never eligible, whatever the pool's configuration says.
 - **Tips flow to staff in full.** Tip charges sit in their own liability account until paid in payroll or cash, so "were all tips paid out" is a balance check, as it is for couriers ([Tips](/books/commerce/delivery-fees-and-the-law#tips)). A cash payout of card tips at end of shift is a `tip_payout` cash movement in the drawer ([Store Operations](/books/commerce/store-operations#how-to-build-it)).
 - **Kitchen timestamps feed estimates.** Fire-to-bump times per item and station are the history the prep-time model for delivery learns from ([Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#how-to-build-it)).
-- **A local path to the kitchen.** Ticket creation and display must work over the restaurant's local network when the internet is down; the KDS and the register sync through a local hub, and the backup printer takes over when a screen is unreachable ([Offline Sync](/docs/architecture/offline-sync)).
+- **A local path to the kitchen.** Ticket creation and display must work over the restaurant's local network when the internet is down; the KDS and the register sync through a local hub, and the backup printer takes over when a screen is unreachable ([Offline Sync](/docs/building-blocks/offline-sync)).
 
 ## Auditing
 
@@ -286,7 +286,7 @@ Design notes:
 - **Every tip pool distribution,** with its inputs, so an employee or the Department of Labor can see how each share was computed and that no manager shared in it.
 - **Every comp, void and check transfer,** with staff and approver.
 - **Kitchen timelines:** each ticket's fire, bump, recall and printer fallback, for food safety questions and complaint handling.
-- **Form 8027 inputs** for establishments that file it: gross receipts, charged receipts with tips and reported tips per period ([Audit Trails](/docs/architecture/audit-trails)).
+- **Form 8027 inputs** for establishments that file it: gross receipts, charged receipts with tips and reported tips per period ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

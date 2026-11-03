@@ -190,7 +190,7 @@ Design notes:
 - **Verified purchase is a join.** The badge is `order_line_id IS NOT NULL` with the line delivered and not refunded at submission; it's never set by hand, and imported reviews keep their source's status in `source_ref` rather than gaining ours.
 - **Ratings are derived.** `rating_average` and `rating_count` are computed from published reviews on a schedule or on change, never edited, and the same numbers go to the page, the structured data and the feed to Google.
 - **Requests are logged even when nobody answers.** `review_requests` is what proves every buyer was asked; the gating query above should show the same coverage for every eligibility path, and a drop for one segment is a finding.
-- **Detection proposes, policy decides.** Fake-review signals (linked accounts, bursts, text similarity, reviewers who never bought) feed a score that queues a review; the action records the model version and evidence ([Risk Scoring](/docs/architecture/risk-scoring), [The Decision Record](/docs/architecture/risk-scoring#the-decision-record)).
+- **Detection proposes, policy decides.** Fake-review signals (linked accounts, bursts, text similarity, reviewers who never bought) feed a score that queues a review; the action records the model version and evidence ([Risk Scoring](/docs/building-blocks/risk-scoring), [The Decision Record](/docs/building-blocks/risk-scoring#the-decision-record)).
 - **Syndication is an outbox.** Publication and removal events go to each syndication partner and are logged per partner, so a removal reaches every copy ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)).
 
 ## Auditing

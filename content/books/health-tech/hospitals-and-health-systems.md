@@ -45,7 +45,7 @@ ADT (admit, discharge, transfer) is the stream of patient movement and registrat
 What consuming ADT teaches:
 
 - **Events are corrections as often as facts.** A transfer is cancelled, a discharge is undone, an admit is backdated; the consumer applies cancels and updates to its own state and keeps the history, rather than treating each message as a new truth.
-- **Merges are the dangerous message.** Two patient records combined in the EHR must be combined downstream, and an unmerge has to split them again; the consumer records the merge with both identifiers ([Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible)).
+- **Merges are the dangerous message.** Two patient records combined in the EHR must be combined downstream, and an unmerge has to split them again; the consumer records the merge with both identifiers ([Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible)).
 - **Order is per patient, and imperfect.** Messages for one patient must be applied in order, and interface engines can reorder or replay; consumers key on the message control ID, process idempotently and detect gaps ([Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent), [Ordering](/docs/architecture/events#ordering)).
 - **The location is a hierarchy.** Facility, building, unit, room and bed, each with its own identifiers, and the bed is the leaf every downstream system cares about.
 
@@ -53,7 +53,7 @@ What consuming ADT teaches:
 
 Capacity is the hospital's daily operating problem: patients waiting in the ED for an inpatient bed, beds occupied by patients ready for discharge, rooms dirty and waiting for environmental services, and transfers requested from other hospitals. Bed management software keeps a live board of every bed's state, assigns patients to beds, dispatches cleaning, tracks pending discharges and runs the transfer center that accepts patients from outside. TeleTracking's figures (30% of US beds) show it is often a separate system from the EHR, fed by ADT and feeding assignments back.
 
-A bed has its own state machine, separate from the patient's: available, assigned, occupied, pending discharge, dirty, cleaning, blocked (isolation, maintenance, staffing). Assignment is a hold on a resource with a short life, and two patients assigned to one bed is the double booking every reservation system prevents ([Exclusion Constraints for Time](/docs/architecture/reservations-and-holds#exclusion-constraints-for-time)). The metrics hospitals run on (ED boarding time, discharge-order-to-departure, bed turnaround, transfer acceptance time) are all intervals between events, so they come from the event history, not from the board's current state.
+A bed has its own state machine, separate from the patient's: available, assigned, occupied, pending discharge, dirty, cleaning, blocked (isolation, maintenance, staffing). Assignment is a hold on a resource with a short life, and two patients assigned to one bed is the double booking every reservation system prevents ([Exclusion Constraints for Time](/docs/building-blocks/reservations-and-holds#exclusion-constraints-for-time)). The metrics hospitals run on (ED boarding time, discharge-order-to-departure, bed turnaround, transfer acceptance time) are all intervals between events, so they come from the event history, not from the board's current state.
 
 ## The Epic-Centered Enterprise
 
@@ -225,7 +225,7 @@ Design decisions:
 - **EMTALA timelines.** Arrival, screening, stabilization, financial interactions and disposition for every ED encounter, including patients who left without being seen.
 - **Notifications sent.** For hospitals using your software for 482.24(d), each notification with its trigger event, recipients and delivery.
 - **340B determinations.** For each qualifying prescription or dispense, the encounter, prescriber and rule that made it eligible, and the Medicaid status that ruled out a duplicate discount.
-- **Price transparency.** Each published file, its source versions, its attestation and its hash, kept as long as the hospital may be asked about it ([Audit Trails](/docs/architecture/audit-trails#make-it-tamper-evident)).
+- **Price transparency.** Each published file, its source versions, its attestation and its hash, kept as long as the hospital may be asked about it ([Audit Trails](/docs/building-blocks/audit-trails#make-it-tamper-evident)).
 
 ## What This Means for the System You Build
 

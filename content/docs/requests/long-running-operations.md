@@ -90,7 +90,7 @@ POST /operations/019a0b70-1e2f-7a3b-8c4d-5e6f7a8b9c0d/cancel
 
 ## Retention
 
-Completed operations and their results are kept for **30 days**, the window AIP-151 suggests: long enough to come back after a weekend or an incident, short enough that exported files, which often contain customer data, don't accumulate forever ([Data Retention & Deletion](/docs/architecture/data-retention)). A `GET` on an expired operation returns `404`. Results that need to live longer belong in a real resource, not an operation.
+Completed operations and their results are kept for **30 days**, the window AIP-151 suggests: long enough to come back after a weekend or an incident, short enough that exported files, which often contain customer data, don't accumulate forever ([Data Retention & Deletion](/docs/building-blocks/data-retention)). A `GET` on an expired operation returns `404`. Results that need to live longer belong in a real resource, not an operation.
 
 ## When Not to Use This
 

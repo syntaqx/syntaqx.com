@@ -11,7 +11,7 @@ Every company in this volume reports the same handful of numbers to its investor
 
 This chapter covers the metrics as providers publish and define them: recurring revenue (ARR and run rate), net dollar retention and its variants, customer counts and their redefinitions, churn and renewal rates for hosting and domains, revenue per customer, gross margin and the distortion pass-through fees cause, utilization, capital intensity and contracted backlog, and cost per unit. It ends with tables that make every metric a versioned definition computed from [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model), so the number in the board deck can be rebuilt from the usage and invoices behind it.
 
-The method belongs to the playbook: [One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric) for what a definition contains and why it is versioned, [Measure Cost per Unit](/docs/operations/cost-and-finops#measure-cost-per-unit-not-just-in-total) for unit cost, and [Subscriptions & Recurring Billing](/docs/money/subscriptions) for MRR from subscriptions. The GPU providers' backlog and capacity figures are [The Neocloud Business](/books/hosting-and-cloud/gpu-and-ai-clouds#the-neocloud-business)'s.
+The method belongs to the playbook: [One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric) for what a definition contains and why it is versioned, [Measure Cost per Unit](/docs/operations/cost-and-finops#measure-cost-per-unit-not-just-in-total) for unit cost, and [Subscriptions & Recurring Billing](/docs/money/subscriptions) for MRR from subscriptions. The GPU providers' backlog and capacity figures are [The Neocloud Business](/books/hosting-and-cloud/gpu-and-ai-clouds#the-neocloud-business)'s.
 
 ## How the Providers Do It
 
@@ -238,7 +238,7 @@ Notes on the sketch:
 - **The definition carries the footnote.** Population, exclusions, clock, comparison and aggregation are the five places provider definitions differ in the table above; storing them as columns makes "which NDR is this?" answerable from the row.
 - **`revenue_scope` keeps pass-through honest.** Every revenue metric states whether registry, carrier and license fees are in it, using the core `skus.pass_through` flag, so margin and ARPU can be reported both ways from one definition each.
 - **Values freeze and restate.** A number published in an earnings release, filed, or used for a sales commission sets `frozen_at`; a correction (Cloudflare's overstated customer count is the public example) is a new row that supersedes it, and the original stays readable.
-- **Reconcile before freezing.** `reconciled_to` names the billing or ledger total the value was checked against ([Reconcile to the Source](/docs/architecture/data-pipelines#reconcile-to-the-source)); a value that can't be reconciled isn't frozen.
+- **Reconcile before freezing.** `reconciled_to` names the billing or ledger total the value was checked against ([Reconcile to the Source](/docs/data/data-pipelines#reconcile-to-the-source)); a value that can't be reconciled isn't frozen.
 - **Redefinitions are new keys or versions, never edits.** DigitalOcean's customer redefinition is the case: the old definition's series ends on a date, the new one starts, and both stay computable.
 - **Events:** `metric.frozen` and `metric.restated` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to reporting and investor tools.
 

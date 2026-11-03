@@ -39,7 +39,7 @@ So when a team struggles, I look at what it owns before who's on it. The symptom
 
 ## Stream-Aligned Teams Own Services End to End
 
-A stream-aligned team owns its services from design through production: code, schema, pipeline, dashboards, the [pager](/docs/operations/on-call). It's the owner in [code ownership](/docs/engineering/code-ownership), and it ships to its customers without waiting on anyone. End to end is the point: a team that throws code to an ops team never learns what it does at 3am, and the people who know the trade-offs are the ones who live with them.
+A stream-aligned team owns its services from design through production: code, schema, pipeline, dashboards, the [pager](/docs/operations/on-call). It's the owner in [code ownership](/docs/development/code-ownership), and it ships to its customers without waiting on anyone. End to end is the point: a team that throws code to an ops team never learns what it does at 3am, and the people who know the trade-offs are the ones who live with them.
 
 ## Platform Teams Are Product Teams
 

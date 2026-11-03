@@ -198,12 +198,12 @@ How it runs:
 
 ## Auditing
 
-The core is the bank's book of original entry, so its records are what examiners, external auditors and, if the bank fails, the FDIC as receiver read first. The general design is in [Audit Trails](/docs/architecture/audit-trails); for a core, the record must show:
+The core is the bank's book of original entry, so its records are what examiners, external auditors and, if the bank fails, the FDIC as receiver read first. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for a core, the record must show:
 
 - **Every GL mapping in force on any past date,** who approved it and when it changed, so a past journal entry can be explained by the rule that produced it.
 - **The daily subledger proofs and their explanations,** retained, so the state of the books on any past business date is shown as it was.
 - **The link from every summary journal line to its account transactions,** so an auditor's sample of a GL movement walks back to accounts in minutes.
-- **Configuration changes as events,** with old and new values: products, fees, rates, GL mappings, posting rules ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Configuration changes as events,** with old and new values: products, fees, rates, GL mappings, posting rules ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Vendor notifications and incidents,** including the Bank Service Company Act notice to the regulator and every service-provider incident notice received, with times.
 
 ## What This Means for the System You Build

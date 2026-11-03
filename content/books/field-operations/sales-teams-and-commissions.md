@@ -140,7 +140,7 @@ Leads passed from technicians to sales reps (a "tech lead") need attribution too
 
 Leaderboards are how door-to-door teams manage motivation, and every D2D app has one. They're also the most common source of pay disputes, because a leaderboard shows sales that may never become customers. SalesRabbit and FieldRoutes both separate a **leaderboard**, which ranks reps on chosen metrics over time, from a **competition**, a specific event with rules participants must meet; FieldRoutes runs both for players and teams. The KPIs SPOTIO suggests door-to-door managers track are doors knocked per day, contact rate, conversation to demo, demo to close, average deal size and pipeline velocity, reviewed weekly.
 
-- **Define each metric once.** "Sales" must mean the same on the leaderboard, in commissions and in finance ([Data Pipelines](/docs/architecture/data-pipelines#one-definition-per-metric)).
+- **Define each metric once.** "Sales" must mean the same on the leaderboard, in commissions and in finance ([Data Pipelines](/docs/data/data-pipelines#one-definition-per-metric)).
 - **Label what's counted.** Show leaderboards in near real time, but say whether a number is signed today, net of cooling-off cancellations, first service done, or earned. A board of signed sales rewards pressure; rank on sales that survived cancellation and first service, or show both.
 - **Freeze standings.** A contest result is a payout: version and publish its rules like a plan, snapshot the scoring with the metric definition version when the contest closes, and change it only through an audited adjustment entry.
 - **Rank names, not customers.** Leaderboards read aggregates, never other reps' lead records ([Authorization](/docs/security/authorization)).
@@ -195,7 +195,7 @@ The field-specific records behind that:
 - **Plan versions and acknowledgments:** every version's full rules, who approved it, when it took effect, and each rep's signed acknowledgment (California requires the signed receipt).
 - **Onboarding records:** I-9 and E-Verify dates, FCRA disclosures, authorizations and adverse action notices, permits and their expiries, kept for the periods each rule requires.
 
-The ledger itself is the record of every payout; record structure, actors and retention follow [Audit Trails](/docs/architecture/audit-trails), with field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). Together they answer a wage claim, a misclassification audit, a state inspector asking whether a rep was permitted in a city on a given day, and a rep who's sure they were short-paid.
+The ledger itself is the record of every payout; record structure, actors and retention follow [Audit Trails](/docs/building-blocks/audit-trails), with field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). Together they answer a wage claim, a misclassification audit, a state inspector asking whether a rep was permitted in a city on a given day, and a rep who's sure they were short-paid.
 
 ## What This Means for the System You Build
 

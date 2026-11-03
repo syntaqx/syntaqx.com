@@ -58,7 +58,7 @@ Three patterns run through the table:
 
 ## Managed Rulesets and Custom Rules
 
-A WAF rule is an expression over request fields and an action. The expression language differs by vendor (Cloudflare's Rules language, Cloud Armor's custom rules language with functions such as `inIPRange()` and `evaluatePreconfiguredWaf()`, AWS WAF's statements, ModSecurity's `SecRule`), but the shape is constant, and it is the playbook's [shape of a rule](/docs/architecture/rules-as-data#the-shape-of-a-rule): a condition, an outcome, a priority, an owner and a validity. ModSecurity's language set the vocabulary: `SecRule` reads "over one hundred variables" from requests and responses, matches them with regular expressions, numeric comparisons and a parallel phrase matcher, and denies with "403 Forbidden" by default.
+A WAF rule is an expression over request fields and an action. The expression language differs by vendor (Cloudflare's Rules language, Cloud Armor's custom rules language with functions such as `inIPRange()` and `evaluatePreconfiguredWaf()`, AWS WAF's statements, ModSecurity's `SecRule`), but the shape is constant, and it is the playbook's [shape of a rule](/docs/building-blocks/rules-as-data#the-shape-of-a-rule): a condition, an outcome, a priority, an owner and a validity. ModSecurity's language set the vocabulary: `SecRule` reads "over one hundred variables" from requests and responses, matches them with regular expressions, numeric comparisons and a parallel phrase matcher, and denies with "403 Forbidden" by default.
 
 Rules come in two kinds, and every provider separates them:
 
@@ -84,7 +84,7 @@ The rule every provider builds in: a new rule, a new ruleset version or a raised
 > [!WARNING]
 > A rule in log mode still runs. Cloudflare's 2 Jul 2019 rule was meant for "simulate" mode, "where real customer traffic passes through the rule but nothing is blocked," and its regular expression still consumed every CPU core handling HTTP traffic worldwide. Log mode protects users from wrong decisions, not the fleet from expensive rules.
 
-False positives are the WAF's operating cost and the reason customers turn WAFs off. The tools against them are exclusions scoped to a path or field (skip the SQL injection rule on the rich-text field that legitimately contains SQL keywords), executing-level testing before raising a paranoia level, and keeping a record of which rule blocked each request so a support ticket can name it, the playbook's [record which rule decided](/docs/architecture/rules-as-data#record-which-rule-decided). The playbook's [risk scoring](/docs/architecture/risk-scoring#changing-rules-and-models-safely) doc covers the same discipline for score thresholds.
+False positives are the WAF's operating cost and the reason customers turn WAFs off. The tools against them are exclusions scoped to a path or field (skip the SQL injection rule on the rich-text field that legitimately contains SQL keywords), executing-level testing before raising a paranoia level, and keeping a record of which rule blocked each request so a support ticket can name it, the playbook's [record which rule decided](/docs/building-blocks/rules-as-data#record-which-rule-decided). The playbook's [risk scoring](/docs/building-blocks/risk-scoring#changing-rules-and-models-safely) doc covers the same discipline for score thresholds.
 
 ## Emergency Rules and Virtual Patching
 
@@ -94,7 +94,7 @@ Log4Shell (CVE-2021-44228) is the reference case. The vulnerability became publi
 
 The React Server Components vulnerability (CVE-2025-55182, affecting React 19.0 to 19.2 and Next.js 15 through 16) showed the pattern ahead of disclosure. Cloudflare's security partners alerted it, and its rules "were deployed at 5:00 PM GMT on Tuesday, December 2, 2025," in both the Managed Ruleset and the Free Managed Ruleset, default Block, before the CVE announcement; it said it had "not observed any attempted exploit" by the time it published on 3 Dec. Customers on paid plans needed Managed Rules enabled; free customers had them on by default.
 
-Two engineering consequences follow. A ruleset version is a dated, published artifact, so a customer can see which version protected them on a given day and pin or follow it ([effective dates and versions](/docs/architecture/rules-as-data#effective-dates-and-versions)). And an emergency rule is still a deploy, which is the next section.
+Two engineering consequences follow. A ruleset version is a dated, published artifact, so a customer can see which version protected them on a given day and pin or follow it ([effective dates and versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)). And an emergency rule is still a deploy, which is the next section.
 
 ## Rule Rollout Is a Deploy
 

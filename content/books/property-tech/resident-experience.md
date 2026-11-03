@@ -69,14 +69,14 @@ A property sends more kinds of messages than most businesses, and each kind has 
 | **Community** | Events, newsletters, wall posts | Optional; easy to mute |
 | **Marketing** | Renewal promotions, referral programs, partner offers | Consent and opt-out rules for marketing; partner offers disclose the relationship |
 
-The general machinery is in [Notifications & Consent](/docs/architecture/notifications): classify by purpose ([Purpose Decides Everything](/docs/architecture/notifications#purpose-decides-everything)), record consent per channel and purpose in a ledger ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)), and send everything through one gate that re-checks consent, quiet hours and suppression at send time ([One Outbound Gate](/docs/architecture/notifications#one-outbound-gate)). Texting rules (TCPA consent, revocation in any reasonable manner, carrier registration) are in [Calls, Texts & Email](/docs/compliance/consumer-contact#tcpa-consent).
+The general machinery is in [Notifications & Consent](/docs/building-blocks/notifications): classify by purpose ([Purpose Decides Everything](/docs/building-blocks/notifications#purpose-decides-everything)), record consent per channel and purpose in a ledger ([The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger)), and send everything through one gate that re-checks consent, quiet hours and suppression at send time ([One Outbound Gate](/docs/building-blocks/notifications#one-outbound-gate)). Texting rules (TCPA consent, revocation in any reasonable manner, carrier registration) are in [Calls, Texts & Email](/docs/compliance/consumer-contact#tcpa-consent).
 
 The property twists:
 
 - **Legal notices are not notifications.** A rent increase or an entry notice sent by app push is a message about a notice; the notice itself is a document served by a method the law accepts, with its own record of service, which [The Lease](/books/property-tech/the-lease#notices) and [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#entry-notice) own. The communications layer links to the served notice; it never substitutes for it.
 - **Opting out of marketing never silences the tenancy.** A resident who texts STOP to a renewal promotion still needs to hear about the water shutoff and the fire alarm test. That's why the purpose has to be right on every template, and why consent is per purpose, not per phone number ([Revoking Consent](/docs/compliance/consumer-contact#revoking-consent)).
 - **Audience comes from leases and units.** "Building C, floors 3 to 5" or "units on the east riser" resolves through units and current leases at send time, including occupants who opted in, not from a mailing list that went stale at the last move-out.
-- **The operator is the sender, per property.** Messages go out under the property's name and number, from a sender registered for that tenant ([Multi-Tenant Senders](/docs/architecture/notifications#multi-tenant-senders)); replies land in a shared inbox where site and central staff see one thread per household. Entrata's OXP Communications describes a shared inbox with SMS and email together.
+- **The operator is the sender, per property.** Messages go out under the property's name and number, from a sender registered for that tenant ([Multi-Tenant Senders](/docs/building-blocks/notifications#multi-tenant-senders)); replies land in a shared inbox where site and central staff see one thread per household. Entrata's OXP Communications describes a shared inbox with SMS and email together.
 - **Partner messages are the operator's messages.** An internet or moving offer sent through the app is marketing by the operator, whatever revenue share sits behind it; the disclosure and consent obligations are [Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#disclosure-and-revenue-share)'s.
 
 **Community walls and classifieds** are user-generated content inside the operator's product. My default is posting rules residents accept, reporting and moderation by staff, and a review queue for posts that look like housing ads (a sublet or roommate post), because a discriminatory preference in a housing notice is a fair housing problem wherever it's published ([Fair Housing](/books/property-tech/fair-housing#advertising)).
@@ -85,11 +85,11 @@ The property twists:
 
 Amenities are rentable inventory with short durations: a clubhouse for an evening, a guest suite for three nights, a grill or a court for an hour, the freight elevator and loading dock for a move. Entrata lists amenity booking in its app and portal; RealPage's LOFT Moving lists "amenity, parking, storage, and rentable items reservations"; RealPage's AI Resident Agent takes amenity bookings.
 
-The mechanics are a reservation system ([Reservations & Holds](/docs/architecture/reservations-and-holds)):
+The mechanics are a reservation system ([Reservations & Holds](/docs/building-blocks/reservations-and-holds)):
 
-- **Exclusive amenities** (a party room, a guest suite, the move elevator) use a time-range exclusion constraint so two households can't hold the same slot ([Exclusion Constraints for Time](/docs/architecture/reservations-and-holds#exclusion-constraints-for-time)).
-- **Shared amenities with capacity** (a gym or pool with a headcount limit) use counters per slot ([Counters for Pooled Inventory](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory)).
-- **Rules are per amenity:** lead time, maximum duration, bookings per household per period, hours, whether staff approve, a fee and a refundable deposit as charge codes on the lease ledger, cancellation terms. Fair use limits stop one household from holding every Saturday ([Caps and Abuse](/docs/architecture/reservations-and-holds#caps-and-abuse)).
+- **Exclusive amenities** (a party room, a guest suite, the move elevator) use a time-range exclusion constraint so two households can't hold the same slot ([Exclusion Constraints for Time](/docs/building-blocks/reservations-and-holds#exclusion-constraints-for-time)).
+- **Shared amenities with capacity** (a gym or pool with a headcount limit) use counters per slot ([Counters for Pooled Inventory](/docs/building-blocks/reservations-and-holds#counters-for-pooled-inventory)).
+- **Rules are per amenity:** lead time, maximum duration, bookings per household per period, hours, whether staff approve, a fee and a refundable deposit as charge codes on the lease ledger, cancellation terms. Fair use limits stop one household from holding every Saturday ([Caps and Abuse](/docs/building-blocks/reservations-and-holds#caps-and-abuse)).
 - **Eligibility comes from the lease:** current leaseholders and adult occupants in good standing, by property or building, with any delinquency restriction applied as written policy, not a staff judgment at the counter.
 - **Fees are charges.** A party room fee posts to the lease ledger with its charge code; a damage deposit is a held amount released after inspection; damage beyond it becomes a chargeback with evidence, the same way work orders do ([Resident Chargebacks](/books/property-tech/maintenance-and-work-orders#resident-chargebacks)).
 - **Bookings may open doors.** A confirmed booking can grant an access credential to the amenity for the slot ([Smart Locks and Access Control](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control)).
@@ -115,21 +115,21 @@ How to make that a system rather than a dashboard:
 
 - **Trigger from events.** `work_order.completed` sends the work-order survey; `lease.moved_in` plus a few weeks sends the move-in survey; the renewal window opening sends the renewal pulse. One survey per household per period, with quiet hours and the community-message consent, so surveys don't become spam.
 - **Tie the answer to its subject.** A one-star response points at the work order and the technician or vendor that did it, so it feeds vendor scorecards ([Vendors, Procurement & Payables](/books/property-tech/vendors-and-payables)) and reopens the request if the resident says it isn't fixed.
-- **Separate what residents said from what a model inferred.** A survey score is the resident's statement; a sentiment label on a text thread is a model's guess with a version. Store both, never overwrite one with the other, and keep the model output out of decisions the resident can't see or contest ([Automated Risk Decisions](/docs/architecture/risk-scoring)).
-- **Escalate, don't just score.** A response that says "still leaking" or "I feel unsafe" opens a work order or a manager task with an owner; an emergency in free text skips the queue ([Emergencies Skip the Model](/docs/architecture/ai-agents#emergencies-skip-the-model)).
+- **Separate what residents said from what a model inferred.** A survey score is the resident's statement; a sentiment label on a text thread is a model's guess with a version. Store both, never overwrite one with the other, and keep the model output out of decisions the resident can't see or contest ([Automated Risk Decisions](/docs/building-blocks/risk-scoring)).
+- **Escalate, don't just score.** A response that says "still leaking" or "I feel unsafe" opens a work order or a manager task with an owner; an emergency in free text skips the queue ([Emergencies Skip the Model](/docs/building-blocks/ai-agents#emergencies-skip-the-model)).
 - **Don't gate reviews.** Asking only happy residents to post public reviews, or paying for positive ones, runs into the FTC's rules on consumer reviews, which [Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#the-ftc-rule-on-consumer-reviews) owns along with reputation management.
 
 ## AI Resident Agents
 
 An AI agent that answers residents is a staff member with the same access and none of the judgment. RealPage's AI Resident Agent handles "everyday resident questions, service requests, amenity bookings, and rent reminders" across channels at any hour, and the suites' AI tiers include similar agents ([The Software Landscape](/books/property-tech/software-landscape#packaging-core-tiers-and-ai) covers the packaging).
 
-The general rules are in [AI Agents in the Product](/docs/architecture/ai-agents); the resident-side twists:
+The general rules are in [AI Agents in the Product](/docs/building-blocks/ai-agents); the resident-side twists:
 
-- **Identity before account actions.** The agent confirms it's talking to a lease member before discussing a balance, a lease or a work order, and acts only with that person's permissions ([Identity Before Account Actions](/docs/architecture/ai-agents#identity-before-account-actions)).
-- **Emergencies skip the model.** Gas, fire, flooding, no heat in winter and threats to safety route to the emergency path by deterministic rules ([Emergencies Skip the Model](/docs/architecture/ai-agents#emergencies-skip-the-model)), the same triage [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#triage-and-priority) uses.
-- **No legal promises.** The agent can explain a policy; it can't waive a fee, grant an accommodation, agree to a payment plan or extend a deadline unless that action is a tool with its own rules. Its promises are the operator's ([The AI's Promises Are the Business's Promises](/docs/architecture/ai-agents#the-ai-s-promises-are-the-business-s-promises)).
+- **Identity before account actions.** The agent confirms it's talking to a lease member before discussing a balance, a lease or a work order, and acts only with that person's permissions ([Identity Before Account Actions](/docs/building-blocks/ai-agents#identity-before-account-actions)).
+- **Emergencies skip the model.** Gas, fire, flooding, no heat in winter and threats to safety route to the emergency path by deterministic rules ([Emergencies Skip the Model](/docs/building-blocks/ai-agents#emergencies-skip-the-model)), the same triage [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#triage-and-priority) uses.
+- **No legal promises.** The agent can explain a policy; it can't waive a fee, grant an accommodation, agree to a payment plan or extend a deadline unless that action is a tool with its own rules. Its promises are the operator's ([The AI's Promises Are the Business's Promises](/docs/building-blocks/ai-agents#the-ai-s-promises-are-the-business-s-promises)).
 - **Accommodation requests go to people.** A resident who mentions a disability, an assistance animal or a need for a change is making a request the operator must handle through its process, and the agent's job is to recognize it and hand it off ([Reasonable Accommodations and Modifications](/books/property-tech/fair-housing#reasonable-accommodations-and-modifications)).
-- **Disclose and hand off.** Residents know they're talking to an AI where the law requires it and as my default everywhere ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)), and can reach a person ([Human Handoff Is a Product Feature](/docs/architecture/ai-agents#human-handoff-is-a-product-feature)).
+- **Disclose and hand off.** Residents know they're talking to an AI where the law requires it and as my default everywhere ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)), and can reach a person ([Human Handoff Is a Product Feature](/docs/building-blocks/ai-agents#human-handoff-is-a-product-feature)).
 
 [AI in Property Management](/books/property-tech/ai-in-property-management#automation-levels) covers governance, automation levels and cost allocation to owners across all agents.
 
@@ -153,7 +153,7 @@ Renewal rate, notice reasons and the trade-out between renewal and new-lease ren
 
 ## How to Build It
 
-The schema extends [the core model](/books/property-tech/property-business#the-core-data-model): reservable amenities are property inventory (`amenity_spaces`, distinct from the unit and property feature catalog `amenities` in [Portfolios, Properties & Units](/books/property-tech/portfolios-properties-and-units#how-to-build-it)); reservations, service orders and surveys hang off leases and people; fees post as `charges`. Consent and message history use the playbook's consent ledger and message log ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger), [The Message Log](/docs/architecture/notifications#the-message-log)) with `people` as the subject, so there's no consent table here.
+The schema extends [the core model](/books/property-tech/property-business#the-core-data-model): reservable amenities are property inventory (`amenity_spaces`, distinct from the unit and property feature catalog `amenities` in [Portfolios, Properties & Units](/books/property-tech/portfolios-properties-and-units#how-to-build-it)); reservations, service orders and surveys hang off leases and people; fees post as `charges`. Consent and message history use the playbook's consent ledger and message log ([The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger), [The Message Log](/docs/building-blocks/notifications#the-message-log)) with `people` as the subject, so there's no consent table here.
 
 ```sql
 CREATE TABLE amenity_spaces (          -- what residents can book
@@ -195,7 +195,7 @@ CREATE TABLE amenity_reservations (
 );
 ```
 
-The exclusion constraint needs to know whether the amenity is exclusive, and Postgres can't reference another table in a constraint, so `exclusive_slot` is copied from the amenity's booking mode when the row is created and never updated. Capacity amenities use a per-slot counter row locked on booking ([Counters for Pooled Inventory](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory)).
+The exclusion constraint needs to know whether the amenity is exclusive, and Postgres can't reference another table in a constraint, so `exclusive_slot` is copied from the amenity's booking mode when the row is created and never updated. Capacity amenities use a per-slot counter row locked on booking ([Counters for Pooled Inventory](/docs/building-blocks/reservations-and-holds#counters-for-pooled-inventory)).
 
 ```sql
 CREATE TABLE service_offerings (          -- bookable services from partners
@@ -270,18 +270,18 @@ Design decisions behind it:
 
 - **Portal permissions are computed, not stored.** A request from a portal session resolves the person's current `lease_members` rows on every call; there's no "resident user" table whose permissions drift from the lease.
 - **Reservations post charges, not balances.** A fee is a `charges` row with the amenity's charge code, reversed on a cancellation the rules refund; a deposit is a charge with its release recorded.
-- **Holds expire on read.** A household that starts a booking and abandons it doesn't block the slot past `held_until` ([Expiry Is Enforced on Read](/docs/architecture/reservations-and-holds#expiry-is-enforced-on-read)).
+- **Holds expire on read.** A household that starts a booking and abandons it doesn't block the slot past `held_until` ([Expiry Is Enforced on Read](/docs/building-blocks/reservations-and-holds#expiry-is-enforced-on-read)).
 - **The merchant of record is explicit** on every service offering, so the ledger, the owner statement and the disclosure all say the same thing about who sold what.
 - **Stated and inferred feedback are separate tables,** and inferred rows name who classified them (`classified_by`, the model's AI agent user, whose version is in the AI audit trail), so a disputed label can be traced and a model change can be re-run.
 - **Events in, events out.** Surveys and retention flags subscribe to `lease.moved_in`, `work_order.completed` and the renewal window; bookings and orders emit their own events for owner reporting and integrations ([Events & Async Messaging](/docs/architecture/events)).
 
 ## Auditing
 
-- **Every message to a resident,** with its purpose, channel, template version, the consent that allowed it and the delivery result ([The Message Log](/docs/architecture/notifications#the-message-log)); for legal notices, a link to the served notice record.
+- **Every message to a resident,** with its purpose, channel, template version, the consent that allowed it and the delivery result ([The Message Log](/docs/building-blocks/notifications#the-message-log)); for legal notices, a link to the served notice record.
 - **Consent changes,** including opt-outs by keyword and their effective time, kept as long as a TCPA claim can be brought.
 - **Who saw what in the portal,** especially former roommates and guarantors, since access to a household's records after someone leaves is a common complaint.
 - **Amenity rules as policy text,** with versions and effective dates, so a fair housing complaint about pool hours can be answered with the rule in force on the date.
-- **AI agent conversations and actions,** with the tools called and the handoffs made ([Auditing AI Actions](/docs/architecture/ai-agents#auditing-ai-actions)).
+- **AI agent conversations and actions,** with the tools called and the handoffs made ([Auditing AI Actions](/docs/building-blocks/ai-agents#auditing-ai-actions)).
 - **Retention flags and the actions taken on them,** so a renewal decision can be shown to rest on service history, not on complaints or protected characteristics.
 
 ## What This Means for the System You Build

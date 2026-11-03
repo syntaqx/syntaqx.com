@@ -14,7 +14,7 @@ The order matters. An agent's exploration is cheap, broad and nondeterministic, 
 
 A coding agent that writes UI code can't see it. It reasons from the JSX and the CSS to what it thinks renders, and that's where its UI mistakes live: the dark-mode token it didn't check, the button the sticky footer covers at phone width, the flex row that overflows with a long name. Typecheck and unit tests pass, the diff reads fine, and the page is wrong.
 
-A browser closes that loop. With [Claude in Chrome](https://code.claude.com/docs/en/chrome) connected to Claude Code, the same session that wrote the change opens it, takes a screenshot, reads console errors and the DOM, and fixes what it finds. Anthropic's docs list the jobs plainly: live debugging from console errors and DOM state, design verification against a mock, and web app testing of form validation, visual regressions and user flows. My rule from [AI-Assisted Development](/docs/engineering/ai-assisted-development#run-it-before-you-believe-it) applies here first: nothing visual is done until it has been looked at in each theme and at phone width, and the agent can do that looking itself.
+A browser closes that loop. With [Claude in Chrome](https://code.claude.com/docs/en/chrome) connected to Claude Code, the same session that wrote the change opens it, takes a screenshot, reads console errors and the DOM, and fixes what it finds. Anthropic's docs list the jobs plainly: live debugging from console errors and DOM state, design verification against a mock, and web app testing of form validation, visual regressions and user flows. My rule from [AI-Assisted Development](/docs/development/ai-assisted-development#run-it-before-you-believe-it) applies here first: nothing visual is done until it has been looked at in each theme and at phone width, and the agent can do that looking itself.
 
 ## What an Agent Finds
 
@@ -28,7 +28,7 @@ Pointed at a running app with a charter, an agent is good at the tireless half o
 
 ## What It Misses
 
-The agent's limits are the same ones [AI-Assisted Development](/docs/engineering/ai-assisted-development#plausible-but-wrong) describes for code: its mistakes look exactly like its successes.
+The agent's limits are the same ones [AI-Assisted Development](/docs/development/ai-assisted-development#plausible-but-wrong) describes for code: its mistakes look exactly like its successes.
 
 - **Confident misses.** "Everything works" after checking two of the five states it was asked about. Ask what it didn't cover, and treat a report without that section as incomplete.
 - **Confident false alarms.** A "bug" that was its own misclick, a timing guess, or a misread screenshot. Nothing becomes a defect until it's been reproduced, by a person or by a test that fails.

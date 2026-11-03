@@ -125,7 +125,7 @@ SCA started in Europe, and it's spreading in two directions: the EU's next rules
 - **India.** The Reserve Bank of India's 2025 authentication directions, in force from April 1, 2026, require at least two factors for domestic digital payments and let issuers add risk-based checks on top. They also require card issuers to validate an additional factor of authentication on non-recurring cross-border card-not-present payments when the overseas merchant or acquirer asks for it, which is a reason for a provider outside India to support requesting 3DS for Indian cards.
 - **The UK** supervises its own SCA rules through the FCA ([above](#what-sca-requires)).
 
-Elsewhere, 3-D Secure is optional ([above](#how-3-d-secure-works)), and an issuer may still ask for it on any payment. Keep the decision to request authentication a per-payment, per-country rule with effective dates, not a constant ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+Elsewhere, 3-D Secure is optional ([above](#how-3-d-secure-works)), and an issuer may still ask for it on any payment. Keep the decision to request authentication a per-payment, per-country rule with effective dates, not a constant ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## What This Means for the System You Build
 

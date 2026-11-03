@@ -366,7 +366,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Every rule and attachment, with its range and actor.** The firewall a customer had at any instant, reconstructable from rows, because a breach investigation starts with "what was exposed" ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Every rule and attachment, with its range and actor.** The firewall a customer had at any instant, reconstructable from rows, because a breach investigation starts with "what was exposed" ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **Every cross-tenant connection.** Who requested and who accepted each peering, endpoint or attachment, because joining two customers' networks is a decision both made.
 - **Who held which address on which network.** Private and public addresses in `resource_identifiers`, since abuse and law enforcement requests name an IP and a time.
 - **Provider-side changes to tenant networks.** An abuse mitigation that blocks a port or detaches a group is a provider action on the customer's resource and belongs in the case record with the rule rows it created.

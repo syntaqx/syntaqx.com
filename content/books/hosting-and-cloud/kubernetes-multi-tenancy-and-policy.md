@@ -327,7 +327,7 @@ Notes on the sketch:
 - **Who held each namespace and virtual cluster, when.** With isolation model, runtime class and node pool, so an incident or a legal request about a workload names an account and the isolation it had.
 - **Which policies were in force, and their exact content.** Provider-managed and customer-managed, with versions and enforcement modes, so a denial or a missed denial can be explained.
 - **Every denial, violation and runtime alert, with its actor.** Linked to the tenant at that instant and to an abuse case where one was opened.
-- **Isolation changes.** Moving a tenant from shared nodes to a sandbox, relaxing a Pod Security level or granting API access are changes with an approver ([typed actors](/docs/architecture/audit-trails#typed-actors)).
+- **Isolation changes.** Moving a tenant from shared nodes to a sandbox, relaxing a Pod Security level or granting API access are changes with an approver ([typed actors](/docs/building-blocks/audit-trails#typed-actors)).
 - **Webhook configuration and failure policy.** Which webhooks could block or modify writes, with `failurePolicy` and timeout, because a webhook set to `Ignore` is a policy that can be bypassed by load.
 - **Isolation tests.** The results of regularly trying cross-tenant access that must fail, as the playbook's [Testing Isolation](/docs/architecture/multi-tenancy#testing-isolation) asks of applications.
 

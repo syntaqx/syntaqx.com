@@ -46,7 +46,7 @@ The law is the same as for any automatic renewal: disclosure, consent and simple
 
 A points program issues a balance for activity (purchases, reviews, referrals, birthdays) and redeems it for value (a discount, a product, free shipping, an experience). The design decisions:
 
-- **Earn rules.** Points per dollar, on which base (pre-tax, after discounts, excluding gift cards and shipping), with multipliers by tier, category or promotion, and bonus events. The earn rule is a versioned rule like a price ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Earn rules.** Points per dollar, on which base (pre-tax, after discounts, excluding gift cards and shipping), with multipliers by tier, category or promotion, and bonus events. The earn rule is a versioned rule like a price ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **When points vest.** Points earned on a purchase that is returned must come back. Most programs post points as pending and make them available after the return window, so a return reverses a pending entry instead of clawing back a spent balance.
 - **Burn rules.** What a point buys, in fixed steps ("100 points = $5 off") or a rate, with minimums and exclusions. The redemption is a discount line on the order that funds it ([Order Line Versus Order Charge](/books/commerce/commerce-business#the-core-data-model)).
 - **Expiry.** Points that expire after inactivity or a fixed time. Starbucks Stars expire after 6 to 12 months; Ulta's are valid for at least a year. Expiry drives breakage, and the rule has to be disclosed in the program terms.

@@ -207,7 +207,7 @@ Subscriptions run as each recipient: a group or channel recipient is expanded at
 
 - **Sharing changes** on views and dashboards (who shared what with whom, and widening to the whole organization), as admin-visible events in `audit_events`.
 - **Subscriptions to groups and channels**, with the creator and the audience at creation, because they publish results outside the product.
-- **Exports** of query results (CSV, Excel, API bulk reads), with the viewer and the row count, since an export is the bulk path out ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Exports** of query results (CSV, Excel, API bulk reads), with the viewer and the row count, since an export is the bulk path out ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Ownership transfers** of views and dashboards during offboarding.
 
 ## What This Means for the System You Build

@@ -179,8 +179,8 @@ CREATE TABLE business_plan_projections (   -- the approved plan, to test deviati
 
 Design notes:
 
-- **A product launch checks the plan first.** Any new `products` row or `programs` row at a bank inside its three-year window should require a link to a `business_plan_change` approval or a recorded determination that it isn't a significant deviation; that check belongs in the product release workflow, not in a lawyer's memory ([Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided)).
-- **Conditions are tested on a schedule.** Capital and liquidity conditions daily from the GL, personnel conditions on every HR change of a covered role, deadlines as computed dates with alerts ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **A product launch checks the plan first.** Any new `products` row or `programs` row at a bank inside its three-year window should require a link to a `business_plan_change` approval or a recorded determination that it isn't a significant deviation; that check belongs in the product release workflow, not in a lawyer's memory ([Rules as Data](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
+- **Conditions are tested on a schedule.** Capital and liquidity conditions daily from the GL, personnel conditions on every HR change of a covered role, deadlines as computed dates with alerts ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Deviation is measured, not argued.** Actuals against `business_plan_projections` with the tolerance the board set, so growth that "significantly exceeds or falls short of projections" is seen before the examiner sees it.
 - **Moving a program is a new `programs` row at the new institution**, with each account migrated as an event and the old program set to `winding_down`, never an update of `institution_id` on live accounts.
 

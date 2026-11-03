@@ -102,11 +102,11 @@ And yes, AI-written tests will mock the function under test, or edit the asserti
 
 Then make it show its work, the same way you'd ask an engineer to. "It works" isn't evidence. Screenshots of the change in the PR are. Better yet, have the agent record itself using the feature, clicking through the flow it just built, and attach the video. If it can't demo the thing, it didn't finish the thing.
 
-The part that makes people nervous is work nobody started. Support files a bug. An error spike after a deploy files another. Dependabot opens the [major version bump](/docs/engineering/dependencies) that used to sit for a month because the changelog said "breaking changes" and nobody had an afternoon. An agent picks it up, reproduces it, writes the failing test and fixes it, and a different agent reviews it. If the numbers say that kind of change is safe, it merges on green, and a human first hears about it in the changelog.
+The part that makes people nervous is work nobody started. Support files a bug. An error spike after a deploy files another. Dependabot opens the [major version bump](/docs/development/dependencies) that used to sit for a month because the changelog said "breaking changes" and nobody had an afternoon. An agent picks it up, reproduces it, writes the failing test and fixes it, and a different agent reviews it. If the numbers say that kind of change is safe, it merges on green, and a human first hears about it in the changelog.
 
 Some tickets aren't fixes at all. "Make the export work differently" is a product decision filed as a bug, and it waits for a person: the agent writes up a plan and waits for a yes, or the reviewer hands you a preview environment and a question instead of a merge.
 
-It's an on-call rotation that never sleeps. Like the human one, it needs an owner for every queue it pulls from and a track record that widens what it can do alone. But engineers built up a feel for when to ping the architect, and agents don't have one, so you write it down: which changes need a human, which can merge on green, which files nobody touches without asking. A line in a config file, or [an instruction the agent actually reads](/docs/engineering/ai-assisted-development).
+It's an on-call rotation that never sleeps. Like the human one, it needs an owner for every queue it pulls from and a track record that widens what it can do alone. But engineers built up a feel for when to ping the architect, and agents don't have one, so you write it down: which changes need a human, which can merge on green, which files nobody touches without asking. A line in a config file, or [an instruction the agent actually reads](/docs/development/ai-assisted-development).
 
 ## Where the analogy breaks
 
@@ -114,7 +114,7 @@ It's an on-call rotation that never sleeps. Like the human one, it needs an owne
 
 **The volume is different.** A junior opens one to three pull requests a week. An agent can open more than that before lunch, and humans with too much to review start approving things. A 2,000-line diff gets the same "LGTM" as a 20-line one, just faster. If your plan is "we'll review all of it carefully," you don't have a plan. You have a backlog.
 
-So hold agents to the rule we've always held people to: [changes small enough to review](/docs/engineering/commits-and-reviews#pull-requests). We learned to ship in iterations because a small change can actually be read, actually be tested, and actually be rolled back on its own. An agent will cheerfully do the whole feature in one heroic diff if you let it. So will most engineers I've worked with. Don't let either of them. Ask for the same work in steps, each one merged, deployed and verified before the next one starts.
+So hold agents to the rule we've always held people to: [changes small enough to review](/docs/development/commits-and-reviews#pull-requests). We learned to ship in iterations because a small change can actually be read, actually be tested, and actually be rolled back on its own. An agent will cheerfully do the whole feature in one heroic diff if you let it. So will most engineers I've worked with. Don't let either of them. Ask for the same work in steps, each one merged, deployed and verified before the next one starts.
 
 **Agents are wrong with a straight face.** A nervous junior hedges in the PR description and puts "I think?" at the end of things. An agent sounds exactly as sure about the broken thing as the working one. You lose the tell, so the guardrails have to become the tell.
 

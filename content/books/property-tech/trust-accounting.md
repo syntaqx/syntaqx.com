@@ -60,7 +60,7 @@ Some details matter enough to model directly:
 - **Nevada** requires a reconciliation of the trust account when a designated property manager leaves, covering the preceding 30 days and submitted within 15 days, and an annual trust account reconciliation report (its Form 546) filed by the broker's license anniversary, signed by the broker if an employee prepared it.
 - **Delegation doesn't move liability.** Nevada's manual is explicit: the broker "is personally responsible for the supervision and maintenance of the trust fund accounts and records," and neither delegation nor ignorance relieves that. Outsourced or AI-assisted accounting changes who does the work, not who answers for it.
 
-These are rules as data, attached to the property's state and the account's purpose ([Rules as Data](/docs/architecture/rules-as-data)): which accounts must exist, how they must be titled, deposit deadlines in banking days, reconciliation frequency and filing deadlines, outstanding-item age limits, and whether broker funds are permitted. [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) owns the rules catalog; this chapter's tables consume it.
+These are rules as data, attached to the property's state and the account's purpose ([Rules as Data](/docs/building-blocks/rules-as-data)): which accounts must exist, how they must be titled, deposit deadlines in banking days, reconciliation frequency and filing deadlines, outstanding-item age limits, and whether broker funds are permitted. [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) owns the rules catalog; this chapter's tables consume it.
 
 ## Security Deposit Accounts
 
@@ -352,7 +352,7 @@ How it runs:
 - **Closed periods per entity,** with corrections posted forward and linked.
 - **Unclaimed property items through their whole life,** with due diligence evidence and the report and remittance each went into.
 
-The mechanics of append-only history and evidence are in [Audit Trails](/docs/architecture/audit-trails) and the Payments volume's [Proving It to Auditors and Sponsor Banks](/books/payments/ledger-and-reconciliation#proving-it-to-auditors-and-sponsor-banks); retention by record type is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
+The mechanics of append-only history and evidence are in [Audit Trails](/docs/building-blocks/audit-trails) and the Payments volume's [Proving It to Auditors and Sponsor Banks](/books/payments/ledger-and-reconciliation#proving-it-to-auditors-and-sponsor-banks); retention by record type is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

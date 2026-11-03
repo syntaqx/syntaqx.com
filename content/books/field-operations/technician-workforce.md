@@ -163,7 +163,7 @@ Field work is outdoor work, and attics and mechanical rooms are often hotter tha
 Indoor heat matters more to the trades than it looks: California's indoor rule reaches the attic where an HVAC technician replaces a coil, which the property's thermostat says nothing about. What the system can do:
 
 - **Know the heat at the visit.** Pull forecast temperature and heat index per property and day; a branch-wide number misses the valley route that's ten degrees hotter.
-- **Turn thresholds into rules.** The state's triggers are dated rules per jurisdiction ([Rules as Data](/docs/architecture/rules-as-data)), producing required cool-down breaks the route builder must reserve, a check-in cadence, and flags on visits with known hot spaces (attic air handlers, rooftop units).
+- **Turn thresholds into rules.** The state's triggers are dated rules per jurisdiction ([Rules as Data](/docs/building-blocks/rules-as-data)), producing required cool-down breaks the route builder must reserve, a check-in cadence, and flags on visits with known hot spaces (attic air handlers, rooftop units).
 - **Move the work when needed.** Shifting outdoor work earlier, splitting a long attic job, or standing down a territory are dispatch operations ([Weather and Emergencies](/books/field-operations/dispatch#weather-and-emergencies)).
 - **Record it.** Acclimatization for new hires and returning workers, training, check-ins and every heat-related incident, against the state rule in force that day.
 
@@ -280,7 +280,7 @@ Two events matter to other modules: `time_entry.corrected` (the technician is no
 
 ## Auditing
 
-Wage claims, DOL investigations, prevailing wage audits and OSHA inspections all ask for records the field platform holds. What to keep, beyond the general rules in [Audit Trails](/docs/architecture/audit-trails):
+Wage claims, DOL investigations, prevailing wage audits and OSHA inspections all ask for records the field platform holds. What to keep, beyond the general rules in [Audit Trails](/docs/building-blocks/audit-trails):
 
 - **Raw punches and every correction,** with device time, server time, location, who corrected and why. The *Donohue* presumption means the raw meal punch is the evidence.
 - **Classification decisions with their rule version:** why a drive was or wasn't counted, which commute agreement was in force, which on-call policy applied.

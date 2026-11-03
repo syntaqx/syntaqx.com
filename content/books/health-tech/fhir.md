@@ -220,7 +220,7 @@ CREATE TABLE fhir_subscriptions (              -- subscriptions this platform ho
 Design decisions:
 
 - **Capabilities are data.** The CapabilityStatement is fetched and stored per connection, and the client builds queries from it; a server upgrade that drops a parameter shows up as a diff, not as silently wrong results.
-- **Remote ids are links, not keys.** A local `conditions` row has its own UUID; the remote id and version live in `fhir_resource_versions`, and patients link through `patient_identifiers` with the server's identifier systems. A merge on the server closes the old link and opens a new one ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)).
+- **Remote ids are links, not keys.** A local `conditions` row has its own UUID; the remote id and version live in `fhir_resource_versions`, and patients link through `patient_identifiers` with the server's identifier systems. A merge on the server closes the old link and opens a new one ([Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids)).
 - **Versions make reads cheap.** `remote_version` and `remote_updated_at` let an incremental sync skip unchanged resources and detect a conflicting write before sending `If-Match`.
 - **Exports are resumable jobs.** The status URL, manifest and expiry are stored so a worker restart resumes polling or downloading instead of kicking off a new hours-long export; `transaction_time` becomes the next job's `since`.
 - **Subscriptions have a backstop.** Every subscription points at a catch-up cursor; a gap in event numbers or a missed heartbeat triggers the catch-up read.

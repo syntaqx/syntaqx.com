@@ -115,7 +115,7 @@ Drip pricing claims follow. A law firm has advertised individual arbitration cla
 What the rules do to the quote:
 
 - **Every line is classified.** Mandatory (rental, cleaning or prep, platform service fee, required protection, mandatory screening fee), optional (add-ons, optional protection upgrades, deposit waiver where optional), government (taxes) or contingent (usage, late return, damage). The displayed price is a sum over classes, computed from the lines, never typed separately.
-- **The rule applied depends on where.** Listing category, the listing's location and the guest's location select which display rule applies ([Rules as Data](/docs/architecture/rules-as-data)); the strictest applicable one is the safe default.
+- **The rule applied depends on where.** Listing category, the listing's location and the guest's location select which display rule applies ([Rules as Data](/docs/building-blocks/rules-as-data)); the strictest applicable one is the safe default.
 - **Search shows the total.** A search result, a map pin and a listing page show the price for the requested dates with mandatory fees included, which means pricing is computed for search, not only at checkout ([Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking)).
 - **A required protection product is a mandatory fee.** If the guest can't book without one of several protection plans, the cheapest is part of the total.
 - **Snapshot what was shown.** The quote shown at each step is recorded, because a drip-pricing claim asks what the guest saw before checkout.

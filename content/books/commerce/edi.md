@@ -225,7 +225,7 @@ Design notes:
 
 - **Bytes first, parse second.** Every inbound interchange is stored as received before parsing, so a parse failure loses nothing and the original is the evidence; the parsed form goes to `documents.parsed` and the owning tables (an 850 to `orders`, an 820 to `remittances`).
 - **Duplicates fail on the envelope.** The unique key on sender, receiver and ISA13 rejects a resent interchange at insert; the handler acknowledges again without reprocessing ([Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent)).
-- **Maps are versioned like rules.** A partner's guide change is a new `edi_partner_maps` row tested under `usage = 'T'` and moved to production on a date ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Maps are versioned like rules.** A partner's guide change is a new `edi_partner_maps` row tested under `usage = 'T'` and moved to production on a date ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **One record for label and ASN.** `sscc_allocations` ties each SSCC to the package the label was printed for and the shipment the 856 describes.
 - **Events:** `edi.interchange_received`, `edi.parse_failed`, `edi.document_sent`, `edi.ack_received`, `edi.ack_overdue` and `edi.document_rejected` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the order system, the warehouse and the operations queue.
 

@@ -29,7 +29,7 @@ RFC 8693's `act` claim carries the second identity in a token: the subject is th
 
 Whatever the mechanism (a token, a server-side session with two user columns), the rules are the same:
 
-- **Every write records the staff member as the actor and the customer as the subject.** The audit trail's typed actors make this a field, not a convention ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Every write records the staff member as the actor and the customer as the subject.** The audit trail's typed actors make this a field, not a convention ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **Authorization runs as the intersection.** A delegated session can do what the customer can do *and* what the staff member's role allows, never the union. A support agent can't use a customer's admin role to reach another tenant, and a customer's limits still apply.
 - **Sign-in factors are off limits.** No delegated session can see or change the customer's password, passkeys, MFA, recovery contacts or API keys. Those changes go through the customer's own [recovery](/docs/security/authentication#recovery-is-the-real-login) flow, because "support changed my email, then someone else logged in" is the classic account takeover.
 - **Chains stay visible.** When an AI agent acts for a staff member who acts for a customer, nest the actors. RFC 8693 treats prior actors in a chain as "informational only", not inputs to access control, so the check still runs against the current actor.
@@ -106,7 +106,7 @@ Integrations, scheduled jobs, support automations and AI agents act on customer 
 OWASP's list of higher-risk events includes "use of systems administrative privileges or access by application administrators including all actions by those users", along with access to sensitive data and data export ([OWASP: Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html)). For support access that means:
 
 - **Sessions:** started, upgraded, extended, ended or expired, with staff member, subject, reason, ticket, approver and access level.
-- **Every read, not just every write.** Which records and fields were viewed, which were revealed, which searches ran and what they matched. The read is the abuse in most insider cases: browsing an ex-partner's account, a celebrity's orders, a coworker's payroll ([Audit Trails](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every read, not just every write.** Which records and fields were viewed, which were revealed, which searches ran and what they matched. The read is the abuse in most insider cases: browsing an ex-partner's account, a celebrity's orders, a coworker's payroll ([Audit Trails](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Every action,** with before and after values, the approval it used, and the domain operation it called.
 - **Into the tamper-evident audit store,** not the console's own tables, where the people being audited can't edit their history.
 

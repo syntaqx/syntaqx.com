@@ -89,7 +89,7 @@ An SLA is a target time for some event on a ticket, and every service desk imple
 The design rules that follow:
 
 - **One clock per SLA per ticket**, as a row with its own state, so a ticket can carry first-response and resolution clocks at once.
-- **Compute the deadline and store it** ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)), recomputing only on pause, resume or calendar change, so queues can sort by breach time with an index.
+- **Compute the deadline and store it** ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)), recomputing only on pause, resume or calendar change, so queues can sort by breach time with an index.
 - **Store the calendar version** the clock ran under. A holiday added in March must not retroactively breach a ticket from January.
 - **Make pause conditions visible to the requester.** "Waiting for customer" is the condition most often abused, since it stops the clock, and the requester should see that it was set.
 - **Record breach as an event** with the time it happened, not only a flag, because reports count breaches by period.
@@ -98,7 +98,7 @@ The design rules that follow:
 
 A configuration management database (CMDB) records configuration items (servers, applications, services, laptops, licenses) and the relationships between them, so an incident can name what is affected and a change can show what it might break. ServiceNow's Common Service Data Model gives the service layer its vocabulary: a business service is "published to business users and it typically underpins one or more business capabilities"; a technical service is "published to service owners and typically underpins a business or application service"; a service offering is "a stratification of a service into capability, availability, pricing, and packaging options." Assets and configuration items overlap without being identical: "Many assets are CIs and vice versa, but that's not always the case." Jira Service Management's equivalent is Assets; Freshservice licenses asset management in Asset Units sold in packs of 500.
 
-The CMDB's difficulty is staleness. Its value depends on accuracy, and its data comes from discovery tools, cloud APIs, endpoint managers and people, each of which disagrees with the others. A builder should treat every CI attribute as sourced (which discovery source said so, when), reconcile sources by precedence rather than by last write, and age out CIs nobody has confirmed. The record linkage problem is the playbook's [Record Linkage](/docs/architecture/record-linkage); the ITSM twist is that relationships matter more than attributes, because impact analysis walks the graph.
+The CMDB's difficulty is staleness. Its value depends on accuracy, and its data comes from discovery tools, cloud APIs, endpoint managers and people, each of which disagrees with the others. A builder should treat every CI attribute as sourced (which discovery source said so, when), reconcile sources by precedence rather than by last write, and age out CIs nobody has confirmed. The record linkage problem is the playbook's [Record Linkage](/docs/building-blocks/record-linkage); the ITSM twist is that relationships matter more than attributes, because impact analysis walks the graph.
 
 ## Service Beyond IT
 
@@ -252,7 +252,7 @@ WHERE c.ci_class IN ('business_service', 'technical_service');
 - **SLA history is evidence**: every clock event with its cause, kept with the ticket, because SLA reports are contractual between IT and the business and often between an outsourcer and its client.
 - **Change approvals and CAB decisions**, with approver, comment and the change's state at approval, plus every emergency change and who authorized it after the fact.
 - **Priority overrides**: when an agent sets priority against the matrix, the reason and actor.
-- **Restricted request types** (HR, legal): access to their tickets logged as reads, not only writes ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Restricted request types** (HR, legal): access to their tickets logged as reads, not only writes ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **SLA policy and calendar changes**, versioned, since they change what every past and future report means.
 
 ## What This Means for the System You Build

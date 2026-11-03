@@ -235,7 +235,7 @@ Notes on the sketch:
 - **What arrived from where:** inbound activities by remote actor and instance, and what moderation did with them, for notices, legal requests and child-safety reports.
 - **Deletes and account deletions sent,** per target server, as the record of best-effort erasure.
 - **Labels received and applied,** with signatures, labeler versions and negations.
-- **Signature verification failures** per instance, as a security and abuse signal ([Audit Trails](/docs/architecture/audit-trails)).
+- **Signature verification failures** per instance, as a security and abuse signal ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

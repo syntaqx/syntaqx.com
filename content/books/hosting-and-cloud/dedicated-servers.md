@@ -205,7 +205,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Every asset's chain of custody.** Received, commissioned, allocated, repaired, wiped and disposed, with location, actor and reason, so the provider can say where a drive was and who held the server it was in on any date ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Every asset's chain of custody.** Received, commissioned, allocated, repaired, wiped and disposed, with location, actor and reason, so the provider can say where a drive was and who held the server it was in on any date ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **Every wipe.** The method per drive, the job that ran it, and its result, because a customer's auditor (and a regulator after a breach) will ask how the provider knows the previous tenant's data was gone.
 - **Who touched the BMC.** Every power action, boot-device change and console session, with the actor, because the management network can do anything a tenant can and more.
 - **Which hardware backed which customer.** The assignment history, kept as long as abuse and law enforcement requests can reach back.

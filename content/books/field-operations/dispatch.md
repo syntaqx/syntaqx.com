@@ -72,7 +72,7 @@ CREATE TABLE visit_events (
 );
 ```
 
-The two clocks matter: a check-in made offline at 9:02 (`device_recorded_at`) can reach the server at 9:40 (`received_at`) ([The Technician App](/books/field-operations/technician-app)). Order by when it happened, alert on when you learned it, and never let a late-arriving event move a visit backwards past a state a dispatcher has since set by hand; send it to review instead ([Offline Sync](/docs/architecture/offline-sync#two-clocks)).
+The two clocks matter: a check-in made offline at 9:02 (`device_recorded_at`) can reach the server at 9:40 (`received_at`) ([The Technician App](/books/field-operations/technician-app)). Order by when it happened, alert on when you learned it, and never let a late-arriving event move a visit backwards past a state a dispatcher has since set by hand; send it to review instead ([Offline Sync](/docs/building-blocks/offline-sync#two-clocks)).
 
 ## Exceptions and Same-Day Changes
 
@@ -104,7 +104,7 @@ An arrival window says "between 8 and 12." A live ETA says "22 minutes, here's t
 - **Onfleet's** notification triggers include an ETA threshold, a "Driver Arriving" message and a delay threshold.
 - **Samsara's** live share link on each route stop needs no login, shows progress, location, status and ETA, and exposes no driver or vehicle personal information.
 
-The general rules (the link is a short-lived bearer token scoped to one stop, location is shared only while en route to that customer, ETAs are travel plus remaining work and smoothed, lateness is computed and announced once) are in [Shareable Tracking Links](/docs/architecture/location-tracking#shareable-tracking-links) and [ETAs](/docs/architecture/location-tracking#etas). What dispatch adds:
+The general rules (the link is a short-lived bearer token scoped to one stop, location is shared only while en route to that customer, ETAs are travel plus remaining work and smoothed, lateness is computed and announced once) are in [Shareable Tracking Links](/docs/building-blocks/location-tracking#shareable-tracking-links) and [ETAs](/docs/building-blocks/location-tracking#etas). What dispatch adds:
 
 - **End the link with the visit.** FieldRoutes' 90 minutes and Salesforce's end-of-appointment cutoff are the two shapes; whichever comes first, the link dies at check-in, and it never shows the technician's full name, phone number or the next customer's address.
 - **The ETA reads the route, not just the road.** A technician still on the previous stop is late by that stop's remaining service time, so the ETA comes from the dispatched route's sequence and the current visit's planned duration, recomputed when a stop runs long.
@@ -116,7 +116,7 @@ Technicians forget to tap "arrived." Geofences fill the gap and keep the tap hon
 
 Telematics providers send these events (Motive's entry and exit webhook, Samsara's route stop arrival and departure webhooks, Geotab's ZoneStop rules for a device stopped in a zone), tracking APIs such as NextBillion's fire them over polygon, circle or isochrone fences, and Bringg records whether a geofence checked a driver in automatically.
 
-GPS is noisy and parking lots are big, so a geofence that fires on one point produces phantom arrivals at the neighbor's house. Require dwell (Geotab's ZoneStop models "stopped inside") and use a larger exit fence than entry fence, as [Arrival and Departure Detection](/docs/architecture/location-tracking#arrival-and-departure-detection) describes. What's specific to field work:
+GPS is noisy and parking lots are big, so a geofence that fires on one point produces phantom arrivals at the neighbor's house. Require dwell (Geotab's ZoneStop models "stopped inside") and use a larger exit fence than entry fence, as [Arrival and Departure Detection](/docs/building-blocks/location-tracking#arrival-and-departure-detection) describes. What's specific to field work:
 
 - **Size per property.** A house needs a small fence; a hospital campus, an apartment complex or a farm needs a polygon. Store the fence on the property and let the office correct it.
 - **Record the source and keep both.** A geofence arrival is evidence alongside the technician's tap, not a replacement for it. Store each with its source, and when they disagree by a lot (a check-in tapped from three miles away), flag it. Arrival and departure times feed time on site, which feeds pay, time-and-materials billing for repair work, and disputes about whether anyone came.
@@ -144,7 +144,7 @@ Run it as a resumable, idempotent job ([Background Jobs](/docs/architecture/back
 
 ## Talking to the Customer
 
-Drive messages from visit events through the one outbound gate that applies consent, channel and quiet hours ([Notifications](/docs/architecture/notifications)); on-my-way and running-late texts are informational messages that still need consent ([Consumer Contact](/docs/compliance/consumer-contact)). What dispatch adds:
+Drive messages from visit events through the one outbound gate that applies consent, channel and quiet hours ([Notifications](/docs/building-blocks/notifications)); on-my-way and running-late texts are informational messages that still need consent ([Consumer Contact](/docs/compliance/consumer-contact)). What dispatch adds:
 
 - **Message on meaningful change, coalesced.** A visit moving ten minutes within its window isn't news; leaving the window, changing day, or a technician on the way is. A dispatcher rebuilding a route makes many edits in a few minutes, so send one message per affected customer about the final state; ServiceTitan's one-dispatch-notification-per-day option and Housecall Pro's choice to save an optimized route with or without notifications are the same instinct.
 - **Retract what's stale.** A cancelled visit's queued reminder must not go out.
@@ -170,7 +170,7 @@ Dispatch is where disputes start. What's specific to it:
 - **Location data** under a retention rule and an access log, since it's personal data about employees.
 - **The vendor's own record**: ingest Samsara's routes audit-log feed and Geotab's audit feed, because the telematics provider's record is evidence when yours is questioned.
 
-They answer a customer disputing that anyone came, a chargeback for a service "not rendered," a labor claim about unpaid drive time and a missed-SLA credit. Record structure and access logging are in [Audit Trails](/docs/architecture/audit-trails); field retention periods are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+They answer a customer disputing that anyone came, a chargeback for a service "not rendered," a labor claim about unpaid drive time and a missed-SLA credit. Record structure and access logging are in [Audit Trails](/docs/building-blocks/audit-trails); field retention periods are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

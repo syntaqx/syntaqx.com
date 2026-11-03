@@ -255,7 +255,7 @@ How it runs:
 
 ## Auditing
 
-- **Every per-owner file as received,** hashed, with every correction as a new file, so "what did the records say on the day" has one answer ([Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident)).
+- **Every per-owner file as received,** hashed, with every correction as a new file, so "what did the records say on the day" has one answer ([Make It Tamper-Evident](/docs/building-blocks/audit-trails#make-it-tamper-evident)).
 - **Every nightly reconciliation** with its in-transit items, unallocated income, breaks and the entries that funded them, and who closed each break and how.
 - **The bank's access to the subledger:** the contract terms, the last successful pull, and a tested restore of the program's ledger into a system the bank controls.
 - **Allocation of pooled interest and rebates,** each posting with the rule that assigned it.

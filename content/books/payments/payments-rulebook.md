@@ -122,7 +122,7 @@ The useful question at each stage is not "are we compliant?" but "which contract
 ## What This Means for the System You Build
 
 - **Record where every requirement comes from.** Each control names its source (a network rule, a law, a contract), who tests it and how often, so a change in the rule can be traced to the code it affects.
-- **Rules as effective-dated data** wherever they vary by network, state or country (surcharge caps, dispute windows, authentication rules, licensing conditions), owned by someone accountable for them ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Rules as effective-dated data** wherever they vary by network, state or country (surcharge caps, dispute windows, authentication rules, licensing conditions), owned by someone accountable for them ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **Measure what your bank measures,** daily: return rates, dispute and fraud ratios, the numbers a sponsor checks long before an assessor arrives.
 - **Sanctions screening as a gate, not a score,** at onboarding and before money moves, with a match stopping the payment.
 - **Reversal windows in the ledger** for every rail and consumer right, so a settled payment that can still come back is modeled as one ([Payment States & Ledgers](/docs/money/payment-states#settled-is-not-final)).

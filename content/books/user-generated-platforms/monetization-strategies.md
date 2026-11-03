@@ -385,7 +385,7 @@ LIMIT 1;
 Design decisions behind it:
 
 - **Terms are rows, resolved at the earning event.** A subscription period, an ad impression month, a booking's check-in or a sale picks its terms when the money is earned and stores the term's ID on the earning or fee line; changing the split is inserting a new version with a later `valid_during`, never an update. Old money stays under old terms ([Effective Dating & History](/docs/database/temporal-data)).
-- **Tier conditions are data, evaluated by a rules engine.** "300 Plus Points for three months" or "trailing 365-day sales above $10,000" go in `conditions` and are evaluated against facts the platform already records; the result (which tier applied) is stored, not recomputed ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Tier conditions are data, evaluated by a rules engine.** "300 Plus Points for three months" or "trailing 365-day sales above $10,000" go in `conditions` and are evaluated against facts the platform already records; the result (which tier applied) is stored, not recomputed ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **The store fee has an owner in the terms.** `share_base` and `store_fee_bearer` say whether a creator's 70% is of the price, the price net of tax, or the price net of the store's cut, so a payout statement can explain every cent.
 - **Prices are per channel.** An in-app price that offsets the store fee is a `store_fee_offset` row; a local price is a `regional` row; a creator's own tier price is `creator_set` with the creator as `set_by`. Increases carry `notice_sent_at`, and the renewal job refuses to charge a higher price without it.
 - **Promotions are fees, not ads in the ad system.** A seller's promotion charge posts to the seller's balance as a fee line tied to the sale or click that caused it, and reverses with a refund; it never touches the advertiser billing that [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing) covers.
@@ -401,7 +401,7 @@ Revenue programs are promises to the people who supply the platform, and the rec
 - **Every change of terms and prices, with notice.** Who published a new version, when payees and subscribers were told, and the source URL of the published terms; price increases without notice are a consumer-law exposure.
 - **Channel and store fees.** For each in-app purchase, the store, the store's transaction ID, the estimated fee and the fee the store reported, reconciled monthly ([Two Audiences for the Same Numbers](/books/payments/ledger-and-reconciliation#two-audiences-for-the-same-numbers)).
 - **Promotion charges and their attribution.** The click or sale each charge rests on, the attribution window and any reversal, since sellers dispute ad charges and regulators look at paid ranking.
-- **Revenue by model.** Ledger postings per program, so filings, investor metrics and transparency reports come from the same entries ([Audit Trails](/docs/architecture/audit-trails)).
+- **Revenue by model.** Ledger postings per program, so filings, investor metrics and transparency reports come from the same entries ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

@@ -137,7 +137,7 @@ Open-source engines have community end-of-life dates, and a managed database pro
 - **Forced upgrade on a date.** The provider announces a date and upgrades whatever is left in a maintenance window, which is what Extended Support's year-three end becomes.
 - **Product retirement.** Azure retired an entire deployment option ([Migrations, Shutdowns & End of Life](/books/hosting-and-cloud/migrations-and-end-of-life#the-lifecycle-of-a-sunset)): Azure Database for MySQL Single Server was "scheduled for retirement by September 16, 2024," with no new instances from the portal after 16 Jan 2024; PostgreSQL Single Server was "scheduled for retirement by March 28, 2025." Microsoft offered a service-initiated in-place migration only for "select Single Server database workloads," with a nomination form, not a blanket promise.
 
-The [managed Kubernetes chapter](/books/hosting-and-cloud/managed-kubernetes#extended-support) describes the same fee for clusters past their support window; the pattern is the provider pricing its own cost of maintaining a version it would rather drop, and turning an upgrade deadline into a revenue line. A provider that sells this has to make the date and the charge visible before it starts: the enrollment default, the rate, the date the rate doubles and the date of the forced upgrade are all facts the customer needs on the resource, not in a blog post. The general upgrade discipline (small, continuous, on supported versions) is the playbook's [Runtime Policy](/docs/engineering/dependencies#runtime-policy).
+The [managed Kubernetes chapter](/books/hosting-and-cloud/managed-kubernetes#extended-support) describes the same fee for clusters past their support window; the pattern is the provider pricing its own cost of maintaining a version it would rather drop, and turning an upgrade deadline into a revenue line. A provider that sells this has to make the date and the charge visible before it starts: the enrollment default, the rate, the date the rate doubles and the date of the forced upgrade are all facts the customer needs on the resource, not in a blog post. The general upgrade discipline (small, continuous, on supported versions) is the playbook's [Runtime Policy](/docs/development/dependencies#runtime-policy).
 
 ## Migration and Lock-In
 
@@ -290,7 +290,7 @@ Notes on the sketch:
 - **What was running, at which version, under which support status.** Every database's version history and every extended-support start and end, so a charge can be traced to the date the version left standard support and the notice that preceded it.
 - **What the provider changed.** Patches, forced upgrades and failovers with their actor and time, because a customer's incident review needs them and a credit claim may depend on them.
 - **Restores and who asked.** Each point-in-time restore with its target time and requester; a restore is how data from a deleted account or a legal hold comes back.
-- **Backups past account closure.** Snapshots are customer data: they are deleted on the provider's published schedule after termination, and that deletion is logged ([Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records)).
+- **Backups past account closure.** Snapshots are customer data: they are deleted on the provider's published schedule after termination, and that deletion is logged ([Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records)).
 
 ## What This Means for the System You Build
 

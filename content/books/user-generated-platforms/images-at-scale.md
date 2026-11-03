@@ -80,7 +80,7 @@ Fixed quality settings are a guess. A setting that's invisible on a busy photogr
 - **Cloudflare** defaults to quality 85 on a 1 to 100 scale and also accepts perceptual levels (`high`, `medium-high`, `medium-low`, `low`), applied to JPEG, WebP and AVIF output.
 - **Wolt's tuning** matched visual quality at AVIF 58, WebP 82 and JPEG 85, a reminder that the same number means different things per encoder.
 
-How lossy coding discards information, which metrics to tune against and why every variant is encoded from the original are in [Media Compression](/docs/architecture/media-compression).
+How lossy coding discards information, which metrics to tune against and why every variant is encoded from the original are in [Media Compression](/docs/building-blocks/media-compression).
 
 A user-generated platform should tune by content class, not by page: screenshots, text and line art need a lossless or near-lossless path (PNG or lossless WebP), photographs take aggressive perceptual quality, and artwork uploaded by creators who will complain about compression may need a higher floor. The class can be detected (few colors and sharp edges suggest a screenshot) and recorded with the variant.
 

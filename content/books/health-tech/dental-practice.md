@@ -123,7 +123,7 @@ What the products do and what that means for the system:
 - **Detection on images.** Caries, calculus, bone level, periapical radiolucencies and existing restorations outlined on X-rays, as a second reader for the dentist and a visual for the patient. The clearance covers specific indications on specific image types; a product used outside its indications is outside its clearance.
 - **Case acceptance.** An annotated X-ray is a persuasive picture, and vendors sell AI as a case acceptance tool. The finding is decision support for the dentist, not a diagnosis, and the treatment plan stays the dentist's ([Practice Analytics & AI Front Desk](/books/health-tech/practice-analytics-and-ai#accuracy-and-liability) covers liability).
 - **Payers use it too.** Overjet sells utilization review and provider analytics to insurers, and a claim's X-ray may be read by a payer's AI as well as the dentist; consistent findings and good images matter on both ends.
-- **Findings are records.** An AI finding on an image, its model version, whether the dentist confirmed, rejected or ignored it, and what was charted as a result, is clinical decision support output that belongs in the record with its provenance ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Findings are records.** An AI finding on an image, its model version, whether the dentist confirmed, rejected or ignored it, and what was charted as a result, is clinical decision support output that belongs in the record with its provenance ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 
 ## How to Build It
 

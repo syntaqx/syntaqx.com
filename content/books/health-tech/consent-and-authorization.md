@@ -35,7 +35,7 @@ Two patterns. **Consent is attached to the appointment type,** because a new pat
 | **HIPAA authorization** | 45 CFR 164.508 | Individual or personal representative | Expiration date or event | Gate for any use or disclosure outside TPO and other permissions |
 | **Part 2 consent** | 42 CFR 2.31 | Patient (with state-law rules for minors) | Expiration date or event, "end of treatment" or "none" for TPO | Gate for SUD records |
 | **Telehealth consent** | State law (for example California) | Patient | Per state rule | Gate for a video or phone visit |
-| **Communication consent** | TCPA, CAN-SPAM, carrier rules | The contact | Until revoked | Gate for texts and calls ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)) |
+| **Communication consent** | TCPA, CAN-SPAM, carrier rules | The contact | Until revoked | Gate for texts and calls ([The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger)) |
 | **Consumer health data consent** | Washington, Nevada, Connecticut laws | The consumer | Until withdrawn; Washington sale authorizations one year | Gate for collection, sharing and sale outside HIPAA ([Consumer Health Data Laws](/books/health-tech/state-health-privacy#consumer-health-data-laws)) |
 | **Research consent** | Common Rule, FDA | Subject or legally authorized representative | Study duration | [Clinical Trials](/books/health-tech/clinical-trials#econsent-and-decentralized-elements) covers eConsent |
 
@@ -147,8 +147,8 @@ Design decisions:
 - **Verbal consent is a capture method, not a missing signature.** Where state law accepts it (California's telehealth consent), `captured_via = 'phone'` with `attested_by` names the staff member who documented it.
 - **Capacity is a column, and authority is a record.** A signature by a parent, an agent or an executor points at the `personal_representatives` grant it relied on, verified against a document, so "who signed for this patient, and could they?" is a join.
 - **Validation lives in the form kind.** A HIPAA authorization without an expiration, a purpose or the required statements can't be saved; a Part 2 counseling-notes consent can't share a form with anything else; a self-pay or marketing authorization records whether remuneration was disclosed.
-- **Revocation and expiry are checked at use, not at signing.** The disclosure path (a records release, an outbound message, an API grant) asks for an in-force consent at the moment of use and records which one it relied on in the `audit_events` row for the disclosure (authorized disclosures aren't in the 164.528 accounting) ([Event-Triggered, Re-Checked at Send Time](/docs/architecture/notifications#event-triggered-re-checked-at-send-time)).
-- **Representative scopes come from rules.** Adolescent thresholds, confidential categories and state parental access mandates set `scopes` and `excluded_categories`; when a patient turns the threshold age, a scheduled job ends one grant and opens another, rather than editing it ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Revocation and expiry are checked at use, not at signing.** The disclosure path (a records release, an outbound message, an API grant) asks for an in-force consent at the moment of use and records which one it relied on in the `audit_events` row for the disclosure (authorized disclosures aren't in the 164.528 accounting) ([Event-Triggered, Re-Checked at Send Time](/docs/building-blocks/notifications#event-triggered-re-checked-at-send-time)).
+- **Representative scopes come from rules.** Adolescent thresholds, confidential categories and state parental access mandates set `scopes` and `excluded_categories`; when a patient turns the threshold age, a scheduled job ends one grant and opens another, rather than editing it ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Pet owners are clients, not patients.** In veterinary tenants the signer is the client, who is also the `guarantors` row, with `signer_capacity = 'client_owner'` and the core's `granted_by = 'owner'`, and the patient is the animal.
 
 ## Auditing
@@ -156,7 +156,7 @@ Design decisions:
 - **Every consent with its exact form version,** signer, capacity, capture method, evidence and dates, and every revocation with the written request.
 - **Every disclosure that relied on a consent,** with the consent it relied on and whether it was in force.
 - **Representative grants** with their evidence, verifier, scopes, the rule that set them, suspensions for safety and their reasons.
-- **Proxy access** by each representative, logged like any other read ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Proxy access** by each representative, logged like any other read ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Form versions** as published, so a dispute about what a patient was told resolves to the text on that date.
 - **Retention:** HIPAA keeps signed authorizations six years (45 CFR 164.530(j)); state medical record retention often runs longer for consents filed in the chart.
 

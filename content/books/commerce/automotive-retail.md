@@ -60,7 +60,7 @@ What it means for anyone building around one:
 
 - **The DMS is the system of record** for the vehicle and the deal; a website, a digital retailing tool or a marketplace listing reads from it and writes deals back, with one system of record per object as in [The Commerce Landscape](/books/commerce/commerce-landscape#how-to-build-it).
 - **Integration access is controlled by the DMS vendor,** through certified interfaces with fees. That's a design constraint for any product a dealer wants to plug in.
-- **Plan for its absence.** The 2024 outage showed that a dealer whose DMS is down still sells; the integration layer should queue and reconcile rather than fail, and the dealer needs a way to work deals manually and enter them later ([Offline Sync](/docs/architecture/offline-sync)).
+- **Plan for its absence.** The 2024 outage showed that a dealer whose DMS is down still sells; the integration layer should queue and reconcile rather than fail, and the dealer needs a way to work deals manually and enter them later ([Offline Sync](/docs/building-blocks/offline-sync)).
 
 ## F&I: Financing, Leases and Add-Ons
 
@@ -116,7 +116,7 @@ A vehicle's ownership is a state record. Selling one means:
 - **Electronic lien and title (ELT).** Many states hold titles with liens electronically and exchange lien releases and title transfers with lenders through ELT providers; two examples show the pattern. California's program "provides an electronic ownership record on the DMV database in lieu of a paper title" while the owner still gets a paper registration card; the lienholder's name and address must match DMV's ELT listing exactly or DMV issues a paper title, and when the lien is satisfied DMV mails a paper title to whoever now owns the vehicle outright (the owner, or a dealer that paid off a trade-in). Florida transmits "lien notifications and satisfactions" electronically between the state and the lienholder, keeps the title electronic after payoff until someone asks for paper (for a sale or a move out of state), and lets an owner with no lien convert it online for $4.50. A dealer's title workflow therefore branches by state on whether the payoff produces a paper title in hand or an electronic record to transfer. Temporary tag systems vary by state too and aren't covered here.
 - **Title history.** The National Motor Vehicle Title Information System (NMVTIS) "is designed to protect consumers from fraud" and helps states and law enforcement deter title fraud, and consumers can buy NMVTIS vehicle history reports. A dealer or marketplace checks a vehicle's title history before buying or listing it.
 
-For the system, titling is a fulfillment with its own lifecycle (documents collected, submitted, accepted, title issued) and its own deadlines set by each state, and a deal isn't finished until it completes ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+For the system, titling is a fulfillment with its own lifecycle (documents collected, submitted, accepted, title issued) and its own deadlines set by each state, and a deal isn't finished until it completes ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Online Car Sales
 
@@ -260,8 +260,8 @@ Design notes:
 - **A vehicle is an item with a VIN.** Each vehicle is its own `items` row (quantity one) and a `vehicles` row with the VIN and condition, so the catalog, listings and orders work as everywhere else. It's retail inventory, unrelated to the Field Operations volume's fleet [`vehicles`](/books/field-operations/fleet-and-safety#how-to-build-it); a platform hosting both namespaces them.
 - **The deal holds the arithmetic.** Offering price, selling price, amount financed, APR, term, payment and total of payments are stored together, computed by one function the worksheet, the website and the contract all call, so a payment can never be shown without the total it implies.
 - **Every add-on has its own consent.** `deal_fi_products` records who presented it, when (relative to the price disclosure) and how the customer agreed, which is the evidence an FTC or state inquiry asks for.
-- **Eligibility rules block useless products.** A product's eligibility is data (powertrain, loan-to-value, mileage), checked before it can be added to a deal ([Rules as Data](/docs/architecture/rules-as-data)).
-- **Documents are versioned and timed.** The Buyers Guide displayed on the vehicle and the one in the deal jacket must match; the odometer disclosure is signed electronically with the creation, signing and access logging the federal rule requires ([Electronic Signatures](/docs/compliance/electronic-signatures), [Audit Trails](/docs/architecture/audit-trails)).
+- **Eligibility rules block useless products.** A product's eligibility is data (powertrain, loan-to-value, mileage), checked before it can be added to a deal ([Rules as Data](/docs/building-blocks/rules-as-data)).
+- **Documents are versioned and timed.** The Buyers Guide displayed on the vehicle and the one in the deal jacket must match; the odometer disclosure is signed electronically with the creation, signing and access logging the federal rule requires ([Electronic Signatures](/docs/compliance/electronic-signatures), [Audit Trails](/docs/building-blocks/audit-trails)).
 - **Title work is a fulfillment with a deadline.** `due_on` comes from the state's rule and temporary tags expire; both are monitored.
 
 ## Auditing
@@ -271,7 +271,7 @@ Design notes:
 - **Every vehicle document** with its version, display time and signature, including Buyers Guides and odometer disclosures.
 - **Recall and NMVTIS checks** per vehicle, with the time and result, before listing and before sale.
 - **Title and registration progress** per deal against the state deadline, and every temporary tag issued.
-- **Advertised prices** against offering prices, for every vehicle listing ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Advertised prices** against offering prices, for every vehicle listing ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 
 ## What This Means for the System You Build
 

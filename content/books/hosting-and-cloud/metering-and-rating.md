@@ -343,7 +343,7 @@ Notes on the sketch:
 - **Pass-through against suppliers.** Rated carrier, registry and license fees against the suppliers' invoices for the same period, by supplier identifier.
 - **Quarantine.** Events quarantined for unknown meters or dimensions, how long they waited, and how they were resolved, because quarantined usage is either unbilled or billed late.
 
-Retention follows the billing and tax records the events support: raw events and runs for as long as an invoice built from them can be disputed or audited, which is longer than any operational telemetry is kept ([Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records)).
+Retention follows the billing and tax records the events support: raw events and runs for as long as an invoice built from them can be disputed or audited, which is longer than any operational telemetry is kept ([Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records)).
 
 ## What This Means for the System You Build
 

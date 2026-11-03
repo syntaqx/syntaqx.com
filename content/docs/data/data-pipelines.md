@@ -1,21 +1,16 @@
 +++
 title = "Data Pipelines & Analytics"
 nav_title = "Data Pipelines"
-description = "Getting data from production into analytics without breaking either: CDC, ELT, tested transformations, replayable pipelines, contracts and one metrics layer."
-category = "Architecture"
-order = 414
+description = "Moving production data into analytics without breaking either: CDC, ELT, tested transformations, replayable pipelines, contracts and one definition per metric."
+category = "Data Platforms"
+aliases = ["architecture/data-pipelines"]
+order = 1276
 tags = ["data", "analytics", "pipelines", "cdc", "warehouse"]
 +++
 
 Every company eventually asks questions its production database wasn't built to answer: revenue by cohort, conversion by channel, churn by plan. How you answer them decides whether analytics becomes a trusted part of how the company runs or a pile of dashboards nobody believes. The difference is almost never the tools; it's whether the pipeline is treated as software, with contracts, tests, owners and the ability to rebuild from scratch.
 
-## Keep Analytics Off Production
-
-Production databases (OLTP) are tuned for many small reads and writes on a few rows each. Analytical queries (OLAP) scan millions of rows, join everything, and aggregate. Running the second on the first is the most common early mistake, and it fails in two ways.
-
-The obvious one: a heavy report fills the buffer cache with cold data and burns CPU, and checkout gets slow. A read replica moves the load but not the problem: its schema is still designed for the application, and a long analytical query there can conflict with replication and either stall it or get cancelled. The subtler one: analysts querying production tables couple themselves to your schema, so every [migration](/docs/database/zero-downtime-migrations) can break a dashboard you don't know exists.
-
-So analytics gets its own store, a columnar warehouse (BigQuery, Snowflake, Redshift, ClickHouse) or lakehouse, fed by a pipeline, with a defined interface between the two.
+This doc covers the pipeline from one to the other. Why analytics never queries production, and where read replicas stop helping, is in [Separating Production from Analytics](/docs/data/separating-production-and-analytics); which store to load into is in [Warehouses, Lakes & Lakehouses](/docs/data/warehouses-and-lakes). Product events sent from clients follow their own rules in [Event Design & Instrumentation](/docs/telemetry/event-design).
 
 ## ELT, Not ETL
 
@@ -38,24 +33,6 @@ Rows leave an application database one of two ways. Scheduled queries (`WHERE up
 The operational catch is the replication slot: PostgreSQL retains every WAL segment the slot hasn't confirmed, so a stalled or abandoned connector makes the primary's disk grow until it fills. Monitor slot lag, alert on it well before disk is at risk, and set `max_slot_wal_keep_size` so a dead consumer costs you a resync instead of an outage.
 
 CDC exports your tables, which means it exports your schema. For data other teams depend on, [domain events](/docs/architecture/events) through an outbox are a deliberate contract instead of your internal columns. CDC for your own analytics, events between teams.
-
-## Event Tracking
-
-Product analytics (page views, clicks, feature usage) comes from the client, and it rots faster than anything else in the stack. Six months in, there are `signup_clicked`, `SignUp Clicked` and `click_signup`, and nobody knows which one the funnel uses.
-
-The fix is a **tracking plan**: a reviewed, versioned list of every event, its properties and their types, owned like code.
-
-- **Events are named `object_action`** in past tense (`order_completed`, `invite_sent`), with one convention for the whole company.
-- **Every event has a schema**, validated at collection. Events that don't match are quarantined, not silently loaded.
-- **Adding or changing an event goes through review**, like an API change, because dashboards and models are its consumers.
-- **No personal data in event properties by default.** Use the user's ID, not their email. Free-text fields are where PII leaks in unnoticed.
-- **Server-side for anything that matters.** Purchases, signups and billing events are recorded by the backend, where ad blockers and flaky networks can't drop them. Client events are for behavior, not for money.
-
-## Warehouse or Lakehouse
-
-A **warehouse** stores data in its own managed format and gives you SQL, with storage and compute managed together. A **lakehouse** stores data as open table formats (Apache Iceberg, Delta Lake) on object storage, and lets several engines (Spark, Trino, the warehouses themselves) query the same tables.
-
-Start with a managed warehouse: the fewest moving parts, so the team's time goes to modeling instead of infrastructure. Move toward a lakehouse for a concrete reason: volumes where object storage pricing matters, machine-learning workloads that need the data outside SQL, or avoiding years of data locked into one vendor's format. Open table formats have made that move much less dramatic.
 
 ## Transformations Are Code
 
@@ -111,7 +88,7 @@ Analytics copies data, and every copy is in scope for your [privacy obligations]
 
 - **Minimize at ingestion.** Don't load fields analytics doesn't need. Hash or tokenize identifiers that are only needed for joins. Card data never enters the warehouse in any form; see [Sensitive Data](/docs/security/sensitive-data).
 - **Classify columns** as personal or sensitive, and use the warehouse's column-level access controls and masking so most analysts see aggregates or masked values.
-- **Erasure has to reach the warehouse,** including raw tables, snapshots and exports ([Data Retention](/docs/architecture/data-retention)).
+- **Erasure has to reach the warehouse,** including raw tables, snapshots and exports ([Data Retention](/docs/building-blocks/data-retention)).
 - **Raw data has retention too,** the tension with "keep everything for rebuilds." Keep raw history as long as you can justify, partitioned by time so expiring it is cheap, and document the window.
 
 ## One Definition per Metric
@@ -164,7 +141,6 @@ For a worked set of metric definitions with formulas, see [Operating Metrics](/b
 - [dbt: Incremental models](https://docs.getdbt.com/docs/build/incremental-models), processing only new data on each run
 - [Apache Airflow: DAGs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html), pipelines as dependency graphs of tasks
 - [Dagster](https://dagster.io/docs), orchestration around data assets
-- [Apache Iceberg](https://iceberg.apache.org/), an open table format for lakehouses
 
 **In practice**
 

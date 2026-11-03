@@ -82,7 +82,7 @@ Old versions, forgotten staging hosts and undocumented endpoints nobody patches.
 
 - Every endpoint is in the OpenAPI document, and CI fails if the document and the routes disagree.
 - Versions have a published lifecycle with `Deprecation` and `Sunset`, and retired versions actually stop answering. See [Versioning & Deprecation](/docs/api-design/versioning).
-- Every service has an owner. See [Code Ownership](/docs/engineering/code-ownership).
+- Every service has an owner. See [Code Ownership](/docs/development/code-ownership).
 
 ## API10:2023 Unsafe Consumption of APIs
 

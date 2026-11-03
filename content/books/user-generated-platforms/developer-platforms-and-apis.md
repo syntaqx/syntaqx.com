@@ -108,7 +108,7 @@ A licensing deal reads like a commercial contract and lands as a set of technica
 
 - **A feed, not a scrape:** structured records, incremental updates and a backfill, under credentials scoped to the license.
 - **Performance commitments:** availability and freshness targets the platform must meet, on capacity separated from free and app traffic.
-- **Deletion propagation.** When an author deletes a post, a moderator removes it, or a user erases their account, the licensee must be told, by a compliance feed of removals and erasures with a deadline to act, and the license must require them to act. Without it, licensing turns every removal into a copy that lives on elsewhere ([Data Retention & Deletion](/docs/architecture/data-retention#erasure-requests)).
+- **Deletion propagation.** When an author deletes a post, a moderator removes it, or a user erases their account, the licensee must be told, by a compliance feed of removals and erasures with a deadline to act, and the license must require them to act. Without it, licensing turns every removal into a copy that lives on elsewhere ([Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-requests)).
 - **Scope rules:** which content is in (public posts, not private communities or messages; not content from minors' accounts where the platform's policy excludes it), which fields (no IP addresses or emails), which jurisdictions.
 - **Usage records:** what was delivered to whom, when, under which license version, so a user's question ("was my post licensed?") and a regulator's can be answered.
 
@@ -237,7 +237,7 @@ Notes on the sketch:
 - **Secrets are hashed and prefixed.** A visible prefix lets secret scanning in public repositories recognize leaked tokens and revoke them automatically ([Store a Hash, Show the Key Once](/docs/api-design/authentication#store-a-hash-show-the-key-once)).
 - **Installations are ranges with granted bits.** The grant is checked against the installer's own effective permissions at install time; moderators can narrow `granted_permissions` or end the range; actions taken through an installation are logged in the mod log with the app id.
 - **Privileges expire.** Approved privileged access carries a reconfirmation date tied to the app's reach; crossing a reach threshold (servers, users) opens a review automatically.
-- **Plans are versioned data,** so a limits change is a new version with an effective date. A paid plan points at an `api_plan` product, so its prices are [Monetization Strategies](/books/user-generated-platforms/monetization-strategies#how-to-build-it)' `product_prices` rows and its revenue a revenue program; usage is billed under the plan version and price in force ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Plans are versioned data,** so a limits change is a new version with an effective date. A paid plan points at an `api_plan` product, so its prices are [Monetization Strategies](/books/user-generated-platforms/monetization-strategies#how-to-build-it)' `product_prices` rows and its revenue a revenue program; usage is billed under the plan version and price in force ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **One license, two chapters.** The contract (purposes, content kinds, exclusions, freshness target, deletion propagation window, revenue program) is [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#how-to-build-it)' `data_licenses`; this chapter adds the licensee's app and the delivery log.
 - **Removals reach licensees.** Content and account life-cycle events (`content.removed`, `content.deleted`, `account.erased`) and new `data_license_opt_outs` rows produce `removal_notice`, `erasure_notice` and `opt_out_notice` deliveries to every license whose deliveries included the subject; unacknowledged notices past the license's `deletion_propagation` window page someone.
 - **Events:** `app.created`, `app.installed`, `app.uninstalled`, `app.privilege_requested`, `app.privilege_decided`, `credential.revoked`, `app.suspended` and `license.delivery_acknowledged` go through the outbox ([Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)).
@@ -249,7 +249,7 @@ Notes on the sketch:
 - **Credential lifecycle,** including leaks detected and automatic revocations.
 - **Plan and price versions** with the usage billed under each.
 - **Everything delivered under each license and research access grant,** with removal and erasure notices and their acknowledgements, so the platform can show that deletions propagated.
-- **Anti-scraping measures and their changes,** with dates, as evidence for enforcement ([Audit Trails](/docs/architecture/audit-trails)).
+- **Anti-scraping measures and their changes,** with dates, as evidence for enforcement ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

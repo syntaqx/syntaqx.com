@@ -100,7 +100,7 @@ A home agent who hears card numbers puts a home network, a personal room and wha
 
 ## Auditing
 
-Phone payment records are evidence in a PCI assessment, in an ACH dispute over a TEL authorization, in a TCPA claim over a text, and in an investigation into how a card number got out. The general design is in [Audit Trails](/docs/architecture/audit-trails); for phone payments, make sure the record shows:
+Phone payment records are evidence in a PCI assessment, in an ACH dispute over a TEL authorization, in a TCPA claim over a text, and in an investigation into how a card number got out. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for phone payments, make sure the record shows:
 
 - **How every payment was captured:** agent-assisted with masking, payment IVR, or link, with the channel indicator sent in the authorization, so a MOTO flag can be shown to match a real phone or mail order.
 - **Every TEL authorization,** the recording or the written confirmation, its required elements and when it was sent, kept for the two years Nacha requires.

@@ -84,7 +84,7 @@ Even when an item is taxable, the question of *which* jurisdiction's tax applies
 Texas pest control is a worked example of a rule that isn't destination-based: the Comptroller's publication says "Local taxes are based on your place of business in Texas", while separately applying local use tax in some cases when the service is performed in other local jurisdictions. Taxing every Texas job at the customer's local rate would be wrong for that business.
 
 - **Send both addresses.** Every engine call carries ship-from (the warehouse, store or branch the sale or service came from) and ship-to (the delivery address, the service location, or the customer's country for a digital sale). The engine applies the sourcing rule; you supply the facts.
-- **The sourcing rule is configuration, not code.** Where you handle it yourself (a manual fallback, a country the engine doesn't cover), store it per jurisdiction and item type with effective dates, the way [Rules as Data](/docs/architecture/rules-as-data) stores any policy that varies by place and date.
+- **The sourcing rule is configuration, not code.** Where you handle it yourself (a manual fallback, a country the engine doesn't cover), store it per jurisdiction and item type with effective dates, the way [Rules as Data](/docs/building-blocks/rules-as-data) stores any policy that varies by place and date.
 - **The location you used is evidence.** For digital sales, the customer's location is a determination, not a field the customer typed. The UK requires sellers of digital services to "get and keep 2 pieces of information as evidence of where a consumer normally lives", such as, for a small business using a payment provider, the billing address and the provider's country code, and to resolve them when they conflict. Store the evidence with the snapshot.
 
 ## US Economic Nexus
@@ -126,7 +126,7 @@ Games, SaaS and apps meet VAT first, because digital sales cross borders on day 
 What that means for a game or SaaS system:
 
 - **Location evidence on every sale,** as above: billing country, payment card country, IP country, stored with the tax snapshot.
-- **Inclusive prices are a product decision.** A €9.99 battle pass that stays €9.99 across countries means the net revenue differs by each country's VAT rate. Regional pricing ([Rules as Data](/docs/architecture/rules-as-data) covers storing it) and tax behavior are decided together.
+- **Inclusive prices are a product decision.** A €9.99 battle pass that stays €9.99 across countries means the net revenue differs by each country's VAT rate. Regional pricing ([Rules as Data](/docs/building-blocks/rules-as-data) covers storing it) and tax behavior are decided together.
 - **Business customers are a separate path.** A tax ID changes the treatment (often to reverse charge); collect it at checkout, validate it, and record it with the invoice.
 - **Consider a merchant of record** for consumer digital sales worldwide, before building VAT registrations in dozens of countries.
 

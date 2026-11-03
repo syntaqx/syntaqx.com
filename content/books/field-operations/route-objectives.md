@@ -14,7 +14,7 @@ A solver minimizes one number. Everything the business cares about (drive time, 
 
 ## Two Ways to Fold
 
-The general choice, a **weighted sum** that prices every term on one scale or a **lexicographic** objective that ranks them in levels, and why most designs use both, is in [Two Ways to Fold](/docs/architecture/weighing-objectives#two-ways-to-fold). Field routing engines land on the same shape: Timefold scores plans in hard, medium and soft levels, with unassigned visits on the medium level and priced costs at the bottom, while Dynamics' RSO ranks its goals instead of weighting them. The level arrangement has a field cost: with unassigned visits above travel, the solver will add two hours of driving to place one low-priority inspection.
+The general choice, a **weighted sum** that prices every term on one scale or a **lexicographic** objective that ranks them in levels, and why most designs use both, is in [Two Ways to Fold](/docs/building-blocks/weighing-objectives#two-ways-to-fold). Field routing engines land on the same shape: Timefold scores plans in hard, medium and soft levels, with unassigned visits on the medium level and priced costs at the bottom, while Dynamics' RSO ranks its goals instead of weighting them. The level arrangement has a field cost: with unassigned visits above travel, the solver will add two hours of driving to place one low-priority inspection.
 
 Inside the bottom level, magnitudes interact. A skip penalty is the price at which the solver may sell a visit. If serving an outlying stop takes a 50-minute detour of 40 miles, and a minute of labor costs $0.75 and a mile $0.76 (the rates below), the detour costs 50 × 0.75 + 40 × 0.76 = $67.90. A skip penalty of $50 tells the solver to drop that customer, and nothing in the output says the weights did it. Google's Route Optimization API makes the safe choice the default: a shipment with no `penalty_cost` must be performed.
 
@@ -38,7 +38,7 @@ Every engine has a place for those numbers:
 
 A few details matter. Google's `cost_per_hour` also charges waiting and visit time, so it's where paid labor goes; `cost_per_traveled_hour` is for costs that accrue only while moving. In OR-Tools the arc cost is whatever the callback returns, so a money objective is one callback that prices a leg's seconds and meters together, and balance is a separate lever: the VRP guide sets a global span coefficient of 100, which "makes the global span the predominant factor in the objective function" and so minimizes the longest route. Timefold penalizes travel per second and distance per meter, units that can't be compared without weights, and its docs say the two goals are not typically used together; pick one, or convert both to money before they reach the solver. Salesforce states the trade-off in plain words: ASAP "can contradict other objectives," because the earliest slot often means more travel.
 
-Price every term in money and per leg, scaled to integers where the engine needs them ([One Unit, Preferably Money](/docs/architecture/weighing-objectives#one-unit-preferably-money); [Integer Scaling](/docs/architecture/weighing-objectives#integer-scaling)). At $0.76 a mile a per-meter price rounds to zero cents, while a 6,400-meter leg priced in one step is 302 cents.
+Price every term in money and per leg, scaled to integers where the engine needs them ([One Unit, Preferably Money](/docs/building-blocks/weighing-objectives#one-unit-preferably-money); [Integer Scaling](/docs/building-blocks/weighing-objectives#integer-scaling)). At $0.76 a mile a per-meter price rounds to zero cents, while a 6,400-meter leg priced in one step is 302 cents.
 
 ## Why Places Weigh Differently
 
@@ -52,7 +52,7 @@ The right ratio depends on where the trucks drive and who drives them:
 - **High-value commercial work** carries SLA credits or contract risk for lateness, so lateness penalties outweigh travel.
 - **Seasonal peaks** trade efficiency for throughput. Salesforce's High Intensity policy ranks travel minimization and grouping first to get through as many appointments as possible, for periods such as storms, and dispatchers switch policies during the day as conditions change.
 
-So weights are configuration, scoped to a branch, territory or policy, versioned, approved and effective from a date, like any other rule ([Rules as Data](/docs/architecture/rules-as-data); [Territories & Capacity](/books/field-operations/territories-and-capacity) owns the scopes). A sketch, with made-up values:
+So weights are configuration, scoped to a branch, territory or policy, versioned, approved and effective from a date, like any other rule ([Rules as Data](/docs/building-blocks/rules-as-data); [Territories & Capacity](/books/field-operations/territories-and-capacity) owns the scopes). A sketch, with made-up values:
 
 ```json
 {
@@ -99,7 +99,7 @@ The distance-weighted plan saves 34 miles and costs $30.41 more, because the ext
 
 ## Pitfalls
 
-Weights are set by replay and shadow runs, not by meeting ([Calibrating Weights](/docs/architecture/weighing-objectives#calibrating-weights); [Replay and Shadow Testing](/docs/architecture/weighing-objectives#replay-and-shadow-testing)). For routing, replay a season of real days from the optimization audit trail, including storms and short-staffed days, and compare a scorecard of drive hours, miles, stops per hour, window adherence, overtime, unassigned visits and fairness spread. Routing days can't be split between profiles without the halves competing for the same technicians, and Skedulo and Bringg both document different results between runs on the same data, so solve each day several times per profile and shadow a branch for a few weeks before switching on an effective date. What goes wrong:
+Weights are set by replay and shadow runs, not by meeting ([Calibrating Weights](/docs/building-blocks/weighing-objectives#calibrating-weights); [Replay and Shadow Testing](/docs/building-blocks/weighing-objectives#replay-and-shadow-testing)). For routing, replay a season of real days from the optimization audit trail, including storms and short-staffed days, and compare a scorecard of drive hours, miles, stops per hour, window adherence, overtime, unassigned visits and fairness spread. Routing days can't be split between profiles without the halves competing for the same technicians, and Skedulo and Bringg both document different results between runs on the same data, so solve each day several times per profile and shadow a branch for a few weeks before switching on an effective date. What goes wrong:
 
 - **Weights that encode hidden policy.** A low skip penalty for low-revenue customers, or a preference that keeps one technician off a neighborhood, is a business decision made in a number. Name it, and have someone accountable approve it.
 - **Ignoring what dispatchers override.** If dispatchers keep moving the same kind of visit, the weights disagree with them. Override rates by reason ([Operating Metrics](/books/field-operations/operating-metrics#route-efficiency)) are the best calibration signal you have.
@@ -113,7 +113,7 @@ A weight is a decision that touches pay and service, so it gets the same record 
 - **Profile changes** with before and after values, who proposed and approved them, the effective date, and the replay or shadow results that justified the change.
 - **Cost by term per run,** so a later question ("why did the north branch stop serving the lake houses?") can be answered from the run's own breakdown, not a re-solve.
 
-Recording which rule version decided is covered in [Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided), and the record structure in [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions).
+Recording which rule version decided is covered in [Rules as Data](/docs/building-blocks/rules-as-data#record-which-rule-decided), and the record structure in [Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions).
 
 ## What This Means for the System You Build
 
