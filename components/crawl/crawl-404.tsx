@@ -35,7 +35,7 @@ export function Crawl404() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     // Reading storage after mount keeps the server and first client render equal.
-     
+
     setBest(readBest());
     game.current = createCrawl({
       canvas,
