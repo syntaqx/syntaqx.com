@@ -76,6 +76,7 @@
     "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
     "eslint-config-next": "16.4.5",
+    "eslint-plugin-better-tailwindcss": "^4.10.0",
     "pagefind": "^1.6.0",
     "tailwindcss": "^4.3.4",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
