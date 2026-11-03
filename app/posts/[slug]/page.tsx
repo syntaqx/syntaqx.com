@@ -1,12 +1,15 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import {
   getAllPosts,
+  getAllTags,
   getPostSlugs,
   getPostBySlug,
   markdownToHtml,
+  slugifyTag,
   type Heading,
 } from "@/lib/posts";
-import { PostMeta, PostTags } from "@/components/post-meta";
+import Link from "next/link";
+import { PostMeta } from "@/components/post-meta";
 import { CopyCodeScript } from "@/components/copy-code";
 import { CodeTabsScript } from "@/components/code-tabs";
 import { SceneArt } from "@/components/scene-art";
@@ -97,6 +100,7 @@ export default async function PostPage({ params }: Props) {
     p && { href: `/posts/${p.slug}`, label: format(postDay(p.date), "MMM d, yyyy"), title: p.title };
   const words = post.content.split(/\s+/).filter(Boolean).length;
   const feature = post.layout === "feature" && post.hero;
+  const tagCounts = new Map(getAllTags(all).map((t) => [t.slug, t.count]));
 
   return (
     <article>
@@ -190,10 +194,26 @@ export default async function PostPage({ params }: Props) {
             ))}
           </dl>
           {post.tags && post.tags.length > 0 && (
-            <div>
-              <p className="inst mb-3 text-dim">filed under</p>
-              <PostTags tags={post.tags} asLinks />
-            </div>
+            <nav aria-label="Filed under">
+              <p className="inst mb-1 text-dim">filed under</p>
+              {/* Rows like the details above, so a long tag stays on one line. */}
+              <ul className="border-t border-border">
+                {post.tags.map((tag) => {
+                  const slug = slugifyTag(tag);
+                  return (
+                    <li key={slug} className="border-b border-border">
+                      <Link
+                        href={`/tags/${slug}`}
+                        className="flex items-baseline justify-between gap-4 py-2.5 text-sm text-foreground transition-colors hover:text-accent"
+                      >
+                        {tag}
+                        <span className="inst text-dim tabular-nums">{tagCounts.get(slug)}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
           )}
           <a
             href="/feed.xml"

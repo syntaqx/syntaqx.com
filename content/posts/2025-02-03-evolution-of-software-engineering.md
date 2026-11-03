@@ -3,7 +3,7 @@ title = "The Evolution of Software Engineering in the Age of AI"
 date = 2025-02-03T00:00:00Z
 description = "With AI-assisted coding, software engineers are becoming product engineers and architects, leaning into system design, collaboration, and iteration with LLMs."
 categories = ["AI", "Software Engineering", "Technology Trends"]
-tags = ["AI", "Future of Work", "Software Architecture", "Product"]
+tags = ["AI", "Future of Work", "Software Architecture", "Product Management"]
 images = ["/img/open-graph/evolution-of-software-engineering.png"]
 +++
 

@@ -3,7 +3,7 @@ title = "The Thinking Tax"
 date = 2026-08-11T00:00:00Z
 description = "I fixed a bug in ten minutes that could've cost me hours, and felt nothing. The understanding never showed up. On what goes missing when the tool thinks first."
 categories = ["AI", "Software Engineering"]
-tags = ["AI", "Careers"]
+tags = ["AI", "Engineering Careers"]
 layout = "feature"
 hero = "loop"
 +++
