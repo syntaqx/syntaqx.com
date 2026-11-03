@@ -373,7 +373,7 @@ function EditorPane({
   onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
 }) {
   return (
-    <div className="max-h-[600px] overflow-auto min-h-[288px]">
+    <div className="max-h-150 overflow-auto min-h-72">
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -381,7 +381,7 @@ function EditorPane({
         placeholder={placeholder}
         rows={12}
         spellCheck={false}
-        className="w-full min-h-[288px] bg-transparent px-3 py-2 text-sm text-foreground caret-foreground focus:outline-none resize-none font-mono whitespace-pre-wrap break-words placeholder:text-dim/50"
+        className="w-full min-h-72 bg-transparent px-3 py-2 text-sm text-foreground caret-foreground focus:outline-none resize-none font-mono whitespace-pre-wrap wrap-break-word placeholder:text-dim/50"
       />
     </div>
   );

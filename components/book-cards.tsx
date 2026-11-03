@@ -100,7 +100,7 @@ function PlaceholderCover() {
         </mask>
       </defs>
       <rect width="160" height="100" fill={`url(#${id}d)`} mask={`url(#${id}m)`} />
-      <g fill="none" strokeWidth="1" strokeDasharray="2 3" className="[&>*]:[vector-effect:non-scaling-stroke]">
+      <g fill="none" strokeWidth="1" strokeDasharray="2 3" className="*:[vector-effect:non-scaling-stroke]">
         <polygon points={poly([[-2, -2, 0], [6, -2, 0], [6, 6, 0], [-2, 6, 0]])} stroke="var(--dim)" opacity="0.5" />
         <polyline points={poly([[0, 0, 0], [0, 0, top]])} stroke="currentColor" opacity="0.4" />
         <polyline points={poly([[0, 4, 0], [0, 0, 0], [4, 0, 0]])} stroke="currentColor" opacity="0.4" />

@@ -57,7 +57,7 @@ export function CodeHighlight({
   return (
     <div
       className={cn(
-        "[&_pre]:bg-transparent! [&_pre]:p-0! [&_pre]:text-sm [&_pre]:font-mono [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:!text-sm",
+        "[&_pre]:bg-transparent! [&_pre]:p-0! [&_pre]:text-sm [&_pre]:font-mono [&_pre]:whitespace-pre-wrap [&_pre]:wrap-break-word [&_code]:text-sm!",
         className,
       )}
       dangerouslySetInnerHTML={{ __html: html }}
