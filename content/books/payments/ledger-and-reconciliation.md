@@ -8,7 +8,7 @@ part = "Paying Out"
 tags = ["payments", "ledger", "reconciliation", "accounting", "treasury"]
 +++
 
-A merchant's ledger has one bank account and one processor. A provider's has every merchant's money in a handful of pooled accounts, a settlement file per processor and network per day, a statement per bank account, fees that are estimates until a file says otherwise, and a sponsor bank that wants to know, any morning it asks, whose money is in the pool. [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger) covers double entry itself and [Money & Amounts](/docs/payments/money) the amounts; this chapter is what changes when the ledger is the system of record for other people's money, and reconciliation is how you prove it every day. [Payouts & Settlement](/books/payments/payouts-and-settlement) produces the entries, [Treasury & Bank Operations](/books/payments/treasury) runs the accounts they describe, and this chapter is where the two are made to agree. The merchant's side of the same match, deposits against orders, refunds and marketplace settlements, is the Commerce volume's [Payout and Marketplace Reconciliation](/books/commerce/commerce-accounting#payout-and-marketplace-reconciliation).
+A merchant's ledger has one bank account and one processor. A provider's has every merchant's money in a handful of pooled accounts, a settlement file per processor and network per day, a statement per bank account, fees that are estimates until a file says otherwise, and a sponsor bank that wants to know, any morning it asks, whose money is in the pool. [Payment States & Ledgers](/docs/money/payment-states#double-entry-ledger) covers double entry itself and [Money & Amounts](/docs/money/amounts) the amounts; this chapter is what changes when the ledger is the system of record for other people's money, and reconciliation is how you prove it every day. [Payouts & Settlement](/books/payments/payouts-and-settlement) produces the entries, [Treasury & Bank Operations](/books/payments/treasury) runs the accounts they describe, and this chapter is where the two are made to agree. The merchant's side of the same match, deposits against orders, refunds and marketplace settlements, is the Commerce volume's [Payout and Marketplace Reconciliation](/books/commerce/commerce-accounting#payout-and-marketplace-reconciliation).
 
 ## How the Platforms Do It
 
@@ -33,7 +33,7 @@ None of them reconciles for you across sources. A provider holds the processor's
 
 ## A Provider's Chart of Accounts
 
-[A Chart of Accounts](/docs/payments/payment-states#a-chart-of-accounts) names the accounts a merchant-facing ledger posts to. A provider's ledger has two halves that must equal each other: liabilities that say who the money belongs to, and assets that say where it physically is.
+[A Chart of Accounts](/docs/money/payment-states#a-chart-of-accounts) names the accounts a merchant-facing ledger posts to. A provider's ledger has two halves that must equal each other: liabilities that say who the money belongs to, and assets that say where it physically is.
 
 | Account | Side | Holds |
 | --- | --- | --- |
@@ -60,7 +60,7 @@ Three rules make it work at scale.
 
 ## Double Entry at Provider Scale
 
-The rules don't change at scale: balanced transactions, append-only rows, idempotent postings, corrections as reversals ([Append-Only Records](/docs/payments/payment-states#append-only-records)). What changes is what breaks first.
+The rules don't change at scale: balanced transactions, append-only rows, idempotent postings, corrections as reversals ([Append-Only Records](/docs/money/payment-states#append-only-records)). What changes is what breaks first.
 
 - **Hot accounts.** Every payment credits `platform_revenue` and `processing_costs`, so those two rows take a write from every transaction on the platform. A ledger that locks a cached balance row per posting serializes the whole business on them. Post entries without locking the balance, compute balances from entries plus periodic snapshots, and reserve row-level locking for accounts where an overdraft check is the point (a merchant's available balance before a payout). [Hot Accounts](/books/payments/architecture-at-scale#hot-accounts) covers sharding, batching and deferred aggregation.
 - **Pending and posted are separate balances.** A capture is pending until settlement confirms it, a payout until the bank does. Track them as separate figures on the account, the way TigerBeetle keeps `debits_pending` beside `debits_posted`, so available balance is computed from posted entries and nothing pays out against money that might not come.
@@ -76,7 +76,7 @@ Every movement of money is described three times, by three systems that never co
 2. **The processor's and network's files,** which say what they did: settlement and fee files per processor, network settlement reports for a provider that clears directly ([Inside a Processor](/books/payments/inside-a-processor#settlement)), ACH return and NOC files, card payout confirmations.
 3. **The bank's statements,** which say what money actually moved: in the US mostly BAI2, elsewhere MT940, and increasingly ISO 20022's `camt.053` (the prior day's booked entries), `camt.052` (intraday) and `camt.054` (individual debit and credit notifications). Each bank populates them in "their own flavour", in the words of one practitioner guide: the detail record (BAI2 record 16, MT940 tag 61) carries references however the bank chose to. The formats, record by record, are in the Banking & Lending volume's [Bank Connectivity: BAI2 and camt](/books/banking-and-lending/treasury-management#bank-connectivity-bai2-and-camt).
 
-The ledger can balance perfectly while a wire you think you sent never left, which is why the ledger's own checks are not reconciliation. The general rules (breaks are records with owners, fixed by correcting entries, on a data path separate from the payment flow) are in [Reconciliation](/docs/payments/payment-states#reconciliation). A **three-way match** is two joins, at different grains, and a daily check of balances:
+The ledger can balance perfectly while a wire you think you sent never left, which is why the ledger's own checks are not reconciliation. The general rules (breaks are records with owners, fixed by correcting entries, on a data path separate from the payment flow) are in [Reconciliation](/docs/money/payment-states#reconciliation). A **three-way match** is two joins, at different grains, and a daily check of balances:
 
 - **Ledger to processor, per transaction.** Every capture, refund, dispute and fee in the ledger matches a row in the processor's file, and every row in the file matches the ledger. This is where fee true-ups happen and where a transaction the processor dropped, or one you never recorded, shows up.
 - **Processor to bank, per batch.** Each settlement batch's net amount matches one deposit on the bank statement. Adyen's rule (net credits minus net debits equals the payout) and Stripe's itemized payout are the processor side of this join.
@@ -128,9 +128,9 @@ A **break** is anything the engine couldn't match, or matched with a difference.
 | **Missing internal** | A refund made in the processor's dashboard, a dispute you never ingested, a bank fee | Post the missing event from the external record, linked to it |
 | **Amount difference** | Fee true-up, partial capture recorded wrong, interchange downgrade | Correcting entry against the right account, with the reason |
 | **Duplicate** | A file imported twice, a payout sent twice | Reverse the duplicate entry; recover the money if it really moved twice |
-| **FX difference** | Conversion at a different rate or time than recorded | Post to `fx_gain_loss` with both rates ([Multi-Currency & FX](/docs/payments/multi-currency#refunds-and-fx-gains-and-losses)) |
+| **FX difference** | Conversion at a different rate or time than recorded | Post to `fx_gain_loss` with both rates ([Multi-Currency & FX](/docs/money/multi-currency#refunds-and-fx-gains-and-losses)) |
 | **Unidentified cash** | A deposit with no usable reference | Into suspense, then claimed or returned |
-| **Misapplied** | Money matched to the wrong merchant | A transfer between merchant accounts, never an edit ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)) |
+| **Misapplied** | Money matched to the wrong merchant | A transfer between merchant accounts, never an edit ([Payments Are Applied, Not Assigned](/docs/money/payment-states#payments-are-applied-not-assigned)) |
 
 **Aging is the control.** Report breaks in age buckets (today, 1 to 3 days, 4 to 7, 8 to 30, older), by type and amount, with the oldest and largest at the top. A timing break that's two days old is normal; one that's ten days old is a missing transaction. Set a deadline per type, and escalate past it, first to the team lead and then to whoever signs the financial statements.
 
@@ -161,12 +161,12 @@ A provider serving software platforms reconciles for two readers at once. A **me
 
 ## Multi-Currency Ledgers
 
-Everything above runs per currency. A transaction balances in each currency it touches, a conversion is two balanced legs linked by one ID, and no account ever sums two currencies ([Storing Both Amounts](/docs/payments/multi-currency#storing-both-amounts)). At provider scale that adds:
+Everything above runs per currency. A transaction balances in each currency it touches, a conversion is two balanced legs linked by one ID, and no account ever sums two currencies ([Storing Both Amounts](/docs/money/multi-currency#storing-both-amounts)). At provider scale that adds:
 
 - **Cash accounts per bank account per currency.** A multi-currency account at one bank is several ledger accounts, each reconciled to its own statement balance.
 - **Conversion as a recorded trade.** When the provider converts a merchant's EUR settlement into a USD payout, the conversion is a transaction with the rate, its source, the quote it executed against, and the FX provider's confirmation, reconciled against that provider's statement like any other counterparty ([Cross-Border Payments & FX](/books/payments/cross-border-and-fx)).
 - **FX differences have their own account.** A refund converted at a different rate than the charge, a dispute months later, a processor converting at settlement at a rate you didn't record: each difference posts to `fx_gain_loss`, never into the merchant's balance unless the merchant agreed to carry it.
-- **Revaluation is a reporting step.** Balances held in foreign currencies are revalued into the functional currency at period end for the financial statements, by a documented rate policy ([Reporting in One Currency](/docs/payments/multi-currency#reporting-in-one-currency)). Revaluation entries live in the accounting books, not in merchant balances; a merchant's EUR balance is a EUR balance whatever the dollar did.
+- **Revaluation is a reporting step.** Balances held in foreign currencies are revalued into the functional currency at period end for the financial statements, by a documented rate policy ([Reporting in One Currency](/docs/money/multi-currency#reporting-in-one-currency)). Revaluation entries live in the accounting books, not in merchant balances; a merchant's EUR balance is a EUR balance whatever the dollar did.
 
 ## Closing the Day and the Month
 
@@ -178,9 +178,9 @@ Everything above runs per currency. A transaction balances in each currency it t
 4. **Breaks are aged and owned,** and any unexplained cash break has held the next payout run.
 5. **The per-owner balance file is produced,** summing exactly to the custodial balance (below).
 
-**The month-end close** adds the accounting layer, and the general mechanics (period locks, accruals, journals to the general ledger) are in [Accounting](/docs/payments/accounting). For a provider, the payments-specific steps are:
+**The month-end close** adds the accounting layer, and the general mechanics (period locks, accruals, journals to the general ledger) are in [Accounting](/docs/money/accounting). For a provider, the payments-specific steps are:
 
-- **Lock the period** so nothing posts into it, and post late-arriving corrections into the open period with the original effective date; a break found after the close is a correction in the next open period, never an edit to a closed one ([Closed Periods Stay Closed](/docs/payments/accounting#closed-periods-stay-closed)).
+- **Lock the period** so nothing posts into it, and post late-arriving corrections into the open period with the original effective date; a break found after the close is a correction in the next open period, never an edit to a closed one ([Closed Periods Stay Closed](/docs/money/accounting#closed-periods-stay-closed)).
 - **Reconcile the processor's and network's invoices** against the per-transaction costs you recorded. When they differ, the difference is either a fee you didn't know about or a transaction you didn't record ([Interchange & Pricing](/books/payments/interchange-and-pricing#a-pricing-engine) prices them; this is where you find out whether the prices were right).
 - **Accrue what's owed but not billed,** like a monthly sponsor-bank fee, and reverse estimates that the files have since replaced.
 - **Produce the merchant statements** from the closed ledger, so every number a merchant sees ties to a locked period ([Operating the Platform](/books/payments/operating-the-platform#statements-and-reports)).
@@ -197,7 +197,7 @@ Reconciliation is also evidence, and the people who ask for it want specific art
 
 ## How to Build It
 
-The tables below extend the core `ledger_accounts`, `ledger_transactions`, `ledger_entries`, `payments` and `payouts` from [the core data model](/books/payments/card-payments#the-core-data-model), with the double-entry rules of [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger) enforced on them. The core already gives every account a `merchant_id`, a `name` and a `currency`, and every transaction a `status`, an `effective_at` and the event that caused it (`source_type`, `source_id`, unique together). `bank_accounts` is one row per real account [Treasury](/books/payments/treasury#how-to-build-it) runs, and this chapter owns every inbound file, statement line and break: Treasury's outbound files and transfers are matched through the tables here.
+The tables below extend the core `ledger_accounts`, `ledger_transactions`, `ledger_entries`, `payments` and `payouts` from [the core data model](/books/payments/card-payments#the-core-data-model), with the double-entry rules of [Payment States & Ledgers](/docs/money/payment-states#double-entry-ledger) enforced on them. The core already gives every account a `merchant_id`, a `name` and a `currency`, and every transaction a `status`, an `effective_at` and the event that caused it (`source_type`, `source_id`, unique together). `bank_accounts` is one row per real account [Treasury](/books/payments/treasury#how-to-build-it) runs, and this chapter owns every inbound file, statement line and break: Treasury's outbound files and transfers are matched through the tables here.
 
 ```sql
 -- Dimensions on accounts, so one type covers every merchant, bank account and currency.

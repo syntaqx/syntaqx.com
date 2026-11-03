@@ -9,7 +9,7 @@ import path from "node:path";
  *   - the books' old home under /docs/industries, to /books
  *   - each doc's or book chapter's former slugs, from its `aliases`
  *     frontmatter (former paths under /docs), to its URL
- *   - a bare section folder, like /docs/payments, to its group on /docs
+ *   - a bare section folder, like /docs/money, to its group on /docs
  *
  * next.config.ts imports this, so it reads files directly and imports no
  * app code.

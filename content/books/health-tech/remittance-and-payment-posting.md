@@ -253,9 +253,9 @@ RETURNING deposit_id, remittance_id;
 Design notes:
 
 - **Balance before posting.** Lines, claims and the payment must each add up; an unbalanced ERA is stored and flagged, never partly posted.
-- **Post in one transaction per claim:** every ledger entry for a remittance claim commits together, keyed by the remittance claim so a retry can't post twice ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
+- **Post in one transaction per claim:** every ledger entry for a remittance claim commits together, keyed by the remittance claim so a retry can't post twice ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
 - **Posting rules decide, and the decision is recorded** with the posting run's rule versions, so a misposting can be traced to the rule that caused it and fixed everywhere.
-- **Payer payments are `payments` rows** with a payer source, applied to claim lines through ledger entries, the same as patient payments ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)).
+- **Payer payments are `payments` rows** with a payer source, applied to claim lines through ledger entries, the same as patient payments ([Payments Are Applied, Not Assigned](/docs/money/payment-states#payments-are-applied-not-assigned)).
 - **Events:** `remittance.received`, `remittance.posted`, `remittance.exception`, `deposit.unmatched` and `denial.opened`.
 
 ## Auditing

@@ -66,7 +66,7 @@ CREATE INDEX customer_external_ids_customer_id_idx ON customer_external_ids (cus
 - **Vendor keys move.** Google says its place IDs "may change over time" and recommends refreshing any older than 12 months ([Google: Place IDs](https://developers.google.com/maps/documentation/places/web-service/place-id)). Overture Maps keeps its address IDs out of its stable ID registry because its matching relies on identical values ([Overture: Addresses](https://docs.overturemaps.org/guides/addresses/)). A changed key is a new crosswalk row, not an edit.
 - **Distinguish the immediate source from the origin.** Data that has passed through an aggregator has two keys. The RESO Data Dictionary used by real estate listing feeds defines `ListingKey` as "the local key of the system" and points to separate `SourceSystemKey` and `OriginatingSystemKey` fields for carrying the original keys ([RESO: ListingKey](https://dd.reso.org/DD2.0/Property/ListingKey/)). Store both, because the same listing syndicated through two aggregators shares an origin key and nothing else.
 
-A crosswalk also makes migrations idempotent: re-running an import finds the rows it created by source key instead of inserting duplicates ([Idempotency](/docs/payments/idempotency)).
+A crosswalk also makes migrations idempotent: re-running an import finds the rows it created by source key instead of inserting duplicates ([Idempotency](/docs/requests/idempotency)).
 
 ## Survivorship Per Field
 

@@ -70,7 +70,7 @@ The important word is *unsecured*. PHI encrypted in line with HHS guidance isn't
 
 ## De-identification
 
-Properly **de-identified** data isn't PHI, and HIPAA stops applying to it. That makes de-identification health care's most powerful scope reduction, the equivalent of [tokenization](/docs/payments/sensitive-data) for card data. There are two methods:
+Properly **de-identified** data isn't PHI, and HIPAA stops applying to it. That makes de-identification health care's most powerful scope reduction, the equivalent of [tokenization](/docs/security/sensitive-data) for card data. There are two methods:
 
 - **Safe Harbor:** remove 18 specified identifiers of the individual and their relatives, employers and household (names, geography smaller than a state with limited ZIP exceptions, all date elements except the year, phone numbers, emails, record and device numbers, full-face photos and more), *and* have no actual knowledge that what remains identifies someone.
 - **Expert Determination:** a qualified expert applies statistical methods and documents a very small risk of re-identification.

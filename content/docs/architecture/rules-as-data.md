@@ -64,7 +64,7 @@ A rule's value, scope and source are never edited. A change is a new row whose `
 
 - **Changes ship before they take effect.** A law effective on the first of next month is entered today and switches on by itself. No deploy at midnight, no feature flag to remember to flip ([Feature Flags](/docs/delivery/feature-flags) are for rollouts, not for dated legal changes).
 - **Evaluate as of the right date.** The rule that applies is the one in force on the date that matters for the decision: the sale date for a cancellation window, the service date for a license check, the send time for a calling window. Not "today", which is wrong for anything computed in advance or re-evaluated later.
-- **History answers questions.** "What was the rule on March 3?" is a query, and so is "what changed in the last quarter?" Append-only rules are the same discipline as [append-only records](/docs/payments/payment-states#append-only-records).
+- **History answers questions.** "What was the rule on March 3?" is a query, and so is "what changed in the last quarter?" Append-only rules are the same discipline as [append-only records](/docs/money/payment-states#append-only-records).
 
 ## When Rules Overlap
 
@@ -110,7 +110,7 @@ The design that holds up:
 
 The last stage is different in kind: **final checks** are validation that no rule earlier in the pipeline can override. They state what must be true of any outcome, whatever the configuration says:
 
-- A price is never below its floor, never negative, and rounded to the currency's minor unit ([Money & Amounts](/docs/payments/money)).
+- A price is never below its floor, never negative, and rounded to the currency's minor unit ([Money & Amounts](/docs/money/amounts)).
 - A discount never exceeds the approving role's maximum.
 - A loot box is never sold without an odds table attached, and never offered in a country whose rule says not offered.
 - A message is never sent outside the resolved window; a job is never assigned to someone without the required license.

@@ -94,7 +94,7 @@ A log line is copied to more places, kept by more systems and read by more peopl
 The cheat sheet's remedy is to remove, mask, sanitize, hash or encrypt. My rules for making that hold:
 
 - **Redact at the logger,** not downstream. A serializer that knows which fields are sensitive (by type or annotation) masks them before the line exists; the Collector's [redaction](/docs/observability/collector#redacting-and-filtering) is a backstop, not the plan.
-- **No request or response bodies** for endpoints that accept sensitive data. Log the request ID, the route and the outcome; the request ID finds everything else ([Sensitive Data](/docs/payments/sensitive-data)).
+- **No request or response bodies** for endpoints that accept sensitive data. Log the request ID, the route and the outcome; the request ID finds everything else ([Sensitive Data](/docs/security/sensitive-data)).
 - **Opaque IDs, not personal data.** A user ID in a log is searchable and joinable; an email address is personal data in every log store, backup and vendor it reaches ([GDPR & Privacy](/docs/compliance/gdpr)).
 - **URLs are data.** Query strings carry tokens and personal data; log the route template and the parameters you've vetted.
 - **Sanitize what users control.** Escape or strip control characters from user-supplied values, even in JSON, before they reach a human reading a terminal.

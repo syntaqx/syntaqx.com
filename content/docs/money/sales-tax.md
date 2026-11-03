@@ -1,14 +1,15 @@
 +++
 title = "Sales Tax & VAT"
 description = "Indirect tax as data: a tax code per item, tax as a quote until the invoice finalizes, engines, exemptions, sourcing, US nexus and VAT on digital sales."
-category = "Payments"
+category = "Money"
 order = 808
 tags = ["payments", "tax", "vat", "invoicing"]
+aliases = ["payments/sales-tax"]
 +++
 
 Sales tax, VAT and GST look like a percentage applied at checkout, and the first version of every system treats them that way: a `tax_rate` column and a multiplication. Then the business sells into a second state or country, or adds a product one state taxes and its neighbor doesn't, and the column turns out to have been answering four questions at once, each with its own data.
 
-This is the engineering of indirect tax, not tax advice: which taxes apply to your products is a question for an adviser, and the answers change. The system's job is to make the answers configurable and the history permanent. Nexus, marketplace facilitator laws, exemption certificates, VAT and duties for a store are the Commerce volume's [Sales Tax, VAT & Duties](/books/commerce/sales-tax-vat-and-duties). Amounts follow [Money & Amounts](/docs/payments/money), and multi-currency invoices follow [Multi-Currency & FX](/docs/payments/multi-currency).
+This is the engineering of indirect tax, not tax advice: which taxes apply to your products is a question for an adviser, and the answers change. The system's job is to make the answers configurable and the history permanent. Nexus, marketplace facilitator laws, exemption certificates, VAT and duties for a store are the Commerce volume's [Sales Tax, VAT & Duties](/books/commerce/sales-tax-vat-and-duties). Amounts follow [Money & Amounts](/docs/money/amounts), and multi-currency invoices follow [Multi-Currency & FX](/docs/money/multi-currency).
 
 ## Four Questions, Four Kinds of Data
 
@@ -58,7 +59,7 @@ CREATE TABLE invoice_line_taxes (
 CREATE INDEX invoice_line_taxes_invoice_line_id_idx ON invoice_line_taxes (invoice_line_id);
 ```
 
-- **Snapshot, never recompute.** The invoice shows what was charged, and a report six months later reads these rows. Recomputing from today's rates produces a different number, which is the one thing a tax record can't do. It's the [append-only rule](/docs/payments/payment-states#append-only-records) applied to tax.
+- **Snapshot, never recompute.** The invoice shows what was charged, and a report six months later reads these rows. Recomputing from today's rates produces a different number, which is the one thing a tax record can't do. It's the [append-only rule](/docs/money/payment-states#append-only-records) applied to tax.
 - **Corrections are new documents.** A finalized invoice isn't edited; a credit note reduces it, or it's voided and reissued, as in Stripe's invoicing model. Each credit note carries its own tax lines, reversing tax with the same jurisdictions and rates as the original, not today's.
 - **Offline quotes are labeled.** A device offline (a point-of-sale terminal, a field app, a game client) can show an estimate from cached rates, marked as an estimate; the number the customer is charged comes from the server at finalization.
 - **Decide when to call.** Calling on every draft edit is accurate and costly; checkout plus finalization is usually enough. The finalization call is mandatory.

@@ -34,7 +34,7 @@ The patterns:
 A rental deposit is almost never a charge. It's a card authorization placed shortly before the trip, released if nothing goes wrong, and partly captured if something does. The timing comes from two sides that don't agree:
 
 - **The business wants a long hold.** It should exist when the vehicle leaves and last until damage is known: Outdoorsy places it two days before the trip, releases it seven days after the trip ends, can extend to 30 days from the trip's end, and keeps it at least 30 days when a claim is filed.
-- **The card networks give a short one.** An online, customer-initiated card authorization is generally valid for seven days, and a Visa merchant-initiated one for about five; card-present authorizations are shorter still. Processors offer extended authorizations for eligible merchants and transactions ([Authorizations Expire](/docs/payments/payment-states#authorizations-expire)).
+- **The card networks give a short one.** An online, customer-initiated card authorization is generally valid for seven days, and a Visa merchant-initiated one for about five; card-present authorizations are shorter still. Processors offer extended authorizations for eligible merchants and transactions ([Authorizations Expire](/docs/money/payment-states#authorizations-expire)).
 
 A two-day lead, a seven-day trip and a seven-day release window add up to sixteen days, well beyond a standard authorization. So a deposit is a sequence of authorizations, not one: authorize before pickup, re-authorize (or extend) before expiry while the trip runs and the claim window is open, capture part when a claim is approved, and release the rest. Each re-authorization can be declined, and the system has to decide what then: notify the guest, fall back to the card on file for later collection, or treat the booking as uncovered.
 
@@ -42,7 +42,7 @@ A two-day lead, a seven-day trip and a seven-day release window add up to sixtee
 
 My rules for deposits:
 
-- **A deposit is its own record with its own clock,** separate from the booking's payment: the amount and its basis (host-set within the platform's minimums), when it must exist, when it may be released, how long it may be extended, and each authorization behind it ([Holds That Change Size](/docs/payments/payment-states#holds-that-change-size)).
+- **A deposit is its own record with its own clock,** separate from the booking's payment: the amount and its basis (host-set within the platform's minimums), when it must exist, when it may be released, how long it may be extended, and each authorization behind it ([Holds That Change Size](/docs/money/payment-states#holds-that-change-size)).
 - **Release is the default.** Without a claim, the hold is released on schedule automatically; extension requires a claim or a host request inside the window, recorded with a reason.
 - **The deposit is the first source, not the only one.** Outdoorsy uses it first for insurance deductibles; RVshare takes the owner's deductible from it. Charges above it go to the card on file through post-trip collection.
 - **A deposit isn't trust money on a marketplace, but it's still the guest's.** In residential rentals deposits are regulated as tenant funds ([Security Deposits](/books/property-tech/insurance-deposits-and-guarantees#security-deposits)); a rental marketplace's authorization moves no money until capture, but a captured deposit pending a claim decision is held for someone, and the ledger should say for whom.

@@ -105,7 +105,7 @@ Most recurring-service sales collect something at signing: the initial service f
 - **The rep keys the card into a web virtual terminal.** SAQ C-VT is meant for merchants who manually enter one transaction at a time by keyboard into a third-party-hosted virtual terminal, on an isolated device. A shared sales tablet running other apps fits that poorly.
 - **The rep taps or dips the card on a reader or the phone.** That's card-present acceptance, with its own validated-solution path ([Card-Present Payments](/books/payments/card-present)).
 
-The pattern that keeps reps out of scope and customers in control is the same one as for signing: the payment step is a hosted page on the customer's phone, opened from the same link as the packet, and the app never sees a card number. Store only the provider's token, brand, last four and expiry ([Sensitive Data](/docs/payments/sensitive-data)).
+The pattern that keeps reps out of scope and customers in control is the same one as for signing: the payment step is a hosted page on the customer's phone, opened from the same link as the packet, and the app never sees a card number. Store only the provider's token, brand, last four and expiry ([Sensitive Data](/docs/security/sensitive-data)).
 
 Timing matters as much as scope: signing stores the payment method, and nothing is charged before the agreement is `active` except the two refundable exceptions in [Consumer Protection](/books/field-operations/consumer-protection#charging-inside-the-window).
 

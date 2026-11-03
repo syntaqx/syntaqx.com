@@ -42,7 +42,7 @@ Three rules come from how these break:
 - **States carry their cause.** A cancellation's reason and actor decide who pays: a merchant cancel after the courier arrived is a merchant error; a platform cancel for no courier is the platform's ([Who Pays for an Error](/books/commerce/refunds-and-delivery-fraud#who-pays-for-an-error)).
 - **Events, not polling.** Networks push status by webhook (Uber Direct's `event.delivery_status`); the order's state machine consumes them idempotently, ignoring stale or duplicate events by comparing provider timestamps ([Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent)).
 
-The playbook's [Explicit State Machines](/docs/payments/payment-states#explicit-state-machines) section is the pattern: allowed transitions in a table, every transition a row with its time, actor and reason.
+The playbook's [Explicit State Machines](/docs/money/payment-states#explicit-state-machines) section is the pattern: allowed transitions in a table, every transition a row with its time, actor and reason.
 
 ## Prep Time and ETAs
 
@@ -77,7 +77,7 @@ Owned inventory removes most of this: Gopuff picks from its own shelves, so a mi
 
 An ASAP order starts its clocks at checkout. A scheduled order promises a time or a window (`scheduled_for` on the order) and has to start them later, backward from the promise. Uber's orders app shows a scheduled order to the restaurant a second time, roughly 25 to 45 minutes before the scheduled time, based on the default prep time and "the current marketplace dynamics." Grocery delivery is commonly sold in windows: Shipt's app asks customers to "choose your preferred delivery window."
 
-Scheduled orders change three things: the order is accepted early but released to the kitchen later; capacity is a reservation against a window, so a full window stops taking orders ([Reservations & Holds](/docs/architecture/reservations-and-holds)); and the card authorization may expire before capture, so a long lead time needs a later re-authorization or a capture plan ([Authorizations Expire](/docs/payments/payment-states#authorizations-expire)).
+Scheduled orders change three things: the order is accepted early but released to the kitchen later; capacity is a reservation against a window, so a full window stops taking orders ([Reservations & Holds](/docs/architecture/reservations-and-holds)); and the card authorization may expire before capture, so a long lead time needs a later re-authorization or a capture plan ([Authorizations Expire](/docs/money/payment-states#authorizations-expire)).
 
 ## The Handoff
 

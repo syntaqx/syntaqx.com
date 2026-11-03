@@ -19,7 +19,7 @@ GET /payments?status=captured&currency=USD
 
 - **Multiple parameters are AND.** `status=captured&currency=USD` matches both.
 - **Comma-separated values are OR** within one field: `status=captured,settled`. That covers the common "any of these states" case without repeating the parameter. It only works for values that can't contain commas (enums, IDs), which is every filterable field here; free text goes through `q` instead.
-- **Values use the field's JSON format:** [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) for times ([Time](/docs/fundamentals/time)), minor units for amounts ([Money](/docs/payments/money)), lowercase strings for enums ([JSON Field Conventions](/docs/requests/json-conventions)).
+- **Values use the field's JSON format:** [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339) for times ([Time](/docs/fundamentals/time)), minor units for amounts ([Money](/docs/money/amounts)), lowercase strings for enums ([JSON Field Conventions](/docs/requests/json-conventions)).
 
 ### Ranges
 

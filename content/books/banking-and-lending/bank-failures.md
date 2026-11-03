@@ -159,7 +159,7 @@ Design notes:
 
 - **The extract that must balance is checked when it's produced.** A per-owner file that doesn't sum to the custodial account's balance is a failed control today, not a discovery during a receivership; the `CHECK` makes the job fail loudly ([Reconcile to the Source](/docs/architecture/data-pipelines#reconcile-to-the-source)).
 - **Produce it daily, keep every one.** "What did the records say at the close on the day the bank failed" has to have an exact, hashed answer, which is the same file the Payments volume asks a provider to send its bank daily.
-- **Holds on failure use the normal path.** A provisional insurance hold is a `holds` row against available balance, released or converted when the FDIC determines insurance, so the core, digital banking and card authorization all see it the same way and nothing special-cases the failure ([Payment States & Ledgers](/docs/payments/payment-states#holds-that-change-size)).
+- **Holds on failure use the normal path.** A provisional insurance hold is a `holds` row against available balance, released or converted when the FDIC determines insurance, so the core, digital banking and card authorization all see it the same way and nothing special-cases the failure ([Payment States & Ledgers](/docs/money/payment-states#holds-that-change-size)).
 - **Record the failure as an event with a date and a counterparty**, so routing numbers, accounts and file formats can be followed to the acquirer for the months the old identifiers keep arriving.
 - **Exposure is per bank, per legal entity, per category.** A business or fintech treasury that can't answer "how much do we have at this bank, and how much is insured" before Friday's close is the depositor the 2023 runs were made of.
 

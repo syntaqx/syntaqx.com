@@ -1,13 +1,13 @@
 +++
 title = "Idempotency"
 description = "Safe retries for any write with the Idempotency-Key header: how keys are stored and replayed, and what happens on conflicting or concurrent requests."
-category = "Payments"
-order = 802
+category = "Requests & Responses"
+order = 311
 tags = ["api", "payments", "idempotency", "headers"]
-aliases = ["idempotency"]
+aliases = ["payments/idempotency", "idempotency"]
 +++
 
-Once an amount is represented correctly ([Money & Amounts](/docs/payments/money)), the next way to get it wrong is to move it twice. Networks fail after the server has done the work: a client sends `POST /payments`, the connection drops, and it can't know whether the card was charged. Retry, and the customer may pay twice. Don't, and the order may never be paid.
+Networks fail after the server has done the work: a client sends `POST /payments`, the connection drops, and it can't know whether the card was charged. Retry, and the customer may pay twice. Don't, and the order may never be paid. Money makes the stakes obvious, but every write with a side effect has the same problem: an email sent twice, an order shipped twice, a job queued twice.
 
 An idempotency key removes the dilemma. The client attaches a key to the operation, and the server promises that the same key always produces the same result, with the side effect happening at most once. Retrying becomes always safe, so clients can retry freely, which is exactly what you want them to do.
 

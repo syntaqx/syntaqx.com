@@ -75,7 +75,7 @@ A merchant has a PCI DSS obligation for its own systems. A provider is a **servi
 - **Plan for Level 1 from day one.** Visa puts a service provider at Level 1 above 300,000 transactions a year, and Mastercard puts every processor and merchant payment gateway there regardless of volume. Level 1 means an annual Report on Compliance from a Qualified Security Assessor (quarterly external scans apply at every level), and it's where a credible competitor to the large processors sits (Payabli describes itself as a PCI DSS Level 1 service provider, and Stripe states it is certified as a PCI Service Provider Level 1). Service providers also carry extra requirements merchants don't, like scope and segmentation checks every six months; [PCI DSS](/docs/compliance/pci-dss#what-a-service-provider-adds) lists them.
 - **It's annual.** Visa requires acquirers to ensure their service providers demonstrate compliance at least every 12 months, so the assessment is a standing program, not a launch milestone.
 - **Your customers will ask for the AOC.** The Attestation of Compliance is what merchants, acquirers and enterprise buyers see, and enterprise deals stall without a current one.
-- **Your design decides your scope.** Isolate card data in a small vault and hand everything else tokens, as in [Sensitive Data](/docs/payments/sensitive-data); [Running a Card Vault](/books/payments/card-vault) is how to build it. A provider whose whole platform is in scope assesses its whole platform, every year.
+- **Your design decides your scope.** Isolate card data in a small vault and hand everything else tokens, as in [Sensitive Data](/docs/security/sensitive-data); [Running a Card Vault](/books/payments/card-vault) is how to build it. A provider whose whole platform is in scope assesses its whole platform, every year.
 
 Other PCI standards follow from what you build:
 
@@ -112,10 +112,10 @@ A provider is a gatekeeper for the financial system. [Merchant Onboarding](/book
 
 ## What This Means for the System You Build
 
-The engineering in [Payments](/docs/payments/money) becomes requirements a merchant integration never sees:
+The engineering in [Payments](/docs/money/amounts) becomes requirements a merchant integration never sees:
 
-- **A double-entry ledger** ([Payment States & Ledgers](/docs/payments/payment-states)) is the source of truth for every balance, fee, reserve and payout, and at provider scale it's what auditors, the sponsor bank and regulators examine.
-- **Idempotency end to end** ([Idempotency](/docs/payments/idempotency)): merchants retry, and so do you toward networks and banks, and a charge or payout that runs twice is real money.
+- **A double-entry ledger** ([Payment States & Ledgers](/docs/money/payment-states)) is the source of truth for every balance, fee, reserve and payout, and at provider scale it's what auditors, the sponsor bank and regulators examine.
+- **Idempotency end to end** ([Idempotency](/docs/requests/idempotency)): merchants retry, and so do you toward networks and banks, and a charge or payout that runs twice is real money.
 - **Reconciliation as a product:** daily matching of network settlement files, bank statements and the ledger, with exceptions routed to people, and the same view offered to merchants for their own money.
 - **Webhooks as a contract** ([Webhooks](/docs/api-design/webhooks)): merchants build their businesses on your events.
 - **Hardware security modules** for the keys behind your [card vault](/books/payments/card-vault), and PIN keys if you touch PINs, under dual control with documented key ceremonies ([HSMs & Key Management](/books/payments/key-management)). The PCI assessment spends much of its time here.

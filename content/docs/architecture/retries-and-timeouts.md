@@ -25,7 +25,7 @@ The question isn't "did it fail?", it's "if I send this again, can it happen twi
 | Situation | Retry? |
 | --------- | ------ |
 | Connection refused, DNS failure, reset before the request was sent | Yes. Nothing reached the server |
-| Timeout or dropped connection after the request was sent | Idempotent requests: yes. Writes: only with the same [Idempotency-Key](/docs/payments/idempotency) |
+| Timeout or dropped connection after the request was sent | Idempotent requests: yes. Writes: only with the same [Idempotency-Key](/docs/requests/idempotency) |
 | `409 Conflict` (same idempotency key still executing) | Yes, same key, after a short wait |
 | `429 Too Many Requests` | Yes, after `Retry-After` (see [Rate Limiting](/docs/requests/rate-limiting)) |
 | `502`, `503`, `504` | Yes, with backoff (and the same key for writes) |

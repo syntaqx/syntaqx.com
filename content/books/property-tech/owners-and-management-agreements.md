@@ -73,7 +73,7 @@ x base fee 3.00%                                             2,778
 
 Two methods compute that basis, and they answer the questions differently:
 
-- **By application.** Assess the fee on each payment as it's applied to a charge, by the charge's code: rent at 3%, late fees at 100% (where the agreement gives late fees to the manager), deposits at 0%. This is precise and naturally handles reversals: when a payment returns, its applications reverse, and so does the fee on them ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)).
+- **By application.** Assess the fee on each payment as it's applied to a charge, by the charge's code: rent at 3%, late fees at 100% (where the agreement gives late fees to the manager), deposits at 0%. This is precise and naturally handles reversals: when a payment returns, its applications reverse, and so does the fee on them ([Payments Are Applied, Not Assigned](/docs/money/payment-states#payments-are-applied-not-assigned)).
 - **By ledger activity.** Sum the activity in a set of income accounts for the period and apply the rate. This fits agreements written in accounting terms ("3% of total income per the operating statement") and commercial agreements with fees on recoveries, and it depends on the chart of accounts being mapped right ([Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#the-chart-of-accounts)).
 
 Both need the same decisions written down per agreement:
@@ -82,11 +82,11 @@ Both need the same decisions written down per agreement:
 - **Prepayments.** Rent paid in March for April is cash in March; the fee is usually taken when it's earned, not when it arrives, and a platform that pays fees on prepaid rent and then refunds the rent has overpaid the manager.
 - **Minimums and maximums.** "3% or $250 a month, whichever is greater" for small properties; caps in some institutional agreements.
 - **Returned payments.** A fee taken on a payment that bounces is reversed in the period the return posts, not by editing the old period.
-- **Rounding.** Per payment or per period; the totals differ by cents across hundreds of payments, and the owner's accountant will find it ([Rounding](/docs/payments/money#rounding)).
+- **Rounding.** Per payment or per period; the totals differ by cents across hundreds of payments, and the owner's accountant will find it ([Rounding](/docs/money/amounts#rounding)).
 
 Beyond the base fee, agreements add **leasing fees** (a flat amount or a share of first month's rent per new lease), **renewal fees**, **construction management fees** (5% of completed cost of capital projects over $10,000 per item in the 2010 agreement; [Budgets, Forecasts & Capital Projects](/books/property-tech/budgets-and-capital-projects#capital-projects-and-job-costing) computes the cost), **fees on ancillary contracts** (10% of upfront payments for cable, internet and laundry agreements in the same agreement), **setup and termination fees**, and **markups** on maintenance billed at a rate above cost. Each is a fee rule with a trigger (a lease signed, a project closed, a contract executed) rather than a percentage of a period's receipts.
 
-A **fee run** computes every fee for a period across the portfolio, posts each as a ledger transaction moving money from the owner's funds to the manager's income, and stores its inputs: the rule version, the basis amount, the payments or ledger lines in the basis, and the result. Rerunning a closed period never changes it; a correction posts an adjustment in the open period with a link to what it corrects ([Closed Periods Stay Closed](/docs/payments/accounting#closed-periods-stay-closed)).
+A **fee run** computes every fee for a period across the portfolio, posts each as a ledger transaction moving money from the owner's funds to the manager's income, and stores its inputs: the rule version, the basis amount, the payments or ledger lines in the basis, and the result. Rerunning a closed period never changes it; a correction posts an adjustment in the open period with a link to what it corrects ([Closed Periods Stay Closed](/docs/money/accounting#closed-periods-stay-closed)).
 
 ## Reimbursements and Allocated Costs
 
@@ -313,7 +313,7 @@ CREATE TABLE tax_profiles (                           -- owners; vendors keep TI
 
 How it runs:
 
-1. **Fee runs read the ledger as of the period close,** never live tables, and post one balanced transaction per assessment, from the owner's funds to the manager's fee income ([Double-Entry Ledger](/docs/payments/payment-states#double-entry-ledger)).
+1. **Fee runs read the ledger as of the period close,** never live tables, and post one balanced transaction per assessment, from the owner's funds to the manager's fee income ([Double-Entry Ledger](/docs/money/payment-states#double-entry-ledger)).
 2. **The distribution run is after the fee run and the reconciliation,** and refuses to distribute from a trust account with an open reconciliation difference.
 3. **Every distribution line is a ledger balance,** and `calculation` stores them, so the statement and the distribution explain each other.
 4. **A missing or expired tax form is a hold,** not a warning; for foreign owners without a W-8ECI the run withholds at the configured rate.

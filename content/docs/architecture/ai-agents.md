@@ -114,7 +114,7 @@ An agent on a phone line or an anonymous chat widget doesn't know who it's talki
 
 Caller ID is spoofable and chat is anonymous, so the strong checks happen through a channel the account already owns. A bank's card-freeze agent sends a push to the bank's app ("Freeze card ending 4417?") and freezes only when the customer approves there, so the decision is authenticated by the app, not by how convincing the caller sounded. Prefer actions whose worst case is mild for the weak tiers: a freeze is safe to make easy, an unfreeze is not.
 
-Never let the model hear, read or repeat card numbers, bank details or one-time codes. Send a payment link or route the customer to a secure capture step outside the conversation, so those values never reach transcripts ([Phone Payments](/books/payments/phone-payments), [Sensitive Data](/docs/payments/sensitive-data)).
+Never let the model hear, read or repeat card numbers, bank details or one-time codes. Send a payment link or route the customer to a secure capture step outside the conversation, so those values never reach transcripts ([Phone Payments](/books/payments/phone-payments), [Sensitive Data](/docs/security/sensitive-data)).
 
 ## Emergencies Skip the Model
 
@@ -187,7 +187,7 @@ What the agent tells a customer binds you the way an employee's statement would.
 
 A transcript holds names, addresses, account details and whatever else customers say, and a recording holds their voice. Treat both as personal data from the start.
 
-- **Classify and redact.** Transcripts get a [classification](/docs/payments/sensitive-data#classify-every-field), and card numbers, codes and government IDs are redacted before storage (better: never collected, per the identity section above).
+- **Classify and redact.** Transcripts get a [classification](/docs/security/sensitive-data#classify-every-field), and card numbers, codes and government IDs are redacted before storage (better: never collected, per the identity section above).
 - **Retention and erasure.** Give transcripts and recordings a retention window tied to the records they support, and include them, plus every copy in eval sets and analytics, in the [erasure pipeline](/docs/architecture/data-retention#erasure-requests).
 - **Know where they go.** Your model provider and voice vendor are processors: check what they retain, for how long, and whether they may train on it, and put it in the contract ([GDPR & Privacy](/docs/compliance/gdpr#controllers-processors-and-the-dpa)).
 

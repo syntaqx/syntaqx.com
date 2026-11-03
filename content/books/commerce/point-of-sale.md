@@ -107,7 +107,7 @@ Offline is more than payments. Prices and promotions changed in the back office 
 
 My rules for a POS offline mode:
 
-- **Generate IDs on the device.** Every sale, line and tender gets its ID and idempotency key on the register, so the upload can be retried without creating a second sale ([Idempotency](/docs/payments/idempotency)).
+- **Generate IDs on the device.** Every sale, line and tender gets its ID and idempotency key on the register, so the upload can be retried without creating a second sale ([Idempotency](/docs/requests/idempotency)).
 - **Mark everything taken offline.** The order and each payment carry `taken_offline = true` and the device's timestamp; a card tender is `collected_offline` until forwarded and authorized, never `authorized`.
 - **Cap the risk in configuration.** Per-payment and per-device totals, a maximum session length, and the tenders allowed offline, all per merchant, enforced on the device.
 - **Collect a contact.** Shopify requires the customer's phone or email for an offline card sale; it's the only way to recover a decline.
@@ -229,7 +229,7 @@ Design notes:
 - **Tenders are the POS view; `order_payments` is the money.** A tender exists the moment the cashier takes it, even offline and even for cash; `order_payments` rows are created when the processor or ledger has something to point at. Cash tenders never have one unless the merchant's ledger records cash; gift card tenders point at `gift_card_transactions`.
 - **The device's clock and the server's.** `device_placed_at` and `device_created_at` say when the sale happened in the store; `placed_at` and `created_at` say when the server learned of it. Reports by business day use the device time in the location's time zone ([Business Dates, Business Days and Holidays](/docs/fundamentals/time#business-dates-business-days-and-holidays)); anything about upload delay uses the gap.
 - **Cash arithmetic is a constraint.** `tendered = amount + change_given` for cash makes a miskeyed change amount impossible to store, and the drawer's expected balance in [Store Operations](/books/commerce/store-operations#how-to-build-it) sums `amount`, not `tendered`.
-- **Card data never lands here.** Tenders carry the brand, last four and authorization code inside the Payments records they point at; the POS database never holds a card number ([Sensitive Data](/docs/payments/sensitive-data), [P2PE: Encrypt at the Glass](/books/payments/card-present#p2pe-encrypt-at-the-glass)).
+- **Card data never lands here.** Tenders carry the brand, last four and authorization code inside the Payments records they point at; the POS database never holds a card number ([Sensitive Data](/docs/security/sensitive-data), [P2PE: Encrypt at the Glass](/books/payments/card-present#p2pe-encrypt-at-the-glass)).
 - **Events.** `order.placed` with `channel = 'pos'`, `tender.collected_offline`, `tender.forwarded`, `tender.declined_after_offline` and `pos_device.stale` are what inventory, accounting and alerting subscribe to ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)).
 
 ## Auditing

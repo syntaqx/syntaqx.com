@@ -40,7 +40,7 @@ Two exceptions prove the rule. **Balance checks before money leaves** (a payout,
 
 ## Idempotency End to End
 
-An idempotency key at the API protects one hop. A payment crosses many, and each can fail after doing its work and before reporting it. The design is a chain of keys, each derived from the one before, so a retry at any point lands on the same record downstream ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)):
+An idempotency key at the API protects one hop. A payment crosses many, and each can fail after doing its work and before reporting it. The design is a chain of keys, each derived from the one before, so a retry at any point lands on the same record downstream ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)):
 
 1. **API request.** The client's `Idempotency-Key`, scoped to the merchant, with the request's parameters stored beside it so a reused key with a different body is rejected rather than replayed.
 2. **Payment and attempt.** The payment row is unique on merchant and key, as the [core data model](/books/payments/card-payments#the-core-data-model) has it. Each attempt at a processor carries a key derived from the payment and the attempt number, which is what lets a timeout be resolved by query rather than by a second charge ([Failover Without Double Charging](/books/payments/processor-routing#failover-without-double-charging)).

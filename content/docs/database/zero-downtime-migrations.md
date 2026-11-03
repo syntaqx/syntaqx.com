@@ -75,7 +75,7 @@ Some DDL takes an `ACCESS EXCLUSIVE` lock that blocks every read and write on th
 
 ## Financial Tables
 
-On ledger and payment tables the bar is higher. Backfills never modify existing financial rows in place: those rows are [append-only](/docs/payments/payment-states), and an in-place backfill is exactly the untraceable edit the ledger exists to prevent. New derived columns are filled from the history, and reconciliation runs before and after to prove no balance changed.
+On ledger and payment tables the bar is higher. Backfills never modify existing financial rows in place: those rows are [append-only](/docs/money/payment-states), and an in-place backfill is exactly the untraceable edit the ledger exists to prevent. New derived columns are filled from the history, and reconciliation runs before and after to prove no balance changed.
 
 ## References
 

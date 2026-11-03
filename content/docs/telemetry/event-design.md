@@ -78,7 +78,7 @@ The conventions are the rest of the playbook's, applied to events:
 
 - **IDs are opaque [UUID v7](/docs/fundamentals/identifier-conventions),** including the event ID, which the client generates so retries can be deduplicated ([Collecting Events](/docs/telemetry/collection)).
 - **Times are [RFC 3339 in UTC](/docs/fundamentals/time)** and end in `_at`. A business date ends in `_on` and is assigned in the business's zone, not the device's.
-- **Money is an integer amount in minor units with a `currency`,** per [Money & Amounts](/docs/payments/money). `total: 45.99` in an event is how revenue dashboards drift from the ledger.
+- **Money is an integer amount in minor units with a `currency`,** per [Money & Amounts](/docs/money/amounts). `total: 45.99` in an event is how revenue dashboards drift from the ledger.
 - **Units go in the name** when they aren't obvious: `duration_ms`, `distance_m`, `file_size_bytes`.
 - **Enumerations are lowercase strings from a declared list,** never free text. A free-text property is where personal data leaks in unnoticed, and where `Card`, `card` and `credit card` become three payment methods.
 - **No personal data in properties by default.** The user is referenced by ID. An email, a name, a phone number or a free-text search query needs a stated purpose and goes through [Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy).

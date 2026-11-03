@@ -52,7 +52,7 @@ An order in flight has at least three state machines, and most bugs come from co
 
 - **The order** (placed, then open until every line is fulfilled or cancelled, then closed). On a delivery order it also has accepted, preparing and ready ([The Order Lifecycle](/books/commerce/orders-dispatch-and-batching#the-order-lifecycle)).
 - **Each fulfillment** (open, on hold, scheduled, requested from the provider, accepted, in progress, shipped or closed, cancelled), one per location and provider. Shopify's fulfillment order states are a fair template.
-- **The payment** (authorized, partially captured, captured, partially refunded, refunded, voided, expired), which the Payments volume owns ([Explicit State Machines](/docs/payments/payment-states#explicit-state-machines)).
+- **The payment** (authorized, partially captured, captured, partially refunded, refunded, voided, expired), which the Payments volume owns ([Explicit State Machines](/docs/money/payment-states#explicit-state-machines)).
 
 The order's own status is then mostly a rollup: partially fulfilled when some fulfillments shipped and others didn't, fulfilled when every line is shipped or cancelled. Amazon's `PartiallyShipped` and Shopify's `IN_PROGRESS` (set when a fulfillment covers only part of a fulfillment order) are the same rollup seen from two sides. My rule: store the fulfillment and payment states, derive the order's display status from them, and never let a person or an integration set "fulfilled" on the order directly; it then can't disagree with its own fulfillments.
 
@@ -80,7 +80,7 @@ A hold stops work on an order, or on one of its fulfillments, without cancelling
 
 Each hold is a row: what it holds (the whole order or one fulfillment), its kind, who placed it, a note, an expiry and how it ended. Holds stack (an order can wait on fraud and address at once), and release happens only when the last active hold ends. Two rules come from how holds fail:
 
-- **Every hold has a clock.** An authorization expires while an order sits in review ([Authorizations Expire](/docs/payments/payment-states#authorizations-expire)); a shipping promise runs out while it waits for stock. A hold without an expiry or an escalation becomes an order nobody ships.
+- **Every hold has a clock.** An authorization expires while an order sits in review ([Authorizations Expire](/docs/money/payment-states#authorizations-expire)); a shipping promise runs out while it waits for stock. A hold without an expiry or an escalation becomes an order nobody ships.
 - **A hold must reach the building.** Shopify won't let fulfillment start on a held fulfillment order; a 3PL that already has the order needs a cancellation request or its own hold, which only works before picking. Holds belong before release, which is why fraud and address checks run as early as they can.
 
 ## Edits and Cancellations
@@ -90,7 +90,7 @@ Customers change their minds, and staff fix mistakes. The edit model is the same
 An edit touches four other systems, and the OMS sequences them:
 
 - **Inventory.** An added line reserves stock; a removed one releases it ([Reservations](/books/commerce/inventory#reservations)).
-- **Payment.** A higher total needs a new authorization or an incremental one where the network and the merchant category allow it; a lower total is a partial capture or a refund ([Holds That Change Size](/docs/payments/payment-states#holds-that-change-size)). [Order Edits and Changing Totals](/books/commerce/taking-payment#order-edits-and-changing-totals) covers the capture plans.
+- **Payment.** A higher total needs a new authorization or an incremental one where the network and the merchant category allow it; a lower total is a partial capture or a refund ([Holds That Change Size](/docs/money/payment-states#holds-that-change-size)). [Order Edits and Changing Totals](/books/commerce/taking-payment#order-edits-and-changing-totals) covers the capture plans.
 - **Tax and promotions.** Tax is recalculated on the new lines; a discount that required a minimum may no longer apply, and the edit has to decide whether the customer keeps it.
 - **The building.** If a fulfillment was already released, the change is a cancellation request plus a new fulfillment, and it may be refused.
 
@@ -269,7 +269,7 @@ Design notes:
 - **Edits keep the before and after.** `total_before`, `total_after` and the payment action are what the payment step executes and what a refund dispute reads. A committed edit emits `order.edited` with its deltas, and consumers apply edits in order by ID.
 - **Sourcing rules are versioned data.** A rule change is a new version with a validity range, and each decision names the version it ran, so a new rule can be replayed against last month's orders before it goes live ([Replay and Shadow Testing](/docs/architecture/weighing-objectives#replay-and-shadow-testing)).
 - **Rejections create attempts.** A rejected fulfillment triggers a new `sourcing_decisions` row with the rejecting location excluded; the attempts on one order are its routing history.
-- **Releases use `SKIP LOCKED`.** Several release workers can take fulfillments without double-sending one ([SKIP LOCKED for Work Queues](/docs/database/transactions-and-concurrency#skip-locked-for-work-queues)), and each request to a provider carries an idempotency key derived from the fulfillment ID ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
+- **Releases use `SKIP LOCKED`.** Several release workers can take fulfillments without double-sending one ([SKIP LOCKED for Work Queues](/docs/database/transactions-and-concurrency#skip-locked-for-work-queues)), and each request to a provider carries an idempotency key derived from the fulfillment ID ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
 
 ## Auditing
 

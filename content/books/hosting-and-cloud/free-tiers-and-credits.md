@@ -51,7 +51,7 @@ The hyperscalers combine them: AWS's free plan is a credit grant, a trial clock 
 
 Trials also carry restrictions, and the restrictions are where the fraud controls live. Google's trial forbids GPUs, Marketplace purchases, quota increases and Windows Server VMs; Azure's free account requires a pay-as-you-go upgrade before quota increases; AWS's free plan blocks "some services that large enterprises typically use"; Railway restricts outbound network until verification. Each is a quota or a permission ceiling that the conversion lifts, so in the model they are `quotas` rows with `source = 'risk'` that end when the plan changes, not code paths that check a flag.
 
-How a trial converts is a separate legal question. Google states that there are no automatic charges; Azure and AWS require an explicit upgrade; Railway and Fly.io require a card to continue. A trial that converts to a paid subscription without a new affirmative act is an automatic renewal under state law, and [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law) owns the rules ([The Law of Automatic Renewal](/docs/payments/subscriptions#the-law-of-automatic-renewal)).
+How a trial converts is a separate legal question. Google states that there are no automatic charges; Azure and AWS require an explicit upgrade; Railway and Fly.io require a card to continue. A trial that converts to a paid subscription without a new affirmative act is an automatic renewal under state law, and [Subscriptions, Renewals & Cancellation Law](/books/hosting-and-cloud/renewals-and-cancellation-law) owns the rules ([The Law of Automatic Renewal](/docs/money/subscriptions#the-law-of-automatic-renewal)).
 
 ## How It Got Here
 
@@ -103,7 +103,7 @@ The hard part is latency. Usage is rated minutes to hours after it happens, so a
 
 ## Credits on the Books
 
-Credits are money for accounting even when they aren't cash for the customer. DigitalOcean's 10-K describes the common treatment: credits earned with a purchase are "recorded as contract liabilities when earned" and "recognized at the earlier of redemption or expiration"; its promotional and referral credits "typically expire in two months or less if not used." Unused credit that expires is breakage, and the playbook's [Breakage](/docs/payments/accounting#breakage) section covers when it is recognized and why the product must keep the redemption history that lets finance estimate it.
+Credits are money for accounting even when they aren't cash for the customer. DigitalOcean's 10-K describes the common treatment: credits earned with a purchase are "recorded as contract liabilities when earned" and "recognized at the earlier of redemption or expiration"; its promotional and referral credits "typically expire in two months or less if not used." Unused credit that expires is breakage, and the playbook's [Breakage](/docs/money/accounting#breakage) section covers when it is recognized and why the product must keep the redemption history that lets finance estimate it.
 
 Hosting adds four twists:
 
@@ -310,10 +310,10 @@ Notes on the sketch:
 
 - **A program is versioned by new rows.** Changing a program's amount, exclusions or validity creates a new `credit_programs` row with its own `available_during`; grants keep pointing at the terms the customer accepted.
 - **Allowances aren't credits.** Always-free limits are `plan_versions.included` and are consumed during rating ([Allowances, Tiers and Monthly Caps](/books/hosting-and-cloud/metering-and-rating#allowances-tiers-and-monthly-caps)); only money goes through `credit_grants`. A coverage-rate program (Google's second year) is applied per line at its rate, capped by the grant, in the same function.
-- **The invoice run writes the allocations** as `invoice_lines` with `line_kind = 'credit'`, a negative amount and `credit_grant_id`, rounded once by the written rule ([Rounding](/docs/payments/money#rounding)); the preview runs the same function without writing, so the balance a customer sees mid-month is the one the invoice will produce.
+- **The invoice run writes the allocations** as `invoice_lines` with `line_kind = 'credit'`, a negative amount and `credit_grant_id`, rounded once by the written rule ([Rounding](/docs/money/amounts#rounding)); the preview runs the same function without writing, so the balance a customer sees mid-month is the one the invoice will produce.
 - **Trial restrictions are quotas.** No GPUs, no quota increases and restricted egress are `quotas` rows with `source = 'risk'` and the trial period as their range; conversion ends them.
 - **The cap is a hold.** When provisional spend reaches `amount` less `margin_pct` (or the credit balance reaches zero), the limit's `action` becomes an `account_holds` row with `reason = 'spending_limit'`; removing or raising the limit lifts it. Overshoot past a hard limit becomes a `credit_grants` row of kind `goodwill`.
-- **Breakage is computed, not posted by the product.** Expired remaining balances are reported to finance by cohort with their issue and redemption history; the product never edits a balance to recognize them ([Breakage](/docs/payments/accounting#breakage)).
+- **Breakage is computed, not posted by the product.** Expired remaining balances are reported to finance by cohort with their issue and redemption history; the product never edits a balance to recognize them ([Breakage](/docs/money/accounting#breakage)).
 - **Events:** `credit.granted`, `credit.applied`, `credit.expiring` (at the thresholds the program sets: AWS sends 50%, 25% and 10% remaining, and 15, 7 and 2 days left), `credit.expired`, `credit.voided`, `trial.ending`, `trial.ended`, `spending_limit.reached` and `spending_limit.removed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, billing and risk.
 
 ## Auditing
@@ -322,7 +322,7 @@ Notes on the sketch:
 - **Every drawdown.** Which grant paid which line in which invoice, so a balance can be rebuilt and the expiry order shown to have been followed.
 - **Every void and why.** The fraud case or terms violation behind it, and the drawdowns already made, which the terms say can be reclaimed.
 - **Every trial and limit transition.** When a trial ended, which restrictions lifted, when a spending limit was reached and what it stopped, and whether anything billed above a hard limit was credited back.
-- **Breakage by cohort.** Issue date, amount, redemptions and expiry per program, for finance's estimate and for unclaimed property rules where they reach credits ([Breakage](/docs/payments/accounting#breakage)).
+- **Breakage by cohort.** Issue date, amount, redemptions and expiry per program, for finance's estimate and for unclaimed property rules where they reach credits ([Breakage](/docs/money/accounting#breakage)).
 
 ## What This Means for the System You Build
 

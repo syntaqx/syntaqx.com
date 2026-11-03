@@ -274,7 +274,7 @@ The details that decide whether it works:
 
 ### Updating Ratings
 
-Rating updates consume `match.completed` events, never a poll of the matches table. An abandoned or remade match must not update anyone, and a match reversed for cheating must undo its updates, which is why `rating_events` is append-only with a `reversal` kind: League's Vanguard posts describe undoing matches and returning LP to players who faced cheaters ([Anti-Cheat](/books/gaming/anti-cheat)). The update is idempotent on (rating, match, kind), so a redelivered event changes nothing ([Idempotency](/docs/payments/idempotency)). Snapshot the ratings and the model version at match formation (`rating_before`, `rating_model_id`), so the update uses what the matchmaker used, even if a placement adjustment arrived mid-match.
+Rating updates consume `match.completed` events, never a poll of the matches table. An abandoned or remade match must not update anyone, and a match reversed for cheating must undo its updates, which is why `rating_events` is append-only with a `reversal` kind: League's Vanguard posts describe undoing matches and returning LP to players who faced cheaters ([Anti-Cheat](/books/gaming/anti-cheat)). The update is idempotent on (rating, match, kind), so a redelivered event changes nothing ([Idempotency](/docs/requests/idempotency)). Snapshot the ratings and the model version at match formation (`rating_before`, `rating_model_id`), so the update uses what the matchmaker used, even if a placement adjustment arrived mid-match.
 
 ### Fairness Metrics
 

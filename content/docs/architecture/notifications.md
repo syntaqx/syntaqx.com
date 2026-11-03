@@ -53,8 +53,8 @@ CREATE INDEX consent_events_tenant_id_contact_point_idx
   ON consent_events (tenant_id, contact_point, channel, purpose, occurred_at DESC);
 ```
 
-- **Never update, never delete.** A revocation is a new row. When someone claims they opted out in March, the ledger shows whether they did, by what method, and what the system did next. It's the [Payment States & Ledgers](/docs/payments/payment-states) rule applied to permission.
-- **Keep the disclosure.** `disclosure_id` points at the exact consent text the person saw, versioned like any other legal text, because "I agreed to receive texts" means nothing without what they were told. The consent text is a `messaging_consent` row in the same versioned [disclosures](/docs/payments/subscriptions#consent-and-reminders-as-data) table renewal terms use.
+- **Never update, never delete.** A revocation is a new row. When someone claims they opted out in March, the ledger shows whether they did, by what method, and what the system did next. It's the [Payment States & Ledgers](/docs/money/payment-states) rule applied to permission.
+- **Keep the disclosure.** `disclosure_id` points at the exact consent text the person saw, versioned like any other legal text, because "I agreed to receive texts" means nothing without what they were told. The consent text is a `messaging_consent` row in the same versioned [disclosures](/docs/money/subscriptions#consent-and-reminders-as-data) table renewal terms use.
 - **One ledger for the whole platform.** The messaging service, the dialer, the marketing tool, the support inbox and any AI agent all read the same projection and append to the same ledger. A second opt-out list in a vendor tool is the classic failure: two systems texting one number, and a STOP that only reached one of them. If a vendor must keep its own list, sync both ways and treat a mismatch as an incident.
 - **Revocations come from everywhere.** A STOP reply, an unsubscribe click, an email that says "please stop texting me", a support agent noting a request on a call. Each becomes a `revoke` row with its method and evidence, written before anything acknowledges it.
 - **Erasure doesn't erase revocations.** When a person's data is deleted ([Data Retention & Deletion](/docs/architecture/data-retention)), keep a suppression for the contact point, ideally as a keyed hash, so they aren't re-added from an old import and messaged again.
@@ -124,7 +124,7 @@ The design decision that matters: **a scheduled message is a claim about the fut
 - **Drop what's gone stale.** A day-before reminder deferred by quiet hours until after the appointment is dropped, not delivered late. A message has an expiry along with its due time.
 - **Re-check consent and quiet hours.** A revocation between scheduling and sending wins.
 
-Duplicates come from at-least-once delivery, as everywhere else. Give each message an **idempotency key built from (subject, purpose, occurrence)**: `invoice 0193b1c4-…, payment_reminder, 2026-11-01`. A unique constraint on the key makes a redelivered event or retried job a no-op ([Idempotency](/docs/payments/idempotency)). The occurrence is what distinguishes legitimate repeats (the second reminder, next month's statement) from duplicates.
+Duplicates come from at-least-once delivery, as everywhere else. Give each message an **idempotency key built from (subject, purpose, occurrence)**: `invoice 0193b1c4-…, payment_reminder, 2026-11-01`. A unique constraint on the key makes a redelivered event or retried job a no-op ([Idempotency](/docs/requests/idempotency)). The occurrence is what distinguishes legitimate repeats (the second reminder, next month's statement) from duplicates.
 
 ## Templates and Localization
 

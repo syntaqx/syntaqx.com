@@ -64,7 +64,7 @@ A support agent compensating a player for a purchase that never arrived:
 }
 ```
 
-IDs are [UUID v7](/docs/fundamentals/identifier-conventions), times are UTC [RFC 3339](/docs/fundamentals/time), field names follow the [JSON conventions](/docs/requests/json-conventions). Store `changes` as a structured diff, not a sentence, because you'll query it: "every grant over 1,000 gems by this agent this month" is a filter, not a regex. Never put secrets, tokens or card numbers in it ([Sensitive Data](/docs/payments/sensitive-data)), and keep personal data out where an ID will do, which matters again under [erasure](#privacy-erasure-and-the-audit-store).
+IDs are [UUID v7](/docs/fundamentals/identifier-conventions), times are UTC [RFC 3339](/docs/fundamentals/time), field names follow the [JSON conventions](/docs/requests/json-conventions). Store `changes` as a structured diff, not a sentence, because you'll query it: "every grant over 1,000 gems by this agent this month" is a filter, not a regex. Never put secrets, tokens or card numbers in it ([Sensitive Data](/docs/security/sensitive-data)), and keep personal data out where an ID will do, which matters again under [erasure](#privacy-erasure-and-the-audit-store).
 
 ### Typed Actors
 
@@ -108,7 +108,7 @@ COMMIT;
 
 Never write the audit entry after the commit from a background job. It works in testing and fails exactly when the system is struggling, which is when the history matters most.
 
-Event sourcing pays for itself where the history *is* the product: the money [ledger](/docs/payments/payment-states#append-only-records), consent, agreements. Not everywhere.
+Event sourcing pays for itself where the history *is* the product: the money [ledger](/docs/money/payment-states#append-only-records), consent, agreements. Not everywhere.
 
 **Offline clients** record their own audit entries with device time, a monotonic sequence number and, where it matters, location, and upload them as they happened, rather than the server inventing them at sync time. When the server rejects or merges a stale offline edit, that resolution is an audit entry too.
 
@@ -116,7 +116,7 @@ Event sourcing pays for itself where the history *is* the product: the money [le
 
 Records get corrected: a bank fee charged in error, a wrong ban, an order shipped to the wrong address. The question is how the change is kept.
 
-- **Corrections are new versions or new entries.** The [ledger rule](/docs/payments/payment-states#append-only-records) generalizes: a reversed fee is a reversal plus a correct entry, not an edited amount. A lifted ban is an `unban` with its own actor and reason, not a deleted `ban`.
+- **Corrections are new versions or new entries.** The [ledger rule](/docs/money/payment-states#append-only-records) generalizes: a reversed fee is a reversal plus a correct entry, not an edited amount. A lifted ban is an `unban` with its own actor and reason, not a deleted `ban`.
 - **A decision that's reviewed gets a second decision.** A fraud reviewer approving a held payment adds a decision rather than overwriting the model's; a manager overturning a moderator does the same.
 - **Seal what's final.** When a record reaches a final state (an order fulfilled, a claim settled, a month closed), store a hash over its canonical form. Later edits are amendments with a required reason, and the original stays readable.
 - **Restrict who can amend what,** and make the restriction tighter as the record ages and matters more: a same-day note is easy, an edit on a billed or disputed record needs a manager.

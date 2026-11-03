@@ -89,13 +89,13 @@ Migrate the signed authorization with the account, as a document linked to the p
 
 No processor exports subscriptions, and Payabli's import guides say the same in reverse: payment history, invoices and recurring schedules don't transfer. Recurring billing moves from your own records. Two rules decide whether customers notice.
 
-**Keep the billing anchor.** Stripe's subscription migration guide says a customer with six months left on a yearly subscription must keep that term, with `billing_cycle_anchor` and `start_date` reflecting it; its toolkit says to "cancel old subscriptions before they charge so you don't double-bill," and if a billing date is close, to "schedule the new Stripe subscription to start after the last charge from the old subscription." The same rule holds on any processor: an imported subscription carries its original start date, current period, next billing date and price version ([Periods and Anchors](/docs/payments/subscriptions#periods-and-anchors)), and starts in the future so it can be reviewed before it bills.
+**Keep the billing anchor.** Stripe's subscription migration guide says a customer with six months left on a yearly subscription must keep that term, with `billing_cycle_anchor` and `start_date` reflecting it; its toolkit says to "cancel old subscriptions before they charge so you don't double-bill," and if a billing date is close, to "schedule the new Stripe subscription to start after the last charge from the old subscription." The same rule holds on any processor: an imported subscription carries its original start date, current period, next billing date and price version ([Periods and Anchors](/docs/money/subscriptions#periods-and-anchors)), and starts in the future so it can be reviewed before it bills.
 
 **Carry the dunning state.** A subscription in the middle of dunning has a history the new processor doesn't know:
 
 - **Retry counts belong to the card,** and the networks count them. Visa limits reattempts per card over 30 days and Mastercard charges for excessive retries ([Declines, and the Rules on Retrying](/books/payments/stored-credentials#declines-and-the-rules-on-retrying)), so a card retried three times on the old processor is not a fresh card on the new one. Persist attempts per credential, across processors.
 - **Stop codes carry over.** A Mastercard merchant advice code `03` ("do not try again") or `21` (payment cancellation) received on the old processor still applies; a credential revoked there is revoked everywhere.
-- **Grace periods and service state carry over.** A customer in a grace period keeps its end date; a suspended account doesn't reactivate because its subscription was re-created ([Dunning](/docs/payments/subscriptions#dunning)).
+- **Grace periods and service state carry over.** A customer in a grace period keeps its end date; a suspended account doesn't reactivate because its subscription was re-created ([Dunning](/docs/money/subscriptions#dunning)).
 
 Never let both processors bill the same subscription. The rule is mechanical: one system owns each subscription at a time, recorded as data, and the cutover flips ownership in one transaction.
 
@@ -127,7 +127,7 @@ Set a stop rule before each cohort: if its authorization rate falls more than an
 
 ## Reconciling the Overlap
 
-For weeks or months, money moves through both processors, and the ledger has to explain all of it ([Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger)).
+For weeks or months, money moves through both processors, and the ledger has to explain all of it ([Payment States & Ledgers](/docs/money/payment-states#double-entry-ledger)).
 
 - **Two settlement files, one ledger.** Each processor's payouts and fees import as ledger entries attributed to their route, reconciled daily, as in [One Ledger, Many Settlement Files](/books/payments/processor-routing#one-ledger-many-settlement-files).
 - **Refunds and disputes on the old route.** A refund for a payment taken before cutover goes back through the old processor; a dispute arrives there too. Keep the old integration's credentials, webhooks and dispute workflow alive until the longest dispute window on its last payment has passed.

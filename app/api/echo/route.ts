@@ -36,7 +36,7 @@ registry.registerPath({
   operationId: "createEcho",
   summary: "Create an echo (idempotency demo)",
   description:
-    "Creates an echo of a JSON object with a new id and timestamp, so every call is a new side effect. Send an `Idempotency-Key` to make retries safe: the same key and body replay the original response with `Idempotent-Replayed: true`; the same key with a different body is a 400; a retry while the first is still running is a 409. Keys are kept 24 hours, scoped to your IP. See https://www.syntaqx.com/docs/payments/idempotency.",
+    "Creates an echo of a JSON object with a new id and timestamp, so every call is a new side effect. Send an `Idempotency-Key` to make retries safe: the same key and body replay the original response with `Idempotent-Replayed: true`; the same key with a different body is a 400; a retry while the first is still running is a 409. Keys are kept 24 hours, scoped to your IP. See https://www.syntaqx.com/docs/requests/idempotency.",
   tags: ["Playbook"],
   request: {
     headers: z.object({

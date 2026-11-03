@@ -67,7 +67,7 @@ The Payments volume's [Pricing Per Merchant](/books/payments/software-platforms#
 
 Whose name is on the card statement, who refunds and who absorbs a chargeback depend on the marketplace's payment model ([Who Pays the Fee](/books/payments/software-platforms#who-pays-the-fee); [Four Ways In](/books/payments/software-platforms#four-ways-in)). Outdoorsy's terms describe it as a limited payment collection agent for the host; Airbnb runs licensed payment entities (a US money transmitter, an EEA payment institution, a UK e-money institution and a Canadian payment service provider) and holds guest funds until check-in, which is when it recognizes its revenue. The model affects pricing in two places: the fee lines are earned by different parties (a collection agent's host fee is a deduction from the host's payout; a guest fee is the platform's revenue at once or on recognition), and taxes follow whoever the law treats as the seller or facilitator.
 
-Multi-currency is the other money-path decision. Airbnb integrated payments in about 50 currencies and added more than 20 local payment methods (Pix, UPI, M-Pesa, Blik and others) in about 14 months, with a payment-method configuration shared by its backend and frontend. Prices are set in the listing's currency, quoted in the guest's, and the conversion rate used is frozen on the booking like every other line ([Multi-Currency](/docs/payments/multi-currency)).
+Multi-currency is the other money-path decision. Airbnb integrated payments in about 50 currencies and added more than 20 local payment methods (Pix, UPI, M-Pesa, Blik and others) in about 14 months, with a payment-method configuration shared by its backend and frontend. Prices are set in the listing's currency, quoted in the guest's, and the conversion rate used is frozen on the booking like every other line ([Multi-Currency](/docs/money/multi-currency)).
 
 ## Usage Charges
 
@@ -124,7 +124,7 @@ What the rules do to the quote:
 
 ## Marketplace Facilitator Tax
 
-Since states began taxing remote sales after *South Dakota v. Wayfair*, state marketplace facilitator laws have made marketplaces calculate, collect and remit sales tax on third-party sales ([US Economic Nexus](/docs/payments/sales-tax#us-economic-nexus)). For goods the platform becomes the collector: Etsy calculates, collects and remits US sales tax using the seller's listing category, and sellers indemnify Etsy for a miscategorized item.
+Since states began taxing remote sales after *South Dakota v. Wayfair*, state marketplace facilitator laws have made marketplaces calculate, collect and remit sales tax on third-party sales ([US Economic Nexus](/docs/money/sales-tax#us-economic-nexus)). For goods the platform becomes the collector: Etsy calculates, collects and remits US sales tax using the seller's listing category, and sellers indemnify Etsy for a miscategorized item.
 
 Rentals are harder because the taxes are different taxes. Outdoorsy collects and remits sales and use, excise, motor vehicle rental and peer-to-peer vehicle sharing taxes in listed jurisdictions, leaves hosts responsible elsewhere (some must still file zero returns), and excludes bookings hosts take through its separate fleet software. Turo's S-1 disputed that it is a car rental company subject to rental-car taxes, said marketplace facilitator laws apply to it only in some cases, and carried an indirect tax reserve of $5.5 million at the end of 2020. Lodging taxes for stays (Airbnb collects and remits occupancy taxes where it has agreements or a legal duty) are the Property Tech volume's [Lodging Taxes](/books/property-tech/short-term-rentals#lodging-taxes).
 
@@ -133,7 +133,7 @@ The design follows the lodging tax model there:
 - **Taxes are rules per jurisdiction and product,** effective-dated, with the taxable base by line kind (is the delivery fee taxable? the platform fee? the protection plan?).
 - **Who remits is a second rule,** per tax, per jurisdiction, per date: the platform as facilitator, or the host.
 - **Every booking gets tax lines,** each marked with its remitter. Platform-remitted tax is the platform's liability to the authority; host-remitted tax is a line the host is responsible for, shown to them for filing.
-- **Tax is a quote until the booking finalizes,** and post-trip charges and refunds adjust it ([Tax Is a Quote Until the Invoice Finalizes](/docs/payments/sales-tax#tax-is-a-quote-until-the-invoice-finalizes)). Outdoorsy refunds taxes in proportion to the charges refunded.
+- **Tax is a quote until the booking finalizes,** and post-trip charges and refunds adjust it ([Tax Is a Quote Until the Invoice Finalizes](/docs/money/sales-tax#tax-is-a-quote-until-the-invoice-finalizes)). Outdoorsy refunds taxes in proportion to the charges refunded.
 
 Seller tax reporting (1099-K, DAC7) belongs to [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#information-returns-1099-k-1099-misc-and-1042-s).
 
@@ -286,7 +286,7 @@ ALTER TABLE bookings
 Design decisions behind it:
 
 - **Current prices and frozen quotes are different tables.** `rate_overrides`, `pricing_rules` and `listing_add_ons` are current state that hosts and tools change; `booking_lines` is what this guest agreed to, never recomputed. A refund, a payout, a tax return and a drip-pricing claim all read the lines.
-- **Each line says who pays, who earns and how it displays.** `payer` and `earner` drive the ledger postings (the host fee reduces the host's payable; the guest fee is platform revenue; tax is a liability to the authority; protection is owed to the plan) ([Payment States & Ledgers](/docs/payments/payment-states)); `display_class` drives the all-in total; `refundable` drives cancellations.
+- **Each line says who pays, who earns and how it displays.** `payer` and `earner` drive the ledger postings (the host fee reduces the host's payable; the guest fee is platform revenue; tax is a liability to the authority; protection is owed to the plan) ([Payment States & Ledgers](/docs/money/payment-states)); `display_class` drives the all-in total; `refundable` drives cancellations.
 - **The total is a sum, never a field to edit.** `bookings.total_amount` equals the sum of quote and change lines; a check on write keeps it honest. Post-trip lines are collected separately and don't change the agreed total.
 - **Fee programs are versioned terms.** The booking keeps the program versions it was priced under, so a fee change, a migration to host-only fees or a new tier never reprices an existing booking.
 - **Recommendations are logged with their outcome,** so the pricing tool can be explained to a host and measured by the platform.

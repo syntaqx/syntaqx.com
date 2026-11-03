@@ -54,7 +54,7 @@ Every broker worth using delivers **at least once**, because the only way to gua
 - **Or make the handler naturally idempotent.** "Set status to captured" is safe to repeat. "Add 100 to the balance" looks fine in testing and double-credits in production.
 - **Acknowledge after the work commits,** never before. Acknowledging first turns a crash mid-handler into a lost event.
 
-See [Idempotency](/docs/payments/idempotency) for the same rule at the API boundary, and [Webhooks](/docs/api-design/webhooks) for it across organizations.
+See [Idempotency](/docs/requests/idempotency) for the same rule at the API boundary, and [Webhooks](/docs/api-design/webhooks) for it across organizations.
 
 ## Ordering
 

@@ -103,7 +103,7 @@ Building it in:
 
 - **A message thread can become an episode.** When a clinician decides a thread is evaluation and management, the system opens an e-visit episode on that date, counts the clinician's time on the thread for 7 days, and produces the charge at close with the code the time supports.
 - **Not every message is billable.** Scheduling, refill requests, results questions and follow-ups within a visit's window are triaged by staff and never become episodes; the triage decision is recorded.
-- **Tell the patient before they're billed.** The portal states, when a message is sent, that a clinical question may be billed, with the patient's choice to request a visit instead, and the notice shown is recorded with the message ([Consent and Reminders as Data](/docs/payments/subscriptions#consent-and-reminders-as-data) is the same pattern for subscriptions).
+- **Tell the patient before they're billed.** The portal states, when a message is sent, that a clinical question may be billed, with the patient's choice to request a visit instead, and the notice shown is recorded with the message ([Consent and Reminders as Data](/docs/money/subscriptions#consent-and-reminders-as-data) is the same pattern for subscriptions).
 - **Response expectations are policy, not promises.** The portal shows the practice's stated response time and routes urgent symptoms to a call or emergency message rather than an inbox ([Emergencies Skip the Model](/docs/architecture/ai-agents#emergencies-skip-the-model) applies to AI triage of the same inbox).
 
 ## CMS's Health Tech Ecosystem

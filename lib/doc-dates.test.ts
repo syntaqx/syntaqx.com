@@ -5,11 +5,11 @@ const S = "\u0001";
 const log = [
   `${S}c3${S}2026-10-22T12:00:00-06:00`,
   "",
-  "content/docs/payments/idempotency.md",
-  "content/docs/payments/money.md",
+  "content/docs/requests/idempotency.md",
+  "content/docs/money/amounts.md",
   `${S}c2${S}2026-09-01T09:00:00-06:00`,
   "",
-  "content/docs/payments/money.md",
+  "content/docs/money/amounts.md",
   "content/docs/api-design/webhooks.md",
   `${S}c1${S}2026-05-10T08:00:00-06:00`,
   "",
@@ -20,8 +20,8 @@ const log = [
 describe("parseLastModified()", () => {
   it("keeps each file's newest commit date", () => {
     const dates = parseLastModified(log);
-    expect(dates.get("content/docs/payments/idempotency.md")).toBe("2026-10-22T12:00:00-06:00");
-    expect(dates.get("content/docs/payments/money.md")).toBe("2026-10-22T12:00:00-06:00");
+    expect(dates.get("content/docs/requests/idempotency.md")).toBe("2026-10-22T12:00:00-06:00");
+    expect(dates.get("content/docs/money/amounts.md")).toBe("2026-10-22T12:00:00-06:00");
     expect(dates.get("content/docs/api-design/webhooks.md")).toBe("2026-09-01T09:00:00-06:00");
     expect(dates.get("content/docs/fundamentals/time.md")).toBe("2026-05-10T08:00:00-06:00");
   });
@@ -57,15 +57,15 @@ describe("parseLastModified()", () => {
 describe("parseFirstAdded()", () => {
   it("keeps each file's oldest commit date", () => {
     const dates = parseFirstAdded(log);
-    expect(dates.get("content/docs/payments/idempotency.md")).toBe("2026-10-22T12:00:00-06:00");
-    expect(dates.get("content/docs/payments/money.md")).toBe("2026-09-01T09:00:00-06:00");
+    expect(dates.get("content/docs/requests/idempotency.md")).toBe("2026-10-22T12:00:00-06:00");
+    expect(dates.get("content/docs/money/amounts.md")).toBe("2026-09-01T09:00:00-06:00");
     expect(dates.get("content/docs/api-design/webhooks.md")).toBe("2026-05-10T08:00:00-06:00");
   });
 
   it("drops files first seen at a shallow boundary", () => {
     const dates = parseFirstAdded(log, new Set(["c1"]));
     expect(dates.has("content/docs/api-design/webhooks.md")).toBe(false);
-    expect(dates.get("content/docs/payments/money.md")).toBe("2026-09-01T09:00:00-06:00");
+    expect(dates.get("content/docs/money/amounts.md")).toBe("2026-09-01T09:00:00-06:00");
   });
 
   it("follows moves back to the original path, and dates a re-added file from its newer add", () => {

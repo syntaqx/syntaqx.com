@@ -75,9 +75,9 @@ The engineering follows from that table:
 
 ![Async payment flow: the customer is redirected from checkout to their bank, approves the payment there, and is returned to the merchant with the order still pending; the provider's webhook, not the redirect, marks the payment received, and a status check covers a webhook that never arrives.](/diagrams/async-payment.svg "The redirect isn't the result. The customer may never come back, and coming back proves nothing; the provider's webhook or your own status check is what moves the order from pending to paid.")
 
-- **Every method needs its own states.** A card is authorized and then captured; a push is awaiting funds and then received; a debit is submitted, settled and then final weeks later. Forcing them into one card-shaped state machine is how a returned direct debit becomes a shipped order that nobody paid for. [Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final) holds the rule: each method's states are explicit, and the ledger records the difference between settled and final.
+- **Every method needs its own states.** A card is authorized and then captured; a push is awaiting funds and then received; a debit is submitted, settled and then final weeks later. Forcing them into one card-shaped state machine is how a returned direct debit becomes a shipped order that nobody paid for. [Payment States & Ledgers](/docs/money/payment-states#settled-is-not-final) holds the rule: each method's states are explicit, and the ledger records the difference between settled and final.
 - **Refunds are a new payment.** On a push rail there's nothing to reverse; a refund is a credit you send, with its own failure modes (a closed account, a wrong IBAN that Verification of Payee would have caught).
-- **Currency is part of the method.** Pix is reais, UPI is rupees, SEPA is euros. [Multi-Currency & FX](/docs/payments/multi-currency) covers what presenting and settling in each costs.
+- **Currency is part of the method.** Pix is reais, UPI is rupees, SEPA is euros. [Multi-Currency & FX](/docs/money/multi-currency) covers what presenting and settling in each costs.
 
 ## References
 

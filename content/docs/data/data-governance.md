@@ -42,7 +42,7 @@ My classes, coarse on purpose:
 | Internal | Order totals, plan, usage counts, pseudonymous IDs | Readable by all data users |
 | Personal | Name, email, phone, address, IP address, device ID | Masked by default; unmasked for an approved purpose |
 | Sensitive | Health, precise location history, government IDs, children's data, payroll | Excluded from the warehouse where possible; otherwise restricted role, logged reads |
-| Prohibited | Card numbers, CVV, passwords, secrets | Never loaded ([Sensitive Data](/docs/payments/sensitive-data)) |
+| Prohibited | Card numbers, CVV, passwords, secrets | Never loaded ([Sensitive Data](/docs/security/sensitive-data)) |
 
 Warehouses help with discovery. Snowflake's classification assigns each column a semantic category ("the type of personal attribute") and a privacy category of `IDENTIFIER`, `QUASI_IDENTIFIER` or `SENSITIVE`, stored as system tags, and can classify a database automatically ([Snowflake: Sensitive data classification](https://docs.snowflake.com/en/user-guide/classify-intro)). Quasi-identifiers deserve the attention: a postcode, a birth date and a gender are each harmless and together often identify a person.
 

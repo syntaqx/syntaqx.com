@@ -64,7 +64,7 @@ The rules behind the table:
 - **Every table has `created_at`, and `updated_at` when rows change.** One name everywhere, not `inserted_at` in some tables. Soft deletes are `deleted_at`, never a boolean, so you know when (see [Data Retention & Deletion](/docs/architecture/data-retention)).
 - **Booleans are `NOT NULL`.** A nullable boolean has three values, and the third is always a bug.
 - **Prefer `TEXT` to `VARCHAR(255)`.** In Postgres they perform the same, and `255` is a habit inherited from other databases, not a real limit. When a value genuinely has a maximum length, say so with a named `CHECK` constraint.
-- **Money follows [Money & Amounts](/docs/payments/money):** integer minor units in `BIGINT`, always with a currency beside it.
+- **Money follows [Money & Amounts](/docs/money/amounts):** integer minor units in `BIGINT`, always with a currency beside it.
 
 ## Enumerations
 

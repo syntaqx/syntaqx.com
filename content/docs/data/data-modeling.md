@@ -46,7 +46,7 @@ CREATE TABLE fct_order_lines (
 );
 ```
 
-The business date is assigned once, in the location's zone ([Time & Date Formats](/docs/fundamentals/time#business-dates-business-days-and-holidays)); money is integer minor units with its currency ([Money](/docs/payments/money)). Facts carry measures that add up: an amount sums across lines, days and stores. Ratios and averages are not stored as facts, because an average of averages is wrong; store the numerator and the denominator and compute the ratio at query time or in the [semantic layer](#semantic-layers).
+The business date is assigned once, in the location's zone ([Time & Date Formats](/docs/fundamentals/time#business-dates-business-days-and-holidays)); money is integer minor units with its currency ([Money](/docs/money/amounts)). Facts carry measures that add up: an amount sums across lines, days and stores. Ratios and averages are not stored as facts, because an average of averages is wrong; store the numerator and the denominator and compute the ratio at query time or in the [semantic layer](#semantic-layers).
 
 ## Conformed Dimensions
 

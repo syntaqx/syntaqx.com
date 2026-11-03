@@ -1,5 +1,5 @@
 /**
- * Idempotency-Key handling, per /docs/payments/idempotency.
+ * Idempotency-Key handling, per /docs/requests/idempotency.
  *
  * The first request with a key claims it (`in_progress`), runs, and stores
  * its response (`completed`) for 24 hours. A retry with the same key and the

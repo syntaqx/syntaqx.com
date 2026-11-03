@@ -75,7 +75,7 @@ Whether the provider or your own code runs the ceremony, every signature or acce
 - **The certificate:** the provider's completion certificate or audit trail, stored next to the document.
 - **Delivery of the signed copy:** channel, address, time and result.
 
-This is personal data kept for legal reasons, so classify it like any other field ([Sensitive Data](/docs/payments/sensitive-data#classify-every-field)) and keep it out of general-purpose logs. [Audit Trails & Records](/books/field-operations/audit-trails-and-records#e-signature-evidence) shows the same list applied to field service, for example.
+This is personal data kept for legal reasons, so classify it like any other field ([Sensitive Data](/docs/security/sensitive-data#classify-every-field)) and keep it out of general-purpose logs. [Audit Trails & Records](/books/field-operations/audit-trails-and-records#e-signature-evidence) shows the same list applied to field service, for example.
 
 ## Click-Through Terms Are Signatures Too
 

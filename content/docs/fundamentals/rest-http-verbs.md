@@ -26,7 +26,7 @@ That's the practical case for REST ([Fielding's dissertation](https://ics.uci.ed
 | `PATCH` | No | Only if the patch format makes it so | Yes |
 | `POST` | No | No | Yes |
 
-The definitions come from [RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2) and [RFC 5789](https://datatracker.ietf.org/doc/html/rfc5789). The practical consequence: everything in the idempotent "No" column needs its own retry story ([Idempotency](/docs/payments/idempotency)), and everything in the "Yes" column gets one for free.
+The definitions come from [RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110#section-9.2) and [RFC 5789](https://datatracker.ietf.org/doc/html/rfc5789). The practical consequence: everything in the idempotent "No" column needs its own retry story ([Idempotency](/docs/requests/idempotency)), and everything in the "Yes" column gets one for free.
 
 ## GET: Read
 

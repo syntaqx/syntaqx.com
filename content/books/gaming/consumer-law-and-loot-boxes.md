@@ -221,7 +221,7 @@ Publishing a version runs checks the database can't express on its own: entries'
 
 - **On the server, never the client.** The client asks; the server rolls, grants and records. A client that rolls can be made to roll whatever its owner likes ([Anti-Cheat](/books/gaming/anti-cheat)).
 - **From a cryptographically secure generator,** drawing an integer in `[0, total_weight)` without modulo bias (rejection sampling, or the language's uniform-integer function), then walking the cumulative weights in a fixed order. Record the drawn value, so any opening can be replayed against its version and produce the same item.
-- **Exactly once.** The purchase, the currency spend, the roll, the grant and the pity counter update are one transaction with one idempotency key, so a retried request returns the original result instead of a second roll ([Idempotency](/docs/payments/idempotency)). A player who can retry until they like the result has found a free reroll.
+- **Exactly once.** The purchase, the currency spend, the roll, the grant and the pity counter update are one transaction with one idempotency key, so a retried request returns the original result instead of a second roll ([Idempotency](/docs/requests/idempotency)). A player who can retry until they like the result has found a free reroll.
 
 ### Pity and the Effective Rate
 

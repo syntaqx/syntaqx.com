@@ -7,7 +7,7 @@ part = "How Money Moves"
 tags = ["payments", "cross-border", "fx", "currency", "swift", "dcc"]
 +++
 
-A payment crosses a border whenever two of its parties sit in different countries, and the card networks, the banks and the regulators each charge for it in their own way. A US merchant's sale to a German cardholder costs more than the same sale to a Texan, declines more often, may convert currency twice, and refunds to a different number of dollars than it collected. A provider paying a French seller in euros from a dollar balance runs a currency trade and a bank transfer that may pass through two or three banks on the way. None of that is visible in a checkout that just shows a price. The mechanics of storing amounts in two currencies, locking a rate and booking the difference are in [Multi-Currency & FX](/docs/payments/multi-currency); this chapter is what the industry around those mechanics does, what it costs, and what a provider has to build. The seller's side (markets, merchants of record, customs and duties) is the Commerce volume's [Cross-Border Commerce](/books/commerce/cross-border-commerce). [Payments in Canada](/books/payments/canada) and [Payments in the EU & UK](/books/payments/eu-and-uk) cover the rules of specific destinations.
+A payment crosses a border whenever two of its parties sit in different countries, and the card networks, the banks and the regulators each charge for it in their own way. A US merchant's sale to a German cardholder costs more than the same sale to a Texan, declines more often, may convert currency twice, and refunds to a different number of dollars than it collected. A provider paying a French seller in euros from a dollar balance runs a currency trade and a bank transfer that may pass through two or three banks on the way. None of that is visible in a checkout that just shows a price. The mechanics of storing amounts in two currencies, locking a rate and booking the difference are in [Multi-Currency & FX](/docs/money/multi-currency); this chapter is what the industry around those mechanics does, what it costs, and what a provider has to build. The seller's side (markets, merchants of record, customs and duties) is the Commerce volume's [Cross-Border Commerce](/books/commerce/cross-border-commerce). [Payments in Canada](/books/payments/canada) and [Payments in the EU & UK](/books/payments/eu-and-uk) cover the rules of specific destinations.
 
 ## How the Platforms Do It
 
@@ -27,7 +27,7 @@ The large providers sell the same three things, priced differently: acceptance o
 
 ## More Than Two Currencies
 
-[Two Currencies, Two Names](/docs/payments/multi-currency#two-currencies-two-names) separates **presentment** (what the customer sees and is charged) from **settlement** (what lands with the merchant's provider). A provider sees a third: the **funding currency**, the currency of the bank account the merchant's payout actually goes to. And the card adds a fourth outside your control: the cardholder's **billing currency**, which the issuer converts into if it differs from the presentment currency.
+[Two Currencies, Two Names](/docs/money/multi-currency#two-currencies-two-names) separates **presentment** (what the customer sees and is charged) from **settlement** (what lands with the merchant's provider). A provider sees a third: the **funding currency**, the currency of the bank account the merchant's payout actually goes to. And the card adds a fourth outside your control: the cardholder's **billing currency**, which the issuer converts into if it differs from the presentment currency.
 
 | Currency | Chosen by | Example | Where it lives in your system |
 | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ The large providers sell the same three things, priced differently: acceptance o
 | Settlement | The acquirer and the merchant's contract | USD from the processor | The settlement amount and rate on the payment |
 | Funding | The merchant's payout account | EUR to a French IBAN | The payout's currency, and a conversion if it differs from the balance |
 
-Each pair that differs is a conversion, and each conversion has a rate, a source, a time and someone who bears the difference. A US merchant charging a Swiss card in euros and settling in dollars has two conversions in one sale: the issuer's (euros to francs, the cardholder's problem) and the acquirer's or provider's (euros to dollars, yours or the merchant's). The ledger stores every amount in its own currency and every conversion as a linked pair of balanced legs ([Storing Both Amounts](/docs/payments/multi-currency#storing-both-amounts)).
+Each pair that differs is a conversion, and each conversion has a rate, a source, a time and someone who bears the difference. A US merchant charging a Swiss card in euros and settling in dollars has two conversions in one sale: the issuer's (euros to francs, the cardholder's problem) and the acquirer's or provider's (euros to dollars, yours or the merchant's). The ledger stores every amount in its own currency and every conversion as a linked pair of balanced legs ([Storing Both Amounts](/docs/money/multi-currency#storing-both-amounts)).
 
 ## What Makes a Card Payment Cross-Border
 
@@ -79,7 +79,7 @@ The break-even is a calculation, not a principle: the fee and approval-rate diff
 
 ## Dynamic Currency Conversion
 
-[Dynamic Currency Conversion](/docs/payments/multi-currency#dynamic-currency-conversion) offers a foreign cardholder the price in their own currency, converted at a rate the merchant's provider sets. The networks permit it under rules strict enough to read as warnings. Visa's require the merchant to:
+[Dynamic Currency Conversion](/docs/money/multi-currency#dynamic-currency-conversion) offers a foreign cardholder the price in their own currency, converted at a rate the merchant's provider sets. The networks permit it under rules strict enough to read as warnings. Visa's require the merchant to:
 
 - tell the cardholder DCC is optional, and not use language or procedures, such as pre-selecting the DCC option, that make it the default;
 - get the cardholder's express agreement;
@@ -113,7 +113,7 @@ A rate needs a source, and the sources differ in whether anyone will trade at th
 - **Network rates are what card conversions use.** Visa's currency conversion rate is "a rate set by Visa from the range of rates available (not necessarily executed) in wholesale currency markets", or a government-mandated one. An issuer may add an optional issuer fee as a percentage on top, which is the cardholder's foreign transaction fee; when VisaNet converts into the acquirer's settlement currency, Visa's rate applies unadjusted.
 - **Provider rates are what you'll actually get.** A payment provider or FX provider quotes a rate it will execute, usually a mid-market rate plus a spread, and the spread is its revenue.
 
-A provider that converts for merchants is an FX intermediary: it gets rates from one or more liquidity providers or banks, adds a markup, quotes it with an expiry, and executes and settles the conversion later. [Locking a Quoted Rate](/docs/payments/multi-currency#locking-a-quoted-rate) covers the quote object. The provider-scale additions:
+A provider that converts for merchants is an FX intermediary: it gets rates from one or more liquidity providers or banks, adds a markup, quotes it with an expiry, and executes and settles the conversion later. [Locking a Quoted Rate](/docs/money/multi-currency#locking-a-quoted-rate) covers the quote object. The provider-scale additions:
 
 - **The quote's lifetime is a priced option.** Stripe charges more for a day's lock than for five minutes, and sets a rate threshold on extended locks (3.5% for payments, 1% for transfers, in its preview); Airwallex's guaranteed rates carry a validity period the same way. Price each lock duration, cap exposure per merchant and currency pair, and expire quotes on time.
 - **Quotes reference the upstream quote.** When your quote is backed by a liquidity provider's, store both, so the spread you earned on each conversion is a fact rather than an estimate.
@@ -143,7 +143,7 @@ Where no local rail reaches, money moves by international wire, which is a chain
 
 ## FX Risk on Refunds and Disputes
 
-A refund weeks after the sale, or a dispute months after it, converts at a different rate than the sale did, and someone carries the difference. [Refunds and FX Gains and Losses](/docs/payments/multi-currency#refunds-and-fx-gains-and-losses) sets the rule (refund the customer exactly what they paid, in their currency, and book the difference explicitly). The industry's behavior is what makes it necessary:
+A refund weeks after the sale, or a dispute months after it, converts at a different rate than the sale did, and someone carries the difference. [Refunds and FX Gains and Losses](/docs/money/multi-currency#refunds-and-fx-gains-and-losses) sets the rule (refund the customer exactly what they paid, in their currency, and book the difference explicitly). The industry's behavior is what makes it necessary:
 
 - **Standard conversion uses the rate at refund time.** Stripe's documented example: a 60 USD payment converted at 0.88 settles 52.80 EUR to the merchant; refunded when the rate is 0.86, Stripe deducts 51.60 EUR. The customer gets 60 USD back either way. The merchant gained 1.20 EUR here, and loses when the rate moves the other way.
 - **Some products hold the original rate.** Stripe's Adaptive Pricing refunds at the same exchange rate as the original transaction, because the customer paid for the guarantee.
@@ -164,7 +164,7 @@ Cross-border payments are where sanctions screening does its real work, because 
 
 ## How to Build It
 
-The changes below extend the core `payments`, `refunds`, `payouts` and `merchants` tables from [the core data model](/books/payments/card-payments#the-core-data-model), the `merchant_accounts` of [Payments for Software Platforms](/books/payments/software-platforms#how-to-build-it), one per merchant ID (MID) with its country and processor, the payout columns of [Payouts & Settlement](/books/payments/payouts-and-settlement#how-to-build-it), and the amount fields of [Multi-Currency & FX](/docs/payments/multi-currency#storing-both-amounts).
+The changes below extend the core `payments`, `refunds`, `payouts` and `merchants` tables from [the core data model](/books/payments/card-payments#the-core-data-model), the `merchant_accounts` of [Payments for Software Platforms](/books/payments/software-platforms#how-to-build-it), one per merchant ID (MID) with its country and processor, the payout columns of [Payouts & Settlement](/books/payments/payouts-and-settlement#how-to-build-it), and the amount fields of [Multi-Currency & FX](/docs/money/multi-currency#storing-both-amounts).
 
 ```sql
 -- A merchant has one account per entity and country it acquires in;

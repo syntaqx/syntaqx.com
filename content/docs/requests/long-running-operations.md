@@ -33,7 +33,7 @@ Location: /operations/019a0b70-1e2f-7a3b-8c4d-5e6f7a8b9c0d
 Retry-After: 5
 ```
 
-The response body is the operation resource (below), so the client doesn't need a second request to see it. An [Idempotency-Key](/docs/payments/idempotency) makes the `POST` safe to retry: a client that lost the `202` sends the same request again and gets the same operation back, not a second job.
+The response body is the operation resource (below), so the client doesn't need a second request to see it. An [Idempotency-Key](/docs/requests/idempotency) makes the `POST` safe to retry: a client that lost the `202` sends the same request again and gets the same operation back, not a second job.
 
 ## The Operation Resource
 
@@ -58,7 +58,7 @@ The response body is the operation resource (below), so the client doesn't need 
 | `failed` | Done; `error` uses the standard [error format](/docs/requests/error-responses) |
 | `canceled` | Stopped at the client's request |
 
-Terminal states are terminal, as in [Payment States & Ledgers](/docs/payments/payment-states): a client that has seen `succeeded` never wonders whether it might change. Errors that stop the work being accepted at all (validation, auth) are ordinary `4xx` responses to the original request, never a `failed` operation. Validate everything you can before returning `202`, so a typo surfaces in seconds, not after polling a job that was doomed from the start.
+Terminal states are terminal, as in [Payment States & Ledgers](/docs/money/payment-states): a client that has seen `succeeded` never wonders whether it might change. Errors that stop the work being accepted at all (validation, auth) are ordinary `4xx` responses to the original request, never a `failed` operation. Validate everything you can before returning `202`, so a typo surfaces in seconds, not after polling a job that was doomed from the start.
 
 ### Operation or Pending Resource?
 

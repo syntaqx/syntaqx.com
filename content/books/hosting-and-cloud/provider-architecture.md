@@ -119,7 +119,7 @@ Metering is the seam between the data plane and money. Every data-plane componen
 The architecture rules come from where the pipeline sits:
 
 - **The data plane emits, never waits.** A hypervisor that can't reach the collector buffers locally and sends later; it never stops a VM because the meter is down. Usage is late more often than lost, so rating runs in event time and late events become adjustments on the next invoice.
-- **Idempotent at every hop.** Each event carries the producer's key, unique per source, so replays and double-sends from collectors are no-ops ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
+- **Idempotent at every hop.** Each event carries the producer's key, unique per source, so replays and double-sends from collectors are no-ops ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
 - **Usage feeds controls, with a lag.** Spend caps, budgets, free-tier limits and fraud detection all read the same stream, and the delay shows in the providers' own documentation: Vercel checks usage "every few minutes" before acting on a budget ([Spend Caps and Pauses](/books/hosting-and-cloud/paas-and-frontend-clouds#spend-caps-and-pauses)). A design that promises a hard cap has to state its lag.
 - **Reconcile against the data plane.** A daily count of running resources by kind, compared with the resources that emitted usage for the day, finds silent meters before customers find free compute.
 

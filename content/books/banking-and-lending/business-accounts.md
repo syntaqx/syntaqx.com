@@ -69,7 +69,7 @@ Business platforms sell many accounts per customer: Relay 20 checking accounts p
 Two designs sit behind the word. A sub-account can be a separate deposit account at the bank with its own number (Relay describes its sub-accounts as checking accounts), or a bucket inside one account that exists only in the program's ledger. The first gives each envelope routing and account numbers that can receive ACH and wires directly; the second is cheaper and invisible to the bank. Either way two rules hold:
 
 - **Insurance doesn't multiply.** Every sub-account of the same company at the same bank is the same depositor in the same category, aggregated to one $250,000 ([How a Bank Computes Insured Amounts](/books/banking-and-lending/deposit-insurance#how-a-bank-computes-insured-amounts)). Twenty accounts at one bank are not $5 million of coverage; twenty banks are, which is what a sweep does.
-- **Transfer rules are money movements.** "Move 30% of every deposit to Taxes" or "keep payroll at $80,000" is a scheduled or triggered book transfer, each one a journal entry with an idempotency key derived from its trigger, so a retried rule doesn't move the money twice ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
+- **Transfer rules are money movements.** "Move 30% of every deposit to Taxes" or "keep payroll at $80,000" is a scheduled or triggered book transfer, each one a journal entry with an idempotency key derived from its trigger, so a retried rule doesn't move the money twice ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
 
 ## Users, Roles and Approvals
 

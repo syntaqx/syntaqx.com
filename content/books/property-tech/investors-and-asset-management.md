@@ -110,7 +110,7 @@ The fund's books are a set of entity books in the same ledger as the properties'
 - **Income is allocated,** from the property entities upward, by each layer's ownership share and allocation rules.
 - **Consolidation and eliminations** produce the fund's statements from the layers below, which only works if every layer uses mapped charts of accounts and closes on time.
 
-The platform doesn't choose the fund's accounting policies ([The Product Keeps Facts, Finance Picks Policy](/docs/payments/accounting#the-product-keeps-facts-finance-picks-policy)); it keeps every fact those policies need, dated and by entity, so that finance can produce book and tax views from the same entries.
+The platform doesn't choose the fund's accounting policies ([The Product Keeps Facts, Finance Picks Policy](/docs/money/accounting#the-product-keeps-facts-finance-picks-policy)); it keeps every fact those policies need, dated and by entity, so that finance can produce book and tax views from the same entries.
 
 ## Data from Third-Party Managers
 
@@ -340,7 +340,7 @@ CREATE TABLE external_datasets (                      -- provenance for market d
 How it runs:
 
 1. **Indirect ownership is computed on a date** by walking `ownership_shares` upward, and cached only per report with the date it was computed for.
-2. **Capital calls post receivables** per commitment; receipts apply to them like any payment ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)).
+2. **Capital calls post receivables** per commitment; receipts apply to them like any payment ([Payments Are Applied, Not Assigned](/docs/money/payment-states#payments-are-applied-not-assigned)).
 3. **A waterfall run reads capital accounts as of the distribution date,** fills tiers in order, stores every allocation with its tier, posts ledger entries per investor, and only then applies withholding and creates payouts.
 4. **Manager submissions publish only when accepted,** and a resubmission for a published period posts the difference into the open period, linked to the version it replaces.
 5. **Datasets without provenance can't be attached** to valuations, reports or models.

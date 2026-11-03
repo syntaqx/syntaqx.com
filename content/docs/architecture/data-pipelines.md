@@ -109,7 +109,7 @@ An orchestrator runs the steps in order, retries failures, backfills ranges and 
 
 Analytics copies data, and every copy is in scope for your [privacy obligations](/docs/compliance/gdpr). The warehouse often ends up holding the most complete, least protected copy of customer data in the company.
 
-- **Minimize at ingestion.** Don't load fields analytics doesn't need. Hash or tokenize identifiers that are only needed for joins. Card data never enters the warehouse in any form; see [Sensitive Data](/docs/payments/sensitive-data).
+- **Minimize at ingestion.** Don't load fields analytics doesn't need. Hash or tokenize identifiers that are only needed for joins. Card data never enters the warehouse in any form; see [Sensitive Data](/docs/security/sensitive-data).
 - **Classify columns** as personal or sensitive, and use the warehouse's column-level access controls and masking so most analysts see aggregates or masked values.
 - **Erasure has to reach the warehouse,** including raw tables, snapshots and exports ([Data Retention](/docs/architecture/data-retention)).
 - **Raw data has retention too,** the tension with "keep everything for rebuilds." Keep raw history as long as you can justify, partitioned by time so expiring it is cheap, and document the window.
@@ -136,7 +136,7 @@ Once a metric decides money (a commission, a bonus, a royalty, a revenue share, 
 
 - **Version every definition.** The SQL or YAML lives in version control with an author, a reviewer, an effective date and a reason. Settings that change a metric without touching code (a threshold, a weighting, an attribution window) are logged with who changed them, when, and the before and after values.
 - **Stamp outputs with the version.** Every row a payout, scorecard or invoice reads carries the definition version that built it, so a disputed number can be recomputed exactly as it was.
-- **Freeze what was paid.** A closed period's figures are snapshotted, not recomputed from live data on each read. A late correction (a refund after payroll, a callback linked after the commission run) posts as an adjustment to the next open period, with a reference to the record it corrects, the same way a [ledger](/docs/payments/payment-states) corrects with new entries rather than edits.
+- **Freeze what was paid.** A closed period's figures are snapshotted, not recomputed from live data on each read. A late correction (a refund after payroll, a callback linked after the commission run) posts as an adjustment to the next open period, with a reference to the record it corrects, the same way a [ledger](/docs/money/payment-states) corrects with new entries rather than edits.
 - **Log manual overrides.** Excusing a late delivery for weather or reclassifying a cancellation reason changes someone's pay. Each override is an attributed action with a reason, reviewable by someone other than the person it benefits.
 
 ### Assign the Business Date Once

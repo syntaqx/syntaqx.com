@@ -28,7 +28,7 @@ Every table and every log stream has a documented retention period and an automa
 | Data | Example retention | Why |
 | ---- | ----------------- | --- |
 | Request logs | 30 days | Debugging and abuse investigation rarely need older logs |
-| Idempotency keys | 24 hours | The retry window in [Idempotency](/docs/payments/idempotency) |
+| Idempotency keys | 24 hours | The retry window in [Idempotency](/docs/requests/idempotency) |
 | Webhook events | 30 days | Replay for [Webhooks](/docs/api-design/webhooks) consumers |
 | Soft-deleted user content | 30 days | An undo window, then gone |
 | Financial records | Per legal requirement, often years | Tax, audit and anti-money-laundering rules |
@@ -51,13 +51,13 @@ Business records and [audit trails](/docs/architecture/audit-trails) are the har
 Under [GDPR Article 17](https://gdpr-info.eu/art-17-gdpr/), a person can ask for their personal data to be erased, with [one month](https://gdpr-info.eu/art-12-gdpr/) to respond. A month sounds generous until the data is spread across twelve services, three vendors and a warehouse.
 
 - **One erasure pipeline,** not a checklist. A request fans out as an [event](/docs/architecture/events), every service holding personal data handles it and reports back, and the request isn't complete until all of them have. A checklist is followed perfectly once and then drifts.
-- **Know where personal data lives.** Every field has a [classification](/docs/payments/sensitive-data), so finding personal data is a query, not an archaeology project.
+- **Know where personal data lives.** Every field has a [classification](/docs/security/sensitive-data), so finding personal data is a query, not an archaeology project.
 - **Erase from derived stores too:** search indexes, caches, [analytics warehouses](/docs/architecture/data-pipelines), third-party processors. That's where erasure usually fails, because nobody thinks of a search index as a copy.
 - **Keep proof.** Record that the request was received and completed, without keeping the data that was erased.
 
 ## Erasure vs Append-Only Records
 
-Financial records are [append-only](/docs/payments/payment-states), and usually legally required for years, which looks like a direct conflict with erasure. GDPR anticipates it: Article 17(3)(b) exempts data needed to comply with a legal obligation, and 17(3)(e) data needed for legal claims. The workable answer is to separate identity from the record:
+Financial records are [append-only](/docs/money/payment-states), and usually legally required for years, which looks like a direct conflict with erasure. GDPR anticipates it: Article 17(3)(b) exempts data needed to comply with a legal obligation, and 17(3)(e) data needed for legal claims. The workable answer is to separate identity from the record:
 
 - **Keep personal data out of ledger rows.** A ledger entry references `customer_id`, never a name or email. Then there's nothing personal in the rows you can't delete.
 - **Pseudonymize on erasure.** The customer record is scrubbed (name, email and address removed or replaced), and the ID stays, so the ledger still balances and the books still reconcile.

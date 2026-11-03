@@ -103,7 +103,7 @@ Language-model agents make the conversational part easier and the risks larger: 
 
 **Support applies the clawback rule; it doesn't invent one.** An agent's refund button calls the one algorithm in [Refunds, Chargebacks and Clawbacks](/books/gaming/economies-and-entitlements#refunds-chargebacks-and-clawbacks), with the policy for spent currency decided before launch; every grant, revocation and goodwill credit is an entitlement or [ledger](/books/gaming/economies-and-entitlements#wallets-are-ledgers) entry with a reason, never a balance edit. A chargeback is never by itself a reason to lock the account ([The FTC's Orders](/books/gaming/consumer-law-and-loot-boxes#the-ftc-s-orders)).
 
-**Missing grants are a reconciliation problem.** Most "paid but didn't get it" tickets are a grant that failed after a successful charge. A job that reconciles store transactions against grants and fixes the gaps (idempotently, keyed by the store's transaction ID, as [Idempotency](/docs/payments/idempotency) describes) prevents the ticket instead of answering it.
+**Missing grants are a reconciliation problem.** Most "paid but didn't get it" tickets are a grant that failed after a successful charge. A job that reconciles store transactions against grants and fixes the gaps (idempotently, keyed by the store's transaction ID, as [Idempotency](/docs/requests/idempotency) describes) prevents the ticket instead of answering it.
 
 ## Account Recovery
 

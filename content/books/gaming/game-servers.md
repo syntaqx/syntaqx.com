@@ -93,7 +93,7 @@ A **fleet** is a set of identical game servers (one build, one location) kept wa
 
 Allocation has three properties to get right:
 
-- **Idempotent.** The matchmaker will retry. Key each allocation by the match id (the `allocation_key` above), so a retry returns the same server instead of a second one ([Idempotency](/docs/payments/idempotency) has the pattern).
+- **Idempotent.** The matchmaker will retry. Key each allocation by the match id (the `allocation_key` above), so a retry returns the same server instead of a second one ([Idempotency](/docs/requests/idempotency) has the pattern).
 - **Atomic.** Two concurrent requests must never get the same server. Orchestrators handle this; a homemade allocator needs a compare-and-set on the server's state.
 - **Placed.** The request carries where the players are (latencies to regions, or a region list in preference order), so the allocator picks the right fleet ([Regions and Latency-Based Placement](#regions-and-latency-based-placement)).
 

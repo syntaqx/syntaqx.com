@@ -32,7 +32,7 @@ A merchant can have several bank accounts, each for a different kind of money. P
 
 ## Fees Are Separate Entries
 
-A $50.00 charge with a 2.9% plus $0.30 fee shouldn't be recorded as a $48.25 payment. It's a $50.00 payment and a $1.75 fee, posted together in one [ledger transaction](/docs/payments/payment-states#double-entry-ledger):
+A $50.00 charge with a 2.9% plus $0.30 fee shouldn't be recorded as a $48.25 payment. It's a $50.00 payment and a $1.75 fee, posted together in one [ledger transaction](/docs/money/payment-states#double-entry-ledger):
 
 | Account | Amount |
 | ------- | ------ |
@@ -49,7 +49,7 @@ Recording only the net loses what you'll need later: a partial refund needs the 
 
 The platform collects its fees one of two ways. **Net settlement** deducts fees from each payout, so the merchant receives $48.25 and the fee never has to be collected; it's simple, and it's the default for most platforms. **Gross settlement** pays the merchant the full $50.00 and collects fees separately, usually as one monthly debit from the merchant's bank account, which some businesses require so deposits match their sales exactly and fees appear as an expense of their own in their books. Gross settlement turns fees into receivables that can fail: the monthly debit can come back insufficient or unauthorized, and then it's a collection, handled like the negative balances below. The same ledger serves both; only the payout instruction differs. Finix offers the same choice: net by default, where "deposits and fees are combined into one payout", or gross, where they're "distributed into two separate payouts". These are the same words [Treasury](/books/payments/treasury#funding-the-day) uses for how the acquirer pays you; here they're how you pay the merchant, and the two choices are independent. Fees the platform charges merchants beyond processing (monthly service fees, return and chargeback fees, failed-authorization fees) are entries of their own types, never folded into the processing fee.
 
-Platforms that [split a payment](/books/payments/software-platforms#where-the-money-goes) between several parties (a marketplace paying a seller and a delivery driver, say) post every share as its own entry in the same transaction. The rule from [Money & Amounts](/docs/payments/money) still applies: the shares must sum exactly to the gross, with any rounding remainder assigned deliberately.
+Platforms that [split a payment](/books/payments/software-platforms#where-the-money-goes) between several parties (a marketplace paying a seller and a delivery driver, say) post every share as its own entry in the same transaction. The rule from [Money & Amounts](/docs/money/amounts) still applies: the shares must sum exactly to the gross, with any rounding remainder assigned deliberately.
 
 ## Payout Schedules, Holds and Reserves
 
@@ -96,7 +96,7 @@ A changed payout account is where takeovers cash out, so a change re-verifies th
 
 ## Idempotent Payouts
 
-A payout sent twice is money that's very hard to get back. Payouts carry an [idempotency key](/docs/payments/idempotency) derived from what they represent and the attempt (the merchant, the balance period, attempt 1), so a retry after a timeout can't create a second transfer, and a scheduled payout job uses the same deterministic key so a crash and restart can't pay twice. A payout re-sent after a return is a new attempt, with a new key, to the corrected account. The key chain from the API to the bank file is in [Idempotency End to End](/books/payments/architecture-at-scale#idempotency-end-to-end).
+A payout sent twice is money that's very hard to get back. Payouts carry an [idempotency key](/docs/requests/idempotency) derived from what they represent and the attempt (the merchant, the balance period, attempt 1), so a retry after a timeout can't create a second transfer, and a scheduled payout job uses the same deterministic key so a crash and restart can't pay twice. A payout re-sent after a return is a new attempt, with a new key, to the corrected account. The key chain from the API to the bank file is in [Idempotency End to End](/books/payments/architecture-at-scale#idempotency-end-to-end).
 
 ## Reconciliation
 
@@ -110,7 +110,7 @@ Each chapter of this volume describes one layer, several of them still ahead in 
 | --- | --- | --- |
 | At checkout | The customer's card goes from hosted fields to the vault; the merchant's server creates a payment with an idempotency key and confirms it with a token | [Running a Card Vault](/books/payments/card-vault), [Designing the Payments API](/books/payments/payments-api) |
 | Seconds later | Risk allows it; the vault's forwarder sends it to the processor, which sends an ISO 8583 `0100` through the network to the issuer; a `0110` comes back approved, and the payment is `authorized` | [Fraud & Risk](/books/payments/fraud-and-risk), [Inside a Processor](/books/payments/inside-a-processor) |
-| Same day | The merchant captures; the payment is `captured`, a `payment.captured` event goes to the merchant, and the ledger posts the customer receivable, the merchant's $96.80, an estimated $1.94 of processing costs, and the platform's $1.26 | [Payment States & Ledgers](/docs/payments/payment-states), [Webhooks](/docs/api-design/webhooks) |
+| Same day | The merchant captures; the payment is `captured`, a `payment.captured` event goes to the merchant, and the ledger posts the customer receivable, the merchant's $96.80, an estimated $1.94 of processing costs, and the platform's $1.26 | [Payment States & Ledgers](/docs/money/payment-states), [Webhooks](/docs/api-design/webhooks) |
 | That night | The capture goes to the network in a clearing file, gets an acquirer reference number, and qualifies for its interchange category | [Inside a Processor](/books/payments/inside-a-processor#clearing), [Interchange & Pricing](/books/payments/interchange-and-pricing) |
 | Next business day | The network settles; the processor's settlement file arrives, the payment is `settled`, and the actual interchange and network fees replace the estimate | [Inside a Processor](/books/payments/inside-a-processor#settlement) |
 | Two business days later | The merchant's $96.80 becomes available and goes out in that day's ACH payout, which the bank statement later confirms | This chapter, [Treasury & Bank Operations](/books/payments/treasury) |

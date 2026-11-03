@@ -56,7 +56,7 @@ WHERE id = $2 AND version = $3;   -- the version you read
 
 If another writer got there first, the version moved and zero rows are updated: your code knows it lost the race and can reload, reapply, or tell the user. No lock is held while the user thinks or the code computes, so throughput stays high when conflicts are rare. When they're common, repeated retries waste more work than a lock would.
 
-The same mechanism shows up at every layer: guarded status transitions in [Payment States & Ledgers](/docs/payments/payment-states), and `If-Match` with `412 Precondition Failed` in [Caching & Conditional Requests](/docs/requests/caching), which is optimistic concurrency over HTTP.
+The same mechanism shows up at every layer: guarded status transitions in [Payment States & Ledgers](/docs/money/payment-states), and `If-Match` with `412 Precondition Failed` in [Caching & Conditional Requests](/docs/requests/caching), which is optimistic concurrency over HTTP.
 
 ## Pessimistic Locking
 

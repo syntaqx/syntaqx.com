@@ -68,7 +68,7 @@ The most expensive form bug is the one that clears the form: ten minutes on an a
 
 ## Double Submits
 
-People double-click, and networks drop the response after the server did the work, so users click again. If submitting creates something (an order, a payment), two clicks can create two of it. Disabling the button in flight handles the double click, but not the retry after a lost response, which is the case that actually charges cards twice. Generate an [idempotency key](/docs/payments/idempotency) when the form is first shown and send it with every attempt: the button state is a courtesy; the key is the guarantee.
+People double-click, and networks drop the response after the server did the work, so users click again. If submitting creates something (an order, a payment), two clicks can create two of it. Disabling the button in flight handles the double click, but not the retry after a lost response, which is the case that actually charges cards twice. Generate an [idempotency key](/docs/requests/idempotency) when the form is first shown and send it with every attempt: the button state is a courtesy; the key is the guarantee.
 
 ## Password Managers and Paste
 

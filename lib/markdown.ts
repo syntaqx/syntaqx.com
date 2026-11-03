@@ -288,7 +288,7 @@ export function renderMarkdownPage(path: string): MarkdownPage {
   const [section, slug, ...rest] = parts;
   let body: string | null = null;
 
-  // Docs nest in section folders: /docs/payments/idempotency.
+  // Docs nest in section folders: /docs/requests/idempotency.
   if (section === "docs")
     body = slug ? doc([slug, ...rest].join("/")) : docsIndex();
   // Books: /books, a cover at /books/payments, a chapter at /books/payments/ach,

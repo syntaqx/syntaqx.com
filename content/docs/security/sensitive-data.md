@@ -1,13 +1,13 @@
 +++
 title = "Sensitive Data"
 description = "Handling card data and PII: keep PCI scope small with tokenization, never log secrets, redact by default, and treat access to sensitive data as an event."
-category = "Payments"
-order = 806
+category = "Security"
+order = 714
 tags = ["payments", "security", "pci", "privacy"]
-aliases = ["sensitive-data"]
+aliases = ["payments/sensitive-data", "sensitive-data"]
 +++
 
-Payments, ledgers and webhooks all carry data an attacker wants: card numbers, bank details, names and addresses. The cheapest sensitive data to protect is the data you never touch. Every system that sees a card number has to be secured, audited and explained to an assessor, and every log line with an email address in it is a privacy liability for as long as the log is kept. So the design goal isn't "protect sensitive data everywhere"; it's "make sure most of the system never sees it", and then protect the small part that does.
+Most systems carry data an attacker wants: card numbers, bank details, health records, names and addresses, and the credentials that unlock the rest. The cheapest sensitive data to protect is the data you never touch. Every system that sees a card number has to be secured, audited and explained to an assessor, and every log line with an email address in it is a privacy liability for as long as the log is kept. So the design goal isn't "protect sensitive data everywhere"; it's "make sure most of the system never sees it", and then protect the small part that does.
 
 ## Keep PCI Scope Small
 

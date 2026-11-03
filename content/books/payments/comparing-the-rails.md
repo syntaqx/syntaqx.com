@@ -28,7 +28,7 @@ The chapters before this one take one way of paying at a time: [cards](/books/pa
 | **Buy now, pay later** | The merchant, via the lender | When the lender approves | Paid out by the lender | The lender's terms | The lender's dispute process |
 | **Push to card** (a payout, [Vendor Payouts](/books/payments/vendor-payouts#push-to-card)) | The platform, pushing to a debit card | Seconds to 30 minutes | Immediately, if the card's issuer is in Visa's Fast Funds program | Immediately; reversible only for processing errors | Nothing, in practice |
 
-Two columns matter more than the rest. **"You know it worked"** is when to tell the customer the payment went through. **"Final"** is when it's safe to release value you can't take back: ship the goods, pay out the merchant, credit the wallet. Most losses on a payments platform happen in the gap between those two moments, caused by a system that treated the first as the second. [Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final) turns the gap into states, and [Payouts & Settlement](/books/payments/payouts-and-settlement#payout-schedules-holds-and-reserves) into holds.
+Two columns matter more than the rest. **"You know it worked"** is when to tell the customer the payment went through. **"Final"** is when it's safe to release value you can't take back: ship the goods, pay out the merchant, credit the wallet. Most losses on a payments platform happen in the gap between those two moments, caused by a system that treated the first as the second. [Payment States & Ledgers](/docs/money/payment-states#settled-is-not-final) turns the gap into states, and [Payouts & Settlement](/books/payments/payouts-and-settlement#payout-schedules-holds-and-reserves) into holds.
 
 ## How Refunds Differ
 

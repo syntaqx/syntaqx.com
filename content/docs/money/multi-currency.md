@@ -1,12 +1,13 @@
 +++
 title = "Multi-Currency & FX"
 description = "Charging in one currency and settling in another: who takes the FX risk, locking a quoted rate, storing both amounts, refunds, and checkout conversion."
-category = "Payments"
+category = "Money"
 order = 805
 tags = ["payments", "currency", "fx", "money"]
+aliases = ["payments/multi-currency"]
 +++
 
-The chapters before this one hold for a single currency. Selling in the customer's own currency raises conversion and approval rates, and it's what customers expect, but it means a payment now has two amounts, a rate between them, and a question single-currency systems never face: when the rate moves between the charge and the refund, whose money is that? Every rule here builds on [Money & Amounts](/docs/payments/money), and what the card networks, banks and FX providers charge and require around these mechanics is in [Cross-Border Payments & FX](/books/payments/cross-border-and-fx).
+The chapters before this one hold for a single currency. Selling in the customer's own currency raises conversion and approval rates, and it's what customers expect, but it means a payment now has two amounts, a rate between them, and a question single-currency systems never face: when the rate moves between the charge and the refund, whose money is that? Every rule here builds on [Money & Amounts](/docs/money/amounts), and what the card networks, banks and FX providers charge and require around these mechanics is in [Cross-Border Payments & FX](/books/payments/cross-border-and-fx).
 
 ## Two Currencies, Two Names
 
@@ -70,7 +71,7 @@ The payment stores both sides of the conversion, each as an integer in its own c
 - **Convert in minor units with the exponents.** Converting €49.00 to yen is `4900 × rate ÷ 100` (EUR's exponent), not `4900 × rate`: a factor-of-100 error that tests with only two-decimal currencies never catch.
 - **Round once,** at the end, with half-even. Rounding the rate and then the amount compounds two errors into one visible cent.
 
-In the ledger, a conversion is a balanced transaction in each currency: entries in EUR that sum to zero, entries in USD that sum to zero, linked by the same transaction ID ([Payment States & Ledgers](/docs/payments/payment-states)). Never add EUR and USD in one account.
+In the ledger, a conversion is a balanced transaction in each currency: entries in EUR that sum to zero, entries in USD that sum to zero, linked by the same transaction ID ([Payment States & Ledgers](/docs/money/payment-states)). Never add EUR and USD in one account.
 
 ## Refunds and FX Gains and Losses
 

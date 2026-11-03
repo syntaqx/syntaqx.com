@@ -171,7 +171,7 @@ deposit held                          1,500.00
 
 ## How to Build It
 
-The chapter extends `leases` and `work_orders` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model), posts damage through `charges`, extends the `inspections` table that [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#how-to-build-it) owns, stores deposit deadlines as `deposit_return_deadline` rules in the [Landlord-Tenant Law](/books/property-tech/landlord-tenant-law#how-to-build-it) catalog, and adds key, utility and statement tables. Amounts in minor units ([Money & Amounts](/docs/payments/money)); every table carries `tenant_id` under row-level security.
+The chapter extends `leases` and `work_orders` from [The Core Data Model](/books/property-tech/property-business#the-core-data-model), posts damage through `charges`, extends the `inspections` table that [Maintenance & Work Orders](/books/property-tech/maintenance-and-work-orders#how-to-build-it) owns, stores deposit deadlines as `deposit_return_deadline` rules in the [Landlord-Tenant Law](/books/property-tech/landlord-tenant-law#how-to-build-it) catalog, and adds key, utility and statement tables. Amounts in minor units ([Money & Amounts](/docs/money/amounts)); every table carries `tenant_id` under row-level security.
 
 ```sql
 ALTER TABLE leases
@@ -317,7 +317,7 @@ WHERE l.tenant_id = $1 AND l.starts_on = $2;
 
 Design decisions behind it:
 
-- **Deductions are charges.** Each `move_out_deductions` row points at a posted `charges` row, so the statement, the resident ledger and the owner's ledger reconcile by construction, and a corrected statement reverses charges rather than editing them ([Append-Only Records](/docs/payments/payment-states#append-only-records)).
+- **Deductions are charges.** Each `move_out_deductions` row points at a posted `charges` row, so the statement, the resident ledger and the owner's ledger reconcile by construction, and a corrected statement reverses charges rather than editing them ([Append-Only Records](/docs/money/payment-states#append-only-records)).
 - **The deadline is stored, with its rule.** `due_on` and `rule_evaluation_id` are written when the clock starts. A nightly job lists statements due within a few days, and a statement past `due_on` without `issued_at` is an incident, not a report line.
 - **Statements are versioned documents.** The rendered statement's hash is stored; a correction is a new statement that supersedes the old, and both stay retrievable, as Proof of Service does for service reports.
 - **Inspections are sealed.** Once completed and signed, an inspection is amended only by a superseding version, because the move-in record is evidence a year later.

@@ -42,11 +42,11 @@ The core produces the GL entries itself, by mapping each transaction type on eac
 
 Three consequences follow for anyone building on or beside a core:
 
-- **The GL is a summary, so the subledger is the evidence.** An examiner or auditor who asks why demand deposits moved $4 million on a Tuesday is answered from the account-level transactions behind the GL entry. Keep the link from each summary entry to the activity it summarizes ([Summary Journals or Detail](/docs/payments/accounting#summary-journals-or-detail)).
+- **The GL is a summary, so the subledger is the evidence.** An examiner or auditor who asks why demand deposits moved $4 million on a Tuesday is answered from the account-level transactions behind the GL entry. Keep the link from each summary entry to the activity it summarizes ([Summary Journals or Detail](/docs/money/accounting#summary-journals-or-detail)).
 - **The mapping is configuration with financial consequences.** A new fee type mapped to the wrong income line misstates the income statement; a new product mapped to the wrong deposit line misstates the call report. Changes to GL mappings go through the same approval as a journal entry.
 - **Reconciling subledger to GL is a daily control,** not a month-end task. A difference means a transaction posted to an account without its GL entry, or the reverse, and the longer it ages the harder it is to find.
 
-The double-entry rules themselves (balanced entries, append-only rows, corrections as reversals) are in [Double-Entry Ledger](/docs/payments/payment-states#double-entry-ledger). Where this volume's model and the Payments volume's meet: this book's `gl_accounts`, `journal_entries` and `journal_lines` are the bank's books, while the Payments volume's `ledger_accounts`, `ledger_transactions` and `ledger_entries` are a payment provider's ([A Provider's Chart of Accounts](/books/payments/ledger-and-reconciliation#a-provider-s-chart-of-accounts)). A provider's FBO account is one `accounts` row in its sponsor bank's core and one `bank_accounts` row, with a `cash` ledger account, on the provider's side; the provider's daily cash reconciliation is a match between those two systems.
+The double-entry rules themselves (balanced entries, append-only rows, corrections as reversals) are in [Double-Entry Ledger](/docs/money/payment-states#double-entry-ledger). Where this volume's model and the Payments volume's meet: this book's `gl_accounts`, `journal_entries` and `journal_lines` are the bank's books, while the Payments volume's `ledger_accounts`, `ledger_transactions` and `ledger_entries` are a payment provider's ([A Provider's Chart of Accounts](/books/payments/ledger-and-reconciliation#a-provider-s-chart-of-accounts)). A provider's FBO account is one `accounts` row in its sponsor bank's core and one `bank_accounts` row, with a `cash` ledger account, on the provider's side; the provider's daily cash reconciliation is a match between those two systems.
 
 ## How the Platforms Do It
 
@@ -193,7 +193,7 @@ How it runs:
 
 1. **Every journal entry resolves a mapping** for its kind on the account's product version and effective date, or it doesn't post. An unmapped kind is a configuration error caught at posting, not at month end.
 2. **The proof runs after end of day snapshots,** one row per control line and subledger. A nonzero difference means a snapshot and the journal disagree (a transaction without its lines, lines without the account), and opens a break with an owner, the same way a cash break does in [Breaks](/books/payments/ledger-and-reconciliation#breaks).
-3. **Where the bank's GL lives in a separate accounting system,** end of day summarizes the day's lines by GL account and branch into `gl_exports`, idempotent per business date, and that system's batch ID comes back for the walk from its books to the core's ([Idempotent Sync](/docs/payments/accounting#idempotent-sync)).
+3. **Where the bank's GL lives in a separate accounting system,** end of day summarizes the day's lines by GL account and branch into `gl_exports`, idempotent per business date, and that system's batch ID comes back for the walk from its books to the core's ([Idempotent Sync](/docs/money/accounting#idempotent-sync)).
 4. **Manual GL entries never touch a control line** that a subledger proves against. A correction to customer balances is a transaction on the account, which reaches the GL through the mapping.
 
 ## Auditing

@@ -46,7 +46,7 @@ new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(12
 new Intl.DateTimeFormat("en-GB", { dateStyle: "long" }).format(date);
 ```
 
-Formatting happens at the edge, for display only. Data stays canonical, the way the API sends it: amounts as integer minor units with a currency code ([Money & Amounts](/docs/payments/money)), instants as UTC timestamps ([Time & Date Formats](/docs/fundamentals/time)). Convert when rendering, never before storing, or you'll be parsing "1.234,50" back into a number someday.
+Formatting happens at the edge, for display only. Data stays canonical, the way the API sends it: amounts as integer minor units with a currency code ([Money & Amounts](/docs/money/amounts)), instants as UTC timestamps ([Time & Date Formats](/docs/fundamentals/time)). Convert when rendering, never before storing, or you'll be parsing "1.234,50" back into a number someday.
 
 ## Choosing the Locale
 

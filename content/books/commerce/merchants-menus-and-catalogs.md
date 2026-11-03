@@ -97,7 +97,7 @@ When the shopper can't find an item, the order changes after the customer paid. 
 
 - **A preference per line, set before shopping.** The customer chooses a best match chosen by the shopper, a specific replacement, or a refund for that item. Shipt's app lets customers "request substitutions" and talk to the shopper directly.
 - **Confirmation during shopping.** Instacart's October 2025 shopper flow lets the shopper "scan up to three available replacement options" for the customer to choose from or approve, with a refund as the alternative, and counts a "customer pre-approved replacement" as a replaced item in the shopper's quality score.
-- **The price difference is settled.** A replacement can cost more or less than the original; the charge for the order is adjusted after shopping, which is why grocery orders authorize more than the estimated total ([Holds That Change Size](/docs/payments/payment-states#holds-that-change-size)).
+- **The price difference is settled.** A replacement can cost more or less than the original; the charge for the order is adjusted after shopping, which is why grocery orders authorize more than the estimated total ([Holds That Change Size](/docs/money/payment-states#holds-that-change-size)).
 - **Weighted items are estimates.** An item sold by weight is ordered as an estimate and charged at the weight picked; Instacart's pricing help describes an "Adjustment Charge" when "the final item cost was higher than estimated."
 
 Substitutions are recorded as a link from the original order line to its replacement, never by editing the original line: the customer was promised one thing and given another, and a refund request, a regulated-item check (a replacement can't be alcohol if the original wasn't) or a dispute needs both.

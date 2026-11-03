@@ -125,7 +125,7 @@ Count refunds by the month of the refund and by the month of the original paymen
 
 ## Revenue and Cost
 
-All amounts here are ledger amounts in minor units, by currency, converted for reporting only at the rates recorded on each entry ([Money](/docs/payments/money), [Multi-Currency](/docs/payments/multi-currency)).
+All amounts here are ledger amounts in minor units, by currency, converted for reporting only at the rates recorded on each entry ([Money](/docs/money/amounts), [Multi-Currency](/docs/money/multi-currency)).
 
 **Gross volume:** captured amount, before refunds and disputes. **Net volume:** captured minus refunded minus lost disputes.
 

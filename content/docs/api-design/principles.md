@@ -77,7 +77,7 @@ The header has no `X-` prefix: [RFC 6648](https://datatracker.ietf.org/doc/html/
 | `Content-Type` | `application/json` for request bodies |
 | `Accept` | The representation the client wants (default `application/json`) |
 | `Api-Version` | The dated API version to use |
-| `Idempotency-Key` | Makes a `POST` safe to retry ([Idempotency](/docs/payments/idempotency)) |
+| `Idempotency-Key` | Makes a `POST` safe to retry ([Idempotency](/docs/requests/idempotency)) |
 | `User-Agent` | Who's calling, so their traffic can be found and contacted |
 
 ## References

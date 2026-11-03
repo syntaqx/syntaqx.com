@@ -193,7 +193,7 @@ Four processors change or drop data, and they suit different jobs:
 - **`redaction`** "deletes span, log, and metric datapoint attributes that don't match a list of allowed attributes," and its `allowed_keys` list "is designed to fail closed." It can also mask values matching `blocked_values` patterns. An allow-list is the stronger control for regulated data; a block-list catches what slipped through.
 - **`tail_sampling`** keeps or drops whole traces ([below](#tail-sampling-needs-two-layers)).
 
-The Collector is the last place to catch sensitive data before it leaves your network, not the first: redaction belongs at the logger and in the instrumentation ([Logs](/docs/observability/logs#what-not-to-log), [Sensitive Data](/docs/payments/sensitive-data)), and the gateway's rules are the backstop that holds when a new attribute shows up.
+The Collector is the last place to catch sensitive data before it leaves your network, not the first: redaction belongs at the logger and in the instrumentation ([Logs](/docs/observability/logs#what-not-to-log), [Sensitive Data](/docs/security/sensitive-data)), and the gateway's rules are the backstop that holds when a new attribute shows up.
 
 ### Tail Sampling Needs Two Layers
 

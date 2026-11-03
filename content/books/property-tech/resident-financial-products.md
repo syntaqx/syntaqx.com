@@ -42,9 +42,9 @@ Rewards give residents points for actions the operator values: on-time payment, 
 
 What the platform has to get right:
 
-- **Points are a ledger,** append-only, per person: earned, redeemed, expired, reversed, each with the event that caused it and who funded it. Never a balance column ([Append-Only Records](/docs/payments/payment-states#append-only-records)).
+- **Points are a ledger,** append-only, per person: earned, redeemed, expired, reversed, each with the event that caused it and who funded it. Never a balance column ([Append-Only Records](/docs/money/payment-states#append-only-records)).
 - **Redemption against rent is a payment,** not a concession: when points pay rent, the funder pays the property, and the resident ledger shows a payment from a third party. A digital concession redeemed at a retailer never touches the resident ledger at all ([Concessions](/books/property-tech/charges-and-resident-ledgers#concessions)).
-- **Unredeemed value is money somebody owes.** Points and gift-card-like concessions create liabilities until used or expired, with accounting policy for breakage set by finance ([Breakage](/docs/payments/accounting#breakage)), and expiry and unclaimed-property rules that vary by state.
+- **Unredeemed value is money somebody owes.** Points and gift-card-like concessions create liabilities until used or expired, with accounting policy for breakage set by finance ([Breakage](/docs/money/accounting#breakage)), and expiry and unclaimed-property rules that vary by state.
 - **Rewards that depend on behavior aren't neutral.** Rewarding reviews runs into the FTC's rules on incentivized reviews ([Leads, CRM, Tours & the Leasing Center](/books/property-tech/leads-crm-and-tours#the-ftc-rule-on-consumer-reviews) covers them); rewarding autopay excludes residents who pay by the methods the law protects; and points that depend on screening or income would be a fair housing problem.
 
 ## Resident Marketplaces and Referral Revenue

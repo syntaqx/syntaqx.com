@@ -235,7 +235,7 @@ Design notes:
 - **Guarantees are terms on the decision.** A guaranteed decision records what the vendor covered and under which conditions (ship to the screened address, ship within the window, fraud only), which the order manager checks before release ([Taking Payment in Commerce](/books/commerce/taking-payment#how-to-build-it) keeps the guaranteed address on the capture plan).
 - **Bot signals are observations, not verdicts.** The edge's score, a CAPTCHA pass, a queue token and a velocity hit are inputs a decision reads; storing them per session lets a later chargeback be traced back to a session that looked like a script.
 - **Labels are typed.** Fraud, abuse, first-party misuse and legitimate are different outcomes; collapsing them makes a card-fraud model decline friendly-fraud customers it should have challenged.
-- **Hash what you only match.** Card fingerprints, addresses, devices and phones are compared for equality, so `identity_links` and `bot_signals` store hashes, which keeps them out of card data scope ([Sensitive Payment Data](/docs/payments/sensitive-data)).
+- **Hash what you only match.** Card fingerprints, addresses, devices and phones are compared for equality, so `identity_links` and `bot_signals` store hashes, which keeps them out of card data scope ([Sensitive Payment Data](/docs/security/sensitive-data)).
 - **Limits are rules with a policy reference.** The purchase limit and its window are versioned rules ([Rules as Data](/docs/architecture/rules-as-data)), and a cancellation for a limit violation records the policy text it enforced.
 
 ## Auditing

@@ -181,7 +181,7 @@ A residual run is a job over one closed period, with states the provider can sho
 4. **Approve and publish.** A person other than the run's operator approves; statements go out with the summary and the line detail.
 5. **Pay and post.** Payments post as ledger transactions against a residuals payable, and the run records each payout.
 
-**Late costs are adjustments, not reruns.** Networks bill some fees up to two months after the transaction, and interchange-plus pricing trues up estimates when the settlement files arrive ([A Pricing Engine](/books/payments/interchange-and-pricing#a-pricing-engine)). When a cost for a closed period changes, the next run writes adjustment lines that reference the original lines and period, so a closed statement stays exactly as published ([Closed Periods Stay Closed](/docs/payments/accounting#closed-periods-stay-closed)).
+**Late costs are adjustments, not reruns.** Networks bill some fees up to two months after the transaction, and interchange-plus pricing trues up estimates when the settlement files arrive ([A Pricing Engine](/books/payments/interchange-and-pricing#a-pricing-engine)). When a cost for a closed period changes, the next run writes adjustment lines that reference the original lines and period, so a closed statement stays exactly as published ([Closed Periods Stay Closed](/docs/money/accounting#closed-periods-stay-closed)).
 
 ### Statements Partners Can Reproduce
 

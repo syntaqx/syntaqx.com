@@ -82,7 +82,7 @@ A trace follows a request through every service it touches, so "the API was slow
 
 ## Logs in Brief
 
-Logs are JSON, one event per line, with constant messages and the data in fields, levels that mean something, the `request_id` and `trace_id` on every line, and sensitive data redacted at the logger ([Sensitive Data](/docs/payments/sensitive-data)). The format, levels, correlation, what never to log, sampling and retention are in [Logs](/docs/observability/logs).
+Logs are JSON, one event per line, with constant messages and the data in fields, levels that mean something, the `request_id` and `trace_id` on every line, and sensitive data redacted at the logger ([Sensitive Data](/docs/security/sensitive-data)). The format, levels, correlation, what never to log, sampling and retention are in [Logs](/docs/observability/logs).
 
 ## Metrics in Brief
 

@@ -74,7 +74,7 @@ CREATE UNIQUE INDEX account_external_ids_open_idx
 ```
 
 - **One crosswalk per entity you load:** accounts, addresses or sites, contracts, assets, payment methods. A value in the new system can then be traced to the export line it came from.
-- **Re-runs are idempotent.** A loader that finds its target by open source key updates instead of inserting a duplicate, so a failed batch can be fixed and run again ([Idempotency](/docs/payments/idempotency)).
+- **Re-runs are idempotent.** A loader that finds its target by open source key updates instead of inserting a duplicate, so a failed batch can be fixed and run again ([Idempotency](/docs/requests/idempotency)).
 - **Wrong links are closed, not edited.** When reconciliation finds a record loaded onto the wrong account, the bad link gets `unlinked_at` and a corrected one opens with `link_reason = 'reviewed'`, so anything that happened under the first link still explains itself.
 - **Vendor mapping files land here too.** When a processor imports stored cards it returns a file linking the previous processor's customer and card IDs to new ones ([Stripe: Import payment data](https://docs.stripe.com/get-started/data-migrations/pan-import)); load it into the payment method crosswalk with the old processor as its source.
 - **Keep your own primary keys.** The crosswalk maps their IDs to yours; your IDs never change because a source did. That one decision is what lets the next migration happen without rewriting every foreign key.
@@ -104,10 +104,10 @@ A dark launch ends when the mismatch rate for a cohort is zero or every remainin
 
 ## Reconciliation
 
-A migration is correct when you can prove it, cohort by cohort, before the cohort goes live. Reconciliation runs on its own data path, reading the legacy export and the new system's tables independently, never through the loader's code, so a bug in the loader can't hide itself ([Reconciliation](/docs/payments/payment-states#reconciliation)).
+A migration is correct when you can prove it, cohort by cohort, before the cohort goes live. Reconciliation runs on its own data path, reading the legacy export and the new system's tables independently, never through the loader's code, so a bug in the loader can't hide itself ([Reconciliation](/docs/money/payment-states#reconciliation)).
 
 - **Counts by type and status.** Active accounts, open contracts by plan, assets, open invoices, payment methods, users with each role: legacy versus new, with every difference explained.
-- **Sums to the cent.** Open receivables, receivables by aging bucket, prepaid and credit balances, deferred revenue, recurring value by plan ([Money & Amounts](/docs/payments/money)).
+- **Sums to the cent.** Open receivables, receivables by aging bucket, prepaid and credit balances, deferred revenue, recurring value by plan ([Money & Amounts](/docs/money/amounts)).
 - **Next dates.** Next bill date, next renewal, next scheduled action, for every contract, in both systems.
 - **Credentials.** Every customer on automatic payment has a default payment method in the new system, and the mapping file's last four digits and expiry match the legacy record.
 - **The shadow cycle.** The new system's computed cycle matches the old system's, line by line.

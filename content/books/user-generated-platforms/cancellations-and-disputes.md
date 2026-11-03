@@ -231,7 +231,7 @@ CREATE TABLE arbitration_demands (       -- user claims against the platform
 Design decisions behind it:
 
 - **Policies are versioned schedules; bookings freeze them.** `cancellation_policies` holds tiers, grace rules and component rules as data; each booking points at the exact version, and the grace deadline is stored when the booking is made.
-- **A cancellation records its computation.** `refund_lines` maps each frozen price line to its refund, so the ledger postings, the tax adjustment and the host's statement all come from one record; refunds themselves are the Payments `refunds` objects ([Refunds and Disputes Are Their Own Objects](/docs/payments/payment-states#refunds-and-disputes-are-their-own-objects)).
+- **A cancellation records its computation.** `refund_lines` maps each frozen price line to its refund, so the ledger postings, the tax adjustment and the host's statement all come from one record; refunds themselves are the Payments `refunds` objects ([Refunds and Disputes Are Their Own Objects](/docs/money/payment-states#refunds-and-disputes-are-their-own-objects)).
 - **Three initiators, each with its own rules.** Guest cancellations follow the policy; host cancellations refund fully and carry a fee, a block and possibly penalties; platform cancellations refund fully and penalize nobody.
 - **Disruptions are activations with an area and time,** and eligibility is a query, so a hurricane's thousands of cancellations are computed consistently and excluded from status metrics.
 - **Host consequences are separate records:** the fee in the ledger, the block in occupancy, sanctions in `penalties`, status in the next evaluation. Each can be waived or overturned on its own.

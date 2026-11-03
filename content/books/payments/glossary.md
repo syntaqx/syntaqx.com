@@ -44,7 +44,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **Effective rate:** total fees divided by volume, the single number merchants compare; Canada's code of conduct requires it per card type on statements ([Payments Metrics](/books/payments/payments-metrics#revenue-and-cost)).
 - **EIRF:** the electronic interchange reimbursement fee, the rate a transaction falls to when it misses its preferred category ([Interchange & Pricing](/books/payments/interchange-and-pricing#downgrades)).
 - **E-money token (EMT):** MiCA's term for a single-currency stablecoin, issued only by a credit or e-money institution and redeemable at par ([Stablecoins & Crypto Rails](/books/payments/stablecoins#the-eu-and-the-uk)).
-- **Estimated, incremental, final authorization:** an authorization for an amount that may change, an increase to one, and one for exactly the amount to be captured ([Payment States & Ledgers](/docs/payments/payment-states#holds-that-change-size)).
+- **Estimated, incremental, final authorization:** an authorization for an amount that may change, an increase to one, and one for exactly the amount to be captured ([Payment States & Ledgers](/docs/money/payment-states#holds-that-change-size)).
 - **Exempt debit:** debit from issuers small enough that Regulation II's interchange cap doesn't apply ([Interchange & Pricing](/books/payments/interchange-and-pricing#regulated-debit)).
 - **Extended authorization:** a Visa card-not-present authorization flagged to stay valid for 30 days instead of 10 ([How Card Payments Work](/books/payments/card-payments#five-events-not-one-payment)).
 - **Fallback:** a chip card read by magnetic stripe or keyed because the chip failed, priced and risked as the weaker read ([Card-Present Payments](/books/payments/card-present#the-liability-shift)).
@@ -248,7 +248,7 @@ Payments has more acronyms than most fields, and several words mean different th
 - **Three-way match:** ledger to processor files per transaction, processor to bank per batch, and the ledger's cash to the bank's balances daily ([Ledger & Reconciliation](/books/payments/ledger-and-reconciliation#three-sources-of-truth)).
 - **TIN matching, W-9:** checking a payee's name and taxpayer ID against the IRS, and the form on which a US payee provides them ([Vendor Payouts](/books/payments/vendor-payouts#tax-w-9s-tin-matching-and-1099s)).
 - **T+N:** a schedule where money captured on day T is available N business days later ([Payouts & Settlement](/books/payments/payouts-and-settlement#settlement-timing)).
-- **Unapplied cash:** money received from a customer and not yet matched to a charge ([Payment States & Ledgers](/docs/payments/payment-states#payments-are-applied-not-assigned)).
+- **Unapplied cash:** money received from a customer and not yet matched to a charge ([Payment States & Ledgers](/docs/money/payment-states#payments-are-applied-not-assigned)).
 - **Virtual card:** a card number issued for one payable, with controls on amount, dates and merchant ([Vendor Payouts](/books/payments/vendor-payouts#virtual-cards-who-pays-for-the-rebate)).
 
 ## Issuing Cards

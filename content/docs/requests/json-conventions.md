@@ -45,7 +45,7 @@ Clients stop writing `response.data.data`, a resource from a `GET` is byte-for-b
 | Foreign key | `{resource}_id` | `"user_id": "0194a7f3-2b11-7e80-9c3d-4e8f1a2b5c70"` |
 | Datetime | RFC 3339 string, `_at` suffix ([Time](/docs/fundamentals/time)) | `"created_at": "2026-10-22T14:23:45Z"` |
 | Date | `YYYY-MM-DD`, `_on` suffix | `"published_on": "2026-10-22"` |
-| Money | Integer minor units plus currency ([Money](/docs/payments/money)) | `"amount": 1999, "currency": "USD"` |
+| Money | Integer minor units plus currency ([Money](/docs/money/amounts)) | `"amount": 1999, "currency": "USD"` |
 | Boolean | `is_`, `has_`, `can_` prefix | `"is_active": true` |
 | Enum | Lowercase snake_case string | `"status": "requires_capture"` |
 

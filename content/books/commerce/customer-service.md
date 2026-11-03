@@ -85,7 +85,7 @@ Support agents act on orders: cancel, edit an address or a line, refund all or p
 
 Gorgias's order management lets agents "issue refunds" choosing whether to restock, "cancel orders" with a reason, and create or duplicate orders, and its macros can trigger Shopify refunds and cancellations. The commerce rules on top:
 
-- **Refunds go through the order, not the processor.** A refund issued in the payment processor's dashboard leaves the order showing paid and the return unreconciled; the helpdesk's refund calls the platform, which calls the processor ([Refunds and Disputes Are Their Own Objects](/docs/payments/payment-states#refunds-and-disputes-are-their-own-objects)).
+- **Refunds go through the order, not the processor.** A refund issued in the payment processor's dashboard leaves the order showing paid and the return unreconciled; the helpdesk's refund calls the platform, which calls the processor ([Refunds and Disputes Are Their Own Objects](/docs/money/payment-states#refunds-and-disputes-are-their-own-objects)).
 - **Original tender first.** Refunding to a different card or to a gift card on request is a classic fraud path and, for chargebacks, a way to pay twice ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)).
 - **Caps per actor, per customer, per day.** An agent's goodwill credit up to a value, a second person above it, and a per-customer limit across all agents, so a persistent customer can't collect the cap from each of five agents.
 - **A reason on every action.** The reason code on a refund or a replacement (damaged, carrier lost, wrong item, goodwill) is what links support's spend to the warehouse's, carrier's and catalog's mistakes.
