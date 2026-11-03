@@ -5,7 +5,7 @@ description = "Request IDs on every response, the three signals and the IDs that
 category = "Observability"
 order = 1231
 tags = ["observability", "logging", "tracing", "metrics", "operations"]
-aliases = ["observability", "operations/observability"]
+aliases = ["operations/observability"]
 +++
 
 When something goes wrong, the first question is "what happened to this request?", and every system should answer it in minutes, starting from nothing more than an ID a customer pasted into a support ticket. Monitoring tells you *that* something is wrong; observability is working out *why* without shipping new code to find out. It comes from three kinds of telemetry:
