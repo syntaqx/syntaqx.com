@@ -2167,69 +2167,177 @@ const layers: SceneFn = (s) => {
 };
 
 /**
- * 404: the tile that should be here isn't. A search bot circles the hole
- * with a flashlight, looking in it; the tile it's looking for drifts
- * overhead, just out of view.
+ * 404: a checkpoint. A little droid rolls up to the scanner gate and gets
+ * scanned. A hand reaches in from off frame and waves; the readout says
+ * "move along". The droid blinks, wonders, turns around and rolls back the
+ * way it came. Offset so the resting frame (reduced motion) is the wave.
  */
 const missing: SceneFn = (s) => {
-  const z = 6 + s.spread * 2 + bob(s);
-  const parts: Part[] = [];
-  const tiles: [number, number][] = [];
-  for (let i = 0; i < 3; i++)
-    for (let j = 0; j < 3; j++) if (!(i === 1 && j === 1)) tiles.push([i * 3, j * 3]);
-  tiles.sort((a, b) => a[0] + a[1] - (b[0] + b[1]));
-  parts.push({ kind: "plane", pts: quad(3, 3, 0, 2.6, 2.6), v: 0, dashed: true });
-  tiles.forEach(([x, y]) => parts.push({ kind: "box", box: box(x, y, 0, 2.6, 2.6, 0.5) }));
+  const T = 11;
+  const u = (((s.t + 5.85) % T) + T) % T;
+  const at = (a: number, b: number) => ease(Math.max(0, Math.min(1, (u - a) / (b - a))));
+  const between = (a: number, b: number) => u >= a && u < b;
 
-  // the bot walks the ring of tiles around the hole, hopping as it goes
-  const a = s.t * 0.45 + 0.6;
-  const [px, py] = [4.3 + Math.cos(a) * 2.75, 4.3 + Math.sin(a) * 2.75];
-  const foot = 0.5 + Math.abs(Math.sin(s.t * 4)) * 0.12;
-  // the beam sweeps the floor of the hole
-  const [hx, hy] = [4.3 + Math.cos(s.t * 1.7) * 0.8, 4.3 + Math.sin(s.t * 1.3) * 0.8];
-  const head = foot + 1.1;
-  const blink = Math.floor(s.t * 2) % 2 === 0;
-  parts.push(
-    // where the light lands
-    { kind: "plane", pts: quad(hx - 0.45, hy - 0.45, 0, 0.9, 0.9), v: 0.55 },
-    { kind: "box", box: box(px - 0.5, py - 0.5, foot, 1, 1, 0.8), small: true },
-    { kind: "box", box: box(px - 0.4, py - 0.4, foot + 0.8, 0.8, 0.8, 0.6), handles: true },
-    { kind: "line", a: [px, py, head + 0.65], b: [px, py, head + 1.3], alpha: 0.8 },
-    { kind: "cyl", cx: px, cy: py, z: head + 1.3, r: 0.14, h: 0.18, accent: blink },
-    { kind: "line", a: [px, py, head], b: [hx, hy, 0], alpha: 0.9, accent: true },
-    { kind: "line", a: [px, py, head], b: [hx + 0.5, hy - 0.3, 0], dashed: true, alpha: 0.35 },
-    { kind: "line", a: [px, py, head], b: [hx - 0.3, hy + 0.5, 0], dashed: true, alpha: 0.35 },
-  );
+  // the droid: in from the back, a stop under the gate, then back out
+  const [dx, D] = [3.4, 1.6];
+  const stop = 4.2;
+  const dy = -5 + (stop + 5) * at(0, 2.8) - (stop + 6) * at(6.9, 9.4);
+  const rolling = between(0, 2.8) || between(6.9, 9.4);
+  // a bump as it rolls, and a little hop when it can't work out what happened
+  const hop = between(5.95, 6.35) ? Math.sin(((u - 5.95) / 0.4) * Math.PI) * 0.25 : 0;
+  const dz = (rolling ? Math.abs(Math.sin(u * 11)) * 0.05 : 0) + hop;
+  const [x0, y0] = [dx - D / 2, dy - D / 2];
+  const head = { x: dx - 0.5, y: dy - 0.5, z: dz + 1.3, a: 1, h: 0.6 };
+  const top = head.z + head.h;
+  // the eye looks ahead, blinks twice, then swings round as it turns
+  const blink = between(5.45, 5.57) || between(5.65, 5.77);
+  const turn = u < 6.5 || u >= 9.6 ? 0 : u < 6.8 ? 1 : 2;
+  const eye: Part[] = blink
+    ? []
+    : turn === 0
+      ? [
+          {
+            kind: "box",
+            box: box(dx - 0.18, head.y + 1, head.z + 0.2, 0.36, 0.08, 0.22),
+            accent: true,
+          },
+        ]
+      : turn === 1
+        ? [
+            {
+              kind: "box",
+              box: box(head.x + 1, dy - 0.18, head.z + 0.2, 0.08, 0.36, 0.22),
+              accent: true,
+            },
+          ]
+        : [];
+  const droid: Part[] = [
+    { kind: "box", box: box(x0, y0 + 0.1, dz, 0.35, D - 0.2, 0.32), small: true },
+    { kind: "box", box: box(x0 + D - 0.35, y0 + 0.1, dz, 0.35, D - 0.2, 0.32), small: true },
+    { kind: "box", box: box(x0, y0, dz + 0.3, D, D, 1), vents: true },
+    { kind: "box", box: box(head.x, head.y, head.z, head.a, head.a, head.h) },
+    ...eye,
+    { kind: "line", a: [dx + 0.3, dy - 0.3, top], b: [dx + 0.3, dy - 0.3, top + 0.7], alpha: 0.8 },
+    {
+      kind: "cyl",
+      cx: dx + 0.3,
+      cy: dy - 0.3,
+      z: top + 0.7,
+      r: 0.1,
+      h: 0.14,
+      accent: Math.floor(u * 2) % 2 === 0,
+    },
+  ];
 
-  // the tile drifts in a slow circle above, never over the hole for long
-  const [tx, ty] = [3.6 + Math.cos(s.t * 0.6) * 0.6, 3.6 + Math.sin(s.t * 0.6) * 0.6];
-  parts.push({
-    kind: "line",
-    a: [tx + 0.7, ty + 0.7, 0],
-    b: [tx + 0.7, ty + 0.7, z],
-    dashed: true,
-    alpha: 0.25,
-  });
-  parts.push({ kind: "box", box: box(tx, ty, z, 1.4, 1.4, 0.5), accent: true, handles: true });
-  parts.push({
-    kind: "label",
-    at: [tx + 1.4, ty, z + 0.5],
-    text: "your page",
-    dx: 1.4,
-    dy: -1,
-    accent: true,
-  });
+  // the gate: two posts, a crossbar with a beacon, a scanner underneath
+  const [gy, gz] = [4, 3];
+  const scanning = between(2.9, 4.2);
+  const sweep = y0 + D * (0.5 - 0.5 * Math.cos((u - 2.9) * 4.5));
+  const beam: Part[] = scanning
+    ? [
+        {
+          kind: "line",
+          a: [dx, gy + 0.2, gz - 0.1],
+          b: [x0, sweep, top],
+          alpha: 0.6,
+          accent: true,
+        },
+        {
+          kind: "line",
+          a: [dx, gy + 0.2, gz - 0.1],
+          b: [x0 + D, sweep, top],
+          alpha: 0.6,
+          accent: true,
+        },
+        { kind: "line", a: [x0, sweep, top], b: [x0 + D, sweep, top], alpha: 1, accent: true },
+      ]
+    : [];
+  const along = u >= 4.9 && u < 10.2;
+  const posts: Part[] = [
+    { kind: "box", box: box(1, gy, 0, 0.4, 0.4, gz) },
+    { kind: "box", box: box(5.4, gy, 0, 0.4, 0.4, gz) },
+  ];
+  const bar: Part[] = [
+    { kind: "cyl", cx: dx, cy: gy + 0.2, z: gz - 0.2, r: 0.2, h: 0.2, accent: scanning },
+    { kind: "box", box: box(0.8, gy, gz, 5.2, 0.4, 0.4) },
+    {
+      kind: "box",
+      box: box(dx - 0.3, gy + 0.05, gz + 0.4, 0.6, 0.3, 0.3),
+      accent: !along || Math.floor(u * 3) % 2 === 0,
+    },
+  ];
+
+  // the hand: reaches in from the right, waves, holds, and goes
+  const reach = at(3.7, 4.3) * (1 - at(6.7, 7.4));
+  const wave = between(4.3, 5.5) ? Math.sin(((u - 4.3) / 1.2) * Math.PI * 3) * 0.35 : 0;
+  const [hx, hy, hz, k] = [6.3 + (1 - reach) * 4 + wave, 5.4, 1.1, 1.25];
+  const HAND: [number, number][] = [
+    [0.15, 0],
+    [0, 0.45],
+    [-0.32, 0.78],
+    [-0.22, 0.9],
+    [0.02, 0.68],
+    [0.02, 1.7],
+    [0.24, 1.7],
+    [0.24, 1.02],
+    [0.27, 1.02],
+    [0.27, 1.85],
+    [0.49, 1.85],
+    [0.49, 1.02],
+    [0.52, 1.02],
+    [0.52, 1.78],
+    [0.74, 1.78],
+    [0.74, 1],
+    [0.77, 1],
+    [0.77, 1.5],
+    [0.97, 1.5],
+    [0.97, 0.55],
+    [0.85, 0],
+    [3, -0.95],
+    [2.4, -1.45],
+  ];
+  const hand: Part[] =
+    reach > 0.01
+      ? [{ kind: "plane", pts: HAND.map(([a, c]): V3 => [hx + a * k, hy, hz + c * k]), v: 0.3 }]
+      : [];
+
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 7, 7), v: 0.09, grid: 7 },
+    { kind: "line", a: [1.6, -3, 0], b: [1.6, gy, 0], dashed: true, alpha: 0.45 },
+    { kind: "line", a: [5.2, -3, 0], b: [5.2, gy, 0], dashed: true, alpha: 0.45 },
+    // under the gate the droid sits between the posts; before that, behind it all
+    ...(y0 + D > gy
+      ? [posts[0], ...bar, ...droid, ...beam, posts[1]]
+      : [...droid, ...beam, ...posts, ...bar]),
+    ...hand,
+    {
+      kind: "label",
+      at: [0.8, gy, gz + 0.4],
+      text: along ? "move along" : scanning ? "scanning" : "checkpoint",
+      dx: -1.2,
+      dy: -1.1,
+      accent: along || scanning,
+    },
+  ];
+  if (between(5.6, 6.9))
+    parts.push({
+      kind: "label",
+      at: [dx + 0.3, dy - 0.3, top + 0.85],
+      text: "?",
+      dx: 0.9,
+      dy: -0.8,
+    });
   return {
     parts,
     ext: [
-      [0, 9, 0],
-      [9, 0, 0],
-      [9, 9, 0],
-      [0, 0, 0],
-      [3, 3, z + 1.5],
-      [8.6, 4.3, 3],
+      // the gate, the droid at its stop, and the hand; the floor runs off
+      [-0.5, 4.4, 0],
+      [0.8, gy, gz + 1.8],
+      [8.5, 5.4, 0.6],
+      [7, 1, 0],
+      [4, 7.5, 0],
     ],
-    axes: ground(9),
+    axes: ground(7),
   };
 };
 
