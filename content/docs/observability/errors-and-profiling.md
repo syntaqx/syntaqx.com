@@ -142,7 +142,8 @@ Overhead claims vary in how specific they are, and I only quote the specific one
 - **The OpenTelemetry eBPF profiler** states "1% CPU and 250MB memory are our upper limits in testing."
 - **Go's own diagnostics guide** says it "is safe to profile programs in production, but enabling some profiles (e.g. the CPU profile) adds cost," and recommends collecting one profile at a time.
 - **Grafana**, which makes Pyroscope, gives a range rather than a figure: "CPU and latency overhead for typical configurations lands in the low single-digit percentages," and sampling profilers' memory overhead is "usually less than 50 MB per pod."
-- **Datadog and Parca** describe their overhead as low or very low without publishing a figure, so measure it on your own service before and after enabling it. <!-- source-gap: profiling-vendor-overhead | missing | Datadog and Parca publish no numeric overhead figure for their continuous profilers | closes with: a vendor-published overhead percentage or benchmark | checked: 2026-11-01 -->
+- **Parca** says its agent "has been observed to have an overhead of less than 1% in CPU and less than 200 Mb memory," depending on how many targets are profiled; a maintainer calls the CPU figure "anecdotal for pure native programs and just the CPU profiler" and says "We don't publish any benchmarks."
+- **Datadog** says only that its profiler has "minimal impact on your host's CPU and memory usage," without a figure. For both, measure it on your own service before and after enabling it. <!-- source-gap: profiling-vendor-overhead | missing | Datadog publishes no numeric overhead figure for its continuous profiler, and Parca's under-1% figure is anecdotal, not benchmarked | closes with: a vendor-published overhead percentage or benchmark | checked: 2026-11-03 -->
 
 Block and mutex profiles are the expensive ones: Go leaves both off by default, and Datadog warns that "The block profiler can cause noticeable overhead for production workloads." Turn them on with a sampling rate, not at full fidelity.
 
@@ -231,6 +232,7 @@ The design point worth knowing now: a profile sample "MAY include a `Link` (span
 - [Grafana Pyroscope: Profile types](https://grafana.com/docs/pyroscope/latest/configure-client/profile-types/) and [eBPF with Grafana Alloy](https://grafana.com/docs/pyroscope/latest/configure-client/grafana-alloy/ebpf/), what each language and the eBPF profiler support
 - [Grafana Labs: Continuous profiling in production, a real-world example to measure benefits and costs (February 9, 2026)](https://grafana.com/blog/continuous-profiling-in-production-a-real-world-example-to-measure-benefits-and-costs/), CPU and latency overhead in the low single-digit percentages, memory usually under 50 MB per pod
 - [Parca Agent](https://www.parca.dev/docs/parca-agent/), eBPF sampling at 19 Hz per CPU
+- [Parca: FAQ](https://www.parca.dev/docs/faq/), observed agent overhead under 1% CPU and 200 MB memory, and [parcagpu issue #32](https://github.com/parca-dev/parcagpu/issues/32), where a maintainer calls the figure anecdotal
 - [Datadog: Continuous Profiler](https://docs.datadoghq.com/profiler/) and [profile types](https://docs.datadoghq.com/profiler/profile_types/), wall time, off-CPU blind spots and block profiler overhead
 - [Google Cloud Profiler](https://docs.cloud.google.com/profiler/docs/about-profiler), overhead during collection and amortized
 - [OpenTelemetry eBPF profiler](https://github.com/open-telemetry/opentelemetry-ebpf-profiler), non-intrusive whole-system profiling and its tested limits
