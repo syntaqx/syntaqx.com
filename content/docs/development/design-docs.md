@@ -2,7 +2,7 @@
 title = "Decisions & Design Docs"
 description = "How much process a decision deserves, a named decider and a date, disagree and commit, and design docs and ADRs that keep the reasoning findable later."
 category = "Development"
-order = 1021
+order = 121
 tags = ["process", "architecture", "adr", "documentation", "decisions", "leadership"]
 aliases = ["engineering/design-docs", "engineering", "design-docs", "leadership/technical-decisions"]
 +++

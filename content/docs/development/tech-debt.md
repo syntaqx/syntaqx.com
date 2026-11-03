@@ -3,7 +3,7 @@ title = "Tech Debt"
 description = "Treat tech debt like a loan: know which kind you took on, track the interest you pay, budget a steady share to repay it, and modernize with strangler figs."
 category = "Development"
 aliases = ["engineering/tech-debt"]
-order = 1028
+order = 128
 tags = ["tech-debt", "process", "architecture", "planning"]
 +++
 

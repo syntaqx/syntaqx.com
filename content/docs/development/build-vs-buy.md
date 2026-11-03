@@ -3,7 +3,7 @@ title = "Build vs Buy & Vendors"
 nav_title = "Build vs Buy"
 description = "Buy what isn't your differentiator, total cost both ways, vendor evaluation and security review, exit plans, third-party risk, sprawl, open source and renewals."
 category = "Development"
-order = 1027
+order = 127
 tags = ["build-vs-buy", "vendors", "procurement", "third-party-risk", "architecture", "cost"]
 +++
 

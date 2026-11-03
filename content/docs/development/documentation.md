@@ -2,7 +2,7 @@
 title = "Documentation"
 description = "Docs as code in the repository, reviewed and checked in CI, sorted by Diátaxis, API reference generated from OpenAPI, and every page owned and kept fresh."
 category = "Development"
-order = 1025
+order = 125
 tags = ["documentation", "process", "openapi", "diataxis", "agents"]
 +++
 

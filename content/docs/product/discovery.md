@@ -3,7 +3,7 @@ title = "Discovery & User Research"
 nav_title = "Discovery & Research"
 description = "Finding problems worth solving before a problem statement: weekly customer contact, interviews about past behavior, assumption tests and small usability tests."
 category = "Product"
-order = 1000
+order = 111
 tags = ["product", "discovery", "user-research", "usability"]
 +++
 
