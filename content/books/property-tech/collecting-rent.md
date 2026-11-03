@@ -205,7 +205,7 @@ Decisions behind it:
 - **Autopay respects the block.** The autopay job checks acceptance before each run and pauses enrollment rather than failing silently; a resident on `full_balance_only` gets a message, not a returned debit.
 - **Fees record who charges them.** A platform fee never becomes a ledger charge; a landlord fee always does.
 - **The collection arrangement is per property and period,** so the settlement for a payment is reproducible and a change of model (a new processor, a new trust account, an acquisition) is an effective-dated change rather than a rewrite.
-- **Every channel uses the same matching and posting path,** idempotent on the source's reference ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)), with unmatched items in a suspense queue that is worked daily.
+- **Every channel uses the same matching and posting path,** idempotent on the source's reference ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)), with unmatched items in a suspense queue that is worked daily.
 
 ## Auditing
 

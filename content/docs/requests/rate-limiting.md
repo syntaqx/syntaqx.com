@@ -99,7 +99,7 @@ Start with a fixed window. The boundary burst (a whole budget spent at the end o
 
 ### When the Store Is Down
 
-The rate limiter must never be the reason the API is down. If Redis errors or doesn't answer within a second, fall back to an in-memory count per instance: limits get looser for a while, but requests keep flowing. Failing closed would turn a cache outage into a full outage, to protect against abuse that probably isn't happening at that moment. (An [idempotency](/docs/payments/idempotency) store makes the opposite call, because there a looser check means a duplicate write.)
+The rate limiter must never be the reason the API is down. If Redis errors or doesn't answer within a second, fall back to an in-memory count per instance: limits get looser for a while, but requests keep flowing. Failing closed would turn a cache outage into a full outage, to protect against abuse that probably isn't happening at that moment. (An [idempotency](/docs/requests/idempotency) store makes the opposite call, because there a looser check means a duplicate write.)
 
 Remember clients already over the limit in memory too. A blocked client keeps sending requests, and checking Redis for each one spends the store's capacity, and on a metered plan money, on traffic you've already refused.
 

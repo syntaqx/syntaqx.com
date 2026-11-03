@@ -120,7 +120,7 @@ Every decision is recorded with what produced it:
 }
 ```
 
-The full shape and why each field is there are in [The Decision Record](/docs/architecture/risk-scoring#the-decision-record) and [Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided). Decisions are append-only like the rest of the [payment record](/docs/payments/payment-states): a reviewer approving a payment adds a decision rather than overwriting the original, so the record shows both what the system thought and what the person decided. Backtest rule changes against stored payments before shipping them ([Changing Rules and Models Safely](/docs/architecture/risk-scoring#changing-rules-and-models-safely)): a rule that would have stopped last month's card-testing attack and 3% of last month's good customers is a bad rule that looks good in a postmortem.
+The full shape and why each field is there are in [The Decision Record](/docs/architecture/risk-scoring#the-decision-record) and [Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided). Decisions are append-only like the rest of the [payment record](/docs/money/payment-states): a reviewer approving a payment adds a decision rather than overwriting the original, so the record shows both what the system thought and what the person decided. Backtest rule changes against stored payments before shipping them ([Changing Rules and Models Safely](/docs/architecture/risk-scoring#changing-rules-and-models-safely)): a rule that would have stopped last month's card-testing attack and 3% of last month's good customers is a bad rule that looks good in a postmortem.
 
 ## How to Build It
 

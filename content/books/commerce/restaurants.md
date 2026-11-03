@@ -50,7 +50,7 @@ Full service adds three structures to the order:
 
 So a dine-in order is one order with many lines, one or more checks, and tenders against each check. Moving a line between checks, transferring a table to another server, merging two tables and splitting a check after a course has been fired are all edits to an open order, each attributed to the staff member who made it.
 
-Bar tabs are the same structure with a twist: the guest opens a tab with a card that is pre-authorized for an estimate, orders over hours, and the tab closes with a final amount and tip. The card rules for estimated and incremental authorizations are the Payments volume's ([Holds That Change Size](/docs/payments/payment-states#holds-that-change-size)).
+Bar tabs are the same structure with a twist: the guest opens a tab with a card that is pre-authorized for an estimate, orders over hours, and the tab closes with a final amount and tip. The card rules for estimated and incremental authorizations are the Payments volume's ([Holds That Change Size](/docs/money/payment-states#holds-that-change-size)).
 
 ## Menus and Modifiers In-House
 
@@ -109,7 +109,7 @@ A tip and a service charge look alike on a receipt and are treated completely di
 
 For the system, the rules become three:
 
-- **Tips and service charges are different charge kinds.** A tip is an `order_charges` row with `kind = 'tip'`, payer customer, payee staff; a service charge is `kind = 'service_charge'`, payee merchant, with a flag for whether it's distributed to staff. They never share a column, because they go to different ledger accounts, different tax reports and different paychecks ([A Chart of Accounts](/docs/payments/payment-states#a-chart-of-accounts)).
+- **Tips and service charges are different charge kinds.** A tip is an `order_charges` row with `kind = 'tip'`, payer customer, payee staff; a service charge is `kind = 'service_charge'`, payee merchant, with a flag for whether it's distributed to staff. They never share a column, because they go to different ledger accounts, different tax reports and different paychecks ([A Chart of Accounts](/docs/money/payment-states#a-chart-of-accounts)).
 - **The disclosure is part of the charge.** A mandatory service charge carries the rule that requires its disclosure and the text shown wherever prices appear (menu, online ordering, receipt), resolved by the location's jurisdiction ([Rules as Data](/docs/architecture/rules-as-data)).
 - **Tip suggestions are configuration, and the tip base is a decision.** Whether suggested percentages apply to the pre-tax or post-tax total, before or after discounts, is something the guest sees and the merchant chooses; store which base was used on the charge.
 

@@ -126,7 +126,7 @@ The events that move it come from the rest of the system ([Signing the Agreement
 
 Recovering a clawback means deducting from future pay, and federal and state wage laws limit deductions from an employee's wages; the plan and the recovery method need counsel's review in each state. The holdback exists partly to avoid that: a clawback nets against held money first. For a departed rep with no future pay, the system records the receivable and the business decides (with counsel) whether to pursue it; the system must never silently zero it.
 
-Two engineering rules keep the ledger sane. Every entry carries an idempotency key derived from the triggering event (`agreement_id` + event type + plan version), so a replayed webhook can't pay twice ([Idempotency](/docs/payments/idempotency)). And amounts are integers in minor units with explicit rounding per entry, so a statement sums to the payroll export to the cent ([Money](/docs/payments/money)).
+Two engineering rules keep the ledger sane. Every entry carries an idempotency key derived from the triggering event (`agreement_id` + event type + plan version), so a replayed webhook can't pay twice ([Idempotency](/docs/requests/idempotency)). And amounts are integers in minor units with explicit rounding per entry, so a statement sums to the payroll export to the cent ([Money](/docs/money/amounts)).
 
 ## Technician Sales and Upsells
 

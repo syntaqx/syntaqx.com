@@ -78,7 +78,7 @@ The expense side starts with a property's utility accounts: electric for common 
 
 The flagship number this produces is **utility recovery**, the share of utility expense billed back to residents, defined in [Operating Metrics](/books/property-tech/operating-metrics#utilities-and-ancillary-revenue). A falling recovery rate is how missed move-ins, wrong allocation settings and vacant units billed to occupied ones show up.
 
-**Sales tax** on utilities is its own audit. Where a state taxes residential and commercial utility use differently, a property billed at the wrong rate overpays, so specialist firms recover overpayments on contingency and fix the rate going forward; Entrata's sales tax audit page says some states allow refunds up to ten years back. The platform's job is to keep the tax lines from every bill, by account and service period, so a claim can be filed from data ([Sales Tax](/docs/payments/sales-tax#exemptions-are-documents) covers exemption documents).
+**Sales tax** on utilities is its own audit. Where a state taxes residential and commercial utility use differently, a property billed at the wrong rate overpays, so specialist firms recover overpayments on contingency and fix the rate going forward; Entrata's sales tax audit page says some states allow refunds up to ten years back. The platform's job is to keep the tax lines from every bill, by account and service period, so a claim can be filed from data ([Sales Tax](/docs/money/sales-tax#exemptions-are-documents) covers exemption documents).
 
 ## Procurement
 

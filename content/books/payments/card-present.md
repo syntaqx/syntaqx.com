@@ -99,7 +99,7 @@ Stripe's documentation states the consequence without softening it: when you ope
 So offline is a risk product, and the platform should treat it like one:
 
 - **Per-transaction and cumulative limits,** set per merchant: no offline payments above an amount, and none at all once the stored total crosses a threshold.
-- **A distinct state.** An offline payment is `collected_offline`, not `authorized`, until it's forwarded and authorized ([Payment States & Ledgers](/docs/payments/payment-states)). Don't fund the merchant against it, and show the merchant which payments are still at risk.
+- **A distinct state.** An offline payment is `collected_offline`, not `authorized`, until it's forwarded and authorized ([Payment States & Ledgers](/docs/money/payment-states)). Don't fund the merchant against it, and show the merchant which payments are still at risk.
 - **Fast forwarding,** and an alert when a device holds stored payments for too long, because a terminal that dies with unforwarded payments in it can mean lost money.
 
 ## Why Card-Present Is Cheaper

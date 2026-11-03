@@ -266,7 +266,7 @@ ORDER BY void_rate DESC NULLS LAST;
 Design notes:
 
 - **Staff here, staff members in Field Operations.** A Commerce `staff` row and a Field Operations [`staff_members`](/books/field-operations/field-operations-business) row are the same concept: a person who works for the merchant, scoped to where they work. A store's location is a branch's counterpart, and a role assignment per location is the same shape as a technician's branch. A merchant running both (a garden center with a lawn service) can share one person record and add the commerce role.
-- **The drawer is a ledger.** Expected cash is the sum of `cash_movements`; nothing stores a running balance that can drift. A sale's cash movement comes from its tender, so the drawer and the sales reconcile by construction ([Append-Only Records](/docs/payments/payment-states#append-only-records)).
+- **The drawer is a ledger.** Expected cash is the sum of `cash_movements`; nothing stores a running balance that can drift. A sale's cash movement comes from its tender, so the drawer and the sales reconcile by construction ([Append-Only Records](/docs/money/payment-states#append-only-records)).
 - **A session per drawer, not per person.** Two cashiers sharing a drawer is a choice some stores make and loss prevention dislikes; the model records who did each movement either way, and a merchant that wants one person per drawer enforces it at open.
 - **Counts are evidence.** Denominations, blind or not, who counted and who verified are stored for every count, so an over or short can be traced to a count, not argued about.
 - **Permissions are versioned.** An approval records the role version in force, so a later change to the threshold doesn't make an old approval look wrong.

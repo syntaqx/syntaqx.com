@@ -195,7 +195,7 @@ This is the payout machinery of [Risk Holds, Negative Balances and Clawbacks](/b
 
 ### Sales Tax
 
-In the US a closed-loop platform is the marketplace facilitator for its sellers' sales and collects and remits sales tax in states with facilitator laws ([Marketplace Facilitator Tax](/books/user-generated-platforms/pricing-and-fees#marketplace-facilitator-tax), [US Economic Nexus](/docs/payments/sales-tax#us-economic-nexus)). The content-led twist is the link-out model: when Meta moved Shops checkout to merchants' websites in 2025, the sale stopped happening on its marketplace, and with it the facilitator role for those orders. Whether a platform is the facilitator follows from whether its checkout processes the sale, so the order's checkout path is a tax fact, recorded on the order.
+In the US a closed-loop platform is the marketplace facilitator for its sellers' sales and collects and remits sales tax in states with facilitator laws ([Marketplace Facilitator Tax](/books/user-generated-platforms/pricing-and-fees#marketplace-facilitator-tax), [US Economic Nexus](/docs/money/sales-tax#us-economic-nexus)). The content-led twist is the link-out model: when Meta moved Shops checkout to merchants' websites in 2025, the sale stopped happening on its marketplace, and with it the facilitator role for those orders. Whether a platform is the facilitator follows from whether its checkout processes the sale, so the order's checkout path is a tax fact, recorded on the order.
 
 ### The End of De Minimis
 

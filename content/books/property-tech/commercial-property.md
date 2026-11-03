@@ -174,7 +174,7 @@ The effect on the data is a second schedule beside the billing schedule. As an i
 - **Collectibility.** If collecting a tenant's payments is not probable, ASC 842 generally limits operating lease income to payments received, which reverses the straight-line receivable. Stakeholders in the FASB's 2025 review observed that lessors may not establish a general allowance on a portfolio of operating lease receivables, a change from the prior standard that raised concerns for lessors such as REITs.
 - **Recoveries are a nonlease component.** CAM is a service, and the FASB's review lists allocating consideration between lease and nonlease components as a lessor challenge; the accounting policy decides how recoveries are presented, and the system needs recovery charges identifiable apart from rent to support either choice.
 
-The product keeps the facts and finance picks the policy, exactly as [Accounting & Revenue Recognition](/docs/payments/accounting#recognition-schedules) describes for subscription revenue: the schedule is regenerated under a recorded policy version, never hand-edited.
+The product keeps the facts and finance picks the policy, exactly as [Accounting & Revenue Recognition](/docs/money/accounting#recognition-schedules) describes for subscription revenue: the schedule is regenerated under a recorded policy version, never hand-edited.
 
 ## Tenant Improvements and Free Rent
 
@@ -229,7 +229,7 @@ How flex maps to the model:
 
 - **Private offices are units.** A private office is a `commercial_suite` unit in a property of type `commercial`, occupied by one membership at a time, so occupancy and revenue per available office work like any other unit.
 - **Desks and rooms are bookable resources,** not units: a meeting room, a hot-desk pool with a capacity, a phone booth. Bookings are reservations against them with the exclusion constraint from [Exclusion Constraints for Time](/docs/architecture/reservations-and-holds#exclusion-constraints-for-time), and pooled seats use the counter pattern from [Reservations & Holds](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory).
-- **Memberships are subscriptions.** A membership is a recurring plan with included credits (meeting-room hours, day passes), overage charges and a notice period, billed in periods as [Subscriptions & Billing](/docs/payments/subscriptions#periods-and-anchors) describes, rather than a lease ledger. The member company is a legal entity; its seated members are people with access grants.
+- **Memberships are subscriptions.** A membership is a recurring plan with included credits (meeting-room hours, day passes), overage charges and a notice period, billed in periods as [Subscriptions & Billing](/docs/money/subscriptions#periods-and-anchors) describes, rather than a lease ledger. The member company is a legal entity; its seated members are people with access grants.
 - **Is it a lease?** ASC 842 defines a lease as a contract conveying "the right to control the use of identified property, plant, or equipment," so a hot-desk membership with no identified desk generally is not one, while a private office for a term may be. That classification is the operator's accountants' call per contract type; the system records which plan types are accounted as leases.
 - **Access and IT are part of the product.** Door access follows active memberships and bookings ([Access, Smart Buildings & Parking](/books/property-tech/access-and-smart-buildings#smart-locks-and-access-control)), and managed Wi-Fi and per-member network access are a service line ([Resident Financial Products & Ancillary Revenue](/books/property-tech/resident-financial-products#bulk-internet-and-managed-wi-fi) covers managed internet as ancillary revenue).
 
@@ -745,7 +745,7 @@ CREATE TABLE flex_memberships (
   plan_kind        TEXT NOT NULL CHECK (plan_kind IN ('hot_desk', 'dedicated_desk',
                      'private_office', 'virtual_office', 'day_pass_bundle')),
   unit_id          UUID REFERENCES units (id),        -- the private office, if any
-  subscription_id  UUID NOT NULL,                     -- billing: /docs/payments/subscriptions
+  subscription_id  UUID NOT NULL,                     -- billing: /docs/money/subscriptions
   seats            INT NOT NULL DEFAULT 1,
   notice_days      INT NOT NULL,
   accounted_as_lease BOOLEAN NOT NULL,                -- the operator's policy per plan
@@ -857,7 +857,7 @@ Design decisions behind it:
 - **Area is measured, agreed and pooled separately.** `area_measurements` holds the surveyor's numbers by standard and edition; `lease_premises.agreed_area` and `lease_recovery_terms.stipulated_share` hold what the lease says; pool denominators come from pool membership. A re-measurement never changes a stipulated share.
 - **Recovery terms are data per lease and pool, and the calculation order is versioned.** Every reconciliation records the ledger snapshot and policy version it used, so the same statement can be reproduced for a tenant's auditor years later.
 - **Estimates and true-ups are ordinary charges.** Recovery estimates are `lease_charge_schedules` under a `recovery` charge code; the reconciliation posts a true-up charge or credit; corrections are new reconciliation versions with difference charges, never edits.
-- **Revenue views beside billing.** The straight-line schedule is the lessor's revenue view and the lease accounting schedule is the lessee's; both are regenerated from facts under a policy version, as [Recognition Schedules](/docs/payments/accounting#recognition-schedules) prescribes, and post to the general ledger by summary journal.
+- **Revenue views beside billing.** The straight-line schedule is the lessor's revenue view and the lease accounting schedule is the lessee's; both are regenerated from facts under a policy version, as [Recognition Schedules](/docs/money/accounting#recognition-schedules) prescribes, and post to the general ledger by summary journal.
 - **The occupier posture is its own model.** `occupier_leases` doesn't reuse `leases`, because the lessee doesn't own the building, half the assets aren't buildings, and the money flows out through payables. Clauses and critical dates are shared, with a one-of check between the two lease kinds.
 - **Index values are shared reference data.** `index_values` is the one table without `tenant_id`: a published CPI value is the same for every tenant, and escalations point at the exact rows they used.
 - **Flex billing is a subscription.** Memberships bill through the Payments model's subscriptions instead of adding a fourth account type to `charges`; private offices are units with an exclusion constraint, rooms are resources with the reservations pattern.

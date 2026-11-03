@@ -20,7 +20,7 @@ My rule: **decide which reader each layer is meant to stop, and encrypt at the l
 
 AWS describes RDS storage encryption accurately: it covers "the underlying storage for DB instances, its logs, automated backups, read replicas, and snapshots," and handles decryption "transparently," so "you don't need to modify your database client applications." Transparent is the point and the limit: anyone the database lets in sees plaintext.
 
-Turn storage encryption on everywhere, at creation. On RDS you "can only encrypt an Amazon RDS DB instance when you create it," and encrypting an existing one means restoring from an encrypted copy of a snapshot, which is a migration you don't want to schedule later. Then choose application-level encryption field by field, using the classification in [Sensitive Data](/docs/payments/sensitive-data#classify-every-field). Encrypting everything in the application destroys search, sorting and reporting for no gain on fields that were never sensitive.
+Turn storage encryption on everywhere, at creation. On RDS you "can only encrypt an Amazon RDS DB instance when you create it," and encrypting an existing one means restoring from an encrypted copy of a snapshot, which is a migration you don't want to schedule later. Then choose application-level encryption field by field, using the classification in [Sensitive Data](/docs/security/sensitive-data#classify-every-field). Encrypting everything in the application destroys search, sorting and reporting for no gain on fields that were never sensitive.
 
 ## Envelope Encryption
 
@@ -114,7 +114,7 @@ Application-level encryption turns "who read this?" into a question the KMS can 
 - **The KEK beside the data.** A key in an environment variable, a config file or the same database it protects is a password taped to the safe.
 - **No key ID on the ciphertext,** so rotation means guessing which key made which row.
 - **Unkeyed hashes as lookup columns,** reversible by brute force for anything with a small value space.
-- **Plaintext escaping through the side door:** request logs, error trackers, analytics events and search indexes that receive the decrypted value ([Sensitive Data](/docs/payments/sensitive-data#logging-and-errors)).
+- **Plaintext escaping through the side door:** request logs, error trackers, analytics events and search indexes that receive the decrypted value ([Sensitive Data](/docs/security/sensitive-data#logging-and-errors)).
 - **A key deleted by accident.** Deletion is irreversible by design, so it goes through review, a waiting period and an alarm.
 
 ## Checklist

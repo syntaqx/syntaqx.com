@@ -102,7 +102,7 @@ Requirements 6.4.3 and 11.6.1 are the technical bar for anyone who has to meet t
 
 PCI DSS applies to the **cardholder data environment** (CDE), every system that stores, processes or transmits card data, and every system connected to it or able to affect it. Scope is the cost driver, so the most valuable PCI work is making the CDE small.
 
-- **Tokenize at the edge,** so your servers only ever see a token. [Sensitive Data](/docs/payments/sensitive-data) covers the pattern, and [Running a Card Vault](/books/payments/card-vault) the small vault behind it.
+- **Tokenize at the edge,** so your servers only ever see a token. [Sensitive Data](/docs/security/sensitive-data) covers the pattern, and [Running a Card Vault](/books/payments/card-vault) the small vault behind it.
 - **Segment the network.** It isn't required, but without it the whole network is in scope. If you rely on it, penetration-test it at least every 12 months as a merchant and every six months as a service provider, and after any change to it (11.4.5, 11.4.6).
 - **Never store sensitive authentication data** (full track data, the card verification code, PINs and PIN blocks) after authorization, even encrypted (3.3.1).
 

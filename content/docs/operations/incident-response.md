@@ -25,7 +25,7 @@ Severity decides who gets woken up and how fast you communicate, so whoever is o
 | **SEV2** | A major feature degraded, a subset of customers fully blocked, or an [SLO](/docs/operations/slos) burning fast | Commander assigned; status page if customers can see it; updates hourly |
 | **SEV3** | Minor degradation with a workaround, or internal-only impact | Owning team handles it in business hours; tracked like an incident |
 
-When unsure, pick the higher one; downgrading is free. Anything touching money or personal data starts at SEV1 until proven otherwise: a double charge for ten customers matters more than its count suggests ([Payment States & Ledgers](/docs/payments/payment-states)).
+When unsure, pick the higher one; downgrading is free. Anything touching money or personal data starts at SEV1 until proven otherwise: a double charge for ten customers matters more than its count suggests ([Payment States & Ledgers](/docs/money/payment-states)).
 
 ## Roles
 

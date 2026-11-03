@@ -89,7 +89,7 @@ Webhooks to apps and partners are one more consumer of the same stream, not a se
 
 ## Idempotency at Checkout and Webhooks
 
-Every boundary in a commerce system is crossed by retries: a shopper's double click, a mobile client's timeout, a relay that published but crashed before marking the row, a carrier's webhook resent, a marketplace order pulled twice. The rule is the playbook's ([Idempotency](/docs/payments/idempotency)): every write that crosses a boundary carries a key, and the receiver stores the key with the result. The commerce map of where keys come from:
+Every boundary in a commerce system is crossed by retries: a shopper's double click, a mobile client's timeout, a relay that published but crashed before marking the row, a carrier's webhook resent, a marketplace order pulled twice. The rule is the playbook's ([Idempotency](/docs/requests/idempotency)): every write that crosses a boundary carries a key, and the receiver stores the key with the result. The commerce map of where keys come from:
 
 | Boundary | Key | Where it's stored | Chapter |
 | --- | --- | --- | --- |

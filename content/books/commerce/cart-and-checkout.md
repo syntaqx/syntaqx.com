@@ -129,7 +129,7 @@ The design principle is worth copying when you build your own checkout: third-pa
 
 ## Placing the Order Exactly Once
 
-"Place order" is the moment a provisional checkout becomes an order and a payment. Every failure here is costly: a double click that creates two orders, a timeout after the card was authorized but before the order was written, an order created for a card that was declined. The general tools are the playbook's ([Idempotency](/docs/payments/idempotency), [Double Submits](/docs/frontend/forms#double-submits)); the commerce sequence:
+"Place order" is the moment a provisional checkout becomes an order and a payment. Every failure here is costly: a double click that creates two orders, a timeout after the card was authorized but before the order was written, an order created for a card that was declined. The general tools are the playbook's ([Idempotency](/docs/requests/idempotency), [Double Submits](/docs/frontend/forms#double-submits)); the commerce sequence:
 
 1. **Freeze the checkout.** Recompute every line, charge and the tax one last time, and lock the checkout's version; the total about to be authorized is the total of these rows.
 2. **Reserve or check stock** for the lines (on platforms that commit at order, this is the moment), failing the checkout cleanly if something sold out.
@@ -221,7 +221,7 @@ WHERE c.status IN ('processing', 'failed')
 Design notes:
 
 - **The version is the contract.** Every edit to lines, address, shipping or codes bumps `checkouts.version`; quotes and the tax calculation record the version they were computed for, and placing the order checks that the selected quote and the tax match the current version. A quote from version 3 on a version 5 checkout is stale by construction.
-- **The checkout's key is the order's key.** Reusing `idempotency_key` for the authorization and the order makes a retry after any failure safe, and the query above is the reconciliation that catches the remaining case, matched against the processor's authorizations by the same key ([Reconciliation](/docs/payments/payment-states#reconciliation)).
+- **The checkout's key is the order's key.** Reusing `idempotency_key` for the authorization and the order makes a retry after any failure safe, and the query above is the reconciliation that catches the remaining case, matched against the processor's authorizations by the same key ([Reconciliation](/docs/money/payment-states#reconciliation)).
 - **Keep every quote shown, not only the chosen one.** A shopper who says they were shown free shipping, or a promise of Friday, is answered from these rows; the selected quote's promise becomes the order's shipping promise in [Consumer Protection Online](/books/commerce/online-consumer-protection#how-to-build-it).
 - **Contact starts the clock.** `contact_captured_at` is when recovery becomes possible, and a recovery job selects open checkouts past the merchant's delay with consent to contact, stamping `recovery_sent_at` so one checkout gets one sequence.
 - **Expire checkouts and carts on read,** and purge expired ones on a schedule; a cart is personal data for as long as it holds an email ([Retention Windows](/docs/architecture/data-retention#retention-windows)).

@@ -148,7 +148,7 @@ CREATE TABLE support_operations (
 );
 ```
 
-- **The operation calls the owning service.** A refund goes through the payment service, a credit through the ledger; support never writes those tables itself ([Idempotency](/docs/payments/idempotency)).
+- **The operation calls the owning service.** A refund goes through the payment service, a credit through the ledger; support never writes those tables itself ([Idempotency](/docs/requests/idempotency)).
 - **Caps per actor and per day** live in configuration: a bot's runbook may grant one thing and nothing else, an agent may credit up to a value, a second person approves above it ([Approvals, and Nobody Approves Their Own](/docs/security/support-access#approvals-and-nobody-approves-their-own)).
 - **Some things are deliberately not operations.** No `set_password`, no `set_email`, no `lift_ban`.
 

@@ -85,7 +85,7 @@ Two things follow. A provider's ceiling isn't the merchant's ceiling: Stripe's m
 - **Make eligibility configuration, per merchant.** Fee type, rate or flat amount, which channels and card types, the merchant's category, its jurisdiction, and dates: when it notified its acquirer and the networks, and when it may start. A surcharge can't switch on before its notice period has passed.
 - **Keep jurisdiction rules as effective-dated data.** Caps, prohibitions and disclosure requirements by state, owned by someone accountable for them, and versioned, so every historical fee can be explained by the rule that was in force ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
 - **Show it before the payer commits.** The fee and the total, before authorization, with a way to cancel or pay another way. Then authorize the total, and itemize the fee on the receipt and in the API.
-- **Compute in minor units with a written rounding rule.** A percentage of an amount produces fractions of a cent; decide which way they round, once ([Money & Amounts](/docs/payments/money)).
+- **Compute in minor units with a written rounding rule.** A percentage of an amount produces fractions of a cent; decide which way they round, once ([Money & Amounts](/docs/money/amounts)).
 - **Refund the fee with the payment.** A full refund returns the fee; a partial refund returns a proportional share. Keeping a fee on money you've given back is indefensible, whatever a rule allows.
 - **Keep an audit trail.** For every fee: the inputs (card classification, merchant configuration, jurisdiction rule version) and the result. When an acquirer or a state asks why a fee was charged, the answer is a query, not an investigation.
 

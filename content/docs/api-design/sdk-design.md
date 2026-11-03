@@ -6,7 +6,7 @@ order = 208
 tags = ["api", "sdk", "clients", "developer-experience"]
 +++
 
-An SDK is where your API's conventions either reach the developer or get lost. [Retry rules](/docs/architecture/retries-and-timeouts), [idempotency keys](/docs/payments/idempotency), [pagination links](/docs/requests/pagination): each is documented, and each is something a busy developer half-implements under deadline. A good SDK implements them once, correctly, for everyone. A bad one adds a layer of bugs between the developer and an API that was fine.
+An SDK is where your API's conventions either reach the developer or get lost. [Retry rules](/docs/architecture/retries-and-timeouts), [idempotency keys](/docs/requests/idempotency), [pagination links](/docs/requests/pagination): each is documented, and each is something a busy developer half-implements under deadline. A good SDK implements them once, correctly, for everyone. A bad one adds a layer of bugs between the developer and an API that was fine.
 
 ## When to Ship One
 

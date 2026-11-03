@@ -9,7 +9,7 @@ tags = ["payments", "cards", "iso-8583", "authorization", "settlement"]
 
 A card payment looks like one event: the customer taps, the screen says approved, the merchant has been paid. None of that is true. Approval moves no money, the merchant isn't paid for a day or more, and at least five companies touched the transaction, each with its own system, its own clock and its own rules. Almost every hard problem in a payments platform (holds that expire, funding that doesn't match sales, reversals after a timeout, disputes months later) is one of those companies doing exactly what it's supposed to. You can't build reliably on the system until you can draw it.
 
-This chapter is the map the rest of the volume uses. The engineering of money itself (amounts, idempotency, state machines, ledgers) lives in [Payments](/docs/payments/money); this volume is about the industry those systems plug into. It's mostly about accepting payments and moving money for merchants; issuing cards, the other end of the same wire, has its own part, starting with [Card Issuing](/books/payments/card-issuing). How a store times authorization and capture around its shipments is the Commerce volume's [Taking Payment in Commerce](/books/commerce/taking-payment). Stablecoins settle on blockchains under their own issuer rules rather than on the card and bank rails, so they get a chapter of their own, [Stablecoins & Crypto Rails](/books/payments/stablecoins). Terms are defined where they first appear, and all of them are collected in the [Glossary](/books/payments/glossary).
+This chapter is the map the rest of the volume uses. The engineering of money itself (amounts, idempotency, state machines, ledgers) lives in [Payments](/docs/money/amounts); this volume is about the industry those systems plug into. It's mostly about accepting payments and moving money for merchants; issuing cards, the other end of the same wire, has its own part, starting with [Card Issuing](/books/payments/card-issuing). How a store times authorization and capture around its shipments is the Commerce volume's [Taking Payment in Commerce](/books/commerce/taking-payment). Stablecoins settle on blockchains under their own issuer rules rather than on the card and bank rails, so they get a chapter of their own, [Stablecoins & Crypto Rails](/books/payments/stablecoins). Terms are defined where they first appear, and all of them are collected in the [Glossary](/books/payments/glossary).
 
 ## How to Read This Volume
 
@@ -32,12 +32,12 @@ Read end to end, the volume describes the components of a payment provider. Each
 | Merchant onboarding | Knows who each merchant is and what it may do | [Merchant Onboarding](/books/payments/merchant-onboarding) |
 | Public API, SDKs, test mode | The surface merchants integrate with | [Designing the Payments API](/books/payments/payments-api) |
 | Checkout and invoicing | Hosted pages, payment links, invoices and virtual terminals for merchants who don't write payment code | [Checkout, Invoices & Payment Links](/books/payments/checkout-and-invoicing) |
-| Payment orchestration | One state machine per payment, per rail | [Payment States & Ledgers](/docs/payments/payment-states) |
+| Payment orchestration | One state machine per payment, per rail | [Payment States & Ledgers](/docs/money/payment-states) |
 | Card vault and keys | Holds card and bank numbers, hands out tokens | [Running a Card Vault](/books/payments/card-vault), [HSMs & Key Management](/books/payments/key-management) |
 | Authentication | 3-D Secure, and when it's required | [SCA & 3-D Secure](/books/payments/strong-customer-authentication) |
 | Risk engine | Decides which payments to allow | [Fraud & Risk](/books/payments/fraud-and-risk) |
 | Processor adapters and router | Talk to acquirers and networks, choose between them, and move between them | [Processor Routing](/books/payments/processor-routing), [Inside a Processor](/books/payments/inside-a-processor), [Switching Processors](/books/payments/switching-processors) |
-| Ledger and reconciliation | Every balance explainable, and matched daily to processor files and bank statements | [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger), [Ledger & Reconciliation](/books/payments/ledger-and-reconciliation) |
+| Ledger and reconciliation | Every balance explainable, and matched daily to processor files and bank statements | [Payment States & Ledgers](/docs/money/payment-states#double-entry-ledger), [Ledger & Reconciliation](/books/payments/ledger-and-reconciliation) |
 | Currencies and borders | Where each party is, what crossing costs, conversion and multi-currency payouts | [Cross-Border Payments & FX](/books/payments/cross-border-and-fx) |
 | Pricing engine | What each payment costs and earns | [Interchange & Pricing](/books/payments/interchange-and-pricing) |
 | Disputes | Chargebacks, evidence, prevention | [Disputes & Chargebacks](/books/payments/disputes-and-chargebacks) |
@@ -101,9 +101,9 @@ Hold windows depend on the brand, the channel and who started the payment: a **c
 
 The table is the networks' limits, and Mastercard's are about fees rather than expiry: its Transaction Processing Excellence program charges an integrity fee on a final authorization not cleared or fully reversed within 7 calendar days, and on a pre-authorization not cleared or reversed within 30, with no separate card-present window. A processor can enforce shorter windows of its own. Stripe, as of October 2026, holds a standard Visa authorization for 7 days online when the customer initiated it, a shorter policy of its own than the 10 days Visa allows, and 5 days in person or merchant-initiated (exactly 4 days and 18 hours, to leave time for clearing), and a standard Mastercard authorization for 7 days online (customer- or merchant-initiated) and 2 days in person; only its extended authorization feature holds longer. Payabli voids any authorization not captured within 10 days and limits partial capture too: a capture can't be for less than 85% of the authorized amount, so a smaller final total means voiding and charging again. The window your system tracks is the shorter of the two: the network's rule, or your processor's.
 
-Not every authorization is a purchase for a final amount. A **zero-amount verification** checks a card is valid without holding money, when a card is saved; a **partial approval** approves less than requested (common on prepaid cards) and leaves the merchant to collect the rest another way; **estimated** and **incremental** authorizations hold an amount that may change ([Payment States & Ledgers](/docs/payments/payment-states#holds-that-change-size); [tips and lodging holds](/books/payments/payments-by-vertical#restaurants-and-hospitality)); and a refund can itself be authorized before it's sent.
+Not every authorization is a purchase for a final amount. A **zero-amount verification** checks a card is valid without holding money, when a card is saved; a **partial approval** approves less than requested (common on prepaid cards) and leaves the merchant to collect the rest another way; **estimated** and **incremental** authorizations hold an amount that may change ([Payment States & Ledgers](/docs/money/payment-states#holds-that-change-size); [tips and lodging holds](/books/payments/payments-by-vertical#restaurants-and-hospitality)); and a refund can itself be authorized before it's sent.
 
-The engineering consequence is that each event is a state, not a log line. `authorized` and `captured` are different states with different rules ([Payment States & Ledgers](/docs/payments/payment-states)), "approved" never means "paid", and capture has a deadline the system must track rather than hope for. A platform that books revenue at authorization will one day explain to finance why a week of sales evaporated when the holds expired.
+The engineering consequence is that each event is a state, not a log line. `authorized` and `captured` are different states with different rules ([Payment States & Ledgers](/docs/money/payment-states)), "approved" never means "paid", and capture has a deadline the system must track rather than hope for. A platform that books revenue at authorization will one day explain to finance why a week of sales evaporated when the holds expired.
 
 ## ISO 8583: What's on the Wire
 
@@ -127,7 +127,7 @@ Response codes are the part you'll live with. In the 1987 table that most networ
 
 The most important behavior in the protocol is what happens when a response doesn't arrive. The issuer may have approved and placed a hold; the acquirer can't know. So the acquirer sends a reversal for the original (matched by its STAN, RRN and amount), which tells the issuer to release any hold it placed. Without that, the customer sees a pending charge for a purchase that "failed", tries again, and is held twice.
 
-Your system has the same problem one layer up. A timeout from your processor is an unknown outcome, not a failure. The safe responses are to query the processor for the result or void what you sent, using the processor idempotency key derived from yours ([Idempotency](/docs/payments/idempotency)) so a retry can never become a second authorization. Treating a timeout as a decline and charging again is the most common double-charge bug in payments.
+Your system has the same problem one layer up. A timeout from your processor is an unknown outcome, not a failure. The safe responses are to query the processor for the result or void what you sent, using the processor idempotency key derived from yours ([Idempotency](/docs/requests/idempotency)) so a retry can never become a second authorization. Treating a timeout as a decline and charging again is the most common double-charge bug in payments.
 
 ## Card-Present and Card-Not-Present
 
@@ -185,13 +185,13 @@ Every provider converges on the same handful of objects under different names. S
 | **refund** | `refunds` | Money going back, its own object against a payment |
 | **dispute** | `disputes` | A chargeback against a payment, with its deadlines ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)) |
 | **payout** | `payouts` | Money leaving a merchant's balance for their bank ([Payouts & Settlement](/books/payments/payouts-and-settlement)) |
-| **ledger** | `ledger_accounts`, `ledger_transactions`, `ledger_entries` | Every balance as the sum of balanced entries ([Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger), [Ledger & Reconciliation](/books/payments/ledger-and-reconciliation)) |
+| **ledger** | `ledger_accounts`, `ledger_transactions`, `ledger_entries` | Every balance as the sum of balanced entries ([Payment States & Ledgers](/docs/money/payment-states#double-entry-ledger), [Ledger & Reconciliation](/books/payments/ledger-and-reconciliation)) |
 
 The split that matters most is **payment versus attempt**. The payment is what the merchant asked for and what its customer sees; the attempt is one conversation with one processor. A payment declined on one card and approved on another, retried after a timeout, sent through 3-D Secure, or failed over to a second processor ([Processor Routing](/books/payments/processor-routing)) has several attempts, and each keeps its own raw response code, network transaction ID and BIN data version, because disputes, retries and pricing all look at the attempt that actually went through.
 
-Two more rules recur in every chapter. **Refunds and disputes are their own records,** never a status on the payment ([Payment States & Ledgers](/docs/payments/payment-states#refunds-and-disputes-are-their-own-objects)), because each has its own lifecycle and can fail. **Amounts on the payment are a convenience; the ledger is the truth.** `amount_captured` and `amount_refunded` make queries cheap, but every movement of money posts a balanced ledger transaction keyed to the event that caused it, and balances are sums of entries.
+Two more rules recur in every chapter. **Refunds and disputes are their own records,** never a status on the payment ([Payment States & Ledgers](/docs/money/payment-states#refunds-and-disputes-are-their-own-objects)), because each has its own lifecycle and can fail. **Amounts on the payment are a convenience; the ledger is the truth.** `amount_captured` and `amount_refunded` make queries cheap, but every movement of money posts a balanced ledger transaction keyed to the event that caused it, and balances are sums of entries.
 
-The spine, in the playbook's [naming conventions](/docs/database/naming-conventions), with amounts in integer minor units ([Money & Amounts](/docs/payments/money)):
+The spine, in the playbook's [naming conventions](/docs/database/naming-conventions), with amounts in integer minor units ([Money & Amounts](/docs/money/amounts)):
 
 ```sql
 CREATE TABLE merchants (
@@ -321,7 +321,7 @@ CREATE TABLE ledger_entries (
 );
 ```
 
-The accounts are the [chart of accounts](/docs/payments/payment-states#a-chart-of-accounts) the playbook names, and the sum-to-zero rule is enforced by a deferred constraint trigger, not trusted to application code. What's deliberately missing is anything a chapter owns: onboarding requirements, stored-credential agreements, risk decisions, settlement files, bank accounts and routing rules all arrive as deltas in their chapters.
+The accounts are the [chart of accounts](/docs/money/payment-states#a-chart-of-accounts) the playbook names, and the sum-to-zero rule is enforced by a deferred constraint trigger, not trusted to application code. What's deliberately missing is anything a chapter owns: onboarding requirements, stored-credential agreements, risk decisions, settlement files, bank accounts and routing rules all arrive as deltas in their chapters.
 
 ## What This Means for the System You Build
 

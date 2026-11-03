@@ -30,7 +30,7 @@ The consistency is the point: one error handler works for a `404` from one endpo
 
 - **Nested fields use dot paths** (`items.0.quantity`), so a form can attach each message to the input that caused it.
 - **Messages are for humans, codes are for programs.** Clients branch on the status code, never by matching message text, so messages can be reworded without breaking anyone.
-- **Never echo the input back.** `"The card number is invalid."`, not `"4242 4242 4242 4241 is invalid."` Error bodies end up in logs, support tickets and screenshots. See [Sensitive Data](/docs/payments/sensitive-data).
+- **Never echo the input back.** `"The card number is invalid."`, not `"4242 4242 4242 4241 is invalid."` Error bodies end up in logs, support tickets and screenshots. See [Sensitive Data](/docs/security/sensitive-data).
 - **Every error carries a `Request-Id` header,** which clients log and paste into support tickets, and which ties the response to the server's logs. See [Request IDs](/docs/observability/overview#request-ids).
 
 ### Why Not RFC 9457 Problem Details?
@@ -49,7 +49,7 @@ There's no `success` boolean in the body and no `200 OK` wrapping an error. Ever
 | `403` | Forbidden | Authenticated, but not allowed to do this |
 | `404` | Not Found | The resource doesn't exist, or the caller isn't allowed to know it exists |
 | `405` | Method Not Allowed | The resource doesn't support the method; `Allow` lists the ones it does |
-| `409` | Conflict | The request conflicts with current state: an [idempotency key](/docs/payments/idempotency) still in flight, canceling an operation that already finished |
+| `409` | Conflict | The request conflicts with current state: an [idempotency key](/docs/requests/idempotency) still in flight, canceling an operation that already finished |
 | `410` | Gone | Retired after its [sunset](/docs/api-design/versioning) |
 | `412` | Precondition Failed | An `If-Match` didn't match; someone else changed it ([Caching](/docs/requests/caching)) |
 | `413` | Content Too Large | The body exceeds the endpoint's limit |

@@ -38,7 +38,7 @@ Whatever the mechanism (a token, a server-side session with two user columns), t
 
 Most support questions are answered by looking. Start every session read-only, and make acting a separate, deliberate step with its own permission: paying with a saved card, cancelling a subscription, restoring a deleted project, granting items to a player, adding a user to a team. Upgrading a session to act requires a reason specific to the action and, for anything that moves money, changes ownership or can't be undone, the customer's consent (on the call, in the ticket) or a second approver.
 
-Read-only also means **masked by default**. The support view shows the last four digits of a card, a partial email, a redacted gate code; revealing a full value is its own logged action, and some values (full card numbers, secrets, other people's messages) are never revealable through support tooling at all ([Sensitive Data](/docs/payments/sensitive-data#access)).
+Read-only also means **masked by default**. The support view shows the last four digits of a card, a partial email, a redacted gate code; revealing a full value is its own logged action, and some values (full card numbers, secrets, other people's messages) are never revealable through support tooling at all ([Sensitive Data](/docs/security/sensitive-data#access)).
 
 ## A Reason for Every Session
 
@@ -73,7 +73,7 @@ CREATE TABLE support_sessions (
 
 ## Time-Boxed Sessions
 
-Support access ends on its own. I default to an hour for a read-only session and the duration of the task for acting, with `expires_at` enforced on the server, not a timer in the browser. Extending a session is a new request with a reason. Standing access ("the support team can open any account, any time") is the opposite of the just-in-time model that [Sensitive Data](/docs/payments/sensitive-data#access) requires for production; the same rule applies to the console.
+Support access ends on its own. I default to an hour for a read-only session and the duration of the task for acting, with `expires_at` enforced on the server, not a timer in the browser. Extending a session is a new request with a reason. Standing access ("the support team can open any account, any time") is the opposite of the just-in-time model that [Sensitive Data](/docs/security/sensitive-data#access) requires for production; the same rule applies to the console.
 
 **Break-glass access** exists for incidents where waiting for approval does more harm than the access: a security incident, data at risk, an outage. It skips the approval step and nothing else. It still requires a reason, still expires, pages a second person when used, and every use is reviewed afterwards. Customer Lockbox's own exceptions are of this kind: emergencies to restore service, prevent data loss, or investigate a security incident.
 
@@ -91,7 +91,7 @@ The tool support, risk and finance use every day is a product, with users, a des
 
 - **Find anything by any identifier.** Customers quote what they have: an email, a phone number, an order or invoice number, a gamertag, a device ID, a payment reference from their bank statement, a vendor's reference. The console resolves any of them to the record and shows its full history across systems. A search by email is itself access to personal data, so searches are logged too.
 - **Act with recorded reasons and approvals.** Every action in the console is a named operation (refund, grant, suspend, restore, transfer) that calls the same domain service the product uses, with the staff actor, the reason and the approval passed through. No raw table edits, and no "fix it in the database" runbooks for things that happen weekly.
-- **Adjust balances only by entries.** A goodwill credit, restored in-game currency, a waived fee or a corrected payout is a ledger transaction with a reason code and a second approver, never an edit to a balance ([Payment States & Ledgers](/docs/payments/payment-states#append-only-records)). Adjustments get their own report, reviewed by someone outside support.
+- **Adjust balances only by entries.** A goodwill credit, restored in-game currency, a waived fee or a corrected payout is a ledger transaction with a reason code and a second approver, never an edit to a balance ([Payment States & Ledgers](/docs/money/payment-states#append-only-records)). Adjustments get their own report, reviewed by someone outside support.
 - **Scope by role.** Tier-one support sees masked data for the accounts in their queue; fraud and risk see more; very few people can reveal anything. Roles follow [least privilege](/docs/security/authorization#least-privilege), and nobody can grant themselves a role.
 - **Separate code path, separate front door.** Cross-tenant access belongs in internal tooling with its own permissions, not behind a flag in tenant code ([Multi-Tenancy](/docs/architecture/multi-tenancy)). The console sits behind staff [SSO](/docs/security/sso-and-federation) with phishing-resistant MFA, on its own origin, and off the public internet where you can manage it.
 

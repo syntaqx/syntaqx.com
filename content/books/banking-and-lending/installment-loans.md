@@ -70,7 +70,7 @@ Happen's example, built as a schedule: $15,262 principal, 13.99% annual rate, 36
 - **Front-loading:** the first year's payments carry $1,860.20 of interest and leave $10,863.72 of principal, so after a third of the term the borrower has repaid less than 29% of the loan. That's the arithmetic of amortization, not a fee, and it's why early payoff saves less than borrowers expect.
 - **The last payment absorbs rounding:** $521.71 instead of $521.54. The schedule engine decides once where rounding lands (the final payment is the convention) and the disclosure shows it.
 
-The engine computing this must round each period's interest to the cent with a stated rule ([Rounding](/docs/payments/money#rounding)), store the schedule as rows, not recompute it on read, and regenerate it explicitly (with a new version) when terms change, as in a modification or a payment deferral.
+The engine computing this must round each period's interest to the cent with a stated rule ([Rounding](/docs/money/amounts#rounding)), store the schedule as rows, not recompute it on read, and regenerate it explicitly (with a new version) when terms change, as in a modification or a payment deferral.
 
 ## How Interest Accrues
 

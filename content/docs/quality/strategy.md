@@ -17,7 +17,7 @@ The traditional model puts quality at the end: developers build, a QA team tests
 - **Feedback arrives late.** A defect found a week after the code was written costs a context switch, a re-read and a re-test. Found in review or by a unit test, it costs minutes.
 - **Responsibility moves.** When someone downstream is paid to find bugs, the people writing the code stop looking for them. "QA will catch it" is a design decision nobody admits to making.
 - **The gate becomes the bottleneck.** Testing a batch of changes at the end means batching changes, which means bigger releases, which means more to test. It's the opposite of [deploying every merge](/docs/delivery/ci-pipelines#delivery-vs-deployment).
-- **Testers can only check what they can see.** A tester at the end sees the UI. They can't see the missing database constraint, the retry without an [idempotency key](/docs/payments/idempotency), or the race that shows up once in fifty runs.
+- **Testers can only check what they can see.** A tester at the end sees the UI. They can't see the missing database constraint, the retry without an [idempotency key](/docs/requests/idempotency), or the race that shows up once in fifty runs.
 
 My rule: **the team that writes the code owns its quality**, including the tests, the release decision and what happens in production. Nobody downstream signs off. Quality specialists, where they exist, make the team better at it; they don't do it for them.
 

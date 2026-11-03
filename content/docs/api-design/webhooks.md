@@ -7,7 +7,7 @@ tags = ["api", "webhooks", "events", "payments"]
 aliases = ["webhooks", "payments/webhooks"]
 +++
 
-The [state machine](/docs/payments/payment-states) changes long after the API call that started it: a bank transfer settles days later, a dispute arrives weeks later, and a customer finishes 3-D Secure in a browser tab the client never sees. Webhooks are how those transitions reach the systems that need them, without polling. They're also an API you call, into servers you don't control, over a network that fails, and every rule below follows from that.
+The [state machine](/docs/money/payment-states) changes long after the API call that started it: a bank transfer settles days later, a dispute arrives weeks later, and a customer finishes 3-D Secure in a browser tab the client never sees. Webhooks are how those transitions reach the systems that need them, without polling. They're also an API you call, into servers you don't control, over a network that fails, and every rule below follows from that.
 
 ## Delivery Guarantees
 
@@ -116,7 +116,7 @@ After the last attempt the event is marked failed, the account owner is notified
 
 1. **Verify the signature** before anything else, including parsing.
 2. **Acknowledge fast.** Store the event and return `200`, then process it from a queue. If processing happens inside the request and takes longer than the timeout, the sender retries, and now you're processing it twice, concurrently.
-3. **Dedupe by `Webhook-Id`.** A unique constraint on processed event IDs, written in the same transaction as the side effect, is the simplest correct version. See [Idempotency](/docs/payments/idempotency).
+3. **Dedupe by `Webhook-Id`.** A unique constraint on processed event IDs, written in the same transaction as the side effect, is the simplest correct version. See [Idempotency](/docs/requests/idempotency).
 4. **Don't trust order.** Fetch the current object when the transition matters.
 5. **Subscribe only to the event types you handle.** Every extra subscription is load and noise for nothing.
 6. **Don't rely on webhooks alone.** Endpoints get misconfigured and secrets expire. A periodic job that lists recent objects catches anything a missed webhook would have told you.

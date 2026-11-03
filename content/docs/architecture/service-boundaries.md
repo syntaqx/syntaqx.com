@@ -28,7 +28,7 @@ Extract a service when there's a concrete reason, not because a module got big:
 | Reason | Example |
 | ------ | ------- |
 | Different scaling profile | Webhook delivery bursts 50x at month end, and the API shouldn't scale with it |
-| Different reliability or compliance needs | The card vault, kept separate so the rest of the system stays out of [PCI scope](/docs/payments/sensitive-data) |
+| Different reliability or compliance needs | The card vault, kept separate so the rest of the system stays out of [PCI scope](/docs/security/sensitive-data) |
 | Different deploy cadence | A team blocked weekly by another team's release |
 | Different runtime | A model served from Python next to a Go API |
 | Team ownership | A team big enough to own it end to end, including [on-call](/docs/operations/on-call) |
@@ -55,7 +55,7 @@ The worst outcome isn't a monolith. It's services that have to be deployed toget
 
 - **Prefer async between services.** A synchronous call couples availability: if the callee is down, the caller is down. Chain five services at 99.9% each and the request succeeds about 99.5% of the time, roughly three and a half hours of failure a month instead of 43 minutes. An event published to a broker waits for a consumer that's down; a synchronous call just fails.
 - **Every sync call has a timeout and a fallback.** A call without a timeout turns a slow dependency into exhausted threads and a cascading outage. See [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
-- **No distributed transactions.** Two-phase commit across services couples their availability and their locks. When a workflow spans services, model it as a sequence of local transactions with compensating actions (a saga), and make every step [idempotent](/docs/payments/idempotency) so retries are safe.
+- **No distributed transactions.** Two-phase commit across services couples their availability and their locks. When a workflow spans services, model it as a sequence of local transactions with compensating actions (a saga), and make every step [idempotent](/docs/requests/idempotency) so retries are safe.
 
 ## Boundaries Follow Teams
 

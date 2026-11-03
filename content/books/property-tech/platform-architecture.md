@@ -73,9 +73,9 @@ Five rules make this work:
 
 A manager keeps many sets of books in one ledger: each owning entity's, its own corporate books, funds' and associations'. The design is one ledger with every account dimensioned by legal entity and property, each entity's trial balance a filter, cross-entity transactions balanced by due-to and due-from entries, and period close per entity. [The General Ledger by Entity](/books/property-tech/trust-accounting#the-general-ledger-by-entity) owns it; the platform consequences are three:
 
-- **Every module posts through one ledger service.** Charges, payments, fee runs, payables, deposits, utility billing runs and capital project costs all post balanced transactions with the entity and property on every line. A module that writes its own balances is a reconciliation project waiting to happen ([Double-Entry Ledger](/docs/payments/payment-states#double-entry-ledger)).
+- **Every module posts through one ledger service.** Charges, payments, fee runs, payables, deposits, utility billing runs and capital project costs all post balanced transactions with the entity and property on every line. A module that writes its own balances is a reconciliation project waiting to happen ([Double-Entry Ledger](/docs/money/payment-states#double-entry-ledger)).
 - **The entity is resolved at posting time.** The landlord of record on the lease and the property's owner on the business date decide whose books an entry belongs to; a property sold mid-month splits the month between two entities by date, without anyone choosing.
-- **Closed periods are a platform rule.** Every module that posts must respect each entity's closed periods and post corrections to the open one ([Closed Periods Stay Closed](/docs/payments/accounting#closed-periods-stay-closed)), including the migrations and integrations that load history.
+- **Closed periods are a platform rule.** Every module that posts must respect each entity's closed periods and post corrections to the open one ([Closed Periods Stay Closed](/docs/money/accounting#closed-periods-stay-closed)), including the migrations and integrations that load history.
 
 ## The Rules Engine
 

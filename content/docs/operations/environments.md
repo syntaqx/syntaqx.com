@@ -98,7 +98,7 @@ Config changes are deploys: reviewed, recorded, reversible. "I just tweaked a va
 A leaked secret is an incident even if nothing has happened yet, because you have to assume someone has it.
 
 - **Never in the repository:** not in code, `.env` files, CI YAML or history. Push protection and [secret scanning](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning) run on every repository.
-- **In a secrets manager** (a KMS-backed store, Vault, or the platform's encrypted variables), injected at runtime, scoped per service and environment, and redacted whenever the config is printed. Prefixes make leaks recognizable ([Sensitive Data](/docs/payments/sensitive-data)).
+- **In a secrets manager** (a KMS-backed store, Vault, or the platform's encrypted variables), injected at runtime, scoped per service and environment, and redacted whenever the config is printed. Prefixes make leaks recognizable ([Sensitive Data](/docs/security/sensitive-data)).
 - **Rotation designed in.** Systems accept old and new during an overlap window (up to 7 days for API keys per [API Authentication](/docs/api-design/authentication), 24 hours for [webhook secrets](/docs/api-design/webhooks)). Rotate on a schedule so the procedure is practiced, and immediately on suspicion: rotate, then investigate.
 - **Short-lived credentials beat rotation.** Workload identity (OIDC from CI, cloud IAM roles) means there's no long-lived key to rotate at all.
 

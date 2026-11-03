@@ -110,11 +110,11 @@ Decide what is customer-visible per field, not per record. A visit has internal 
 
 ## Cancelling and Changing the Plan
 
-Online cancellation is where self-service meets automatic renewal law. The general design (cancel in the medium of sign-up, stamp the receipt time, store the effective date, confirm it, save offers as configuration that one click declines) and the law behind it are in [Subscriptions](/docs/payments/subscriptions#cancellation); the field rules are in [Consumer Protection](/books/field-operations/consumer-protection).
+Online cancellation is where self-service meets automatic renewal law. The general design (cancel in the medium of sign-up, stamp the receipt time, store the effective date, confirm it, save offers as configuration that one click declines) and the law behind it are in [Subscriptions](/docs/money/subscriptions#cancellation); the field rules are in [Consumer Protection](/books/field-operations/consumer-protection).
 
 The field mechanics (any channel, the route cleared in the same transaction, the final bill, obligations that outlive the agreement) are in [Collections & Retention](/books/field-operations/collections-and-retention#cancellations). The portal's own choice is whether its cancel button **requests** or **cancels**. A request (FieldRoutes' online cancellation, enabled per service type, creates a task for staff) keeps a person in the loop for saves and exceptions, at the cost of a visit that shows up after the customer cancelled if nobody acts in time; the customer's clock starts when they asked either way. My rule: the portal cancels, recording the receipt time and an effective date the customer can see and clearing future visits, and leaves staff only the exceptions (a prepaid balance, a termite warranty with a renewal inspection due, a final pool closing the customer asked to keep). Show any early termination fee from the agreement version the customer signed.
 
-Plan changes from the portal (adding mosquito service for the summer, moving a pool from weekly to biweekly in winter, upgrading an HVAC membership) are a new agreement version, not an edit, and change the recurrence that generates visits as well as the price; proration is in [Subscriptions](/docs/payments/subscriptions#plan-changes-and-proration).
+Plan changes from the portal (adding mosquito service for the summer, moving a pool from weekly to biweekly in winter, upgrading an HVAC membership) are a new agreement version, not an edit, and change the recurrence that generates visits as well as the price; proration is in [Subscriptions](/docs/money/subscriptions#plan-changes-and-proration).
 
 ## Staff View as Customer
 
@@ -152,11 +152,11 @@ Treat the portal and the agent as thin clients over domain services, with their 
 
 - **Every portal action resolves a grant** (user, account, property, role) before calling a domain service, and passes the actor through so the service's audit records who did it.
 - **Portal reads come from customer-facing projections:** upcoming visits, the customer-visible visit summary, open invoices. They are filtered at build time, so an internal note cannot leak through a forgotten serializer.
-- **Idempotency on every write** ([Idempotency](/docs/payments/idempotency)): customers double-tap pay buttons on bad connections.
+- **Idempotency on every write** ([Idempotency](/docs/requests/idempotency)): customers double-tap pay buttons on bad connections.
 - **Configuration per tenant and service type:** which actions are self-service, reschedule cutoffs, booking horizon, partial payments and tips, which documents and photos are visible, financing.
 - **Accessible.** The audience includes older homeowners on phones ([Accessibility](/docs/frontend/accessibility)).
 
-Build or buy: a billing portal (Stripe's customer portal, or your processor's) covers payment methods and invoices well, but scheduling, history, reports and grants are domain-specific, so most platforms build the portal and embed the processor's hosted fields. What is genuinely hard is consistency: the portal showing a visit that dispatch moved five minutes ago, a payment shown as pending for days on ACH ([Payment States](/docs/payments/payment-states)), and two doors (portal and agent) drifting into different rules.
+Build or buy: a billing portal (Stripe's customer portal, or your processor's) covers payment methods and invoices well, but scheduling, history, reports and grants are domain-specific, so most platforms build the portal and embed the processor's hosted fields. What is genuinely hard is consistency: the portal showing a visit that dispatch moved five minutes ago, a payment shown as pending for days on ACH ([Payment States](/docs/money/payment-states)), and two doors (portal and agent) drifting into different rules.
 
 ## Auditing
 

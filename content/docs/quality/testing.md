@@ -47,10 +47,10 @@ So the base is wide because the logic is extracted and unit-testable, not becaus
 
 ## What to Test Where
 
-- **Unit test the logic that's easy to get wrong.** Rounding and remainder allocation from [Money & Amounts](/docs/payments/money), every allowed and rejected transition in [Payment States](/docs/payments/payment-states), signature verification in [Webhooks](/docs/api-design/webhooks).
+- **Unit test the logic that's easy to get wrong.** Rounding and remainder allocation from [Money & Amounts](/docs/money/amounts), every allowed and rejected transition in [Payment States](/docs/money/payment-states), signature verification in [Webhooks](/docs/api-design/webhooks).
 - **Integration test through the HTTP interface.** Send a request, assert on the response and the resulting state. This tests routing, validation, [error format](/docs/requests/error-responses), and the database together, which is where wiring bugs live.
 - **Test behavior, not implementation.** A test that breaks when you rename a private function is a test of the wrong thing.
-- **Test the failure paths.** Timeouts, duplicate requests, a replayed [idempotency key](/docs/payments/idempotency), a webhook delivered twice. Payments bugs live in the unhappy paths.
+- **Test the failure paths.** Timeouts, duplicate requests, a replayed [idempotency key](/docs/requests/idempotency), a webhook delivered twice. Payments bugs live in the unhappy paths.
 
 ## Real Dependencies Over Mocks
 
@@ -73,7 +73,7 @@ When one service calls another, each side's tests can pass while the integration
 Tests produce the same result every run, on every machine.
 
 - **Stable IDs.** Derive fixture IDs with [UUID v5](https://www.rfc-editor.org/rfc/rfc9562.html#section-5.5) from readable names (`uuid5(ns, "merchant-with-expired-card")`), as described in [Identifier Conventions](/docs/fundamentals/identifier-conventions). Failures are reproducible and IDs are recognizable in output.
-- **Controlled time.** Inject a clock. Never assert against "now". Tests for authorization expiry or [idempotency key](/docs/payments/idempotency) retention set the clock explicitly.
+- **Controlled time.** Inject a clock. Never assert against "now". Tests for authorization expiry or [idempotency key](/docs/requests/idempotency) retention set the clock explicitly.
 - **Seeded randomness.** If a test uses random data, it logs the seed so a failure can be replayed.
 - **Builders, not shared fixtures.** Each test builds the data it needs, with defaults for everything else, so one test's setup can't break another.
 

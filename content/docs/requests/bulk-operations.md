@@ -64,7 +64,7 @@ Why `200` when some items failed? Because the batch did what it promised: it pro
 | Batch malformed (not an array, too many items) | `400` or `422`, nothing processed |
 | Batch rejected before processing (auth, rate limit) | `401`, `403` or `429`, nothing processed |
 
-Where items must succeed or fail together (moving money between accounts, a [ledger transaction](/docs/payments/payment-states)), the endpoint is **atomic** and says so: one invalid item fails the whole request with `422`, and nothing is written. Never mix the two modes behind a flag: a client that forgets it gets partial writes where it expected all-or-nothing, a bug that shows up as an unbalanced ledger, not an error.
+Where items must succeed or fail together (moving money between accounts, a [ledger transaction](/docs/money/payment-states)), the endpoint is **atomic** and says so: one invalid item fails the whole request with `422`, and nothing is written. Never mix the two modes behind a flag: a client that forgets it gets partial writes where it expected all-or-nothing, a bug that shows up as an unbalanced ledger, not an error.
 
 ## Limits
 
@@ -74,7 +74,7 @@ Where items must succeed or fail together (moving money between accounts, a [led
 
 ## Idempotency
 
-The whole batch takes one [Idempotency-Key](/docs/payments/idempotency). A retry replays the stored per-item results, so the successful items aren't created twice and the failed ones aren't silently retried. To retry only the failures, the client sends a new batch, with a new key, containing just those items.
+The whole batch takes one [Idempotency-Key](/docs/requests/idempotency). A retry replays the stored per-item results, so the successful items aren't created twice and the failed ones aren't silently retried. To retry only the failures, the client sends a new batch, with a new key, containing just those items.
 
 ## When to Go Async
 

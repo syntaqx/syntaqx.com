@@ -9,12 +9,12 @@ import type { NextRequest } from "next/server";
 
 const DocSummary = z
   .object({
-    slug: z.string().openapi({ example: "payments/idempotency" }),
-    url: z.string().url().openapi({ example: "https://www.syntaqx.com/docs/payments/idempotency" }),
+    slug: z.string().openapi({ example: "requests/idempotency" }),
+    url: z.string().url().openapi({ example: "https://www.syntaqx.com/docs/requests/idempotency" }),
     title: z.string().openapi({ example: "Idempotency" }),
     description: z.string(),
-    section: z.string().openapi({ example: "payments" }),
-    category: z.string().openapi({ example: "Payments" }),
+    section: z.string().openapi({ example: "money" }),
+    category: z.string().openapi({ example: "Money" }),
     tags: z.array(z.string()),
     position: z.number().int().openapi({ description: "Position in the playbook's reading order, from 1" }),
   })
@@ -22,7 +22,7 @@ const DocSummary = z
 
 const DocsQueryBody = z
   .object({
-    section: z.array(z.string()).optional().openapi({ description: "Any of these sections", example: ["payments"] }),
+    section: z.array(z.string()).optional().openapi({ description: "Any of these sections", example: ["money"] }),
     tag: z.array(z.string()).optional().openapi({ description: "Docs with any of these tags" }),
     q: z.string().optional().openapi({ description: "Free text over title and description" }),
     sort: z.enum(["position", "-position", "title", "-title"]).optional(),
@@ -52,7 +52,7 @@ registry.registerPath({
   tags: ["Playbook"],
   request: {
     query: z.object({
-      section: z.string().optional().openapi({ example: "payments,security" }),
+      section: z.string().optional().openapi({ example: "money,security" }),
       tag: z.string().optional().openapi({ example: "idempotency" }),
       q: z.string().optional().openapi({ example: "retry" }),
       sort: z.string().optional().openapi({ example: "-title" }),

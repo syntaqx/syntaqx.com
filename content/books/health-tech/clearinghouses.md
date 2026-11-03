@@ -192,7 +192,7 @@ Design notes:
 - **Routes are data from the clearinghouse,** refreshed from its payer list, with the date verified, never hardcoded.
 - **The unique live ERA index** encodes the exclusivity rule: a second live ERA enrollment for the same provider and payer is a mistake the database refuses.
 - **Enrollment is a workflow with people in it.** Statuses, notes and documents are the screen; events (`enrollment.live`, `enrollment.rejected`) notify the practice and unblock held claims.
-- **Clearinghouse credentials** are secrets per practice or per platform, stored and rotated as the playbook requires ([Secrets](/docs/payments/sensitive-data#secrets)).
+- **Clearinghouse credentials** are secrets per practice or per platform, stored and rotated as the playbook requires ([Secrets](/docs/security/sensitive-data#secrets)).
 - **Every byte through the clearinghouse is logged** in `edi_transactions`, which is what makes a switch survivable.
 
 ## Auditing

@@ -147,7 +147,7 @@ Three rules come with regional prices:
 - **Decide who funds the cut.** A lower local price lowers the creator's share too. Twitch subsidized creators through the transition; a platform that doesn't is cutting creator pay in that country by fiat.
 - **Price changes are events with notice.** Twitch raised US Tier 1 from $4.99 to $5.99 from July 2024, and Shacknews reported that existing subscriptions would renew at the new price. My rule: notify every affected subscriber before the first renewal at a higher price, and let the old price govern periods already paid.
 
-Taxes sit on top: EU and UK consumer prices are shown including VAT, so an identical price yields different net revenue by country, and digital services sold to consumers carry VAT where the buyer is ([VAT and GST on Digital Goods](/docs/payments/sales-tax#vat-and-gst-on-digital-goods)). The mechanics of price tables, conversion methods and cooldowns are in Gaming's [Regional Pricing](/books/gaming/stores-and-payments#regional-pricing).
+Taxes sit on top: EU and UK consumer prices are shown including VAT, so an identical price yields different net revenue by country, and digital services sold to consumers carry VAT where the buyer is ([VAT and GST on Digital Goods](/docs/money/sales-tax#vat-and-gst-on-digital-goods)). The mechanics of price tables, conversion methods and cooldowns are in Gaming's [Regional Pricing](/books/gaming/stores-and-payments#regional-pricing).
 
 ## App Stores: Fees, Steering and the Epic Rulings
 
@@ -389,7 +389,7 @@ Design decisions behind it:
 - **The store fee has an owner in the terms.** `share_base` and `store_fee_bearer` say whether a creator's 70% is of the price, the price net of tax, or the price net of the store's cut, so a payout statement can explain every cent.
 - **Prices are per channel.** An in-app price that offsets the store fee is a `store_fee_offset` row; a local price is a `regional` row; a creator's own tier price is `creator_set` with the creator as `set_by`. Increases carry `notice_sent_at`, and the renewal job refuses to charge a higher price without it.
 - **Promotions are fees, not ads in the ad system.** A seller's promotion charge posts to the seller's balance as a fee line tied to the sale or click that caused it, and reverses with a refund; it never touches the advertiser billing that [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing) covers.
-- **Revenue by model is a ledger query.** Each program posts the platform's share to its own revenue ledger account (`revenue:advertising`, `revenue:take_rate:stays`, `revenue:promoted_listings`, `revenue:float_interest`), so the unit economics above are a report and not a reconstruction ([Payment States & Ledgers](/docs/payments/payment-states)).
+- **Revenue by model is a ledger query.** Each program posts the platform's share to its own revenue ledger account (`revenue:advertising`, `revenue:take_rate:stays`, `revenue:promoted_listings`, `revenue:float_interest`), so the unit economics above are a report and not a reconstruction ([Payment States & Ledgers](/docs/money/payment-states)).
 
 Events: `revenue_terms.published`, `product_price.changed`, `store_transaction.granted`, `store_transaction.reversed`, `listing_promotion.charged` and `listing_promotion.reversed`, which payouts, statements, finance and notifications subscribe to.
 

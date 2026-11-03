@@ -53,7 +53,7 @@ Choosing between them:
 - **The server's offset is the truth.** Resume from what the server says it has, never from the client's count; both tus and the Google protocol exist to make that question cheap.
 - **Every session expires, and expiry cleans up.** An abandoned upload is storage you pay for and nobody will ever use. The session row carries an expiry, a sweeper aborts or deletes what didn't finish, and the record moves to a terminal state ([Background Jobs](/docs/architecture/background-jobs#scheduling)). On S3, add a lifecycle rule with `AbortIncompleteMultipartUpload` as the backstop.
 - **Checksum the whole file, not just the parts.** Part checksums catch transmission errors; a whole-file hash is what deduplication and matching need. S3 can validate a full-object checksum at completion and fails with `BadDigest` on a mismatch.
-- **Make "create upload" idempotent.** A mobile client that retries the create call after a timeout must get the same session back, not a second record ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
+- **Make "create upload" idempotent.** A mobile client that retries the create call after a timeout must get the same session back, not a second record ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
 - **Reserve, then reconcile.** Cloudflare Stream makes the uploader declare `maxDurationSeconds` and holds that much of the account's storage until the file arrives, then charges only the real duration. A system with quotas can do the same: reserve the declared size against the quota at grant time, release the rest at confirm, and release everything when the session expires.
 
 ## Uploads From a Phone

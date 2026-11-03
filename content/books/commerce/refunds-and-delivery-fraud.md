@@ -48,7 +48,7 @@ A remedy has a form and a scope:
 
 - **Form.** A refund to the original payment method, platform credit, or a redelivery. Credit is cheaper for the platform and keeps the customer ordering; a refund is what the law increasingly requires on request (AB 578 requires, alongside any other refund options, a way for the customer to ask for the refund on the original payment method). The FTC's complaint against Instacart alleged it advertised a "100% satisfaction guarantee" but "hid the refund option from the 'self-service' menu," usually offering a small credit instead.
 - **Scope.** The item's price and its tax for a missing item; the whole order and its fees for a wrong or undelivered order (Uber's pages draw exactly that line); a prorated share of fees for a partial order where the law requires it.
-- **Timing.** A refund on a card that was only authorized is a smaller capture or a partial reversal; after capture it's a refund object with its own lifecycle ([Refunds and Disputes Are Their Own Objects](/docs/payments/payment-states#refunds-and-disputes-are-their-own-objects)). A grocery order, whose total changes after shopping, is often settled after the substitution decisions and the issue report, which affects which of the two applies.
+- **Timing.** A refund on a card that was only authorized is a smaller capture or a partial reversal; after capture it's a refund object with its own lifecycle ([Refunds and Disputes Are Their Own Objects](/docs/money/payment-states#refunds-and-disputes-are-their-own-objects)). A grocery order, whose total changes after shopping, is often settled after the substitution decisions and the issue report, which affects which of the two applies.
 
 A refund and a chargeback on the same order must net: a customer refunded in the app who also disputes with the bank should not be paid twice, which is why the issue record links to the payment records and the dispute flow checks it ([Disputes & Chargebacks](/books/payments/disputes-and-chargebacks)).
 
@@ -189,7 +189,7 @@ Design notes:
 
 - **Issue, resolution, charge and dispute are separate rows.** The customer's refund doesn't wait for the merchant's dispute, and reversing a merchant charge doesn't claw back the customer's refund.
 - **Charges carry their dispute deadline,** computed when charged ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
-- **Identity links are hashed.** Matching needs equality, not the raw card number or phone, which keeps the linking table out of card data scope ([Sensitive Payment Data](/docs/payments/sensitive-data)).
+- **Identity links are hashed.** Matching needs equality, not the raw card number or phone, which keeps the linking table out of card data scope ([Sensitive Payment Data](/docs/security/sensitive-data)).
 - **Restrict backward transitions.** Moving an order out of `fulfilled`, or a fulfillment out of `delivered`, goes through a privileged path that records the employee and reason and alerts on repetition, closing the gap the insider scheme used.
 
 ## Auditing

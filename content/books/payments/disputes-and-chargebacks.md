@@ -52,7 +52,7 @@ The consequence for system design: evidence is captured at payment time, not rec
 
 ## Disputes in the Ledger
 
-A dispute is its own object with its own state machine, referencing the payment (see [Payment States & Ledgers](/docs/payments/payment-states)). The payment stays `settled`; what changes is money, and every movement is a ledger transaction:
+A dispute is its own object with its own state machine, referencing the payment (see [Payment States & Ledgers](/docs/money/payment-states)). The payment stays `settled`; what changes is money, and every movement is a ledger transaction:
 
 | Event | Ledger transaction |
 | ----- | ------------------ |
@@ -61,7 +61,7 @@ A dispute is its own object with its own state machine, referencing the payment 
 | Lost | The held amount leaves for good, through the acquirer's settlement (`acquirer_settlement_clearing`), because the issuer kept it. |
 | Accepted without contest | Same as lost, without the countering fee. |
 
-Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts. On a cross-currency payment, the amount debited for a dispute can differ from what the merchant received for the sale, because it's converted at a different time; post the difference as an FX gain or loss, as [Multi-Currency](/docs/payments/multi-currency#refunds-and-fx-gains-and-losses) does for refunds; who carries it under the network rules is in [FX Risk on Refunds and Disputes](/books/payments/cross-border-and-fx#fx-risk-on-refunds-and-disputes).
+Modeling the hold as a transfer to a holding account, instead of marking the payment, keeps the merchant's balance explainable at every point in a two-month process. It also handles what breaks simpler models: the disputed amount can differ from the charge (currency conversion, a partial dispute, three subscription charges bundled into one), and a payment can occasionally receive a second dispute under a different reason code. Each dispute posts its own amounts. On a cross-currency payment, the amount debited for a dispute can differ from what the merchant received for the sale, because it's converted at a different time; post the difference as an FX gain or loss, as [Multi-Currency](/docs/money/multi-currency#refunds-and-fx-gains-and-losses) does for refunds; who carries it under the network rules is in [FX Risk on Refunds and Disputes](/books/payments/cross-border-and-fx#fx-risk-on-refunds-and-disputes).
 
 Post each fee as its own entry too, with its own timing. Stripe, for example, debits a fee when a dispute is received that isn't returned on a win, and charges a separate countering fee that is. Payabli debits the disputed amount immediately but collects the chargeback fee in the merchant's end-of-month billing, and charges retrieval requests a fee of their own though they move no funds. Explicit entries are what answer "why is this merchant down a fee on a dispute they won", and a fee that posts weeks after the debit is one more reason the dispute, not the statement, should be the source of both.
 

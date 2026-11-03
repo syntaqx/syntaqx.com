@@ -41,7 +41,7 @@ fix(webhooks): verify signature before parsing the body
 
 feat(payments)!: amounts are integer minor units
 
-BREAKING CHANGE: `amount` is now an integer, see /docs/payments/money.
+BREAKING CHANGE: `amount` is now an integer, see /docs/money/amounts.
 ```
 
 - **Imperative, lowercase, no period.** "add", not "added" or "Adds": what the commit does when applied.

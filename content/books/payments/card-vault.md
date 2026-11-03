@@ -8,7 +8,7 @@ part = "Running a Provider"
 tags = ["payments", "pci", "tokenization", "security", "cryptography", "vault"]
 +++
 
-[Sensitive Data](/docs/payments/sensitive-data) makes the case for keeping card numbers out of your systems, and [Processor Routing](/books/payments/processor-routing) makes the case for holding them anyway: cards stored as one processor's tokens belong to that processor. Once you decide to own the credential layer, one service holds every card number you have ever seen, and PCI SSC's own tokenization guidance calls that vault the "most attractive target" in the system. This chapter is about building and operating it: what a token is, how the number is stored, who can get it back, how it gets in, and the [cardholder data environment](/docs/compliance/pci-dss) around it.
+[Sensitive Data](/docs/security/sensitive-data) makes the case for keeping card numbers out of your systems, and [Processor Routing](/books/payments/processor-routing) makes the case for holding them anyway: cards stored as one processor's tokens belong to that processor. Once you decide to own the credential layer, one service holds every card number you have ever seen, and PCI SSC's own tokenization guidance calls that vault the "most attractive target" in the system. This chapter is about building and operating it: what a token is, how the number is stored, who can get it back, how it gets in, and the [cardholder data environment](/docs/compliance/pci-dss) around it.
 
 ## The Shape of a Vault
 
@@ -36,7 +36,7 @@ Each is in [PCI scope](/docs/compliance/pci-dss), whoever runs it. On a platform
 
 **Other doors** each need the same care: a server-to-server API for partners that are themselves PCI compliant; file imports when a merchant migrates its cards in from another provider, encrypted to your key and deleted after loading; [phone payments](/books/payments/phone-payments), which have their own capture problem; and [card-present](/books/payments/card-present#p2pe-encrypt-at-the-glass) data encrypted at the terminal and decrypted in your environment under DUKPT keys, a fresh key per transaction derived from one root ([HSMs & Key Management](/books/payments/key-management#dukpt-and-pin-blocks)), where track data is deleted the moment the authorization returns.
 
-**Keep the number out of logs.** The classic leak isn't the vault's database; it's a debug log of a raw processor request, so the forwarder never logs bodies and the security code field is redacted everywhere it can appear. The general rules, allowlist serializers and a card-number scanner, are in [Sensitive Data](/docs/payments/sensitive-data#logging-and-errors). Then assume something will slip and write the procedure for finding a number where it shouldn't be: retrieve or delete it, check whether a security code is with it, find the source and close it (12.10.7).
+**Keep the number out of logs.** The classic leak isn't the vault's database; it's a debug log of a raw processor request, so the forwarder never logs bodies and the security code field is redacted everywhere it can appear. The general rules, allowlist serializers and a card-number scanner, are in [Sensitive Data](/docs/security/sensitive-data#logging-and-errors). Then assume something will slip and write the procedure for finding a number where it shouldn't be: retrieve or delete it, check whether a security code is with it, find the source and close it (12.10.7).
 
 ## Designing the Token
 

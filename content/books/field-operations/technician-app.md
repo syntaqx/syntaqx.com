@@ -111,7 +111,7 @@ The field is where card-present, card-on-file and paper payments meet, often in 
 These are different risk positions, not different features. A payment captured offline isn't authorized: the card can decline hours later, after the technician has left with the customer believing they paid. [Card-Present Payments](/books/payments/card-present) covers why approved offline isn't paid. The field rules:
 
 - **Model offline payments as their own state** (captured, not authorized), visible to the office, with a per-company limit and an automatic follow-up when they fail. A $9,000 system replacement and a $120 quarterly service shouldn't share a limit.
-- **Keep card data out of your app.** Use the processor's SDK or a certified reader so the phone never holds a card number ([Sensitive Data](/docs/payments/sensitive-data)).
+- **Keep card data out of your app.** Use the processor's SDK or a certified reader so the phone never holds a card number ([Sensitive Data](/docs/security/sensitive-data)).
 - **Record the tender exactly:** entry mode, last four, check number, the cash amount and who holds it until deposit. Cash and checks in a van are a reconciliation problem before they're a payment.
 - **Saving a card for future service** is a stored-credential agreement ([Stored Cards & Recurring Billing](/books/payments/stored-credentials)) and belongs with [Billing Recurring Service](/books/field-operations/billing-recurring-service). Financing presentment is in [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules).
 

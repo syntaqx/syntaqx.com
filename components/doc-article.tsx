@@ -37,7 +37,7 @@ export async function DocArticle({
   doc: DocData;
   /** The structured data's headline, where it names more than the page's title does. */
   headline?: string;
-  /** The page's URL path, e.g. /docs/payments/money. */
+  /** The page's URL path, e.g. /docs/money/amounts. */
   path: string;
   /** The Markdown file, repo-relative, for Edit on GitHub. */
   source: string;

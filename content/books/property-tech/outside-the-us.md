@@ -96,7 +96,7 @@ The rows are the easy part. These are the structural changes that need code befo
 
 | Area | US assumption | What changes | Where it lands |
 | --- | --- | --- | --- |
-| **Currency** | Dollars, two decimals | Each property's ledger has a currency; owners with properties in two countries get statements per currency | [Money & Amounts](/docs/payments/money#currency-is-always-explicit) |
+| **Currency** | Dollars, two decimals | Each property's ledger has a currency; owners with properties in two countries get statements per currency | [Money & Amounts](/docs/money/amounts#currency-is-always-explicit) |
 | **Deposits** | The landlord holds the deposit | A scheme or authority holds or insures it (UK, Australia); a segregated interest-bearing account per tenancy (Germany) | `deposit_protections`; deposit accounting |
 | **Tenancy form** | Fixed term with renewals | Periodic by default (England, Scotland); occupation contracts (Wales); prescribed lease forms (Ontario, Quebec) | The lease state machine and documents |
 | **Rent changes** | Reprice at renewal, local caps | Annual guideline (Ontario), tribunal-fixed rent (Quebec), frequency limits (NSW, England), comparative rent (Germany), portfolio-size rules (Spain) | `legal_rules` types `rent_cap`, `rent_increase_notice` |
@@ -188,7 +188,7 @@ Design decisions behind it:
 
 - **New rule types, same registry.** `deposit_protection` (deadline, prescribed information, schemes allowed), `mandatory_lease_form`, `landlord_registration` and `indirect_tax` join the registry in [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#how-to-build-it); rent and notice rules outside the US reuse `rent_cap` and `rent_increase_notice` with richer parameters (a published figure, a comparative-rent reference, a tribunal process).
 - **A protected deposit is not the landlord's balance.** When a scheme or authority holds the money, the landlord's ledger records a transfer out to the scheme and a claim back at the end, not a liability sitting in the landlord's bank account; the trust accounting for that is [Trust Accounting & the General Ledger](/books/property-tech/trust-accounting#security-deposit-accounts)'s.
-- **Currency is per property ledger,** fixed at creation, and every amount carries its currency ([Currency Is Always Explicit](/docs/payments/money#currency-is-always-explicit)); cross-currency owner reporting converts at reporting time with a recorded rate, never in the ledger.
+- **Currency is per property ledger,** fixed at creation, and every amount carries its currency ([Currency Is Always Explicit](/docs/money/amounts#currency-is-always-explicit)); cross-currency owner reporting converts at reporting time with a recorded rate, never in the ledger.
 - **Tenancy form is a lease attribute,** because England, Scotland and Wales define different contracts and the lease state machine branches on it, not on country.
 - **Prescribed forms are versioned documents** recorded on the lease as signed, the same discipline as any lease template.
 

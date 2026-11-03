@@ -77,7 +77,7 @@ The rules fall into a few families. Each row names who sets the rule, how it rea
 
 Two regulations decide who absorbs a consumer's disputed payment, and they differ by rail. **Regulation E** covers electronic fund transfers from consumer bank accounts, with error-resolution deadlines and capped liability ([ACH & Bank Transfers](/books/payments/ach#consumer-law-regulation-e) has the numbers). **Regulation Z** covers credit cards: a billing-error notice within 60 days of the statement, acknowledgment within 30 days, resolution within two complete billing cycles and never more than 90 days. The card networks' chargeback systems sit on top of these legal rights and extend them; that's why a cardholder can dispute for reasons the law never mentions, and why the merchant, not the bank, usually ends up paying.
 
-The engineering consequence is the same on every rail: a consumer payment isn't final when it settles, and the ledger has to model the window in which it can still come back ([Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final)).
+The engineering consequence is the same on every rail: a consumer payment isn't final when it settles, and the ledger has to model the window in which it can still come back ([Payment States & Ledgers](/docs/money/payment-states#settled-is-not-final)).
 
 **UDAAP**, the Consumer Financial Protection Act's ban on unfair, deceptive or abusive acts or practices, is the catch-all. It has no technical checklist, which is the point: a cancellation flow that's harder than signup, a fee disclosed after the fact, or a "free" trial that quietly converts are product decisions with legal exposure.
 
@@ -125,7 +125,7 @@ The useful question at each stage is not "are we compliant?" but "which contract
 - **Rules as effective-dated data** wherever they vary by network, state or country (surcharge caps, dispute windows, authentication rules, licensing conditions), owned by someone accountable for them ([Rules as Data](/docs/architecture/rules-as-data)).
 - **Measure what your bank measures,** daily: return rates, dispute and fraud ratios, the numbers a sponsor checks long before an assessor arrives.
 - **Sanctions screening as a gate, not a score,** at onboarding and before money moves, with a match stopping the payment.
-- **Reversal windows in the ledger** for every rail and consumer right, so a settled payment that can still come back is modeled as one ([Payment States & Ledgers](/docs/payments/payment-states#settled-is-not-final)).
+- **Reversal windows in the ledger** for every rail and consumer right, so a settled payment that can still come back is modeled as one ([Payment States & Ledgers](/docs/money/payment-states#settled-is-not-final)).
 - **Evidence kept for whoever will ask,** for as long as they can ask: authorizations, verification results, attestations and dispute submissions.
 - **Know which stage you're at,** and design the next stage's obligations (a payfac's sub-merchant liability, a processor's direct network duties) before the business model commits to them.
 - **Track pending rules with a date,** such as PSD3 and the PSR or the Section 1033 rewrite, so their adoption is a planned change rather than a surprise.

@@ -2,12 +2,13 @@
 title = "Subscriptions & Recurring Billing"
 nav_title = "Subscriptions"
 description = "Subscription states, billing periods and anchors, idempotent renewals, proration, dunning, cancellation, and the automatic renewal laws that govern all of it."
-category = "Payments"
+category = "Money"
 order = 807
 tags = ["payments", "subscriptions", "recurring", "billing", "consumer-protection"]
+aliases = ["payments/subscriptions"]
 +++
 
-A subscription is a promise to charge someone again, on a schedule, with nobody watching. A SaaS seat, a game's battle pass, a gym membership, a lawn care agreement and a streaming plan share one skeleton: the customer agreed once, a job charges them every period, and the business must be able to prove, months later, what they agreed to, what they paid for, and when they asked to stop. This chapter builds on [Money & Amounts](/docs/payments/money), [Idempotency](/docs/payments/idempotency) and [Payment States & Ledgers](/docs/payments/payment-states). Charging a stored card under the network rules is the layer below, in [Stored Cards & Recurring Billing](/books/payments/stored-credentials).
+A subscription is a promise to charge someone again, on a schedule, with nobody watching. A SaaS seat, a game's battle pass, a gym membership, a lawn care agreement and a streaming plan share one skeleton: the customer agreed once, a job charges them every period, and the business must be able to prove, months later, what they agreed to, what they paid for, and when they asked to stop. This chapter builds on [Money & Amounts](/docs/money/amounts), [Idempotency](/docs/requests/idempotency) and [Payment States & Ledgers](/docs/money/payment-states). Charging a stored card under the network rules is the layer below, in [Stored Cards & Recurring Billing](/books/payments/stored-credentials).
 
 ## Subscription States
 
@@ -92,10 +93,10 @@ Plans change: a team adds seats, a player upgrades, a member drops to off-peak. 
 
 Proration has sharp edges worth deciding once:
 
-- **Granularity.** Stripe prorates to the second by default; most customers understand days better. Pick one, compute in integer minor units, and round per [Money & Amounts](/docs/payments/money#rounding).
+- **Granularity.** Stripe prorates to the second by default; most customers understand days better. Pick one, compute in integer minor units, and round per [Money & Amounts](/docs/money/amounts#rounding).
 - **Preview with a fixed instant.** Compute the preview at a stated `prorated_at` and apply the change with the same one, so "$4.17 due today" isn't charged as $4.18.
 - **Don't credit what wasn't paid.** A change while the current period is `failed` can credit time the customer never paid for. Settle or void it first, or skip proration.
-- **Credits are ledger entries,** a balance owed to the customer and applied to the next charge or refunded ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)).
+- **Credits are ledger entries,** a balance owed to the customer and applied to the next charge or refunded ([Payments Are Applied, Not Assigned](/docs/money/payment-states#payments-are-applied-not-assigned)).
 
 ## Dunning
 

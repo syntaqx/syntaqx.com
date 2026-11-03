@@ -9,7 +9,7 @@ tags = ["commerce", "sales-tax", "vat", "customs", "duties"]
 
 Every order a store takes raises four tax questions: does the seller have to collect in the buyer's jurisdiction at all, is this item taxable there, at what rate, and who remits it: the seller, a marketplace, or nobody because the buyer is exempt. A cross-border order adds two more: what import VAT and customs duty apply at the border, and who pays them, the seller at checkout or the buyer at the door. The answers change by state, by country, by product, by date and by channel, and the order has to carry the answer it got, line by line, because the tax return and the audit are built from those lines months later.
 
-The general method is the playbook's [Sales Tax](/docs/payments/sales-tax): a tax code per item ([A Tax Code Per Item](/docs/payments/sales-tax#a-tax-code-per-item)), tax as a quote until the invoice finalizes, sourcing as data, exemptions as documents. This chapter covers what commerce adds: economic nexus thresholds and what counts toward them, marketplace facilitator laws, product taxability including shipping, exemption certificates for B2B and resale, Streamlined Sales Tax, tax engines and filing, the EU's VAT e-commerce package and its 2026 customs reform, the UK and Canada, and duties on imports, with the end of the US de minimis exemption and the choice between DDP and DAP. Customs data, HS codes and merchant-of-record services are [Cross-Border Commerce](/books/commerce/cross-border-commerce); tax on hosting and SaaS is the Hosting & Cloud volume's [Tax](/books/hosting-and-cloud/tax). The chapter extends `order_charges` and `items.tax_category` in [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and adds `tax_registrations`, `exemption_certificates` and `tax_calculations`.
+The general method is the playbook's [Sales Tax](/docs/money/sales-tax): a tax code per item ([A Tax Code Per Item](/docs/money/sales-tax#a-tax-code-per-item)), tax as a quote until the invoice finalizes, sourcing as data, exemptions as documents. This chapter covers what commerce adds: economic nexus thresholds and what counts toward them, marketplace facilitator laws, product taxability including shipping, exemption certificates for B2B and resale, Streamlined Sales Tax, tax engines and filing, the EU's VAT e-commerce package and its 2026 customs reform, the UK and Canada, and duties on imports, with the end of the US de minimis exemption and the choice between DDP and DAP. Customs data, HS codes and merchant-of-record services are [Cross-Border Commerce](/books/commerce/cross-border-commerce); tax on hosting and SaaS is the Hosting & Cloud volume's [Tax](/books/hosting-and-cloud/tax). The chapter extends `order_charges` and `items.tax_category` in [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and adds `tax_registrations`, `exemption_certificates` and `tax_calculations`.
 
 ## How the Platforms Do It
 
@@ -30,7 +30,7 @@ What the table shows: calculation is cheap and commoditized; registration, filin
 
 ## Nexus After Wayfair
 
-Until *South Dakota v. Wayfair* (2018), a state could require a seller to collect sales tax only with a physical presence there; since then each state can require it once sales into the state cross an economic threshold ([US Economic Nexus](/docs/payments/sales-tax#us-economic-nexus)). Every one of the 45 states with a statewide sales tax now has an economic nexus rule; Missouri was the last, effective January 1, 2023. Delaware, Montana, New Hampshire and Oregon have no sales tax; Alaska has none statewide, but local jurisdictions that belong to its remote seller commission collect on remote sales.
+Until *South Dakota v. Wayfair* (2018), a state could require a seller to collect sales tax only with a physical presence there; since then each state can require it once sales into the state cross an economic threshold ([US Economic Nexus](/docs/money/sales-tax#us-economic-nexus)). Every one of the 45 states with a statewide sales tax now has an economic nexus rule; Missouri was the last, effective January 1, 2023. Delaware, Montana, New Hampshire and Oregon have no sales tax; Alaska has none statewide, but local jurisdictions that belong to its remote seller commission collect on remote sales.
 
 Thresholds as of October 2026, from the Sales Tax Institute's state guide (dated August 1, 2026):
 
@@ -61,7 +61,7 @@ Running a marketplace that has these duties is [Running Your Own Marketplace](/b
 
 ## What Is Taxable
 
-Taxability depends on the item, the place and sometimes the price, which is why each item carries a tax category that the engine resolves per jurisdiction ([Taxability Varies by Place](/docs/payments/sales-tax#taxability-varies-by-place)). Retail examples:
+Taxability depends on the item, the place and sometimes the price, which is why each item carries a tax category that the engine resolves per jurisdiction ([Taxability Varies by Place](/docs/money/sales-tax#taxability-varies-by-place)). Retail examples:
 
 - **Clothing.** Pennsylvania's 6% sales tax (plus 1% in Allegheny County and 2% in Philadelphia) exempts "most apparel and clothing"; New York exempts clothing and footwear under $110 an item from state tax but not always local tax. The same shirt is taxable next door.
 - **Food.** Pennsylvania exempts food not prepared for immediate consumption; prepared food, candy and soft drinks are taxed differently state to state, which is why a grocery delivery order is many tax categories.
@@ -71,7 +71,7 @@ Taxability depends on the item, the place and sometimes the price, which is why 
 
 ## Exemption Certificates
 
-B2B buyers, resellers, governments and nonprofits buy exempt, and the seller proves it with a certificate on file ([Exemptions Are Documents](/docs/payments/sales-tax#exemptions-are-documents)). Texas states the general rule: "All gross receipts of a seller are presumed subject to sales or use tax unless" a properly completed certificate is accepted, and a certificate is accepted in good faith if it is taken at or before the sale, properly completed and legible, and "the seller does not know, and does not have reason to know, that the sale is not exempt"; certificates are kept for at least four years from the sale.
+B2B buyers, resellers, governments and nonprofits buy exempt, and the seller proves it with a certificate on file ([Exemptions Are Documents](/docs/money/sales-tax#exemptions-are-documents)). Texas states the general rule: "All gross receipts of a seller are presumed subject to sales or use tax unless" a properly completed certificate is accepted, and a certificate is accepted in good faith if it is taken at or before the sale, properly completed and legible, and "the seller does not know, and does not have reason to know, that the sale is not exempt"; certificates are kept for at least four years from the sale.
 
 Multistate forms reduce paperwork but don't settle it:
 
@@ -86,12 +86,12 @@ The Streamlined Sales and Use Tax Agreement is the states' attempt at uniformity
 
 ## Tax Engines and Filing
 
-The engine call is part of checkout and every later change to the order: quote while the shopper edits, commit when the order is placed, adjust on refunds and edits, void on cancellation ([Tax Is a Quote Until the Invoice Finalizes](/docs/payments/sales-tax#tax-is-a-quote-until-the-invoice-finalizes); [Tax Engines](/docs/payments/sales-tax#tax-engines)). The commerce specifics:
+The engine call is part of checkout and every later change to the order: quote while the shopper edits, commit when the order is placed, adjust on refunds and edits, void on cancellation ([Tax Is a Quote Until the Invoice Finalizes](/docs/money/sales-tax#tax-is-a-quote-until-the-invoice-finalizes); [Tax Engines](/docs/money/sales-tax#tax-engines)). The commerce specifics:
 
 - **Send lines, addresses and the item's category.** Ship-from location and ship-to address (or the pickup store), each line's category and amount, each charge (shipping, handling, gift wrap) as its own line, the customer's exemption, and the channel; tax comes back per line and per jurisdiction.
 - **Commit with the order's ID and the checkout's version,** so the committed calculation matches the total the shopper authorized, and a retried commit is idempotent.
 - **Refunds reverse tax by line.** A return of one item reverses that item's tax at the rate charged, not today's rate; a full refund reverses shipping tax too.
-- **Pickup and store sales source to the store.** In-store and pickup orders are taxed at the store's location; shipped orders generally at the destination, with origin-sourcing exceptions ([Sourcing Is Data](/docs/payments/sales-tax#sourcing-is-data)).
+- **Pickup and store sales source to the store.** In-store and pickup orders are taxed at the store's location; shipped orders generally at the destination, with origin-sourcing exceptions ([Sourcing Is Data](/docs/money/sales-tax#sourcing-is-data)).
 - **Filing follows registrations.** Returns per jurisdiction and period are built from committed calculations; an engine that files (Avalara Returns, TaxJar AutoFile, Stripe Tax Complete, an SST provider) needs the same data, and a merchant that files itself needs the reports. Either way the committed tax lines in the order system must match what was filed.
 
 ## EU VAT: OSS and IOSS

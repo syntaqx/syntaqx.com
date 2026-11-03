@@ -23,7 +23,7 @@ Keep work in the request when the user needs the result to continue, or when doi
 
 **Small inputs.** Enqueue identifiers, not objects: `{ "invoice_id": "..." }`, then load the invoice inside the job. A job enqueued with a copy of the data acts on that copy even if the record changed while it waited ([Sidekiq: Best Practices](https://github.com/sidekiq/sidekiq/wiki/Best-Practices)).
 
-**Idempotent, always.** Every real queue delivers at least once: a worker can finish the work and crash before acknowledging it. So running a job twice has to be harmless: check whether the work is already done, let a unique constraint reject a duplicate insert, and pass an [idempotency key](/docs/payments/idempotency) derived from the job to any external API so a retried charge or email isn't repeated downstream.
+**Idempotent, always.** Every real queue delivers at least once: a worker can finish the work and crash before acknowledging it. So running a job twice has to be harmless: check whether the work is already done, let a unique constraint reject a duplicate insert, and pass an [idempotency key](/docs/requests/idempotency) derived from the job to any external API so a retried charge or email isn't repeated downstream.
 
 **One unit of work per job.** "Email all 40,000 users" as one job means a failure at user 23,000 retries the first 23,000. Fan out: one job enqueues 40,000 small ones, or processes in batches it can resume.
 

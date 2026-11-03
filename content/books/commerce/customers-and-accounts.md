@@ -211,7 +211,7 @@ ORDER BY customer_id, channel, recorded_at DESC;
 Design notes:
 
 - **One active row per email per merchant.** The partial unique index lets merged and redacted customers keep their rows (orders still point at them) while guaranteeing that a lookup by email finds one live customer.
-- **Consent is a ledger.** Appending rows and reading the latest per channel gives the history every TCPA or PECR complaint asks for; updating a column loses it ([Append-Only Records](/docs/payments/payment-states#append-only-records)).
+- **Consent is a ledger.** Appending rows and reading the latest per channel gives the history every TCPA or PECR complaint asks for; updating a column loses it ([Append-Only Records](/docs/money/payment-states#append-only-records)).
 - **Opt-outs skip verification.** `verified_at` is required for access, deletion and correction, never for opting out of sale or sharing: requiring it was one of the findings against Honda and Todd Snyder.
 - **GPC is a request too.** A browser's opt-out signal creates a `privacy_requests` row (`channel = 'gpc'`) tied to the customer when known, so the opt-out persists beyond the session and reaches the pixels and the ad platforms.
 - **Deadlines are computed from the law.** `acknowledge_by` and `respond_by` come from the rule for the request's `law`, held as data, so a new state's clock is a row, not a release ([Rules as Data](/docs/architecture/rules-as-data)).

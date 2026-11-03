@@ -161,7 +161,7 @@ WHERE product_id = $1
   AND recorded_during @> TIMESTAMPTZ '2027-03-10T12:00:00Z';
 ```
 
-The exclusion constraint becomes `(product_id WITH =, valid_during WITH &&, recorded_during WITH &&)`: one belief per day per moment of knowledge. PostgreSQL implements valid-time keys but not SQL:2011 system versioning, so `recorded_during` is maintained by your write path or a trigger. The money itself is fixed the way all money is: an adjusting entry for the difference, never an edit to past accruals ([Payment States & Ledgers](/docs/payments/payment-states#append-only-records)). Rates live in basis points or exact decimals, never floats ([Money & Amounts](/docs/payments/money)).
+The exclusion constraint becomes `(product_id WITH =, valid_during WITH &&, recorded_during WITH &&)`: one belief per day per moment of knowledge. PostgreSQL implements valid-time keys but not SQL:2011 system versioning, so `recorded_during` is maintained by your write path or a trigger. The money itself is fixed the way all money is: an adjusting entry for the difference, never an edit to past accruals ([Payment States & Ledgers](/docs/money/payment-states#append-only-records)). Rates live in basis points or exact decimals, never floats ([Money & Amounts](/docs/money/amounts)).
 
 ## What Goes Wrong
 

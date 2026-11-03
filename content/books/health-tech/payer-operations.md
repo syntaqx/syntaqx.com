@@ -67,7 +67,7 @@ Accumulators are the member's running totals for the benefit period: deductible 
 - **They are shared across vendors.** The medical plan, the PBM and sometimes a behavioral health carve-out each adjudicate their own claims, and a plan with a combined deductible must exchange accumulator updates between them, usually in daily files. A stale exchange is why a member's pharmacy copay can be wrong for days.
 - **They reset.** The period boundary (January 1 or the plan year date) resets them, except for carryover features some dental plans have.
 
-My rule: accumulators are a ledger of entries per claim line, and the running total is a sum, exactly like a patient ledger ([Double-Entry Ledger](/docs/payments/payment-states#double-entry-ledger)). A replay is reversing entries and new entries, never an edited total.
+My rule: accumulators are a ledger of entries per claim line, and the running total is a sum, exactly like a patient ledger ([Double-Entry Ledger](/docs/money/payment-states#double-entry-ledger)). A replay is reversing entries and new entries, never an edited total.
 
 ## Utilization Management
 

@@ -333,7 +333,7 @@ Notes on the sketch:
 - **Every strike** with the notice behind it, its expiry, and any revocation and why; every termination with the rule version and the strikes counted.
 - **Every claim and dispute,** with the reference, match span, action per territory, dispute reason, claimant response and outcome, and the claimant's dispute loss rate.
 - **Reference provenance:** who supplied each reference, the exclusivity attestation, conflicts and suspensions.
-- **Revenue moved by claims,** reconciled to the ledger, because a wrong claim is also a wrong payment ([Payment States & Ledgers](/docs/payments/payment-states)).
+- **Revenue moved by claims,** reconciled to the ledger, because a wrong claim is also a wrong payment ([Payment States & Ledgers](/docs/money/payment-states)).
 
 Reddit's published set (notices, items, actionability rates, invalid notices, counter-notices, withdrawals, repeat-infringer bans for accounts and communities) and YouTube's (claims, disputes, outcomes, active claimants) are the templates for the public report; [Transparency Reporting](/books/user-generated-platforms/transparency-reporting#what-the-voluntary-reports-count) covers the formats.
 

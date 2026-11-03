@@ -21,7 +21,7 @@ The GENIUS Act defines a payment stablecoin as a digital asset that "is, or is d
 - **Mint and redeem.** Only the issuer's direct customers (exchanges, payment companies, banks, after onboarding) mint and redeem with it. Everyone else buys and sells on the secondary market, through an exchange or a **ramp**: an on-ramp turns bank money into tokens, an off-ramp turns tokens into bank money.
 - **The token contract on each chain.** USDC exists as a separate contract on dozens of blockchains (Circle lists Ethereum, Solana, Base, Polygon PoS, Arbitrum, Avalanche, Stellar and many more), each with its own address. USDC on Solana and USDC on Ethereum are both redeemable at Circle, but they are different tokens on different ledgers, and moving between them is a transfer service of its own. A **bridged** token is different again: Circle says the bridged `USDC.e` on X Layer "is not issued or backed by Circle."
 
-Amounts have their own precision. USDC uses six decimal places, so one USDC is 1,000,000 base units on chain; other tokens use 18. A provider's [money model](/docs/payments/money#exponents-come-from-a-table) takes the exponent from a table per asset, never from the currency code.
+Amounts have their own precision. USDC uses six decimal places, so one USDC is 1,000,000 base units on chain; other tokens use 18. A provider's [money model](/docs/money/amounts#exponents-come-from-a-table) takes the exponent from a table per asset, never from the currency code.
 
 ## How It Moves
 
@@ -317,7 +317,7 @@ CREATE TABLE ramp_orders (                   -- conversions at the ramp or issue
 );
 ```
 
-The payment's state follows its transfers: a quote's inbound transfer reaching `final` (and a `clear` screening) is what moves the payment to `succeeded`, and only then does a ledger transaction post the tokens to the merchant's pending balance, keyed `('onchain_transfer', id)` so it posts once. A transfer that moves from `included` back to `seen` after a reorg posts nothing, because nothing posted before `final`. The ramp order's `settled` status, matched to the bank credit, posts the conversion's two legs and makes the merchant's dollars available for a normal [payout](/books/payments/payouts-and-settlement). Outbound sends carry an idempotency key, so a retried payout finds the signed transaction it already broadcast instead of paying twice ([Idempotency Beyond the API](/docs/payments/idempotency#idempotency-beyond-the-api)).
+The payment's state follows its transfers: a quote's inbound transfer reaching `final` (and a `clear` screening) is what moves the payment to `succeeded`, and only then does a ledger transaction post the tokens to the merchant's pending balance, keyed `('onchain_transfer', id)` so it posts once. A transfer that moves from `included` back to `seen` after a reorg posts nothing, because nothing posted before `final`. The ramp order's `settled` status, matched to the bank credit, posts the conversion's two legs and makes the merchant's dollars available for a normal [payout](/books/payments/payouts-and-settlement). Outbound sends carry an idempotency key, so a retried payout finds the signed transaction it already broadcast instead of paying twice ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
 
 ## Auditing
 

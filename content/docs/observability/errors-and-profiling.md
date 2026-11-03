@@ -92,7 +92,7 @@ Production code isn't the code you wrote. JavaScript is bundled and minified, An
 
 ### PII and Scrubbing
 
-Error events carry whatever was in scope: request bodies, headers, local variables, the user. That makes the tracker a store of personal data unless it's designed not to be ([Sensitive Data](/docs/payments/sensitive-data), [Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy)).
+Error events carry whatever was in scope: request bodies, headers, local variables, the user. That makes the tracker a store of personal data unless it's designed not to be ([Sensitive Data](/docs/security/sensitive-data), [Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy)).
 
 - **Scrub in the process first.** A `before_send` hook (or `beforeSend`) "can return a modified event object or `null`," so card numbers, tokens and free-text fields never leave the machine.
 - **Keep the SDK's PII collection off** unless a specific field is needed. Sentry's flag for this is moving from `sendDefaultPii` to a `data_collection` option whose defaults Sentry describes as "more permissive," so read the defaults when upgrading.

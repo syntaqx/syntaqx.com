@@ -93,11 +93,11 @@ For the engine this means a "free" or BOGO promotion stores its regular price ba
 
 An order discount ("$10 off") has to be spread across the lines it applied to. Three things depend on it:
 
-- **Tax.** A seller's own discount generally reduces the price tax is computed on, and a line-level base is needed when lines have different tax rates (a food item and a mug in one order). A coupon a third party reimburses, such as a manufacturer's, can be treated differently by state, so the discount's funder is recorded ([Taxability Varies by Place](/docs/payments/sales-tax#taxability-varies-by-place)).
+- **Tax.** A seller's own discount generally reduces the price tax is computed on, and a line-level base is needed when lines have different tax rates (a food item and a mug in one order). A coupon a third party reimburses, such as a manufacturer's, can be treated differently by state, so the discount's funder is recorded ([Taxability Varies by Place](/docs/money/sales-tax#taxability-varies-by-place)).
 - **Refunds.** A customer who returns one of three items gets back what they paid for it, which is its price less its share of the order discount. Without allocation, a return either refunds too much (the full price) or requires recomputing the whole promotion, which can now fail its own threshold. The refund rule ("if the remaining order no longer qualifies, do we claw back the discount?") is a policy to state in the promotion's terms.
 - **Margin and reporting.** Discount cost per item, per promotion and per channel is how a promotion is judged.
 
-The default allocation is proportional to each eligible line's amount after item discounts, with the rounding remainder put on the largest line so the allocations sum exactly to the discount ([Rounding](/docs/payments/money#rounding)). BOGO allocates the free unit's value to the "get" line; a free shipping discount allocates to the shipping charge. The core model stores a discount as an `order_charges` row (kind `discount`, payer `merchant`, payee `customer`); the allocation rows below split it by line, and a refund reverses allocations, never the original row.
+The default allocation is proportional to each eligible line's amount after item discounts, with the rounding remainder put on the largest line so the allocations sum exactly to the discount ([Rounding](/docs/money/amounts#rounding)). BOGO allocates the free unit's value to the "get" line; a free shipping discount allocates to the shipping charge. The core model stores a discount as an `order_charges` row (kind `discount`, payer `merchant`, payee `customer`); the allocation rows below split it by line, and a refund reverses allocations, never the original row.
 
 ## Promotion Abuse
 
@@ -146,7 +146,7 @@ Which state gets the money follows the Supreme Court's priority rules from *Texa
 
 ### Breakage
 
-**Breakage** is the part of gift card balances that will never be redeemed. Under ASC 606-10-55-48, if a merchant "expects to be entitled to a breakage amount," it recognizes expected breakage as revenue "in proportion to the pattern of rights exercised by the customer"; if not, only "when the likelihood of the customer exercising its remaining rights becomes remote." Under 55-49, amounts the merchant must remit to a state under unclaimed property law are a liability "and not revenue." Deloitte's illustration: with $1,000 of cards issued and $200 of expected breakage, each $40 of redemptions releases $10 of breakage. The playbook's [Breakage](/docs/payments/accounting#breakage) covers the accounting; [Commerce Accounting](/books/commerce/commerce-accounting) the journal entries.
+**Breakage** is the part of gift card balances that will never be redeemed. Under ASC 606-10-55-48, if a merchant "expects to be entitled to a breakage amount," it recognizes expected breakage as revenue "in proportion to the pattern of rights exercised by the customer"; if not, only "when the likelihood of the customer exercising its remaining rights becomes remote." Under 55-49, amounts the merchant must remit to a state under unclaimed property law are a liability "and not revenue." Deloitte's illustration: with $1,000 of cards issued and $200 of expected breakage, each $40 of redemptions releases $10 of breakage. The playbook's [Breakage](/docs/money/accounting#breakage) covers the accounting; [Commerce Accounting](/books/commerce/commerce-accounting) the journal entries.
 
 What the system owes finance is the history that makes the estimate: every card's issue date, amount, channel and jurisdiction, and every redemption, load, adjustment and escheatment with its date. With that, finance computes a redemption curve by issue cohort. My rule: breakage is a number in the books, never a state of the card. Recognizing breakage doesn't remove a customer's balance, and an escheated card is still a card the support team can see.
 
@@ -296,9 +296,9 @@ HAVING MAX(t.created_at) < NOW() - INTERVAL '4 years 6 months';
 
 Design notes:
 
-- **A gift card is a ledger, not a balance column.** Every issue, load, redemption, reversal, fee, cash-out and escheatment is an append-only row with an idempotency key, and redemption locks the card and checks the sum in one transaction ([Payment States & Ledgers](/docs/payments/payment-states)). The core model's `order_payments` has a `credit` kind; a gift card or store credit redemption is recorded there as a payment against the order, pointing at the transaction row.
+- **A gift card is a ledger, not a balance column.** Every issue, load, redemption, reversal, fee, cash-out and escheatment is an append-only row with an idempotency key, and redemption locks the card and checks the sum in one transaction ([Payment States & Ledgers](/docs/money/payment-states)). The core model's `order_payments` has a `credit` kind; a gift card or store credit redemption is recorded there as a payment against the order, pointing at the transaction row.
 - **The sale of a gift card is not revenue** and generally not a taxable sale of goods; the card is an item with `kind = 'gift_card'` whose order line creates a liability, and tax is charged when the card is redeemed for taxable goods.
-- **Never store a card number.** Hash it for lookup, show the last four, and rate-limit balance checks; treat the number and PIN like a password ([Sensitive Payment Data](/docs/payments/sensitive-data)).
+- **Never store a card number.** Hash it for lookup, show the last four, and rate-limit balance checks; treat the number and PIN like a password ([Sensitive Payment Data](/docs/security/sensitive-data)).
 - **Fees and expiry are rules by jurisdiction,** recorded with the rule that allowed them; the check constraint encodes only the federal floor for purchased cards.
 - **Promotions are versioned,** and a redemption records the version, so changing a live promotion never changes what an old order got.
 - **Allocations sum exactly** to their charge, and refunds reverse allocations.

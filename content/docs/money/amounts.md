@@ -1,13 +1,13 @@
 +++
 title = "Money & Amounts"
 description = "How monetary amounts are represented: integer minor units, an explicit ISO 4217 currency on every amount, and rounding rules that never lose a cent."
-category = "Payments"
+category = "Money"
 order = 801
 tags = ["payments", "money", "currency", "standards"]
-aliases = ["money"]
+aliases = ["payments/money", "payments"]
 +++
 
-Any system that handles money, whether it charges cards, pays invoices or just keeps a balance, rests on how it writes down an amount, so that's where Payments starts. Money is never a float: every amount is an integer count of the currency's smallest unit, and every amount travels with its currency. It's the one decision you can't cheaply change later, because by the time it's wrong it's wrong in every row, every API response, every report and every client that ever parsed one.
+Any system that handles money, whether it charges cards, pays invoices or just keeps a balance, rests on how it writes down an amount, so that's where Money starts. Money is never a float: every amount is an integer count of the currency's smallest unit, and every amount travels with its currency. It's the one decision you can't cheaply change later, because by the time it's wrong it's wrong in every row, every API response, every report and every client that ever parsed one.
 
 ## Integer Minor Units
 
@@ -91,7 +91,7 @@ The test for any money calculation: do the parts sum exactly to the whole? If no
 
 ## Negative Amounts
 
-Amounts in requests are always positive; direction comes from the operation: a refund, a payout, a fee. A `POST /refunds` with `"amount": -500` is ambiguous (refund 500, or reverse a refund?), and a sign is easy to drop or double. Signed amounts appear in exactly one place, ledger entries, where every debit and credit has to balance to zero. That ledger is where amounts go once they start moving, in [Payment States & Ledgers](/docs/payments/payment-states); before that, the next problem is making sure an amount moves only once, which is [Idempotency](/docs/payments/idempotency).
+Amounts in requests are always positive; direction comes from the operation: a refund, a payout, a fee. A `POST /refunds` with `"amount": -500` is ambiguous (refund 500, or reverse a refund?), and a sign is easy to drop or double. Signed amounts appear in exactly one place, ledger entries, where every debit and credit has to balance to zero. That ledger is where amounts go once they start moving, in [Payment States & Ledgers](/docs/money/payment-states); before that, the next problem is making sure an amount moves only once, which is [Idempotency](/docs/requests/idempotency).
 
 ## References
 

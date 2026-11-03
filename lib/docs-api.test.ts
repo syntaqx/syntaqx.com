@@ -33,9 +33,9 @@ describe("GET /docs", () => {
   });
 
   it("filters by section and tag (comma means any of) and free text", async () => {
-    const payments = (await (await list("?section=payments,security")).json()) as Summary[];
-    expect(payments.length).toBeGreaterThan(0);
-    expect(new Set(payments.map((d) => d.section))).toEqual(new Set(["payments", "security"]));
+    const money = (await (await list("?section=money,security")).json()) as Summary[];
+    expect(money.length).toBeGreaterThan(0);
+    expect(new Set(money.map((d) => d.section))).toEqual(new Set(["money", "security"]));
 
     const tagged = (await (await list("?tag=idempotency")).json()) as Summary[];
     expect(tagged.every((d) => d.tags.includes("idempotency"))).toBe(true);
@@ -51,7 +51,7 @@ describe("GET /docs", () => {
   });
 
   it("rejects unknown parameters, bad sorts and over-limit pages with 422", async () => {
-    for (const qs of ["?secton=payments", "?sort=created_at", "?limit=101", "?limit=0"]) {
+    for (const qs of ["?secton=money", "?sort=created_at", "?limit=101", "?limit=0"]) {
       const res = await list(qs);
       expect(res.status, qs).toBe(422);
       expect((await res.json()).errors, qs).toBeTruthy();
@@ -59,7 +59,7 @@ describe("GET /docs", () => {
   });
 
   it("rejects a cursor reused with different filters", async () => {
-    const first = await list("?section=payments&limit=2");
+    const first = await list("?section=money&limit=2");
     const cursor = new URL(first.headers.get("Link")!.match(/^<([^>]+)>/)![1]).searchParams.get("cursor");
     const res = await list(`?section=security&limit=2&cursor=${cursor}`);
     expect(res.status).toBe(422);
@@ -67,11 +67,11 @@ describe("GET /docs", () => {
   });
 
   it("answers QUERY bodies with the same results as GET", async () => {
-    const viaGet = (await (await list("?section=payments&sort=title")).json()) as Summary[];
+    const viaGet = (await (await list("?section=money&sort=title")).json()) as Summary[];
     const viaQuery = await queryDocsHandler(
       new Request(base, {
         method: "POST",
-        body: JSON.stringify({ section: ["payments"], sort: "title" }),
+        body: JSON.stringify({ section: ["money"], sort: "title" }),
       }),
     );
     expect(await viaQuery.json()).toEqual(viaGet);
@@ -81,11 +81,11 @@ describe("GET /docs", () => {
 describe("GET /docs/{slug}", () => {
   it("returns one doc with its Markdown, and 404 for an unknown slug", async () => {
     const ok = await getDoc(new Request(`${base}/payments/idempotency`), {
-      params: Promise.resolve({ slug: ["payments", "idempotency"] }),
+      params: Promise.resolve({ slug: ["requests", "idempotency"] }),
     });
     expect(ok.status).toBe(200);
     const doc = await ok.json();
-    expect(doc).toMatchObject({ slug: "payments/idempotency", section: "payments", title: "Idempotency" });
+    expect(doc).toMatchObject({ slug: "requests/idempotency", section: "requests", title: "Idempotency" });
     expect(doc.content).toContain("Idempotency-Key");
 
     const missing = await getDoc(new Request(`${base}/nope`), { params: Promise.resolve({ slug: ["nope"] }) });

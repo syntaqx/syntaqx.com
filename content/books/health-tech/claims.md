@@ -174,7 +174,7 @@ Rules that keep the statuses honest:
 
 - **Correlate every acknowledgment.** A 999 answers a file (by its control numbers); a 277CA answers a claim (by patient control number and, per line, the line item control number). An acknowledgment that matches nothing is itself an alert.
 - **No acknowledgment is a status.** A claim submitted with no 277CA in two business days goes on a queue; the clearinghouse may have lost it, or the payer may need enrollment.
-- **Resubmission is idempotent.** A retry after a timeout reuses the same claim identity and idempotency key, so a payer never sees two originals ([Idempotency](/docs/payments/idempotency)).
+- **Resubmission is idempotent.** A retry after a timeout reuses the same claim identity and idempotency key, so a payer never sees two originals ([Idempotency](/docs/requests/idempotency)).
 
 ## Corrected and Voided Claims
 

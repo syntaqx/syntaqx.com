@@ -43,7 +43,7 @@ The API returns a `Request-Id` header on every response, including errors ([Erro
 
 ## Retry and Offline
 
-Most frontend errors are transient: a dropped connection, a timeout, a `503` during a deploy. Every error state for a read gets a retry button, and many reads can retry once automatically first. The rules are the same as anywhere ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)): reads are safe to repeat, writes only with an [idempotency key](/docs/payments/idempotency), and automatic retries back off.
+Most frontend errors are transient: a dropped connection, a timeout, a `503` during a deploy. Every error state for a read gets a retry button, and many reads can retry once automatically first. The rules are the same as anywhere ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)): reads are safe to repeat, writes only with an [idempotency key](/docs/requests/idempotency), and automatic retries back off.
 
 When the device is offline, say so once, globally, instead of letting every widget fail separately. The browser's [`online` and `offline` events](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) are a hint, not proof (a device can be "online" with no route to your server), so treat a failed request as the real signal and the event as a cue to retry when connectivity returns.
 

@@ -39,7 +39,7 @@ Two rules make the structure insurable. The FBO's title and the bank's records m
 
 ## The Subledger
 
-The program's ledger is a double-entry ledger in which each customer's sub-account is a liability of the FBO, and the sum of the sub-accounts is what the FBO should hold. The playbook's [Double-Entry Ledger](/docs/payments/payment-states#double-entry-ledger) rules apply as they do to the bank's own books, with three additions that come from being one level removed from the money:
+The program's ledger is a double-entry ledger in which each customer's sub-account is a liability of the FBO, and the sum of the sub-accounts is what the FBO should hold. The playbook's [Double-Entry Ledger](/docs/money/payment-states#double-entry-ledger) rules apply as they do to the bank's own books, with three additions that come from being one level removed from the money:
 
 - **Every entry names the bank account it moves.** A credit to a customer from an ACH deposit is cash arriving in the settlement account; a card purchase is a future drawdown of the FBO; an internal transfer between two customers moves nothing at the bank. The ledger records which bank account each entry will touch and when, so in-transit amounts are positions, not guesses.
 - **Money between banks is two entries at two institutions.** A program spread across several banks, or a sweep to more banks for insurance, has one FBO per bank, and each customer's balance is the sum of their interests in each. The subledger must say how much of each customer's money is at each bank on each day, because insurance is per bank and so is the payout if one fails.

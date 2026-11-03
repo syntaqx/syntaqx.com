@@ -2,14 +2,15 @@
 title = "Accounting & Revenue Recognition"
 nav_title = "Accounting"
 description = "What the product owes the books: deferred revenue as ledger facts, ASC 606 and IFRS 15 basics, breakage, accounting sync, month-end close and write-offs."
-category = "Payments"
+category = "Money"
 order = 809
 tags = ["payments", "accounting", "revenue-recognition", "ledger", "month-end"]
+aliases = ["payments/accounting"]
 +++
 
 The product's ledger records money that moved. The business's books record what that money *means*: how much of it has been earned, how much is still owed back as service, how much will never be collected. Those are different questions, and the second set is answered by accountants under standards that change their estimates every quarter. The engineering job isn't to make accounting decisions. It's to keep the facts every accounting decision needs, in a form finance can recompute under this quarter's policy, and to deliver them to the accounting system in a way that reconciles.
 
-This is the engineering of accounting data, not accounting advice: which treatment applies to your products is your finance team's and auditor's call. The ledger underneath follows [Payment States & Ledgers](/docs/payments/payment-states#double-entry-ledger), amounts follow [Money & Amounts](/docs/payments/money), and recurring billing follows [Subscriptions & Recurring Billing](/docs/payments/subscriptions).
+This is the engineering of accounting data, not accounting advice: which treatment applies to your products is your finance team's and auditor's call. The ledger underneath follows [Payment States & Ledgers](/docs/money/payment-states#double-entry-ledger), amounts follow [Money & Amounts](/docs/money/amounts), and recurring billing follows [Subscriptions & Recurring Billing](/docs/money/subscriptions).
 
 ## The Product Keeps Facts, Finance Picks Policy
 
@@ -39,9 +40,9 @@ So a deferral is a ledger fact, posted like any other transaction:
 | Customer pays | `cash` | `accounts_receivable` | 120,000 |
 | Each month end | `deferred_revenue` | `revenue` | 10,000 |
 
-Stripe's revenue recognition product is built exactly this way, on "a double-entry accounting ledger": finalizing an invoice debits accounts receivable and credits deferred revenue, payment debits cash and credits receivables, and recognition moves deferred revenue to revenue over each line's period. By default it amortizes "by the day", with options for the second or the month ([Stripe: How Revenue Recognition works](https://docs.stripe.com/revenue-recognition/methodology), [Stripe: Revenue Recognition settings](https://docs.stripe.com/revenue-recognition/revenue-settings)). Refunds and disputes split the same way: the part already recognized becomes contra revenue, and the rest comes out of deferred revenue. Tax collected is a liability to the tax authority, never revenue ([Sales Tax & VAT](/docs/payments/sales-tax)).
+Stripe's revenue recognition product is built exactly this way, on "a double-entry accounting ledger": finalizing an invoice debits accounts receivable and credits deferred revenue, payment debits cash and credits receivables, and recognition moves deferred revenue to revenue over each line's period. By default it amortizes "by the day", with options for the second or the month ([Stripe: How Revenue Recognition works](https://docs.stripe.com/revenue-recognition/methodology), [Stripe: Revenue Recognition settings](https://docs.stripe.com/revenue-recognition/revenue-settings)). Refunds and disputes split the same way: the part already recognized becomes contra revenue, and the rest comes out of deferred revenue. Tax collected is a liability to the tax authority, never revenue ([Sales Tax & VAT](/docs/money/sales-tax)).
 
-Prepaid balances that aren't tied to a period behave the same: account credit, a stored-value wallet, a gift card, a bundle of visits paid upfront, a pack of virtual currency. Each is a liability until it's used, and the ledger keeps them in their own accounts (`customer_credit`, `prepaid_balance`, `deferred_revenue`), separate from `unapplied_cash`, which is money received and not yet matched to anything ([Payments Are Applied, Not Assigned](/docs/payments/payment-states#payments-are-applied-not-assigned)).
+Prepaid balances that aren't tied to a period behave the same: account credit, a stored-value wallet, a gift card, a bundle of visits paid upfront, a pack of virtual currency. Each is a liability until it's used, and the ledger keeps them in their own accounts (`customer_credit`, `prepaid_balance`, `deferred_revenue`), separate from `unapplied_cash`, which is money received and not yet matched to anything ([Payments Are Applied, Not Assigned](/docs/money/payment-states#payments-are-applied-not-assigned)).
 
 ## ASC 606 and IFRS 15 in Five Steps
 
@@ -62,7 +63,7 @@ The common shapes, and the fact each one needs:
 - **A subscription to a hosted service** is usually a promise to stand ready over the term, recognized evenly over the period. Stripe treats "each invoice line item as its own performance obligation" and amortizes it evenly over the line's period; a line with no period is recognized in full at finalization ([Stripe: How Revenue Recognition works](https://docs.stripe.com/revenue-recognition/methodology)). So every line carries a period, or someone decided it shouldn't.
 - **Setup, onboarding and implementation fees** may be a separate obligation or part of the subscription, which changes whether they're recognized up front or over the term. Keep them as their own line with their own standalone price so either answer can be computed.
 - **Prepaid usage** (credits, a bundle of visits, a quota) is recognized as it's used, which needs a consumption event per use.
-- **Plan changes** create prorations and negative lines that reverse recognition already scheduled; [Plan Changes and Proration](/docs/payments/subscriptions#plan-changes-and-proration) produces them as lines with their own periods, which is what recognition needs.
+- **Plan changes** create prorations and negative lines that reverse recognition already scheduled; [Plan Changes and Proration](/docs/money/subscriptions#plan-changes-and-proration) produces them as lines with their own periods, which is what recognition needs.
 - **Virtual goods and in-app currency** are paid for before they're delivered. Roblox's annual report says bookings are "initially recorded in deferred revenue" and durable items are recognized over "the estimated average lifetime of a paying user, which was 27 months as of December 31, 2025" ([Roblox: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1315098/000131509826000024/rblx-20251231.htm)). The lifetime is an estimate that can move; the purchase, the item's durability and each spend are facts. [Monetization Models](/books/gaming/monetization#virtual-currency) covers the game side.
 
 When the answer depends on a judgment ("is this a stand-ready promise or a set number of visits?"), store both shapes of fact (the term dates and the deliveries) and let finance pick. The system shouldn't hard-code one method into a column nobody can recompute.
@@ -109,7 +110,7 @@ CREATE TABLE recognition_entries (
 );
 ```
 
-- **Entries are append-only.** A refund in March of an annual plan posts a negative entry in March; it never edits January's entry ([Append-Only Records](/docs/payments/payment-states#append-only-records)).
+- **Entries are append-only.** A refund in March of an annual plan posts a negative entry in March; it never edits January's entry ([Append-Only Records](/docs/money/payment-states#append-only-records)).
 - **The policy version is on every entry,** like any rule's decision record ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)). A method change produces a new version and, for closed periods, correcting entries in the open one.
 - **The sum checks itself.** For every line, recognized entries plus remaining deferred equals the allocated amount; a nightly job asserts it and opens a break when it doesn't.
 - **Periods are dates in the business's reporting time zone,** assigned once when the entry is created, not recomputed on read ([Assign the Business Date Once](/docs/architecture/data-pipelines#assign-the-business-date-once)).
@@ -160,7 +161,7 @@ CREATE TABLE accounting_sync_batches (
 
 A sync that times out after the accounting system accepted the journal will post it twice on retry unless it's idempotent, and a doubled revenue journal is the worst kind of reconciliation break because it balances.
 
-- **One deterministic key per journal:** tenant, target, period, journal kind and revision. A retry reuses the key, and the batch table's unique constraint means the product never builds a second journal for the same thing ([Idempotency](/docs/payments/idempotency)).
+- **One deterministic key per journal:** tenant, target, period, journal kind and revision. A retry reuses the key, and the batch table's unique constraint means the product never builds a second journal for the same thing ([Idempotency](/docs/requests/idempotency)).
 - **Store the external ID before declaring success,** and on retry look for a journal with your reference (most accounting APIs let you set a reference or document number) before posting again.
 - **Never edit a confirmed journal.** A late event for a synced period becomes a new revision journal for the difference, in the open period, with its own batch record.
 
@@ -170,7 +171,7 @@ Closing the books is finance's process, but it runs on what the product provides
 
 - **A frozen cutoff.** Every event assigned to a period by its business date, and a way to say "everything up to 23:59:59 on the last day, in the reporting time zone, has arrived." Late events (a webhook delayed past midnight, a settlement file that lands on the 2nd) are the usual cause of a close that won't tie.
 - **Balances that tie out.** Receivables, deferred revenue, customer credit and prepaid balances, unapplied cash and tax liability, each as the sum of ledger entries, matching the summary journals sent for the period.
-- **Reconciliations already done.** Processor settlements and bank deposits matched to the ledger daily, with breaks tracked and owned ([Reconciliation](/docs/payments/payment-states#reconciliation)), and every processor and network invoice reconciled against the fees the ledger expected.
+- **Reconciliations already done.** Processor settlements and bank deposits matched to the ledger daily, with breaks tracked and owned ([Reconciliation](/docs/money/payment-states#reconciliation)), and every processor and network invoice reconciled against the fees the ledger expected.
 - **The subledger reports:** a deferred revenue rollforward (opening balance, billed, recognized, reversed, closing balance), an aging of receivables, and a list of write-offs with approvers.
 - **Controls evidence.** Who changed a price, a mapping, a policy version or a sync setting, and when. Enterprise customers and auditors ask for a SOC 1 report on the controls behind financial numbers, separate from the security-focused [SOC 2](/docs/compliance/soc-2).
 

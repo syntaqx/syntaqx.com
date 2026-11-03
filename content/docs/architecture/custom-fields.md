@@ -65,7 +65,7 @@ ALTER TABLE customers ADD COLUMN custom_fields JSONB NOT NULL DEFAULT '{}';
 
 ## Types and Option Lists
 
-- **Pick a small set of types and map each to one JSON representation:** numbers as JSON numbers, exact decimals as strings ([Money & Amounts](/docs/payments/money) for why), dates as `YYYY-MM-DD` strings, datetimes as RFC 3339 in UTC ([Time & Date Formats](/docs/fundamentals/time)). A type that has two representations will be stored both ways.
+- **Pick a small set of types and map each to one JSON representation:** numbers as JSON numbers, exact decimals as strings ([Money & Amounts](/docs/money/amounts) for why), dates as `YYYY-MM-DD` strings, datetimes as RFC 3339 in UTC ([Time & Date Formats](/docs/fundamentals/time)). A type that has two representations will be stored both ways.
 - **Options have stable keys and editable labels:** `[{"key": "residential", "label": "Residential"}, {"key": "commercial", "label": "Commercial", "archived": true}]`. Values store the key. Renaming a label changes nothing stored; archiving an option hides it from new input while old values still display.
 - **Multi-select is an array of option keys,** never a comma-joined string.
 - **References point at another record by ID,** checked for existence and tenant on write. Without that check, a custom field becomes a way to read across tenants.

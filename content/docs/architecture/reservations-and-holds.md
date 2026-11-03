@@ -161,7 +161,7 @@ Some rules can't be expressed as a constraint: "a customer may hold at most one 
 
 Confirmation is where retries hurt most: the customer has paid, the network blips, and the app sends "confirm" again. It must produce one booking, one charge and one confirmation email.
 
-- **Every claim-creating request carries an idempotency key,** stored on the row under a unique constraint, as in the table above. A retry with the same key returns the stored result instead of claiming again ([Idempotency](/docs/payments/idempotency#what-the-server-stores)). Natural keys work too: a partner's booking ID, or a recurring series' occurrence ID for system-created bookings.
+- **Every claim-creating request carries an idempotency key,** stored on the row under a unique constraint, as in the table above. A retry with the same key returns the stored result instead of claiming again ([Idempotency](/docs/requests/idempotency#what-the-server-stores)). Natural keys work too: a partner's booking ID, or a recurring series' occurrence ID for system-created bookings.
 - **Confirmation is a conditional state change** on the existing row, not a new insert:
 
 ```sql

@@ -49,7 +49,7 @@ The interchange arrives at the issuing bank, which keeps its share and remits th
 - **Network and processor fees** come out next: per transaction, per card, per service.
 - **What's left goes to the program manager,** which may share it again with a platform that distributes its cards.
 
-**Gross or net is an accounting judgment, not a fact about the cash.** BILL says it recognizes interchange "gross or net of fees paid to the Issuing Banks" depending on whether it's the principal or the agent under each agreement; Expensify recognizes interchange gross because it's the principal in the card program. A program manager that controls the card product, sets the rewards and carries the credit risk usually concludes it's the principal; one that refers cards for a bank usually doesn't. The ledger has to carry the gross interchange, the bank's share and each fee as separate lines whatever the income statement shows, because the program agreement settles on gross and the auditors decide the presentation ([The Product Keeps Facts, Finance Picks Policy](/docs/payments/accounting#the-product-keeps-facts-finance-picks-policy)).
+**Gross or net is an accounting judgment, not a fact about the cash.** BILL says it recognizes interchange "gross or net of fees paid to the Issuing Banks" depending on whether it's the principal or the agent under each agreement; Expensify recognizes interchange gross because it's the principal in the card program. A program manager that controls the card product, sets the rewards and carries the credit risk usually concludes it's the principal; one that refers cards for a bank usually doesn't. The ledger has to carry the gross interchange, the bank's share and each fee as separate lines whatever the income statement shows, because the program agreement settles on gross and the auditors decide the presentation ([The Product Keeps Facts, Finance Picks Policy](/docs/money/accounting#the-product-keeps-facts-finance-picks-policy)).
 
 ## Rewards as a Share of Interchange
 
@@ -69,7 +69,7 @@ Software revenue is smaller for the card-first players and larger for the rest:
 - **Expensify** bills its plans at the start of each month on the prior month's active policy members, and subscription fees were about $130.5 million of its 2025 revenue.
 - **Navan** earned $61.9 million of subscription revenue in fiscal 2026 against $640.4 million of usage-based revenue.
 
-A subscription priced per active user means the platform must define "active" exactly (a member who submitted an expense, held a card, or approved one) and keep the count that produced each invoice. The billing mechanics (periods, proration, dunning, renewal law) are the playbook's [Subscriptions](/docs/payments/subscriptions); the industry twist is that rewards can pay the subscription, so the rewards ledger and the billing system have to agree on what was redeemed.
+A subscription priced per active user means the platform must define "active" exactly (a member who submitted an expense, held a card, or approved one) and keep the count that produced each invoice. The billing mechanics (periods, proration, dunning, renewal law) are the playbook's [Subscriptions](/docs/money/subscriptions); the industry twist is that rewards can pay the subscription, so the rewards ledger and the billing system have to agree on what was redeemed.
 
 ## Float, Deposits and Funding
 

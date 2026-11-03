@@ -1,13 +1,13 @@
 +++
 title = "Payment States & Ledgers"
 description = "Explicit state machines for financial objects, append-only records, and a double-entry ledger, so every balance can be explained and nothing is ever edited."
-category = "Payments"
+category = "Money"
 order = 803
 tags = ["payments", "state-machines", "ledger", "database"]
-aliases = ["payment-states"]
+aliases = ["payments/payment-states", "payment-states"]
 +++
 
-With amounts represented exactly and every write [idempotent](/docs/payments/idempotency), the next question is what a payment *is* over its life. This chapter uses card vocabulary (issuer, authorization, capture, clearing, settlement); if it's new, [How Card Payments Work](/books/payments/card-payments) introduces it and the [Payments Glossary](/books/payments/glossary) defines it. Financial data has two rules: every change of state is explicit, and nothing that happened is ever rewritten. Mistakes are corrected with new entries, as accountants have done for centuries, and for the same reason: the most important question about money is never "what is the balance?", it's "why is that the balance?", and only an intact history can answer it.
+With amounts represented exactly and every write [idempotent](/docs/requests/idempotency), the next question is what a payment *is* over its life. This chapter uses card vocabulary (issuer, authorization, capture, clearing, settlement); if it's new, [How Card Payments Work](/books/payments/card-payments) introduces it and the [Payments Glossary](/books/payments/glossary) defines it. Financial data has two rules: every change of state is explicit, and nothing that happened is ever rewritten. Mistakes are corrected with new entries, as accountants have done for centuries, and for the same reason: the most important question about money is never "what is the balance?", it's "why is that the balance?", and only an intact history can answer it.
 
 ## Explicit State Machines
 
@@ -36,7 +36,7 @@ The alternative, a status column any code path can set to anything, fails quietl
 
 ### In-Flight States
 
-A call to a processor can time out with the outcome unknown: the authorization may have happened, or not. If the only states are before and after, a retry can't tell which it is. So record the attempt before making it: `authorizing`, `capturing`, `voiding`, each with the idempotency key the request will carry ([Idempotency](/docs/payments/idempotency)). A worker that finds a payment stuck in `capturing` knows exactly what to do: ask the processor about that key, or retry with the same one, and move the payment to `captured` or back to `authorized` on the answer. Nothing is ever "probably captured", and a crash between the request and the response leaves a record that says so instead of a gap. The diagram above shows only where a payment rests; each arrow that calls a processor passes through one of these states on the way. (A void, in this vocabulary, is the merchant-facing name for an authorization reversal: it releases the issuer's hold.)
+A call to a processor can time out with the outcome unknown: the authorization may have happened, or not. If the only states are before and after, a retry can't tell which it is. So record the attempt before making it: `authorizing`, `capturing`, `voiding`, each with the idempotency key the request will carry ([Idempotency](/docs/requests/idempotency)). A worker that finds a payment stuck in `capturing` knows exactly what to do: ask the processor about that key, or retry with the same one, and move the payment to `captured` or back to `authorized` on the answer. Nothing is ever "probably captured", and a crash between the request and the response leaves a record that says so instead of a gap. The diagram above shows only where a payment rests; each arrow that calls a processor passes through one of these states on the way. (A void, in this vocabulary, is the merchant-facing name for an authorization reversal: it releases the issuer's hold.)
 
 ### Settled Is Not Final
 
@@ -127,9 +127,9 @@ Why not a single `balance` column per merchant? Because a single balance can be 
 
 - **Entries are written atomically,** and a constraint rejects any transaction that doesn't balance.
 - **Account balances are the sum of their entries.** A cached balance is fine for reads, but it's derived, and it can always be rebuilt from the entries.
-- **Postings are idempotent.** Each ledger transaction carries the ID of the event that caused it (a capture, a refund), with a unique constraint, so a retried event can't post twice. See [Idempotency](/docs/payments/idempotency).
+- **Postings are idempotent.** Each ledger transaction carries the ID of the event that caused it (a capture, a refund), with a unique constraint, so a retried event can't post twice. See [Idempotency](/docs/requests/idempotency).
 - **Entries have a lifecycle too.** As Modern Treasury's ledgers model it, a transaction is **pending** when it's expected but not yet certain (a capture awaiting settlement, a payout sent but not confirmed) and **posted** when it's final enough to count, and a pending transaction that never happens is archived, not deleted. That split is where a merchant's pending and available balances come from: the posted balance is the starting point for the available balance, what can safely be paid out, which [Payouts & Settlement](/books/payments/payouts-and-settlement) defines.
-- **Amounts follow [Money & Amounts](/docs/payments/money):** integer minor units, explicit currency. Signs live here and only here.
+- **Amounts follow [Money & Amounts](/docs/money/amounts):** integer minor units, explicit currency. Signs live here and only here.
 
 ### A Chart of Accounts
 
