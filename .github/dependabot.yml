@@ -2,8 +2,8 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     # Workflows, plus the local composite action (which Dependabot doesn't
-    # find from "/" alone). Actions are SHA-pinned; Dependabot bumps the
-    # SHA and its version comment together.
+    # find from "/" alone). Actions are pinned to semver tags (major, like
+    # @v7); Dependabot bumps them.
     directories:
       - "/"
       - "/.github/actions/setup"
