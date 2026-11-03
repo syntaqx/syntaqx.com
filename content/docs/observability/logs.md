@@ -2,7 +2,7 @@
 title = "Logs"
 description = "Structured JSON logs, levels with meaning, trace correlation, the OpenTelemetry logs model and bridges, what never to log, sampling noise, and retention."
 category = "Observability"
-order = 1235
+order = 1232
 tags = ["observability", "logging", "opentelemetry", "security", "operations"]
 +++
 

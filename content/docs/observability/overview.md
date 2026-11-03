@@ -12,8 +12,8 @@ When something goes wrong, the first question is "what happened to this request?
 
 | Signal | Answers | Cost |
 | --- | --- | --- |
-| **Metrics** | Is something wrong, and how much? | Cheap: numbers aggregated over time, kept for months |
 | **Logs** | What exactly happened in this one event? | Moderate: every event is stored and searched |
+| **Metrics** | Is something wrong, and how much? | Cheap: numbers aggregated over time, kept for months |
 | **Traces** | Where did this request spend its time, across every service? | Higher: usually sampled |
 
 Alerts fire on metrics, investigations start from a trace or a request ID, and logs fill in the detail. Each is weak alone; the IDs that tie them together make them useful.
@@ -24,11 +24,11 @@ This page is the frame: request IDs, how the signals connect, and the one rule a
 
 | Page | Covers |
 | ---- | ------ |
-| [Instrumenting with OpenTelemetry](/docs/observability/opentelemetry) | API and SDK, zero-code agents and the Kubernetes Operator, resources, semantic conventions, OTLP, propagation, signal status |
-| [Running the OpenTelemetry Collector](/docs/observability/collector) | Deployment patterns, a working configuration, distributions, scaling, securing and managing a fleet |
-| [Tracing & Sampling](/docs/observability/tracing) | Spans and what deserves one, async work and span links, head and tail sampling |
 | [Logs](/docs/observability/logs) | Structured logging, levels, correlation, what never to log, sampling and retention |
 | [Metrics](/docs/observability/metrics) | Instruments, the golden signals, cardinality budgets |
+| [Tracing & Sampling](/docs/observability/tracing) | Spans and what deserves one, async work and span links, head and tail sampling |
+| [Instrumenting with OpenTelemetry](/docs/observability/opentelemetry) | API and SDK, zero-code agents and the Kubernetes Operator, resources, semantic conventions, OTLP, propagation, signal status |
+| [Running the OpenTelemetry Collector](/docs/observability/collector) | Deployment patterns, a working configuration, distributions, scaling, securing and managing a fleet |
 | [Errors & Profiling](/docs/observability/errors-and-profiling) | Error grouping and tracking, continuous profiling |
 | [Frontend & Synthetic Monitoring](/docs/observability/frontend-and-synthetic) | Real-user monitoring and checks that run when no user is there |
 | [Dashboards & Alerts](/docs/observability/dashboards-and-alerts) | What goes on a dashboard and what is allowed to page |
@@ -76,10 +76,6 @@ Cardinality is the number of distinct values a field can take. The rule that dec
 
 The two meet through the joins above: the metric says the authorization rate dropped for one processor, the exemplar or a query on the wide events says which requests, and the trace says where they spent their time.
 
-## Traces in Brief
-
-A trace follows a request through every service it touches, so "the API was slow" becomes "the API waited 2.1 seconds on the processor call". Calls between services propagate [W3C Trace Context](https://www.w3.org/TR/trace-context/) (`traceparent` and `tracestate`), instrumented with [OpenTelemetry](https://opentelemetry.io/), because every library, proxy and vendor on the path already knows how to pass the standard on. Queue messages and [webhooks](/docs/api-design/webhooks) carry the context too, so asynchronous work links back to the request that caused it, and traces are the one signal I sample. Spans, async work, span links and sampling are in [Tracing & Sampling](/docs/observability/tracing); propagation and its risks are in [Instrumenting with OpenTelemetry](/docs/observability/opentelemetry#context-propagation).
-
 ## Logs in Brief
 
 Logs are JSON, one event per line, with constant messages and the data in fields, levels that mean something, the `request_id` and `trace_id` on every line, and sensitive data redacted at the logger ([Sensitive Data](/docs/security/sensitive-data)). The format, levels, correlation, what never to log, sampling and retention are in [Logs](/docs/observability/logs).
@@ -87,6 +83,10 @@ Logs are JSON, one event per line, with constant messages and the data in fields
 ## Metrics in Brief
 
 Start with the [four golden signals](https://sre.google/sre-book/monitoring-distributed-systems/) (latency, traffic, errors and saturation) for every service and every dependency, with latency split by success and failure. Add the business signals that show trouble before an error rate does: for payments, authorization rate by processor and card brand, payments stuck in `pending`, and reconciliation breaks per day. Instruments, naming and cardinality budgets are in [Metrics](/docs/observability/metrics).
+
+## Traces in Brief
+
+A trace follows a request through every service it touches, so "the API was slow" becomes "the API waited 2.1 seconds on the processor call". Calls between services propagate [W3C Trace Context](https://www.w3.org/TR/trace-context/) (`traceparent` and `tracestate`), instrumented with [OpenTelemetry](https://opentelemetry.io/), because every library, proxy and vendor on the path already knows how to pass the standard on. Queue messages and [webhooks](/docs/api-design/webhooks) carry the context too, so asynchronous work links back to the request that caused it, and traces are the one signal I sample. Spans, async work, span links and sampling are in [Tracing & Sampling](/docs/observability/tracing); propagation and its risks are in [Instrumenting with OpenTelemetry](/docs/observability/opentelemetry#context-propagation).
 
 ## Alerts in Brief
 
