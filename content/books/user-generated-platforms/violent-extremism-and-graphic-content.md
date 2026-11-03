@@ -12,7 +12,7 @@ Terrorist and violent extremist content is the harm where the industry cooperate
 
 The same chapter has to hold the opposite problem. Most violent imagery on a user-generated platform isn't terrorist propaganda: it's war footage, police violence, the aftermath of an accident, a medical procedure, a hunting video, a documentary. Some of it is the most important material on the platform, and removing it erases evidence and news. Platforms handle that with a different set of tools: warning screens that make viewers click through, age restrictions instead of removals, blur by default, and a newsworthiness exception that lets a policy team keep up something the rules would otherwise remove.
 
-This chapter covers both: the shared machinery for terrorist content (GIFCT, incident response, the Christchurch Call, EU removal orders), livestreamed attacks, and the handling of graphic content that stays up. The general moderation machinery (policy, queues, ladders, notices, appeals) is the playbook's [Trust & Safety](/docs/security/trust-and-safety); hashing technology and list hygiene are in [Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#hash-matching). None of this is legal advice.
+This chapter covers both: the shared machinery for terrorist content (GIFCT, incident response, the Christchurch Call, EU removal orders), livestreamed attacks, and the handling of graphic content that stays up. The general moderation machinery (policy, queues, ladders, notices, appeals) is the playbook's [Trust & Safety](/docs/building-blocks/trust-and-safety); hashing technology and list hygiene are in [Child Safety: Detection & Reporting](/books/user-generated-platforms/child-safety#hash-matching). None of this is legal advice.
 
 ## How the Platforms Do It
 
@@ -23,7 +23,7 @@ The published practice converges on a few patterns:
 | **Shared hashes of known terrorist content** | GIFCT members integrated into its hash-sharing database include Discord, Dropbox, Facebook, Instagram, Google, Microsoft, Pinterest, Twitch, Vimeo, X and YouTube | Each member matches uploads against shared hashes and decides the action under its own terms |
 | **Incident response after attacks** | GIFCT's Incident Response Framework, activated 7 times in 2024 and 14 times in 2025 | A protocol that alerts members, opens hash sharing for one event's perpetrator content, and closes when re-upload attempts subside |
 | **Hash matching plus human review** | Reddit, second half of 2025: automated tools (including hash matching) flagged 2,200 items, 696 were removed after human review, with all associated accounts permanently suspended; 166 user reports led to 136 removals | Automation finds, people confirm, accounts go to the top of the ladder |
-| **Zero tolerance at the account level** | Discord ("a zero-tolerance policy towards violent extremism"), Reddit (permanent suspension of associated accounts), Meta (a Live ban for a first violation of its most serious policies) | Severity skips the ladder ([Penalties and Escalation Ladders](/docs/security/trust-and-safety#penalties-and-escalation-ladders)) |
+| **Zero tolerance at the account level** | Discord ("a zero-tolerance policy towards violent extremism"), Reddit (permanent suspension of associated accounts), Meta (a Live ban for a first violation of its most serious policies) | Severity skips the ladder ([Penalties and Escalation Ladders](/docs/building-blocks/trust-and-safety#penalties-and-escalation-ladders)) |
 | **Graphic content kept up behind a gate** | YouTube age-restricts instead of removing when context is enough; Meta puts allowed disturbing content behind a warning screen and may limit it to adults | Interstitials, age gates, signed-in requirements |
 | **Blur by default** | Discord blurs possibly sensitive media for teens by default, and for all UK users since July 21, 2025; Bluesky's labelers can hide, block or blur content per user setting | The viewer sees a placeholder and chooses to reveal |
 | **A documented newsworthiness exception** | Meta: 44 documented newsworthy allowances from June 2024 to June 2025, up from 32 the year before | Escalation to a policy team, a balancing test, a record |
@@ -85,7 +85,7 @@ A platform's own incident mode follows from that:
 
 1. **Declare an incident** from an external activation (GIFCT, a government crisis protocol) or internal signals (a spike in reports of one video), with a start time and an owner.
 2. **Load the incident's hashes** from the shared database as they arrive, and add your own as reviewers confirm new variants.
-3. **Tighten the bands for that incident only:** auto-remove exact matches, quarantine near matches pending review, and hold new uploads that match the incident's audio or visual signature for review before they're visible ([Automated Detection, Human Review](/docs/security/trust-and-safety#automated-detection-human-review)).
+3. **Tighten the bands for that incident only:** auto-remove exact matches, quarantine near matches pending review, and hold new uploads that match the incident's audio or visual signature for review before they're visible ([Automated Detection, Human Review](/docs/building-blocks/trust-and-safety#automated-detection-human-review)).
 4. **Staff a live queue** for reports tied to the incident, and pull reviewers from other queues with the exposure rules in [Reviewer Wellbeing](/books/user-generated-platforms/moderation-at-scale#reviewer-wellbeing).
 5. **Watch search, recommendations and trending:** suppress the event's names and hashes from autocomplete and recommendation surfaces while the incident is open.
 6. **Close with a record:** when it ended, why, what was added and removed, and what the debrief found.
@@ -177,7 +177,7 @@ From those, the controls a platform needs, from least to most restrictive:
 
 Three design rules make them work:
 
-- **They're decisions, not author settings.** An author can mark their own post sensitive; a reviewer applying a warning screen or an age restriction is a moderation decision, recorded with category, policy version and reason, and appealable like any other ([Appeals](/docs/security/trust-and-safety#appeals)). It's also a restriction the user is told about, with the reasons a statement of reasons requires in the EU ([Notices and Statements of Reasons](/docs/security/trust-and-safety#notices-and-statements-of-reasons)).
+- **They're decisions, not author settings.** An author can mark their own post sensitive; a reviewer applying a warning screen or an age restriction is a moderation decision, recorded with category, policy version and reason, and appealable like any other ([Appeals](/docs/building-blocks/trust-and-safety#appeals)). It's also a restriction the user is told about, with the reasons a statement of reasons requires in the EU ([Notices and Statements of Reasons](/docs/building-blocks/trust-and-safety#notices-and-statements-of-reasons)).
 - **Gates apply everywhere the item renders:** feeds, search results, embeds, link previews, notifications and the API. An interstitial that the embed player ignores is no interstitial.
 - **Age gates need an age.** An age restriction is only as good as the platform's knowledge of who is 18, and the signed-out viewer is treated as a minor. Age assurance methods and the law around them are [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#age-assurance-on-a-general-audience-platform).
 
@@ -263,7 +263,7 @@ Notes on the sketch:
 - **Every incident:** source, activation and close times, bands in force, hashes consumed and contributed, cases, removals and the debrief.
 - **Every hash-list action:** which list version matched, with what labels and distance, and what the platform did; and every hash the platform contributed, tied to the decision that confirmed it.
 - **Every gate and allowance:** who applied a warning screen or age restriction, under which rule, and every newsworthiness allowance with both sides of the balance and its approver.
-- **The annual TCO transparency report** and the platform's own transparency counts as queries over these records ([Transparency Reporting](/docs/security/trust-and-safety#transparency-reporting)); [Transparency Reporting](/books/user-generated-platforms/transparency-reporting) covers the formats.
+- **The annual TCO transparency report** and the platform's own transparency counts as queries over these records ([Transparency Reporting](/docs/building-blocks/trust-and-safety#transparency-reporting)); [Transparency Reporting](/books/user-generated-platforms/transparency-reporting) covers the formats.
 
 ## What This Means for the System You Build
 

@@ -148,7 +148,7 @@ Almost every platform rents the commodity and regulated layers and builds the pr
 | Video encoding, live ingest and delivery | Rent until scale, then build selectively | Twitch, YouTube and Meta built their own transcoders and hardware at a scale few reach; Mux, IVS and Cloudflare Stream exist for everyone else |
 | Hash matching against child-safety and terrorist lists | Join the programs; rent the matching | The lists are only available through PhotoDNA, NCMEC, IWF, GIFCT and vendors like Safer; never build your own list from scratch |
 | Classifiers for nudity, violence, hate, spam | Rent, then tune with your own labels | The vendor's models are a starting point; your policy and appeals decide thresholds |
-| Moderation workflow (cases, decisions, notices, appeals) | Build on the playbook's model | Your policy, your legal clocks and your transparency reports run on it ([Trust & Safety](/docs/security/trust-and-safety)) |
+| Moderation workflow (cases, decisions, notices, appeals) | Build on the playbook's model | Your policy, your legal clocks and your transparency reports run on it ([Trust & Safety](/docs/building-blocks/trust-and-safety)) |
 | Identity verification | Rent | Document and liveness checks, and their fraud models, are a vendor's full-time job |
 | Payments, payouts and tax forms | Rent a connected-accounts platform | Money transmission, KYC and 1099-K filing are regulated ([Payments for Software Platforms](/books/payments/software-platforms#what-a-provider-builds-for-platforms)) |
 | Insurance | Partner with a carrier and a licensed producer | Selling insurance takes licenses; protection plans that aren't insurance still need careful drafting |

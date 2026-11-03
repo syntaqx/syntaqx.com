@@ -118,7 +118,7 @@ Some answers should come from a person even when a bot could produce them:
 - **Denials.** Riot found satisfaction "about 20% lower" when the bot delivered a denial instead of a live agent. The answer was the same; who said it changed how it landed. Automate the yeses and the routing; let a person say no.
 - **Money beyond a cap.** Refunds, credits and goodwill above a value a bot can grant, and anything that reverses a charge on a different instrument.
 - **Account control.** Recovery, ownership disputes and changes to contact points; an agent verifies evidence against a written threshold and unlocks self-service, never sets a password or sign-in factor directly ([Recovery Is the Real Login](/docs/security/authentication#recovery-is-the-real-login)).
-- **Safety.** Threats to life, self-harm, child safety and harassment follow the urgent path in [Trust & Safety](/docs/security/trust-and-safety), from any channel, at any hour.
+- **Safety.** Threats to life, self-harm, child safety and harassment follow the urgent path in [Trust & Safety](/docs/building-blocks/trust-and-safety), from any channel, at any hour.
 - **Penalties and appeals.** Ban and suspension appeals go to the process that made the decision, reviewed by someone not involved in it; a support agent who reverses a penalty because the ticket was persuasive has bypassed that process ([Explanations and Appeals](/docs/building-blocks/risk-scoring#explanations-and-appeals)).
 
 Voice agents on the phone follow the same rules, plus disclosure and recording rules that differ by jurisdiction ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)).

@@ -186,7 +186,7 @@ My default: start with scripted bots that reproduce known paths (they are cheap 
 
 ## AI in Moderation and Anti-Cheat
 
-Machine learning is already central to trust and safety and fair play ([Trust & Safety](/docs/security/trust-and-safety#automated-detection-human-review)), and the game chapters own it: classifiers on text and voice, report triage and the human review behind them are in [Player Behavior & Moderation](/books/gaming/player-behavior); behavior-based cheat detection and its appeal path are in [Anti-Cheat](/books/gaming/anti-cheat); support bots in [Player Support](/books/gaming/player-support). The rule they share with this chapter: a model can flag, hide temporarily and prioritize, while penalties that are hard to undo go through a person ([Decide in Code](/docs/building-blocks/ai-agents#decide-in-code)).
+Machine learning is already central to trust and safety and fair play ([Trust & Safety](/docs/building-blocks/trust-and-safety#automated-detection-human-review)), and the game chapters own it: classifiers on text and voice, report triage and the human review behind them are in [Player Behavior & Moderation](/books/gaming/player-behavior); behavior-based cheat detection and its appeal path are in [Anti-Cheat](/books/gaming/anti-cheat); support bots in [Player Support](/books/gaming/player-support). The rule they share with this chapter: a model can flag, hide temporarily and prioritize, while penalties that are hard to undo go through a person ([Decide in Code](/docs/building-blocks/ai-agents#decide-in-code)).
 
 ## How to Build It
 

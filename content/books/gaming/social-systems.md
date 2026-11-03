@@ -10,7 +10,7 @@ tags = ["gaming", "social", "presence", "chat", "voice", "parties", "xmpp"]
 
 Players come back to a game because their friends are in it. The social layer is what makes that true: a friends list that shows who is online and what they're doing, an invite that drops a friend into a party, a party that queues together, chat before, during and after a match, and voice once the match starts. None of it is gameplay, and all of it is load: the social tier is connected to every player who is online, not only the ones in a match, and it carries the most personal data in the game (who knows whom, who is online when, and what they said).
 
-This chapter covers the social graph, presence and its fan-out, parties and invites, chat, server push, voice, cross-platform social and the platform rules around it, privacy, moderation hooks and scale. How a party becomes a matchmaking ticket is in [Matchmaking & Ranked](/books/gaming/matchmaking). Accounts and linked platform identities are in [Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity). What happens to a report about a message is in [Player Behavior & Moderation](/books/gaming/player-behavior) and, for the general system, [Trust & Safety](/docs/security/trust-and-safety).
+This chapter covers the social graph, presence and its fan-out, parties and invites, chat, server push, voice, cross-platform social and the platform rules around it, privacy, moderation hooks and scale. How a party becomes a matchmaking ticket is in [Matchmaking & Ranked](/books/gaming/matchmaking). Accounts and linked platform identities are in [Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity). What happens to a report about a message is in [Player Behavior & Moderation](/books/gaming/player-behavior) and, for the general system, [Trust & Safety](/docs/building-blocks/trust-and-safety).
 
 ## The Social Graph
 
@@ -116,7 +116,7 @@ Chat is where most player-to-player harm happens, so the moderation hooks belong
 - **Report from the message.** A report names the message ids, so the reviewer sees exactly what was said, in context, from the server's record rather than a screenshot.
 - **Restrictions are enforced by the chat service.** A chat restriction from the core model's `penalties` table blocks sending (and, by policy, joining voice) for its duration; the client is told, and every server checks.
 
-The review queues, penalties, appeals and transparency reporting are the general system in [Trust & Safety](/docs/security/trust-and-safety); the game-specific detection and penalty ladders are in [Player Behavior & Moderation](/books/gaming/player-behavior).
+The review queues, penalties, appeals and transparency reporting are the general system in [Trust & Safety](/docs/building-blocks/trust-and-safety); the game-specific detection and penalty ladders are in [Player Behavior & Moderation](/books/gaming/player-behavior).
 
 ## Server Push
 

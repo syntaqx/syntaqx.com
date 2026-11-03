@@ -189,7 +189,7 @@ What Article 17 adds to the system:
 - **Rightholder information is an input with provenance.** "Relevant and necessary information" is the rights reference: without one, there's no 17(4)(b) duty for that work; with one, the matching duty applies. The reference table is the compliance record.
 - **Two thresholds, not one.** Block at upload only where the match is close to identical and long enough that no exception plausibly applies; route partial, short or transformed matches to keep-up-pending-review or to a claim that doesn't block. That is the line *C-401/19* drew.
 - **Stay-down is a fingerprint, not a URL.** A notified work becomes a reference so re-uploads match; for a small service under 17(6), that duty starts when it crosses 5 million monthly visitors.
-- **Complaints with human review,** and a statement of the outcome, sharing the appeal machinery in the playbook's [Appeals](/docs/security/trust-and-safety#appeals).
+- **Complaints with human review,** and a statement of the outcome, sharing the appeal machinery in the playbook's [Appeals](/docs/building-blocks/trust-and-safety#appeals).
 - **Licensing is part of compliance.** Best efforts to obtain authorization is a record of whom the platform approached and what it signed; [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#ads-on-user-content) and [Creator Monetization](/books/user-generated-platforms/creator-monetization#music-costs-shared-with-creators) cover the revenue side of licensed music and claims.
 
 ## How to Build It

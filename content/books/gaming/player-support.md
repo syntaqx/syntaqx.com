@@ -125,7 +125,7 @@ Route them out of general support:
 
 - **Ban appeals go to the moderation appeal flow** in [Player Behavior & Moderation](/books/gaming/player-behavior), reviewed by someone other than the original decision-maker, recorded as a new decision. A general support agent who unbans a player because the ticket was persuasive has bypassed the whole system. Published appeal processes put the review with a dedicated team: Xbox sends eligible appeals, filed within six months, to "a trained team of human moderators" whose decisions are final, and Riot's privacy notice describes appeals where a player can ask an agent to make "a final manual determination". Either way, the reviewer belongs to the behavior team's process, with its evidence and its records.
 - **Harassment reports that arrive as tickets** become moderation reports with the ticket attached, not a reply saying "please use the in-game report button".
-- **Threats to life and child safety** follow the urgent path in [Trust & Safety](/docs/security/trust-and-safety#child-safety), with written escalation steps, from any channel, at any hour.
+- **Threats to life and child safety** follow the urgent path in [Trust & Safety](/docs/building-blocks/trust-and-safety#child-safety), with written escalation steps, from any channel, at any hour.
 - **Tell agents what they can't say.** Support explains the rule and the evidence the player was shown; it doesn't reveal reporters, detection thresholds or other players' data.
 
 ## Support Access to Player Data

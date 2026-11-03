@@ -81,7 +81,7 @@ User content reaches players through a pipeline with gates, and the gates are wh
 - **Approval, for curated catalogs.** Steam's curated Workshop requires the developer to "approve each item," and Workshop items stay "hidden by default until the contributor agrees to the Steam Workshop Legal Agreement." Paid content is usually curated; free content often isn't.
 - **Platform certification for consoles.** Console platform holders treat UGC as part of the game's certification, which is why mod.io advertises support for "certification requirements around UGC" and the "Word filtering, parental controls and safety processes required by each platform." The Xbox privilege for user-generated content is one of those a title must check ([Cross-Play, Cross-Progression and Cross-Purchase](/books/gaming/accounts-and-identity#cross-play-cross-progression-and-cross-purchase)).
 
-My rule: **every content version is immutable and reviewed as a version.** A creator who updates an approved island submits a new version that goes through the gates again; players get the approved version until the new one passes. An approval that covers "the island" rather than a version is how unreviewed content ships under a reviewed label. Moderation after release (reports, takedowns, penalties on the creator) follows the same ladder as for players, from [Player Behavior & Moderation](/books/gaming/player-behavior) and [Trust & Safety](/docs/security/trust-and-safety); the creator-specific addition is that a penalty can also freeze earnings.
+My rule: **every content version is immutable and reviewed as a version.** A creator who updates an approved island submits a new version that goes through the gates again; players get the approved version until the new one passes. An approval that covers "the island" rather than a version is how unreviewed content ships under a reviewed label. Moderation after release (reports, takedowns, penalties on the creator) follows the same ladder as for players, from [Player Behavior & Moderation](/books/gaming/player-behavior) and [Trust & Safety](/docs/building-blocks/trust-and-safety); the creator-specific addition is that a penalty can also freeze earnings.
 
 ## IP and Takedowns
 
@@ -101,7 +101,7 @@ What that means for the system:
 
 - **A claim is a case with a state machine:** received, validated, content disabled, creator notified, counter-notice received, restore scheduled, restored or kept down because the claimant sued. Each transition has a deadline the law sets, so the deadlines are data.
 - **Takedowns are per content version and per item,** and disabling content must also stop sales and pause the earnings it accrues, without deleting the purchases players already made. Whether players keep an item that was taken down for infringement is a policy; record it.
-- **Strikes count toward a repeat-infringer policy,** per creator account, with a published threshold, and the termination is a penalty like any other ([Penalties and Escalation Ladders](/docs/security/trust-and-safety#penalties-and-escalation-ladders)).
+- **Strikes count toward a repeat-infringer policy,** per creator account, with a published threshold, and the termination is a penalty like any other ([Penalties and Escalation Ladders](/docs/building-blocks/trust-and-safety#penalties-and-escalation-ladders)).
 - **Abusive claimants are tracked too,** because the DSA requires it and because takedown notices are a harassment tool between rival creators.
 
 ## Creator Identity, KYC and Tax
@@ -235,7 +235,7 @@ Creators are paid partners, and their disputes are about money and takedowns:
 
 - **Earnings lineage.** Every accrual traceable to the purchase, ledger transaction or pool day that funded it and the rule version that set its share, and every reversal to the refund that caused it. "Why did my payout drop" is answered from these rows.
 - **Pool computations.** For engagement pools, each day's inputs (eligible revenue, eligible engagement per creator, exclusions for fraud) and the allocation, kept so a payout can be recomputed and explained.
-- **Review decisions.** Who or what approved or rejected each content version, under which policy version and rating, and every disablement and its reason ([Auditing Moderation Decisions](/docs/security/trust-and-safety#auditing-moderation-decisions)).
+- **Review decisions.** Who or what approved or rejected each content version, under which policy version and rating, and every disablement and its reason ([Auditing Moderation Decisions](/docs/building-blocks/trust-and-safety#auditing-moderation-decisions)).
 - **IP claims.** Each notice, its validation, the dates of every legal step, strikes counted against the creator, and claimants flagged for abuse.
 - **Identity and tax.** When KYC passed, which tax form is on file, and changes to payout details, which are an account-takeover target exactly as vendor bank changes are ([Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account)).
 

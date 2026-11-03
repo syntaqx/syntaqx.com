@@ -186,7 +186,7 @@ GROUP BY r.rule_version, d.lines;
 
 Design notes:
 
-- **The reason list is the rule's list.** `review_moderation_actions.reason` is the FTC rule's sentiment-neutral grounds (and spam and legal orders); there is no reason for "negative." A withheld review without a reason can't be written ([Notices and Statements of Reasons](/docs/security/trust-and-safety#notices-and-statements-of-reasons)).
+- **The reason list is the rule's list.** `review_moderation_actions.reason` is the FTC rule's sentiment-neutral grounds (and spam and legal orders); there is no reason for "negative." A withheld review without a reason can't be written ([Notices and Statements of Reasons](/docs/building-blocks/trust-and-safety#notices-and-statements-of-reasons)).
 - **Verified purchase is a join.** The badge is `order_line_id IS NOT NULL` with the line delivered and not refunded at submission; it's never set by hand, and imported reviews keep their source's status in `source_ref` rather than gaining ours.
 - **Ratings are derived.** `rating_average` and `rating_count` are computed from published reviews on a schedule or on change, never edited, and the same numbers go to the page, the structured data and the feed to Google.
 - **Requests are logged even when nobody answers.** `review_requests` is what proves every buyer was asked; the gating query above should show the same coverage for every eligibility path, and a drop for one segment is a finding.

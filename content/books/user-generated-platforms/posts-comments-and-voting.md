@@ -277,7 +277,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Every revision of every item,** so a report, an appeal or a court sees the version that was judged.
-- **Who removed what, as what:** the moderator or system, the community or platform scope, and the rule, kept beside the tombstone ([Auditing Moderation Decisions](/docs/security/trust-and-safety#auditing-moderation-decisions)).
+- **Who removed what, as what:** the moderator or system, the community or platform scope, and the rule, kept beside the tombstone ([Auditing Moderation Decisions](/docs/building-blocks/trust-and-safety#auditing-moderation-decisions)).
 - **Every vote discount,** with the finding behind it, the votes affected and the scores and karma recomputed, because a creator whose post lost its rank will ask why.
 - **Label history,** including negations, with source and the revision described.
 - **Ranking configuration over time:** the constants and weights in force when an item ranked, so a sudden change in what a community sees can be traced to a release.
