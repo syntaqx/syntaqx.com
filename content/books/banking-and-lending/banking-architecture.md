@@ -134,7 +134,7 @@ The design follows from the example:
 - **Calendars are data per rail and per institution,** loaded from the published schedules a year ahead, with the source recorded (`rail_calendars`, below). A holiday added by statute, as Juneteenth was in 2021, is a row inserted, not a deploy.
 - **Cutoffs are data per institution, rail and window,** with the bank's internal deadline beside the operator's, in the operator's time zone, effective-dated so a change to the Same Day schedule is a new row (`rail_cutoffs`).
 - **Every entry carries its business date at receipt.** Assigned once, from the calendar and cutoff in force when the item arrived, and never recomputed; a late correction gets a value date in the past and a booking date in the open period ([Effective Dates and Backdating](/books/banking-and-lending/posting-holds-and-balances#effective-dates-and-backdating)).
-- **Deadlines are computed and stored.** A case's due date, a funds availability date and a filing's due date are written when the clock starts, from the calendar version in force, so a calendar correction later shows up as a difference to review rather than a silent change to history ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Deadlines are computed and stored.** A case's due date, a funds availability date and a filing's due date are written when the clock starts, from the calendar version in force, so a calendar correction later shows up as a difference to review rather than a silent change to history ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Multi-Program Tenancy
 
@@ -177,9 +177,9 @@ Built yourself, as a bank, a program on a sponsor bank, a BaaS platform or a len
 - **A transactional core.** One relational database holding parties, products, accounts, the posting engine, holds, positions, interest and fees, cases and the outbox as modules, so a posting, its position update and its event commit together.
 - **Rail gateways.** One per rail (ACH, wires, card processor, RTP or FedNow, check image exchange), each storing inbound messages under their identity, building outbound files against the cutoffs, and turning both into posting commands ([Comparing the Rails](/books/payments/comparing-the-rails)).
 - **End-of-day and scheduled work.** The ordered steps of the business day, idempotent per account and step, plus date-driven jobs: interest crediting, maturities, statements, dormancy, delinquency aging ([Background Jobs](/docs/architecture/background-jobs)).
-- **Decisioning.** Screening, monitoring and credit decisions as services that answer synchronously when a posting or an application waits on them, with a defined fallback when they don't ([When the Scorer Is Down](/docs/architecture/risk-scoring#when-the-scorer-is-down)).
+- **Decisioning.** Screening, monitoring and credit decisions as services that answer synchronously when a posting or an application waits on them, with a defined fallback when they don't ([When the Scorer Is Down](/docs/building-blocks/risk-scoring#when-the-scorer-is-down)).
 - **Servicing and cases.** Loan servicing, collections, disputes and legal process as workflows over the core's data, posting only through the posting engine.
-- **A ledger export and a warehouse.** The GL export to the accounting system and change data capture into an analytical store that reporting, CECL, monitoring models and metrics read; nobody runs a report against the posting database ([Keep Analytics Off Production](/docs/architecture/data-pipelines#keep-analytics-off-production); [Regulatory Reporting & Data](/books/banking-and-lending/regulatory-reporting) builds the filings from it).
+- **A ledger export and a warehouse.** The GL export to the accounting system and change data capture into an analytical store that reporting, CECL, monitoring models and metrics read; nobody runs a report against the posting database ([Keep Analytics Off Production](/docs/data/separating-production-and-analytics); [Regulatory Reporting & Data](/books/banking-and-lending/regulatory-reporting) builds the filings from it).
 
 What I buy rather than build, even when building the rest: card processing, identity verification, sanctions list data, check imaging, the rails' connectivity and, for a program, the bank's core itself. A team that builds its own ledger still connects to a bank that runs someone else's ([Build, Buy or Partner](/books/banking-and-lending/banking-landscape#build-buy-or-partner)), and the security and resilience duties that come with every vendor are [Security, Resilience & Incident Notice](/books/banking-and-lending/security-and-resilience).
 
@@ -313,10 +313,10 @@ Design notes:
 
 The records in this chapter are the ones an examiner, an auditor, a sponsor bank or a court asks for when something went wrong between systems:
 
-- **What arrived, and when.** Every inbound file and message as received, with its business date, its control totals and what it posted ([Producing Records](/docs/architecture/audit-trails#producing-records)).
+- **What arrived, and when.** Every inbound file and message as received, with its business date, its control totals and what it posted ([Producing Records](/docs/building-blocks/audit-trails#producing-records)).
 - **Which calendar and cutoff applied.** The calendar rows and cutoff versions in force on each date, so a funds availability date or a case deadline can be recomputed and shown.
 - **That the books balanced, every day.** Every invariant check with its result and, for each failure, who worked it and how it was resolved.
-- **Who could see and move what.** The tenancy scope of every session and API key, and every change to a program's limits and status, with the approver ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who could see and move what.** The tenancy scope of every session and API key, and every change to a program's limits and status, with the approver ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **That events matched state.** The outbox and the consumers' applied-event records, so a gap between a posting and a notification, a monitoring alert or a program's subledger can be traced to where it opened.
 
 ## What This Means for the System You Build

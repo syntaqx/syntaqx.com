@@ -252,7 +252,7 @@ Design notes:
 
 ## Auditing
 
-Payables records are evidence for owners auditing their manager, for trust account examinations, for IRS notices, for insurers after a vendor injury, and for any BEC investigation ([Audit Trails](/docs/architecture/audit-trails)):
+Payables records are evidence for owners auditing their manager, for trust account examinations, for IRS notices, for insurers after a vendor injury, and for any BEC investigation ([Audit Trails](/docs/building-blocks/audit-trails)):
 
 - **Who was allowed to work.** Each vendor's compliance status for a property on a date, the documents behind it, and every hold placed and released.
 - **Why each bill was paid.** The PO, receipt or completed work order, match result, approvals with the limits in force, and which paying entity and bank account funded it.

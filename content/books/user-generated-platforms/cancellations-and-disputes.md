@@ -50,7 +50,7 @@ Rental platforms use fewer tiers with the same structure. Outdoorsy's policies f
 
 My rules for policies:
 
-- **The catalog is versioned data.** Each policy version is a schedule of tiers (from how long before start, which components refund at what percentage, what the host earns) with an effective range ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)). Outdoorsy keeps its legacy policies for bookings made before February 2, 2026; Airbnb's Limited policy applies to bookings from October 1, 2025. The platform needs both versions live at once.
+- **The catalog is versioned data.** Each policy version is a schedule of tiers (from how long before start, which components refund at what percentage, what the host earns) with an effective range ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)). Outdoorsy keeps its legacy policies for bookings made before February 2, 2026; Airbnb's Limited policy applies to bookings from October 1, 2025. The platform needs both versions live at once.
 - **The booking freezes the version.** A refund is computed from the policy the guest accepted, never the listing's current policy, and the computation is recorded line by line against the booking's frozen price lines ([Pricing, Fees & All-In Prices](/books/user-generated-platforms/pricing-and-fees#how-to-build-it)).
 - **Time is measured in the listing's time zone** against the booked start, and the policy says so, because a guest in another zone reads "24 hours before" differently.
 - **Components refund by their own rule.** The platform's own fee, protection, deposit waiver, taxes and add-ons each carry a refundability rule independent of the host's policy; the policy governs the host's share.
@@ -235,7 +235,7 @@ Design decisions behind it:
 - **Three initiators, each with its own rules.** Guest cancellations follow the policy; host cancellations refund fully and carry a fee, a block and possibly penalties; platform cancellations refund fully and penalize nobody.
 - **Disruptions are activations with an area and time,** and eligibility is a query, so a hurricane's thousands of cancellations are computed consistently and excluded from status metrics.
 - **Host consequences are separate records:** the fee in the ledger, the block in occupancy, sanctions in `penalties`, status in the next evaluation. Each can be waived or overturned on its own.
-- **Cases have three clocks:** the respondent's deadline, the waiting period before escalation and the program's deadline, all stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Cases have three clocks:** the respondent's deadline, the waiting period before escalation and the program's deadline, all stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **One remedy is enforced by links.** A case links to its refund and to any dispute on the same payment; a chargeback on a payment with an open case moves the case to `superseded_by_chargeback`, and a refunded case is the dispute's evidence.
 - **Decisions reuse the moderation decision record** for reasons, notice and appeal, even though the queue is different.
 - **Events:** `booking.cancelled`, `cancellation.host_fee_charged`, `disruption.activated`, `protection_case.opened`, `protection_case.escalated`, `protection_case.decided` and `arbitration_demand.received` feed payouts, refunds, notifications, standing and finance.

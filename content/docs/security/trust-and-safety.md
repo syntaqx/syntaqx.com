@@ -23,7 +23,7 @@ Platforms built from communities add a third layer: each community's own rules, 
 
 Make the categories data. A violation category is an enum shared by the report form, the classifiers, the moderator console, the penalty ladder, the notice templates and the transparency report: `harassment`, `hate`, `sexual_content`, `child_safety`, `violent_extremism`, `self_harm`, `spam`, `fraud`, `impersonation`, `personal_information`, `illegal_goods`. If the report form says "abusive" and the penalty table says "harassment", someone writes a mapping, and the mapping is where your numbers stop adding up.
 
-Version the policy the way [Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions) versions any rule: effective-dated, with every decision recording the version it applied. When the rule on a slur changes, last month's decisions were still right under last month's rule, and an appeal reviews them under the version that was in force.
+Version the policy the way [Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions) versions any rule: effective-dated, with every decision recording the version it applied. When the rule on a slur changes, last month's decisions were still right under last month's rule, and an appeal reviews them under the version that was in force.
 
 The same FPA guide warns against the most common shortcut: staff who apply penalties ad hoc as they encounter bad behavior. Its advice is to be clear on who can issue, modify or revoke penalties, keep track of every penalty issued or modified and why, and send even a staff member's complaint through the reporting system. That's [least privilege](/docs/security/authorization#least-privilege) applied to enforcement.
 
@@ -31,7 +31,7 @@ The same FPA guide warns against the most common shortcut: staff who apply penal
 
 A report is a signal, not a verdict. Users report things that break no rule (an opponent who beat them, a seller with a slow reply), coordinate false reports against people they dislike, and report real abuse with the wrong category. Design for all three.
 
-**Capture context at report time.** The report names the reporter, the subject (an account, a message, a listing, a match), the category, an optional comment and, crucially, a pointer to the evidence as it was when reported: the message ID and its text, the image hash, the audio clip, the listing version. Content gets edited and deleted; the snapshot is what the moderator judges ([Audit Trails](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you) makes the same point about records).
+**Capture context at report time.** The report names the reporter, the subject (an account, a message, a listing, a match), the category, an optional comment and, crucially, a pointer to the evidence as it was when reported: the message ID and its text, the image hash, the audio clip, the listing version. Content gets edited and deleted; the snapshot is what the moderator judges ([Audit Trails](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you) makes the same point about records).
 
 **Group reports into cases.** Fifty reports about one message are one decision, not fifty. Group by subject and time window, keep every report linked to its case, and let the count and diversity of reporters raise the case's priority.
 
@@ -81,7 +81,7 @@ Detection comes in three kinds, and they fail differently:
 - **Rules and lists** (blocked terms, link and phone-number patterns, velocity limits on new accounts) are cheap, explainable and easy to evade with spacing, look-alike characters and slang. Commercial text filters advertise handling exactly those evasions; Microsoft's Community Sift lists "subversions, acronyms, l33T speak, emojis" ([Microsoft: Community Sift](https://developer.microsoft.com/en-us/games/products/community-sift/)).
 - **Classifiers** (text, image, audio and behavior models) find new content and new patterns, produce scores rather than answers, and drift as language and abuse change.
 
-Turn a score into a decision with bands, the same shape [Matching & Merging](/docs/architecture/record-linkage#review-bands) uses for record links: above an upper threshold the system acts on its own, between the thresholds it queues the case for a person, below the lower threshold it does nothing. Set the bands per category, because the costs differ. Auto-removing spam with a 2% false positive rate is fine; auto-banning for harassment at that rate means thousands of wrongful bans a week, each one a support ticket and an appeal. How the largest platforms run this at scale, with classifier scores ordering human review, vendors and outsourced reviewers, and prevalence as the measure, is in [Moderation at Scale](/books/user-generated-platforms/moderation-at-scale#classifiers-as-prioritizers).
+Turn a score into a decision with bands, the same shape [Matching & Merging](/docs/building-blocks/record-linkage#review-bands) uses for record links: above an upper threshold the system acts on its own, between the thresholds it queues the case for a person, below the lower threshold it does nothing. Set the bands per category, because the costs differ. Auto-removing spam with a 2% false positive rate is fine; auto-banning for harassment at that rate means thousands of wrongful bans a week, each one a support ticket and an appeal. How the largest platforms run this at scale, with classifier scores ordering human review, vendors and outsourced reviewers, and prevalence as the measure, is in [Moderation at Scale](/books/user-generated-platforms/moderation-at-scale#classifiers-as-prioritizers).
 
 Keep the automation honest:
 
@@ -128,7 +128,7 @@ CREATE TABLE penalties (
 
 Enforcement reads penalties at the points that matter (sign-in, posting, sending a message, joining a session), not just in the moderation console, and caches them briefly with explicit invalidation when a penalty starts or is revoked.
 
-Ban evasion is the cost of every ban. People create new accounts, so an account ban without links to devices, payment instruments and other signals is a speed bump. Linking accounts to one person is a [Matching & Merging](/docs/architecture/record-linkage) problem with the same rule as everywhere else: link with evidence, review the uncertain middle, never merge two people because they share a household router.
+Ban evasion is the cost of every ban. People create new accounts, so an account ban without links to devices, payment instruments and other signals is a speed bump. Linking accounts to one person is a [Matching & Merging](/docs/building-blocks/record-linkage) problem with the same rule as everywhere else: link with evidence, review the uncertain middle, never merge two people because they share a household router.
 
 ## Notices and Statements of Reasons
 
@@ -136,7 +136,7 @@ A penalty nobody explains is one the user can't learn from and can't contest. Ev
 
 In the EU this is law. The Digital Services Act requires hosting providers to give affected users a statement of reasons, and the Commission's documentation for its transparency database lists what Article 17(3) requires in one: the type of restriction with its duration and territorial scope, the facts and circumstances relied on, information on the use of automated means, and the legal or contractual ground with an explanation ([DSA Transparency Database: Documentation](https://transparency.dsa.ec.europa.eu/page/documentation)). Online platforms must also submit their statements of reasons to that public database without personal data (Article 24(5)), and the database's front page counted more than 4.5 billion statements submitted in the last 180 days as of October 26, 2026 ([DSA Transparency Database](https://transparency.dsa.ec.europa.eu/)). The database fields record whether automated means detected the content and whether the decision was fully automated, partially automated or not automated, which is a good reason to store exactly that on every decision whether or not you operate in the EU. Why these duties attach to hosts at all, and why liability under Section 230, the DMCA and the DSA turns on what the host knew, is in [The Law of Hosting User Content](/books/user-generated-platforms/hosting-liability#knowledge-is-the-trigger).
 
-Build notices from the decision record, not from free text: the category, policy version, evidence excerpt, automation level and penalty all come from the data, and a template per locale turns them into words. Send them through the normal [notification](/docs/architecture/notifications) path, and keep them visible in the user's account (a "your standing" page) so they aren't lost in an inbox.
+Build notices from the decision record, not from free text: the category, policy version, evidence excerpt, automation level and penalty all come from the data, and a template per locale turns them into words. Send them through the normal [notification](/docs/building-blocks/notifications) path, and keep them visible in the user's account (a "your standing" page) so they aren't lost in an inbox.
 
 ## Appeals
 
@@ -144,7 +144,7 @@ Automated or not, moderation makes mistakes, and appeals are how you find them. 
 
 - **A different reviewer.** Santa Clara asks for review by a person or panel not involved in the original decision, who understands the language and cultural context, with a chance for the user to add information and a result with reasoning they can understand. Enforce "not the original reviewer" in data, the way [Support Access](/docs/security/support-access#approvals-and-nobody-approves-their-own) enforces separate approvers.
 - **Proportionate.** Not every warning needs an appeal; Xbox offers case reviews when an enforcement exceeds a certain length. Every suspension and ban does.
-- **Outcomes are decisions too.** An appeal upholds, modifies or reverses, and each outcome is a new decision record that points at the one it reviewed, never an edit to it ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Outcomes are decisions too.** An appeal upholds, modifies or reverses, and each outcome is a new decision record that points at the one it reviewed, never an edit to it ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Reversals feed back.** A reversal tells you which reviewer, rule or model was wrong. Report reversal rates by category, by detection source and by model version, and treat a rising rate as an incident.
 - **Restore everything.** A reversed ban restores the account, its content and its purchases and removes the strike from the ladder, and the notice says so.
 
@@ -159,7 +159,7 @@ Child safety is the one area where the law gives you obligations with deadlines 
 **Build the path before you need it:**
 
 - **A dedicated category and queue** with trained, designated reviewers, its own response target and an escalation to whoever files the report.
-- **Restricted evidence.** The evidence store for these cases is separate, access is limited to the people who must see it, every view is logged ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)), and nothing can be downloaded or forwarded through ordinary tools. Preservation overrides normal [retention](/docs/architecture/data-retention#retention-windows) for exactly the period the law requires.
+- **Restricted evidence.** The evidence store for these cases is separate, access is limited to the people who must see it, every view is logged ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)), and nothing can be downloaded or forwarded through ordinary tools. Preservation overrides normal [retention](/docs/building-blocks/data-retention#retention-windows) for exactly the period the law requires.
 - **Immediate account action** (the zero-tolerance step of the ladder) without notice text that would tip off an investigation where counsel says not to.
 - **Grooming signals, not just imagery.** Adults contacting many minors, moving conversations off-platform, requests for images: behavior detection belongs here as much as content detection. Default settings that limit who can contact young users are a moderation feature; [Children's Privacy & Age Assurance](/docs/compliance/childrens-privacy) covers age assurance and the defaults the law expects for minors.
 
@@ -167,7 +167,7 @@ The same staffed path handles threats to life. Xbox's report describes threats o
 
 ## Auditing Moderation Decisions
 
-Every decision, automated or human, is an [audit record](/docs/architecture/audit-trails#automated-and-ai-decisions): who or what decided, on what evidence, under which rule, with which result. A moderation decision is the evidence in an appeal, a regulator's inquiry, a press story and sometimes a lawsuit, and "the model did it" is not an answer anyone accepts.
+Every decision, automated or human, is an [audit record](/docs/building-blocks/audit-trails#automated-and-ai-decisions): who or what decided, on what evidence, under which rule, with which result. A moderation decision is the evidence in an appeal, a regulator's inquiry, a press story and sometimes a lawsuit, and "the model did it" is not an answer anyone accepts.
 
 ```sql
 CREATE TABLE moderation_decisions (

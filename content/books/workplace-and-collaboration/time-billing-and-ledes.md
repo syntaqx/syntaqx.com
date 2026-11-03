@@ -355,7 +355,7 @@ How it runs:
 - **Rates applied,** standard and agreed, as of the work date, and the communication of rate changes to each client (Rule 1.5(b)).
 - **Pre-bill approvals:** who approved each invoice, with what write-downs.
 - **Every e-billing submission and response:** the file sent, the platform's status, each adjustment, the firm's response and the outcome.
-- **AI-assisted work:** time entries for work done with GAI tools record the tool, so a later question about billing actual time (Opinion 512) has an answer ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **AI-assisted work:** time entries for work done with GAI tools record the tool, so a later question about billing actual time (Opinion 512) has an answer ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 
 ## What This Means for the System You Build
 

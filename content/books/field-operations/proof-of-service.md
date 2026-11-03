@@ -124,8 +124,8 @@ Photos are the most persuasive evidence and the easiest to undermine. A photo pi
 
 - **Capture in the app** where evidence matters, and record whether a photo came from the camera or the library.
 - **Hash on the device** at capture, store the hash in the visit record, and upload the file separately. The hash proves the file the server holds is the one taken on site, even if the upload finishes hours later.
-- **Record location with its accuracy, and both clocks,** on every status, photo and signature. Why a position is a measurement with an error bar, and why device time and received time are kept apart, is in [A Position Is a Measurement](/docs/architecture/location-tracking#a-position-is-a-measurement); geofence arrival as evidence is in [Evidence, Not Truth](/docs/architecture/location-tracking#evidence-not-truth). The field twist is what the point is compared with: the property's service point (a technician's pin, per [Customers, Accounts & Properties](/books/field-operations/customers-and-properties#addresses-for-service-work)), not a rooftop geocode, so a large lot or a commercial campus doesn't flag every visit.
-- **Mind what's in the frame.** Photos inside homes and offices capture people, documents and belongings. Set a retention period, restrict who can view them, and don't expose them in customer-facing reports without a reason ([Data Retention](/docs/architecture/data-retention)).
+- **Record location with its accuracy, and both clocks,** on every status, photo and signature. Why a position is a measurement with an error bar, and why device time and received time are kept apart, is in [A Position Is a Measurement](/docs/building-blocks/location-tracking#a-position-is-a-measurement); geofence arrival as evidence is in [Evidence, Not Truth](/docs/building-blocks/location-tracking#evidence-not-truth). The field twist is what the point is compared with: the property's service point (a technician's pin, per [Customers, Accounts & Properties](/books/field-operations/customers-and-properties#addresses-for-service-work)), not a rooftop geocode, so a large lot or a commercial campus doesn't flag every visit.
+- **Mind what's in the frame.** Photos inside homes and offices capture people, documents and belongings. Set a retention period, restrict who can view them, and don't expose them in customer-facing reports without a reason ([Data Retention](/docs/building-blocks/data-retention)).
 
 ## Service Reports
 
@@ -150,7 +150,7 @@ Build a dispute package generator that assembles these from the record by paymen
 
 ## Edits After Completion
 
-Records get corrected. A technician forgets a product, picks the wrong reason, or completes the wrong visit. The question is not whether completed visits can change but how the change is kept, and the general answer (seal what's final, amend by new version with a required reason, tighten who may amend as the record ages) is in [Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite).
+Records get corrected. A technician forgets a product, picks the wrong reason, or completes the wrong visit. The question is not whether completed visits can change but how the change is kept, and the general answer (seal what's final, amend by new version with a required reason, tighten who may amend as the record ages) is in [Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite).
 
 The platforms show the range of what "completed" means:
 
@@ -225,7 +225,7 @@ CREATE TABLE service_reports (
 );
 ```
 
-Completion checks `visit_evidence` against the resolved rules on the device and again on the server, then writes the snapshot and seals the visit. After `sealed_at`, changes are amendments with a reason ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)), and a corrected report is a new `service_reports` row pointing at the one it revises. A dispute package is a query over these tables by payment and billing period.
+Completion checks `visit_evidence` against the resolved rules on the device and again on the server, then writes the snapshot and seals the visit. After `sealed_at`, changes are amendments with a reason ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)), and a corrected report is a new `service_reports` row pointing at the one it revises. A dispute package is a query over these tables by payment and billing period.
 
 ## Auditing
 
@@ -235,7 +235,7 @@ Proof of service is itself an audit record, so the field-specific points are abo
 - **Completion source:** who completed the visit or marked it `not_completed`, field or office, with the reason and the evidence present at the time.
 - **Exports:** every dispute package, inspection export and report sent to a third party (water system, fire authority, manufacturer), with what it contained.
 
-The general record shape, access logging and tamper evidence are in [Audit Trails](/docs/architecture/audit-trails); retention periods for field records and producing them for an inspection or a lawsuit are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+The general record shape, access logging and tamper evidence are in [Audit Trails](/docs/building-blocks/audit-trails); retention periods for field records and producing them for an inspection or a lawsuit are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

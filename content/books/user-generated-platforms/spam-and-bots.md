@@ -36,9 +36,9 @@ Three things make an account worth more to an operator, and each is a detection 
 
 The defense is mostly at sign-up and in the first hours. Meta says its detection blocks millions of fake-account attempts a day and catches millions more, often within minutes of creation; blocked attempts never appear in its fake-account counts. My defaults:
 
-- **Score every sign-up** on device, network, email domain and pattern, sign-up velocity from the same signals, and similarity to recent banned accounts, then allow, challenge or hold ([More Outcomes Than Yes and No](/docs/architecture/risk-scoring#more-outcomes-than-yes-and-no)). The challenge can be a CAPTCHA, proof of work or phone check (below), chosen by risk.
+- **Score every sign-up** on device, network, email domain and pattern, sign-up velocity from the same signals, and similarity to recent banned accounts, then allow, challenge or hold ([More Outcomes Than Yes and No](/docs/building-blocks/risk-scoring#more-outcomes-than-yes-and-no)). The challenge can be a CAPTCHA, proof of work or phone check (below), chosen by risk.
 - **Hold new accounts' reach, not their sign-up.** New accounts can post, but links, mentions, direct messages to strangers, community creation and votes that count toward ranking unlock with age and good behavior. Reddit's 605,570 community bans, mostly spam and unmoderated communities, show why community creation is itself a gated privilege.
-- **Link accounts, then act on the cluster.** Devices, payment instruments, phone numbers, sign-up networks and behavior link accounts to one operator ([Probabilistic Linkage](/docs/architecture/record-linkage#probabilistic-linkage)). A ban on one account in a confirmed link set is a decision about all of them; ban evasion is the same problem ([Account Standing](/books/user-generated-platforms/accounts-and-identity#account-standing)).
+- **Link accounts, then act on the cluster.** Devices, payment instruments, phone numbers, sign-up networks and behavior link accounts to one operator ([Probabilistic Linkage](/docs/building-blocks/record-linkage#probabilistic-linkage)). A ban on one account in a confirmed link set is a decision about all of them; ban evasion is the same problem ([Account Standing](/books/user-generated-platforms/accounts-and-identity#account-standing)).
 - **Hold, don't ban, when unsure.** Bluesky's "needs review" label is a temporary measure applied automatically to accounts that look like large-scale spam, as a holding measure that "minimizes user impact" while moderators decide. A hold that limits reach, reviewed within hours, costs a real person little and a spam run its timing.
 
 ## Vote Rings and Manipulation
@@ -98,7 +98,7 @@ Some networks aren't selling anything. Meta's Community Standards define **inaut
 
 What makes CIB different from spam is that the content can be indistinguishable from real speech, so the evidence is behavioral: accounts created together, shared infrastructure, synchronized posting, recycled personas, coordination with off-platform assets, and deception about who is behind them. That changes the workflow:
 
-- **The cluster is the case.** An investigation collects accounts, communities, domains and content into one cluster with evidence per member, and the decision (remove all, remove operators and monitor amplifiers, take no action) is made once for the cluster ([Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible) for the linkage discipline).
+- **The cluster is the case.** An investigation collects accounts, communities, domains and content into one cluster with evidence per member, and the decision (remove all, remove operators and monitor amplifiers, take no action) is made once for the cluster ([Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible) for the linkage discipline).
 - **Attribution is a separate, cautious claim.** Removing a network for deceptive behavior doesn't require knowing who ran it; publishing "likely Russia-based" does, and the evidence and confidence behind any attribution belong in the record.
 - **Disclosure is part of the work.** Threat reports, researcher access and regulators' questions all draw on the cluster records. For the largest platforms in the EU this is law: DSA Article 34(2) requires very large platforms' systemic risk assessments to consider "intentional manipulation of their service, including by inauthentic use or automated exploitation of the service." [Regulators & Enforcement](/books/user-generated-platforms/regulators-and-enforcement#very-large-online-platforms) covers the risk assessment duty.
 
@@ -131,7 +131,7 @@ Crowd context sits next to spam in this chapter for a reason: it's a voting syst
 
 ## How to Build It
 
-The chapter adds linked accounts, challenges, clusters of coordinated accounts and crowd context notes to the core model; votes stay in [Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting#how-to-build-it)'s votes table, and sign-up and account scoring use the playbook's [decision record](/docs/architecture/risk-scoring#the-decision-record):
+The chapter adds linked accounts, challenges, clusters of coordinated accounts and crowd context notes to the core model; votes stay in [Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting#how-to-build-it)'s votes table, and sign-up and account scoring use the playbook's [decision record](/docs/building-blocks/risk-scoring#the-decision-record):
 
 ```sql
 ALTER TABLE accounts
@@ -244,7 +244,7 @@ CREATE TABLE note_ratings (
 
 Notes on the sketch:
 
-- **Links are evidence, not merges.** `account_links` records why two accounts look like one operator, with strength and status; nothing is merged, and a dismissed link stays as a record that someone looked. Raw device IDs, phone numbers and card fingerprints live in the evidence store under their own retention and access rules; the link holds a reference. The sign-up and account risk scores themselves are decision records from [Automated Risk Decisions](/docs/architecture/risk-scoring#the-decision-record).
+- **Links are evidence, not merges.** `account_links` records why two accounts look like one operator, with strength and status; nothing is merged, and a dismissed link stays as a record that someone looked. Raw device IDs, phone numbers and card fingerprints live in the evidence store under their own retention and access rules; the link holds a reference. The sign-up and account risk scores themselves are decision records from [Automated Risk Decisions](/docs/building-blocks/risk-scoring#the-decision-record).
 - **Challenges are measured like models.** Pass, fail, abandon and assistive-path rates by trigger, provider, country and device show both what the challenge stops and whom it wrongly stops; `cost_minor` on phone checks feeds the SMS budget and pumping alerts. The phone number itself isn't stored here, only its country and line type.
 - **A cluster is decided once.** `inauthentic_clusters.case_id` points at one moderation case whose decision applies to every current member; penalties for each account are still rows in `penalties` linked to that decision, so each account gets a notice and an appeal, and a member removed from the cluster has its penalty reviewed.
 - **Votes are discounted by query.** [Posts, Comments & Voting](/books/user-generated-platforms/posts-comments-and-voting#how-to-build-it)'s score computation excludes votes from accounts that are members of an actioned `vote_ring` or `spam_farm` cluster, from the moment of the action backwards; removing a member restores its votes on the next recompute. The votes table itself isn't changed.

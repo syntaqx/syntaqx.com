@@ -207,10 +207,10 @@ GROUP BY channel_id, route;
 Design notes:
 
 - **The claim is a typed field, never free text.** A report's claim decides what evidence it needs and how the marketplace will treat it; a `material_difference` claim without a `difference` is not submitted. That is also what keeps price complaints out of infringement reports: there is no claim value for "below MAP."
-- **Evidence is captured when observed.** Listings change and disappear; the page, the seller's disclosed identity and the test buy's photos are stored at the time, by reference to object storage, so a rejected report can be appealed and a lawsuit has its exhibits ([Audit Trails](/docs/architecture/audit-trails)).
-- **Monitoring proposes, people submit.** A crawler or a vendor's monitoring tool can flag listings by price, image match or seller; a human (or a rule with a recorded version) decides each report, because acceptance rate is a qualification and false notices have costs ([Decide in Code](/docs/architecture/ai-agents#decide-in-code) for the same split with a model).
+- **Evidence is captured when observed.** Listings change and disappear; the page, the seller's disclosed identity and the test buy's photos are stored at the time, by reference to object storage, so a rejected report can be appealed and a lawsuit has its exhibits ([Audit Trails](/docs/building-blocks/audit-trails)).
+- **Monitoring proposes, people submit.** A crawler or a vendor's monitoring tool can flag listings by price, image match or seller; a human (or a rule with a recorded version) decides each report, because acceptance rate is a qualification and false notices have costs ([Decide in Code](/docs/building-blocks/ai-agents#decide-in-code) for the same split with a model).
 - **Violations resolve to an account.** `map_violations.authorized_reseller_id` and the lot or serial trace from a test buy are what turn an observed price into a step under the policy; a violation by a stranger stays a record with no step.
-- **Renewals and acceptance rates are deadlines and thresholds.** Trademark renewal dates and the Project Zero accuracy floor are watched like any deadline ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Renewals and acceptance rates are deadlines and thresholds.** Trademark renewal dates and the Project Zero accuracy floor are watched like any deadline ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Auditing
 

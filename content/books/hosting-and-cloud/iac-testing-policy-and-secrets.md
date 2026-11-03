@@ -231,9 +231,9 @@ Design decisions behind it:
 ## Auditing
 
 - **Every apply with its plan, approver and credentials:** the commit, the plan hash, who approved, who or what applied, how the cloud credentials were obtained, and the state version it produced. "Who changed production, from which reviewed plan" is the question every incident review starts with.
-- **Every policy result and override,** with the policy version that ran, kept as long as the change it allowed exists ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions) for runs an agent requested).
+- **Every policy result and override,** with the policy version that ran, kept as long as the change it allowed exists ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions) for runs an agent requested).
 - **Every drift detection and how it was resolved,** codified or reverted, so an emergency console change can be traced to the incident behind it.
-- **Every read of a plan or state body and every key use,** because both may hold secrets ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every read of a plan or state body and every key use,** because both may hold secrets ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **The meter behind every bill:** managed-resource hours, successful applies or worker subscriptions, rebuildable from runs and state versions.
 
 ## What This Means for the System You Build

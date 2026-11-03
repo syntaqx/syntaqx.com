@@ -71,7 +71,7 @@ At scale, three details matter:
 
 - **Order per payment, not globally.** Partition the event log by payment (or merchant) so one payment's events stay in order on one partition, and let different payments interleave. A global order is a single-threaded bottleneck, and nothing in payments needs it.
 - **Consumers tolerate gaps and reorders anyway.** A `refund.succeeded` that arrives before `payment.captured` is held or used to fetch the current state, never applied blindly. The ledger is the strictest consumer: it posts from the event and its own rules, so arrival order doesn't change the result.
-- **The outbox is pruned, the ledger isn't.** The outbox is a delivery queue. Rows are deleted after a retention window; proof of what happened is in the ledger and the [audit trail](/docs/architecture/audit-trails#not-logs-not-events).
+- **The outbox is pruned, the ledger isn't.** The outbox is a delivery queue. Rows are deleted after a retention window; proof of what happened is in the ledger and the [audit trail](/docs/building-blocks/audit-trails#not-logs-not-events).
 
 ## Sagas for Money That Moves in Steps
 
@@ -199,9 +199,9 @@ A failed invariant opens a break with an owner ([Breaks](/books/payments/ledger-
 
 ## Analytics Without Recomputing Money
 
-Reporting, finance, risk models and dashboards all need the payment data, and none of them may slow down or change the system that holds it. The split is the usual one: the OLTP databases serve the product, and a change-data-capture stream copies their changes to an analytical store ([Nobody Queries the Primary](/docs/data/separating-production-and-analytics#nobody-queries-the-primary); [Change Data Capture](/docs/architecture/data-pipelines#change-data-capture)).
+Reporting, finance, risk models and dashboards all need the payment data, and none of them may slow down or change the system that holds it. The split is the usual one: the OLTP databases serve the product, and a change-data-capture stream copies their changes to an analytical store ([Nobody Queries the Primary](/docs/data/separating-production-and-analytics#nobody-queries-the-primary); [Change Data Capture](/docs/data/data-pipelines#change-data-capture)).
 
-The payments-specific rule: **the analytics side reads money, it never recomputes it.** A merchant's balance, a fee, a payout amount is copied from the ledger as posted, with the ledger transaction ID beside it. A warehouse query that re-derives fees from pricing rules, or balances from payment rows, will disagree with the ledger the first time a rule changes or a correction posts, and then two numbers circulate for the same thing. Metrics that need money join to the ledger's figures; when an analytical number and the ledger disagree, the ledger is right and the pipeline has a bug ([Reconcile to the Source](/docs/architecture/data-pipelines#reconcile-to-the-source); [Payments Metrics](/books/payments/payments-metrics)).
+The payments-specific rule: **the analytics side reads money, it never recomputes it.** A merchant's balance, a fee, a payout amount is copied from the ledger as posted, with the ledger transaction ID beside it. A warehouse query that re-derives fees from pricing rules, or balances from payment rows, will disagree with the ledger the first time a rule changes or a correction posts, and then two numbers circulate for the same thing. Metrics that need money join to the ledger's figures; when an analytical number and the ledger disagree, the ledger is right and the pipeline has a bug ([Reconcile to the Source](/docs/data/data-pipelines#reconcile-to-the-source); [Payments Metrics](/books/payments/payments-metrics)).
 
 ## Change Management
 

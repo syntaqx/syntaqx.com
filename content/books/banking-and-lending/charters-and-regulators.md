@@ -181,7 +181,7 @@ Design notes:
 
 - **Thresholds are derived, then recorded.** Crossing $10 billion moves consumer compliance examination to the CFPB and caps debit interchange; compute it from `total_assets` on each call report, then write the `institution_supervisors` change with its date, so a program can tell which examiner and which interchange schedule applied in any quarter.
 - **The charter is a fact with history.** Charter conversions (state to national, thrift to bank) are `institution_events`; supervisors and state-law applicability are read as of the business date ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
-- **Preemption is a reviewed opinion, not a constant.** Each `state_law_applicability` row names the authority relied on and when counsel last reviewed it; the escrow interest cases show a row can change with one appellate decision. Product rules read it as data ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Preemption is a reviewed opinion, not a constant.** Each `state_law_applicability` row names the authority relied on and when counsel last reviewed it; the escrow interest cases show a row can change with one appellate decision. Product rules read it as data ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Key on identifiers, not names.** FDIC certificate, RSSD ID and NCUA charter number are how the agencies' data, the FFIEC's call reports and enforcement releases name the institution.
 
 ## Auditing

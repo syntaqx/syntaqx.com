@@ -246,7 +246,7 @@ WHERE l.id = :order_line_id;
 
 Design notes:
 
-- **Every rule row cites its page.** `source_url` and the validity range are what let a person check the schedule against the marketplace's page when a settlement disagrees, and what makes a fee change a new row instead of an edit ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Every rule row cites its page.** `source_url` and the validity range are what let a person check the schedule against the marketplace's page when a settlement disagrees, and what makes a fee change a new row instead of an edit ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Bases are line kinds.** TikTok's base adds back platform discounts, eBay's and Amazon's include shipping, Whatnot's excludes it; storing the base as the list of line kinds it sums keeps one engine for all of them.
 - **Requirements are checked before listing.** A listing job reads `listing_requirements` and `channel_approvals` and refuses to submit an item to a gated category the account isn't approved for; the channel's rejection is a backstop, not the check.
 - **Standards are definitions, not numbers.** The metric's definition and window are stored with its threshold, and the system's own computation of it is recorded beside the channel's reported value ([Seller Performance Scores](/books/user-generated-platforms/social-commerce-and-live-shopping#seller-performance-scores)).

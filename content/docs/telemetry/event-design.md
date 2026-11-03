@@ -26,7 +26,7 @@ The opposite school, "track everything and analyze later," is what autocapture t
 
 ## Names: Object, Then Action
 
-Pick one naming convention for the whole company and enforce it in code. The one I use is **`object_action`, lowercase snake_case, action in the past tense:** `order_completed`, `invite_sent`, `report_exported`, `level_failed`, `visit_started`, `application_submitted`. The object comes first so related events sort together (`order_created`, `order_completed`, `order_refunded`), and the past tense says the event is a fact, the same rule as [Events & Async Messaging](/docs/architecture/events). [Data Pipelines & Analytics](/docs/architecture/data-pipelines#event-tracking) uses the same convention, and it matches the database and JSON field casing, so an event name can be a table name in the warehouse without quoting.
+Pick one naming convention for the whole company and enforce it in code. The one I use is **`object_action`, lowercase snake_case, action in the past tense:** `order_completed`, `invite_sent`, `report_exported`, `level_failed`, `visit_started`, `application_submitted`. The object comes first so related events sort together (`order_created`, `order_completed`, `order_refunded`), and the past tense says the event is a fact, the same rule as [Events & Async Messaging](/docs/architecture/events). [Data Pipelines & Analytics](/docs/telemetry/event-design) uses the same convention, and it matches the database and JSON field casing, so an event name can be a table name in the warehouse without quoting.
 
 Vendors differ on casing. Segment's planning guide is a fan of "the Object (`Blog Post`) + Action (`Read`) framework" and recommends Title Case for event names with snake_case properties; Amplitude's default is also Title Case noun and past-tense verb. Either works. What doesn't work is two conventions at once: Amplitude points out that it "captures `Song Played` and `song played` as two separate events," and every analytics tool does the same.
 
@@ -203,7 +203,7 @@ Mixpanel's simplified ID merge is a clean statement of the mechanism: "when a `$
 
 The rules I build identity on:
 
-- **Link anonymous to known; never merge two known users through an event.** One anonymous ID maps to at most one user ID. If a shared device sees a second login, that's a new anonymous ID (after the reset) or a conflict to log, not a merge of two accounts. Merging accounts is a deliberate, reversible operation with a record, the practice in [Matching & Merging](/docs/architecture/record-linkage#merges-recorded-and-reversible).
+- **Link anonymous to known; never merge two known users through an event.** One anonymous ID maps to at most one user ID. If a shared device sees a second login, that's a new anonymous ID (after the reset) or a conflict to log, not a merge of two accounts. Merging accounts is a deliberate, reversible operation with a record, the practice in [Matching & Merging](/docs/building-blocks/record-linkage#merges-recorded-and-reversible).
 - **Keep the link as data, not as rewritten events.** Raw events keep the IDs they arrived with; the warehouse resolves identity through a link table at query or model time. When a link turns out to be wrong, you fix one row and rebuild, instead of trying to un-merge history.
 - **Expect lag.** Mixpanel says the mapping "may take up to 24 hours to propagate fully"; a funnel built over the last hour will show some converted users as anonymous.
 
@@ -222,7 +222,7 @@ CREATE TABLE identity_links (
 CREATE INDEX identity_links_user_id_idx ON identity_links (user_id);
 ```
 
-Cross-product identity (a player's console and PC accounts, a customer in the CRM and in billing) is record linkage, not event tracking, and belongs in the same model as every other many-source entity ([Matching & Merging](/docs/architecture/record-linkage)).
+Cross-product identity (a player's console and PC accounts, a customer in the CRM and in billing) is record linkage, not event tracking, and belongs in the same model as every other many-source entity ([Matching & Merging](/docs/building-blocks/record-linkage)).
 
 ## Events, Logs, Metrics and Traces
 

@@ -153,7 +153,7 @@ Each return or claim posts a reversing `ledger_transactions` row with `source_ty
 
 ## Auditing
 
-Checks are audited by your bank against its RDC agreement and the FFIEC's expectations, by Nacha's rules for anything converted, and by the payer who says a check was cashed twice. The general design is in [Audit Trails](/docs/architecture/audit-trails); keep:
+Checks are audited by your bank against its RDC agreement and the FFIEC's expectations, by Nacha's rules for anything converted, and by the payer who says a check was cashed twice. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); keep:
 
 - **Every capture attempt, not just the deposits:** who scanned, on which device and location, the image quality result, the amounts read and keyed, and any rejection, so velocity and limit reviews have the raw events.
 - **Duplicate detection hits and how each was resolved,** since the permanent duplicate key is a control the bank will ask you to demonstrate, and an override is the event most worth reviewing.

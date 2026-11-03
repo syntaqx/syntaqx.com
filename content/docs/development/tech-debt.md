@@ -1,7 +1,8 @@
 +++
 title = "Tech Debt"
 description = "Treat tech debt like a loan: know which kind you took on, track the interest you pay, budget a steady share to repay it, and modernize with strangler figs."
-category = "Engineering Practice"
+category = "Development"
+aliases = ["engineering/tech-debt"]
 order = 1025
 tags = ["tech-debt", "process", "architecture", "planning"]
 +++
@@ -17,7 +18,7 @@ Martin Fowler's [technical debt quadrant](https://martinfowler.com/bliki/Technic
 | **Deliberate** | Skipping design because there's "no time" | Shipping now, knowing the cost, with a plan to pay it back |
 | **Inadvertent** | Not knowing good design in the first place | Learning, after building it, how it should have been built |
 
-- **Deliberate and prudent** is a business decision. Record it as a backlog item with what it'll take to pay back, so the loan has terms. If the shortcut departs from the playbook, it also gets an [ADR](/docs/engineering/design-docs), because that's exactly the choice someone will later mistake for an accident.
+- **Deliberate and prudent** is a business decision. Record it as a backlog item with what it'll take to pay back, so the loan has terms. If the shortcut departs from the playbook, it also gets an [ADR](/docs/development/design-docs), because that's exactly the choice someone will later mistake for an accident.
 - **Inadvertent and prudent** is inevitable. You learn the domain by building in it. Pay it down as understanding improves.
 - **Reckless** debt in either row is a process problem. Fix the process (reviews, design docs, mentoring), not just the code.
 
@@ -37,12 +38,12 @@ Reserve a steady share of every team's capacity for paying down debt and keeping
 
 - **Not debt sprints.** A quarterly "cleanup sprint" lets interest compound for three months, then gets cancelled the first time a deadline slips.
 - **The team chooses** what to spend it on. They know where the interest hurts.
-- **Upgrades come out of this budget,** before they become emergencies. See [Dependencies & Upgrades](/docs/engineering/dependencies).
+- **Upgrades come out of this budget,** before they become emergencies. See [Dependencies & Upgrades](/docs/development/dependencies).
 - **It's engineering's share of the roadmap,** set before features are prioritized. [Roadmaps & Capacity](/docs/product/roadmaps) covers what else it pays for.
 
 ## Pay It Down Where You're Working
 
-The cheapest time to fix code is when you're already changing it: the context is loaded and the reviewer is already looking. Leave it a little better than you found it, with the refactor landed as its own pull request before the behavior change ([one concern per PR](/docs/engineering/commits-and-reviews)). Improve what you touch; a drive-by rewrite of an unrelated module belongs in its own change.
+The cheapest time to fix code is when you're already changing it: the context is loaded and the reviewer is already looking. Leave it a little better than you found it, with the refactor landed as its own pull request before the behavior change ([one concern per PR](/docs/development/commits-and-reviews)). Improve what you touch; a drive-by rewrite of an unrelated module belongs in its own change.
 
 ## When to Stop and Pay
 

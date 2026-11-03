@@ -270,7 +270,7 @@ How it runs:
 
 ## Auditing
 
-Interest is computed for every account every day, so examiners test it by sample and by recomputation: pick an account, recompute a month's interest and the APY earned from the disclosed terms, and compare. Beyond [Audit Trails](/docs/architecture/audit-trails), the records that make that possible:
+Interest is computed for every account every day, so examiners test it by sample and by recomputation: pick an account, recompute a month's interest and the APY earned from the disclosed terms, and compare. Beyond [Audit Trails](/docs/building-blocks/audit-trails), the records that make that possible:
 
 - **Each accrual row** keeps the balance, rate, tier detail, day count, basis and product version it used, so the recomputation reads the core's inputs, not today's configuration.
 - **Each crediting** keeps the unrounded accrual, the credited amount, the rounding rule and the residual.

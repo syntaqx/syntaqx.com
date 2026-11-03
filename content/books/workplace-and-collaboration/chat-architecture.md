@@ -195,7 +195,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Every message accepted, with its write path** (client, API token, workflow, bridge) and the policy checks it passed, so "how did this get posted?" has an answer.
-- **The capture stream's integrity:** positions are gap-free and consumers record the last position they processed, so a missing range is detectable ([Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident)).
+- **The capture stream's integrity:** positions are gap-free and consumers record the last position they processed, so a missing range is detectable ([Make It Tamper-Evident](/docs/building-blocks/audit-trails#make-it-tamper-evident)).
 - **Cross-tenant operations:** shared-channel creation, host recorded, overlays changed, and every read or write routed to another organization's host.
 - **Operator actions:** cell drains and restores with the operator, scope and duration, because they affect which customers saw errors and feed SLA credit calculations.
 - **Index operations:** rebuilds, deletions for retention and the hold check that preceded them.

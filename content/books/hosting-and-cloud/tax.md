@@ -339,7 +339,7 @@ Notes on the sketch:
 - **Every zero explained.** Reverse charge with the validated tax ID and its VIES reference, an exemption with its accepted certificate, a non-taxable code, or no registration, each a reason, never a bare zero.
 - **Seller entity history.** Which entity sold to each account on each date, so a reassignment can't make an old invoice look as if another entity issued it.
 - **Telecom contributions and surcharges.** The USF factor applied each quarter against the published public notice, the interstate share used, and per-line surcharges against reported access lines, because regulators and auditors reconcile to those counts.
-- **Registrations against thresholds and law changes.** When each registration started, why, and which rule changes (Washington's 2029 provisions, Chicago's rate, a new province) are pending as dated rows ([Audit Trails](/docs/architecture/audit-trails)).
+- **Registrations against thresholds and law changes.** When each registration started, why, and which rule changes (Washington's 2029 provisions, Chicago's rate, a new province) are pending as dated rows ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

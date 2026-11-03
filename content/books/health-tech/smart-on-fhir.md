@@ -200,7 +200,7 @@ Design decisions:
 ## Auditing
 
 - **Every grant:** who authorized, at which instance, which scopes were requested and which granted, the launch context, and when it was revoked and why.
-- **Every token use:** the grant, the FHIR requests made under it and the patients they touched, so "what did this app read about me?" has an answer for the patient and the health system ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every token use:** the grant, the FHIR requests made under it and the patients they touched, so "what did this app read about me?" has an answer for the patient and the health system ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Registrations and approvals per customer,** including the scopes each health system approved and the review records behind them.
 - **Key lifecycle:** creation, publication, rotation and retirement of each connection's signing key, and every signing operation.
 - **Data origin,** so records from patient-directed grants can be separated from customer PHI on request.

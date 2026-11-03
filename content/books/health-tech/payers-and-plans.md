@@ -166,7 +166,7 @@ CREATE TABLE network_contracts (         -- a provider organization's contract i
 
 Design notes:
 
-- **Funding beside the state.** `plans.funding`, `erisa` and `situs_state` decide which laws apply to a coverage: a state prior authorization or mandate rule is a rule row keyed on state and filtered on funding, never a hard-coded state check ([What Belongs in Data](/docs/architecture/rules-as-data#what-belongs-in-data)).
+- **Funding beside the state.** `plans.funding`, `erisa` and `situs_state` decide which laws apply to a coverage: a state prior authorization or mandate rule is a rule row keyed on state and filtered on funding, never a hard-coded state check ([What Belongs in Data](/docs/building-blocks/rules-as-data#what-belongs-in-data)).
 - **The administrator is not the payer.** A self-funded plan has a sponsor (the employer), an administrator (the TPA or insurer) and a network (possibly rented); the claim routes to the administrator and the contract that priced it hangs off the network. Collapsing them breaks contract lookups and appeals.
 - **Benefit periods are versions.** A plan changes every January; cost-sharing is keyed to its period, never edited in place, so last year's claims reprocess under last year's rules.
 - **Benefits are rows, not prose.** `plan_benefits` is the structured form of a summary of benefits and coverage. The payer's adjudication engine reads it; a practice platform holds the same shape when it caches what [Eligibility & Benefits](/books/health-tech/eligibility-and-benefits) returned from a 271. Where only prose exists (a scanned plan document), the row carries `document_ref` and a person verifies it.
@@ -177,7 +177,7 @@ Design notes:
 
 - **Which benefits priced a claim.** Every adjudicated claim points at the `plan_benefits` rows and contract that applied, so a member appeal or an external review can see the cost-sharing as it was.
 - **Coverage history.** Effective dates, terminations, retroactive changes and their source (an 834 enrollment file, a 271, a manual change), because retroactive terminations recoup paid claims months later.
-- **Network status at the date of service.** A provider's participation as of the date of service, not today, decides in- or out-of-network; the record keeps the history ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Network status at the date of service.** A provider's participation as of the date of service, not today, decides in- or out-of-network; the record keeps the history ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## What This Means for the System You Build
 

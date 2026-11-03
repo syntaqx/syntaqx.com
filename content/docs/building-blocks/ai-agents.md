@@ -1,10 +1,10 @@
 +++
 title = "AI Agents in the Product"
 description = "Agents that act for customers and operators: narrow tools, typed results, decisions in code, identity checks, handoff, evals, auditing and the law."
-category = "Architecture"
-order = 423
+category = "Building Blocks"
+order = 464
 tags = ["architecture", "ai", "agents", "llm", "audit"]
-aliases = ["ai-agents"]
+aliases = ["architecture/ai-agents", "ai-agents"]
 +++
 
 An agent that only chats is a content feature. One that books the appointment, refunds the subscription, freezes the card or mutes the player is a new kind of actor in your system, and it needs everything a new actor needs: limited permissions, checks it can't talk its way around, a record of what it did and a way to hand the work to a person. The model is the easy part; the layer around it is ordinary engineering.
@@ -173,7 +173,7 @@ When a customer says "your bot cancelled my subscription," "the AI did it" has t
 - **What it saw and said.** The transcript (and recording, if any), linked from every record the conversation touched.
 - **Before and after,** through the same field-level history any user write gets.
 
-Write each record to the audit store in the same transaction as the action it describes, as [Audit Trails](/docs/architecture/audit-trails#not-logs-not-events) requires for any audited write. The outbox is a delivery queue, not evidence: if analytics or evals need to react, the same transaction can also write an [event](/docs/architecture/events), shaped for its consumers. The audit records answer disputes (what was promised), attribution (who made the sale), regulators, and debugging (which prompt version started cancelling instead of pausing).
+Write each record to the audit store in the same transaction as the action it describes, as [Audit Trails](/docs/building-blocks/audit-trails#not-logs-not-events) requires for any audited write. The outbox is a delivery queue, not evidence: if analytics or evals need to react, the same transaction can also write an [event](/docs/architecture/events), shaped for its consumers. The audit records answer disputes (what was promised), attribution (who made the sale), regulators, and debugging (which prompt version started cancelling instead of pausing).
 
 ## The AI's Promises Are the Business's Promises
 
@@ -188,7 +188,7 @@ What the agent tells a customer binds you the way an employee's statement would.
 A transcript holds names, addresses, account details and whatever else customers say, and a recording holds their voice. Treat both as personal data from the start.
 
 - **Classify and redact.** Transcripts get a [classification](/docs/security/sensitive-data#classify-every-field), and card numbers, codes and government IDs are redacted before storage (better: never collected, per the identity section above).
-- **Retention and erasure.** Give transcripts and recordings a retention window tied to the records they support, and include them, plus every copy in eval sets and analytics, in the [erasure pipeline](/docs/architecture/data-retention#erasure-requests).
+- **Retention and erasure.** Give transcripts and recordings a retention window tied to the records they support, and include them, plus every copy in eval sets and analytics, in the [erasure pipeline](/docs/building-blocks/data-retention#erasure-requests).
 - **Know where they go.** Your model provider and voice vendor are processors: check what they retain, for how long, and whether they may train on it, and put it in the contract ([GDPR & Privacy](/docs/compliance/gdpr#controllers-processors-and-the-dpa)).
 
 ## The Law, at a Pointer Level

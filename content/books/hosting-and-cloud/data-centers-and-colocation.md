@@ -275,7 +275,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Who entered and who asked.** Every access grant with its range, every visit the operator logs, and every remote hands request with its requester, because a physical change to a server is as consequential as an API call ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Who entered and who asked.** Every access grant with its range, every visit the operator logs, and every remote hands request with its requester, because a physical change to a server is as consequential as an API call ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **What the building was rated, and when.** The design, constructed-facility and operational attestations with their dates, and the operator's SOC 2 or ISO 27001 reports for each period, because a customer's auditor inherits those controls.
 - **Power drawn against power sold.** Metered readings per circuit, over-draw events, and single-feed cabinets, which are where SLA claims and capacity disputes start.
 - **Every curtailment.** Program, instruction, megawatts, duration, affected tenants and the credit settled, because grid operators, tenants and auditors each ask about the same hours.

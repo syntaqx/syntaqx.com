@@ -145,9 +145,9 @@ CREATE TABLE program_limits (              -- what the bank lets a program do, e
 Design notes:
 
 - **Limits are enforced where accounts open and money moves.** A `new_accounts_paused` row is read by account opening for the program's products; a `daily_outbound` limit is read by the payment path; an order article that freezes growth becomes a row, not an email to the program.
-- **Tests sample from the records, not from the program's reports.** The population for a CIP test is the `party_identities` and `applications` rows for the period, and the sample is drawn by the bank ([Producing Records](/docs/architecture/audit-trails#producing-records)).
+- **Tests sample from the records, not from the program's reports.** The population for a CIP test is the `party_identities` and `applications` rows for the period, and the sample is drawn by the bank ([Producing Records](/docs/building-blocks/audit-trails#producing-records)).
 - **Order articles are findings.** Each article of an order against the bank is a `supervisory_findings` row of kind `order_article` linked to the `enforcement_actions` row, with `program_id` set where a program is in scope, so a program sees the work assigned to it without the confidential text.
-- **Guidance is versioned like a rule.** Reviews record which guidance and tiering policy applied, so a review done under the 2023 guidance is judged by it after a replacement takes effect ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Guidance is versioned like a rule.** Reviews record which guidance and tiering policy applied, so a review done under the 2023 guidance is judged by it after a replacement takes effect ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Ingest partners' public actions.** A scheduled job reads the agencies' enforcement releases for every bank a program uses, keyed by FDIC certificate or RSSD ID, and opens a review when one appears ([Exams, Ratings & Call Reports](/books/banking-and-lending/exams-and-supervision#how-to-build-it)).
 
 ## Auditing

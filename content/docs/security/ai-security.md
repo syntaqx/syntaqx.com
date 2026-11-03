@@ -55,7 +55,7 @@ With all three, the attack writes itself: a web page or email the agent reads sa
 
 Tools are where a model's words become actions. A model tricked into saying something wrong is a content problem; one tricked into calling `delete_repository` or `send_payment` is an incident. Tools get the strictest review in the system.
 
-- **Every tool and MCP server is a [dependency](/docs/engineering/dependencies),** with the same vetting, pinning and update discipline.
+- **Every tool and MCP server is a [dependency](/docs/development/dependencies),** with the same vetting, pinning and update discipline.
 - **Never pass a user's token through** to a downstream API. The MCP specification forbids token passthrough: a server only accepts tokens issued for it.
 - **Ask for the smallest scopes** and elevate only when a privileged action is first attempted.
 - **Run local tools sandboxed,** with the exact command shown to the user before it runs.
@@ -63,7 +63,7 @@ Tools are where a model's words become actions. A model tricked into saying some
 
 ## AI on the Other Side
 
-Attackers use the same models to find vulnerabilities, write exploits and personalize phishing. The response isn't AI-specific: patch quickly ([Vulnerability Management](/docs/security/vulnerability-management)), keep authorization correct ([API Security](/docs/security/api-security)), and hold AI-written code to the same review as human-written code ([AI-Assisted Development](/docs/engineering/ai-assisted-development)).
+Attackers use the same models to find vulnerabilities, write exploits and personalize phishing. The response isn't AI-specific: patch quickly ([Vulnerability Management](/docs/security/vulnerability-management)), keep authorization correct ([API Security](/docs/security/api-security)), and hold AI-written code to the same review as human-written code ([AI-Assisted Development](/docs/development/ai-assisted-development)).
 
 ## References
 

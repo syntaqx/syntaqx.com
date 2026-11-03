@@ -8,7 +8,7 @@ tags = ["data", "warehouse", "lakehouse", "iceberg", "parquet"]
 
 Once analytics has its own side of the line ([Separating Production from Analytics](/docs/data/separating-production-and-analytics)), the next question is what that side is made of. The answer has changed three times in twenty years, and most companies still carry a layer from each era: a Hive metastore nobody wants to touch, a cloud warehouse where the analysts live, and a bucket of Parquet files someone calls the lake.
 
-[Warehouse or Lakehouse](/docs/architecture/data-pipelines#warehouse-or-lakehouse) gives my short default: start with a managed warehouse, move toward open table formats for a concrete reason. This chapter is the long version: where each design came from, what it actually guarantees, and how I choose.
+[Warehouse or Lakehouse](/docs/data/warehouses-and-lakes) gives my short default: start with a managed warehouse, move toward open table formats for a concrete reason. This chapter is the long version: where each design came from, what it actually guarantees, and how I choose.
 
 ## The Hadoop Era
 
@@ -59,7 +59,7 @@ A lake is files in object storage (Amazon S3, Google Cloud Storage, Azure Data L
 A plain lake is also a directory of files pretending to be a table, and it breaks in predictable ways:
 
 - **No transactions.** A job that fails halfway leaves half its files; a reader listing the directory mid-write sees a mix of old and new.
-- **No safe updates or deletes.** Changing one row means rewriting files by hand, which is how an erasure request turns into a week of work ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **No safe updates or deletes.** Changing one row means rewriting files by hand, which is how an erasure request turns into a week of work ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 - **Schema by convention.** Two writers disagree about a column's type, and the first reader to find out is a dashboard.
 - **Listing is slow and partitioning is visible.** Queries have to know the directory layout (`dt=2026-10-26/`) to prune, and changing the layout means rewriting history.
 

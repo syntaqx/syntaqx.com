@@ -276,7 +276,7 @@ Notes on the sketch:
 - **Removals with their actor kind:** author, owner, admin, retention or DLP, and for owner and admin removals, which policy permitted it.
 - **Channel lifecycle:** creation, visibility changes (public to private, sharing with another org), archive, unarchive, rename and delete, with the hold check result for deletes.
 - **Membership ranges:** who was in a channel and when, so a later question ("could she have seen this?") has an answer from the record, not the current list.
-- **Admin access to content** through compliance tools, logged as access ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)); the [Audit Logs](/books/workplace-and-collaboration/audit-logs) chapter covers the event catalogs vendors publish.
+- **Admin access to content** through compliance tools, logged as access ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)); the [Audit Logs](/books/workplace-and-collaboration/audit-logs) chapter covers the event catalogs vendors publish.
 
 ## What This Means for the System You Build
 

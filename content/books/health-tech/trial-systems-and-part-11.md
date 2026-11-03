@@ -10,7 +10,7 @@ tags = ["health-tech", "pharma", "clinical-trials", "part-11", "cdisc", "validat
 
 Trial software is held to a standard most software never meets: a regulator may ask, years later, who entered a value, what it was before, why it changed, who signed the page and what the signature meant, and the system must answer from records nobody could have quietly altered. That standard is 21 CFR Part 11 in the United States and EU GMP Annex 11 in Europe, applied through the good clinical practice guideline ICH E6, and it shapes every system in a trial: electronic data capture where sites enter visit data, the clinical trial management system where sponsors and CROs run operations, the electronic trial master file where every essential document lives, randomization and trial supply, and electronic patient-reported outcomes on a subject's phone. The data those systems produce has to be delivered to the FDA in CDISC standards.
 
-This chapter covers the system types and their vendors, the data standards from collection to submission, Part 11 and Annex 11 in engineering terms, ICH E6(R3), and validation. The trial business (phases, sites, consent, registration) is [Clinical Trials](/books/health-tech/clinical-trials); safety databases and submissions are [Pharmacovigilance & Regulatory Submissions](/books/health-tech/pharmacovigilance-and-regulatory). The playbook's general rules for e-signatures and audit trails are [Electronic Signatures & Records](/docs/compliance/electronic-signatures) and [Audit Trails](/docs/architecture/audit-trails); Part 11 is stricter than both.
+This chapter covers the system types and their vendors, the data standards from collection to submission, Part 11 and Annex 11 in engineering terms, ICH E6(R3), and validation. The trial business (phases, sites, consent, registration) is [Clinical Trials](/books/health-tech/clinical-trials); safety databases and submissions are [Pharmacovigilance & Regulatory Submissions](/books/health-tech/pharmacovigilance-and-regulatory). The playbook's general rules for e-signatures and audit trails are [Electronic Signatures & Records](/docs/compliance/electronic-signatures) and [Audit Trails](/docs/building-blocks/audit-trails); Part 11 is stricter than both.
 
 ## How the Platforms Do It
 
@@ -178,7 +178,7 @@ ORDER BY item, repeat_key, version DESC;
 
 Design notes:
 
-- **Append-only by construction.** `form_entries` has no update path; a correction is a new version with a reason, and the prior value stays visible, as 11.10(e) requires ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)). Tamper evidence (hash chains or a write-once store) makes the guarantee checkable ([Make It Tamper-Evident](/docs/architecture/audit-trails#make-it-tamper-evident)).
+- **Append-only by construction.** `form_entries` has no update path; a correction is a new version with a reason, and the prior value stays visible, as 11.10(e) requires ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)). Tamper evidence (hash chains or a write-once store) makes the guarantee checkable ([Make It Tamper-Evident](/docs/building-blocks/audit-trails#make-it-tamper-evident)).
 - **Signatures bind to a digest.** The signature stores a hash of the exact record version; any later entry on a signed casebook invalidates the signature and requires re-signing, which is how the "cannot be transferred to falsify" rule is enforced.
 - **Re-authenticate at signing.** The signing ceremony asks for the password (and the ID outside a continuous session), records the components used, and states the meaning on screen before the signer commits.
 - **Server time is the record's time.** Audit timestamps come from a synchronized server clock in UTC with the time zone shown, never the browser.
@@ -191,7 +191,7 @@ Design notes:
 - **Signatures:** who signed what, with what meaning, when, and whether a later change invalidated it.
 - **Access:** account provisioning and removal, role changes, and reads of unblinded data.
 - **Validation:** for the release and study build in use on any date, the validation record and its approval.
-- **Retention:** trial records, audit trails and signatures kept for the predicate rule's period, in a form that stays readable after the system is retired ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Retention:** trial records, audit trails and signatures kept for the predicate rule's period, in a form that stays readable after the system is retired ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ## What This Means for the System You Build
 

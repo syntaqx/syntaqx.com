@@ -43,7 +43,7 @@ Cards on file are the part customers notice and the part software vendors can't 
 
 Every migrated record keeps a permanent link to where it came from, in a crosswalk of external IDs with the batch that created it; the shape, the run log and the rules for closing a wrong link are in [Crosswalks and ID Mapping](/docs/architecture/replacing-systems#crosswalks-and-id-mapping). A field migration needs one crosswalk per entity it loads (`account_external_ids`, `property_external_ids`, `agreement_external_ids`, `asset_external_ids`, `payment_method_external_ids`), and the processor's card mapping file lands in the last one with the old processor as its source, so a token can be traced back to the legacy account.
 
-Deduplication happens before the load, with rules the business agrees to, and it takes real time (import and cleanup is the largest block in the vendor timelines below). Merge candidates (same standardized address and unit, same name or phone) go to a review queue ([Review Bands](/docs/architecture/record-linkage#review-bands)). Two field rules: never auto-merge two accounts that both have active agreements or cards on file, and a landlord or property manager with fifty properties is one account with fifty properties, not fifty duplicate customers.
+Deduplication happens before the load, with rules the business agrees to, and it takes real time (import and cleanup is the largest block in the vendor timelines below). Merge candidates (same standardized address and unit, same name or phone) go to a review queue ([Review Bands](/docs/building-blocks/record-linkage#review-bands)). Two field rules: never auto-merge two accounts that both have active agreements or cards on file, and a landlord or property manager with fifty properties is one account with fifty properties, not fifty duplicate customers.
 
 ## Big Bang, Phased or Parallel
 
@@ -84,7 +84,7 @@ Staff need the change earlier. FieldRoutes' approach trains power users first, w
 
 ## Auditing the Migration
 
-A migration rewrites every record in the business at once, which makes it the event most likely to be questioned later: a customer disputing a charge that started the month of the switch, a regulator asking for a pesticide record from before it, an employee whose commission dropped, an acquirer's diligence on retention. The general audit record is in [Audit Trails](/docs/architecture/audit-trails), and field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). What a migration adds:
+A migration rewrites every record in the business at once, which makes it the event most likely to be questioned later: a customer disputing a charge that started the month of the switch, a regulator asking for a pesticide record from before it, an employee whose commission dropped, an acquirer's diligence on retention. The general audit record is in [Audit Trails](/docs/building-blocks/audit-trails), and field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). What a migration adds:
 
 - **Keep the original exports.** Every legacy and processor export, unchanged, with checksums, encrypted at rest (card data never lands here; it went processor to processor), retained for the longest retention period of anything in it, which for pesticide records can be years.
 - **A run log per batch.** Who ran it, when, from what code and mapping version, with what input checksum, and what it created, updated, rejected and why, with a failure file per rejected row, as Commusoft's import returns.

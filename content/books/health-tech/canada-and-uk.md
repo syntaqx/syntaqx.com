@@ -119,7 +119,7 @@ CREATE TABLE provincial_claims (         -- a claim to a provincial plan, beside
 
 Design notes:
 
-- **Jurisdiction is configuration with dates.** Consent model, breach clocks, residency and assurance are rows keyed by country and subdivision with effective ranges, so a new province is data, not a branch ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)). Tenants carry their jurisdiction through their locations' `country` and `subdivision`.
+- **Jurisdiction is configuration with dates.** Consent model, breach clocks, residency and assurance are rows keyed by country and subdivision with effective ranges, so a new province is data, not a branch ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)). Tenants carry their jurisdiction through their locations' `country` and `subdivision`.
 - **The fee schedule is versioned reference data.** Provincial fee masters change several times a year; each claim records the version it was priced under.
 - **Validate identity against the national service, sparingly.** Health card validation and PDS lookups are rate-limited and audited; cache results with their time and result code, and never retry in a loop.
 - **Residency is enforced in placement.** A tenant whose profile says `in_province` gets storage, backups, logs and support access pinned accordingly, which is an infrastructure property, not an application check.
@@ -129,7 +129,7 @@ Design notes:
 
 - **Every identity validation call** with the result code and who triggered it.
 - **Claims with the fee schedule version and the relationship basis** for virtual care codes, because provincial audits recover payments billed under the wrong code.
-- **Access to health information** by staff and vendors, with the lockbox or express instructions that applied ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access to health information** by staff and vendors, with the lockbox or express instructions that applied ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Assurance evidence:** DSPT submissions, DTAC and clinical safety documents, OntarioMD certification and MHRA registration, each with its date and version.
 - **Breach notifications** made under each jurisdiction's rule.
 

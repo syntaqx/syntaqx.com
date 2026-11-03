@@ -73,7 +73,7 @@ The service type code is the question's subject, from an X12 external code list.
 | `MH` | Mental Health | Behavioral health |
 | `UC` | Urgent Care | Urgent care centers |
 
-A practice's eligibility configuration is a map from its appointment types to the service types to ask about: a new-patient dental exam asks `35`, `23` and `41`; a PT evaluation asks `30` and `PT`. The map belongs in data, per practice, because a specialty clinic's questions differ from a general practice's ([What Belongs in Data](/docs/architecture/rules-as-data#what-belongs-in-data)).
+A practice's eligibility configuration is a map from its appointment types to the service types to ask about: a new-patient dental exam asks `35`, `23` and `41`; a PT evaluation asks `30` and `PT`. The map belongs in data, per practice, because a specialty clinic's questions differ from a general practice's ([What Belongs in Data](/docs/building-blocks/rules-as-data#what-belongs-in-data)).
 
 ## Real-Time and Batch
 
@@ -132,7 +132,7 @@ An eligibility check is only as good as the member ID and birth date it sends. M
 - **At the desk,** a scan of the card front and back.
 - **From the payer,** when a 271 corrects the name or birth date on file, or a search by name and birth date without a member ID finds the member (payers support some search options under the operating rules, but not uniformly).
 
-Card OCR reads the payer name, member ID, group number and printed copays from the image. My rules for it: keep the image as the source document; treat OCR output as a proposal the patient or staff confirms; map the printed payer name to a payer ID through a maintained table (card logos name brands and networks, not clearinghouse payer IDs, and one card can show a network logo for a different administrator); and run an eligibility check on the result before the visit, so a wrong read surfaces as a rejected inquiry rather than a denied claim. The images are PHI and go into the same storage and access controls as clinical documents ([File Uploads](/docs/architecture/file-uploads)).
+Card OCR reads the payer name, member ID, group number and printed copays from the image. My rules for it: keep the image as the source document; treat OCR output as a proposal the patient or staff confirms; map the printed payer name to a payer ID through a maintained table (card logos name brands and networks, not clearinghouse payer IDs, and one card can show a network logo for a different administrator); and run an eligibility check on the result before the visit, so a wrong read surfaces as a rejected inquiry rather than a denied claim. The images are PHI and go into the same storage and access controls as clinical documents ([File Uploads](/docs/building-blocks/file-uploads)).
 
 ## Portals and the Phone
 
@@ -250,7 +250,7 @@ Design notes:
 
 ## Auditing
 
-- **Every check:** who or what asked, why, for which date and service type, and the raw response, retained with the billing records it supports ([Retention Windows](/docs/architecture/data-retention#retention-windows)).
+- **Every check:** who or what asked, why, for which date and service type, and the raw response, retained with the billing records it supports ([Retention Windows](/docs/building-blocks/data-retention#retention-windows)).
 - **Every change to coverage order or member data,** with the source (patient, card, 271 correction, staff), since a wrong primary is a double denial.
 - **Every edit to shared plan rules,** versioned, with the source and verifier.
 - **Check volumes per practice and payer,** to show checks are tied to appointments and to catch runaway loops.

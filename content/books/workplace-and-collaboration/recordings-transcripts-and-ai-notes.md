@@ -117,7 +117,7 @@ A meeting has participants in many places, so the vendor mechanisms all implemen
 - Teams always notifies participants of recording, and an admin policy (`-ExplicitRecordingConsent`) requires "participants to give their explicit consent to be recorded or transcribed" in meetings organized under it. Admins can also replace the default recording privacy statement with their own URL.
 - Meet notifies all participants when recording starts or stops, including people outside the organization and on phones, who are told but "can't control the recording."
 
-Transcription and AI notes are recordings for consent purposes, and the vendors treat them so: Teams' explicit consent covers transcription, and Meet notifies participants when notes are taken. The playbook's [Recordings and Transcripts Are Personal Data](/docs/architecture/ai-agents#recordings-and-transcripts-are-personal-data) states the general rule.
+Transcription and AI notes are recordings for consent purposes, and the vendors treat them so: Teams' explicit consent covers transcription, and Meet notifies participants when notes are taken. The playbook's [Recordings and Transcripts Are Personal Data](/docs/building-blocks/ai-agents#recordings-and-transcripts-are-personal-data) states the general rule.
 
 ## Expiry, Retention and Holds
 
@@ -125,7 +125,7 @@ Recordings are large and mostly never watched again, so storage owners want them
 
 **Expiry** is storage management. In Teams, recordings and transcripts get a default expiration of 120 days, configurable per policy from 1 to 99,999 days, or never (-1, PowerShell only); A1 education users are capped at 30 days, changes apply only to new recordings, and published event recordings have their own shorter expiry that organizers can extend. An expired file moves to the OneDrive or SharePoint recycle bin, which for work accounts deletes items after 93 days unless an admin changed it. Zoom's equivalent deletes cloud recordings a set number of days after creation, with a separate 30-day trash that admins can't lock and that doesn't count against storage.
 
-**Retention and holds** are compliance. A Teams recording is an ordinary OneDrive or SharePoint file, and Microsoft states that Purview applies to recording files "the same as with other files," so the tenant's retention policies and holds govern it alongside the expiry setting; Zoom offers WORM (write once, read many) retention through its support team, under which recordings "can't be edited or deleted until the retention period expires" and auto-delete starts only after it. The rule to implement: **a hold always beats an expiry, and an expiry never silently deletes a held item.** Retention design in general is [Data Retention & Deletion](/docs/architecture/data-retention#retention-windows); preservation and the spoliation cases that punish getting it wrong are [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
+**Retention and holds** are compliance. A Teams recording is an ordinary OneDrive or SharePoint file, and Microsoft states that Purview applies to recording files "the same as with other files," so the tenant's retention policies and holds govern it alongside the expiry setting; Zoom offers WORM (write once, read many) retention through its support team, under which recordings "can't be edited or deleted until the retention period expires" and auto-delete starts only after it. The rule to implement: **a hold always beats an expiry, and an expiry never silently deletes a held item.** Retention design in general is [Data Retention & Deletion](/docs/building-blocks/data-retention#retention-windows); preservation and the spoliation cases that punish getting it wrong are [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
 
 Copies leak outside both. Teams keeps recordings that fail to upload available for local download for 20 days; summaries emailed to recipients live in their mailboxes under the mailbox's retention; notetaker vendors keep their own copies under their own policies. An organization's retention policy covers the copy in its storage, not the copies its meeting features distributed.
 
@@ -213,7 +213,7 @@ Notes on the sketch:
 
 - **Every capture start and stop,** with who or what started it (a member, the compliance system, an app), the policy in force, and the consents collected.
 - **Every share** of a recording, transcript or summary beyond the meeting's invitees, including emailed summaries.
-- **Every view and download** of recordings in sensitive containers ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every view and download** of recordings in sensitive containers ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Every expiry, deletion and restore,** and every expiry skipped because of a hold.
 - **Every bot and notetaker** that joined, the app installation behind it, and whether it was admitted from the lobby.
 - **Voice profile enrollment, use and deletion,** retained as long as the biometric law the customer is under requires.

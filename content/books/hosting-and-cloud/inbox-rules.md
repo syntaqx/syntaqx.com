@@ -9,7 +9,7 @@ tags = ["email", "deliverability", "dmarc", "bimi", "feedback-loops", "enforceme
 
 Mailbox providers are to email what carriers are to texting: private gatekeepers whose rules bind harder than the law. Since February 2024, Gmail and Yahoo have required bulk senders to authenticate with SPF, DKIM and DMARC, offer one-click unsubscribe and keep complaint rates below 0.3%; Outlook.com followed in May 2025 and rejects non-compliant bulk mail outright. Gmail began ramping enforcement in November 2025 with temporary and permanent rejections. For an email sending platform, these rules apply twice. Its own infrastructure (IPs, shared domains, return paths) must comply, and so must every customer it sends for, because a customer whose complaint rate crosses Gmail's line damages the shared pool the platform's other customers rely on. So the platform enforces the mailbox providers' rules on its customers before the mailbox providers enforce them on the platform. A store meets the same rules as a sender, in the Commerce volume's [Deliverability](/books/commerce/email-sms-and-lifecycle#deliverability).
 
-This chapter covers the rules from the platform's side: how they came to be mandatory, what each mailbox provider requires and how it enforces, feedback loops, BIMI, blocklists, and how an ESP measures and enforces on its own customers. The mechanics of SPF, DKIM, DMARC and RFC 8058 one-click unsubscribe, and why a sender separates its streams, are the playbook's [Email: Authentication and Streams](/docs/architecture/notifications#email-authentication-and-streams); the platforms and their IP pools are [Email Sending Platforms](/books/hosting-and-cloud/email-sending-platforms).
+This chapter covers the rules from the platform's side: how they came to be mandatory, what each mailbox provider requires and how it enforces, feedback loops, BIMI, blocklists, and how an ESP measures and enforces on its own customers. The mechanics of SPF, DKIM, DMARC and RFC 8058 one-click unsubscribe, and why a sender separates its streams, are the playbook's [Email: Authentication and Streams](/docs/building-blocks/notifications#email-authentication-and-streams); the platforms and their IP pools are [Email Sending Platforms](/books/hosting-and-cloud/email-sending-platforms).
 
 ## How the Mailbox Providers Do It
 
@@ -217,7 +217,7 @@ WHERE s.source = 'own_events' AND s.mailbox_provider = 'all'
                     AND h.effect IN ('pause', 'terminate'));
 ```
 
-The thresholds in the sketch are SES's published ones; set your own as rows in a rules table ([Rules as Data](/docs/architecture/rules-as-data)), not constants.
+The thresholds in the sketch are SES's published ones; set your own as rows in a rules table ([Rules as Data](/docs/building-blocks/rules-as-data)), not constants.
 
 Notes on the sketch:
 

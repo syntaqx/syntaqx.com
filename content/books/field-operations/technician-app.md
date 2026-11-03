@@ -9,7 +9,7 @@ tags = ["field-operations", "mobile", "offline", "forms", "pricebook", "time-tra
 
 The office runs on a desktop with fiber. The technician runs on a phone in a crawlspace, a basement mechanical room, an attic air handler, a rural route with one bar, or a high-rise utility closet with none. Everything the business promises the customer (arrive in the window, diagnose and fix the problem or do the service, record what was measured and applied, sell the repair or the plan, take the payment, send the report) happens through that phone, and most of it has to keep working when the network doesn't. That makes the technician app the hardest client in a field operations platform: an offline database, a forms engine, a parts catalog, a point of sale, a time clock and a compliance recorder, running on hardware the company may not own, used with gloves on.
 
-The generic machinery (a scoped local store, a command outbox, two clocks, conflict policies, the native versus web choice) is in [Offline-First Sync](/docs/architecture/offline-sync). This chapter is the field-specific part: what the platforms keep on the device, which conflicts field work produces, and what the app has to capture for each trade.
+The generic machinery (a scoped local store, a command outbox, two clocks, conflict policies, the native versus web choice) is in [Offline-First Sync](/docs/building-blocks/offline-sync). This chapter is the field-specific part: what the platforms keep on the device, which conflicts field work produces, and what the app has to capture for each trade.
 
 ## The Shape of a Technician's Day
 
@@ -40,7 +40,7 @@ Offline support ranges from "the job you opened stays loaded" to a full local da
 | Successware | A dedicated offline mode, with jobs staying active once loaded and syncing when a stable connection returns | Not published |
 | Zuper | Opt-in per company; assigned jobs "primed" at login with related records two levels deep, including assets and parts, expiring after one day | Accepting jobs, quotes and invoices, chat, previously added attachments |
 
-The pattern is consistent: the work itself (status, notes, photos, forms, readings) is offline everywhere that offers offline at all, and anything touching shared, scarce or external state (inventory availability, purchase orders, live card authorization, financing, new contracts) needs a signal, the same line [What Stays Online](/docs/architecture/offline-sync#what-stays-online) draws in general. Solea draws it further in: its field app keeps the schedule and inspections working offline, while "checkout, signatures and payments need a connection." Where to draw it, per flow, is the first real decision, and the answer differs by trade: a route of mostly exterior recurring service can live offline all day, while an HVAC repair that needs a part checked against the warehouse can't finish the sale without one.
+The pattern is consistent: the work itself (status, notes, photos, forms, readings) is offline everywhere that offers offline at all, and anything touching shared, scarce or external state (inventory availability, purchase orders, live card authorization, financing, new contracts) needs a signal, the same line [What Stays Online](/docs/building-blocks/offline-sync#what-stays-online) draws in general. Solea draws it further in: its field app keeps the schedule and inspections working offline, while "checkout, signatures and payments need a connection." Where to draw it, per flow, is the first real decision, and the answer differs by trade: a route of mostly exterior recurring service can live offline all day, while an HVAC repair that needs a part checked against the warehouse can't finish the sale without one.
 
 ## What the Device Holds
 
@@ -59,13 +59,13 @@ Work recorded offline is a queue of commands replayed in order, not a copy of ro
 
 ![Offline sync: a tap of Complete with no signal makes one local write to the record and the outbox, and the screen shows items waiting to sync; on reconnect the outbox replays in order to the server, which skips command IDs it has already applied, compares the base version and checks rules, and either applies it, appends it beside newer office changes, or sends a state conflict to a review queue; an acknowledgement removes the command and the device pulls new versions.](/diagrams/fo-technician-app-outbox.svg "Offline work is a queue of commands, not a copy of rows. The server deduplicates, checks each command against current state, and only the true conflicts reach a person.")
 
-The field delta on [Two Clocks](/docs/architecture/offline-sync#two-clocks) is how many regulated records hang off the device clock: the visit, the pesticide application record (`applied_at`), the refrigerant log and the timesheet all take the time the technician did the work (`device_recorded_at`), and `received_at` only explains why the office saw it late.
+The field delta on [Two Clocks](/docs/building-blocks/offline-sync#two-clocks) is how many regulated records hang off the device clock: the visit, the pesticide application record (`applied_at`), the refrigerant log and the timesheet all take the time the technician did the work (`device_recorded_at`), and `received_at` only explains why the office saw it late.
 
 ## Conflicts in Field Work
 
 Field work produces a predictable set of conflicts, because the office keeps planning while the technician is underground. Oracle Field Service, which replays offline actions in chronological order, documents three of them: a route deactivated offline while the office added an activity; an activity completed offline after the office moved it to someone else; an activity completed offline that the server had already set to not done.
 
-I decide per command type, as [Conflicts: Choosing Who Wins](/docs/architecture/offline-sync#conflicts-choosing-who-wins) sets out. The field assignments:
+I decide per command type, as [Conflicts: Choosing Who Wins](/docs/building-blocks/offline-sync#conflicts-choosing-who-wins) sets out. The field assignments:
 
 - **From the field:** arrival, departure, readings, products applied, parts used, photos, signatures and payments. A completion on a visit reassigned mid-work is recorded against the visit; the reassignment is what gets fixed.
 - **From the office:** schedule, assignment, route order, pins and pricebook changes.
@@ -134,11 +134,11 @@ The company either issues devices or lets technicians use their own, and the app
 - **Company-owned devices** can be fully managed. Android's dedicated device mode lists field service management as a use case, and lock task mode restricts a device to an allowlisted set of apps. Apple's deployment program covers automated device enrollment, supervision and managed app distribution. Managed devices let you push app versions, enforce a passcode and encryption, and wipe a lost phone.
 - **Personal devices** can't be locked down, so the app protects itself: an app-level lock, encrypted local storage, a remote sign-out that deletes the local database on next launch, and a short expiry on cached data.
 
-Field apps also talk to hardware: card readers, Bluetooth gauges and probes, barcode scanners for bait stations and parts, label and receipt printers. That's most of why I'd build the technician app natively or in React Native with native modules for the database, outbox, payments and peripherals, and not as a progressive web app; the trade-offs are in [Native, React Native or a PWA](/docs/architecture/offline-sync#native-react-native-or-a-pwa). Either way, keep the fleet's app versions within a known window, because an old app replaying commands against a new server is a compatibility problem you'll otherwise discover in production ([Mobile Releases](/docs/delivery/mobile-releases)).
+Field apps also talk to hardware: card readers, Bluetooth gauges and probes, barcode scanners for bait stations and parts, label and receipt printers. That's most of why I'd build the technician app natively or in React Native with native modules for the database, outbox, payments and peripherals, and not as a progressive web app; the trade-offs are in [Native, React Native or a PWA](/docs/building-blocks/offline-sync#native-react-native-or-a-pwa). Either way, keep the fleet's app versions within a known window, because an old app replaying commands against a new server is a compatibility problem you'll otherwise discover in production ([Mobile Releases](/docs/delivery/mobile-releases)).
 
 ## How to Build It
 
-This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model) with the three records the app creates that no other chapter owns: form answers, raw time punches and field payments. Payroll classifies hours from the punches; this table is only the immutable record of what the device saw. Each row carries both clocks; the outbox and sync machinery is in [Offline-First Sync](/docs/architecture/offline-sync).
+This extends the core model in [The Field Operations Business](/books/field-operations/field-operations-business#the-core-data-model) with the three records the app creates that no other chapter owns: form answers, raw time punches and field payments. Payroll classifies hours from the punches; this table is only the immutable record of what the device saw. Each row carries both clocks; the outbox and sync machinery is in [Offline-First Sync](/docs/building-blocks/offline-sync).
 
 ```sql
 CREATE TABLE form_definitions (          -- versioned; never edited once published
@@ -226,7 +226,7 @@ The technician app produces most of the records the business is later asked to p
 - **Offline payments and time punches keep their full history:** every tender with its state changes, every punch and every correction with who made it and why.
 - **Conflicts are logged with both versions and the resolver,** the first place anyone looks when a customer says the technician was there and the system says otherwise.
 
-The record shape, actors and amendment rules are in [Audit Trails](/docs/architecture/audit-trails); retention and production of field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+The record shape, actors and amendment rules are in [Audit Trails](/docs/building-blocks/audit-trails); retention and production of field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 
@@ -239,7 +239,7 @@ The record shape, actors and amendment rules are in [Audit Trails](/docs/archite
 - **Treat offline payments as a separate, limited state,** and keep card data inside the processor's SDK.
 - **Keep raw time punches immutable,** derive time from status events, and compute rounding at payroll.
 
-The general sync design is in [Offline-First Sync](/docs/architecture/offline-sync).
+The general sync design is in [Offline-First Sync](/docs/building-blocks/offline-sync).
 
 ## References
 

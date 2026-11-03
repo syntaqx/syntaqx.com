@@ -97,7 +97,7 @@ Large customers manage the console through code: provisioning roles, applying po
 - **Atlassian Organizations REST API:** list users and update their product access, create and update organization policies, and read domains and events, authenticated with an organization API key used as a bearer token.
 - **Slack:** the Audit Logs API on Enterprise plans, the SCIM API, and a session duration API that sets durations for a subset of members.
 
-The design lesson is that every console action needs an API equivalent with the same permission checks and the same audit events, attributed to the API key's owner and the key itself ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+The design lesson is that every console action needs an API equivalent with the same permission checks and the same audit events, attributed to the API key's owner and the key itself ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 
 ## Change History
 
@@ -108,7 +108,7 @@ Admins need to answer "who changed this setting, when, and from where?" The vend
 - **Slack's** Audit Logs API, on Enterprise plans, returns events with an action, an actor (a user, Slack's security agent or a placeholder), an entity (user, channel, file, app, workspace or enterprise) and a context with the location (enterprise or workspace), user agent, IP address, session id and the app, if one was involved.
 - **Atlassian's** organization audit log tracks activity across the organization; whether it stores in-app data such as Confluence page titles and Jira work item identifiers is a setting on Guard Premium or Cloud Enterprise, and the audit log isn't covered by data residency.
 
-The rule that matters for a builder: an admin change event records the before and after value, the scope, the actor and how they authenticated (including whether a role was activated just in time), and it is written in the same transaction as the change. Log design and retention are in the playbook's [What a Record Holds](/docs/architecture/audit-trails#what-a-record-holds).
+The rule that matters for a builder: an admin change event records the before and after value, the scope, the actor and how they authenticated (including whether a role was activated just in time), and it is written in the same transaction as the change. Log design and retention are in the playbook's [What a Record Holds](/docs/building-blocks/audit-trails#what-a-record-holds).
 
 ## How to Build It
 

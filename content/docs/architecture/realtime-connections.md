@@ -9,7 +9,7 @@ aliases = ["realtime-connections"]
 
 Some screens are wrong a second after they load unless the server can tell them something changed: a chat, a friends list, a dispatch board, a live order status, a shared document, a trading view, a party invite in a game. The alternative to a held connection is every client asking "anything new?" every few seconds, which is slow for the user and expensive for you, since nearly every answer is "no."
 
-A realtime connection is a long-lived channel from a client that's currently open to the server. It isn't the same thing as a push notification. Push reaches a device whose app isn't running, through Apple's or Google's service, and is covered in [Notifications](/docs/architecture/notifications#push-notifications). This chapter covers the connected case: choosing a transport, the shape of the tier that holds connections, and the failure modes that only show up when a million clients hold sockets at once.
+A realtime connection is a long-lived channel from a client that's currently open to the server. It isn't the same thing as a push notification. Push reaches a device whose app isn't running, through Apple's or Google's service, and is covered in [Notifications](/docs/building-blocks/notifications#push-notifications). This chapter covers the connected case: choosing a transport, the shape of the tier that holds connections, and the failure modes that only show up when a million clients hold sockets at once.
 
 ## Choosing a Transport
 

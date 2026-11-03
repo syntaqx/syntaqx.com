@@ -160,12 +160,12 @@ Build or buy: a billing portal (Stripe's customer portal, or your processor's) c
 
 ## Auditing
 
-Self-service shifts actions from staff to customers and agents, so the record has to say which. When a customer disputes a charge ("I cancelled online in March"), a tenant claims the landlord never authorized a visit, or a commercial client's auditor asks who changed a site contact, the answer is in the log. The general design (typed actors, delegated sessions, access logging) is in [Audit Trails](/docs/architecture/audit-trails), and field records are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). For the portal specifically, make sure the record shows:
+Self-service shifts actions from staff to customers and agents, so the record has to say which. When a customer disputes a charge ("I cancelled online in March"), a tenant claims the landlord never authorized a visit, or a commercial client's auditor asks who changed a site contact, the answer is in the log. The general design (typed actors, delegated sessions, access logging) is in [Audit Trails](/docs/building-blocks/audit-trails), and field records are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records). For the portal specifically, make sure the record shows:
 
 - **The channel and the grant behind every action:** portal, AI agent, staff in the office app, or a support session, and which person's grant on which property allowed it, so "the tenant moved the visit" is provable.
 - **The cancellation request's receipt time,** the effective date shown, any fee shown and the visits it removed from the schedule.
 - **Which disclosures were shown at acceptance:** autopay terms, ACH authorization text and financing disclosures, by version.
-- **Who viewed or downloaded reports and certificates,** especially commercial auditors and anyone with a read-only grant ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who viewed or downloaded reports and certificates,** especially commercial auditors and anyone with a read-only grant ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

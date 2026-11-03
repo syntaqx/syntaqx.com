@@ -94,7 +94,7 @@ A platform that isn't an EHR (telehealth, DTC, dental, behavioral health, vet fo
 
 - **The vendor holds the network relationship**, the drug database, the SCRIPT version handling and, for EPCS, the audited signing flow and identity proofing; the platform passes the patient, the prescriber and the order and receives status back by webhook or polling.
 - **The prescriber is enrolled twice:** once in the platform and once with the vendor, with NPI, DEA registrations by state, state licenses and, for EPCS, the identity-proofing result and token. Enrollment state is the platform's to track, because a prescriber who can't sign today is a scheduling problem.
-- **The platform still owns the record.** The vendor's prescription ID maps to the platform's `medication_requests` row through a crosswalk ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)); the vendor's events update status; the platform's audit trail records who ordered what and when, not only the vendor's.
+- **The platform still owns the record.** The vendor's prescription ID maps to the platform's `medication_requests` row through a crosswalk ([Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids)); the vendor's events update status; the platform's audit trail records who ordered what and when, not only the vendor's.
 - **Veterinary prescribing to human pharmacies** uses the same pipes with a different patient (the animal) and the owner as the person picking up; that boundary belongs to [Veterinary Practice](/books/health-tech/veterinary-practice#prescriptions-and-pharmacy).
 
 ## Compounding and the GLP-1 Era
@@ -222,7 +222,7 @@ Design decisions:
 - **Controlled-substance signing.** Enrollment with identity proofing, the two administrators who granted access, each signature with its factors, and the PDMP check before it; DEA's rule expects the application to produce reports of controlled-substance prescriptions and access changes for the registrant to review.
 - **Rule evaluations.** For each controlled-substance prescription after a virtual encounter, the DEA rule version and inputs that allowed it, because the rule's dates have changed every year.
 - **Part D EPCS compliance.** The share of a prescriber's qualifying controlled-substance prescriptions sent electronically per measurement year, with exceptions, against CMS's 70% threshold.
-- **Access.** Who viewed medication histories and PDMP results, including reads ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access.** Who viewed medication histories and PDMP results, including reads ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

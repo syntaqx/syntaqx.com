@@ -257,7 +257,7 @@ GROUP BY p.code, date_trunc('month', ia.business_date);
 
 The realized beta for a window is the change in that cost over the change in `policy_rates` for the same dates; store it per product and cycle beside the assumption it replaces. Design notes:
 
-- **NIM from the books, FTE as an explicit step.** Average earning assets come from daily balances of `earning_asset` GL accounts, interest from the income accounts, and the FTE adjustment from `tax_exempt` income at the statutory rate, stored as its own line so the reported and GL figures reconcile ([One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric)).
+- **NIM from the books, FTE as an explicit step.** Average earning assets come from daily balances of `earning_asset` GL accounts, interest from the income accounts, and the FTE adjustment from `tax_exempt` income at the statutory rate, stored as its own line so the reported and GL figures reconcile ([One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric)).
 - **Positions are snapshots, not live reads.** ALM runs on a frozen `as_of_date`; rerunning last quarter's scenario must produce last quarter's answer, which is why positions are copied rather than joined to live accounts ([Snapshots](/docs/database/temporal-data#snapshots)).
 - **Administered rates are a type, not a missing value.** A savings rate the bank sets has no index and no reset date; modeling it as `floating` with a guessed index is how an assumption hides inside data.
 - **Uninsured concentration is a daily query.** Per-depositor balances by ownership category against the insurance limit ([Deposit Insurance](/books/banking-and-lending/deposit-insurance) owns the computation), summed by segment and top depositors, with the day-over-day change, is the early warning the 2023 failures lacked.
@@ -266,7 +266,7 @@ The realized beta for a window is the change in that cost over the change in `po
 
 ALM and margin reporting go to the board's asset-liability committee, the examiners' Sensitivity to Market Risk and Liquidity ratings ([Exams, Ratings & Call Reports](/books/banking-and-lending/exams-and-supervision#camels)), the auditors and, through the call report and 10-K, the public. What to keep:
 
-- **Every assumption set with its approval and rationale,** and which runs used it, so "why did EVE improve" can be answered with "the deposit decay assumption changed on this date, approved by this committee" ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Every assumption set with its approval and rationale,** and which runs used it, so "why did EVE improve" can be answered with "the deposit decay assumption changed on this date, approved by this committee" ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Limit breaches and their resolution,** including breaches resolved by changing an assumption rather than the balance sheet.
 - **Measured against assumed betas and decay,** per cycle, as model back-testing evidence.
 - **The reconciliation from GL to reported ratios,** NIM, efficiency and capital, with each adjustment named.

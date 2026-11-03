@@ -239,7 +239,7 @@ Creators are paid partners, and their disputes are about money and takedowns:
 - **IP claims.** Each notice, its validation, the dates of every legal step, strikes counted against the creator, and claimants flagged for abuse.
 - **Identity and tax.** When KYC passed, which tax form is on file, and changes to payout details, which are an account-takeover target exactly as vendor bank changes are ([Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account)).
 
-The record structure is in [Audit Trails](/docs/architecture/audit-trails).
+The record structure is in [Audit Trails](/docs/building-blocks/audit-trails).
 
 ## What This Means for the System You Build
 

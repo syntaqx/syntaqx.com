@@ -1,8 +1,9 @@
 +++
 title = "Weighing Competing Objectives"
 description = "Folding many goals into one solver score: levels or weighted sums, hard and soft constraints, money as the unit, integer scaling, replay and explanations."
-category = "Architecture"
-order = 422
+category = "Building Blocks"
+aliases = ["architecture/weighing-objectives"]
+order = 463
 tags = ["architecture", "optimization", "solvers", "scheduling", "routing"]
 +++
 
@@ -78,7 +79,7 @@ Keep the snapshots: a test bench of historical inputs is what makes every later 
 - **Record cost by term for every run,** and for every resource or task where the engine can report it. "Travel 61%, lateness 22%, unserved 9%, overtime 8%" answers most questions without a re-solve. If one term is nearly all of the cost and the others barely move when their weights change, the weights aren't doing what they say.
 - **Use the engine's breakdown.** Timefold's score analysis shows the score each constraint contributes and "which planning entities and problem facts are responsible for breaking which constraints," and can diff two solutions constraint by constraint. Other engines expose the same through per-dimension costs; where they don't, recompute the terms from the solution.
 - **Answer counterfactuals by constraint.** "Why wasn't task X assigned to Y?" is best answered by re-solving with X pinned to Y and reporting how the score changed by term.
-- **Record which configuration decided.** Each run stores the objective profile name and version, the input snapshot and the time limit, the same discipline as [Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided), with the record shape in [Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions).
+- **Record which configuration decided.** Each run stores the objective profile name and version, the input snapshot and the time limit, the same discipline as [Rules as Data](/docs/building-blocks/rules-as-data#record-which-rule-decided), with the record shape in [Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions).
 
 ## Guarding Against Degenerate Solutions
 

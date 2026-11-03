@@ -2,13 +2,13 @@
 title = "Data Science & ML Platforms"
 description = "Running data science without breaking production: notebooks, reproducibility, feature stores and skew, experiment tracking, model registries, serving and drift."
 category = "Data Platforms"
-order = 1277
+order = 1278
 tags = ["data", "machine-learning", "mlops", "feature-store", "data-science"]
 +++
 
 A churn model for a SaaS product, a fraud score on card authorizations, a demand forecast for a store, a no-show prediction for a field service schedule, a matchmaking quality model for a game: each starts as a notebook on someone's laptop and, if it works, ends up deciding things for customers. The platform is everything between those two points. Without one, every model is a one-off: trained on a CSV nobody can find, deployed by copying a pickle file, and monitored by nobody until a customer complains.
 
-This chapter is about that platform: where data scientists work, how their work becomes reproducible, how features and models reach production, and how you know they're still right. LLM-powered agents inside a product have their own rules ([AI Agents in the Product](/docs/architecture/ai-agents)); many of the platform pieces here (evaluation, versioning, monitoring) apply to them too.
+This chapter is about that platform: where data scientists work, how their work becomes reproducible, how features and models reach production, and how you know they're still right. LLM-powered agents inside a product have their own rules ([AI Agents in the Product](/docs/building-blocks/ai-agents)); many of the platform pieces here (evaluation, versioning, monitoring) apply to them too.
 
 ## Exploration Is Not Production
 
@@ -38,7 +38,7 @@ A model is reproducible when you can say exactly which code, which data and whic
 - **Data:** a fixed snapshot of the training set, not a query against tables that keep changing. Tools differ in how: DVC keeps small metafiles in Git "in lieu of large files" and the data in remote storage ([DVC: Versioning data and models](https://doc.dvc.org/use-cases/versioning-data-and-models)); Delta Lake time travel queries an older table version by number or timestamp ([Delta Lake: Table batch reads and writes](https://docs.delta.io/latest/delta-batch.html)). Time travel is not an archive: Delta keeps history for 30 days by default and `VACUUM` removes old files, so a training set you need to keep is written out as its own snapshot.
 - **Randomness:** seeds recorded, and the evaluation set fixed, so a "better" model is better on the same examples.
 
-Erasure applies to training data like any other copy. A training snapshot that contains personal data has a retention period and is in scope for deletion requests ([Data Retention](/docs/architecture/data-retention#erasure-requests)); keep snapshots keyed by pseudonymous IDs so they're cheap to filter, and record which snapshot each model was trained on so you know which models a deletion touches.
+Erasure applies to training data like any other copy. A training snapshot that contains personal data has a retention period and is in scope for deletion requests ([Data Retention](/docs/building-blocks/data-retention#erasure-requests)); keep snapshots keyed by pseudonymous IDs so they're cheap to filter, and record which snapshot each model was trained on so you know which models a deletion touches.
 
 ## Features and Training/Serving Skew
 
@@ -73,7 +73,7 @@ My default is batch. A score table is easy to test, cheap to run, simple to roll
 
 ## Shipping Models Into Products Safely
 
-A model's output is an input to a decision, not the decision. The pattern in [AI Agents](/docs/architecture/ai-agents#decide-in-code) applies to every model: code owns the rule ("decline above 0.92, review between 0.7 and 0.92"), the model supplies a number, and the threshold lives where it can be changed and audited ([Rules as Data](/docs/architecture/rules-as-data)).
+A model's output is an input to a decision, not the decision. The pattern in [AI Agents](/docs/building-blocks/ai-agents#decide-in-code) applies to every model: code owns the rule ("decline above 0.92, review between 0.7 and 0.92"), the model supplies a number, and the threshold lives where it can be changed and audited ([Rules as Data](/docs/building-blocks/rules-as-data)).
 
 - **Shadow first.** The new model scores live traffic and its output is logged but not used. Compare it to the champion on real inputs before it decides anything.
 - **Behind a flag, then a ramp.** Release to a share of traffic with a [feature flag](/docs/delivery/feature-flags), and measure the business outcome (approval rate, false declines, retention), not just model metrics.

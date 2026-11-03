@@ -145,7 +145,7 @@ GROUP BY d.id, r.required_approvals, r.wait_timer, d.created_at;
 ## Auditing
 
 - **Every approval, rejection, bypass and timeout,** with actor, requester, comment and the rule version in force, as the evidence of separation of duties.
-- **Every change to protection rules,** as staff or customer actions with [typed actors](/docs/architecture/audit-trails#typed-actors), because weakening a gate before a deploy is the move an auditor looks for.
+- **Every change to protection rules,** as staff or customer actions with [typed actors](/docs/building-blocks/audit-trails#typed-actors), because weakening a gate before a deploy is the move an auditor looks for.
 - **Flag changes in production,** with the same actor and reason fields as deployments, since a flag is a release.
 - **Automated verdicts,** with the metrics and thresholds the analysis used, so "why did this canary promote" has an answer.
 

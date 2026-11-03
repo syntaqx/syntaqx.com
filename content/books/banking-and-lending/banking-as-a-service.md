@@ -198,7 +198,7 @@ Design notes:
 
 - **A move is two programs.** The program at the new bank is a new `programs` row with its own institution, agreement and products, because the old program's records must stay producible on their own for the old bank's examiners; `program_migrations` links them.
 - **Account migrations reuse the conversion tables.** The receiving bank's `conversions`, `conversion_crosswalk` and `conversion_controls` from [Core Modernization & Conversions](/books/banking-and-lending/core-modernization#how-to-build-it) carry the old-to-new account mapping and control totals; `account_migrations` adds what is specific to a sponsor change: notice, card reissue, direct deposit switching and the end of forwarding.
-- **Obligations point at procedures by version.** When the bank changes its CIP procedure, every program's `cip` obligation points at the new version from a date, and the evidence before that date is judged against the old one ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Obligations point at procedures by version.** When the bank changes its CIP procedure, every program's `cip` obligation points at the new version from a date, and the evidence before that date is judged against the old one ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Tenancy is institution, then program.** A middleware or a bank-direct platform serves many banks or programs, and each bank's records must be producible alone ([Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies)).
 
 ## Auditing

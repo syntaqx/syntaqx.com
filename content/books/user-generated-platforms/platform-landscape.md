@@ -155,13 +155,13 @@ Almost every platform rents the commodity and regulated layers and builds the pr
 | Chat and real-time | Build when chat is the product; rent otherwise | Discord built its stack; a marketplace's messaging can run on a managed service |
 | Federation | Adopt the protocol, build the policy | ActivityPub and the AT Protocol are open; which servers and labelers you trust is yours |
 
-My rule for the rented layers: keep the record of what the vendor said in your own tables. A classifier score, a hash match, an identity check result or an insurer's claim decision is evidence in a case, an appeal or a lawsuit, and it has to survive the vendor changing its model, its API or its owner ([Automated Risk Decisions](/docs/architecture/risk-scoring#the-decision-record)).
+My rule for the rented layers: keep the record of what the vendor said in your own tables. A classifier score, a hash match, an identity check result or an insurer's claim decision is evidence in a case, an appeal or a lawsuit, and it has to survive the vendor changing its model, its API or its owner ([Automated Risk Decisions](/docs/building-blocks/risk-scoring#the-decision-record)).
 
 ## Auditing
 
 Vendor choices create records that matter later:
 
-- **Which vendor decided, with which version.** Every automated moderation decision, identity check and risk score records the vendor, model version, threshold and raw result ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Which vendor decided, with which version.** Every automated moderation decision, identity check and risk score records the vendor, model version, threshold and raw result ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Which lists matched.** A hash match records the list (NCMEC, IWF, GIFCT, a vendor's database, the platform's own), the list version and the distance, because reports to NCMEC and appeals depend on it.
 - **What left the platform.** Which vendor received which users' content or identity documents, under which contract, and when it was deleted there, the question a breach or a regulator asks first.
 - **Coverage in force.** Which insurer and policy covered which trip, so a claim filed months later goes to the right carrier.

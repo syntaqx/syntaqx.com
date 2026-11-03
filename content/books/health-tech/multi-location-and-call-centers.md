@@ -93,7 +93,7 @@ Group permissions are grants at a node of the hierarchy covering its subtree ([A
 
 Rules that matter more in health care than elsewhere:
 
-- **Patient-level access is logged and reviewable.** Every view of a patient record by a user outside that patient's location is an access event, and access reports by user are what a privacy officer reviews ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Patient-level access is logged and reviewable.** Every view of a patient record by a user outside that patient's location is an access event, and access reports by user are what a privacy officer reviews ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Aggregate isn't a backdoor.** A regional dashboard shows counts and dollars; drilling into a list of patients is a patient-level grant, checked and logged like any other.
 - **Grants expire.** A floating hygienist's access to an office follows their schedule there, and a departed employee's grants end at termination in every location at once.
 
@@ -254,7 +254,7 @@ SELECT EXISTS (
 Design notes:
 
 - **Two parents, stamped on facts.** The practice entity is `organization_id` on every row already; operational reports read `location_group_members` as of the fact's date, so an office that moved regions reports under the region it was in.
-- **Links, not merges, across instances.** The same person in two PMS instances is two `patients` rows, often in different practice entities, joined by a `cross_location_patient_links` row. That is not a duplicate inside one chart, which [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity#merges-overlays-and-unmerges) handles with its own `patient_links` and merges; each instance remains the system of record for its office, and an unlink is reversible ([Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible)). Showing a linked record from another practice entity is a disclosure, so the view checks the basis and, for a HIPAA covered entity, records it where the accounting rules require.
+- **Links, not merges, across instances.** The same person in two PMS instances is two `patients` rows, often in different practice entities, joined by a `cross_location_patient_links` row. That is not a duplicate inside one chart, which [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity#merges-overlays-and-unmerges) handles with its own `patient_links` and merges; each instance remains the system of record for its office, and an unlink is reversible ([Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible)). Showing a linked record from another practice entity is a disclosure, so the view checks the basis and, for a HIPAA covered entity, records it where the accounting rules require.
 - **The number is the routing key.** The `phone_numbers` row decides greeting, first answer and booking scope; the call and text routing services read it, and the call's record stores the number dialed.
 - **Mappings are reviewed data.** A new payment type in an acquired office's PMS lands as unmapped and shows up in a review queue before it can distort group reports.
 

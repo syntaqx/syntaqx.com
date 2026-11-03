@@ -78,7 +78,7 @@ The playbook's rules hold here: back up by policy, keep copies in a separate fai
 
 - **A local copy is a convenience, not a backup.** `/backup` on the same server protects against a customer's mistake, not the server's loss. The offsite destination is the backup.
 - **"Offsite" has to mean another building.** S3 in the same region (WP Engine's choice) is a different failure domain from the server; a second disk in the same rack is not. The question a contract will be read against is where the copies physically are.
-- **Retention is a tradeoff with erasure.** A customer who closes an account or asks for deletion is still in the backups until they age out, so the retention period is also the deletion delay, and should be stated as one ([Backups](/docs/architecture/data-retention#backups)).
+- **Retention is a tradeoff with erasure.** A customer who closes an account or asks for deletion is still in the backups until they age out, so the retention period is also the deletion delay, and should be stated as one ([Backups](/docs/building-blocks/data-retention#backups)).
 - **Backups are a cost line per account.** Thirty daily copies of a 20 GB account with a few percent daily change are a few tens of gigabytes as hard-linked incrementals, or 600 GB as thirty full copies before compression. The type and retention chosen in Backup Configuration are a pricing decision.
 
 ## Restores
@@ -285,7 +285,7 @@ Notes on the sketch:
 - **Every copy and where it is.** Time, size, checksum, storage region and facility per backup, kept beyond the copy's own life, because a dispute about a lost backup asks where it was.
 - **Every skip and every failure,** with the reason and the notice sent, so "you never told me my account wasn't backed up" can be answered.
 - **Every restore,** who requested it, what was overwritten, the pre-restore backup and whether it was verified; drills recorded separately from requests.
-- **Every deletion of a backup,** by retention, by request or by account closure, since backup expiry is also the end of a deletion request ([Erasure Requests](/docs/architecture/data-retention#erasure-requests)).
+- **Every deletion of a backup,** by retention, by request or by account closure, since backup expiry is also the end of a deletion request ([Erasure Requests](/docs/building-blocks/data-retention#erasure-requests)).
 - **Every migration's cutover times** and what was not carried, so a post-migration problem (lost two-factor settings, a missing mail user) can be traced.
 
 ## What This Means for the System You Build

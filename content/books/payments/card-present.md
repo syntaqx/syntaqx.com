@@ -108,7 +108,7 @@ Chip and PIN make card-present payments the safest transactions in the system, a
 
 ## Auditing
 
-Card-present payments are audited by acquirers after a counterfeit dispute, by PCI assessors for anything in the card data path, and by the merchant when a payment taken offline never arrives. The general design is in [Audit Trails](/docs/architecture/audit-trails); keep:
+Card-present payments are audited by acquirers after a counterfeit dispute, by PCI assessors for anything in the card data path, and by the merchant when a payment taken offline never arrives. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); keep:
 
 - **Entry mode, CVM and device on every payment:** chip, contactless, stripe, fallback or keyed, the verification method, and the serial number and software version of the terminal or phone that took it. Providers have started exposing this: Payabli's October 2026 release added the entry mode, the EMV authorization data and the device's serial number to transaction records and notifications, and device lists showing whether each terminal is online, busy or offline.
 - **The fleet's history, per device:** where it was deployed, when its keys were injected and by whom, every firmware and payment application version it ran and when, and when it was retired. PCI DSS Requirement 9.5 has merchants keep a current list of the devices that read cards and inspect them for tampering or substitution, and on a platform that list is your data before it's theirs.

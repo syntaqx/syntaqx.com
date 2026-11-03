@@ -180,7 +180,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Where every VM ran.** Host history with the reason for each move, kept as long as abuse and law enforcement requests can reach back, because a host-level incident has to resolve to every customer on it.
-- **How every surplus charge was computed.** The ledger rows, the window and the baseline that produced each surplus line, because the charge is a computation the customer can't see and will dispute ([Audit Trails](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **How every surplus charge was computed.** The ledger rows, the window and the baseline that produced each surplus line, because the charge is a computation the customer can't see and will dispute ([Audit Trails](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Overcommit by host.** Sold vCPUs and memory against physical capacity per host over time, which answers whether a dedicated-CPU SKU was ever placed on an overcommitted host.
 - **Hypervisor and license changes.** Which hosts ran which hypervisor version and which license, because a vendor's license audit counts sockets and cores on dates.
 

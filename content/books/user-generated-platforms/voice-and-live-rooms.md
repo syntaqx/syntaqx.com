@@ -184,14 +184,14 @@ Notes on the sketch:
 - **Sessions survive reassignment as new rows.** A failover ends one session with `end_reason = 'reassigned'` and starts another for the same channel, so "who was in the room at 21:04?" spans both.
 - **Server mute and deafen are state on the participant row,** set by moderator actions that are also logged as moderator actions; a timeout or ban from `penalties` ends the participation with `timed_out` or `kicked`.
 - **Recording needs consent rows before audio.** The capture path checks that every speaking participant has an `accepted` consent for the current notice; a participant who declined is forced listen-only. Apps that capture use the same path.
-- **Recordings are media assets** with a purpose and a purge date; moderation buffers expire quickly unless attached to a case, and evidence follows `legal_holds` ([Data Retention & Deletion](/docs/architecture/data-retention#retention-windows)).
+- **Recordings are media assets** with a purpose and a purge date; moderation buffers expire quickly unless attached to a case, and evidence follows `legal_holds` ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-windows)).
 - **Events:** `room.started`, `room.ended`, `room.participant_joined`, `room.participant_left`, `room.speaker_added`, `room.recording_started`, `room.recording_stopped` and `media_server.out_of_rotation` go to the gateway (voice state fan-out), moderation, analytics and capacity planning.
 
 ## Auditing
 
 - **Who was in which room, when, as what,** for harassment and child-safety investigations, kept for the safety retention window.
 - **Every moderator action in a room** (mute, deafen, move, disconnect, speaker changes) with actor, rank and target.
-- **Every recording, transcript and summary,** with initiator (member, moderator or app), purpose, consents collected and purge date, and every listen to a moderation recording logged ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every recording, transcript and summary,** with initiator (member, moderator or app), purpose, consents collected and purge date, and every listen to a moderation recording logged ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Encryption state per session,** so what the platform could have seen at the time of a report is on record.
 - **Server failovers and reassignments,** for capacity planning and incident review.
 

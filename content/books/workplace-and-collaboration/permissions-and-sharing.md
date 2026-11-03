@@ -166,7 +166,7 @@ Notes on the sketch:
 - **Every grant and removal,** with the actor, the principal, the role, and the effective audience before and after.
 - **Public link life cycle:** created, used (with counts and coarse origin), rotated, expired and disabled.
 - **Moves and restriction changes** that widen access, flagged.
-- **Access to restricted content by admins or support,** logged as access ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access to restricted content by admins or support,** logged as access ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Index freshness:** the lag between an ACL revision and its arrival in search, kept as an operational metric and alarmed.
 
 ## What This Means for the System You Build

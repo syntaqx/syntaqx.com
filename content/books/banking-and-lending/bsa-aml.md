@@ -151,7 +151,7 @@ For systems this is the hardest requirement in the chapter:
 - **SAR data lives in a restricted store** with its own access list, not in the case table customer support reads. The `cases` row for an AML investigation is visible to the BSA team; its SAR filing records are visible to fewer people still.
 - **Downstream effects carry no reason.** When a SAR leads to restricting or closing an account, the customer-facing reason is a neutral code, and the support tool shows "restricted under policy," never "SAR filed." [Closing Accounts](/books/banking-and-lending/dormancy-and-escheat#closing-accounts) relies on this.
 - **Analytics and logs inherit the restriction.** A warehouse table with a `sar_filed` flag joined to customer data is a disclosure risk; aggregate reporting to the board uses counts.
-- **Fintech staff are agents with need-to-know,** under the bank's procedures, and the program's systems log every access ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Fintech staff are agents with need-to-know,** under the bank's procedures, and the program's systems log every access ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## Currency Transaction Reports and Structuring
 
@@ -382,7 +382,7 @@ BSA/AML is examined at every bank on every cycle, and independent testing covers
 - **314(a):** every request, the search scope and time, and the response.
 - **Access to SAR data,** every read, by whom.
 
-Five years is the BSA's general retention (31 CFR 1010.430), retrievable within a reasonable time. Records for an exited program stay with the bank, which is why a program's monitoring data is the bank's. The record mechanics are in [Audit Trails](/docs/architecture/audit-trails), and model validation is [Model Risk Management](/books/banking-and-lending/model-risk)'s subject.
+Five years is the BSA's general retention (31 CFR 1010.430), retrievable within a reasonable time. Records for an exited program stay with the bank, which is why a program's monitoring data is the bank's. The record mechanics are in [Audit Trails](/docs/building-blocks/audit-trails), and model validation is [Model Risk Management](/books/banking-and-lending/model-risk)'s subject.
 
 ## What This Means for the System You Build
 

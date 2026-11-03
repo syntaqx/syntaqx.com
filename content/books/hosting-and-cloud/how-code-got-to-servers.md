@@ -159,7 +159,7 @@ ORDER BY lower(s.session_during);
 - **Every credential and its scope:** who it was issued to, which directory it reaches, the protocol and authentication method, and when it was revoked and why, so "who could write here on that date" has an answer.
 - **Every session that wrote files,** with source address and counts, retained as long as abuse and incident investigations reach back; this is the evidence that separates a customer's own upload from a stolen password.
 - **Revocations after a malware cleanup,** linked to the abuse case, because the fix for injected files includes rotating every login that could have written them ([Abuse Desks for Hosts & Registrars](/books/user-generated-platforms/abuse-desks#how-to-build-it)).
-- **Changes to confinement settings** (chroot paths, shell access, read-only flags), as staff actions with [typed actors](/docs/architecture/audit-trails#typed-actors).
+- **Changes to confinement settings** (chroot paths, shell access, read-only flags), as staff actions with [typed actors](/docs/building-blocks/audit-trails#typed-actors).
 
 ## What This Means for the System You Build
 

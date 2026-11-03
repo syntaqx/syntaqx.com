@@ -68,7 +68,7 @@ A pickup order's lifecycle adds steps a shipped order doesn't have. Shopify's do
 6. **Handed over** after checking the code or an ID, which is the moment of delivery for the order and, for age-restricted goods, the moment the age check happens ([Alcohol, Tobacco & Age-Restricted Goods](/books/commerce/age-restricted-goods#age-verification-at-checkout-and-at-delivery) covers the rules).
 7. **Picked up,** or **abandoned** after a hold period, when the order is cancelled, refunded and its stock returned to the shelf.
 
-**Abandonment is a policy with a clock.** A store holds a pickup order for a set number of days, reminds the customer, then cancels and restocks. The hold period is a rule per merchant or per category (shorter for groceries), and the reminder and cancellation are scheduled jobs off a stored deadline ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). Until it's restocked, the staged unit is committed stock nobody can sell.
+**Abandonment is a policy with a clock.** A store holds a pickup order for a set number of days, reminds the customer, then cancels and restocks. The hold period is a rule per merchant or per category (shorter for groceries), and the reminder and cancellation are scheduled jobs off a stored deadline ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). Until it's restocked, the staged unit is committed stock nobody can sell.
 
 **When to capture payment.** A pickup order is usually authorized at checkout and captured at handover or when it's marked ready, inside the authorization's lifetime ([Authorizations Expire](/docs/money/payment-states#authorizations-expire)); [Taking Payment in Commerce](/books/commerce/taking-payment#capture-policies) covers the choice. A pickup that waits a week can outlive its authorization, which is one more reason to keep hold periods short.
 
@@ -79,7 +79,7 @@ A pickup order's lifecycle adds steps a shipped order doesn't have. Shopify's do
 Curbside is pickup where the handoff moves to the car. What it adds:
 
 - **Check-in.** The customer tells the store they've arrived, through the app, a link in the ready notice, or a text, with a parking spot number or a description of the car. Target's Drive Up is the best-known version; I couldn't open its help page to confirm the current check-in steps, so the details are left general here.
-- **Arrival prediction.** An app with location permission can tell the store the customer is on the way, so the order is at the door when they park; the playbook's [Location Tracking](/docs/architecture/location-tracking) covers collecting location with consent.
+- **Arrival prediction.** An app with location permission can tell the store the customer is on the way, so the order is at the door when they park; the playbook's [Location Tracking](/docs/building-blocks/location-tracking) covers collecting location with consent.
 - **A wait-time metric.** Time from check-in to handover is the number customers notice and stores manage.
 - **The handover record.** Who brought it out, when, and any ID check, just as for counter pickup.
 
@@ -119,7 +119,7 @@ Online availability for a store is therefore a computation: on hand less committ
 
 A store's fulfillment capacity is people, not shelves. Each store has a number of orders (or units) it can pick per hour by day of week, a pickup slot schedule if it offers timed pickup, and a cutoff after which an order rolls to the next day. When capacity is full, the store stops being offered for same-day pickup, the order is sourced elsewhere, or the promised time moves.
 
-Pickup slots are a reservation problem: a customer holds a slot during checkout, the hold expires if they don't finish, and a slot can't be oversold. The playbook's [Reservations & Holds](/docs/architecture/reservations-and-holds) covers the mechanics, including [Counters for Pooled Inventory](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory), which is what a slot with a capacity of 20 orders is.
+Pickup slots are a reservation problem: a customer holds a slot during checkout, the hold expires if they don't finish, and a slot can't be oversold. The playbook's [Reservations & Holds](/docs/building-blocks/reservations-and-holds) covers the mechanics, including [Counters for Pooled Inventory](/docs/building-blocks/reservations-and-holds#counters-for-pooled-inventory), which is what a slot with a capacity of 20 orders is.
 
 ## Unified Commerce
 
@@ -210,8 +210,8 @@ WHERE il.location_id = $1;
 Design notes:
 
 - **Pickup is a fulfillment, with its own clock.** Ready, checked in, handed over and the hold deadline are columns on the fulfillment, so the store's queue, the customer's notifications and the abandonment job all read one record. Each change is also a row in `fulfillment_events` from [Orders, Dispatch & Batching](/books/commerce/orders-dispatch-and-batching#how-to-build-it), with who made it.
-- **Capacity is data with overrides.** A weekly template plus dated overrides (Black Friday, a short-staffed Sunday) is what sourcing reads; the exclusion constraint stops two overrides from covering the same hour ([Exclusion Constraints for Time](/docs/architecture/reservations-and-holds#exclusion-constraints-for-time)).
-- **Slots are counters.** Reserve with a conditional update (`reserved = reserved + 1 WHERE reserved < capacity`), hold it during checkout with an expiry, and release on abandonment ([Releasing on Abandonment](/docs/architecture/reservations-and-holds#releasing-on-abandonment)).
+- **Capacity is data with overrides.** A weekly template plus dated overrides (Black Friday, a short-staffed Sunday) is what sourcing reads; the exclusion constraint stops two overrides from covering the same hour ([Exclusion Constraints for Time](/docs/building-blocks/reservations-and-holds#exclusion-constraints-for-time)).
+- **Slots are counters.** Reserve with a conditional update (`reserved = reserved + 1 WHERE reserved < capacity`), hold it during checkout with an expiry, and release on abandonment ([Releasing on Abandonment](/docs/building-blocks/reservations-and-holds#releasing-on-abandonment)).
 - **A short pick corrects the count.** Recording `found` should post an inventory adjustment through the [Inventory](/books/commerce/inventory#movements-not-overwrites) chapter's movements and can raise that item's store buffer; the record is the evidence a count was wrong.
 - **Endless aisle keeps the selling store.** The order's `location_id` is the store that sold it; the fulfillment's `location_id` is where it ships from; `origin_channel_location_id` keeps that relationship explicit for store credit and commissions.
 - **Times are local.** Capacity hours, cutoffs and slot windows are in the store's time zone, from `locations.time_zone` ([Business Dates, Business Days and Holidays](/docs/fundamentals/time#business-dates-business-days-and-holidays)).

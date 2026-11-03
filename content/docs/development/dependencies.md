@@ -1,10 +1,10 @@
 +++
 title = "Dependencies & Upgrades"
 description = "Lockfiles, SemVer, small continuous upgrades, an LTS runtime policy, vetting new dependencies, and supply-chain safeguards like provenance and pinned CI."
-category = "Engineering Practice"
+category = "Development"
 order = 1024
 tags = ["dependencies", "security", "supply-chain", "process", "upgrades", "maintenance"]
-aliases = ["dependencies", "delivery/staying-current"]
+aliases = ["engineering/dependencies", "dependencies", "delivery/staying-current"]
 +++
 
 Every dependency is code you ship without writing it. That's usually a great trade, and it stays one only if you know exactly what you pulled in, can trust where it came from, and keep it current. Software rots by standing still: the runtime reaches end of life, the framework moves two majors ahead, a security fix ships only for versions you can't reach, and one day "upgrade" means a quarter-long project nobody wants to fund. The cure is boring: pin everything, and upgrade a little, all the time.
@@ -19,7 +19,7 @@ A range like `^4.2.0` means "whatever 4.x is newest today", so without a lockfil
 
 ## Semantic Versioning
 
-[SemVer](https://semver.org/) is a library author's promise about `MAJOR.MINOR.PATCH`: a breaking change bumps major, new backward-compatible functionality bumps minor, a backward-compatible fix bumps patch. Commit types map straight onto it (`fix`, `feat`, and `!` for breaking; see [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews)). Public HTTP APIs version by date instead, per [Versioning & Deprecation](/docs/api-design/versioning).
+[SemVer](https://semver.org/) is a library author's promise about `MAJOR.MINOR.PATCH`: a breaking change bumps major, new backward-compatible functionality bumps minor, a backward-compatible fix bumps patch. Commit types map straight onto it (`fix`, `feat`, and `!` for breaking; see [Commits, PRs & Code Review](/docs/development/commits-and-reviews)). Public HTTP APIs version by date instead, per [Versioning & Deprecation](/docs/api-design/versioning).
 
 The promise is what makes automation safe: patch and minor updates flow through with tests as the gate, majors get a human. It's only a promise, though; plenty of "minor" releases break things, which is why the tests gate everything, not the version number.
 
@@ -35,7 +35,7 @@ The cost of an upgrade grows much faster than the distance you're behind. One ma
 - **A minimum release age** of a few days before adopting a new version. Compromised releases are usually caught and pulled within days, so letting one sit means someone else finds the malware first.
 - **Make deprecations loud.** Today's deprecation warning is next major's breaking change: surface warnings in CI and logs, then ratchet them into errors, fixing the existing ones and failing the build on new ones.
 
-Upkeep that isn't scheduled doesn't happen, so reserve a fixed share of every sprint for it and protect it when deadlines press (see [Tech Debt](/docs/engineering/tech-debt)). [Containers](/docs/delivery/containers) make it cheaper: with every deploy rebuilt from a pinned base image, a runtime upgrade is a one-line change and a normal deploy.
+Upkeep that isn't scheduled doesn't happen, so reserve a fixed share of every sprint for it and protect it when deadlines press (see [Tech Debt](/docs/development/tech-debt)). [Containers](/docs/delivery/containers) make it cheaper: with every deploy rebuilt from a pinned base image, a runtime upgrade is a one-line change and a normal deploy.
 
 ## Runtime Policy
 

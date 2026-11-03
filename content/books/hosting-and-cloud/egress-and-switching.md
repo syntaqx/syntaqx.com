@@ -149,7 +149,7 @@ GROUP BY u.account_id;
 
 Notes on the sketch:
 
-- **The clocks are the contract.** Notice, transitional and retrieval periods are computed at receipt from the regime and stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)); the two-month notice cap is a constraint.
+- **The clocks are the contract.** Notice, transitional and retrieval periods are computed at receipt from the regime and stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)); the two-month notice cap is a constraint.
 - **Termination waits for retrieval.** The account's deletion clock ([Account Standing](/books/hosting-and-cloud/accounts-and-resellers#account-standing)) can't start before `retrieval_ends_at`.
 - **Destination is a dimension.** Without the destination's ASN and class on egress events, neither a Data Act switch nor an at-cost program can be rated correctly.
 - **From January 12, 2027, EU switching egress rates at zero.** The rule is a waiver created automatically for every `eu_data_act` request, not a support ticket.

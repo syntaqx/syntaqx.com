@@ -225,7 +225,7 @@ On the recipient side, `data_authorizations` is the 1033 authorization and also 
 
 Open banking is examined as information security (GLBA), as third-party risk on the bank's side, as consumer protection (UDAP, Regulation E for payments from linked accounts) and, where data feeds credit decisions, as FCRA. Under the 1033 rule as written, both sides keep records for three years. Keep:
 
-- **Every authorization disclosure as signed,** its categories, purpose, duration and each reauthorization and revocation ([What a Record Holds](/docs/architecture/audit-trails#what-a-record-holds)).
+- **Every authorization disclosure as signed,** its categories, purpose, duration and each reauthorization and revocation ([What a Record Holds](/docs/building-blocks/audit-trails#what-a-record-holds)).
 - **Every pull, with its purpose,** tied to the authorization that allowed it.
 - **Deletion on revocation or expiry,** with what was deleted and when.
 - **Third-party decisions at the bank,** approvals and denials with reasons, showing consistent application.

@@ -107,7 +107,7 @@ The parts that are hard engineering, not workflow configuration:
 
 - **Redlining across organizations.** Negotiation happens in Word files or in a shared online editor, with each side's changes attributed and the agreed version locked before signature. The locked version's hash is what gets sent for signature, so "the version we agreed" and "the version signed" are provably the same.
 - **Metadata extraction.** Renewal dates, notice periods and auto-renewal clauses drive reminders; extracting them (by humans, rules or AI) must record the source clause and a confidence, and a human confirms anything that triggers money or a deadline. Commerce's [Auto-Renewal & Cancellation Law](/books/commerce/auto-renewal-law) shows what a missed renewal notice costs on the consumer side.
-- **Deadlines as computed, stored data.** "60 days before the renewal date" is computed once from the extracted terms, stored with the rule that produced it, and recomputed when an amendment changes the terms ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Deadlines as computed, stored data.** "60 days before the renewal date" is computed once from the extracted terms, stored with the rule that produced it, and recomputed when an amendment changes the terms ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Obligations owned by people.** An obligation (deliver a report quarterly, maintain insurance) needs an owner who's a member, reassigned at offboarding like any other owned item.
 
 ## Remote Online Notarization

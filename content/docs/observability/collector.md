@@ -239,7 +239,7 @@ exporters:
 ./ocb --config builder-config.yaml
 ```
 
-My default is a minimal build per role (one for agents, one for gateways), rebuilt in CI on each Collector release like any other dependency ([Dependencies & Upgrades](/docs/engineering/dependencies)), with every component version pinned to the same release.
+My default is a minimal build per role (one for agents, one for gateways), rebuilt in CI on each Collector release like any other dependency ([Dependencies & Upgrades](/docs/development/dependencies)), with every component version pinned to the same release.
 
 Vendors ship their own distributions, each documented as a Collector with their components and support added:
 

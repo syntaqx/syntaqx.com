@@ -228,15 +228,15 @@ WHERE adjudication_id = $1;               -- $1 the superseded adjudication, $2 
 Design notes:
 
 - **Adjudication is a version, never an edit.** A reprocessed claim gets a new `adjudications` row with its reason; the 835 to the provider carries the reversal and the new result, and the practice's remittance posting sees both.
-- **Every line records what decided it:** the benefit row, the contract, the edits and the engine version, so an appeal or a regulator can reproduce the decision ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
-- **Clocks are computed and stored.** `utilization_reviews.due_at` comes from the strictest applicable rule (CMS-0057-F, a state law for insured plans, ERISA's claims regulation) with the rule recorded, and the annual public metrics are a query over these rows ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
-- **Automated decisions are attributed.** An auto-adjudicated denial or an AI-assisted review records the model or rule version and the human, if any, who confirmed it ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every line records what decided it:** the benefit row, the contract, the edits and the engine version, so an appeal or a regulator can reproduce the decision ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
+- **Clocks are computed and stored.** `utilization_reviews.due_at` comes from the strictest applicable rule (CMS-0057-F, a state law for insured plans, ERISA's claims regulation) with the rule recorded, and the annual public metrics are a query over these rows ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
+- **Automated decisions are attributed.** An auto-adjudicated denial or an AI-assisted review records the model or rule version and the human, if any, who confirmed it ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **APIs read the same records.** The Patient Access, Provider Access and Payer-to-Payer APIs are FHIR views over `adjudications`, `utilization_reviews` and clinical data, with attribution and opt-in or opt-out recorded as `consents` rows.
 
 ## Auditing
 
 - **Decision reproducibility:** each adjudication with its inputs, configuration versions and actor; each utilization review with criteria, records reviewed, reviewer credentials, timestamps against its clock, and the notice sent.
-- **Access to member data:** reads by staff, vendors and API clients, with the client application and the member's consent or opt-out state at the time ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access to member data:** reads by staff, vendors and API clients, with the client application and the member's consent or opt-out state at the time ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Enrollment history** with each file and line that changed it, because retroactive terminations drive recoupments and disputes.
 - **Published files:** each TiC file version with its generation date and inputs, and each prior authorization metrics posting.
 

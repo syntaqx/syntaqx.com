@@ -56,7 +56,7 @@ An entitlement's state is therefore derived, never stored: **live** while `revok
 
 Every item system separates what an item is from a particular copy of it. Steam calls the first kind item definitions, which "describe the possible set of items in your game"; every backend vendor has the same split under some name.
 
-- An **item definition** is catalog data, a row in the core `items` table: the skin's name, its kind, whether copies are unique, whether it can be traded. The numbers designers tune around it (price, rarity, stats, which drop tables can produce it) are versioned, effective-dated content keyed by the item ([Rules as Data](/docs/architecture/rules-as-data)).
+- An **item definition** is catalog data, a row in the core `items` table: the skin's name, its kind, whether copies are unique, whether it can be traded. The numbers designers tune around it (price, rarity, stats, which drop tables can produce it) are versioned, effective-dated content keyed by the item ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - An **item instance** is one copy held by one player profile: this sword, with its rolled stats, its durability, who crafted it, where it came from, and the date it becomes tradable.
 
 The split decides what is cheap to change. A balance patch that changes every sword's damage changes one definition. A bug that rolled bad stats on ten thousand swords is ten thousand instance corrections, each with an audit row. Keep anything you might rebalance on the definition, and put on the instance only what genuinely differs between copies.
@@ -242,11 +242,11 @@ What a clawback must never do is lock the account for having disputed ([The FTC'
 
 ## Auditing
 
-Every grant, revocation, spend, craft and trade is already a ledger or entitlement row with an actor, a source and a reason, which covers most of an audit trail by construction. What's left is the human side ([Audit Trails](/docs/architecture/audit-trails)):
+Every grant, revocation, spend, craft and trade is already a ledger or entitlement row with an actor, a source and a reason, which covers most of an audit trail by construction. What's left is the human side ([Audit Trails](/docs/building-blocks/audit-trails)):
 
 - **Support grants** carry the agent, the ticket, the reason and the approver, and agents have limits (per grant, per day, per account) above which a second person approves ([Support Access](/docs/security/support-access); [Player Support](/books/gaming/player-support)).
 - **Live-ops grants** (compensation after an outage, an event reward to everyone who logged in) run as campaigns: a reviewed definition, a dry run that counts affected accounts and total issuance, and grants keyed by campaign and account so a rerun grants nothing twice. Compensation at scale happens; Square Enix gave players seven days of compensation after Final Fantasy XIV's December 2021 login congestion.
-- **Corrections** are reversing transactions with a reason, never edits ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Corrections** are reversing transactions with a reason, never edits ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Reconciliation** runs daily: every platform report against your grants (Steam's daily `GetReport()`, Google's voided purchases), every cached balance against the sum of its entries, every ledger transaction's entries against zero. A break becomes a tracked record with an owner, as in [Payments](/docs/money/payment-states#reconciliation).
 
 ## What This Means for the System You Build

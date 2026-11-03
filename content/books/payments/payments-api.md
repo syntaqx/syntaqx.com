@@ -194,13 +194,13 @@ Write the event row in the same transaction as the state change it reports, and 
 
 ## Auditing
 
-API records are evidence when a merchant says "we never sent that refund", when a key leaks, and when a payment's history has to be explained to an issuer or a regulator. The general design is in [Audit Trails](/docs/architecture/audit-trails); for the API, make sure the record shows:
+API records are evidence when a merchant says "we never sent that refund", when a key leaks, and when a payment's history has to be explained to an issuer or a regulator. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for the API, make sure the record shows:
 
 - **Which key made every write,** by key ID and prefix, never the secret, with the request ID and source IP, so a leaked key's actions can be listed and reversed.
-- **Key lifecycle:** creation, scope changes, rotation and revocation, with the person who did each ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Key lifecycle:** creation, scope changes, rotation and revocation, with the person who did each ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 - **Requests made on a merchant's behalf,** with the platform and the merchant account both recorded, since either can be asked.
 - **Every webhook delivery attempt** and its response code, so "we never got the event" has an answer.
-- **Who in support viewed or acted on a merchant's account** ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who in support viewed or acted on a merchant's account** ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

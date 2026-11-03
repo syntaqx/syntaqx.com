@@ -244,7 +244,7 @@ Notes on the sketch:
 - **Branches expire and say who made them.** Agents and CI create most branches; `created_by` and `expires_at` let the provider clean them up and bill the right project.
 - **Consistency is a column.** Support, documentation and the console can tell a customer what a reader may see, and a migration between stores can be checked against it.
 - **Caps are data, not code.** The 10 GB ceiling and the per-key write limit are columns, so an error message can quote them and a quota request can be refused with the real number.
-- **Suspension is a state.** A suspended serverless compute is `resources.state = 'stopped'` with a `resource.suspended` event; a free project paused for inactivity is the same state with a deletion clock from the [Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension#suspension-and-deletion-clocks) chapter, and its notice goes through [notifications](/docs/architecture/notifications).
+- **Suspension is a state.** A suspended serverless compute is `resources.state = 'stopped'` with a `resource.suspended` event; a free project paused for inactivity is the same state with a deletion clock from the [Invoices, Dunning & Suspension](/books/hosting-and-cloud/invoices-dunning-and-suspension#suspension-and-deletion-clocks) chapter, and its notice goes through [notifications](/docs/building-blocks/notifications).
 - **Events:** `database.branch_created`, `database.branch_expired`, `database.suspended`, `database.resumed`, `edge_store.limit_reached` and `edge_store.cap_reached` go through the [outbox](/docs/architecture/events#the-transactional-outbox).
 
 ## Auditing
@@ -252,7 +252,7 @@ Notes on the sketch:
 - **Who created each database and branch, and from what.** Branches carry production data unless they are schema-only or anonymized; the record of who cut a branch from which point, with which data mode, is what an access review or a breach investigation asks for.
 - **Every hard-fail and pause.** When a free limit stopped a customer's queries, or a project was paused for inactivity, with the notice sent and the time it resumed, because "my site went down" tickets start there.
 - **Row counts behind the bill.** Rows read and written per database per day, reproducible from events, since row-metered bills are the hardest for customers to predict and the most often disputed.
-- **Sunset notices and exports.** For a product being retired, every notice sent and every export delivered, per account ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Sunset notices and exports.** For a product being retired, every notice sent and every export delivered, per account ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ## What This Means for the System You Build
 

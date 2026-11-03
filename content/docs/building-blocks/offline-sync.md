@@ -1,8 +1,9 @@
 +++
 title = "Offline-First Sync"
 description = "Apps that work without a network: a scoped local store, commands in a device outbox, attachments apart, two clocks, and conflict rules decided per command type."
-category = "Architecture"
-order = 418
+category = "Building Blocks"
+aliases = ["architecture/offline-sync"]
+order = 459
 tags = ["architecture", "offline", "sync", "mobile", "conflicts"]
 +++
 
@@ -61,7 +62,7 @@ Let the user see the queue: "3 changes waiting to sync," and which failed. An in
 
 Photos, signatures, scanned documents and voice notes are large and slow, and they shouldn't hold up a two-hundred-byte status change. Upload them on their own lane:
 
-- **Resumable, keyed by content hash,** so an interrupted upload continues instead of restarting, and the same photo sent twice is stored once ([Resumable Uploads](/docs/architecture/file-uploads#resumable-uploads)).
+- **Resumable, keyed by content hash,** so an interrupted upload continues instead of restarting, and the same photo sent twice is stored once ([Resumable Uploads](/docs/building-blocks/file-uploads#resumable-uploads)).
 - **Commands reference attachments by ID.** "Inspection completed, photos A, B and C" syncs immediately; the server records the inspection and marks the photos as pending until they arrive.
 - **Upload on the platform's background transfer service** where one exists. On iOS, Apple's background `URLSession` lets transfers continue while the app is suspended, relaunching the app when they finish, but only uploads from a file survive the app exiting, so write the attachment to disk first.
 

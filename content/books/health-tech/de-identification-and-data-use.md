@@ -84,7 +84,7 @@ Privacy-preserving record linkage lets two data holders discover that they have 
 What this means for a platform:
 
 - **Keys are the crown jewels.** The keys that turn identifiers into tokens are what OCR's guidance says must not be disclosed; they live in a key management service with narrow access, and a leaked key turns every token into a re-identification code ([Key Hierarchy](/docs/security/encryption-at-rest#the-key-hierarchy)).
-- **Linkage is matching.** Token-based matching inherits every problem of patient matching (typos, name changes, twins); [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity) covers it, and [Probabilistic Linkage](/docs/architecture/record-linkage#probabilistic-linkage) is the method.
+- **Linkage is matching.** Token-based matching inherits every problem of patient matching (typos, name changes, twins); [Patient Matching & Identity](/books/health-tech/patient-matching-and-identity) covers it, and [Probabilistic Linkage](/docs/building-blocks/record-linkage#probabilistic-linkage) is the method.
 - **A joined set needs its own determination.** Each new combination of sources is a new risk analysis.
 
 ## Selling Data and Secondary Use

@@ -189,7 +189,7 @@ How it runs:
 
 ## Auditing
 
-European regulators and schemes expect records they can examine, and the FCA expects to be able to reconstruct who owned what. The general design is in [Audit Trails](/docs/architecture/audit-trails); specifically keep:
+European regulators and schemes expect records they can examine, and the FCA expects to be able to reconstruct who owned what. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); specifically keep:
 
 - **Every mandate and its evidence,** the notices sent with their dates, and each collection linked to the mandate it ran under, for as long as an unauthorized-refund claim can arrive and beyond.
 - **Every name check and its result,** sent or answered, with what the payer or your staff did next.

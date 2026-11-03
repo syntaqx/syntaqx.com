@@ -82,7 +82,7 @@ Details worth modeling:
 - **Illinois reorganized its rule** into Rules 1.15, 1.15A, 1.15B and 1.15C effective July 1, 2023, and allows electronic records if printed copies can be produced and the records are readily accessible.
 - **New York counts its clock differently.** Its Rule 1.15(d) requires bookkeeping records to be kept "for seven years after the events that they record," so the clock runs per entry, not per representation, and the list reaches past the trust account: deposit and withdrawal records for any bank account "that concerns or affects the lawyer's practice of law," retainer and compensation agreements, bills, closing statements filed with the Office of Court Administration, and checkbooks and bank statements. Copies may be kept in any medium "that preserves an image of the document that cannot be altered without detection." Rule 1.15(e) requires withdrawals to a named payee and "not to cash," and makes only a lawyer admitted in New York an authorized signatory of a special account.
 
-The rule set is per jurisdiction and per date, and a firm with offices in several states has accounts under different rules. The platform stores rules as dated rows (reconciliation frequency, retention period, filing window, overdraft reporting), not as code paths ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+The rule set is per jurisdiction and per date, and a firm with offices in several states has accounts under different rules. The platform stores rules as dated rows (reconciliation frequency, retention period, filing window, overdraft reporting), not as code paths ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## Earned and Unearned Fees
 
@@ -256,7 +256,7 @@ How it runs:
 - **Every transfer out:** kind, amount, matter, invoice or settlement statement behind it, who requested, who approved (an admitted lawyer or under one's supervision), and the ledger transaction.
 - **Every reconciliation:** the three numbers, outstanding items with ages, negative ledgers (expected none), adjustments with reasons, preparer, reviewer, and the frozen report, kept for the longest retention period among the firm's jurisdictions.
 - **Card events touching trust:** fees billed to operating, chargebacks, and the firm's covering deposits with timestamps.
-- **Annual filings:** what was certified or registered, when, and by whom, per account and jurisdiction ([Audit Trails](/docs/architecture/audit-trails#what-a-record-holds)).
+- **Annual filings:** what was certified or registered, when, and by whom, per account and jurisdiction ([Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds)).
 
 ## What This Means for the System You Build
 

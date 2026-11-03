@@ -74,7 +74,7 @@ For most banks, the FDIC computes coverage after a failure from the bank's recor
 
 That list is a specification for any system that wants to know its own exposure, at any size:
 
-1. **Resolve depositors.** Every account's parties resolve to persons and entities across products, brands and acquired banks, by tax ID and identity attributes, never by name strings ([Record Linkage](/docs/architecture/record-linkage)). A bank that can't tell that two customer records are one person overstates coverage.
+1. **Resolve depositors.** Every account's parties resolve to persons and entities across products, brands and acquired banks, by tax ID and identity attributes, never by name strings ([Record Linkage](/docs/building-blocks/record-linkage)). A bank that can't tell that two customer records are one person overstates coverage.
 2. **Assign each account a category** from its title and parties: the `ownership_category`, derived and checked, not chosen. A joint account whose second owner never signed or never had access is single coverage for each owner.
 3. **Split each account into owner interests:** equal shares for joint accounts unless the records say otherwise; one interest per beneficial owner for pass-through accounts, from the subledger; one interest per participant for benefit plans.
 4. **Aggregate by owner and category** across the whole charter, with accrued interest to the determination date.
@@ -162,7 +162,7 @@ The determination is a pure function of the accounts, parties, balances and rule
 
 Deposit insurance is audited by the FDIC or NCUA after a failure, and before one by examiners checking Part 370 readiness, signage and advertising, and pass-through recordkeeping. Keep:
 
-- **The evidence behind each category,** as recorded at opening and on every change: signature cards or their electronic equivalent, access records for joint owners, beneficiary designations with their dates, trust certifications ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **The evidence behind each category,** as recorded at opening and on every change: signature cards or their electronic equivalent, access records for joint owners, beneficiary designations with their dates, trust certifications ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Every determination run** with its rule version, inputs and output, so an estimate published to the board or a regulator can be reproduced.
 - **Per-owner files for pass-through accounts,** as received each day, with the reconciliation to the FBO balance and every break.
 - **Insurance statements made to customers:** the FDIC signs and disclosures shown in each channel, and for programs, the nonbank disclosures 328.102 requires, by version and date. The FDIC's 2026 amendments to its digital and ATM signage rule (91 FR 3801) take effect March 2, 2026, with compliance required by April 1, 2027.

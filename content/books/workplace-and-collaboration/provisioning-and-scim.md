@@ -86,7 +86,7 @@ Each product means something specific by each word:
 Two consequences for anyone building a product:
 
 1. **Deactivation must be reversible and complete.** Reversible because directories make mistakes (a scoping filter edited, a group renamed); complete because a deactivated account with a live API token or a running automation is still acting. Microsoft's guidance, Slack's reactivation and Atlassian's retained roles all say the same thing.
-2. **Deletion is about the person's personal data, not the work.** Atlassian's split is the model: the account and its personal data go; pages, issues and comments stay, attributed to "Former user." Erasing a departed employee's authored work would destroy the employer's records and break every thread they took part in. Where personal data is embedded in content the employee typed, Atlassian keeps it; the employer, as controller, decides about it under its own retention rules ([Erasure vs Append-Only Records](/docs/architecture/data-retention#erasure-vs-append-only-records)).
+2. **Deletion is about the person's personal data, not the work.** Atlassian's split is the model: the account and its personal data go; pages, issues and comments stay, attributed to "Former user." Erasing a departed employee's authored work would destroy the employer's records and break every thread they took part in. Where personal data is embedded in content the employee typed, Atlassian keeps it; the employer, as controller, decides about it under its own retention rules ([Erasure vs Append-Only Records](/docs/building-blocks/data-retention#erasure-vs-append-only-records)).
 
 ## Content Ownership on the Way Out
 
@@ -177,7 +177,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Every SCIM request and its outcome,** with the connection, the resolved member or group and the error, kept long enough to answer disputes ([Typed Actors](/docs/architecture/audit-trails#typed-actors) records the identity provider as the actor, not a person).
+- **Every SCIM request and its outcome,** with the connection, the resolved member or group and the error, kept long enough to answer disputes ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors) records the identity provider as the actor, not a person).
 - **Mastering changes:** connections created, tokens rotated, mastered fields changed.
 - **Deactivations and reactivations** with their source, and the time access was actually revoked.
 - **Ownership transfers:** every object handed over, to whom, by whom, and what was revoked instead.

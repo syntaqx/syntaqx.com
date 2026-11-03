@@ -329,7 +329,7 @@ Notes on the sketch:
 - **Hard caps are a promise with a cost.** Where a cap was sold as hard, usage rated between the crossing and the enforcement recorded in `spend_cap_events` (or the `spending_limits` hold) is credited automatically by a `credit_grants` row of kind `goodwill` whose source is the cap.
 - **The detector is versioned.** `anomalies.model` names the detector and version, so false-positive rates can be compared across versions and a customer's "why didn't you warn me" has an answer.
 - **The FOCUS view is the contract.** Dashboards, budgets, anomaly detection and exports all read the same view, so the console, the alert and the file can't disagree.
-- **Events:** `budget.threshold_crossed`, `anomaly.detected`, `anomaly.resolved`, `cost_export.delivered` and `cost_export.restated` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, webhooks and the support desk ([Notifications & Consent](/docs/architecture/notifications)).
+- **Events:** `budget.threshold_crossed`, `anomaly.detected`, `anomaly.resolved`, `cost_export.delivered` and `cost_export.restated` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to notifications, webhooks and the support desk ([Notifications & Consent](/docs/building-blocks/notifications)).
 
 ## Auditing
 
@@ -339,7 +339,7 @@ Notes on the sketch:
 - **Exports reconcile.** Final deliveries against invoices, row by row in total and per SKU; any difference is a pipeline bug.
 - **Detector performance.** Anomalies raised, acknowledged as expected, confirmed as fraud, and missed (surprise bills with no anomaly before them), by model version.
 
-Exports, alerts and anomaly records are billing evidence and are kept with the invoices they explain ([Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records)).
+Exports, alerts and anomaly records are billing evidence and are kept with the invoices they explain ([Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records)).
 
 ## What This Means for the System You Build
 

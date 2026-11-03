@@ -165,7 +165,7 @@ onboarding UX and evidence of consent     identity and business verification dat
 crosswalks to every vendor's IDs          bank rails and account APIs
 ```
 
-The left column is what makes switching possible later: your own payment IDs, your own ledger, and a crosswalk from every vendor's IDs to yours ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)). Put an [anti-corruption layer](/docs/architecture/service-boundaries) between your model and every provider, normalize their responses at that edge ([One Response Model](/books/payments/processor-routing#one-response-model)), and drive your state from your own [events](/docs/architecture/events), not a provider's webhooks.
+The left column is what makes switching possible later: your own payment IDs, your own ledger, and a crosswalk from every vendor's IDs to yours ([Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids)). Put an [anti-corruption layer](/docs/architecture/service-boundaries) between your model and every provider, normalize their responses at that edge ([One Response Model](/books/payments/processor-routing#one-response-model)), and drive your state from your own [events](/docs/architecture/events), not a provider's webhooks.
 
 ## Auditing
 
@@ -176,7 +176,7 @@ A stack assembled from vendors needs auditing across the joins:
 - **Keep each vendor's assurance on file.** PCI Attestations of Compliance, SOC reports, sponsor bank agreements and network registrations, with their expiry dates monitored like certificates ([PCI DSS](/docs/compliance/pci-dss#what-a-service-provider-adds)).
 - **Record ownership changes.** When a vendor is acquired, note the date and the new owner against the contract, because notice periods, change-of-control clauses and data processing terms often hang on it.
 
-The audit record itself is in [Audit Trails](/docs/architecture/audit-trails).
+The audit record itself is in [Audit Trails](/docs/building-blocks/audit-trails).
 
 ## What This Means for the System You Build
 

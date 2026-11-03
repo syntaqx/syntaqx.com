@@ -83,7 +83,7 @@ Detokenization is the whole risk of a vault, so it gets the narrowest interface 
 - **Callers authenticate as services** (mutual TLS or signed workload identity), and each is authorized per operation and per tenant. Network rules are a second layer, not the authentication. A detokenizing endpoint that trusts anything able to reach it is one misrouted security group from an open card-number API.
 - **Destinations are an allowlist** of processor hostnames, enforced on egress, so the forwarder can't be pointed anywhere else (requirement 1.3.2 restricts outbound CDE traffic to what's necessary).
 - **Unusual volume is an alert and a throttle.** The guidelines suggest systems "throttle or reject abnormal requests". A service that normally detokenizes a few thousand cards an hour and suddenly asks for a million is either a bug or a breach, and either way the vault should stop first.
-- **Every detokenization is logged** with the caller, tenant, token, destination and purpose, as an access record rather than a debug line ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every detokenization is logged** with the caller, tenant, token, destination and purpose, as an access record rather than a debug line ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 **People get it almost never.** Support rarely needs more than the BIN, last four, brand and expiry, and PCI DSS caps what a screen may show at the BIN and last four for anyone without a documented need (3.4.1). The general controls on staff access (a reason per session, approvals nobody grants themselves, a log the customer could read) are in [Support Access & Internal Tools](/docs/security/support-access#approvals-and-nobody-approves-their-own) and [Logging Support Access](/docs/security/support-access#logging-support-access). For the few who need the number itself, typically fraud investigators and the team that handles card brand inquiries:
 
@@ -156,11 +156,11 @@ CREATE TABLE vault_access_log (
 
 ## Auditing
 
-Vault records are evidence in a PCI DSS assessment, in a card-data compromise investigation, and in any dispute over whether a merchant's export or a staff reveal was authorized. The general design is in [Audit Trails](/docs/architecture/audit-trails); for a vault, make sure the record shows:
+Vault records are evidence in a PCI DSS assessment, in a card-data compromise investigation, and in any dispute over whether a merchant's export or a staff reveal was authorized. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for a vault, make sure the record shows:
 
-- **Every access, not just every change.** Each detokenization and reveal, with the actor, tenant, token, destination and reason, kept in a store the vault itself can't modify ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every access, not just every change.** Each detokenization and reveal, with the actor, tenant, token, destination and reason, kept in a store the vault itself can't modify ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Which key protected each card when.** Key IDs and versions on every record, and the re-wrap and re-encryption runs with their counts, so an assessor can see no card is left under a retired key.
-- **Replacements and purges as entries.** A replaced token points at its successor and a purge records when and under which retention rule, instead of rows that quietly disappear ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Replacements and purges as entries.** A replaced token points at its successor and a purge records when and under which retention rule, instead of rows that quietly disappear ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Bulk exports end to end.** Who requested, who approved, the recipient and its attestation, the key the file was encrypted to, and the count of cards sent.
 
 ## What This Means for the System You Build

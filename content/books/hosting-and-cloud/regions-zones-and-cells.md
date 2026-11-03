@@ -316,7 +316,7 @@ Notes on the sketch:
 
 - **What each zone was made of.** The facilities in every zone over time, with their operators and power and fiber contracts, because a claim that two zones are independent is checked against buildings and utilities, not names.
 - **Which customers were where.** Cell and shuffle-shard assignments and per-account zone aliases over time, so the customers affected by an incident in one cell or one physical zone can be listed exactly for notices and credits.
-- **Every quota decision.** Requests, outcomes, reasons and the actor or rule version that decided, because quotas ration scarce hardware and screen for fraud, and refusals are disputed ([Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every quota decision.** Requests, outcomes, reasons and the actor or rule version that decided, because quotas ration scarce hardware and screen for fraud, and refusals are disputed ([Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Capacity refusals.** Insufficient-capacity rejections by zone and instance type, which are the evidence for capacity purchases and for any reservation SLA claim.
 - **Configuration rollouts by cell.** Which configuration version reached which cell, zone and region when, since configuration pushes, not hardware, caused the widest outages on record ([Incident Response](/docs/operations/incident-response#the-postmortem)).
 

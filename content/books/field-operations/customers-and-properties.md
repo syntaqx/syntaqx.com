@@ -10,7 +10,7 @@ tags = ["field-operations", "crm", "addresses", "geocoding", "data-modeling", "p
 
 A software company's customer is an email address and a card. A field business's customer is three different things that most people collapse into one: the **party who pays**, the **place where the work happens**, and the **people** who answer the door, approve the quote and read the invoice. A homeowner is all three at once, which is why the shortcut works until the first landlord with twelve rentals, the first tenant who isn't allowed to authorize a repair, the first house that sells mid-contract, or the first restaurant chain whose kitchens are serviced locally and billed at headquarters. Routing needs a coordinate and a time zone, billing a responsible party, compliance a treated address. And the history (treatments, installed equipment, warranties, the water heater replaced in 2023) belongs to the house, not to whoever owned it when the work was done. Get the shape wrong and each system grows its own workaround.
 
-This chapter covers how platforms model customers and sites, how addresses become coordinates and property keys, what attaches to a property, and how duplicates, history and privacy requests are handled. The general address pipeline is in [Addresses & Geocoding](/docs/fundamentals/addresses) and the general practice of reconciling many sources is in [Matching, Merging & Many Sources](/docs/architecture/record-linkage); this chapter is the field-specific part. What the customer buys is the next chapter, [Service Agreements & Plans](/books/field-operations/service-agreements).
+This chapter covers how platforms model customers and sites, how addresses become coordinates and property keys, what attaches to a property, and how duplicates, history and privacy requests are handled. The general address pipeline is in [Addresses & Geocoding](/docs/fundamentals/addresses) and the general practice of reconciling many sources is in [Matching, Merging & Many Sources](/docs/building-blocks/record-linkage); this chapter is the field-specific part. What the customer buys is the next chapter, [Service Agreements & Plans](/books/field-operations/service-agreements).
 
 ## Payer, Site and People
 
@@ -65,9 +65,9 @@ Measure match rates on your own addresses rather than trusting coverage claims, 
 
 ## Addresses From Many Sources
 
-No platform that runs for years gets its addresses from one place. The web form uses one vendor's autocomplete; partner leads arrive validated by another; a canvassing app drops a pin on a parcel; an acquired branch arrives with ten years of unvalidated addresses; a technician drags a pin because the geocode lands in the neighbor's driveway. Overwriting the property's address columns with whichever source wrote last is how a recurring customer ends up on the wrong route with nobody able to say why. The general answer is in [Observations, Not Overwrites](/docs/architecture/record-linkage#observations-not-overwrites): store each source's answer as a dated observation with its key and license, keep a crosswalk of every source's ID, and derive the property's working address by written rules.
+No platform that runs for years gets its addresses from one place. The web form uses one vendor's autocomplete; partner leads arrive validated by another; a canvassing app drops a pin on a parcel; an acquired branch arrives with ten years of unvalidated addresses; a technician drags a pin because the geocode lands in the neighbor's driveway. Overwriting the property's address columns with whichever source wrote last is how a recurring customer ends up on the wrong route with nobody able to say why. The general answer is in [Observations, Not Overwrites](/docs/building-blocks/record-linkage#observations-not-overwrites): store each source's answer as a dated observation with its key and license, keep a crosswalk of every source's ID, and derive the property's working address by written rules.
 
-The rules are where field service differs. Survivorship per field, as [Survivorship Per Field](/docs/architecture/record-linkage#survivorship-per-field) describes, looks like this for a property:
+The rules are where field service differs. Survivorship per field, as [Survivorship Per Field](/docs/building-blocks/record-linkage#survivorship-per-field) describes, looks like this for a property:
 
 - **Mailing lines** from the CASS-processed result.
 - **Unit** from whichever source confirmed it (a `Y` over a `D`).
@@ -107,7 +107,7 @@ CREATE TABLE property_address_observations (
 );
 ```
 
-A scheduled job refreshes or drops observations whose license has lapsed and recomputes the working address, without touching what you own, such as a technician's pin ([Licensed Data](/docs/architecture/record-linkage#licensed-data)). Re-validation is a new observation to review, never an update to apply: postal data changes monthly, and a silent rewrite can move a pin across a territory boundary and re-route a recurring customer.
+A scheduled job refreshes or drops observations whose license has lapsed and recomputes the working address, without touching what you own, such as a technician's pin ([Licensed Data](/docs/building-blocks/record-linkage#licensed-data)). Re-validation is a new observation to review, never an update to apply: postal data changes monthly, and a silent rewrite can move a pin across a territory boundary and re-route a recurring customer.
 
 ## When No Vendor Knows the Address
 
@@ -130,7 +130,7 @@ The harder case is a vendor that confidently returns the wrong answer. Google pu
 
 The licensing row is the one that bites. A pest company licensed in one county, or a plumber who pulls permits from the city, can't let the postal city decide which authority's rules apply: a home in unincorporated county land often carries a city's mailing name. Store the postal address, the service point and the jurisdiction set separately, and never derive the legal city from the postal one.
 
-When a customer disputes a vendor's answer, record a field-scoped override with the evidence and the vendor's answer beside it, and retire it field by field when the vendor converges, as [Overrides That Retire](/docs/architecture/record-linkage#overrides-that-retire) describes. Convergence is about the address, not where the truck parks: a technician's pin still outranks a vendor rooftop after the vendor agrees on the city.
+When a customer disputes a vendor's answer, record a field-scoped override with the evidence and the vendor's answer beside it, and retire it field by field when the vendor converges, as [Overrides That Retire](/docs/building-blocks/record-linkage#overrides-that-retire) describes. Convergence is about the address, not where the truck parks: a technician's pin still outranks a vendor rooftop after the vendor agrees on the city.
 
 ## What Lives on the Property
 
@@ -146,7 +146,7 @@ The property is the record that accumulates. Beyond the address, service point a
 
 Model the person once and the relationship many times. A **person** is a human with channels (phones, emails, a mailing address). A **contact role** joins a person to an account or a property with a type: billing, site contact, owner, tenant, property manager, emergency. FieldRoutes' service contact is "the individual directly involved with the property"; its billing contact is "responsible for receiving and paying the invoices." Jobber attaches communication settings to each contact so a tenant gets arrival texts and the owner gets invoices.
 
-Preferences belong on the contact point and the role, not on the account: channel, language, which kinds of message. Consent to text or call is a separate, append-only ledger with its own evidence, in [Notifications & Consent](/docs/architecture/notifications) and [Consumer Protection](/books/field-operations/consumer-protection). The tenant case is the one to test: a tenant may let a technician in and receive reminders, but signing an agreement or approving a $2,000 water heater replacement usually needs the owner or manager, so **authority is a role attribute** the signing and approval flows check ([Signing the Agreement](/books/field-operations/signing-the-agreement)).
+Preferences belong on the contact point and the role, not on the account: channel, language, which kinds of message. Consent to text or call is a separate, append-only ledger with its own evidence, in [Notifications & Consent](/docs/building-blocks/notifications) and [Consumer Protection](/books/field-operations/consumer-protection). The tenant case is the one to test: a tenant may let a technician in and receive reminders, but signing an agreement or approving a $2,000 water heater replacement usually needs the owner or manager, so **authority is a role attribute** the signing and approval flows check ([Signing the Agreement](/books/field-operations/signing-the-agreement)).
 
 ```sql
 CREATE TABLE property_accounts (          -- who pays, over time
@@ -187,7 +187,7 @@ Notes are where sensitive personal data leaks in (health conditions, family disp
 
 Duplicates arrive from online bookings, double imports, spouses calling under different names and accounting syncs. The SMB and vertical platforms merge destructively: FieldRoutes' merge moves appointments, payments, charges and documents to a master account, keeps the master's address, contact info and billing profiles, removes the other account, and "cannot be undone"; Housecall Pro groups likely duplicates by name, phone or email, merges tags, notes, addresses, emails and attachments, carries a Do not service flag onto the survivor, and says "You cannot unmerge customers after completing this step."
 
-In this industry, **address plus unit is the strongest match signal**, stronger than name; then normalized phone and email; then fuzzy name similarity. Two people at one address are not duplicates (a sold house, roommates): review candidates, and auto-merge only exact matches created minutes apart ([Review Bands](/docs/architecture/record-linkage#review-bands)). The merge itself should be recorded and reversible, with a tombstone that redirects the loser's ID, as [Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible) describes. Two field rules sit on top: never merge two properties that both hold active agreements without deciding which agreement survives, and never merge two accounts that both hold stored payment methods without checking which mandate stays valid ([Stored Cards & Recurring Billing](/books/payments/stored-credentials)).
+In this industry, **address plus unit is the strongest match signal**, stronger than name; then normalized phone and email; then fuzzy name similarity. Two people at one address are not duplicates (a sold house, roommates): review candidates, and auto-merge only exact matches created minutes apart ([Review Bands](/docs/building-blocks/record-linkage#review-bands)). The merge itself should be recorded and reversible, with a tombstone that redirects the loser's ID, as [Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible) describes. Two field rules sit on top: never merge two properties that both hold active agreements without deciding which agreement survives, and never merge two accounts that both hold stored payment methods without checking which mandate stays valid ([Stored Cards & Recurring Billing](/books/payments/stored-credentials)).
 
 ## Ownership Changes and History
 
@@ -203,7 +203,7 @@ The failure to design out first is one payer column with no history: the first h
 
 Which privacy laws reach a field business (the CCPA's thresholds among them) is in [Consumer Protection](/books/field-operations/consumer-protection#privacy-in-a-field-business), with the general machinery in [GDPR & Privacy](/docs/compliance/gdpr). What it means for this model:
 
-- **Deletion has field-specific exceptions.** Pesticide application records, invoices and tax records have their own retention periods ([Data Retention & Deletion](/docs/architecture/data-retention)). Delete or pseudonymize the person while keeping the property's regulated records with the minimum identity the rule requires.
+- **Deletion has field-specific exceptions.** Pesticide application records, invoices and tax records have their own retention periods ([Data Retention & Deletion](/docs/building-blocks/data-retention)). Delete or pseudonymize the person while keeping the property's regulated records with the minimum identity the rule requires.
 - **Find everything.** A request has to reach notes, call recordings, message logs, job photos and the search index, so index personal data by person ID.
 - **The property outlives the person.** A deleted former owner's identity leaves; the house's treatment and equipment history stays for the next owner.
 
@@ -216,7 +216,7 @@ Disputes start here ("the invoice went to my ex-husband," "your technician treat
 - **Payer and role changes,** especially who may approve work, since they decide whose signature was valid.
 - **Views of gate codes and other secrets.**
 
-[Audit Trails](/docs/architecture/audit-trails) covers the record shape, capture and tamper evidence; [Audit Trails & Records](/books/field-operations/audit-trails-and-records) covers field records and retention.
+[Audit Trails](/docs/building-blocks/audit-trails) covers the record shape, capture and tamper evidence; [Audit Trails & Records](/books/field-operations/audit-trails-and-records) covers field records and retention.
 
 ## What This Means for the System You Build
 

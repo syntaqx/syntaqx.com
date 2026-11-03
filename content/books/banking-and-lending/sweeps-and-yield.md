@@ -223,7 +223,7 @@ Design notes:
 - **Placements are facts per business date,** never a current-state table overwritten each night. "Was the company insured on the night of March 9" is the only question that matters after a failure.
 - **The customer's other deposits are an input.** A swept account can't see the customer's own account at a program bank; exclusions are how the customer tells the system, and onboarding should ask for them at the start.
 - **Reciprocal is a property of the placement, brokered of the receiving bank.** Recording `placed_as` lets the sponsor report reciprocal deposits received and placed against its cap, which the 2026 rule makes larger but no less real.
-- **Investment sweeps never mix with deposit placements.** The fund position is not a deposit and is not in any insurance determination; it is a separate account at a custodian with its own statements, reconciled to the adviser's records ([Reconcile to the Source](/docs/architecture/data-pipelines#reconcile-to-the-source)).
+- **Investment sweeps never mix with deposit placements.** The fund position is not a deposit and is not in any insurance determination; it is a separate account at a custodian with its own statements, reconciled to the adviser's records ([Reconcile to the Source](/docs/data/data-pipelines#reconcile-to-the-source)).
 
 ## Auditing
 

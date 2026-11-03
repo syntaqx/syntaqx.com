@@ -59,7 +59,7 @@ Server-side progression has the same problem with a different shape: the data is
 
 ## Conflicts Across Devices
 
-Two devices that play while disconnected produce two histories, and a cloud save has to pick. The general strategies (device wins, server wins, merge, per-command rules) are in [Conflicts: Choosing Who Wins](/docs/architecture/offline-sync#conflicts-choosing-who-wins), which also notes that "most recent" is a guess for saves. What the platforms do with it:
+Two devices that play while disconnected produce two histories, and a cloud save has to pick. The general strategies (device wins, server wins, merge, per-command rules) are in [Conflicts: Choosing Who Wins](/docs/building-blocks/offline-sync#conflicts-choosing-who-wins), which also notes that "most recent" is a guess for saves. What the platforms do with it:
 
 - **Ask the player.** Steam shows its conflict window when local files "differ from the ones stored on the cloud"; Xbox's system dialog offers "This console" or "The Xbox network (cloud data)", one overwriting the other. Steam's own support page warns that Offline Mode "is very likely to cause a conflict" and that Steam Support "cannot recover lost saves or assist in resolving cloud conflicts."
 - **Hand both to the game.** Game Center tells the app when "multiple devices write to the same file while one or more of the devices are offline" and expects it to pick or merge and save again. Google Play Games returns both versions under its manual policy, which "ensures that no user changes to the state of the save game will ever be lost."
@@ -95,7 +95,7 @@ The patterns to take from it:
 
 ## Player Data Rights in a Live Game
 
-A game holds a lot of personal data: the account, linked platform identities, purchases, chat, voice clips attached to reports, match history, telemetry. Players have rights over it, and the general machinery (export jobs, an erasure pipeline that fans out to every store, keeping proof) is in [GDPR](/docs/compliance/gdpr#data-subject-rights) and [Data Retention](/docs/architecture/data-retention#erasure-requests). Under GDPR a controller answers "within one month," extendable by two more for complex or numerous requests; under the CCPA, within 45 calendar days, extendable by 45 more with notice. The game-specific part is that much of a game's data is about more than one player, or is evidence, or is money.
+A game holds a lot of personal data: the account, linked platform identities, purchases, chat, voice clips attached to reports, match history, telemetry. Players have rights over it, and the general machinery (export jobs, an erasure pipeline that fans out to every store, keeping proof) is in [GDPR](/docs/compliance/gdpr#data-subject-rights) and [Data Retention](/docs/building-blocks/data-retention#erasure-requests). Under GDPR a controller answers "within one month," extendable by two more for complex or numerous requests; under the CCPA, within 45 calendar days, extendable by 45 more with notice. The game-specific part is that much of a game's data is about more than one player, or is evidence, or is money.
 
 ### Access and Portability
 
@@ -113,12 +113,12 @@ What it excludes is other people's personal data. A match record names nine othe
 
 Article 17 lets a player ask for erasure, and 17(3) carves out processing needed "for compliance with a legal obligation" or "for the establishment, exercise or defence of legal claims." The CCPA's deletion right has similar exceptions, including "certain business security practices" and complying with legal obligations. A game has four kinds of record that run into erasure:
 
-- **Money.** Purchase records and the currency ledger are financial records, kept for tax and accounting. The playbook's answer applies: no personal data in ledger rows, the account scrubbed, the IDs kept so the books balance ([Erasure vs Append-Only Records](/docs/architecture/data-retention#erasure-vs-append-only-records)).
+- **Money.** Purchase records and the currency ledger are financial records, kept for tax and accounting. The playbook's answer applies: no personal data in ledger rows, the account scrubbed, the IDs kept so the books balance ([Erasure vs Append-Only Records](/docs/building-blocks/data-retention#erasure-vs-append-only-records)).
 - **Penalties and ban evasion.** A banned cheater who deletes their account and signs up again must not get a clean slate. Keep what fraud and security require (the penalty, the hashed hardware and identity signals, for a defined retention) and say so in the privacy notice. Riot's privacy notice is a public example: on deletion it deletes personal info used to provide the service "but will keep some account-related personal info (your match history, for instance) for other defined purposes such as security and fraud detection," and it states retention periods for reported chat (7 days if no action is taken, up to 2 years if action is taken). The retention must be bounded and purpose-bound; "we keep everything in case" is not an exception the law recognizes.
 - **Shared records.** A completed match belongs to ten players. Deleting one player's participation would change the other nine's history and break rating recalculation. Pseudonymize: the participant row keeps its result and an opaque ID, the profile it pointed to is scrubbed, and displays show "deleted player."
 - **Leaderboards, replays and esports records.** A leaderboard entry or a public replay shows a name. On erasure the name goes (the entry shows a placeholder or is removed and the board re-ranked, a per-game decision), and replays either re-render without the name or expire on their normal retention ([Replays and Server Recordings](/books/gaming/telemetry#replays-and-server-recordings)). Official tournament results are often public records a league is entitled to keep; decide that in the ruleset, before the request.
 
-Telemetry and the warehouse are where erasure usually fails. Events keyed by account or profile ID need the same pseudonymization or deletion in the raw store and every model built from it ([Erasure Requests](/docs/architecture/data-retention#erasure-requests)); a warehouse that can't find a player's events can't erase them.
+Telemetry and the warehouse are where erasure usually fails. Events keyed by account or profile ID need the same pseudonymization or deletion in the raw store and every model built from it ([Erasure Requests](/docs/building-blocks/data-retention#erasure-requests)); a warehouse that can't find a player's events can't erase them.
 
 ### Account Deletion the Stores Require
 
@@ -229,7 +229,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Save history.** Every revision, the device and build that wrote it, every conflict and which side was kept by whom, and every support restore with its ticket. "My save disappeared" is answered from this.
-- **Data requests.** Receipt, identity verification, each service's step, what was retained and why, and the completion date against the deadline. Regulators ask for this record, and it must not contain the data that was erased ([Privacy Erasure and the Audit Store](/docs/architecture/audit-trails#privacy-erasure-and-the-audit-store)).
+- **Data requests.** Receipt, identity verification, each service's step, what was retained and why, and the completion date against the deadline. Regulators ask for this record, and it must not contain the data that was erased ([Privacy Erasure and the Audit Store](/docs/building-blocks/audit-trails#privacy-erasure-and-the-audit-store)).
 - **Retention exceptions.** The policy behind each retained category (penalty evidence, financial records, match history for fraud), its period, and the purge jobs that enforce it, with legal holds recorded.
 - **Deletion flows by channel.** Which requests came from the iOS app, the Android web link, the website or support, so the store requirements can be shown to work.
 

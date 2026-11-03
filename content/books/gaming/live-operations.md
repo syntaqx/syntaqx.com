@@ -179,7 +179,7 @@ The order matters: an end-of-life patch still has to reach players after the sto
 
 **Run a final season, then close the doors.** A last season or event gives the community an ending; Knockout City shipped its ninth season as the final one, and XDefiant shipped its planned third season. It runs as dated content like any other, with the earn rates and no paid track.
 
-**Open the data export, then schedule deletion.** Players get a self-serve export window ([Access and Portability](/books/gaming/saves-and-player-data#access-and-portability)) that stays up past the server shutdown, and the export includes what players made in the game, which the EU's Digital Content Directive already expects a trader to hand back in a machine-readable format when a contract is terminated. After the window, personal data is deleted on a published schedule, and what must be kept is kept under its own retention ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+**Open the data export, then schedule deletion.** Players get a self-serve export window ([Access and Portability](/books/gaming/saves-and-player-data#access-and-portability)) that stays up past the server shutdown, and the export includes what players made in the game, which the EU's Digital Content Directive already expects a trader to hand back in a machine-readable format when a contract is terminated. After the window, personal data is deleted on a published schedule, and what must be kept is kept under its own retention ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 
 **Ship the end-of-life build, if there is one.** The three forms (an offline mode in the live game, as The Crew 2 shipped; a private server edition, as Knockout City shipped on PC; a separate offline edition, as Capcom shipped for Mega Man X DiVE) all depend on decisions made years earlier:
 
@@ -194,7 +194,7 @@ The order matters: an end-of-life patch still has to reach players after the sto
 
 ## How to Build It
 
-Live ops runs on four kinds of record beside `live_events`: what config was published, which switches exist and what they do, which versions shipped together, and what each change did; a fifth, the end-of-service plan, comes once in a game's life. The general shape of versioned, effective-dated rules is in [Rules as Data](/docs/architecture/rules-as-data); `tenant_id` is on every table because the model is written for a platform serving many games.
+Live ops runs on four kinds of record beside `live_events`: what config was published, which switches exist and what they do, which versions shipped together, and what each change did; a fifth, the end-of-service plan, comes once in a game's life. The general shape of versioned, effective-dated rules is in [Rules as Data](/docs/building-blocks/rules-as-data); `tenant_id` is on every table because the model is written for a platform serving many games.
 
 ```sql
 CREATE TABLE config_versions (              -- one immutable published snapshot per game
@@ -278,7 +278,7 @@ The store, login, matchmaking and export services compute their state from these
 - **Releases.** The release set behind every match, crash and ticket, through the builds they already name ([The Games Business](/books/gaming/games-business#the-core-data-model)).
 - **Compensation.** Every make-good is a campaign with a definition, a dry run and grants keyed by campaign and account ([Inventories, Entitlements & Economies](/books/gaming/economies-and-entitlements#auditing)).
 
-The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/architecture/audit-trails).
+The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 ## What This Means for the System You Build
 

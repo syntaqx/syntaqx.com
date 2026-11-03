@@ -197,7 +197,7 @@ Recurring schedules generate disputes long after the fact: "you only came three 
 - **Generator runs and bulk operations**: recurrences processed, occurrences created and removed, and for a weather reschedule the operator, the scope and every occurrence moved, so one action that moved 300 visits can be explained and reversed.
 - **Reapplication gaps**: occurrences tied to application records let an inspector see that the label interval was respected.
 
-[Audit Trails](/docs/architecture/audit-trails) covers system actors and automated decisions; [Audit Trails & Records](/books/field-operations/audit-trails-and-records) covers field records and retention.
+[Audit Trails](/docs/building-blocks/audit-trails) covers system actors and automated decisions; [Audit Trails & Records](/books/field-operations/audit-trails-and-records) covers field records and retention.
 
 ## What This Means for the System You Build
 

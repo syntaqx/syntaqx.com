@@ -158,7 +158,7 @@ Notes on the sketch:
 - **Rescreen on every list update.** A job screens all active accounts against each new version; only potential matches reach a reviewer.
 - **Owners and end customers are screened parties.** Entities are screened with their beneficial owners; reseller sub-accounts with `end_customer_identity = 'collected'` are screened like direct customers, and resellers that don't collect identities are barred from restricted products.
 - **A confirmed match holds and freezes.** The hold is `full_suspension`; deletion and data-return jobs skip the account until counsel releases it.
-- **Restrictions are product rules.** The 5n, OFAC and export rules differ by product and party, so they live in data with their legal basis ([Rules as Data](/docs/architecture/rules-as-data#what-belongs-in-data)).
+- **Restrictions are product rules.** The 5n, OFAC and export rules differ by product and party, so they live in data with their legal basis ([Rules as Data](/docs/building-blocks/rules-as-data#what-belongs-in-data)).
 - **Events:** `sanctions_list.loaded`, `sanctions_screening.potential_match`, `sanctions_screening.confirmed` and `country_restriction.changed` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to compliance review, provisioning and billing.
 
 ## Auditing

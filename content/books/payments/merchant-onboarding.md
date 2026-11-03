@@ -240,13 +240,13 @@ The merchant's `status` is derived from its requirements: any `past_due` row res
 
 ## Auditing
 
-Onboarding records are evidence in sponsor bank exams, network audits, merchant disputes over a restriction, and law-enforcement requests about a merchant that turned out to be a front. The general design is in [Audit Trails](/docs/architecture/audit-trails); for onboarding, make sure the record shows:
+Onboarding records are evidence in sponsor bank exams, network audits, merchant disputes over a restriction, and law-enforcement requests about a merchant that turned out to be a front. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for onboarding, make sure the record shows:
 
 - **Every verification check and its result,** with the provider, the data sent and the match outcome, kept for the five years after closure the CIP rule requires.
-- **Who approved, restricted or rejected a merchant,** and whether a person or an automated rule did it, with the score and rules that decided ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
-- **What underwriting saw:** the website capture, the statements reviewed and the exposure estimate behind the reserve, snapshotted rather than linked, since all three change ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
-- **Changes to owners, bank accounts and terms acceptance,** as amendments with the before and after, never overwrites ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
-- **Who viewed ID documents and unmasked tax IDs** ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who approved, restricted or rejected a merchant,** and whether a person or an automated rule did it, with the score and rules that decided ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
+- **What underwriting saw:** the website capture, the statements reviewed and the exposure estimate behind the reserve, snapshotted rather than linked, since all three change ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
+- **Changes to owners, bank accounts and terms acceptance,** as amendments with the before and after, never overwrites ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
+- **Who viewed ID documents and unmasked tax IDs** ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

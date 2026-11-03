@@ -93,7 +93,7 @@ What subscribes, and why the spine matters for correctness, not just scale:
 - **Transparency counts and metrics** are computed from the same events, through the warehouse ([Operating Metrics](/books/user-generated-platforms/operating-metrics#definitions-as-code-restatements-as-rows)).
 - **Federation and APIs** publish selected events outward: the AT Protocol's relays aggregate repository updates into a public firehose, and developer platforms expose webhooks ([Federation & Open Protocols](/books/user-generated-platforms/federation#the-at-protocol); [Developer Platforms, APIs & Data Access](/books/user-generated-platforms/developer-platforms-and-apis#webhooks-for-moderation-and-automation)).
 
-Events carry identifiers and the community, not copies of personal data, so that an erasure doesn't have to chase a payload through every consumer's retention ([Privacy and Retention](/docs/architecture/data-pipelines#privacy-and-retention)).
+Events carry identifiers and the community, not copies of personal data, so that an erasure doesn't have to chase a payload through every consumer's retention ([Privacy and Retention](/docs/data/data-pipelines#privacy-and-retention)).
 
 ## Vendors at the Edges
 

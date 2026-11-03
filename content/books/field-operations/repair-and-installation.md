@@ -74,7 +74,7 @@ The furnace, condenser, water heater, panel, garage door opener, alarm panel or 
 
 An install should create the asset, not leave it for someone to type in later: Dynamics converts work order products flagged "Convert to Customer Asset" into customer assets when the work order completes. A replacement links to the asset it replaced, so the history at that address survives the hardware.
 
-Warranty terms belong on the asset. Salesforce models warranty terms covering labor, parts and expenses, attaches standard terms to products, and creates asset warranty terms when a product is installed, linkable to the work orders that fulfill them. Registration can change the terms themselves. Carrier's residential warranty asks the homeowner to register within 90 days of installation: a registered system gets a choice of a 10-year parts-only limited warranty or 5 years of parts plus 3 years of labor (the labor option only where the installing dealer participates), an unregistered one gets the standard 5-year parts-only warranty, and where the law doesn't allow benefits to be conditioned on registration the 10-year parts warranty applies automatically. So the asset's warranty term depends on whether, when and where registration happened, and registration is a task with a deadline computed from the install date and owned by someone, not a reminder email ([Rules as Data](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+Warranty terms belong on the asset. Salesforce models warranty terms covering labor, parts and expenses, attaches standard terms to products, and creates asset warranty terms when a product is installed, linkable to the work orders that fulfill them. Registration can change the terms themselves. Carrier's residential warranty asks the homeowner to register within 90 days of installation: a registered system gets a choice of a 10-year parts-only limited warranty or 5 years of parts plus 3 years of labor (the labor option only where the installing dealer participates), an unregistered one gets the standard 5-year parts-only warranty, and where the law doesn't allow benefits to be conditioned on registration the 10-year parts warranty applies automatically. So the asset's warranty term depends on whether, when and where registration happened, and registration is a task with a deadline computed from the install date and owned by someone, not a reminder email ([Rules as Data](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Connected Equipment and Remote Monitoring
 
@@ -380,7 +380,7 @@ ALTER TABLE resources                     -- a contractor resource can belong to
 - **Change orders and remote actions.** Who approved each change and what it moved, and every command sent to a customer's device with who sent it and the result.
 - **Device access and sub credentials.** When an owner granted and revoked access to a device, and which license, insurance certificate and bond a subcontractor held on the day it was dispatched.
 
-The general mechanics are in [Audit Trails](/docs/architecture/audit-trails); field records and their retention are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+The general mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); field records and their retention are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

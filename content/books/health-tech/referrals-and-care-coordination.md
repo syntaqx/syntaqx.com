@@ -38,7 +38,7 @@ The closed loop, from the sender's side:
 
 Each step is a status with a timestamp and a responsible party, and the gaps are measurable: sent but never acknowledged, accepted but never scheduled, scheduled but no-show, seen but no report back. **Leakage**, the share of referrals that go outside the sender's network or never happen, is the metric health systems watch, both as quality and as revenue.
 
-**Inbound referrals are the receiver's intake.** For a specialist, a referral is a new patient arriving with documents attached: demographics, insurance, the referring clinician (who gets the report later) and the reason. The intake becomes a patient, a coverage and an appointment, matched against existing records rather than duplicated ([Match Before Create](/docs/architecture/record-linkage#match-before-create)).
+**Inbound referrals are the receiver's intake.** For a specialist, a referral is a new patient arriving with documents attached: demographics, insurance, the referring clinician (who gets the report later) and the reason. The intake becomes a patient, a coverage and an appointment, matched against existing records rather than duplicated ([Match Before Create](/docs/building-blocks/record-linkage#match-before-create)).
 
 **Closed-loop standards exist and are uneven.** Kno2 lists 360X, a closed-loop referral pattern, as one of its channels. 360X began in July 2012 as an initiative of ONC's State Health Information Exchange Cooperative Agreement Program, standardized the referral and its returned outcome on C-CDA documents over Direct, and is now an IHE profile ("360X for Referral Management") in the Patient Care Coordination domain; HL7's Bidirectional Services eReferrals (BSeR) implementation guide defines FHIR referral and feedback for services such as community programs. Most loops still close by a document coming back, matched to the referral by people.
 
@@ -57,7 +57,7 @@ In 2025, another 46% of hospitals "sometimes" received records by mail or fax. T
 Software that lives with fax:
 
 - **Inbound fax is a document queue.** Every inbound fax becomes a `documents` row with the sending number, page count, received time and the raw image, in a queue a person (or an extraction model, then a person) classifies: referral, records request response, lab result, prior authorization decision, prescription renewal request, junk.
-- **Classify and attach, never retype silently.** The classified document is attached to a patient and, where it closes something, to the referral, order or request it answers. Extracted fields (patient name, date of birth, referring provider) are suggestions confirmed by staff, and the confirmation is recorded ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Classify and attach, never retype silently.** The classified document is attached to a patient and, where it closes something, to the referral, order or request it answers. Extracted fields (patient name, date of birth, referring provider) are suggestions confirmed by staff, and the confirmation is recorded ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Outbound fax is a disclosure.** The fax number is verified against the receiving organization's directory entry, the cover sheet carries the confidentiality notice, and the send is logged with what was sent to whom. A misdialed fax is a breach, and HIPAA's rules on disclosures are the playbook's ([What It Means for a System](/docs/compliance/hipaa#what-it-means-for-a-system)).
 - **The fax is the fallback, not a separate workflow.** A referral that can go by Direct goes by Direct; when the receiver has no Direct address, the same packet renders to fax, and the referral's status machine doesn't care which channel carried it.
 
@@ -87,13 +87,13 @@ Medicare pays for care coordination between visits through monthly and episodic 
 | **Principal care management** | 99424 to 99427 | For "a single, high-risk chronic condition expected to last at least 3 months," at least 30 minutes a month |
 | **Advanced primary care management** | G0556, G0557, G0558 | From January 1, 2025, one code per patient per month combining elements of principal, transitional and chronic care management and communication technology-based services |
 
-The software requirements follow directly. **TCM is two deadlines from a discharge date:** the 2-business-day contact and the 7- or 14-day visit, computed from the ADT discharge time in the practice's business calendar and stored ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)). **CCM is minutes by person by month,** against a care plan the patient consented to, the same shape as remote monitoring time in [Telehealth](/books/health-tech/telehealth#remote-patient-and-therapeutic-monitoring) (CMS's remote monitoring booklet allows the two concurrently if time isn't counted twice). **One program per patient per period** is enforced where the codes exclude each other, and the program enrollment records who bills.
+The software requirements follow directly. **TCM is two deadlines from a discharge date:** the 2-business-day contact and the 7- or 14-day visit, computed from the ADT discharge time in the practice's business calendar and stored ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). **CCM is minutes by person by month,** against a care plan the patient consented to, the same shape as remote monitoring time in [Telehealth](/books/health-tech/telehealth#remote-patient-and-therapeutic-monitoring) (CMS's remote monitoring booklet allows the two concurrently if time isn't counted twice). **One program per patient per period** is enforced where the codes exclude each other, and the program enrollment records who bills.
 
 ## Post-Acute Handoffs
 
 Post-acute care is where patients go after a hospital: home health, skilled nursing facilities, inpatient rehabilitation, long-term care hospitals, hospice. The handoff is a referral with a deadline (the discharge), a patient choice requirement (the quality data under 482.43), and an acceptance decision by a facility that checks insurance, clinical fit and bed availability. A discharge planner may send packets to several facilities at once and place the patient with one that accepts and has a bed, so the system has to make that broadcast and its responses visible. Assisted living sits beside this as a residential setting with its own HIPAA boundary ([Senior Living](/books/property-tech/senior-living#clinical-records-and-the-hipaa-boundary)).
 
-The record model is the referral loop with a fan-out: one discharge, several outbound referrals, accept and decline responses with reasons, the patient's choice recorded, one placement, and the others withdrawn so the facilities stop holding beds ([Releasing on Abandonment](/docs/architecture/reservations-and-holds#releasing-on-abandonment)).
+The record model is the referral loop with a fan-out: one discharge, several outbound referrals, accept and decline responses with reasons, the patient's choice recorded, one placement, and the others withdrawn so the facilities stop holding beds ([Releasing on Abandonment](/docs/building-blocks/reservations-and-holds#releasing-on-abandonment)).
 
 ## How to Build It
 
@@ -209,7 +209,7 @@ Design decisions:
 ## Auditing
 
 - **Every loop.** Each referral's status history with channels and actors, so open loops by age and stage are a report and a closed one shows the document that closed it.
-- **Every disclosure.** What was sent to whom, by which channel and endpoint, including faxes, for HIPAA accounting where required ([Audit Trails](/docs/architecture/audit-trails#what-a-record-holds)).
+- **Every disclosure.** What was sent to whom, by which channel and endpoint, including faxes, for HIPAA accounting where required ([Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds)).
 - **Every inbound document.** Received, classified, confirmed, attached or rejected, with who decided, because a misfiled document is a privacy incident and a missed result.
 - **Care program billing.** Enrollment, consent, deadlines and whether they were met, time by person and month, and the claim, reproducible for a payer audit.
 

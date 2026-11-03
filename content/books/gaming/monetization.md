@@ -65,7 +65,7 @@ PEGI's criteria for games submitted from June 2026 reach battle-pass design dire
 
 The mechanism, as you'd build it:
 
-- **A season** has a validity range, a track of tiers, and a progress threshold per tier. Thresholds and rewards are data, versioned per season ([Rules as Data](/docs/architecture/rules-as-data)), because live operations will tune them mid-season ([Live Operations](/books/gaming/live-operations)).
+- **A season** has a validity range, a track of tiers, and a progress threshold per tier. Thresholds and rewards are data, versioned per season ([Rules as Data](/docs/building-blocks/rules-as-data)), because live operations will tune them mid-season ([Live Operations](/books/gaming/live-operations)).
 - **Progress** is per account per season, fed by match results and challenge completions through events ([Events](/docs/architecture/events)), never by the client. Each award is a row keyed by what earned it and the account's points are their sum (cached on `pass_progress`), the same balances-are-sums rule as the wallet, so a redelivered `match.completed` adds nothing.
 - **Upgrading mid-season grants retroactively**: a player at tier 30 who buys the premium lane is owed premium rewards for tiers 1 through 30 at once. That's a batch of grants that has to be idempotent as a set.
 - **The end of a season** freezes progress and closes the track. What happens to unclaimed rewards is a policy you publish, not a side effect of a deleted row.

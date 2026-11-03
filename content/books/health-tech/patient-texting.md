@@ -62,7 +62,7 @@ What this means for building a practice product:
 - **It isn't clearly available to every practice.** Veterinary clinics aren't HIPAA covered entities, and (D) requires HIPAA compliance; I wouldn't rely on the exemption for a vet clinic. Med spas and wellness businesses that aren't health care providers in the ordinary sense have the same problem.
 - **Courts now read it themselves.** In *McLaughlin Chiropractic Associates v. McKesson Corp.* (June 20, 2025), the Supreme Court held that district courts in enforcement proceedings aren't bound by the FCC's interpretation of the TCPA and owe it only "appropriate respect." The codified conditions above still bind; the FCC's looser statements about what they mean can be relitigated.
 
-My rule: get the patient's express consent to texts at registration and in intake, recorded per purpose in the consent ledger ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)), and treat the health care exemption as a backstop for informational messages to patients whose consent can't be shown, never as the product's legal basis. Consent at intake costs one checkbox and makes the frequency, length and purpose limits a matter of policy rather than law.
+My rule: get the patient's express consent to texts at registration and in intake, recorded per purpose in the consent ledger ([The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger)), and treat the health care exemption as a backstop for informational messages to patients whose consent can't be shown, never as the product's legal basis. Consent at intake costs one checkbox and makes the frequency, length and purpose limits a matter of policy rather than law.
 
 ## Revocation and STOP
 
@@ -111,7 +111,7 @@ When a patient texts a clinical question, the practice's reply can move it ("I'v
 
 ## Email
 
-Email carries the long messages: forms packets, statements, treatment plans, newsletters. The HIPAA analysis is the same as above (HHS's FAQ is about email); CAN-SPAM governs commercial email ([Email: CAN-SPAM](/docs/compliance/consumer-contact#email-can-spam)), and deliverability is a platform problem covered in [Email Sending Platforms](/books/hosting-and-cloud/email-sending-platforms). Two practice specifics: send transactional and marketing mail on separate streams so a newsletter complaint doesn't bury next week's reminders ([Email: Authentication and Streams](/docs/architecture/notifications#email-authentication-and-streams)), and send each practice's mail from its own domain, authenticated, so "Elm Street Dental" arrives as itself rather than as the vendor.
+Email carries the long messages: forms packets, statements, treatment plans, newsletters. The HIPAA analysis is the same as above (HHS's FAQ is about email); CAN-SPAM governs commercial email ([Email: CAN-SPAM](/docs/compliance/consumer-contact#email-can-spam)), and deliverability is a platform problem covered in [Email Sending Platforms](/books/hosting-and-cloud/email-sending-platforms). Two practice specifics: send transactional and marketing mail on separate streams so a newsletter complaint doesn't bury next week's reminders ([Email: Authentication and Streams](/docs/building-blocks/notifications#email-authentication-and-streams)), and send each practice's mail from its own domain, authenticated, so "Elm Street Dental" arrives as itself rather than as the vendor.
 
 ## The Shared Inbox
 
@@ -224,7 +224,7 @@ GROUP BY patient_id;
 
 Notes on the sketch:
 
-- **One outbound gate.** Every product (reminders, recall, payments, reviews, staff replies) sends through one gate that checks, in order: an open `opt_outs` row for the number, open confidential communications requests for the patient, a permitting `consents` row for the template's purpose (or exemption eligibility and budget), quiet hours in the location's time zone, and segment count ([One Outbound Gate](/docs/architecture/notifications#one-outbound-gate)). A refusal is a `communications` row with `status = 'blocked'` and its `blocked_reason`.
+- **One outbound gate.** Every product (reminders, recall, payments, reviews, staff replies) sends through one gate that checks, in order: an open `opt_outs` row for the number, open confidential communications requests for the patient, a permitting `consents` row for the template's purpose (or exemption eligibility and budget), quiet hours in the location's time zone, and segment count ([One Outbound Gate](/docs/building-blocks/notifications#one-outbound-gate)). A refusal is a `communications` row with `status = 'blocked'` and its `blocked_reason`.
 - **The legal basis is recorded per message,** with the consent row it relied on, so a TCPA claim is answered message by message: this one under written consent captured at intake with this wording, that one under the exemption within budget.
 - **Opt-outs belong to the number,** not the patient: a STOP from a parent's phone stops texts about every child on it. The core `contacts.text_ok` flag is cleared as a cache; `opt_outs` is the evidence, with the words and the message they answered.
 - **The budget view is illustrative.** In production the check runs inside the send transaction with a lock per patient, so two products can't both send the third message of the week.
@@ -240,7 +240,7 @@ Notes on the sketch:
 - **Confidential communications requests,** when received and what they covered, and evidence each sending system honored them.
 - **Who chose the patient on a shared number,** since a reply applied to the wrong child is a disclosure.
 - **Bulk sends and exports of patient contact lists,** with who approved them and for what purpose.
-- **Access to message content** by staff and support, per [Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes).
+- **Access to message content** by staff and support, per [Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes).
 
 ## What This Means for the System You Build
 

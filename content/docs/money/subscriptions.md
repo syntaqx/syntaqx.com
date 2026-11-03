@@ -122,7 +122,7 @@ Cancellation is where customer experience and law meet, and the law sets the flo
 
 **Save offers are configuration, not code.** A discount, pause or cheaper plan offered during cancellation is legitimate, and some laws allow it only on conditions (below). Whether an offer may be shown, in which channel and jurisdiction, is a row someone can change, and one click or one word always declines it. An accepted offer is a change of terms, recorded like a sale.
 
-Cancelling isn't deleting: a cancelled subscription keeps its history ([Data Retention & Deletion](/docs/architecture/data-retention)).
+Cancelling isn't deleting: a cancelled subscription keeps its history ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ## The Law of Automatic Renewal
 

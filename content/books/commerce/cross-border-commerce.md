@@ -244,7 +244,7 @@ Design notes:
 - **Duty and tax are order charges.** The core `order_charges` kinds `duty` and `tax` hold what the shopper paid at checkout under DDP, with `rule_ref` pointing at the landed cost quote; under DAP there is no charge, and the order says so.
 - **The declaration is a document.** The data filed for a shipment and the commercial invoice are kept as filed, linked to the shipment, because a held parcel, a duty refund or a CBP inquiry is answered from them ([Documents Are Kept as Exchanged](/books/commerce/commerce-business#the-core-data-model)).
 - **Check restrictions at the cart,** against the destination, and screen parties before shipping; record the list version used so a later list change doesn't rewrite what was checked.
-- **Keep the regime volatile.** De minimis thresholds, flat duties and filing requirements changed several times in 2025 and 2026; they are data with effective dates ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)), not constants in code.
+- **Keep the regime volatile.** De minimis thresholds, flat duties and filing requirements changed several times in 2025 and 2026; they are data with effective dates ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)), not constants in code.
 
 ## Auditing
 

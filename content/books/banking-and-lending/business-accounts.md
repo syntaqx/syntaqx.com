@@ -179,8 +179,8 @@ Every rule returned must have `approvals >= approvals_required` and no rejection
 Design notes:
 
 - **Legal roles and logins never merge.** An authorized signer is an `account_parties` row the bank verified; a user is a `platform_users` row with grants. A user who is also a signer links through `person_party_id`, and removing the login doesn't remove the signer (or the reverse) without its own recorded action.
-- **Grants are effective-dated and granted by someone else.** "Who could send a wire from this account on March 3" is a query over `user_grants` with `valid_during`, and nobody grants themselves authority ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
-- **The approval rule in force is pinned to the payment.** Approvals reference the rule version that applied when the payment was initiated, so a rule relaxed afterwards can't retroactively approve it ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Grants are effective-dated and granted by someone else.** "Who could send a wire from this account on March 3" is a query over `user_grants` with `valid_during`, and nobody grants themselves authority ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
+- **The approval rule in force is pinned to the payment.** Approvals reference the rule version that applied when the payment was initiated, so a rule relaxed afterwards can't retroactively approve it ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Sub-accounts are accounts.** `primary_account_id` groups them for the customer; each still has its own product version, balances and statements, and insurance aggregation ignores the grouping and goes by owner and bank.
 - **Tenancy is institution, program, business.** A business with accounts at two of a program's banks has `accounts` rows at two institutions; the platform's combined view is a query, and each bank's records stay producible alone ([Tenant Hierarchies](/docs/architecture/multi-tenancy#tenant-hierarchies)).
 - **Emit `user.granted`, `user.revoked`, `approval_rule.changed`, `security_procedure.elected` and `payment.approved`,** which alerts to the business's admins and the program's fraud monitoring subscribe to ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)).
@@ -190,7 +190,7 @@ Design notes:
 Business account records are reviewed by the sponsor bank's oversight of the program, in BSA/AML exams and, after a fraud loss, by the customer's lawyers. Keep:
 
 - **The business's verification file:** the entity's documents and checks, each beneficial owner and control person with the certification and when it was refreshed, each authorized signer's CIP ([Auditing](/books/banking-and-lending/kyc-and-account-opening#auditing) in KYC & Account Opening).
-- **Every user grant and its history,** who granted it, when, on which accounts, and every login and payment action under it ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every user grant and its history,** who granted it, when, on which accounts, and every login and payment action under it ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Every approval rule version and every approval,** with how the approver authenticated, linked to the payment it released.
 - **Security procedures offered, accepted and refused,** with the agreement text shown and who elected, the evidence an Article 4A dispute turns on.
 - **Not-a-bank and insurance statements by version and surface,** with the bank list each one named.

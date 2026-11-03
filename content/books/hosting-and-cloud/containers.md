@@ -198,7 +198,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **What ran, by digest.** Every deploy's digest with the time it started and stopped, so a vulnerability disclosure ("which customers ran an image with this layer?") and an abuse report resolve to bytes, not tags ([Audit Trails](/docs/architecture/audit-trails)).
+- **What ran, by digest.** Every deploy's digest with the time it started and stopped, so a vulnerability disclosure ("which customers ran an image with this layer?") and an abuse report resolve to bytes, not tags ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Isolation granted.** Which services ran privileged, with which capabilities added and which seccomp profile, and who approved the exception.
 - **Image provenance.** The origin of every image (customer push, provider build, public mirror) and its base, so a compromised upstream image can be traced to every service built on it.
 - **Registry access.** Pulls of private images by identity and source address, because a leaked registry credential shows up as pulls from somewhere new before it shows up anywhere else.

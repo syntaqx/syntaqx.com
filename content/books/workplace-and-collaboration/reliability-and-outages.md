@@ -276,7 +276,7 @@ Notes on the sketch:
 - **Every incident's timeline.** Status changes, updates with their times, the affected services and tenants, and the post-incident review, kept long enough to answer an SLA claim and a customer's annual vendor review.
 - **Per-tenant impact.** The affected-member counts and windows behind every uptime calculation, so a credit can be recomputed.
 - **Every SLA version and every claim.** Terms in force by date, the measurement, the decision and who made it, and where the credit was applied.
-- **Every destructive operation on a tenant.** Workspace deletes, purges and restores in `audit_events`, with the operator, the ticket and the second approver, because the costliest collaboration outage on record was a delete ([Audit Trails](/docs/architecture/audit-trails)).
+- **Every destructive operation on a tenant.** Workspace deletes, purges and restores in `audit_events`, with the operator, the ticket and the second approver, because the costliest collaboration outage on record was a delete ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Restore drills.** Dates, durations and verification results, which customers increasingly ask for in security questionnaires ([From Self-Serve to Enterprise](/books/workplace-and-collaboration/selling-to-enterprises)).
 
 ## What This Means for the System You Build

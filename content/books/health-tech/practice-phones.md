@@ -47,7 +47,7 @@ Call pop is a lookup: the caller's number (ANI) against the phone numbers in the
 
 ## Routing, Hours and Voicemail
 
-A practice's call flow is configuration that changes weekly: lunch closures, holidays, a doctor out, a snow day. Model it as rules with effective dates rather than as a diagram someone edits live ([Rules as Data](/docs/architecture/rules-as-data)):
+A practice's call flow is configuration that changes weekly: lunch closures, holidays, a doctor out, a snow day. Model it as rules with effective dates rather than as a diagram someone edits live ([Rules as Data](/docs/building-blocks/rules-as-data)):
 
 - **Hours per location,** with holidays and one-off closures, in the location's time zone.
 - **Ring groups and order:** front desk first, then the back office, then overflow to another location or an answering service.
@@ -179,7 +179,7 @@ Notes on the sketch:
 
 - **A match is a list, identification is a choice.** `matched_contact_ids` holds every contact on the number; the core `communications.patient_id` and `guarantor_id` are set only when staff pick, which is what makes call history attach to the right chart.
 - **Routing is versioned.** Every call records the route version that handled it, so "why did my after-hours call go to voicemail?" has an answer, and closures are scheduled, not toggled.
-- **Recordings are documents.** Audio, voicemail and transcripts are `documents` rows (encrypted, hashed, kept as created), so they follow the same retention schedule, legal holds and access logging as every other piece of the record ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)). Playback is a `read` in `audit_events`.
+- **Recordings are documents.** Audio, voicemail and transcripts are `documents` rows (encrypted, hashed, kept as created), so they follow the same retention schedule, legal holds and access logging as every other piece of the record ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)). Playback is a `read` in `audit_events`.
 - **Emergency locations are effective-dated,** one per device at a time, and a softphone that can't confirm its location prompts the user before it's used.
 - **911 calls notify.** A call flagged `is_emergency_call` notifies the device's `notify_user_ids` in the same moment, and the event is kept for compliance.
 - **Text enablement is a registration.** A `phone_numbers` row with `text_enabled` has a `sender_registrations` row ([Two-Way Texting & Messaging](/books/health-tech/patient-texting#how-to-build-it)) that says which campaign or verification it sends under.
@@ -188,7 +188,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Every call with its route version, outcome and who answered,** for staffing questions and disputes about unanswered calls.
-- **Every recording and voicemail playback,** with the user and reason, since recordings are PHI ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Every recording and voicemail playback,** with the user and reason, since recordings are PHI ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Recording announcements,** that the greeting played and was captured, for consent disputes.
 - **Device location history and 911 notifications,** to show the MLTS met its notification and location duties.
 - **Who linked a caller to a patient,** since a wrong link puts a call on the wrong chart.

@@ -1,12 +1,13 @@
 +++
 title = "Code Ownership"
 description = "Every service and directory has an owning team: CODEOWNERS for reviews, a catalog entry for operations, and a README that gets anyone running in one command."
-category = "Engineering Practice"
+category = "Development"
+aliases = ["engineering/code-ownership"]
 order = 1023
 tags = ["ownership", "process", "documentation", "codeowners"]
 +++
 
-Code without an owner decays. Nobody [upgrades its dependencies](/docs/engineering/dependencies), nobody answers its alerts, and the first person to touch it in a year inherits every surprise. Ownership is cheap to write down and expensive to reconstruct, so it's written down from the first commit, and it's what makes the review rules in [Commits, PRs & Code Review](/docs/engineering/commits-and-reviews) enforceable.
+Code without an owner decays. Nobody [upgrades its dependencies](/docs/development/dependencies), nobody answers its alerts, and the first person to touch it in a year inherits every surprise. Ownership is cheap to write down and expensive to reconstruct, so it's written down from the first commit, and it's what makes the review rules in [Commits, PRs & Code Review](/docs/development/commits-and-reviews) enforceable.
 
 ## Every Path Has an Owner
 
@@ -79,7 +80,7 @@ Ownership changes are explicit handoffs, never drift:
 - The handoff includes the runbook, open incidents and action items, known debt, and on-call shadowing for at least one rotation.
 - Nobody inherits a service in the middle of an incident.
 
-Code no team will accept is a candidate for deletion, not for a "shared" label. See [Tech Debt](/docs/engineering/tech-debt).
+Code no team will accept is a candidate for deletion, not for a "shared" label. See [Tech Debt](/docs/development/tech-debt).
 
 ## References
 

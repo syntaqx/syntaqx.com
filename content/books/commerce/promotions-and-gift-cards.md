@@ -34,7 +34,7 @@ Three patterns run through the table:
 
 ## Discount Engines
 
-A discount has four parts: **who** it's for (everyone, a segment, a customer, holders of a code), **what** it applies to (items, collections, the order, shipping), **when** it applies (a minimum quantity or subtotal, a date range, a channel) and **how much** (a percentage, a fixed amount, a fixed price, a free item). Every engine's rule model is a version of that, and the playbook's [The Shape of a Rule](/docs/architecture/rules-as-data#the-shape-of-a-rule) is the general form. The common types:
+A discount has four parts: **who** it's for (everyone, a segment, a customer, holders of a code), **what** it applies to (items, collections, the order, shipping), **when** it applies (a minimum quantity or subtotal, a date range, a channel) and **how much** (a percentage, a fixed amount, a fixed price, a free item). Every engine's rule model is a version of that, and the playbook's [The Shape of a Rule](/docs/building-blocks/rules-as-data#the-shape-of-a-rule) is the general form. The common types:
 
 - **Amount or percentage off items.** 20% off a collection; $5 off each case. Applied per eligible line.
 - **Amount or percentage off the order.** $10 off orders over $75. Applied to the subtotal after item discounts and then allocated back to lines ([Allocating Discounts to Lines](#allocating-discounts-to-lines)).
@@ -62,7 +62,7 @@ Design rules that hold across engines:
 
 - **Rank is data and unique.** commercetools requires a sort order "unique globally across all Cart Discounts"; Adobe's discard rule "needs unique priorities." Two discounts with the same rank make the result depend on evaluation order, which is a bug that appears only in production.
 - **Compute in a fixed sequence:** prices, then item discounts by rank, then order discounts on the reduced subtotal, then shipping discounts, then tax. Each step's output is the next step's input, and the sequence is the same in the cart, the checkout, the order and any refund recalculation.
-- **Explain every result.** The cart shows which discounts applied and, for a code that didn't, why ("Discount couldn't be used with your existing discounts," in Shopify's wording). The order stores the evaluation, not just the totals ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Explain every result.** The cart shows which discounts applied and, for a code that didn't, why ("Discount couldn't be used with your existing discounts," in Shopify's wording). The order stores the evaluation, not just the totals ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Floors.** No line goes below zero, no order total below zero, and a "fixed amount off the order" can't exceed the subtotal. Merchants often add a margin floor (no line below cost), which needs cost at evaluation time and must never expose cost to the storefront ([Cost is not price](/books/commerce/commerce-business#the-core-data-model)).
 
 ## Codes, Limits and Budgets
@@ -72,9 +72,9 @@ Codes need limits, because a code is a bearer instrument: whoever has the string
 - **Per-code and per-customer caps.** Adobe Commerce has "Uses per Coupon" and "Uses per Customer" (which applies only to registered customers, since a guest has no identity to count); Commerce.com requires `max_uses` on a code; Stripe-style coupons carry a redemption cap and a redeem-by date.
 - **Unique codes.** Adobe's "Use Auto Generation" and similar features create thousands of single-use codes, one per recipient. A unique code can be traced to the person it was sent to; a shared code ("SAVE20") can't, and leaks.
 - **Per-order limits.** Shopify allows at most 5 product or order codes and 1 shipping code per order; commercetools 10 codes per cart.
-- **Budgets.** Medusa's campaign budgets stop a promotion when it's spent. A budget is a counter that must be decremented atomically at redemption, the same problem as stock ([Counters for Pooled Inventory](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory)).
+- **Budgets.** Medusa's campaign budgets stop a promotion when it's spent. A budget is a counter that must be decremented atomically at redemption, the same problem as stock ([Counters for Pooled Inventory](/docs/building-blocks/reservations-and-holds#counters-for-pooled-inventory)).
 
-Redemptions are counted when the order is placed, and released when it's cancelled before fulfillment; a code with one use left shouldn't be consumed by an abandoned checkout, so the count is reserved at checkout and confirmed at order ([Confirming a Hold, Idempotently](/docs/architecture/reservations-and-holds#confirming-a-hold-idempotently)).
+Redemptions are counted when the order is placed, and released when it's cancelled before fulfillment; a code with one use left shouldn't be consumed by an abandoned checkout, so the count is reserved at checkout and confirmed at order ([Confirming a Hold, Idempotently](/docs/building-blocks/reservations-and-holds#confirming-a-hold-idempotently)).
 
 ## Free, BOGO and Bargain Claims
 
@@ -106,7 +106,7 @@ Discounts are money handed out by rule, and the rule is the attack surface. The 
 - **Code leakage.** A code sent to one list ends up on coupon aggregators and browser extensions that try every known code at checkout. Unique single-use codes, codes bound to a customer or email, and short validity windows contain it; a public code should be treated as public.
 - **Stacking exploits.** A combination nobody intended (a 30% sitewide offer stacking with a 50% clearance price and a free gift) found and shared. The defenses are class exclusivity by default, explicit combinations only, and a margin floor.
 - **Return arbitrage.** Buying to meet a threshold (free shipping, a gift, a tier), then returning the items that met it. Allocation and a stated clawback rule close it.
-- **Referral loops.** Referring oneself through a second account for both sides of a referral credit; identity linking again ([Record Linkage](/docs/architecture/record-linkage)).
+- **Referral loops.** Referring oneself through a second account for both sides of a referral credit; identity linking again ([Record Linkage](/docs/building-blocks/record-linkage)).
 - **Employee and influencer codes** used far beyond their audience; per-code caps and monitoring by redemption source.
 
 Every redemption is recorded with the code, the customer, the identity links checked and the decision, which the existing `promotion_redemptions` table already does for delivery promotions; this chapter extends it to every promotion.
@@ -308,7 +308,7 @@ Design notes:
 - **Every promotion version** with its terms, dates, rank, combinations and approver, and every redemption with the version, code, customer, identity checks and decision.
 - **The evaluation on every order:** which discounts applied in what order, which were rejected and why, and the allocation to lines; this is what a customer complaint, a tax audit and a margin review read.
 - **Basis for "free" and bargain claims,** with the regular price history and run dates.
-- **The full gift card and store credit ledger,** append only, with issuer entity, jurisdiction, owner address when known, fees with the rule that allowed them, cash-outs and escheat reports; unclaimed property audits look back many years ([Audit Trails](/docs/architecture/audit-trails)).
+- **The full gift card and store credit ledger,** append only, with issuer entity, jurisdiction, owner address when known, fees with the rule that allowed them, cash-outs and escheat reports; unclaimed property audits look back many years ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Breakage inputs:** issue and redemption history by cohort, reconciled to the liability on the balance sheet.
 
 ## What This Means for the System You Build

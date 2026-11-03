@@ -8,7 +8,7 @@ tags = ["operations", "support", "customer-service", "automation", "tickets"]
 
 Support is where every other system shows up when it fails. A charge that went through but didn't unlock anything, an account taken over, a decision the customer thinks was wrong, an outage that hit at dinner time: each one becomes a contact from someone who is usually frustrated and sometimes not who they say they are. Support has the volume of a consumer product, the spikes of every launch and incident, and staff who can change accounts and move money. A store's version, where most contacts ask where an order is, is the Commerce volume's [Customer Service](/books/commerce/customer-service).
 
-This chapter is support as an engineered system: the channels, the ticket and what it carries, how contacts are classified and routed, the automation that answers what can be answered and hands off the rest, how support escalates to engineering, and the numbers that say whether it works. The staff side of data access is [Support Access & Internal Tools](/docs/security/support-access); the rules for automated agents are in [AI Agents in the Product](/docs/architecture/ai-agents).
+This chapter is support as an engineered system: the channels, the ticket and what it carries, how contacts are classified and routed, the automation that answers what can be answered and hands off the rest, how support escalates to engineering, and the numbers that say whether it works. The staff side of data access is [Support Access & Internal Tools](/docs/security/support-access); the rules for automated agents are in [AI Agents in the Product](/docs/building-blocks/ai-agents).
 
 ## Channels
 
@@ -107,8 +107,8 @@ Most contacts ask something the help center already answers or need an action th
 
 The design from Riot's post is the one to copy:
 
-- **Automate runbooks, not conversations.** Its example is a promotional item: check eligibility and reply if the player isn't eligible, escalate to an agent if they already own it, otherwise grant it and reply. Every branch is a rule over known data, and the odd case goes to a person. That's [Decide in Code](/docs/architecture/ai-agents#decide-in-code): the model classifies, the code acts.
-- **A human one click away.** Riot added a "REQUEST A HUMAN" button "for maximum visibility" after satisfaction with bot answers lagged; handoff should work at any point, in any phrasing, with the transcript and everything the bot did attached ([Human Handoff Is a Product Feature](/docs/architecture/ai-agents#human-handoff-is-a-product-feature)).
+- **Automate runbooks, not conversations.** Its example is a promotional item: check eligibility and reply if the player isn't eligible, escalate to an agent if they already own it, otherwise grant it and reply. Every branch is a rule over known data, and the odd case goes to a person. That's [Decide in Code](/docs/building-blocks/ai-agents#decide-in-code): the model classifies, the code acts.
+- **A human one click away.** Riot added a "REQUEST A HUMAN" button "for maximum visibility" after satisfaction with bot answers lagged; handoff should work at any point, in any phrasing, with the transcript and everything the bot did attached ([Human Handoff Is a Product Feature](/docs/building-blocks/ai-agents#human-handoff-is-a-product-feature)).
 - **Measure what the bot closes.** At the time of the post, the bot routed or answered 20% of tickets, "doing the daily work of about 50 agents". Vendors now claim far higher automation rates; treat those as marketing until measured on your own tickets, with satisfaction and reopen rate beside the automation rate. A bot that closes tickets customers reopen is moving work, not removing it.
 
 ### When a Person Must Decide
@@ -119,7 +119,7 @@ Some answers should come from a person even when a bot could produce them:
 - **Money beyond a cap.** Refunds, credits and goodwill above a value a bot can grant, and anything that reverses a charge on a different instrument.
 - **Account control.** Recovery, ownership disputes and changes to contact points; an agent verifies evidence against a written threshold and unlocks self-service, never sets a password or sign-in factor directly ([Recovery Is the Real Login](/docs/security/authentication#recovery-is-the-real-login)).
 - **Safety.** Threats to life, self-harm, child safety and harassment follow the urgent path in [Trust & Safety](/docs/security/trust-and-safety), from any channel, at any hour.
-- **Penalties and appeals.** Ban and suspension appeals go to the process that made the decision, reviewed by someone not involved in it; a support agent who reverses a penalty because the ticket was persuasive has bypassed that process ([Explanations and Appeals](/docs/architecture/risk-scoring#explanations-and-appeals)).
+- **Penalties and appeals.** Ban and suspension appeals go to the process that made the decision, reviewed by someone not involved in it; a support agent who reverses a penalty because the ticket was persuasive has bypassed that process ([Explanations and Appeals](/docs/building-blocks/risk-scoring#explanations-and-appeals)).
 
 Voice agents on the phone follow the same rules, plus disclosure and recording rules that differ by jurisdiction ([Telling People They're Talking to an AI](/docs/compliance/consumer-contact#telling-people-they-re-talking-to-an-ai)).
 
@@ -168,7 +168,7 @@ Some tickets are bugs, and the path from support to engineering decides how fast
 Some contacts aren't just support tickets; they're complaints a regulator, a bank partner or a card network expects you to handle on a deadline. For consumer electronic fund transfers in the US, Regulation E gives the consumer 60 days after the statement to report an error, and the institution must determine whether an error occurred within 10 business days, or up to 45 days if it provisionally credits the account within those 10 business days ([12 CFR 1005.11](https://www.law.cornell.edu/cfr/text/12/1005.11)). Card complaints often become disputes, which have their own process; privacy requests, accessibility complaints and regulated-industry complaints have their own clocks.
 
 - **Tag complaints as complaints,** with a category, an owner and an outcome, so patterns surface and the reports partners ask for write themselves.
-- **Store the deadline on the ticket** when it's created, computed from the rule and its inputs, not recomputed on read ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Store the deadline on the ticket** when it's created, computed from the rule and its inputs, not recomputed on read ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Publish your own deadline** for everything the law doesn't cover, and keep it.
 
 ## Metrics
@@ -191,7 +191,7 @@ Metrics say how fast; QA says whether the answers were right.
 - **Sample and score.** A reviewer scores a random sample of solved tickets per agent, bot flow and category against a rubric: correct, complete, policy followed, actions justified, tone. Sample bot conversations at the same rate as human ones.
 - **Calibrate the reviewers.** Reviewers score the same tickets periodically and compare, or the rubric means something different to each of them.
 - **Close the loop.** QA findings update macros, help articles and runbooks, not only coaching notes.
-- **Recordings and transcripts are personal data.** Call recordings, chat transcripts and screen recordings hold names, account details and sometimes health or payment information. Disclose recording at the start of calls as the law in each place requires ([Recording Calls](/docs/compliance/consumer-contact#recording-calls)), keep card numbers out of recordings by pausing or by taking payment through a link instead, set a retention period per record type, and restrict who can play them ([Recordings and Transcripts Are Personal Data](/docs/architecture/ai-agents#recordings-and-transcripts-are-personal-data)).
+- **Recordings and transcripts are personal data.** Call recordings, chat transcripts and screen recordings hold names, account details and sometimes health or payment information. Disclose recording at the start of calls as the law in each place requires ([Recording Calls](/docs/compliance/consumer-contact#recording-calls)), keep card numbers out of recordings by pausing or by taking payment through a link instead, set a retention period per record type, and restrict who can play them ([Recordings and Transcripts Are Personal Data](/docs/building-blocks/ai-agents#recordings-and-transcripts-are-personal-data)).
 - **Log access.** Every read of a customer's data from the support console is logged with the agent and the ticket, including transcripts opened during QA ([Logging Support Access](/docs/security/support-access#logging-support-access)).
 
 ## Checklist

@@ -190,9 +190,9 @@ WHERE a.program_id IS NOT NULL AND a.account_kind = 'loan';
 Design notes:
 
 - **Check the route before the price.** The license check runs when the borrower's state is known and before the offer: it picks the route (own license, partner bank, own bank), and the route decides the institution, the product version and the rate cap the pricing grid must respect ([State Rate Caps as Data](/books/banking-and-lending/installment-loans#state-rate-caps-as-data)). `not_offered` is a valid outcome, as Enova's states without consumer loans show.
-- **Requirements cite statutes and review dates,** like `state_law_applicability`, because a court decision or a new statute changes a cell, and the lender must show which version it relied on for a loan made under the old one ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Requirements cite statutes and review dates,** like `state_law_applicability`, because a court decision or a new statute changes a cell, and the lender must show which version it relied on for a loan made under the old one ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Licenses belong to legal entities.** A group often holds lending licenses in one subsidiary, servicing in another and money transmission in a third (Affirm Payments, LLC holds Affirm's money transmitter licenses); the check names the entity that will perform each activity.
-- **Renewals are deadlines.** `renewal_due` feeds the same deadline machinery as any regulatory clock ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)); a lapsed license blocks new applications in that state the next day.
+- **Renewals are deadlines.** `renewal_due` feeds the same deadline machinery as any regulatory clock ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)); a lapsed license blocks new applications in that state the next day.
 - **The lender of record never changes.** A loan a partner bank made stays the bank's loan in `accounts.institution_id` after the nonbank charters; only new loans go to the new bank.
 
 ## Auditing
@@ -205,7 +205,7 @@ State examiners, partner banks, warehouse lenders, acquirers and courts each ask
 - **True lender evidence per partner loan:** whose credit policy decided, whose money funded, how long the bank held, what it kept, the price it sold at, the collateral the program posted, and the marketing approvals in force.
 - **Route changes:** when a lender moved a state or product from partner to license to its own bank, and which loans went which way.
 
-Record mechanics are in [Audit Trails](/docs/architecture/audit-trails#producing-records).
+Record mechanics are in [Audit Trails](/docs/building-blocks/audit-trails#producing-records).
 
 ## What This Means for the System You Build
 

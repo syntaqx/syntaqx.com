@@ -231,7 +231,7 @@ Design notes:
 
 ## Auditing
 
-The ERP is the customer's book of record, and the spend platform is the subledger behind a large share of its expense lines, so its records support the customer's financial statement audit. The general design is in [Audit Trails](/docs/architecture/audit-trails); make sure the record shows:
+The ERP is the customer's book of record, and the spend platform is the subledger behind a large share of its expense lines, so its records support the customer's financial statement audit. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); make sure the record shows:
 
 - **For every spend line,** the coding, who or what produced it (rule, model version, person), and every recode with before and after.
 - **For every sync,** what was sent, when, under which key, the ERP's ID and version back, and every rejection and conflict with its resolution.

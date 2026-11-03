@@ -58,7 +58,7 @@ Two gaps show in these docs. FieldRoutes' knowledge base suggests putting a sale
 
 ## A Licensing Model
 
-The vendor precedents combine into one workable design. Keep licenses as their own records linked to states and skills, as FieldRoutes' Licenses API does, with the license numbers printed onto treatment records the way Jobber's chemical tracking prints them. Give each staff member's skills a level and a validity period, as Salesforce Field Service does. Treat a visit's required skills as a hard constraint, as Timefold does. And store what each jurisdiction requires for each kind of work as rows with their own validity, so a change in the law is a data change ([Rules as Data](/docs/architecture/rules-as-data)). The schema below adds licensing tables to the canonical model in [The Field Operations Business](/books/field-operations/field-operations-business); it doesn't redefine visits or properties.
+The vendor precedents combine into one workable design. Keep licenses as their own records linked to states and skills, as FieldRoutes' Licenses API does, with the license numbers printed onto treatment records the way Jobber's chemical tracking prints them. Give each staff member's skills a level and a validity period, as Salesforce Field Service does. Treat a visit's required skills as a hard constraint, as Timefold does. And store what each jurisdiction requires for each kind of work as rows with their own validity, so a change in the law is a data change ([Rules as Data](/docs/building-blocks/rules-as-data)). The schema below adds licensing tables to the canonical model in [The Field Operations Business](/books/field-operations/field-operations-business); it doesn't redefine visits or properties.
 
 ```sql
 CREATE TABLE jurisdictions (            -- each tenant loads the boundaries it works in
@@ -139,7 +139,7 @@ The design choices:
 
 ## Jurisdictions Overlap
 
-A single address falls inside a state, a county and often a city, and each can impose its own requirement. For licensing the combination is "all apply": the worker must satisfy every applicable requirement from every jurisdiction that contains the point ([Rules as Data: When Rules Overlap](/docs/architecture/rules-as-data#when-rules-overlap)).
+A single address falls inside a state, a county and often a city, and each can impose its own requirement. For licensing the combination is "all apply": the worker must satisfy every applicable requirement from every jurisdiction that contains the point ([Rules as Data: When Rules Overlap](/docs/building-blocks/rules-as-data#when-rules-overlap)).
 
 What's field-specific is resolving the jurisdictions. Do it once, when an address is validated, by point-in-polygon against stored boundaries, and save the jurisdiction IDs on the property ([Customers, Accounts & Properties](/books/field-operations/customers-and-properties)). The Census Bureau's TIGER/Line Shapefiles are the free public source, with legal boundaries as of January 1 of the release year, updated through the annual Boundary and Annexation Survey. City limits don't follow ZIP codes, and unincorporated areas have no city at all, so a ZIP-to-city table gives wrong answers exactly where solicitor permits and local licenses change. When boundaries change, re-resolve the affected properties.
 
@@ -245,7 +245,7 @@ Licensing records answer three questions later: did this person hold the right l
 - **Overrides** of any warning or block at assignment, completion or sale, with reason and approver; a sale by an unpermitted rep may have to be unwound and its commission reversed.
 - **Training and supervision records** for as long as the rules require, such as two years from the date of use for federal direct-supervision records and two years after employment ends for Texas technician training.
 
-The record structure and typed actors are in [Audit Trails](/docs/architecture/audit-trails), and the license snapshots on work records and their retention are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+The record structure and typed actors are in [Audit Trails](/docs/building-blocks/audit-trails), and the license snapshots on work records and their retention are in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

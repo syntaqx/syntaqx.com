@@ -268,8 +268,8 @@ Notes on the sketch:
 
 - **Every rule that changed what was billed.** Ingest, sampling and drop rules with their ranges and creators, because a bill is the product of usage and rules.
 - **Cardinality history.** Hourly series counts per metric with their tag breakdown, kept for as long as an invoice can be disputed.
-- **Retention changes.** Who lengthened or shortened retention, and when, since retention changes cost and, for logs that hold personal data, compliance ([Data Retention & Deletion](/docs/architecture/data-retention)).
-- **Access to telemetry.** Logs and traces carry customer and end-user data; who queried what is an audit question in its own right ([Audit Trails](/docs/architecture/audit-trails)).
+- **Retention changes.** Who lengthened or shortened retention, and when, since retention changes cost and, for logs that hold personal data, compliance ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
+- **Access to telemetry.** Logs and traces carry customer and end-user data; who queried what is an audit question in its own right ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

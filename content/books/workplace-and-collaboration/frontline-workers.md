@@ -53,7 +53,7 @@ The design rules for a product that frontline workers use on shared devices:
 
 - **One sign-out ends every session on the device,** and the app wipes the previous user's local data, cached messages, drafts and push registration.
 - **Push tokens belong to the device session,** not the account, so the next worker on the device doesn't receive the last worker's DMs.
-- **Offline data is scoped to the signed-in user** and encrypted with a key that's destroyed at sign-out ([A Scoped Local Store](/docs/architecture/offline-sync#a-scoped-local-store)).
+- **Offline data is scoped to the signed-in user** and encrypted with a key that's destroyed at sign-out ([A Scoped Local Store](/docs/building-blocks/offline-sync#a-scoped-local-store)).
 
 ## The Schedule Is the System of Record
 

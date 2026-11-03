@@ -89,7 +89,7 @@ Feeds are no longer only a product decision:
 
 - **The EU Digital Services Act, Article 27,** requires online platforms that use recommender systems to set out the main parameters in their terms and conditions, including the criteria that matter most and why, and, where users can choose between options, to offer a control to select and change the ordering at any time from the place where content is ranked.
 - **Article 38** requires very large platforms to offer, for each recommender system, at least one option not based on profiling. In practice that's a chronological or community-ranked feed the user can switch to and stay in.
-- **Minors.** Several US states have passed laws restricting algorithmic feeds or notifications for minors, and their court status changes often; [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#us-state-laws-and-their-court-status) tracks them. The engineering consequence is the same everywhere: the feed type and notification schedule must be selectable per account by rule, with the age band and jurisdiction as inputs ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Minors.** Several US states have passed laws restricting algorithmic feeds or notifications for minors, and their court status changes often; [Minors, Age Assurance & US State Law](/books/user-generated-platforms/minors-and-age-assurance#us-state-laws-and-their-court-status) tracks them. The engineering consequence is the same everywhere: the feed type and notification schedule must be selectable per account by rule, with the age band and jurisdiction as inputs ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **Liability.** Courts have begun to treat a platform's own recommendations as its own conduct rather than as third-party content; [The Law of Hosting User Content](/books/user-generated-platforms/hosting-liability#the-litigation) covers the cases. The engineering consequence is that recommendation decisions need records: which model, which candidates, which demotions, for which viewer.
 
 My default is to build the non-profiled feed first and keep it first-class: a user-selectable mode stored on the account, honored by every surface (home, notifications, related items), with its own tests. A non-profiled option that only works on one screen is not the option the law asks for.
@@ -121,8 +121,8 @@ Recommendation-driven notifications need their own budget:
 
 - **A per-user cap** on recommendation pushes per day and per week, learned per user within a hard ceiling, with opens and disables as the labels.
 - **Quiet hours** in the user's time zone.
-- **Consent and purpose.** Push and email for recommendations are marketing in purpose, with opt-outs that must work; the playbook's [Notifications & Consent](/docs/architecture/notifications#purpose-decides-everything) covers the consent ledger, the single outbound gate and re-checking eligibility at send time.
-- **Re-check at send.** Between selection and delivery the post may have been removed or the user may have blocked its author; the send-time check reads current state ([Event-Triggered, Re-Checked at Send Time](/docs/architecture/notifications#event-triggered-re-checked-at-send-time)).
+- **Consent and purpose.** Push and email for recommendations are marketing in purpose, with opt-outs that must work; the playbook's [Notifications & Consent](/docs/building-blocks/notifications#purpose-decides-everything) covers the consent ledger, the single outbound gate and re-checking eligibility at send time.
+- **Re-check at send.** Between selection and delivery the post may have been removed or the user may have blocked its author; the send-time check reads current state ([Event-Triggered, Re-Checked at Send Time](/docs/building-blocks/notifications#event-triggered-re-checked-at-send-time)).
 - **Minors.** Rules limiting notifications to minors at night or by default are the most common feature restrictions in recent state laws and proposals; the cap and quiet hours must be configurable per age band.
 
 ## Measuring It
@@ -208,7 +208,7 @@ Notes on the sketch:
 - **One block table, read everywhere.** Feeds, search, chat, mentions, notifications and recommendations all filter on `blocks` in both directions; services cache each viewer's block set with explicit invalidation, because a block that takes minutes to apply is a harassment window.
 - **Friend requests expire,** and the pair is stored once with an ordered key so neither side can create a duplicate.
 - **Feed definitions are data,** including the platform's own feeds, so the non-profiled option is a row with `profiled = false` that every surface can be pointed at, and a user's choice survives releases. [Federation & Open Protocols](/books/user-generated-platforms/federation#how-to-build-it) registers third-party feed generators here.
-- **Impressions are an analytics log,** partitioned and retained for a fixed window (long enough for training and for answering a regulator's or court's questions about what was recommended), with logged-out viewers pseudonymous ([Data Retention & Deletion](/docs/architecture/data-retention#retention-windows)). High-volume pipelines write them to the event stream and the warehouse rather than the transactional database ([Streaming](/docs/data/streaming)).
+- **Impressions are an analytics log,** partitioned and retained for a fixed window (long enough for training and for answering a regulator's or court's questions about what was recommended), with logged-out viewers pseudonymous ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-windows)). High-volume pipelines write them to the event stream and the warehouse rather than the transactional database ([Streaming](/docs/data/streaming)).
 - **Per-viewer feed caches aren't tables.** Fan-out lists live in a cache keyed by viewer, rebuilt on miss; the record is the graph and the content.
 - **Events:** `follow.created`, `follow.removed`, `friendship.requested`, `friendship.accepted`, `block.created`, `block.removed` and `feed.mode_changed` go through the outbox ([Events & Async Messaging](/docs/architecture/events#the-transactional-outbox)); content life-cycle events from the core model trigger fan-out and removal sweeps.
 
@@ -217,8 +217,8 @@ Notes on the sketch:
 - **What was recommended to whom, and why:** the impression log with candidate source, model version and demotions, for the retention window.
 - **Model and value-model versions over time,** with the experiments that shipped them and their measured effects, because "when did the feed change?" is a question from users, creators, regulators and plaintiffs.
 - **Feed mode choices and defaults,** per account and per age band and jurisdiction, so compliance with non-profiling and minors' rules can be shown, not asserted.
-- **Graph changes that matter to safety:** blocks and their timing, friend requests to minors, and follows of minors by unknown adults ([Audit Trails](/docs/architecture/audit-trails)).
-- **Recommendation notifications sent,** with the eligibility check result at send time ([The Message Log](/docs/architecture/notifications#the-message-log)).
+- **Graph changes that matter to safety:** blocks and their timing, friend requests to minors, and follows of minors by unknown adults ([Audit Trails](/docs/building-blocks/audit-trails)).
+- **Recommendation notifications sent,** with the eligibility check result at send time ([The Message Log](/docs/building-blocks/notifications#the-message-log)).
 
 ## What This Means for the System You Build
 

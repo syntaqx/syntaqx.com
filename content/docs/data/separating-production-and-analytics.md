@@ -9,7 +9,7 @@ tags = ["data", "analytics", "cdc", "data-contracts", "security"]
 
 Every product that succeeds grows a second workload. The first is the product itself: a checkout, a match, a booking, a ledger entry, thousands of small transactions a second. The second is everyone who wants to understand the first: finance closing the month, a designer checking whether a level is too hard, a data scientist training a churn model, a support lead asking which customers had a bad week. Both want the same data. They should never get it from the same place.
 
-This chapter is about the line between them: why it exists, what crosses it, and who is allowed to stand on which side. [Data Pipelines & Analytics](/docs/architecture/data-pipelines) covers the pipeline that carries data over the line (CDC mechanics, ELT layers, tests, replayability). The rest of this section covers what sits on the far side: [warehouses and lakes](/docs/data/warehouses-and-lakes), [running a cloud warehouse](/docs/data/cloud-warehouses), [real-time analytical databases](/docs/data/analytical-databases), [streaming](/docs/data/streaming), [modeling](/docs/data/data-modeling), [data science platforms](/docs/data/data-science-platforms) and [governance](/docs/data/data-governance).
+This chapter is about the line between them: why it exists, what crosses it, and who is allowed to stand on which side. [Data Pipelines & Analytics](/docs/data/data-pipelines) covers the pipeline that carries data over the line (CDC mechanics, ELT layers, tests, replayability). The rest of this section covers what sits on the far side: [warehouses and lakes](/docs/data/warehouses-and-lakes), [running a cloud warehouse](/docs/data/cloud-warehouses), [real-time analytical databases](/docs/data/analytical-databases), [streaming](/docs/data/streaming), [modeling](/docs/data/data-modeling), [data science platforms](/docs/data/data-science-platforms) and [governance](/docs/data/data-governance).
 
 ## Two Workloads, Two Shapes
 
@@ -23,7 +23,7 @@ This chapter is about the line between them: why it exists, what crosses it, and
 | Schema designed for | The application's invariants | The questions people ask |
 | Who changes it | Product engineers, every sprint | Data engineers, on a slower cadence |
 
-The two shapes pull storage engines in opposite directions. Row stores with B-tree indexes make the left column fast; columnar stores with compression and vectorized scans make the right column fast ([Real-Time Analytical Databases](/docs/data/analytical-databases) explains why). No setting turns one into the other. [Keep Analytics Off Production](/docs/architecture/data-pipelines#keep-analytics-off-production) gives the short version of what goes wrong when they share a database; the rest of this chapter is the longer one.
+The two shapes pull storage engines in opposite directions. Row stores with B-tree indexes make the left column fast; columnar stores with compression and vectorized scans make the right column fast ([Real-Time Analytical Databases](/docs/data/analytical-databases) explains why). No setting turns one into the other. [Keep Analytics Off Production](/docs/data/separating-production-and-analytics) gives the short version of what goes wrong when they share a database; the rest of this chapter is the longer one.
 
 ## Nobody Queries the Primary
 
@@ -54,7 +54,7 @@ When I accept a replica for analytics: in the first year, for a handful of inter
 
 Data reaches the analytics side in two forms, and a mature platform uses both on purpose.
 
-**Database snapshots and CDC** copy the tables. Change data capture reads the database's log, so the warehouse gets every insert, update and delete in commit order, at almost no cost to the primary ([Change Data Capture](/docs/architecture/data-pipelines#change-data-capture)). Netflix built its own framework, DBLog, to capture both the log and a table's full state in resumable chunks, with an approach that "does not use locks and has minimum impact on the source" ([Netflix: DBLog](https://arxiv.org/abs/2010.12597)). CDC is complete and cheap to start, because the application changes nothing. Its weakness is that it ships your internal model: column names, status enums, the join table you meant to drop next quarter.
+**Database snapshots and CDC** copy the tables. Change data capture reads the database's log, so the warehouse gets every insert, update and delete in commit order, at almost no cost to the primary ([Change Data Capture](/docs/data/data-pipelines#change-data-capture)). Netflix built its own framework, DBLog, to capture both the log and a table's full state in resumable chunks, with an approach that "does not use locks and has minimum impact on the source" ([Netflix: DBLog](https://arxiv.org/abs/2010.12597)). CDC is complete and cheap to start, because the application changes nothing. Its weakness is that it ships your internal model: column names, status enums, the join table you meant to drop next quarter.
 
 **Service-owned analytical events** are facts the service decides to publish: `order.completed`, `match.ended`, `visit.completed`, `transfer.settled`. They carry business meaning the tables don't (why a visit was skipped, which matchmaking rule placed a player), they survive a schema refactor, and their shape is a promise. Their weakness is that someone has to design, publish and maintain each one, and a fact nobody thought to publish is missing forever.
 
@@ -93,7 +93,7 @@ The same shape works for a SaaS `subscription.renewed`, a marketplace `order.com
 
 ## The Boundary Is a Security Boundary
 
-The warehouse usually ends up as the most complete copy of customer data in the company, read by the most people, with the weakest controls. [Privacy and Retention](/docs/architecture/data-pipelines#privacy-and-retention) covers minimizing at ingestion and erasure; the boundary adds access design.
+The warehouse usually ends up as the most complete copy of customer data in the company, read by the most people, with the weakest controls. [Privacy and Retention](/docs/data/data-pipelines#privacy-and-retention) covers minimizing at ingestion and erasure; the boundary adds access design.
 
 - **Least privilege by layer.** Raw and staging are readable by the pipeline's service account and the data engineers who maintain it. Marts are readable by analysts. Nobody outside the data team reads raw. It's the same deny-by-default model as [Authorization](/docs/security/authorization), applied to schemas.
 - **Personal fields are classified and protected at the column.** BigQuery attaches policy tags to columns, and a user needs the Fine-Grained Reader role on the tag in addition to dataset access, so `SELECT *` fails on the restricted columns rather than leaking them; masking can substitute null, default or hashed values ([Google Cloud: Column-level access control](https://docs.cloud.google.com/bigquery/docs/column-level-security-intro)). Snowflake's masking policies "selectively mask plain-text data in table and view columns at query time" depending on the role ([Snowflake: Dynamic Data Masking](https://docs.snowflake.com/en/user-guide/security-column-ddm-intro)). Use whichever your platform has; the point is that the default view of a person is masked.
@@ -120,7 +120,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA marts TO analyst_reader;
 
 ## Data Contracts Between Product and Data Teams
 
-The pipeline failures that cost the most start upstream: a product team shipped a change that was correct for the product and broke something they didn't know existed. [Data Contracts](/docs/architecture/data-pipelines#data-contracts) defines the contract; what follows is how to run one between two teams.
+The pipeline failures that cost the most start upstream: a product team shipped a change that was correct for the product and broke something they didn't know existed. [Data Contracts](/docs/data/data-pipelines#data-contracts) defines the contract; what follows is how to run one between two teams.
 
 A contract names its producer, its consumers, its schema, its meaning, its freshness and its change policy. The Open Data Contract Standard gives a YAML shape for it, with sections for fundamentals, schema, data quality, team, roles and a service-level agreement among others ([ODCS](https://bitol-io.github.io/open-data-contract-standard/latest/)). The format matters less than three habits:
 

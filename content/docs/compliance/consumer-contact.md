@@ -9,7 +9,7 @@ aliases = ["consumer-contact"]
 
 Most products eventually reach out to people: a bank texts a fraud alert, a clinic calls with an appointment reminder, a marketplace emails a promotion, a game studio texts a login code, a home-service company has an AI call lapsed customers. In the US, each of those falls under a different mix of federal statute, FCC rules, state law, carrier rules and mailbox-provider policy, and the penalties are set per message. The Telephone Consumer Protection Act gives consumers a private right of action for $500 per violation, and a court can triple it for willful or knowing violations. Multiply by a reminder campaign and it's clear why TCPA suits are filed as class actions. A store's marketing texts and the cases pending over them are the Commerce volume's [The Courts, as of October 2026](/books/commerce/email-sms-and-lifecycle#the-courts-as-of-october-2026), and the disclosure laws for a store's support bot are its [Disclosure Laws](/books/commerce/customer-service#disclosure-laws).
 
-The rules look scattered, but they share one shape: **consent for a purpose, revocable any time, honored quickly, with records that prove it.** [Notifications & Consent](/docs/architecture/notifications) is the system that enforces them; this chapter is what it enforces. It isn't legal advice: which rules reach which messages depends on facts that are a question for counsel, and this area changes often (the revocation rules below changed in September 2026).
+The rules look scattered, but they share one shape: **consent for a purpose, revocable any time, honored quickly, with records that prove it.** [Notifications & Consent](/docs/building-blocks/notifications) is the system that enforces them; this chapter is what it enforces. It isn't legal advice: which rules reach which messages depends on facts that are a question for counsel, and this area changes often (the revocation rules below changed in September 2026).
 
 ## Which Rules Apply
 
@@ -35,7 +35,7 @@ The consent split:
 - **Informational** messages (a receipt, a delivery update, an appointment reminder, a fraud alert) need **prior express consent**, which in practice usually means the person gave you the number for that kind of contact.
 - **Telemarketing and advertisements** need **prior express written consent**: a written agreement bearing the signature of the person called (an electronic signature counts where federal or state law recognizes it; see [Electronic Signatures & Records](/docs/compliance/electronic-signatures)), authorizing that seller to deliver such messages to that number, and disclosing that agreeing is not a condition of purchase.
 
-The split is about content, not intent. A reminder that ends with a coupon is an advertisement, and needs the stronger consent. That's why the consent ledger in [Notifications & Consent](/docs/architecture/notifications#the-consent-ledger) is keyed by purpose, and why purpose is set on the template rather than guessed at send time.
+The split is about content, not intent. A reminder that ends with a coupon is an advertisement, and needs the stronger consent. That's why the consent ledger in [Notifications & Consent](/docs/building-blocks/notifications#the-consent-ledger) is keyed by purpose, and why purpose is set on the template rather than guessed at send time.
 
 ## Revoking Consent
 
@@ -61,7 +61,7 @@ For the system, that means a STOP is recorded against the purpose of the message
 - **Do-not-call.** A residential subscriber's request not to receive telemarketing must be honored within ten business days and **for five years**. The National Do Not Call Registry applies to telephone solicitations unless an exemption fits, such as an established business relationship: a purchase or transaction within the prior **18 months**, or an inquiry within the prior **three months**.
 - **Artificial or prerecorded messages** must identify the business responsible at the start and give a callback number; telemarketing ones must also offer an automated, interactive voice or key-press opt-out.
 
-**State laws are often stricter.** Florida, for example, bars commercial telephone solicitation calls before 8 a.m. or after 8 p.m. in the called person's time zone, and more than three calls in 24 hours on the same subject. Other states set their own windows, holidays and caps, and they change, so store them as dated rules with sources rather than trusting a table ([Notifications & Consent](/docs/architecture/notifications#one-outbound-gate)).
+**State laws are often stricter.** Florida, for example, bars commercial telephone solicitation calls before 8 a.m. or after 8 p.m. in the called person's time zone, and more than three calls in 24 hours on the same subject. Other states set their own windows, holidays and caps, and they change, so store them as dated rules with sources rather than trusting a table ([Notifications & Consent](/docs/building-blocks/notifications#one-outbound-gate)).
 
 ## Reassigned Numbers
 
@@ -69,7 +69,7 @@ Phone numbers are reassigned, so consent from a customer three years ago may now
 
 ## Artificial and AI Voices
 
-In a February 2024 declaratory ruling (FCC 24-17), the FCC confirmed that the TCPA's restrictions on "artificial or prerecorded voice" encompass current AI technologies that generate human voices, including voice cloning. An AI voice that places calls is making artificial-voice calls: it needs the called party's prior express consent (written, for telemarketing) and must meet the identification and opt-out rules above. The ruling is about initiating calls. An AI that answers inbound calls is governed by disclosure and recording law instead, and the engineering is in [AI Agents in the Product](/docs/architecture/ai-agents). Debt collection adds Regulation F's call limits on top, covered for AI agents in [Collections](/books/banking-and-lending/ai-in-banking#collections).
+In a February 2024 declaratory ruling (FCC 24-17), the FCC confirmed that the TCPA's restrictions on "artificial or prerecorded voice" encompass current AI technologies that generate human voices, including voice cloning. An AI voice that places calls is making artificial-voice calls: it needs the called party's prior express consent (written, for telemarketing) and must meet the identification and opt-out rules above. The ruling is about initiating calls. An AI that answers inbound calls is governed by disclosure and recording law instead, and the engineering is in [AI Agents in the Product](/docs/building-blocks/ai-agents). Debt collection adds Regulation F's call limits on top, covered for AI agents in [Collections](/books/banking-and-lending/ai-in-banking#collections).
 
 ## Telling People They're Talking to an AI
 
@@ -97,7 +97,7 @@ US carriers enforce rules stricter than the law through registration and filteri
 - **Three message types, escalating consent.** Conversational messages (replies to the consumer) carry implied consent; informational messages need express consent; promotional messages need express written consent. Adding a call to action such as a coupon code to an informational text "may place the message in the promotional category."
 - **Opt-in is per campaign** and not transferable; opt-in lists aren't shared.
 - **Opt-out.** Senders should state in the message how to opt out, use standardized "STOP" wording, and honor normal-language requests too ("stop, end, unsubscribe, cancel, quit, 'please opt me out'"), with one final confirmation message and nothing after. Opt-in and opt-out records are kept.
-- **Registration.** Business texting from ten-digit numbers is registered as A2P 10DLC brands and campaigns, and toll-free and short-code numbers have their own vetting; [Notifications & Consent](/docs/architecture/notifications#multi-tenant-senders) covers what that means for a platform.
+- **Registration.** Business texting from ten-digit numbers is registered as A2P 10DLC brands and campaigns, and toll-free and short-code numbers have their own vetting; [Notifications & Consent](/docs/building-blocks/notifications#multi-tenant-senders) covers what that means for a platform.
 
 A carrier can block a sender without a court, so in practice these rules bind first.
 
@@ -105,7 +105,7 @@ A carrier can block a sender without a court, so in practice these rules bind fi
 
 The CAN-SPAM Act covers commercial email: accurate header information, subject lines that reflect the content, a clear disclosure that the message is an ad, a valid physical postal address, and a clear way to opt out of marketing. Opt-outs must be honored within **ten business days**, the mechanism must keep working for at least 30 days after sending, and you can't charge a fee or ask for more than an email address to opt out. An opted-out address can't be sold or transferred. Hiring a vendor to send doesn't move the responsibility: both the sender and the company whose product is promoted can be liable. Each violating email can cost up to $53,088, per the FTC's guide.
 
-**Transactional or relationship** messages (completing a transaction, warranty or safety information, account changes) are largely exempt, but CAN-SPAM judges by **primary purpose**: if the subject line suggests an ad, or the transactional content isn't mainly at the beginning, it's commercial. Mailbox providers add authentication and one-click unsubscribe requirements on top ([Notifications & Consent](/docs/architecture/notifications#email-authentication-and-streams)).
+**Transactional or relationship** messages (completing a transaction, warranty or safety information, account changes) are largely exempt, but CAN-SPAM judges by **primary purpose**: if the subject line suggests an ad, or the transactional content isn't mainly at the beginning, it's commercial. Mailbox providers add authentication and one-click unsubscribe requirements on top ([Notifications & Consent](/docs/building-blocks/notifications#email-authentication-and-streams)).
 
 ## Outside the US
 

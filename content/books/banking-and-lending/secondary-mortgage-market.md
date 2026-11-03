@@ -205,7 +205,7 @@ GROUP BY p.agency, a.kind;
 
 Design notes:
 
-- **The strips are terms of the delivery.** Guarantee fee, base and excess servicing and the upfront fees are stored as contracted per loan, because the LLPA grid and the agencies' fee schedules change by announcement and the remittance must use what applied when the loan was delivered ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **The strips are terms of the delivery.** Guarantee fee, base and excess servicing and the upfront fees are stored as contracted per loan, because the LLPA grid and the agencies' fee schedules change by announcement and the remittance must use what applied when the loan was delivered ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Scheduled/scheduled means remitting the schedule, not the receipts.** For MBS loans the remittance job reads `schedule_installments`, not `loan_payments`; any shortfall becomes a `principal_interest` advance row in the same posting, and a later borrower payment recovers it.
 - **The servicing right is not the loan.** `loans.owner` is the agency or trust; `servicing_rights.owner` is who earns the strip; the subservicer is who works it. Selling an MSR changes only the right and starts a servicing transfer.
 - **Pools are funding vehicles.** Every pool points at a `funding_vehicles` row, so the funding allocation for a delivered loan names the pool and the same investor reporting design applies ([Investor Reporting and Remittance](/books/banking-and-lending/funding-the-book#investor-reporting-and-remittance)).
@@ -222,7 +222,7 @@ The agencies, Ginnie Mae, FHFA, warehouse lenders and auditors each test a diffe
 - **Repurchases and defects:** each demand, the defect, the price and the loan's next funding.
 - **Advance exposure by agency and kind,** daily, because a Ginnie issuer's ability to keep paying is what its regulator watches.
 
-The general record design is in [Audit Trails](/docs/architecture/audit-trails#producing-records).
+The general record design is in [Audit Trails](/docs/building-blocks/audit-trails#producing-records).
 
 ## What This Means for the System You Build
 

@@ -9,7 +9,7 @@ tags = ["commerce", "stores", "staff", "cash-management", "shrink", "loss-preven
 
 A store is a building full of goods and cash, run by people paid by the hour, many of them new. Each of those makes the software's job harder. Goods walk out the door without a sale, through theft, mistakes and damage nobody wrote down. Cash passes through a dozen hands a day, so it has to be counted at the start and end of every drawer, and any difference has to be explained by someone. Staff change every season, so each person needs access to exactly what their job requires, on a shared device, and every refund, discount and drawer open has to name the person who did it. The point of sale records the sale; this chapter covers what keeps the store honest around the sale.
 
-It covers staff roles and permissions on the POS, manager overrides, cash management from the opening float to the bank deposit, shrink and loss prevention, the law on organized retail crime, and the other systems a store runs on. It extends `locations` and `inventory_levels` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and the devices and tenders from [Point of Sale](/books/commerce/point-of-sale#how-to-build-it). Counts, cycle counts and the inventory ledger are [Inventory](/books/commerce/inventory#cycle-counts-and-shrink); stores as fulfillment hubs are [Omnichannel Fulfillment](/books/commerce/omnichannel-fulfillment); tips and tip pools are [Restaurants & Food Service](/books/commerce/restaurants). The playbook's [Authorization](/docs/security/authorization) and [Audit Trails](/docs/architecture/audit-trails) are the general patterns this chapter applies to a store.
+It covers staff roles and permissions on the POS, manager overrides, cash management from the opening float to the bank deposit, shrink and loss prevention, the law on organized retail crime, and the other systems a store runs on. It extends `locations` and `inventory_levels` from [The Core Data Model](/books/commerce/commerce-business#the-core-data-model) and the devices and tenders from [Point of Sale](/books/commerce/point-of-sale#how-to-build-it). Counts, cycle counts and the inventory ledger are [Inventory](/books/commerce/inventory#cycle-counts-and-shrink); stores as fulfillment hubs are [Omnichannel Fulfillment](/books/commerce/omnichannel-fulfillment); tips and tip pools are [Restaurants & Food Service](/books/commerce/restaurants). The playbook's [Authorization](/docs/security/authorization) and [Audit Trails](/docs/building-blocks/audit-trails) are the general patterns this chapter applies to a store.
 
 ## How the Platforms Do It
 
@@ -44,7 +44,7 @@ A store's people fall into a few roles, and each POS action belongs to some of t
 
 The table is typical, not a standard; every merchant tunes it. What carries across systems:
 
-- **Permissions are per action, with limits.** "May discount up to 15%" or "may refund up to $100 without approval" is a permission with a parameter. Store it as data so a merchant can change the threshold without a release ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Permissions are per action, with limits.** "May discount up to 15%" or "may refund up to $100 without approval" is a permission with a parameter. Store it as data so a merchant can change the threshold without a release ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **Roles are per location.** A manager at one store is often a cashier at another, or covers a shift elsewhere. The assignment is (person, role, location), not a role on the person.
 - **The device is shared, the session isn't.** A register is used by several people in an hour; each sale, tender and void records the staff member signed in at that moment. A PIN is a quick re-authentication on a trusted device, not a login, so the device itself is enrolled and the PIN only works on enrolled devices at that location ([Authentication](/docs/security/authentication)).
 - **Least privilege by default.** A new hire starts as a cashier with no overrides. Full access, in Square's model, also makes the person an authorized representative of the account, which is a business decision, not an HR default ([Least Privilege](/docs/security/authorization#least-privilege)).
@@ -93,7 +93,7 @@ Each source leaves a different trail in the data:
 What a system does about it:
 
 - **Record shrink as movements with reasons.** A count variance, a known theft, damage and a write-off are different `inventory_movements` reasons, and a known loss (a broken bottle, a theft caught on camera) is recorded when it happens, not discovered at the next count ([Movements, Not Overwrites](/books/commerce/inventory#movements-not-overwrites)). The shrink that remains unexplained after known losses is the number that matters.
-- **Exception reporting.** Loss prevention teams look for outliers: one cashier's voids at three times the store average, refunds just under the approval limit, no-sales clustered at shift end, returns rung by the same person who sold the item. The POS has every input; the report is the product ([Risk Scoring](/docs/architecture/risk-scoring)).
+- **Exception reporting.** Loss prevention teams look for outliers: one cashier's voids at three times the store average, refunds just under the approval limit, no-sales clustered at shift end, returns rung by the same person who sold the item. The POS has every input; the report is the product ([Risk Scoring](/docs/building-blocks/risk-scoring)).
 - **Count what's stolen most, most often.** The item classes a store's own shrink events show losing most get more frequent cycle counts and sometimes locked cases; a count by item class feeds the store's buffer for online availability ([Store Inventory Accuracy](/books/commerce/omnichannel-fulfillment#store-inventory-accuracy)).
 - **Tags and cameras are data sources too.** Electronic article surveillance (EAS) tags alarm at the door; RFID tags let a store count a rack in seconds and find what moved; cameras at self-checkout and the register can be tied to transaction IDs. Each is an integration that attaches evidence to a sale or a movement.
 
@@ -277,7 +277,7 @@ Design notes:
 
 - **Every register session's ledger:** float, every cash movement, every count by denomination, the variance and its reason, and who reviewed it.
 - **Every manager approval,** with the requester, the approver, the device and the permission version, so a pattern of approvals between the same two people is visible.
-- **Every role grant and revocation,** with who granted it and when it took effect, and every PIN reset ([Audit Trails](/docs/architecture/audit-trails)).
+- **Every role grant and revocation,** with who granted it and when it took effect, and every PIN reset ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Every shrink event** with its evidence and value, and the unexplained count variance left after known losses, by location and item class.
 - **End-of-day closes:** each business day's tender totals, settled card batches, outstanding offline payments and the deposit, with who closed it.
 

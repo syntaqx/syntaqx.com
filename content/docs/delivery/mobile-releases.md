@@ -19,7 +19,7 @@ Four constraints shape everything else:
 - **Version fragmentation.** Users update slowly and some never do. Your backend serves every version still in the wild, simultaneously.
 - **The binary is public.** Anything compiled into the app, including API keys and feature logic, can be extracted. The client is untrusted, exactly as it is on the web.
 
-Apps that have to keep working without a network carry a local database and a queue of unsynced work across every one of those versions; [Offline-First Sync](/docs/architecture/offline-sync) covers how to build them.
+Apps that have to keep working without a network carry a local database and a queue of unsynced work across every one of those versions; [Offline-First Sync](/docs/building-blocks/offline-sync) covers how to build them.
 
 ## Release Trains
 
@@ -104,7 +104,7 @@ Signing proves a build came from you, and losing control of the keys is one of t
 - **Builds and signing happen in CI**, never on a laptop, with signing material in the CI's secret store or a managed signing service, readable only by the release job.
 - **On Android, use Play App Signing**, which is required for new apps. Google holds the app signing key; you hold an upload key, and if the upload key is lost or compromised, it can be reset. A self-managed signing key that's lost means you can never update that app again.
 - **On iOS, manage certificates and provisioning profiles centrally** (fastlane match or the platform's automatic signing in CI), not per developer, and know when they expire before they do.
-- **Pin and lock everything the build uses** (toolchains, [lockfiles](/docs/engineering/dependencies), build images), so a build from the release tag can be reproduced and a dependency change can't slip in between beta and store.
+- **Pin and lock everything the build uses** (toolchains, [lockfiles](/docs/development/dependencies), build images), so a build from the release tag can be reproduced and a dependency change can't slip in between beta and store.
 - **The store build is the beta build.** Promote the exact binary that testers validated rather than rebuilding it. A rebuild is a new, untested artifact.
 
 ## Hotfixes

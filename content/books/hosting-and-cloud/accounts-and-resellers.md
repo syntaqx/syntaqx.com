@@ -238,7 +238,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Who could do what, when.** Every binding, ceiling and membership with its range and grantor, so the access a leaked key or a departed employee had on a given day can be reconstructed ([Audit Trails](/docs/architecture/audit-trails)).
+- **Who could do what, when.** Every binding, ceiling and membership with its range and grantor, so the access a leaked key or a departed employee had on a given day can be reconstructed ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Every credential's life.** Creation, scopes, last use, revocation and its reason, including leak reports from scanning partners and how long the key stayed live after the report.
 - **Who sits behind each sub-account.** The reseller agreement in force, whether end-customer identity was collected, and the end customer's details where it was, because registries, carriers and courts will ask the accredited party.
 - **Every hold and every cascade.** Which holds applied to which accounts because of a parent, so a suspended sub-account can see why.

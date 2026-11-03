@@ -55,7 +55,7 @@ The capture paths, and what each needs:
 - **Browser and merchant connectors** fetch receipts at checkout or from merchant accounts (Ramp's Chrome extension and merchant connectors).
 - **Direct upload by API,** as Brex's pre-signed, 30-minute upload URL does: the client puts the file in storage directly, and the platform processes it after it lands.
 
-The upload mechanics (pre-signed credentials, resumable uploads from phones, checking what arrived before using it) are the playbook's [File Uploads](/docs/architecture/file-uploads#uploads-from-a-phone). The spend twist is volume and duplication: the same receipt arrives by email and by photo, and the second copy must be recognized as the same document, by content hash for identical files and by extracted fields for re-photographed ones.
+The upload mechanics (pre-signed credentials, resumable uploads from phones, checking what arrived before using it) are the playbook's [File Uploads](/docs/building-blocks/file-uploads#uploads-from-a-phone). The spend twist is volume and duplication: the same receipt arrives by email and by photo, and the second copy must be recognized as the same document, by content hash for identical files and by extracted fields for re-photographed ones.
 
 ## Matching
 
@@ -65,11 +65,11 @@ A receipt is matched to a card transaction by merchant, amount and date, and eac
 - **Date.** The receipt's date is the purchase; the transaction's is the authorization or the clearing, a day or more later, and a hotel folio spans the stay.
 - **Merchant.** The receipt's business name and the card descriptor rarely agree; matching normalizes both and uses the merchant ID and location when the network supplies them.
 
-Scores sort into bands: an auto-match above a threshold, a suggestion for the employee to confirm in the middle, and the Missing items queue below ([Review Bands](/docs/architecture/record-linkage#review-bands)). Two invariants matter for audit: one receipt matches at most one transaction unless it's explicitly split, and every auto-match records its score and the rule version that made it, because "the system matched it" has to be explainable later.
+Scores sort into bands: an auto-match above a threshold, a suggestion for the employee to confirm in the middle, and the Missing items queue below ([Review Bands](/docs/building-blocks/record-linkage#review-bands)). Two invariants matter for audit: one receipt matches at most one transaction unless it's explicitly split, and every auto-match records its score and the rule version that made it, because "the system matched it" has to be explainable later.
 
 ## Reading the Receipt
 
-OCR extracts the merchant, amount, date and category (Concur's own description of its extraction), and more ambitious extraction reads tax, tip, currency, line items and the number of guests. Each field comes with a confidence, and the platform's rule decides what to do with it: Ramp fills memo and accounting fields only at high confidence or when an existing rule applies. My rule is to store the extracted value, its confidence and the model version beside the value the employee confirmed, never overwriting one with the other, so a later dispute can see what the machine read and what the person said ([Observations, Not Overwrites](/docs/architecture/record-linkage#observations-not-overwrites)).
+OCR extracts the merchant, amount, date and category (Concur's own description of its extraction), and more ambitious extraction reads tax, tip, currency, line items and the number of guests. Each field comes with a confidence, and the platform's rule decides what to do with it: Ramp fills memo and accounting fields only at high confidence or when an existing rule applies. My rule is to store the extracted value, its confidence and the model version beside the value the employee confirmed, never overwriting one with the other, so a later dispute can see what the machine read and what the person said ([Observations, Not Overwrites](/docs/building-blocks/record-linkage#observations-not-overwrites)).
 
 An image is evidence, and images can be edited or generated. A receipt check that looks only at extracted fields will pass a fabricated receipt with plausible numbers; the stronger signals are outside the image: whether a matching card transaction exists, whether the merchant emailed it, whether the same image or the same receipt number appears elsewhere.
 
@@ -77,10 +77,10 @@ An image is evidence, and images can be edited or generated. A receipt check tha
 
 A company's expense policy turns into rules: receipt thresholds, category limits (meals per person, hotel per night by city), required attendees for meals, banned categories, weekend and personal-looking spend, travel class, and the time allowed to submit. Two layers do the work:
 
-- **Deterministic rules** for everything expressible as a condition: amount over a threshold in a category, a receipt missing past a deadline, a merchant category not allowed under the card's program. They're rows with a scope, condition, action and version ([The Shape of a Rule](/docs/architecture/rules-as-data#the-shape-of-a-rule)), evaluated in order and recorded on every expense they touched ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Deterministic rules** for everything expressible as a condition: amount over a threshold in a category, a receipt missing past a deadline, a merchant category not allowed under the card's program. They're rows with a scope, condition, action and version ([The Shape of a Rule](/docs/building-blocks/rules-as-data#the-shape-of-a-rule)), evaluated in order and recorded on every expense they touched ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Model review** for what isn't: whether a memo actually states a business purpose, whether a receipt's line items include something the policy excludes, whether a dinner's attendees fit the stated reason. Ramp's Policy Agent reads the policy as an "AI-friendly structured document" (Ramp recommends about 10 pages, or 10,000 words), the receipt's OCR and itemization, the memo and the attendees, and returns one of three outcomes with citations to the policy text; after the policy changes, re-evaluating recent expenses can take "up to 24 hours"; it can auto-approve clearly compliant expenses only "when a workflow enables that behavior"; and it doesn't check whether accounting codes are correct. Ramp reports early customers cut manual reviews "by about 85% while maintaining 99%+ accuracy," a vendor claim.
 
-The design lessons generalize. **The model recommends and code decides:** an approval is a state change with an actor, and an AI recommendation is an input to it ([Decide in Code](/docs/architecture/ai-agents#decide-in-code)). **Ambiguity goes to a human,** which is what a "requires review" outcome is. **The policy the model read is versioned,** so each recommendation names the policy version and model version that produced it ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)). **Evaluation lags configuration,** so the system must show which expenses were evaluated under the old policy and which under the new.
+The design lessons generalize. **The model recommends and code decides:** an approval is a state change with an actor, and an AI recommendation is an input to it ([Decide in Code](/docs/building-blocks/ai-agents#decide-in-code)). **Ambiguity goes to a human,** which is what a "requires review" outcome is. **The policy the model read is versioned,** so each recommendation names the policy version and model version that produced it ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)). **Evaluation lags configuration,** so the system must show which expenses were evaluated under the old policy and which under the new.
 
 ## Approvals
 
@@ -214,20 +214,20 @@ Design notes:
 
 - **One expense per purchase.** `clearing_record_id` is unique, so a card transaction can't be expensed twice; a refund is its own clearing record and its own negative expense, and a split purchase is one expense with allocated coding, not two expenses.
 - **Receipts are immutable documents.** `expense_receipts` keeps the file, its hash and what was extracted; matching is a separate, reversible record with its method and score. A duplicate check is a query on `content_sha256`, `receipt_number` and extracted merchant, total and date across the company, not just the employee.
-- **Every evaluation is kept,** rules and model, with the policy version, so an expense judged before a policy change can be shown to have passed the rules then in force, and a model's recommendation can be compared with the human decision ([Measuring It](/docs/architecture/risk-scoring#measuring-it)).
+- **Every evaluation is kept,** rules and model, with the policy version, so an expense judged before a policy change can be shown to have passed the rules then in force, and a model's recommendation can be compared with the human decision ([Measuring It](/docs/building-blocks/risk-scoring#measuring-it)).
 - **Approvals are steps with constraints:** no self-approval, delegation named, and automated approval only with the evaluation that justified it. The same table serves expenses, card requests and bills, so a company's approval history is one query.
-- **Retention follows the tax record.** The stored image is the record Rev. Proc. 97-22 relies on, so the controls it asks for (integrity, prevention and detection of alteration, indexing, legible reproduction) are the storage design. Receipts and evaluations are kept as long as the return they support can be examined, on a retention rule rather than a default ([Data Retention](/docs/architecture/data-retention)).
+- **Retention follows the tax record.** The stored image is the record Rev. Proc. 97-22 relies on, so the controls it asks for (integrity, prevention and detection of alteration, indexing, legible reproduction) are the storage design. Receipts and evaluations are kept as long as the return they support can be examined, on a retention rule rather than a default ([Data Retention](/docs/building-blocks/data-retention)).
 
 ## Auditing
 
-Internal audit, external auditors and tax examiners read the expense record. The general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Internal audit, external auditors and tax examiners read the expense record. The general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **For each expense,** the card transaction or employee entry, the receipt as received, how and when it was matched, the business purpose and attendees, and when they were recorded.
 - **The policy version and every evaluation** (rules and model) with findings and citations.
 - **Every approval step** with the approver, delegation, decision, time and routing rule.
 - **Every exception:** missing-receipt declarations, overrides of a violation, and who allowed them.
 - **Duplicate and anomaly checks** that ran, what they flagged and how each flag was closed.
-- **Access to receipts,** which can carry personal data (a pharmacy receipt, a hotel folio with a home address), logged as reads ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access to receipts,** which can carry personal data (a pharmacy receipt, a hotel folio with a home address), logged as reads ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

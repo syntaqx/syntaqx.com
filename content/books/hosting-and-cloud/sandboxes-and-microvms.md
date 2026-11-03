@@ -201,7 +201,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Which wall every tenant had, when.** The isolation and runtime per resource over time, kept with placements, so a published escape in a VMM, the Sentry or V8 can be scoped to the tenants who shared the affected component ([Audit Trails](/docs/architecture/audit-trails)).
+- **Which wall every tenant had, when.** The isolation and runtime per resource over time, kept with placements, so a published escape in a VMM, the Sentry or V8 can be scoped to the tenants who shared the affected component ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Runtime versions in the fleet.** Which Firecracker, gVisor, Kata or V8 version ran on each host and when it was patched, because the patch gap is the exposure window.
 - **Snapshot lineage.** Every snapshot, what it was taken from, and every restore, against the rule that a snapshot should resume once.
 - **Exceptions.** Any tenant granted a weaker wall than its product's default (a privileged container, a shared-kernel exception) with who approved it and why.

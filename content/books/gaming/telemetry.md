@@ -9,7 +9,7 @@ tags = ["gaming", "telemetry", "analytics", "events", "heatmaps", "performance"]
 
 A live game is run on what it reports about itself. Designers want to know which map lane nobody walks, live ops wants to know whether the weekend event moved retention, engineers want the crash that only happens on one GPU driver, the fair play team wants the match where one player's aim never missed, and finance wants every purchase to reconcile. All of it arrives as telemetry: events emitted by clients, game servers and backend services, collected, stored and turned into numbers.
 
-The general practice is in the playbook's telemetry section: how to name and shape an event ([Event Design & Instrumentation](/docs/telemetry/event-design)), how clients and servers ship events reliably ([Collecting Events](/docs/telemetry/collection)), consent and personal data ([Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy)), funnels and cohorts ([Product Analytics](/docs/telemetry/product-analytics)) and A/B tests ([Experimentation & A/B Testing](/docs/telemetry/experimentation)). The warehouse behind it is in [Data Pipelines & Analytics](/docs/architecture/data-pipelines). This chapter is the part that is specific to games: what a match produces, where positions and heatmaps come from, how server tick health and crashes are measured, why replays are a data source, how economy events are kept honest, which vendors exist, and how to keep the bill proportional to the game. The metric definitions built on top (DAU, retention, ARPDAU, match quality) are in [Game Metrics](/books/gaming/game-metrics).
+The general practice is in the playbook's telemetry section: how to name and shape an event ([Event Design & Instrumentation](/docs/telemetry/event-design)), how clients and servers ship events reliably ([Collecting Events](/docs/telemetry/collection)), consent and personal data ([Consent & Privacy in Telemetry](/docs/telemetry/consent-and-privacy)), funnels and cohorts ([Product Analytics](/docs/telemetry/product-analytics)) and A/B tests ([Experimentation & A/B Testing](/docs/telemetry/experimentation)). The warehouse behind it is in [Data Pipelines & Analytics](/docs/data/data-pipelines). This chapter is the part that is specific to games: what a match produces, where positions and heatmaps come from, how server tick health and crashes are measured, why replays are a data source, how economy events are kept honest, which vendors exist, and how to keep the bill proportional to the game. The metric definitions built on top (DAU, retention, ARPDAU, match quality) are in [Game Metrics](/books/gaming/game-metrics).
 
 ## What a Game Emits
 
@@ -140,7 +140,7 @@ Telemetry cost grows with players, events per player and bytes per event, and th
 - **Aggregate on the device or server.** Histograms for frame time, counters per minute for repeated actions, one resource event per level. GameAnalytics' resource guidance is the same idea.
 - **Sample by match** for position streams and verbose diagnostics, as above.
 - **Keep cardinality in fields,** so storage compresses and queries group instead of scanning millions of event names.
-- **Tier retention.** Raw positions and frame data for weeks, aggregates for years, money and penalties as long as the ledger and the policy require ([Data Retention](/docs/architecture/data-retention)).
+- **Tier retention.** Raw positions and frame data for weeks, aggregates for years, money and penalties as long as the ledger and the policy require ([Data Retention](/docs/building-blocks/data-retention)).
 - **Kill switches.** Every event family can be turned down or off from remote configuration, because the day a new event floods the pipeline is the day nobody can ship a patch ([Live Operations](/books/gaming/live-operations)).
 - **Report cost per thousand DAU** next to the pipeline's own metrics, so a feature that doubles the bill is visible in the week it ships ([Cost & FinOps](/docs/operations/cost-and-finops)).
 
@@ -188,7 +188,7 @@ My default for which path an event takes: it goes to the hot path only if someon
 
 ### The Data Model
 
-The warehouse tables follow the general layering ([Data Pipelines & Analytics](/docs/architecture/data-pipelines)). The operational side needs two things the [core data model](/books/gaming/games-business) doesn't have: sampling and budget rules as data, and per-match health written by the server:
+The warehouse tables follow the general layering ([Data Pipelines & Analytics](/docs/data/data-pipelines)). The operational side needs two things the [core data model](/books/gaming/games-business) doesn't have: sampling and budget rules as data, and per-match health written by the server:
 
 ```sql
 CREATE TABLE telemetry_sampling_rules (     -- served to clients and servers as remote config

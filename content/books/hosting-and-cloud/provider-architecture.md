@@ -258,7 +258,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Every mutating request, with its actor and reason.** The operation log answers who created, stopped or deleted a resource, including support staff and automated systems, for as long as the resources' identifier history is kept ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Every mutating request, with its actor and reason.** The operation log answers who created, stopped or deleted a resource, including support staff and automated systems, for as long as the resources' identifier history is kept ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **Every hold's fan-out.** For a suspension, the list of operations it produced and their outcomes, so "you stopped my server" can be answered with the hold, the invoice or case, the time and the result.
 - **The dependency map.** Which services each control-plane and data-plane component depends on, reviewed after every incident, because the post-mortems keep finding edges nobody drew.
 - **Configuration pushes.** Every global configuration, policy or rule change with its author, its rollout stages and its kill switch, kept with the same weight as code deploys.

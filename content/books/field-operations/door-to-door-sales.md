@@ -84,8 +84,8 @@ CREATE TABLE knocks (
 
 - **Configurable codes, fixed semantics.** Map each tenant's custom status to system meanings (contact made, positive, terminal) so funnels and scores stay comparable.
 - **Verify location, don't reject on it.** SPOTIO tracks activity "with location verification", Badger Maps "GPS-verified check-ins". Store position, accuracy and distance to the address point and flag outliers; GPS under trees is poor, and an honest rep shouldn't lose a sale to it.
-- **Two clocks.** Device time for the rep's day, server time for ordering and fraud checks ([Offline Sync](/docs/architecture/offline-sync#two-clocks)).
-- **Revisit rules are dated tenant policy**, not code: how many "not home" knocks before a door rests, how long "not interested" suppresses it ([Rules as Data](/docs/architecture/rules-as-data)).
+- **Two clocks.** Device time for the rep's day, server time for ordering and fraud checks ([Offline Sync](/docs/building-blocks/offline-sync#two-clocks)).
+- **Revisit rules are dated tenant policy**, not code: how many "not home" knocks before a door rests, how long "not interested" suppresses it ([Rules as Data](/docs/building-blocks/rules-as-data)).
 - **Emit events** (`knock.recorded`, and `agreement.signed` when the door closes a sale) for CRM, commissions and scoring ([Events](/docs/architecture/events)).
 
 ## How the Platforms Do It
@@ -105,7 +105,7 @@ The best canvassing systems know something about a door before anyone knocks. Th
 | Mover and household data | Speedeon, Experian, Data Axle | New movers and pre-movers, homeowner status, modeled household attributes |
 | Imagery and computer vision | Nearmap, EagleView, Google Solar API | Roof condition, age, material and pitch; pools; vegetation; solar potential |
 
-Property keys and address validation are covered in [Customers, Accounts & Properties](/books/field-operations/customers-and-properties), and licenses carried per imported row in [Record Linkage: Licensed Data](/docs/architecture/record-linkage#licensed-data); key every knock, lead and sale to the same stable property key, never a raw address or APN. What's specific to the door:
+Property keys and address validation are covered in [Customers, Accounts & Properties](/books/field-operations/customers-and-properties), and licenses carried per imported row in [Record Linkage: Licensed Data](/docs/building-blocks/record-linkage#licensed-data); key every knock, lead and sale to the same stable property key, never a raw address or APN. What's specific to the door:
 
 - **Coverage and cadence are vendor claims.** Recorder data arrives county by county on each vendor's schedule, and Experian's own pages give both weekly and monthly mover cadences. A stale owner or a missed move-in sends a rep to the wrong door, so measure staleness against your own knocks.
 - **Owner occupancy is the workhorse field.** Precisely codes absentee, probable owner-occupied and owner-occupied; BatchData sells owner-occupied, absentee and recently sold lists. A renter can't sign for the building.
@@ -158,7 +158,7 @@ Reps work alone, outdoors, in unfamiliar neighborhoods; customers open the door 
 
 **Make the rep verifiable.** Permits commonly require a visible photo ID badge, and RepCard's recruiting module includes background checks and badges. Build a badge QR code that resolves to a company page with the rep's photo and permit status. Confirming the sale with someone other than the rep, by phone and again by the technician on the first visit, is covered in [Signing the Agreement](/books/field-operations/signing-the-agreement#verification-calls).
 
-**Know where reps are.** Live location on shift, shift check-ins, an alert when a device goes silent too long, and a one-tap unsafe-door flag that suppresses the door for everyone. Grey out the map after the local ordinance cutoff. Heat is the quiet hazard: NIOSH lists hot outdoor work, exertion, dehydration and lack of acclimatization as heat stress risk factors, and new reps in their first summer weeks are the unacclimatized group. Location data is sensitive too: collect it only on shift, disclose it, and retain it for a defined period ([Data Retention](/docs/architecture/data-retention)).
+**Know where reps are.** Live location on shift, shift check-ins, an alert when a device goes silent too long, and a one-tap unsafe-door flag that suppresses the door for everyone. Grey out the map after the local ordinance cutoff. Heat is the quiet hazard: NIOSH lists hot outdoor work, exertion, dehydration and lack of acclimatization as heat stress risk factors, and new reps in their first summer weeks are the unacclimatized group. Location data is sensitive too: collect it only on shift, disclose it, and retain it for a defined period ([Data Retention](/docs/building-blocks/data-retention)).
 
 ## Auditing
 
@@ -168,7 +168,7 @@ Door-to-door produces disputes in every direction: a customer who says they neve
 - **Exclusion evidence**: the registry version loaded on the device at the time of the knock, and whether the app warned or blocked.
 - **Area assignments and score lineage**: who assigned which rep to which polygon version and when (it settles ownership and commission disputes), and the vendor attributes, licenses and model version behind a score that put a door on a map.
 
-Permits per rep are credential records ([Licenses & Permits](/books/field-operations/licensing-and-permits)). Record structure, actors and retention follow [Audit Trails](/docs/architecture/audit-trails), with field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+Permits per rep are credential records ([Licenses & Permits](/books/field-operations/licensing-and-permits)). Record structure, actors and retention follow [Audit Trails](/docs/building-blocks/audit-trails), with field records in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

@@ -303,7 +303,7 @@ Notes on the sketch:
 
 - **Which CA vouched for each name, and through which chain.** Every certificate with its CA, issuing intermediate, names and validity, kept past expiry, so a distrust or a misissuance report can be answered with the exact certificates affected.
 - **The SCTs each certificate carried.** Parsed and stored, with the log list state at the time, because a distrust cutoff keyed on SCT time is decided from them.
-- **What the provider published in customers' DNS.** CAA records the provider added or changed on a customer's zone, with the actor and time, since they decide who else can issue for that customer ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **What the provider published in customers' DNS.** CAA records the provider added or changed on a customer's zone, with the actor and time, since they decide who else can issue for that customer ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 - **Imported certificates and who uploaded them.** A customer's own certificate on the provider's servers is still the provider's to serve; the upload, its checks and its owner are a record.
 
 ## What This Means for the System You Build

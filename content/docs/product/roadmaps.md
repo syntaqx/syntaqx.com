@@ -25,7 +25,7 @@ Marty Cagan described the deal in 2007: "Product management takes 20% of the cap
 
 It isn't an unusual idea. Google's SRE teams cap operational work at half of each engineer's time: "At least 50% of each SRE's time should be spent on engineering project work that will either reduce future toil or add service features" ([Eliminating Toil](https://sre.google/sre-book/eliminating-toil/)). Shape Up builds slack into the calendar instead: "after each six-week cycle, we schedule two weeks for cool-down", which teams "use to fix bugs, explore new ideas, or try out new technical possibilities" ([The Betting Table](https://basecamp.com/shapeup/2.2-chapter-08)).
 
-My default: **at least 20% of every team's capacity, every cycle, engineering's to spend.** It's the same budget [Tech Debt](/docs/engineering/tech-debt#budget-for-it-continuously) draws on. Three rules keep it real:
+My default: **at least 20% of every team's capacity, every cycle, engineering's to spend.** It's the same budget [Tech Debt](/docs/development/tech-debt#budget-for-it-continuously) draws on. Three rules keep it real:
 
 - **It's set once, not negotiated each cycle.** A share that's argued about every planning meeting loses to every feature, because the features have sponsors and the headroom doesn't.
 - **Engineering chooses what it buys.** The people who feel the friction know where it is.
@@ -35,8 +35,8 @@ My default: **at least 20% of every team's capacity, every cycle, engineering's 
 
 | Spend it on | Not on |
 | --- | --- |
-| Paying down [tech debt](/docs/engineering/tech-debt) with known interest | Features product didn't prioritize, relabeled as engineering work |
-| [Dependency and runtime upgrades](/docs/engineering/dependencies), before they're emergencies | Bugs: those are prioritized against features ([Backlogs](/docs/product/backlogs#one-backlog-three-kinds-of-work)) |
+| Paying down [tech debt](/docs/development/tech-debt) with known interest | Features product didn't prioritize, relabeled as engineering work |
+| [Dependency and runtime upgrades](/docs/development/dependencies), before they're emergencies | Bugs: those are prioritized against features ([Backlogs](/docs/product/backlogs#one-backlog-three-kinds-of-work)) |
 | Faster builds, tests and deploys | Gold-plating something that already works |
 | Reliability work from [postmortems](/docs/operations/incident-response) | Rewrites with no stated problem |
 | Improvements spotted while building something else | |

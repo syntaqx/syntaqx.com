@@ -73,7 +73,7 @@ TrueSkill's factor-graph inference is more machinery than many teams want, and i
 | TrueSkill 2 | Plus experience, party, kills, quitting | Yes | Factor graph, more inputs | Shooters with rich per-player data |
 | Weng-Lin / OpenSkill | Mean, deviation | Any number | Closed form | Team games without TrueSkill's machinery |
 
-My default for a new team game is a Weng-Lin model through OpenSkill, with party membership as a feature and the rating's deviation driving placement, then evaluate against held-out history before launch. Whatever the choice, store the rating per player, per queue, per season, and treat the formula and its constants as versioned configuration, so a change can be replayed against last season's matches before it ships ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+My default for a new team game is a Weng-Lin model through OpenSkill, with party membership as a feature and the rating's deviation driving placement, then evaluate against held-out history before launch. Whatever the choice, store the rating per player, per queue, per season, and treat the formula and its constants as versioned configuration, so a change can be replayed against last season's matches before it ships ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## Hidden MMR and Visible Rank
 
@@ -283,7 +283,7 @@ The matchmaker must log what the [Game Metrics](/books/gaming/game-metrics#match
 ## Auditing
 
 - **Every rating change** is a `rating_events` row naming the match, the model version and the before and after values. A player who asks "why did I lose 30 points?" gets an answer from the record.
-- **Every model or schedule change** is a new `rating_models` row with an effective range, the replay results that justified it, and who approved it ([Audit Trails](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every model or schedule change** is a new `rating_models` row with an effective range, the replay results that justified it, and who approved it ([Audit Trails](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Every adjustment that isn't a match result** (placement, smurf adjustment, decay, reversal, a manual correction by support) has its own kind and reason, so a ranked leaderboard dispute can separate play from intervention.
 
 ## What This Means for the System You Build

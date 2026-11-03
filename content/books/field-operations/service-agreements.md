@@ -166,7 +166,7 @@ Agreements are contracts, so their history is evidence: "I never agreed to auto-
 - **Cancellation requests,** when received and through which channel (portal, phone, a technician at the door), separately from when they were processed.
 - **Renewal notices and price-change notices** with content and delivery result. Housecall Pro's activity feed logs the plan lifecycle and automatic charges, including failures; FieldRoutes keeps a renewal date log behind an access control.
 
-[Audit Trails](/docs/architecture/audit-trails) covers the record shape and capture; [Audit Trails & Records](/books/field-operations/audit-trails-and-records) covers field records and retention.
+[Audit Trails](/docs/building-blocks/audit-trails) covers the record shape and capture; [Audit Trails & Records](/books/field-operations/audit-trails-and-records) covers field records and retention.
 
 ## What This Means for the System You Build
 

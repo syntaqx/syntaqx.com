@@ -214,7 +214,7 @@ Design notes:
 
 - **Keep the bytes.** Every file sent and received is stored exactly, by reference, because a payer dispute is settled by what was transmitted, and a parser bug found next month needs the original to re-parse. The parsed JSON is a convenience.
 - **Correlate everything.** A 999 points at the file it acknowledges, a 277CA at its claim, an 835 claim at its claim through the patient control number. Without correlation, the work queues can't say "no response."
-- **Deadlines are computed and stored** on the work item when it is created (timely filing from the date of service, an appeal window from the remittance date), following [Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored), so a rule change doesn't silently move a deadline already promised.
+- **Deadlines are computed and stored** on the work item when it is created (timely filing from the date of service, an appeal window from the remittance date), following [Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored), so a rule change doesn't silently move a deadline already promised.
 - **The ledger is double entry.** Charges, payments, adjustments and transfers between payer and patient responsibility are entries that sum to balances, never edited in place ([Double-Entry Ledger](/docs/money/payment-states#double-entry-ledger)).
 - **Events** (`claim.submitted`, `claim.acknowledged`, `claim.rejected`, `remittance.received`, `remittance.posted`, `denial.opened`) go through the [outbox](/docs/architecture/events#the-transactional-outbox) to work queues, patient messaging and reporting.
 
@@ -223,7 +223,7 @@ Design notes:
 - **Every transaction exchanged:** raw bytes, direction, control numbers, the acknowledgment that answered it and when.
 - **Every posting:** which remittance line or payment produced each ledger entry, by whom or by which automation, so a balance can be explained line by line to a patient or an auditor.
 - **Every work item's history:** who owned it, what they did and why it closed, especially write-offs, which are where revenue disappears.
-- **Access to billing data** by outsourced staff, logged like any PHI access ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)), since an 835 names diagnoses and procedures.
+- **Access to billing data** by outsourced staff, logged like any PHI access ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)), since an 835 names diagnoses and procedures.
 
 ## What This Means for the System You Build
 

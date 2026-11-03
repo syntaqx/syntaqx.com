@@ -272,7 +272,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Every record change.** Who changed which record set, in which batch, through which credential, with the before and after, because a hijacked DNS account is how phishing and certificate misissuance start ([Audit Trails](/docs/architecture/audit-trails#what-a-record-holds)).
+- **Every record change.** Who changed which record set, in which batch, through which credential, with the before and after, because a hijacked DNS account is how phishing and certificate misissuance start ([Audit Trails](/docs/building-blocks/audit-trails#what-a-record-holds)).
 - **Delegation history.** When each zone's NS and DS at the parent changed and what the provider observed, so an outage can be placed on the provider, the registrar or the customer.
 - **Key lifecycle.** Generation, publication, activation, retirement and removal of every key, the DS submissions and when each was seen at the parent, and every use of the KMS or HSM key behind it.
 - **Health check decisions.** Each failover flip with the checker results behind it, so a customer disputing an outage or a false failover can be shown the data.

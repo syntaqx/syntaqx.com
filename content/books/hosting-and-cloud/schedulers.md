@@ -206,7 +206,7 @@ Notes on the sketch:
 
 - **Who shared a host with whom, when.** The occupancy history the placement decisions produce, kept as long as security disclosures and abuse investigations can reach back, because a cross-tenant incident is investigated by co-residency.
 - **Every preemption and its notice.** When a spot or low-priority resource was evicted, by what, and how much warning it got, against the notice the product promises.
-- **Policy changes.** Each scheduler version and the date it went live, so a change in packing or spread can be tied to a change in incidents or complaints ([Audit Trails](/docs/architecture/audit-trails)).
+- **Policy changes.** Each scheduler version and the date it went live, so a change in packing or spread can be tied to a change in incidents or complaints ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Unmet demand.** Pending and rejected placements by region, shape and reason, which is the evidence for a capacity purchase and for quota decisions.
 
 ## What This Means for the System You Build

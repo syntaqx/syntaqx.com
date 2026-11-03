@@ -147,7 +147,7 @@ Whether a driver is an employee or a contractor is a legal question with differe
 
 ## Tracking, ETAs and the Customer
 
-Delivery customers watch the map closely, because a missed handoff costs them a trip to the depot. How an ETA is computed and smoothed and how a tracking link stays safe are general ([ETAs](/docs/architecture/location-tracking#etas), [Shareable Tracking Links](/docs/architecture/location-tracking#shareable-tracking-links)); the field platforms' links are in [Dispatch & the Day of Service](/books/field-operations/dispatch#live-tracking-and-eta-links), and the messages and their consent rules in [Customer Communications](/books/field-operations/customer-communications). Delivery adds three triggers worth copying from Onfleet: a predicted ETA for stops later in the route, a delay threshold, and a message when the task fails. For attended deliveries, a few-stops-away message turns a two-hour window into a person at the door.
+Delivery customers watch the map closely, because a missed handoff costs them a trip to the depot. How an ETA is computed and smoothed and how a tracking link stays safe are general ([ETAs](/docs/building-blocks/location-tracking#etas), [Shareable Tracking Links](/docs/building-blocks/location-tracking#shareable-tracking-links)); the field platforms' links are in [Dispatch & the Day of Service](/books/field-operations/dispatch#live-tracking-and-eta-links), and the messages and their consent rules in [Customer Communications](/books/field-operations/customer-communications). Delivery adds three triggers worth copying from Onfleet: a predicted ETA for stops later in the route, a delay threshold, and a message when the task fails. For attended deliveries, a few-stops-away message turns a two-hour window into a person at the door.
 
 ## Who Pays: Shipper and Consignee
 
@@ -231,7 +231,7 @@ ALTER TABLE vehicles                          -- defined in Fleet, Inventory & S
   ADD COLUMN capacity_pallets   NUMERIC;
 ```
 
-`items` is the shared catalog from [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#how-to-build-it): an appliance dealer delivering its own stock points each line at it, while a carrier delivering for shippers keeps only the barcode and description. The `work_orders` constraint makes the proof rule structural: an adult signature or age check can't sit on work that allows an unattended drop. Attempts are visits, so dispatch and metrics read attempts from rows they already have. Evidence (photos, the PIN result, the ID check result without the image) uses the model in [Proof of Service](/books/field-operations/proof-of-service). Shipper terms are resolved onto the work order at creation and snapshotted, so a shipper changing its attempt limit doesn't change orders in flight ([Rules as Data](/docs/architecture/rules-as-data)). The chapter adds outbox events `work_order_item.loaded`, `work_order_item.delivered` and `work_order.returned_to_shipper`, beside the visit events the core already emits.
+`items` is the shared catalog from [Pricing & Sales Rules](/books/field-operations/pricing-and-sales-rules#how-to-build-it): an appliance dealer delivering its own stock points each line at it, while a carrier delivering for shippers keeps only the barcode and description. The `work_orders` constraint makes the proof rule structural: an adult signature or age check can't sit on work that allows an unattended drop. Attempts are visits, so dispatch and metrics read attempts from rows they already have. Evidence (photos, the PIN result, the ID check result without the image) uses the model in [Proof of Service](/books/field-operations/proof-of-service). Shipper terms are resolved onto the work order at creation and snapshotted, so a shipper changing its attempt limit doesn't change orders in flight ([Rules as Data](/docs/building-blocks/rules-as-data)). The chapter adds outbox events `work_order_item.loaded`, `work_order_item.delivered` and `work_order.returned_to_shipper`, beside the visit events the core already emits.
 
 ## Auditing
 
@@ -240,7 +240,7 @@ ALTER TABLE vehicles                          -- defined in Fleet, Inventory & S
 - **Item custody.** Each scan from load to drop or return, with the vehicle and the person, so a missing item can be placed on a route and a shelf.
 - **Handoffs to external networks.** What was sent to an on-demand carrier, the statuses and proof it returned, and when, since the tenant answers to the shipper for that delivery.
 
-The record shape and tamper evidence are in [Audit Trails](/docs/architecture/audit-trails); retention for field records is in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
+The record shape and tamper evidence are in [Audit Trails](/docs/building-blocks/audit-trails); retention for field records is in [Audit Trails & Records](/books/field-operations/audit-trails-and-records).
 
 ## What This Means for the System You Build
 

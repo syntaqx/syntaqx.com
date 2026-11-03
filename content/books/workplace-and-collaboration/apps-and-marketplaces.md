@@ -204,7 +204,7 @@ Notes on the sketch:
 - **A new version that adds scopes doesn't inherit consent.** `breaking_scopes` routes the upgrade back through approval; existing installations keep running on their old grant until an admin accepts.
 - **A policy change sweeps.** Moving an app to `blocked` writes the policy row and enqueues revocation of every live installation and token for it in that workspace, the behavior Google applies when a service becomes restricted.
 - **Suspension is one row.** `apps.suspended_at` makes every token check for that app fail at once, across all tenants, which is the Drift response as a primitive. Token validation reads it through the same cache that holds the token, invalidated on change ([Caching Decisions Safely](/docs/security/authorization#caching-decisions-safely)).
-- **App actions are typed actors.** Every write an app makes lands in `audit_events` with the app, the installation and, for user tokens, the human it acted for ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **App actions are typed actors.** Every write an app makes lands in `audit_events` with the app, the installation and, for user tokens, the human it acted for ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 
 ## Auditing
 

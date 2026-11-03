@@ -87,7 +87,7 @@ Anything scarce enough to need a queue is worth automating against. Assume bots 
 
 ## Priority Classes
 
-Not every arrival is equal, and that's a legitimate business decision: paying subscribers ahead of free trials, existing customers ahead of new sign-ups, accessibility needs, staff and support sessions. Model priority as separate queues or weighted admission from each, never as a bypass around the gate, and store the rule with an effective date and an owner like any other business rule ([Rules as Data](/docs/architecture/rules-as-data)). Publish it, too: an unexplained priority looks like a bug, or like favoritism.
+Not every arrival is equal, and that's a legitimate business decision: paying subscribers ahead of free trials, existing customers ahead of new sign-ups, accessibility needs, staff and support sessions. Model priority as separate queues or weighted admission from each, never as a bypass around the gate, and store the rule with an effective date and an owner like any other business rule ([Rules as Data](/docs/building-blocks/rules-as-data)). Publish it, too: an unexplained priority looks like a bug, or like favoritism.
 
 ## Reclaiming Idle Sessions
 

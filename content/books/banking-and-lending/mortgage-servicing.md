@@ -267,7 +267,7 @@ How it runs:
 
 ## Auditing
 
-Mortgage servicing is examined by the CFPB, state regulators and every investor, and the general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Mortgage servicing is examined by the CFPB, state regulators and every investor, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **Every escrow analysis** with its projection, cushion, outcome, treatment and the statement sent, and every disbursement against its penalty deadline.
 - **Force-placed insurance notices** and the dates, and any refund after proof of coverage.

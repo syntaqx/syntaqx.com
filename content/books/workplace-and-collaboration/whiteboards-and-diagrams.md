@@ -187,7 +187,7 @@ The rules:
 - **Presence never lands in tables.** Cursors, selections, live timers and cursor chat stay in the room's memory; nothing in this schema stores them, which is the retention decision made explicit.
 - **Ballots are hidden by permission, not by the client.** Until `ended_at`, the API returns a member only their own ballots; the facilitator sees counts only if the vote allows it.
 - **Templates are frozen versions.** Publishing points at an `item_versions` row, so editing the source board doesn't change a template mid-quarter.
-- **Assets live outside the document,** in object storage under the workspace's region, referenced by id, and deleted by the retention job when the last referencing board is purged ([File Uploads](/docs/architecture/file-uploads)).
+- **Assets live outside the document,** in object storage under the workspace's region, referenced by id, and deleted by the retention job when the last referencing board is purged ([File Uploads](/docs/building-blocks/file-uploads)).
 - **Retention, holds and eDiscovery see the board as a file** plus its `board_objects` text, because an export of only the snapshot blob is unreadable to a reviewer.
 
 ## Auditing
@@ -197,7 +197,7 @@ The rules:
 - **Vote outcomes** with their settings (hidden or open, votes per person), so a decision taken on a board can be shown to have been taken fairly.
 - **App and embed additions:** which app card or embed was placed, by whom, through which installation.
 - **Exports** (image, PDF, CSV of stickies) with the exporter, because exported boards leave the tenant's controls.
-- **What the record excludes:** a per-tenant statement that cursor chat and presence aren't retained, so legal teams don't assume they are ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **What the record excludes:** a per-tenant statement that cursor chat and presence aren't retained, so legal teams don't assume they are ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

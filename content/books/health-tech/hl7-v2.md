@@ -180,10 +180,10 @@ Design decisions:
 - **Duplicates are expected.** Senders resend on timeouts with the same control id; the unique key and `duplicate_of` turn a resend into a no-op ([Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent)).
 - **Order is per channel.** `sequence_number` and the pending index let a feed stop on an error and hold everything behind it, which is how interface teams expect a feed to behave. Different channels never block each other.
 - **Acknowledgments are their own rows.** Enhanced mode can produce a commit and an application ACK for one message, and an outbound message's ACK arrives later from the other side; `hl7_acks` keeps both with their raw bytes and error detail.
-- **Identifiers carry their issuer.** A `PID-3` MRN is stored in `patient_identifiers` with `issuer` set to the channel's assigning authority, because MRN 000123456 at two hospitals is two patients ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)).
+- **Identifiers carry their issuer.** A `PID-3` MRN is stored in `patient_identifiers` with `issuer` set to the channel's assigning authority, because MRN 000123456 at two hospitals is two patients ([Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids)).
 - **Merges are events, not overwrites.** An A40 or A47 becomes a merge or identifier change in the patient index with its source message, reversible like any other merge ([Patient Matching & Identity](/books/health-tech/patient-matching-and-identity#merges-overlays-and-unmerges)).
 - **Effects are recorded.** `hl7_message_effects` answers "which message created this appointment?" and "what did this A08 change?", the two questions every support ticket about a feed starts with.
-- **Messages are PHI.** The table is encrypted, access to raw messages is a logged read, and retention follows the integration's contract and the customer's record rules ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Messages are PHI.** The table is encrypted, access to raw messages is a logged read, and retention follows the integration's contract and the customer's record rules ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ## Auditing
 
@@ -191,7 +191,7 @@ Design decisions:
 - **What each message did:** the core records it created, changed, merged or cancelled, and messages filtered out with the rule that filtered them.
 - **Errors, holds and replays:** who released a held queue, who replayed which messages, and why. A replay is an act with an operator, not a silent rerun.
 - **Mapping versions:** which version of a site's field map and code translations processed each message, so a historical result can be explained.
-- **Access to raw messages,** because a message log is a PHI store that support staff will want to search ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access to raw messages,** because a message log is a PHI store that support staff will want to search ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

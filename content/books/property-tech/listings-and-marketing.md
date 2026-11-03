@@ -318,11 +318,11 @@ WHERE ap.tenant_id = $1
 Design decisions behind it:
 
 - **Fee terms are per property and effective-dated.** The same charge code is mandatory at one community and optional at another, and changes over time; the advertised total for any past date is computable from the terms in force ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
-- **Jurisdiction rules classify, data doesn't hard-code.** Which components are included, disclosed or excluded, and which fees are banned outright, comes from rules resolved from the property's jurisdiction, versioned, with the version stored on every snapshot ([Rules as Data](/docs/architecture/rules-as-data#record-which-rule-decided)). [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) holds the rules; this chapter applies them.
+- **Jurisdiction rules classify, data doesn't hard-code.** Which components are included, disclosed or excluded, and which fees are banned outright, comes from rules resolved from the property's jurisdiction, versioned, with the version stored on every snapshot ([Rules as Data](/docs/building-blocks/rules-as-data#record-which-rule-decided)). [Landlord-Tenant Law as Data](/books/property-tech/landlord-tenant-law#the-rules-matrix) holds the rules; this chapter applies them.
 - **A channel that can't carry fee lines still gets the total.** `carries_fee_lines` records the channel's limit; when it's false, the adapter sends the total monthly price as the price and links to the itemization, and the snapshot records that. Sending base rent because the channel has no fee field is exactly what the FTC letters warn about.
 - **One price computation.** The website page, its structured data, every feed and the leasing agent's answer all call the same function over `rent_quotes` and `fee_terms`; no channel adapter computes its own price.
-- **Snapshots are append-only ranges.** A change closes the open snapshot and opens a new one; nothing is updated in place ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
-- **Conversion uploads are a consented outbound flow.** They pass the same consent check as any other outbound use of a person's data, at send time, with suppression recorded rather than silently skipped ([The Consent Ledger](/docs/architecture/notifications#the-consent-ledger)).
+- **Snapshots are append-only ranges.** A change closes the open snapshot and opens a new one; nothing is updated in place ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
+- **Conversion uploads are a consented outbound flow.** They pass the same consent check as any other outbound use of a person's data, at send time, with suppression recorded rather than silently skipped ([The Consent Ledger](/docs/building-blocks/notifications#the-consent-ledger)).
 
 Events: `listing.published`, `listing.withdrawn`, `advertised_price.changed`, `publication.rejected` and `ad_conversion.sent`, consumed by channel adapters, the leasing center's availability view and the audit store ([Events & Async Messaging](/docs/architecture/events)).
 
@@ -337,7 +337,7 @@ Listings produce the records that fee-transparency enforcement, fair housing com
 - **Ad campaigns and conversion uploads.** Housing category flags and targeting settings per campaign, and every conversion sent to an ad platform with its event type and consent basis.
 - **Accessibility.** Test results for templates and embeds by release, and the accessibility statement in force on each date.
 
-The mechanics (typed actors, append-only history, retention) are in [Audit Trails](/docs/architecture/audit-trails); retention periods and records requests are in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
+The mechanics (typed actors, append-only history, retention) are in [Audit Trails](/docs/building-blocks/audit-trails); retention periods and records requests are in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#retention-and-legal-holds).
 
 ## What This Means for the System You Build
 

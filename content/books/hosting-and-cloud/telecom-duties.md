@@ -204,7 +204,7 @@ Notes on the sketch:
 
 - **The emergency address in force for each number at each moment,** with its validation, because a 911 failure investigation starts there.
 - **Kari's Law settings per site** and when they changed.
-- **Every CPNI access by staff,** with the reason, and every release to a customer with how they were authenticated ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Every CPNI access by staff,** with the reason, and every release to a customer with how they were authenticated ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **Every breach determination and report,** with timestamps against the rule's clock.
 - **Every filing,** with the signer and the document as filed.
 - **Every regulatory fee line** with the rate, its source and the revenue it was computed on, because states and cities audit what was collected and remitted.

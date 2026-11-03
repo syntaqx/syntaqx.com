@@ -169,13 +169,13 @@ The fee and the held amount are ledger transactions with the dispute as their so
 
 ## Auditing
 
-Dispute records are evidence in the dispute itself, in pre-arbitration and arbitration, in the merchant's argument with the platform over who pays, and in a network's review of a merchant in a monitoring program. The general design is in [Audit Trails](/docs/architecture/audit-trails); for disputes, make sure the record shows:
+Dispute records are evidence in the dispute itself, in pre-arbitration and arbitration, in the merchant's argument with the platform over who pays, and in a network's review of a merchant in a monitoring program. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for disputes, make sure the record shows:
 
-- **Exactly what was submitted and when,** each file and field as sent, since the network judges the evidence it received, not what you hold now ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Exactly what was submitted and when,** each file and field as sent, since the network judges the evidence it received, not what you hold now ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Both deadlines and who met or missed them,** the merchant's and the network's, with the stage change that started each clock.
 - **Who decided to accept, contest or escalate,** a person, the merchant or an automated rule such as a Rapid Dispute Resolution threshold.
 - **Every ledger movement the dispute caused,** linked to the dispute as its source, so the merchant's balance can be explained line by line.
-- **Who viewed or exported the customer's data** while assembling evidence ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who viewed or exported the customer's data** while assembling evidence ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

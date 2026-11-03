@@ -7,7 +7,7 @@ tags = ["testing", "quality", "process", "ci"]
 aliases = ["testing", "engineering/testing"]
 +++
 
-Tests exist so you can change code with confidence, and everything downstream, from [code review](/docs/engineering/commits-and-reviews) to deploying every merge, leans on them. A suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
+Tests exist so you can change code with confidence, and everything downstream, from [code review](/docs/development/commits-and-reviews) to deploying every merge, leans on them. A suite that's slow, flaky, or only checks that mocks were called gives you the cost of tests without the confidence.
 
 ## The Pyramid
 

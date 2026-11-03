@@ -96,8 +96,8 @@ Then there's everything that never came up in the demo:
 - What does it cost to run every month, and [whose budget is that](/docs/operations/cost-and-finops)?
 - What data does it touch, and [who's allowed to see it](/docs/security/authorization)?
 - How is it backed up, and has anyone [ever restored it](/docs/operations/disaster-recovery)?
-- What does it depend on, and who [keeps those current](/docs/engineering/dependencies)?
-- Whose name goes in [CODEOWNERS](/docs/engineering/code-ownership)?
+- What does it depend on, and who [keeps those current](/docs/development/dependencies)?
+- Whose name goes in [CODEOWNERS](/docs/development/code-ownership)?
 
 All of them show up eventually, and the dependency one can show up on day one. Models make up packages: [a 2025 study of 16 models](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen) found that, on average, at least 5.2% of the packages commercial models suggested didn't exist, and 21.7% from open-source models. An attacker can register one of those names, put malware in it and wait. If an agent installs it, you've got a crypto miner in production, and nothing in that loop knew to look.
 

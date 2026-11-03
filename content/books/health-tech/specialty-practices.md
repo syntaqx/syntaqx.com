@@ -228,7 +228,7 @@ Allocating those units across codes follows the manual's examples (the most minu
 
 Design notes:
 
-- **Deadlines are computed and stored.** The contact lens verification deadline and the plan recertification due date are computed once, from the rule in force and the practice's calendar, and stored, so the worklist sorts by them ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Deadlines are computed and stored.** The contact lens verification deadline and the plan recertification due date are computed once, from the rule in force and the practice's calendar, and stored, so the worklist sorts by them ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Sensitivity is a label on the record,** a `sensitivity_labels` row ([Health Tech Architecture](/books/health-tech/health-tech-architecture#how-to-build-it) defines it) such as `part2_sud` or `mental_health`, and every export, portal release, message template and support view checks it.
 - **Specialty rules are payer and state data:** unit methods, direct access conditions, threshold amounts per year, supervision rules.
 

@@ -1,10 +1,10 @@
 +++
 title = "Commits, PRs & Code Review"
 description = "Conventional Commits, small squash-merged pull requests with a real description, and code reviews that are fast, labeled, and focused on what matters."
-category = "Engineering Practice"
+category = "Development"
 order = 1022
 tags = ["process", "git", "code-review", "commits"]
-aliases = ["commits-and-reviews"]
+aliases = ["engineering/commits-and-reviews", "commits-and-reviews"]
 +++
 
 History is documentation. Six months from now, `git blame` is how someone finds out why a line exists, and the commit message is the only answer they'll get. Reviews keep that history good, but a slow review process costs more than the bugs it catches. The goal is both: a log that explains itself, and reviews that keep pace with the work.
@@ -46,7 +46,7 @@ BREAKING CHANGE: `amount` is now an integer, see /docs/money/amounts.
 
 - **Imperative, lowercase, no period.** "add", not "added" or "Adds": what the commit does when applied.
 - **The body says why.** The diff already says what. "Retry on 503 because the processor sheds load during settlement" is worth more than any amount of "update retry logic".
-- **`!` or a `BREAKING CHANGE:` footer** for anything that breaks consumers. It maps straight onto a major version bump under [SemVer](/docs/engineering/dependencies), and onto a new version under [Versioning & Deprecation](/docs/api-design/versioning).
+- **`!` or a `BREAKING CHANGE:` footer** for anything that breaks consumers. It maps straight onto a major version bump under [SemVer](/docs/development/dependencies), and onto a new version under [Versioning & Deprecation](/docs/api-design/versioning).
 
 ## Pull Requests
 
@@ -73,7 +73,7 @@ Tests added, manual steps, screenshots for UI.
 Migrations, flags, how to roll back.
 ```
 
-Link the [design doc](/docs/engineering/design-docs) for anything significant, and the ADR if the change departs from the playbook. The PR explains the change; the doc explains the decision.
+Link the [design doc](/docs/development/design-docs) for anything significant, and the ADR if the change departs from the playbook. The PR explains the change; the doc explains the decision.
 
 ## Reviewing
 

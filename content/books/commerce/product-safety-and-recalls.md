@@ -84,7 +84,7 @@ A recall, usually negotiated with CPSC as a corrective action plan (often throug
 5. **Remedy.** Refund, repair or replacement, with a return method that is lawful for the product (a recalled lithium battery can't go back by mail ([Lithium Batteries](/books/commerce/pesticides-chemicals-and-hazmat#lithium-batteries))).
 6. **Account for units.** Units sold, returned, destroyed, repaired and unaccounted for, reported to CPSC in progress reports until the recall closes; returned units are destroyed or reworked, never restocked ([Disposition](/books/commerce/returns-and-exchanges#disposition)).
 
-The customer data needed for step 3 is one of the few cases where a merchant needs purchase history it would otherwise minimize, so the retention schedule for orders of recall-prone categories should account for it ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type), [Customers, Accounts & Privacy](/books/commerce/customers-and-accounts)).
+The customer data needed for step 3 is one of the few cases where a merchant needs purchase history it would otherwise minimize, so the retention schedule for orders of recall-prone categories should account for it ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type), [Customers, Accounts & Privacy](/books/commerce/customers-and-accounts)).
 
 ## Marketplaces and Recalls
 
@@ -244,7 +244,7 @@ Design notes:
 
 - **Rules attach to items, certificates cite rules.** A certificate that doesn't cite every rule in `item_safety_rules` is incomplete, which is a check the purchasing flow runs before a shipment leaves the factory and eFiling needs the data.
 - **Lots are what make recalls narrow.** Without the lot on the shipped movement, a recall's scope is every unit ever sold; with it, it's the affected lots ([Movements, Not Overwrites](/books/commerce/inventory#movements-not-overwrites)). Store lots on receipts and picks for any category that can be recalled.
-- **The report clock starts at receipt.** `safety_incidents.received_at` is when the firm obtained the information, and `report_due_at` is computed from the regime (24 hours for CPSC once the conclusion is supported, 15 business days for FDA adverse events) ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **The report clock starts at receipt.** `safety_incidents.received_at` is when the firm obtained the information, and `report_due_at` is computed from the regime (24 hours for CPSC once the conclusion is supported, 15 business days for FDA adverse events) ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Stop sale is one action across channels.** A recall's activation suspends listings through the channel integrations, pushes a POS block for the items and lots, moves on-hand units to the unsellable recall bucket and places holds on open orders, as one job with a result per channel ([Order Holds](/books/commerce/order-management)).
 - **Notifications are per order line.** A buyer of two affected items gets one message, but each line records that it was covered, so the progress report's "notified" count is exact.
 
@@ -254,7 +254,7 @@ Design notes:
 - **Every safety incident** from receipt to decision, with the time it was received, who assessed it, the decision and, if reported, when, so the 24-hour question has an answer.
 - **Every recall's progress:** scope, stop-sale results per channel, notices sent, remedies claimed, units returned, destroyed or unaccounted for.
 - **FDA registrations, listings and notices** with their renewal dates.
-- **Retention long enough for recalls:** order and customer contact records for recall-prone categories kept for the period the merchant's retention schedule sets for them ([Audit Trails](/docs/architecture/audit-trails)).
+- **Retention long enough for recalls:** order and customer contact records for recall-prone categories kept for the period the merchant's retention schedule sets for them ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

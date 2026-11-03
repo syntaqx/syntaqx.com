@@ -110,7 +110,7 @@ Upload artifacts from CI with a short retention (a couple of weeks), and link th
 
 ## Who Owns the Suite
 
-The team that owns the code owns its tests, end to end included, under the same [ownership](/docs/engineering/code-ownership) rules as the code. A separate automation team writing tests after the fact produces a suite that lags every feature, breaks on every change it wasn't told about, and is fixed by people who don't know what the right behavior is. Tests ship in the same pull request as the change they cover and get [reviewed](/docs/engineering/commits-and-reviews) with it.
+The team that owns the code owns its tests, end to end included, under the same [ownership](/docs/development/code-ownership) rules as the code. A separate automation team writing tests after the fact produces a suite that lags every feature, breaks on every change it wasn't told about, and is fixed by people who don't know what the right behavior is. Tests ship in the same pull request as the change they cover and get [reviewed](/docs/development/commits-and-reviews) with it.
 
 Quality engineers still have a real job: owning the framework, the shared helpers, the CI wiring, flake tracking and coaching. They make tests easy to write; they don't write everyone's tests.
 

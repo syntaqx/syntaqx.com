@@ -137,8 +137,8 @@ Design consequences:
 
 - **A retrieval window means read access, not service.** During it the account is `read_only`: the customer can download, snapshot or export, and nothing new runs. Egress during the window is the switching question ([Egress & Switching](/books/hosting-and-cloud/egress-and-switching)); Azure, for instance, credits egress for customers who give notice and leave.
 - **Unpaid and retrievable can conflict.** AWS conditions retrieval on payment. A provider that does the same should say so in the termination notice, with the amount, because a customer who can't get their data won't pay to see whether they can.
-- **Deletion is a job with evidence.** The deletion run records what was deleted and when, against the hold's `delete_data_after`, and backups age out on their own schedule, stated separately ([Backups](/docs/architecture/data-retention#backups); [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#retention-and-placement)).
-- **Billing and tax records outlive the data.** Invoices, consent and identifier history are kept for their own retention periods after the customer's content is gone ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+- **Deletion is a job with evidence.** The deletion run records what was deleted and when, against the hold's `delete_data_after`, and backups age out on their own schedule, stated separately ([Backups](/docs/building-blocks/data-retention#backups); [Backups, Restores & Migrations](/books/hosting-and-cloud/backups-and-migrations#retention-and-placement)).
+- **Billing and tax records outlive the data.** Invoices, consent and identifier history are kept for their own retention periods after the customer's content is gone ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 
 ## Resellers and the Cascade
 
@@ -416,7 +416,7 @@ Notes on the sketch:
 - **Every invoice traced to usage.** Each usage line's rated usage, price version and rating run, each credit line's grant, each commitment line's drawdowns, so a disputed bill is rebuilt from facts.
 - **Every run.** Its period, cutoff, seller, the accounts it billed, the ones it skipped and why, and the usage it left for the next run.
 - **Every step of every case.** Retries with their payment results and decline codes, notices with their send times and the dates they quoted, holds with their effects and clocks, pauses for disputes, and the payment that closed the case.
-- **Clocks against actions.** Resources stopped no earlier than `stop_resources_at`, data deleted no earlier than `delete_data_after`, retrieval available until `retrieval_until`: a deletion before the stated date is the finding that matters most ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Clocks against actions.** Resources stopped no earlier than `stop_resources_at`, data deleted no earlier than `delete_data_after`, retrieval available until `retrieval_until`: a deletion before the stated date is the finding that matters most ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **The cascade.** Which sub-account holds came from a reseller's case, and the notices their users got before anything stopped.
 
 ## What This Means for the System You Build

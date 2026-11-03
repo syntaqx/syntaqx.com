@@ -168,7 +168,7 @@ With many front ends, the guide recommends a smaller set of servers that manage 
 
 Renewal failure "should not be treated as a fatal error." The guide's schedule is exponential backoff with no more than one attempt per day per certificate after the first few (1 minute, 10 minutes, 100 minutes, then daily), tracking failures as well as successes, letting administrators request an early retry, and sending errors to whoever is responsible. Caddy's defaults are similar: retry once, try the next challenge type, try the next issuer, then back off to at most a day between attempts for up to 30 days. The general pattern is the playbook's [Exponential Backoff With Jitter](/docs/architecture/retries-and-timeouts#exponential-backoff-with-jitter); what is specific here is that the backoff is per identifier, because the CA's failure limits are per identifier.
 
-Failures have different owners, and the pipeline should sort them: `rateLimited` and 5xx are the provider's problem and retry on `Retry-After`; a CAA refusal, an unpointed name and a failed challenge are the customer's and need a notice with the fix ([Event-Triggered, Re-Checked at Send Time](/docs/architecture/notifications#event-triggered-re-checked-at-send-time)), re-checked before sending so a customer who fixed DNS an hour ago isn't told it's still broken. A CA outage or a refusal that affects many names at once is a reason to switch to the fallback CA for new orders, which only works if the fallback's account, CAA identity and client path were exercised before the outage.
+Failures have different owners, and the pipeline should sort them: `rateLimited` and 5xx are the provider's problem and retry on `Retry-After`; a CAA refusal, an unpointed name and a failed challenge are the customer's and need a notice with the fix ([Event-Triggered, Re-Checked at Send Time](/docs/building-blocks/notifications#event-triggered-re-checked-at-send-time)), re-checked before sending so a customer who fixed DNS an hour ago isn't told it's still broken. A CA outage or a refusal that affects many names at once is a reason to switch to the fallback CA for new orders, which only works if the fallback's account, CAA identity and client path were exercised before the outage.
 
 ## AutoSSL
 
@@ -338,7 +338,7 @@ Notes on the sketch:
 - **Every order and every challenge.** Which account asked which CA for which names, with which challenge, when it was published and answered, and what the CA said; kept past the certificate's expiry, because a misissuance report or a CA's own incident will ask which validation backed which certificate.
 - **Who could issue.** ACME accounts, EAB bindings and the KMS key behind each, with key use logged ([Logging Key Use](/docs/security/encryption-at-rest#logging-key-use)), since the account key is a credential for every hosted name.
 - **What the provider wrote to customers' DNS.** `_acme-challenge` and `_validation-persist` records created and removed on customer zones, with actor and time.
-- **Notices sent for blocked orders.** The message the customer received and when, because "you never told me my certificate would fail" is the support case after an expiry ([The Message Log](/docs/architecture/notifications#the-message-log)).
+- **Notices sent for blocked orders.** The message the customer received and when, because "you never told me my certificate would fail" is the support case after an expiry ([The Message Log](/docs/building-blocks/notifications#the-message-log)).
 
 ## What This Means for the System You Build
 

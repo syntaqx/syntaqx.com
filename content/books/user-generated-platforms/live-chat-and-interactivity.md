@@ -118,7 +118,7 @@ A raid is a growth feature and an attack vector at once, which is why the design
 - **The target consents.** An opt-in setting (everyone, followed channels, an allowlist, no one) is the first defense against raids used to deliver harassment.
 - **The sender is accountable.** Eligibility gates (an audience size, a clean standing) and a rate limit make the feature costly to abuse; a raid records the sender, so a raid that brings abuse is a moderation case against the sending channel.
 - **Arriving viewers are a cohort.** The target's moderators need to know who came in with the raid, so the platform tags arriving chatters with the raid for its first minutes. That makes "remove everyone from this raid" one action, the same shape as Shield Mode's bulk ban.
-- **A countdown is a hold.** The 90 seconds let the sender cancel and the target prepare (switch on followers-only, warn moderators). Model the raid as a short-lived reservation with an expiry, like any hold ([Reservations & Holds](/docs/architecture/reservations-and-holds)).
+- **A countdown is a hold.** The 90 seconds let the sender cancel and the target prepare (switch on followers-only, warn moderators). Model the raid as a short-lived reservation with an expiry, like any hold ([Reservations & Holds](/docs/building-blocks/reservations-and-holds)).
 
 Shoutouts are the lighter version: a broadcaster recommends another channel in chat, with the rate limits above and events for both sides.
 

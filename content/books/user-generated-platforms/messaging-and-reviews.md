@@ -36,10 +36,10 @@ A marketplace thread runs from the first inquiry about a listing, through the bo
 That changes how messaging is built compared to social chat:
 
 - **The thread belongs to a transaction,** keyed to a listing and, once it exists, a booking, with both parties fixed. A pre-booking inquiry becomes the booking's thread when the guest books, so the promise and the contract are in one place.
-- **Messages are immutable.** Edits and deletions are hidden from view but kept: a message the sender deleted is still evidence of what the other party read ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
-- **Staff can read the thread when a case needs it,** under logged, reasoned access ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)), because claims, disputes and safety reports are decided on it.
+- **Messages are immutable.** Edits and deletions are hidden from view but kept: a message the sender deleted is still evidence of what the other party read ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
+- **Staff can read the thread when a case needs it,** under logged, reasoned access ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)), because claims, disputes and safety reports are decided on it.
 - **Retention follows the transaction,** not the chat's retention policy: messages about a booking are kept with its transaction and tax records (Outdoorsy archives message histories after account deletion) and are held while a claim or dispute is open ([Deletion, Claims and Legal Holds](/books/user-generated-platforms/accounts-and-identity#deletion-claims-and-legal-holds)).
-- **Delivery matters to deadlines.** A host's 24-hour response window and a claim's response deadline both start from delivery, so the thread records sent, delivered and read times, and notifications go out by email and push when the app isn't open ([Notifications & Consent](/docs/architecture/notifications)).
+- **Delivery matters to deadlines.** A host's 24-hour response window and a claim's response deadline both start from delivery, so the thread records sent, delivered and read times, and notifications go out by email and push when the app isn't open ([Notifications & Consent](/docs/building-blocks/notifications)).
 
 Automated messages (booking confirmations, check-in instructions, the claim notice, the review reminder) live in the same thread as system messages, so the record shows what the platform told each side and when.
 

@@ -80,7 +80,7 @@ Wellness and administrative software (scheduling, billing, general fitness track
 
 The AI Act (Regulation (EU) 2024/1689) entered into force on August 1, 2024; prohibitions and AI literacy obligations applied from February 2, 2025, general-purpose AI obligations from August 2, 2025, and general application from August 2, 2026. AI that is a medical device requiring third-party conformity assessment under MDR or IVDR is a high-risk system through the Act's product-safety annex.
 
-The dates for high-risk systems moved. The AI omnibus, adopted by the Commission on November 19, 2025 and politically agreed on May 7, 2026, entered into force on July 27, 2026: high-risk rules for the Annex III use cases now apply from December 2, 2027, and for AI embedded in regulated products under Annex I (which includes medical devices) from August 2, 2028. A medical AI manufacturer therefore plans for one conformity assessment covering both MDR and the AI Act's high-risk requirements (risk management, data governance, logging, transparency, human oversight, accuracy and robustness) by August 2028, using MDCG 2025-6 for how they interact. Patient-facing chatbots that are not devices still owe transparency to users that they are talking to an AI; the playbook's [The Law, at a Pointer Level](/docs/architecture/ai-agents#the-law-at-a-pointer-level) summarizes. [AI in Health Tech](/books/health-tech/ai-in-health-tech) owns the cross-jurisdiction comparison.
+The dates for high-risk systems moved. The AI omnibus, adopted by the Commission on November 19, 2025 and politically agreed on May 7, 2026, entered into force on July 27, 2026: high-risk rules for the Annex III use cases now apply from December 2, 2027, and for AI embedded in regulated products under Annex I (which includes medical devices) from August 2, 2028. A medical AI manufacturer therefore plans for one conformity assessment covering both MDR and the AI Act's high-risk requirements (risk management, data governance, logging, transparency, human oversight, accuracy and robustness) by August 2028, using MDCG 2025-6 for how they interact. Patient-facing chatbots that are not devices still owe transparency to users that they are talking to an AI; the playbook's [The Law, at a Pointer Level](/docs/building-blocks/ai-agents#the-law-at-a-pointer-level) summarizes. [AI in Health Tech](/books/health-tech/ai-in-health-tech) owns the cross-jurisdiction comparison.
 
 ## Adjacent EU Laws
 
@@ -144,7 +144,7 @@ CREATE TABLE ehds_access_requests (      -- a patient's or an access body's requ
 Design notes:
 
 - **Purpose is the key.** Every use of health data maps to a `processing_records` row with its Article 6 basis, Article 9 condition and any national law; a new use (training a model on customer data) is a new row and a DPIA update before it ships.
-- **Access logs are a patient-facing product.** The EHDS right to see who accessed one's data turns `audit_events` reads into something a patient can request; reads must be attributable to a person and a role, not a service account ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access logs are a patient-facing product.** The EHDS right to see who accessed one's data turns `audit_events` reads into something a patient can request; reads must be attributable to a person and a role, not a service account ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Restrictions are enforced at query time.** A patient's restriction on part of their record is a `consents` row that the authorization layer evaluates on every read, with the emergency override (where national law allows) logged ([Authorization](/docs/security/authorization)).
 - **Secondary use is an extract, not access.** Requests from a health data access body produce a pseudonymized or anonymized dataset delivered to a secure processing environment under a permit; the platform never grants the body live access to tenant data.
 - **Jurisdiction stays data.** Member state conditions, hosting rules (C5, HDS) and opt-out availability are rows in the jurisdiction profile per country, effective-dated, as in [Canada & the UK](/books/health-tech/canada-and-uk#how-to-build-it).
@@ -155,7 +155,7 @@ Design notes:
 - **Access and restriction history** per patient, viewable by the patient where the EHDS applies.
 - **Secondary-use releases:** permit, dataset definition, pseudonymization method and delivery, for each request.
 - **Device and AI conformity:** classification rationale under MDCG 2019-11, notified body certificates, EUDAMED registrations, and the AI Act technical documentation and logs as they become due.
-- **Hosting attestations:** C5 Type 2 and HDS certificates with their scope and expiry, for every service in the data path ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Hosting attestations:** C5 Type 2 and HDS certificates with their scope and expiry, for every service in the data path ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ## What This Means for the System You Build
 

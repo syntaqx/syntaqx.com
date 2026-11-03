@@ -146,15 +146,15 @@ ALTER TABLE disclosures
 Design decisions:
 
 - **Labels are rows, applied at the source.** A Part 2 program labels everything it creates; code-set rules label records by diagnosis, procedure or medication code (with `rule_id` recording which); clinicians can add labels; inbound records keep the labels they arrived with (FHIR security labels and C-CDA confidentiality codes carry them, covered in the interoperability part). Don't count on certified EHRs to send them: HTI-5 removed the security tags certification criteria, 170.315(b)(7) and (b)(8), effective December 28, 2026 ([The HTI Rules](/books/health-tech/information-blocking-and-certification#the-hti-rules)). A record without a label is ordinary PHI, so removing a label is an audited act. The outbound check that reads the labels against consents is the architecture chapter's ([Segmenting PHI](/books/health-tech/health-tech-architecture#segmenting-phi)).
-- **Rules are data per jurisdiction and regime.** Geofence distances, consent requirements, segmentation categories, parental access, US storage: rows with citations and effective dates, plus an `override_note` for court decisions the Code doesn't reflect ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Rules are data per jurisdiction and regime.** Geofence distances, consent requirements, segmentation categories, parental access, US storage: rows with citations and effective dates, plus an `override_note` for court decisions the Code doesn't reflect ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Filters run at every exit.** Portal views, proxy access, exports, FHIR APIs, outbound messages and claims all ask the same question (who is asking, from where, for which categories) and get the same answer, logged ([Where Checks Belong](/docs/security/authorization#where-checks-belong)).
 - **Disclosures carry what they carried.** The labels on each disclosure and whether the Part 2 notice went with it make a later accounting or an OCR inquiry answerable.
-- **Consumer rights outside HIPAA are a separate queue.** A HIPAA access request and an MHMDA access request have different clocks, scopes and appeal rules; the playbook's erasure mechanics apply to the deletion ones ([Erasure Requests](/docs/architecture/data-retention#erasure-requests)).
+- **Consumer rights outside HIPAA are a separate queue.** A HIPAA access request and an MHMDA access request have different clocks, scopes and appeal rules; the playbook's erasure mechanics apply to the deletion ones ([Erasure Requests](/docs/building-blocks/data-retention#erasure-requests)).
 
 ## Auditing
 
 - **Label history:** every label applied or removed, by whom or by which rule.
-- **Rule versions:** which jurisdictional rule row decided each filter, consent requirement and deadline ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Rule versions:** which jurisdictional rule row decided each filter, consent requirement and deadline ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Consents and authorizations for consumer health data,** with the exact text shown and the separate collect, share and sell decisions ([Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization#the-consent-record)).
 - **Part 2 disclosures** with the notice and consent copy that accompanied them.
 - **Consumer rights requests** with deadlines and outcomes, and appeals.

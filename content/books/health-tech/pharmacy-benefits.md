@@ -189,7 +189,7 @@ CREATE TABLE benefit_checks (            -- a real-time benefit answer shown to 
 Design notes:
 
 - **Three prices on every claim.** `ingredient_cost` plus `dispensing_fee` (to the pharmacy), `plan_cost` (to the sponsor) and `member_pay` are separate columns because spread pricing and pass-through audits compare them; rebates are a separate quarterly ledger keyed to claims.
-- **Formularies are versions.** A claim and a benefit check point at the formulary entry that answered them, so a mid-year change doesn't rewrite history ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Formularies are versions.** A claim and a benefit check point at the formulary entry that answered them, so a mid-year change doesn't rewrite history ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Assistance is explicit.** `assistance_amount` and `counts_toward_oop` make the accumulator decision visible per claim; the rule that decided it is the sponsor's elected program filtered by funding and state.
 - **Versions per trading partner.** `standard_version` lets D.0 and F6 run side by side through 2027 and 2028.
 - **Estimates stay estimates.** `benefit_checks` records what the prescriber saw and when; it never becomes the claim.

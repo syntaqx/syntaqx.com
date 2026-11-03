@@ -163,9 +163,9 @@ CREATE TABLE regulatory_submissions (    -- an eCTD sequence in an application's
 
 Design notes:
 
-- **Day zero is captured at the edge.** Every intake channel (call center, patient support program, social monitoring) stamps `received_at` when the company first had the information, and the clock is computed from it, never from case creation ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Day zero is captured at the edge.** Every intake channel (call center, patient support program, social monitoring) stamps `received_at` when the company first had the information, and the clock is computed from it, never from case creation ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Cases version, never edit.** A follow-up is a new `adverse_event_versions` row; a submitted version is locked, and corrections are follow-ups.
-- **Reporting rules are data per recipient.** Seriousness, expectedness, product approval status and jurisdiction select the report type and due time; the rule is recorded on the report ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Reporting rules are data per recipient.** Seriousness, expectedness, product approval status and jurisdiction select the report type and due time; the rule is recorded on the report ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Formats are per recipient and date.** `format` lets E2B(R2) and R3 coexist for partners while FDA is R3-only from October 1, 2026.
 - **Every program is an intake channel.** Patient support programs, nurse educators and hub services in [Pharma Commercial & Patient Support](/books/health-tech/pharma-commercial) must forward adverse events within the contractual window, so their systems have a "report an adverse event" path that creates the case with its receipt time.
 

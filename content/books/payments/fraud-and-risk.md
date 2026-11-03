@@ -10,7 +10,7 @@ tags = ["payments", "fraud", "risk", "security"]
 
 The chapters so far decide who may take payments and whether the person paying is the cardholder; fraud and risk decide whether a particular payment should go through at all. Most of this chapter is the payer's side (stolen cards and scripted attacks), plus the merchant who is the fraud and the scams that ride on bank transfers. A fraudulent bank debit comes back as an [ACH return](/books/payments/ach#returns-when-money-is-really-yours), and a payment redirected to an impostor is in [Vendor Payouts](/books/payments/vendor-payouts#stopping-the-changed-bank-account).
 
-Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors. The general machinery of scoring, banding, decision records and safe rule changes is in [Risk Scoring](/docs/architecture/risk-scoring); this chapter is what payments add to it. The store's side (card testing at checkout, bots and inventory hoarding, promotion and refund abuse) is the Commerce volume's [Commerce Fraud & Abuse](/books/commerce/commerce-fraud).
+Every payment decision can be wrong in two directions. Approve a fraudulent payment and you lose the goods, the amount, a dispute fee and some standing with the card networks. Decline a legitimate one and you lose the sale, often the customer, and you never find out. The goal isn't the lowest fraud rate; it's the lowest total cost of both errors. The general machinery of scoring, banding, decision records and safe rule changes is in [Risk Scoring](/docs/building-blocks/risk-scoring); this chapter is what payments add to it. The store's side (card testing at checkout, bots and inventory hoarding, promotion and refund abuse) is the Commerce volume's [Commerce Fraud & Abuse](/books/commerce/commerce-fraud).
 
 ## The Two Costs
 
@@ -19,7 +19,7 @@ Every payment decision can be wrong in two directions. Approve a fraudulent paym
 | **Fraud approved** | The amount, the goods or service, dispute fees, time spent responding, and a dispute rate that can put you in a [card network monitoring program](/books/payments/disputes-and-chargebacks#monitoring-programs-the-threshold-that-ends-accounts) | Disputes and early fraud warnings (the issuer's fraud reports, which count toward network ratios even with no dispute), weeks later |
 | **Legitimate customer declined** | The sale, the customer's lifetime value, support load, and trust | Almost never. A false decline looks like an abandoned checkout |
 
-The asymmetry in visibility is the trap ([Two Kinds of Error](/docs/architecture/risk-scoring#two-kinds-of-error)). The payments-specific measure of a false decline is the customer who retries with another card right after one: a strong sign the first decline was wrong. Track approval rates by card brand, issuer country and segment, and sample declined payments for review ([Measuring It](/docs/architecture/risk-scoring#measuring-it)).
+The asymmetry in visibility is the trap ([Two Kinds of Error](/docs/building-blocks/risk-scoring#two-kinds-of-error)). The payments-specific measure of a false decline is the customer who retries with another card right after one: a strong sign the first decline was wrong. Track approval rates by card brand, issuer country and segment, and sample declined payments for review ([Measuring It](/docs/building-blocks/risk-scoring#measuring-it)).
 
 ## Signals
 
@@ -47,9 +47,9 @@ A merchant sees its own traffic. The networks and the large providers see everyo
 
 ## Rules, Models and Decisions
 
-A model score with explicit rules on top is the arrangement that works ([Rules and Models Together](/docs/architecture/risk-scoring#rules-and-models-together)), and commercial tools are built that way: Adyen and Stripe Radar both put machine-learned scoring underneath and custom rules, lists and manual review on top, and Adyen's evaluation ends in the same three actions a merchant would choose, block, allow or review, with backtesting of custom rules against historic data on its premium tier. Keep the rules as versioned data, not code ([Rules as Data](/docs/architecture/rules-as-data)), so a rule written during an attack ships in minutes and the decision records which version decided. Which models score a payment before you see it (the provider's, the network's for the issuer) and what a model may and may not decide are in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
+A model score with explicit rules on top is the arrangement that works ([Rules and Models Together](/docs/building-blocks/risk-scoring#rules-and-models-together)), and commercial tools are built that way: Adyen and Stripe Radar both put machine-learned scoring underneath and custom rules, lists and manual review on top, and Adyen's evaluation ends in the same three actions a merchant would choose, block, allow or review, with backtesting of custom rules against historic data on its premium tier. Keep the rules as versioned data, not code ([Rules as Data](/docs/building-blocks/rules-as-data)), so a rule written during an attack ships in minutes and the decision records which version decided. Which models score a payment before you see it (the provider's, the network's for the issuer) and what a model may and may not decide are in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
 
-A risk check doesn't return yes or no ([More Outcomes Than Yes and No](/docs/architecture/risk-scoring#more-outcomes-than-yes-and-no)). In payments the outcomes have specific costs:
+A risk check doesn't return yes or no ([More Outcomes Than Yes and No](/docs/building-blocks/risk-scoring#more-outcomes-than-yes-and-no)). In payments the outcomes have specific costs:
 
 | Outcome | When | Cost |
 | ------- | ---- | ---- |
@@ -99,9 +99,9 @@ For a provider, bank-rail fraud shows up on both ends: as a payer's platform, wh
 
 ## Labels and Outages
 
-Fraud labels arrive late ([Labels Arrive Late](/docs/architecture/risk-scoring#labels-arrive-late)). In payments the label sources are disputes, early fraud warnings, network fraud reports from the acquirer, and manual review outcomes, and the first three arrive weeks or months after the payment. Blocked payments never get a label at all, so hold out a small random share of borderline traffic for review instead of blocking ([Holdouts](/docs/architecture/risk-scoring#holdouts)). Retraining on those labels, and measuring a vendor model against a holdout, is in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
+Fraud labels arrive late ([Labels Arrive Late](/docs/building-blocks/risk-scoring#labels-arrive-late)). In payments the label sources are disputes, early fraud warnings, network fraud reports from the acquirer, and manual review outcomes, and the first three arrive weeks or months after the payment. Blocked payments never get a label at all, so hold out a small random share of borderline traffic for review instead of blocking ([Holdouts](/docs/building-blocks/risk-scoring#holdouts)). Retraining on those labels, and measuring a vendor model against a holdout, is in [Fraud Scoring](/books/payments/ai-in-payments#fraud-scoring).
 
-The risk service will sometimes be slow or down, and the policy for that is decided in advance ([When the Scorer Is Down](/docs/architecture/risk-scoring#when-the-scorer-is-down)). The payments version: fail open for low-value card payments with local fallback rules (velocity limits, blocklists, CVC must match), because a card payment can still be refunded or disputed; fail closed or queue for review on payouts and instant bank transfers, because those can't be pulled back.
+The risk service will sometimes be slow or down, and the policy for that is decided in advance ([When the Scorer Is Down](/docs/building-blocks/risk-scoring#when-the-scorer-is-down)). The payments version: fail open for low-value card payments with local fallback rules (velocity limits, blocklists, CVC must match), because a card payment can still be refunded or disputed; fail closed or queue for review on payouts and instant bank transfers, because those can't be pulled back.
 
 ## Auditable Decisions
 
@@ -120,7 +120,7 @@ Every decision is recorded with what produced it:
 }
 ```
 
-The full shape and why each field is there are in [The Decision Record](/docs/architecture/risk-scoring#the-decision-record) and [Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided). Decisions are append-only like the rest of the [payment record](/docs/money/payment-states): a reviewer approving a payment adds a decision rather than overwriting the original, so the record shows both what the system thought and what the person decided. Backtest rule changes against stored payments before shipping them ([Changing Rules and Models Safely](/docs/architecture/risk-scoring#changing-rules-and-models-safely)): a rule that would have stopped last month's card-testing attack and 3% of last month's good customers is a bad rule that looks good in a postmortem.
+The full shape and why each field is there are in [The Decision Record](/docs/building-blocks/risk-scoring#the-decision-record) and [Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided). Decisions are append-only like the rest of the [payment record](/docs/money/payment-states): a reviewer approving a payment adds a decision rather than overwriting the original, so the record shows both what the system thought and what the person decided. Backtest rule changes against stored payments before shipping them ([Changing Rules and Models Safely](/docs/building-blocks/risk-scoring#changing-rules-and-models-safely)): a rule that would have stopped last month's card-testing attack and 3% of last month's good customers is a bad rule that looks good in a postmortem.
 
 ## How to Build It
 
@@ -174,13 +174,13 @@ Training and measurement join `risk_decisions` to `fraud_labels` by payment; the
 
 ## Auditing
 
-Risk records are evidence when a customer asks why a payment was declined, when a merchant contests a hold or termination, when a network or acquirer reviews a merchant in a monitoring program, and when a regulator asks how APP fraud controls work. The general design is in [Audit Trails](/docs/architecture/audit-trails); for fraud and risk, make sure the record shows:
+Risk records are evidence when a customer asks why a payment was declined, when a merchant contests a hold or termination, when a network or acquirer reviews a merchant in a monitoring program, and when a regulator asks how APP fraud controls work. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for fraud and risk, make sure the record shows:
 
-- **Every automated decision with its versions,** model, rule set and whether it ran degraded ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **Every automated decision with its versions,** model, rule set and whether it ran degraded ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Every reviewer action** as a new decision that supersedes the old one, with the reviewer and the reason.
 - **Rule and list changes,** who proposed and who approved each, with the backtest result attached; nobody approves their own ([Approvals](/docs/security/support-access#approvals-and-nobody-approves-their-own)).
 - **Actions against merchants:** holds, restrictions and terminations, the evidence behind them, the notice sent and any appeal.
-- **Who looked up a card fingerprint, a customer or a merchant's risk history,** since the same tools that catch fraud can be used to commit it ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who looked up a card fingerprint, a customer or a merchant's risk history,** since the same tools that catch fraud can be used to commit it ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

@@ -241,7 +241,7 @@ CREATE TABLE debt_sale_accounts (
 
 How it runs:
 
-1. **Every outbound contact passes one gate** ([One Outbound Gate](/docs/architecture/notifications#one-outbound-gate)): the gate reads open `contact_restrictions` and `legal_stays`, the consumer's local time, the 7-in-7 window from `collection_contacts` for that person and debt, and any consent, and writes its decision into `gate_result` whether it allows the contact or not.
+1. **Every outbound contact passes one gate** ([One Outbound Gate](/docs/building-blocks/notifications#one-outbound-gate)): the gate reads open `contact_restrictions` and `legal_stays`, the consumer's local time, the 7-in-7 window from `collection_contacts` for that person and debt, and any consent, and writes its decision into `gate_result` whether it allows the contact or not.
 2. **A bankruptcy or stay is one transaction across systems.** Writing `legal_stays` ends autopay, recalls placements, cancels repossession orders, blocks foreclosure steps and adds a `contact_restrictions` row, with each downstream acknowledgment recorded.
 3. **Delinquency snapshots are written nightly** from the ledger and feed buckets, contact strategy, the bureau run and the allowance's roll rates.
 4. **Placements and sales are gated on exclusions** checked per account at the cutoff, stored in `exclusion_checks`, and recalled when an exclusion appears later.
@@ -249,7 +249,7 @@ How it runs:
 
 ## Auditing
 
-Collections is examined call by call and letter by letter, and the general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Collections is examined call by call and letter by letter, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **Every contact attempt,** with its channel, local time, connection, conversation, the 7-in-7 count and the gate's checks.
 - **Every restriction and stay,** when it was received, and every action it stopped.

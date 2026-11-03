@@ -87,7 +87,7 @@ Many B2B buyers require approval before an order is placed. Adobe Commerce turns
 - **By budget.** Orders that would exceed a location's monthly budget need approval.
 - **By role.** Some buyers can only submit; approvers can place.
 
-The order doesn't exist until approved: the approval request holds a cart snapshot with its prices, the approver approves or rejects (with a comment), and approval converts it to an order at the snapshot prices, re-priced only if the snapshot expired. Approval rules are data per company ([Rules as Data](/docs/architecture/rules-as-data)), and each decision is recorded with the approver and the rule that required it.
+The order doesn't exist until approved: the approval request holds a cart snapshot with its prices, the approver approves or rejects (with a comment), and approval converts it to an order at the snapshot prices, re-priced only if the snapshot expired. Approval rules are data per company ([Rules as Data](/docs/building-blocks/rules-as-data)), and each decision is recorded with the approver and the rule that required it.
 
 ## Punchout
 

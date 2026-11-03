@@ -216,7 +216,7 @@ CREATE TABLE fair_value_marks (              -- loans with measurement_basis = '
 
 How it runs:
 
-1. **Freeze the inputs.** A run snapshots balances, delinquency and loan attributes as of the reporting date into `inputs_ref`, so the estimate can be reproduced after the ledger moves on ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+1. **Freeze the inputs.** A run snapshots balances, delinquency and loan attributes as of the reporting date into `inputs_ref`, so the estimate can be reproduced after the ledger moves on ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 2. **Assumptions are rows, not constants.** The run cites exactly which approved assumptions it used, and a changed forecast is a new row with its approval, so the difference between two quarters can be attributed to data or to judgment.
 3. **Posting is one entry.** An approved run posts the true-up (required allowance less the GL allowance after the period's charge-offs and recoveries) as a single provision entry, by pool and loan category, so the GL allowance always equals the latest posted run.
 4. **Charge-offs are driven by policy.** A nightly job charges off every loan the policy requires (days past due by product, bankruptcy notice age, fraud discovery age), writes `charge_offs` with the rule, posts the entry and moves the account's status in the same transaction.
@@ -224,7 +224,7 @@ How it runs:
 
 ## Auditing
 
-The allowance is audited every year and examined at every bank exam, and the general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+The allowance is audited every year and examined at every bank exam, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **Every run** with its frozen inputs, model version, pools, assumptions and results, and who reviewed and approved it.
 - **Every assumption** with its rationale, approver, date and what it replaced.

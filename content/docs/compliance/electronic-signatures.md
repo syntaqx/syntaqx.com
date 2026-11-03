@@ -158,7 +158,7 @@ ESIGN's retention rule is the storage spec. An electronic record satisfies a ret
 - **Keep the signed artifact, not the inputs.** The sealed PDF, its hash and the certificate. A template plus field values re-rendered next year by different code is not the record that was signed.
 - **Write once.** Store signed documents in object storage with write-once retention, keyed by the agreement's ID, and verify the stored hash on read.
 - **The signer can get a copy, any time.** "All parties" means the customer too: a download link in their account, and a support path for the customer who has since lost access.
-- **Retention follows the contract.** Keep it for the life of the agreement plus whatever period counsel sets for disputes, then delete on schedule. Signature evidence is a textbook case for [legal holds and pseudonymization rather than erasure](/docs/architecture/data-retention#erasure-vs-append-only-records) when a person asks to be forgotten ([GDPR & Privacy](/docs/compliance/gdpr)).
+- **Retention follows the contract.** Keep it for the life of the agreement plus whatever period counsel sets for disputes, then delete on schedule. Signature evidence is a textbook case for [legal holds and pseudonymization rather than erasure](/docs/building-blocks/data-retention#erasure-vs-append-only-records) when a person asks to be forgotten ([GDPR & Privacy](/docs/compliance/gdpr)).
 - **Production is a feature.** One call should assemble an agreement's packet: the document as signed, the certificate, the consent record, the event trail and the delivery record. If producing it takes an engineer and a day, it'll be wrong on the day it matters.
 
 ## Outside the US: eIDAS

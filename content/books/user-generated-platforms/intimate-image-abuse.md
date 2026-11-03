@@ -184,7 +184,7 @@ Notes on the sketch:
 - **Every rejection,** with the missing element or the reason, because a rejected victim's complaint to the FTC will be judged on it.
 - **Every list match:** which list and version, the distance, the action and whether a person viewed the image.
 - **Every re-upload blocked,** and the account behind it.
-- **Who saw what:** review access to intimate images is logged like child safety evidence ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who saw what:** review access to intimate images is logged like child safety evidence ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

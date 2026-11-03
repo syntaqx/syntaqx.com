@@ -1,10 +1,10 @@
 +++
 title = "Decisions & Design Docs"
 description = "How much process a decision deserves, a named decider and a date, disagree and commit, and design docs and ADRs that keep the reasoning findable later."
-category = "Engineering Practice"
+category = "Development"
 order = 1021
 tags = ["process", "architecture", "adr", "documentation", "decisions", "leadership"]
-aliases = ["design-docs", "leadership/technical-decisions"]
+aliases = ["engineering/design-docs", "engineering", "design-docs", "leadership/technical-decisions"]
 +++
 
 Teams rarely fail because they make bad technical decisions. They fail because they make them slowly, implicitly, or twice. A choice nobody owns gets relitigated in every meeting; a choice nobody wrote down gets reversed by the next person who didn't know why it was made. Code shows what a system does, rarely why. So the practice has two halves: make decisions at the right weight, by a named person, and write them down where the next engineer will find them.

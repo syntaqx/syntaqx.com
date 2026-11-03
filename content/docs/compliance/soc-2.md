@@ -48,7 +48,7 @@ A well-run team already produces most of the evidence. The work is making it aut
 
 | Control area | What the auditor wants | Where it comes from |
 | --- | --- | --- |
-| **Change management** | Every production change reviewed, tested and approved by someone other than the author | Branch protection with required reviews and checks; [Commits & Code Review](/docs/engineering/commits-and-reviews), [CI Pipelines](/docs/delivery/ci-pipelines). The pull request *is* the change ticket |
+| **Change management** | Every production change reviewed, tested and approved by someone other than the author | Branch protection with required reviews and checks; [Commits & Code Review](/docs/development/commits-and-reviews), [CI Pipelines](/docs/delivery/ci-pipelines). The pull request *is* the change ticket |
 | **Logical access** | Access by role, removed promptly on departure, reviewed on a schedule | SSO everywhere, group grants, a recorded quarterly access review |
 | **Incident response** | Incidents detected, tracked, communicated and learned from | Alerting, an incident channel and a written review; [Incident Response](/docs/operations/incident-response) |
 | **Vulnerability management** | Vulnerabilities fixed within defined windows | Scanning with SLAs by severity; [Vulnerability Management](/docs/security/vulnerability-management) |

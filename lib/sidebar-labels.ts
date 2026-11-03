@@ -5,7 +5,6 @@
  */
 export const SIDEBAR_LABELS: Record<string, string> = {
   // Docs categories
-  "Engineering Practice": "Engineering",
   "Requests & Responses": "Requests",
   "Telemetry & Analytics": "Telemetry",
 

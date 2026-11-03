@@ -66,7 +66,7 @@ Network rules are a contract; state law overrides them, and it varies more than 
 - **Colorado** allows a surcharge of up to **2%** of the transaction, or up to the merchant's actual processing fee, at the merchant's choice, with prescribed disclosure, and never on cash, check, debit cards or gift cards.
 - **New York** has required since **February 11, 2024** that a seller who surcharges post the **total** credit card price, inclusive of the surcharge, and the surcharge may not exceed what the card company charges the seller.
 
-Those examples will age. The durable lesson is structural: the rules are per jurisdiction, they change by statute and court ruling, and they sometimes apply only to some merchant types, so they belong in data a compliance owner maintains, not in code ([Rules as Data](/docs/architecture/rules-as-data)). Outside the US the same table carries national law: Canada allows credit card surcharges within a cap ([Payments in Canada](/books/payments/canada#cards)), and the EU and UK ban surcharges on consumer cards outright ([Card Rules](/books/payments/eu-and-uk#card-rules)). Law firms carry one more rule: card fees can't be taken out of client trust money ([Cards and Trust Money](/books/workplace-and-collaboration/trust-accounting-iolta#cards-and-trust-money)).
+Those examples will age. The durable lesson is structural: the rules are per jurisdiction, they change by statute and court ruling, and they sometimes apply only to some merchant types, so they belong in data a compliance owner maintains, not in code ([Rules as Data](/docs/building-blocks/rules-as-data)). Outside the US the same table carries national law: Canada allows credit card surcharges within a cap ([Payments in Canada](/books/payments/canada#cards)), and the EU and UK ban surcharges on consumer cards outright ([Card Rules](/books/payments/eu-and-uk#card-rules)). Law firms carry one more rule: card fees can't be taken out of client trust money ([Cards and Trust Money](/books/workplace-and-collaboration/trust-accounting-iolta#cards-and-trust-money)).
 
 ## How the Platforms Do It
 
@@ -83,7 +83,7 @@ Two things follow. A provider's ceiling isn't the merchant's ceiling: Stripe's m
 
 - **Decide the fee on the server, from the card.** Look up the BIN before authorization and classify credit, debit or prepaid. Never surcharge debit or prepaid, even when the payer picked "credit" or the card network is ambiguous; when classification fails, charge no surcharge. Record the BIN data version used ([How Card Payments Work](/books/payments/card-payments)).
 - **Make eligibility configuration, per merchant.** Fee type, rate or flat amount, which channels and card types, the merchant's category, its jurisdiction, and dates: when it notified its acquirer and the networks, and when it may start. A surcharge can't switch on before its notice period has passed.
-- **Keep jurisdiction rules as effective-dated data.** Caps, prohibitions and disclosure requirements by state, owned by someone accountable for them, and versioned, so every historical fee can be explained by the rule that was in force ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Keep jurisdiction rules as effective-dated data.** Caps, prohibitions and disclosure requirements by state, owned by someone accountable for them, and versioned, so every historical fee can be explained by the rule that was in force ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Show it before the payer commits.** The fee and the total, before authorization, with a way to cancel or pay another way. Then authorize the total, and itemize the fee on the receipt and in the API.
 - **Compute in minor units with a written rounding rule.** A percentage of an amount produces fractions of a cent; decide which way they round, once ([Money & Amounts](/docs/money/amounts)).
 - **Refund the fee with the payment.** A full refund returns the fee; a partial refund returns a proportional share. Keeping a fee on money you've given back is indefensible, whatever a rule allows.
@@ -91,9 +91,9 @@ Two things follow. A provider's ceiling isn't the merchant's ceiling: Stripe's m
 
 ## Auditing
 
-A fee is a charge the payer didn't choose, so the record has to answer a payer's complaint, an acquirer's review and a state attorney general's inquiry. The general design is in [Audit Trails](/docs/architecture/audit-trails); for fees, make sure the record shows:
+A fee is a charge the payer didn't choose, so the record has to answer a payer's complaint, an acquirer's review and a state attorney general's inquiry. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for fees, make sure the record shows:
 
-- **The inputs and the rule behind every fee:** the BIN classification and its data version, the merchant's fee configuration version, the jurisdiction rule version, and the amount computed, stored on the payment ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **The inputs and the rule behind every fee:** the BIN classification and its data version, the merchant's fee configuration version, the jurisdiction rule version, and the amount computed, stored on the payment ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **What the payer was shown and when,** the fee and total as displayed, before authorization, so disclosure is provable rather than assumed.
 - **Who turned surcharging on for a merchant and on what evidence,** including the dates it notified its acquirer and the networks, since the notice period is the gate.
 - **Every difference between the configured fee and the one charged,** the tolerance, absorbed difference or per-transaction override, with the caller that sent it.

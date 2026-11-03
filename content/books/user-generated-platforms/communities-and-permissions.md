@@ -275,7 +275,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Every role grant, revocation and permission change,** with who made it, their rank at the time and the before and after bits, so "who gave this account the power to ban?" has an answer months later ([Audit Trails](/docs/architecture/audit-trails)).
+- **Every role grant, revocation and permission change,** with who made it, their rank at the time and the before and after bits, so "who gave this account the power to ban?" has an answer months later ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Every overwrite change,** because hiding or exposing a channel is as consequential as a role change, and a leaked private channel starts with an overwrite.
 - **Every membership range,** with how the member joined (which invite, which gate version), for raid investigations and for "was this person a member when they posted."
 - **Every ownership transfer,** with reason, requester, confirmation and the case behind a platform intervention.

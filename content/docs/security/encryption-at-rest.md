@@ -82,7 +82,7 @@ NIST SP 800-57 sets the scale. A data-encryption key used for smaller volumes of
 
 ## Crypto-Shredding
 
-Deleting data from a database is easy. Deleting it from every backup, replica, export and log is not, and backups are usually immutable by design ([Data Retention](/docs/architecture/data-retention#backups)). Crypto-shredding solves the backup problem: encrypt the data under a key that exists only for that data, and to delete the data, destroy the key. Every copy, including the backup from six months ago, becomes ciphertext nobody can read. NIST SP 800-57 names the technique for large volumes of encrypted key information: "cryptographic sanitization (i.e., destroying the key used to decrypt or unwrap the key information)."
+Deleting data from a database is easy. Deleting it from every backup, replica, export and log is not, and backups are usually immutable by design ([Data Retention](/docs/building-blocks/data-retention#backups)). Crypto-shredding solves the backup problem: encrypt the data under a key that exists only for that data, and to delete the data, destroy the key. Every copy, including the backup from six months ago, becomes ciphertext nobody can read. NIST SP 800-57 names the technique for large volumes of encrypted key information: "cryptographic sanitization (i.e., destroying the key used to decrypt or unwrap the key information)."
 
 - **Scope the key to what you'll delete together:** a tenant, a user, a record. A tenant offboarding becomes one key deletion; a [GDPR erasure request](/docs/compliance/gdpr#data-subject-rights) for one person needs a per-person key for the fields that identify them.
 - **Destruction is deliberate and delayed.** AWS requires a waiting period of 7 to 30 days before a KMS key is deleted (30 by default), during which it can't be used and the deletion can be cancelled. After that, "you can no longer decrypt the data that was encrypted under that KMS key, which means that data becomes unrecoverable." Disable first, alarm on any attempted use during the wait, then let it delete.
@@ -105,7 +105,7 @@ Application-level encryption turns "who read this?" into a question the KMS can 
 
 - **Alert on unusual decrypt volume** per caller. A service that unwraps 1,000 keys an hour and suddenly unwraps 100,000 is either a bug or an exfiltration.
 - **Alert on any decrypt from an unexpected principal,** and on every key policy, rotation or deletion change.
-- **Keep the application's own reveal log** too: which user, which record, which reason ([Audit Trails](/docs/architecture/audit-trails#log-access-not-just-changes)). The KMS log knows the service unwrapped a key; only the application knows on whose behalf.
+- **Keep the application's own reveal log** too: which user, which record, which reason ([Audit Trails](/docs/building-blocks/audit-trails#log-access-not-just-changes)). The KMS log knows the service unwrapped a key; only the application knows on whose behalf.
 - **Don't let logging be switched off quietly.** CloudTrail can exclude KMS events from a trail, and AWS warns that doing so "can obscure actions that use your KMS keys." Restrict that permission and alert on it.
 
 ## What Goes Wrong

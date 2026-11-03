@@ -10,7 +10,7 @@ tags = ["health-tech", "patient-matching", "mpi", "identity-proofing", "ial2", "
 
 The United States has no national patient identifier. Every hospital, practice, lab, pharmacy and payer assigns its own number, and when records move between them, someone has to decide from names, birth dates, addresses and phone numbers whether two records describe the same person. When they get it wrong in one direction, a patient's history is split across duplicate charts and a clinician acts without it; in the other, two people's records are fused into one, and a clinician acts on someone else's allergies, results or orders. GAO's 2019 report on patient record matching cites a 2014 study finding that "as few as 50 percent of records are accurately matched when organizations exchange information," and the ECRI Institute's case of a patient in cardiac arrest who was not resuscitated because the care team followed the wrong patient's do-not-resuscitate order.
 
-This chapter covers why there's no identifier, how a master patient index works, matching methods and their failure modes, merges and their reversals, and identity proofing for patients who reach their records themselves. The general engineering of linking records from many sources is the playbook's [Matching, Merging & Many Sources](/docs/architecture/record-linkage); this chapter is what health care adds: higher stakes, worse inputs, regulation, and a network that expects your matching to be right before it releases a record.
+This chapter covers why there's no identifier, how a master patient index works, matching methods and their failure modes, merges and their reversals, and identity proofing for patients who reach their records themselves. The general engineering of linking records from many sources is the playbook's [Matching, Merging & Many Sources](/docs/building-blocks/record-linkage); this chapter is what health care adds: higher stakes, worse inputs, regulation, and a network that expects your matching to be right before it releases a record.
 
 ## How the Platforms Do It
 
@@ -40,7 +40,7 @@ What fills the gap is a patchwork of identifiers, none universal:
 - **Social Security numbers**, increasingly not collected, often wrong when they are, and a breach liability.
 - **Network and vendor identifiers**: an MPI's enterprise id, a network's person id, a credential service provider's identifier for a proofed person.
 
-GAO's stakeholders saw a national identifier as one possible improvement and noted its limits: the funding prohibition, privacy concerns, and that a number can still be mistyped, shared, stolen or refused by the patient. So every system that exchanges records matches on demographics, and every identifier above is a crosswalk entry with its assigning authority ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)).
+GAO's stakeholders saw a national identifier as one possible improvement and noted its limits: the funding prohibition, privacy concerns, and that a number can still be mistyped, shared, stolen or refused by the patient. So every system that exchanges records matches on demographics, and every identifier above is a crosswalk entry with its assigning authority ([Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids)).
 
 ## The Master Patient Index
 
@@ -55,9 +55,9 @@ An MPI does four jobs:
 
 ## Matching Methods
 
-**Deterministic matching** requires exact agreement on chosen fields (last name, first name, birth date, sex, perhaps ZIP). It is fast and explainable and misses every typo, nickname, hyphenated name and moved patient. **Probabilistic matching** weighs each field's agreement by how informative it is (agreement on a rare surname means more than agreement on "Smith"; agreement on birth date means more than on sex) and scores the pair; the Fellegi-Sunter model in the playbook's [Probabilistic Linkage](/docs/architecture/record-linkage#probabilistic-linkage) is the classic form, and most EMPIs implement a version tuned to their population. **Referential matching** uses third-party data from outside health care, such as credit bureaus, to help decide, so a patient who moved can still be recognized; GAO notes Pew's caution about patient and provider reservations and its limits for children. Many products combine them: deterministic rules for certain matches, probabilistic scoring for the rest, and a reference source for hard cases.
+**Deterministic matching** requires exact agreement on chosen fields (last name, first name, birth date, sex, perhaps ZIP). It is fast and explainable and misses every typo, nickname, hyphenated name and moved patient. **Probabilistic matching** weighs each field's agreement by how informative it is (agreement on a rare surname means more than agreement on "Smith"; agreement on birth date means more than on sex) and scores the pair; the Fellegi-Sunter model in the playbook's [Probabilistic Linkage](/docs/building-blocks/record-linkage#probabilistic-linkage) is the classic form, and most EMPIs implement a version tuned to their population. **Referential matching** uses third-party data from outside health care, such as credit bureaus, to help decide, so a patient who moved can still be recognized; GAO notes Pew's caution about patient and provider reservations and its limits for children. Many products combine them: deterministic rules for certain matches, probabilistic scoring for the rest, and a reference source for hard cases.
 
-Whatever the method, the output is a score and a decision in **review bands** ([Review Bands](/docs/architecture/record-linkage#review-bands)): link automatically above an upper threshold, queue for a person between thresholds, create a new patient below. FHIR's `$match` exposes the same shape: results are ordered by a score from 0 to 1 with a match-grade extension (such as `certain` or `possible`), and `onlyCertainMatches=true` asks the server to return nothing rather than several candidates.
+Whatever the method, the output is a score and a decision in **review bands** ([Review Bands](/docs/building-blocks/record-linkage#review-bands)): link automatically above an upper threshold, queue for a person between thresholds, create a new patient below. FHIR's `$match` exposes the same shape: results are ordered by a score from 0 to 1 with a match-grade extension (such as `certain` or `possible`), and `onlyCertainMatches=true` asks the server to return nothing rather than several candidates.
 
 Health care's inputs make every method worse than it is elsewhere:
 
@@ -66,7 +66,7 @@ Health care's inputs make every method worse than it is elsewhere:
 - **People change.** Names change with marriage, divorce and gender transition; addresses and phones change often; payers change.
 - **Data entry is rushed.** Registration happens at a front desk, on a phone call, or in an emergency department with an unidentified patient registered under a placeholder name.
 
-Standardizing inputs helps more than a better algorithm. GAO describes 23 Texas providers that adopted common standards for recording names, addresses and other data in 2017; three hospitals estimated that manual review to resolve matching issues dropped by about 90%. Address standardization is the cheapest win: normalize to postal standards before comparing. Phone numbers belong in E.164 and emails lowercased, exactly as the playbook's [Match Before Create](/docs/architecture/record-linkage#match-before-create) describes.
+Standardizing inputs helps more than a better algorithm. GAO describes 23 Texas providers that adopted common standards for recording names, addresses and other data in 2017; three hospitals estimated that manual review to resolve matching issues dropped by about 90%. Address standardization is the cheapest win: normalize to postal standards before comparing. Phone numbers belong in E.164 and emails lowercased, exactly as the playbook's [Match Before Create](/docs/building-blocks/record-linkage#match-before-create) describes.
 
 ## Duplicates, Overlays and Overlaps
 
@@ -80,7 +80,7 @@ My rules for a product: **err toward duplicates over overlays.** A duplicate is 
 
 ## Merges, Overlays and Unmerges
 
-A merge in health care is a clinical event as much as a data one. When two charts become one, every downstream system must hear about it: HL7 v2 carries it as an **A40** (merge patient, patient identifier list) or **A47** (change patient identifier list), and FHIR servers report a merged patient's old id as replaced. The playbook's rules for recorded, reversible merges ([Merges, Recorded and Reversible](/docs/architecture/record-linkage#merges-recorded-and-reversible)) all apply, with health care's additions:
+A merge in health care is a clinical event as much as a data one. When two charts become one, every downstream system must hear about it: HL7 v2 carries it as an **A40** (merge patient, patient identifier list) or **A47** (change patient identifier list), and FHIR servers report a merged patient's old id as replaced. The playbook's rules for recorded, reversible merges ([Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible)) all apply, with health care's additions:
 
 - **Keep the retired identifier resolving.** Lab results, claims, network queries and patient portal accounts will arrive for the old MRN for years; the old id redirects to the survivor.
 - **Re-point, don't copy.** Encounters, documents, orders, results, appointments, charges and ledger entries are re-pointed to the survivor with the list recorded, so an unmerge can put them back.
@@ -170,7 +170,7 @@ Design decisions:
 - **An identifier is meaningless without its issuer.** The core's `system` (MRN, payer member id, PMS id) and `issuer` (who assigned it) are both required and unique together; `issuer_uri` is the same issuer as the identifier system FHIR and the networks use. A retired MRN stays in the table with `retired_reason = 'merged'` and a closed `valid_during`, so it keeps resolving.
 - **Candidates keep their evidence.** `field_evidence` shows each field's values and weights, which is what a reviewer needs and what an investigator asks for after an overlay. "Not the same person" decisions are kept so the pair isn't asked again.
 - **Gates beat scores.** A high score with a failed gate goes to review, never to auto-link, which is how the system errs toward duplicates.
-- **Algorithms are versioned.** A tuning change is a new `algorithm_version`; sampling auto-links per version estimates the false merge rate ([Review Bands](/docs/architecture/record-linkage#review-bands)).
+- **Algorithms are versioned.** A tuning change is a new `algorithm_version`; sampling auto-links per version estimates the false merge rate ([Review Bands](/docs/building-blocks/record-linkage#review-bands)).
 - **Merges keep the re-pointing list.** A merge sets the core's `patients.status = 'merged'` and `merged_into_id` on the retired row, and the `patient_links` row keeps who, why, from which trigger and every re-pointed record, so an unmerge restores both patients, and an overlay unmerge opens a clinical review that must be completed and timestamped.
 - **External merges are inputs, not commands.** An A40 from a hospital's EHR is recorded with its source message and applied to that hospital's identifiers; whether two local patients merge is still this system's decision, because the hospital's MPI and yours may disagree.
 - **Proofing stores outcomes, not documents.** The verification records level, provider, the provider's subject id and a hash of the verified demographics; driver's license images and selfies stay with the credential service provider, which is built to hold them.
@@ -179,7 +179,7 @@ Design decisions:
 
 - **Every match decision:** automatic or human, with score, band, evidence, gates and algorithm version.
 - **Every merge and unmerge:** who, when, why, the trigger message, the re-pointed records and the clinical review after an overlay.
-- **Identifier history:** every identifier a patient has held, from which authority, when it was retired and why ([Survivorship Per Field](/docs/architecture/record-linkage#survivorship-per-field) records which source won each demographic).
+- **Identifier history:** every identifier a patient has held, from which authority, when it was retired and why ([Survivorship Per Field](/docs/building-blocks/record-linkage#survivorship-per-field) records which source won each demographic).
 - **Match quality over time:** duplicate rates, review queue size and age, sampled false-link rates per algorithm version.
 - **Identity proofing:** level, provider and dates for every person who accessed records through self-service, and every proxy grant.
 - **Overlay exposure:** for each overlay, who saw the fused record, what was disclosed from it and to whom, to support the breach assessment.

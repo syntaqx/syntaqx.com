@@ -218,7 +218,7 @@ Notes on the sketch:
 
 ## Auditing
 
-- **Who entered the site and touched the hardware.** Every provider visit, module replacement and operator access approval, with the customer's approval where the product requires one, because the building and its access log are the customer's ([Audit Trails](/docs/architecture/audit-trails#typed-actors)).
+- **Who entered the site and touched the hardware.** Every provider visit, module replacement and operator access approval, with the customer's approval where the product requires one, because the building and its access log are the customer's ([Audit Trails](/docs/building-blocks/audit-trails#typed-actors)).
 - **The link's history.** Outages with cause and duration, kept as long as SLA claims and the customer's own continuity reviews can reach back.
 - **Capacity and term changes.** Each reconfiguration and each renewal or return decision, with notice dates, because a monthly rollover at a different rate is a billing dispute waiting to happen.
 - **Data destruction at return.** The key removal or erasure per asset and the job that recorded it, before the hardware leaves the customer's building.

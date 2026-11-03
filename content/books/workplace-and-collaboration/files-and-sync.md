@@ -9,7 +9,7 @@ tags = ["workplace", "files", "sync", "storage", "versioning", "ransomware"]
 
 A company's files are its oldest collaboration system and still its largest. Contracts, spreadsheets, CAD drawings, video, exports from every other tool: they live in a sync-and-share platform that has to look like a local folder on every laptop, a web app in every browser, a mobile app on every phone and an API for every integration, and stay consistent across all of them while people rename folders, work offline and share with outsiders. Then the business rules land on top: files belong to the company, not the employee who uploaded them; storage is bought as a pool; a ransomware infection on one laptop must be reversible across the whole tenant; and a file under legal hold can't be deleted by anyone, including the version-trimming job.
 
-Consumer file sync has the same engineering and different duties. In a personal Dropbox the account holder owns everything; in a business tenant the organization does, and its admins decide sharing outside the company, retention, version limits, malware handling and what happens to a leaver's files. This chapter covers how the major platforms sync, how they store, how they handle conflicts, versions and ransomware, where the size limits sit, how ownership and pooled quotas work, and the scanning and preview pipeline. The upload mechanics themselves are [File Uploads](/docs/architecture/file-uploads); the generic object storage layer is the Hosting & Cloud volume's [Storage](/books/hosting-and-cloud/storage); retention and holds as a system belong to [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
+Consumer file sync has the same engineering and different duties. In a personal Dropbox the account holder owns everything; in a business tenant the organization does, and its admins decide sharing outside the company, retention, version limits, malware handling and what happens to a leaver's files. This chapter covers how the major platforms sync, how they store, how they handle conflicts, versions and ransomware, where the size limits sit, how ownership and pooled quotas work, and the scanning and preview pipeline. The upload mechanics themselves are [File Uploads](/docs/building-blocks/file-uploads); the generic object storage layer is the Hosting & Cloud volume's [Storage](/books/hosting-and-cloud/storage); retention and holds as a system belong to [Retention & Legal Hold](/books/workplace-and-collaboration/retention-and-legal-hold).
 
 ## How the Platforms Do It
 
@@ -101,7 +101,7 @@ Per-file limits differ by two orders of magnitude, and on Box they're a plan fea
 - **Google Drive**: 5 TB for files that aren't converted to Google formats, and each user can upload and copy 750 GB within 24 hours.
 - **SharePoint, OneDrive and Teams**: 250 GB per file, 250 MB per attachment on a list item, 20 GB for generated ZIP downloads, and moves or copies across sites limited to 100 GB and 30,000 files per operation.
 
-Large uploads must be resumable and chunked ([Resumable Uploads](/docs/architecture/file-uploads#resumable-uploads)); block-level sync is the chunking. The daily cap matters for migrations: moving a terabyte-scale department into Drive under one account takes days, which is why migration tools spread work across accounts.
+Large uploads must be resumable and chunked ([Resumable Uploads](/docs/building-blocks/file-uploads#resumable-uploads)); block-level sync is the chunking. The daily cap matters for migrations: moving a terabyte-scale department into Drive under one account takes days, which is why migration tools spread work across accounts.
 
 ## Shared Drives and Who Owns the File
 
@@ -131,7 +131,7 @@ Every uploaded file is untrusted input, and in a workplace it will be opened by 
 - SharePoint or Global Administrators can extract a flagged file for forensics with `Get-SPOMalwareFileContent` without access to the site.
 - Microsoft calls the built-in engine a way "to help contain viruses," not a single line of defense; Defender for Office 365 adds Safe Attachments for these services.
 
-The general pipeline (validate, scan, quarantine, then serve) is in the UGP volume's [Scanning Before Publish](/books/user-generated-platforms/upload-path#scanning-before-publish) and [Checking What Arrived](/docs/architecture/file-uploads#checking-what-arrived). The workplace differences: the customer's admin chooses the policy for infected files (warn or block), sensitivity labels and DLP may block sharing or download based on content ([DLP & Information Protection](/books/workplace-and-collaboration/dlp-and-information-protection)), and customer-managed encryption can make server-side scanning and previews impossible, which [Encryption & Customer-Managed Keys](/books/workplace-and-collaboration/encryption-and-customer-keys) weighs.
+The general pipeline (validate, scan, quarantine, then serve) is in the UGP volume's [Scanning Before Publish](/books/user-generated-platforms/upload-path#scanning-before-publish) and [Checking What Arrived](/docs/building-blocks/file-uploads#checking-what-arrived). The workplace differences: the customer's admin chooses the policy for infected files (warn or block), sensitivity labels and DLP may block sharing or download based on content ([DLP & Information Protection](/books/workplace-and-collaboration/dlp-and-information-protection)), and customer-managed encryption can make server-side scanning and previews impossible, which [Encryption & Customer-Managed Keys](/books/workplace-and-collaboration/encryption-and-customer-keys) weighs.
 
 Previews are the other half of the pipeline: a thumbnail and an in-browser rendering for hundreds of formats, generated server-side so users don't download files to look at them. A preview is a derived copy of the file's content, so it inherits every control on the file: it's deleted when the file is, held when the file is held, unavailable when the viewer can't open the file, and never served for a file flagged as malware. Render previews in an isolated sandbox, because document parsers are a classic exploit surface.
 
@@ -229,7 +229,7 @@ What the file platform records in `audit_events`, beyond the journal:
 - **Malware**: detection, download of an infected file after a warning, forensic extraction by an admin.
 - **Policy**: changes to version limits, sharing policy, infected-file policy, quotas and read-only state.
 
-Download and sync events are high volume and employee-identifying; keep them in the audit store with its own retention, not in product analytics ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+Download and sync events are high volume and employee-identifying; keep them in the audit store with its own retention, not in product analytics ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

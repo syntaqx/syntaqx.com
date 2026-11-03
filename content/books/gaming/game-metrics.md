@@ -7,7 +7,7 @@ part = "Running the Platform"
 tags = ["gaming", "metrics", "analytics", "retention", "experiments", "data-pipelines"]
 +++
 
-A live game is run from a short list of numbers: how many people played today, how many of last week's new players came back, how much revenue each active player brought in, how many were online at the peak, how long they waited for a match and whether the match was fair, how often the client crashed, and whether the server kept its tick. Every input is a side effect of running the game, collected by the [telemetry](/books/gaming/telemetry) pipeline. The hard part is that each number has several reasonable definitions, and two widely used game analytics vendors define some of the same names differently. When a number sets a budget, a marketing bid or a server reservation, its definition is a contract. This chapter gives the definitions, says which formulas are vendors' and which are this book's, and shows the pipeline that computes them once. How to define a metric once, version it and stamp its outputs is general practice, in [One Definition per Metric](/docs/architecture/data-pipelines#one-definition-per-metric); what follows is the game-specific part. The events themselves are designed in [Telemetry & Analytics](/books/gaming/telemetry), the ratings behind match fairness in [Matchmaking & Ranked](/books/gaming/matchmaking), and how experiments are run on a live game in [Live Operations](/books/gaming/live-operations#experiments); this chapter is how each of them is measured.
+A live game is run from a short list of numbers: how many people played today, how many of last week's new players came back, how much revenue each active player brought in, how many were online at the peak, how long they waited for a match and whether the match was fair, how often the client crashed, and whether the server kept its tick. Every input is a side effect of running the game, collected by the [telemetry](/books/gaming/telemetry) pipeline. The hard part is that each number has several reasonable definitions, and two widely used game analytics vendors define some of the same names differently. When a number sets a budget, a marketing bid or a server reservation, its definition is a contract. This chapter gives the definitions, says which formulas are vendors' and which are this book's, and shows the pipeline that computes them once. How to define a metric once, version it and stamp its outputs is general practice, in [One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric); what follows is the game-specific part. The events themselves are designed in [Telemetry & Analytics](/books/gaming/telemetry), the ratings behind match fairness in [Matchmaking & Ranked](/books/gaming/matchmaking), and how experiments are run on a live game in [Live Operations](/books/gaming/live-operations#experiments); this chapter is how each of them is measured.
 
 ## Why the Same Metric Disagrees
 
@@ -17,7 +17,7 @@ Three choices make two dashboards show different numbers for the same day.
 - **What counts as revenue.** GameAnalytics' ARPDAU (now a legacy metric, replaced by ARPU) is "the IAP revenue sum divided by all daily active user count," in-app purchases only. Unity's ARPDAU is "the average revenue per user who played on a given day," and its revenue includes Unity Ads plus verified in-app purchases. A game with a large ad business reports a much higher ARPDAU in Unity than in GameAnalytics from the same players.
 - **Where the day ends.** "GameAnalytics calculate metrics within UTC dates/hours," and Unity's glossary also uses UTC days. A studio in Los Angeles that reports in local time disagrees with both every evening.
 
-The design consequence is the same as anywhere else: each metric is a named, versioned definition with a unit, a numerator, a denominator, inclusion rules and a clock ([What a Definition Contains](/docs/architecture/data-pipelines#what-a-definition-contains)). Games add one more decision that most products don't face: **the unit of a player.**
+The design consequence is the same as anywhere else: each metric is a named, versioned definition with a unit, a numerator, a denominator, inclusion rules and a clock ([What a Definition Contains](/docs/data/data-pipelines#what-a-definition-contains)). Games add one more decision that most products don't face: **the unit of a player.**
 
 ## The Unit: Account, Device or Profile
 
@@ -27,7 +27,7 @@ A player can have one account, several platform identities (Steam, PlayStation, 
 - **Account.** The platform's `accounts` row ([Accounts, Identity & Cross-Platform](/books/gaming/accounts-and-identity)). A player who links a console and a PC is one account; a player who never logs in may have none.
 - **Per-game profile.** For a platform that runs several games, `player_profiles` is the unit for a game's metrics, and the account is the unit for the platform's.
 
-My default: count accounts for every metric the business runs on, keep device counts for platform and store reconciliation, and never mix them in one ratio. A DAU built from devices divided into revenue built from accounts is wrong in a way no chart reveals. Merging two accounts into one ([Record Linkage](/docs/architecture/record-linkage)) rewrites history, so the metric reads the merged identity as of the computation and stamps the definition version on its output.
+My default: count accounts for every metric the business runs on, keep device counts for platform and store reconciliation, and never mix them in one ratio. A DAU built from devices divided into revenue built from accounts is wrong in a way no chart reveals. Merging two accounts into one ([Record Linkage](/docs/building-blocks/record-linkage)) rewrites history, so the metric reads the merged identity as of the computation and stamps the definition version on its output.
 
 ## Engagement: DAU, MAU and Stickiness
 
@@ -69,7 +69,7 @@ Four decisions turn this into a definition you can defend.
 
 - **Exact day or unbounded.** The two variants and their trade-off are in [Cohorts and Retention Curves](/docs/telemetry/product-analytics#cohorts-and-retention-curves); exact-day is why the player in detail A, active on days 6 and 8, is not retained on day 7. Report exact-day retention as the headline, because it matches the vendors and partners you'll be compared with, and name the variant when you show the other.
 - **What is day zero.** The first gameplay day, not the install or account creation. A player who installs on Friday and first plays on Sunday is in Sunday's cohort, or every slow first launch looks like churn.
-- **Which day boundary.** UTC (as the vendors use) or the player's local day. A player in Sydney who plays every evening appears on two UTC dates some weeks and none on others. Whatever you choose, assign the date once in staging ([Assign the Business Date Once](/docs/architecture/data-pipelines#assign-the-business-date-once)) and never recompute it in a dashboard.
+- **Which day boundary.** UTC (as the vendors use) or the player's local day. A player in Sydney who plays every evening appears on two UTC dates some weeks and none on others. Whatever you choose, assign the date once in staging ([Assign the Business Date Once](/docs/data/data-pipelines#assign-the-business-date-once)) and never recompute it in a dashboard.
 - **Which accounts are in.** Bots, internal testers, banned cheaters and accounts merged into another are excluded by rule, with the rule in the definition. A ban wave on day 3 otherwise lowers D7 for reasons that have nothing to do with the game.
 
 **Cohort tables** put install days in rows and N in columns, where a bad patch shows up as a diagonal ([Cohorts and Retention Curves](/docs/telemetry/product-analytics#cohorts-and-retention-curves)). Segment cohorts by acquisition source, platform and country before comparing them, because a change in the marketing mix moves retention more than most game changes do.
@@ -177,7 +177,7 @@ Running an experiment on a live game (variants delivered through remote config, 
 
 ## How to Build It
 
-The events arrive through the [telemetry](/books/gaming/telemetry) pipeline and the backend's own tables; the steps (raw, staging, marts, one definition per metric) are in [Data Pipelines & Analytics](/docs/architecture/data-pipelines). Grain, fact types and dimensions are in [Modeling Analytical Data](/docs/data/data-modeling#facts-and-dimensions). The game-specific part is the facts to model. A player-day fact (a periodic snapshot) is the base for engagement, retention and revenue:
+The events arrive through the [telemetry](/books/gaming/telemetry) pipeline and the backend's own tables; the steps (raw, staging, marts, one definition per metric) are in [Data Pipelines & Analytics](/docs/data/data-pipelines). Grain, fact types and dimensions are in [Modeling Analytical Data](/docs/data/data-modeling#facts-and-dimensions). The game-specific part is the facts to model. A player-day fact (a periodic snapshot) is the base for engagement, retention and revenue:
 
 ```sql
 -- One row per player profile per day. tenant_id: one platform serves many games or studios.
@@ -233,9 +233,9 @@ CREATE TABLE experiment_assignments (
 Two holes to close.
 
 - **Client events are late, duplicated and mistimed.** Mobile clients send on the next launch, sometimes days later, and a clock wound forward creates future activity. Deduplicate on the event ID ([Retries Without Double Counting](/docs/telemetry/collection#retries-without-double-counting)), bound the device time by the server's ([Two Clocks](/docs/telemetry/collection#two-clocks)), and rebuild a trailing window so late events land in the right cohort ([Late Data](/docs/telemetry/collection#late-data)).
-- **Reconcile money to the ledger.** Daily revenue in the mart matches the purchase ledger and the stores' reports for the same day, within a tolerance, before anyone reads ARPDAU ([Reconcile to the Source](/docs/architecture/data-pipelines#reconcile-to-the-source)).
+- **Reconcile money to the ledger.** Daily revenue in the mart matches the purchase ledger and the stores' reports for the same day, within a tolerance, before anyone reads ARPDAU ([Reconcile to the Source](/docs/data/data-pipelines#reconcile-to-the-source)).
 
-Metrics that feed money outside the company (a revenue share with a partner, a creator payout, a publisher royalty) get frozen periods and stamped versions ([Versions, Stamps and Frozen Periods](/docs/architecture/data-pipelines#versions-stamps-and-frozen-periods)).
+Metrics that feed money outside the company (a revenue share with a partner, a creator payout, a publisher royalty) get frozen periods and stamped versions ([Versions, Stamps and Frozen Periods](/docs/data/data-pipelines#versions-stamps-and-frozen-periods)).
 
 ## Auditing
 

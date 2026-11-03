@@ -94,7 +94,7 @@ Examination reports, ratings and findings are confidential supervisory informati
 Two consequences for builders:
 
 - **A bank can't simply forward its exam findings to a fintech partner or vendor.** It can share the work the findings require, and may need the agency's permission to share the findings themselves, which is why sponsor bank remediation requests to program managers often arrive without the underlying report.
-- **CSI needs its own access control.** Exam reports, ratings and findings live in a restricted store with access logging, not in a general ticket system or a shared drive ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **CSI needs its own access control.** Exam reports, ratings and findings live in a restricted store with access logging, not in a general ticket system or a shared drive ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## Call Reports
 
@@ -215,7 +215,7 @@ Design notes:
 - **Findings are not tickets.** They have milestones, evidence and validation; a past-due milestone is reported to the board. Keep them outside the general issue tracker because of CSI, and give programs a filtered view of the work assigned to them, not the finding text.
 - **A filing is reproducible.** Each `regulatory_filings` row points at the frozen extract it was built from; an amendment is a new row that `amends_id` the original, never an overwrite ([Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections)).
 - **Ingest the public side.** Enforcement releases and call report data for your own bank, its peers and any partner bank are scheduled jobs keyed by FDIC certificate or RSSD ID, so a new order against a partner raises an alert the morning it's published.
-- **Exam requests are reports.** The standard request list (trial balances, deposit listings, exception reports, complaint logs, vendor inventories) should be runnable as-of any date from the warehouse, not built during the exam ([Producing Records](/docs/architecture/audit-trails#producing-records)).
+- **Exam requests are reports.** The standard request list (trial balances, deposit listings, exception reports, complaint logs, vendor inventories) should be runnable as-of any date from the warehouse, not built during the exam ([Producing Records](/docs/building-blocks/audit-trails#producing-records)).
 
 ## Auditing
 

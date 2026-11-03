@@ -127,7 +127,7 @@ The rest of the table above, in the details a system encodes:
 
 Illinois's Automatic Contract Renewal Act (815 ILCS 601/10, as amended through P.A. 103-919, effective January 1, 2025) requires clear and conspicuous disclosure of the renewal terms near the consent request, consent before charging, and a retainable acknowledgment with the cancellation policy; a notice no less than 3 days before the cancellation deadline of a free trial or promotional period of 15 days or longer; for terms of 12 months or more that renew for more than a month, written notice 30 to 60 days before the cancellation deadline; and, for offers accepted online, cancellation "exclusively online." A seller with written compliance procedures that refunds an error isn't liable.
 
-Because these change every year (Virginia amended its law in 2022, 2023, 2024 and 2026), each requirement is a dated row, not code ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+Because these change every year (Virginia amended its law in 2022, 2023, 2024 and 2026), each requirement is a dated row, not code ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## Notices and Reminders
 
@@ -146,7 +146,7 @@ Three rules make these reliable:
 
 - **Count from the charge, not the shipment.** A product subscription charged three days before it ships has its renewal on the charge date; every "before renewal" window counts back from the charge ([Count every window from the charge date](/books/hosting-and-cloud/renewals-and-cancellation-law#domains-auto-renew-and-the-errp-clock) is the same lesson for domains).
 - **Compute the intersection, send once.** For a subscriber covered by several rules, the scheduler computes each window and sends one notice inside their overlap, marking the others satisfied; where the windows don't overlap, it sends two.
-- **Reminders are transactional.** They go on the transactional stream, so a marketing unsubscribe never suppresses them, and a bounce is a fact to act on ([Purpose Decides Everything](/docs/architecture/notifications#purpose-decides-everything)). The card networks require their own reminder before a trial converts, at least seven days ahead for Visa ([Trials and Cancellation](/books/payments/stored-credentials#trials-and-cancellation)).
+- **Reminders are transactional.** They go on the transactional stream, so a marketing unsubscribe never suppresses them, and a bounce is a fact to act on ([Purpose Decides Everything](/docs/building-blocks/notifications#purpose-decides-everything)). The card networks require their own reminder before a trial converts, at least seven days ahead for Visa ([Trials and Cancellation](/books/payments/stored-credentials#trials-and-cancellation)).
 
 ## Cancellation Flows in Subscription Apps
 
@@ -271,7 +271,7 @@ Notes on the sketch:
 - **Every notice owed.** The rule, the window, the send, the channel, delivery or bounce, and the amount quoted against the amount later charged; a renewal charged without its notice sent inside the window is a finding.
 - **Every cancellation.** Received, confirmed and effective times, channel, flow version, steps, offers shown and declined, and the refund; voicemail requests acted on within a business day.
 - **Goods shipped after a cancel or without consent.** A report of renewal orders created after a cancellation's receipt or without a consent row, because in California, North Dakota and Oregon those goods are gifts and must not be billed.
-- **Rule versions in force on each date,** with sources ([Audit Trails](/docs/architecture/audit-trails)).
+- **Rule versions in force on each date,** with sources ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

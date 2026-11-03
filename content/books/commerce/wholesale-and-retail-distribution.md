@@ -305,7 +305,7 @@ CREATE TABLE sell_through_reports (      -- a partner's sales and stock by item,
 Design notes:
 
 - **Rules are versioned with the guide.** A chargeback is recomputed against the `compliance_charge_rules` row of the guide in force on the ship date; a difference between `amount` and `recomputed_amount` is a dispute on its face.
-- **Deadlines are stored, not remembered.** `dispute_deadline` is computed from the partner's window when the deduction is created ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)), and an open deduction past it is written off by rule, not forgotten.
+- **Deadlines are stored, not remembered.** `dispute_deadline` is computed from the partner's window when the deduction is created ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)), and an open deduction past it is written off by rule, not forgotten.
 - **Delivery facts per PO.** `po_delivery_measures` lets the brand compute its own OTIF from carrier proof of delivery and compare it to the retailer's scorecard before the fine arrives.
 - **Programs are offered, then claimed.** `coop_agreements` holds the program per partner with the program code shared across competing partners, which is the proportional-terms evidence; claims settle by deduction, check or credit memo.
 - **Events:** `wholesale_po.received`, `wholesale_po.acknowledged`, `routing.requested`, `routing.assigned`, `asn.sent`, `invoice.sent`, `remittance.received`, `deduction.created`, `deduction.disputed` and `deduction.resolved` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the ERP, the warehouse and the deductions team.

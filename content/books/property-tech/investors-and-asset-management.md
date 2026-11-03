@@ -89,7 +89,7 @@ The sponsor put in 10% of the capital and received about 13% of the proceeds; th
 
 What a platform needs:
 
-- **The waterfall as versioned data, from the governing documents,** with tiers, hurdles, compounding convention, day count, catch-up and splits, and a citation to the section each came from ([Rules as Data](/docs/architecture/rules-as-data#stages-and-ordered-rules)). Amendments create versions with effective dates.
+- **The waterfall as versioned data, from the governing documents,** with tiers, hurdles, compounding convention, day count, catch-up and splits, and a citation to the section each came from ([Rules as Data](/docs/building-blocks/rules-as-data#stages-and-ordered-rules)). Amendments create versions with effective dates.
 - **Every run stored with its inputs:** the cash distributed, each investor's capital account and pref accrual before the run, the tier each dollar went through, and the result. Rerunning a past distribution never changes it.
 - **IRR hurdles computed from dated cash flows,** with the method written down, since an internal rate of return depends on exactly which dates and amounts count.
 - **Withholding as its own step.** Distributions to foreign investors or to investors without valid tax forms can require withholding that the waterfall's allocation doesn't handle (Juniper Square's distribution calculations exclude it), so the payment step applies it per investor ([Owner Taxes: 1099s and Foreign Owners](/books/property-tech/owners-and-management-agreements#owner-taxes-1099s-and-foreign-owners)).
@@ -99,7 +99,7 @@ What a platform needs:
 
 Investors get quarterly reports (performance, capital account statements, property updates, valuations) and annual tax documents. For entities taxed as partnerships, the entity files Form 1065, an information return (a partnership "doesn't pay tax on its income but passes through any profits or losses to its partners"), due for calendar-year partnerships on March 15, and gives each partner a Schedule K-1 with their share. The partnership's return can't be finished until its books close, which can't happen until the property entities below it close, which makes K-1 timing depend on every layer below and is a reason to close property books promptly every month rather than reconstruct them in February.
 
-The reporting layer has two jobs worth separating. **Generation** builds statements and notices from closed books and waterfall runs, in a consistent format per entity. **Delivery** puts them in the investor portal, scoped to the investor's own positions, and logs who opened what ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)). Investor data (tax IDs, bank accounts, net worth evidence) is among the most sensitive the platform holds, and accreditation evidence in particular is collected for one purpose and should be retained only as long as the offering's records require ([Data Retention & Deletion](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+The reporting layer has two jobs worth separating. **Generation** builds statements and notices from closed books and waterfall runs, in a consistent format per entity. **Delivery** puts them in the investor portal, scoped to the investor's own positions, and logs who opened what ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)). Investor data (tax IDs, bank accounts, net worth evidence) is among the most sensitive the platform holds, and accreditation evidence in particular is collected for one purpose and should be retained only as long as the offering's records require ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 
 ## Fund and Investor Accounting
 
@@ -126,7 +126,7 @@ The pipeline:
 6. **Accept, reject or accept with exceptions,** with the result sent back to the manager, and resubmissions versioned rather than overwritten.
 7. **Publish** to the owner's ledger, reports and valuation models only after acceptance.
 
-The same rules apply in reverse for a manager: a manager whose packages fail validation every month is a manager the owner replaces, so a platform selling to third-party managers should run the owner's likely checks before sending ([Data Contracts](/docs/architecture/data-pipelines#data-contracts), [Reconcile to the Source](/docs/architecture/data-pipelines#reconcile-to-the-source)).
+The same rules apply in reverse for a manager: a manager whose packages fail validation every month is a manager the owner replaces, so a platform selling to third-party managers should run the owner's likely checks before sending ([Data Contracts](/docs/data/data-pipelines#data-contracts), [Reconcile to the Source](/docs/data/data-pipelines#reconcile-to-the-source)).
 
 ## Asset Management
 
@@ -148,7 +148,7 @@ Open-end funds price investor entries and exits from valuations; closed-end fund
 Asset managers want to know how their properties compare: rents, occupancy and expenses against competitors and the market. The data comes from three kinds of source, and the kind matters more than the vendor:
 
 - **Public data:** listed asking rents and availability, public records, transaction records. Anyone can observe it.
-- **Licensed survey and transaction data** from market data businesses, under license terms that limit use and redistribution ([Licensed Data](/docs/architecture/record-linkage#licensed-data)).
+- **Licensed survey and transaction data** from market data businesses, under license terms that limit use and redistribution ([Licensed Data](/docs/building-blocks/record-linkage#licensed-data)).
 - **Contributed nonpublic data:** competitors' actual rents, occupancy and lease terms pooled by a vendor and returned as benchmarks.
 
 The third is where antitrust law lives. The pricing software cases turned on competitors' nonpublic data being pooled and used to set rents ([Capital and Consolidation, as of October 2026](/books/property-tech/software-landscape#capital-and-consolidation-as-of-october-2026) notes why vendors that own data businesses sit on both sides), and benchmarking products that compare a property's performance with named or identifiable competitors from pooled nonpublic data raise the same question. [Revenue Management & Pricing](/books/property-tech/revenue-management#the-antitrust-record-as-of-october-2026) sets out the legal record and the design constraints; [Operating Metrics](/books/property-tech/operating-metrics#benchmarking-as-an-information-exchange-risk) covers benchmarking. For the asset management layer, my rule is provenance on every external dataset: who supplied it, whether it contains competitors' nonpublic data, how old it is, how aggregated, and what the license allows, so the question "did this number come from a competitor's private data" has an answer before a regulator asks it.

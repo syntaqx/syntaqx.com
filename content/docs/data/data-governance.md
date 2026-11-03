@@ -2,7 +2,7 @@
 title = "Data Governance & Access"
 description = "Knowing what data you hold and who can see it: owners, catalogs and lineage, PII tags, masking and row-level security, quality contracts, erasure and cost."
 category = "Data Platforms"
-order = 1278
+order = 1279
 tags = ["data", "governance", "privacy", "access-control", "data-quality"]
 +++
 
@@ -12,9 +12,9 @@ Data governance is the set of habits that fixes this. Not a committee or a polic
 
 ## Ownership Comes First
 
-Every dataset has an owning team: the one that answers when it's late or wrong, approves changes to its definition, and decides who may read it. [Data Pipelines](/docs/architecture/data-pipelines#data-contracts) makes the producer the owner of what it publishes; the same rule applies to every mart and model downstream.
+Every dataset has an owning team: the one that answers when it's late or wrong, approves changes to its definition, and decides who may read it. [Data Pipelines](/docs/data/data-pipelines#data-contracts) makes the producer the owner of what it publishes; the same rule applies to every mart and model downstream.
 
-- **Owners are teams, not people,** recorded in the model's metadata next to its code, the same way [Code Ownership](/docs/engineering/code-ownership) assigns code. A dataset owned by someone who left is owned by nobody.
+- **Owners are teams, not people,** recorded in the model's metadata next to its code, the same way [Code Ownership](/docs/development/code-ownership) assigns code. A dataset owned by someone who left is owned by nobody.
 - **Ownership includes classification and access.** The owner tags the sensitive columns and approves who reads them; the platform team enforces the decision but doesn't make it.
 - **Unowned data is deleted.** A table with no owner, no reader in ninety days and no documented purpose goes to an archive with an expiry, then away. Orphan tables are where retention and cost problems hide.
 
@@ -74,7 +74,7 @@ Where each belongs: contracts on every model another team, a semantic layer or a
 
 ## Retention and Deletion Through the Warehouse
 
-Retention schedules and erasure ([Data Retention](/docs/architecture/data-retention)) apply to every copy, and the warehouse holds several copies of each row: raw, staging, marts, snapshots, exports, feature tables and the stream that fed them. An erasure request under [GDPR](/docs/compliance/gdpr#data-subject-rights) has one month to complete ([GDPR Article 12](https://gdpr-info.eu/art-12-gdpr/)), and the warehouse is where it usually fails.
+Retention schedules and erasure ([Data Retention](/docs/building-blocks/data-retention)) apply to every copy, and the warehouse holds several copies of each row: raw, staging, marts, snapshots, exports, feature tables and the stream that fed them. An erasure request under [GDPR](/docs/compliance/gdpr#data-subject-rights) has one month to complete ([GDPR Article 12](https://gdpr-info.eu/art-12-gdpr/)), and the warehouse is where it usually fails.
 
 - **Pseudonymize at ingestion.** Keep identifying fields in as few tables as possible (one `dim_customers`, one identity table) and use IDs everywhere else, so an erasure is a delete in a few places and facts can stay.
 - **Erasure runs as a pipeline.** The request arrives as an event, a purge model deletes or scrubs the subject's rows in raw and every table the lineage graph says contains their identifying columns, and the run reports completion per table. Type 2 dimensions and snapshots are included: history is a copy.

@@ -74,7 +74,7 @@ When unsure, pick the higher one; downgrading costs nothing. Anything touching m
 
 A bug that nobody has looked at is not in the backlog, it's in a pile. Triage turns the pile into decisions.
 
-- **Who:** the owning team, by rotation, using [code ownership](/docs/engineering/code-ownership) to route anything that lands in the wrong place. One person per week runs triage, with the product owner joining for the priority calls. A rotation spreads the knowledge of what's breaking; a single permanent triager becomes the person who knows and the bottleneck.
+- **Who:** the owning team, by rotation, using [code ownership](/docs/development/code-ownership) to route anything that lands in the wrong place. One person per week runs triage, with the product owner joining for the priority calls. A rotation spreads the knowledge of what's breaking; a single permanent triager becomes the person who knows and the bottleneck.
 - **How often:** new bugs get a first look within one business day, and S1s immediately (see [below](#when-a-bug-is-an-incident)). A short triage session two or three times a week clears the rest. Daily is fine for a busy product; weekly lets the queue rot.
 - **Every bug leaves triage with one outcome:**
 
@@ -138,7 +138,7 @@ Both work for the same reason: they force a decision on every bug instead of let
 
 ## Bugs Versus Tech Debt
 
-A bug is behavior that's wrong: the system doesn't do what it should. [Tech debt](/docs/engineering/tech-debt) is a design that makes correct behavior expensive to change. The distinction matters because they're funded differently: bugs are prioritized against features by the product owner, while debt is paid from the team's standing capacity share.
+A bug is behavior that's wrong: the system doesn't do what it should. [Tech debt](/docs/development/tech-debt) is a design that makes correct behavior expensive to change. The distinction matters because they're funded differently: bugs are prioritized against features by the product owner, while debt is paid from the team's standing capacity share.
 
 - **A bug fix stays a bug fix.** Don't smuggle a refactor into it; land the refactor first as its own change, then the fix.
 - **A bug that keeps recurring is debt.** If the same area produces a third bug of the same kind, the escaped-defect review should say so, and the fix is a debt item with the bugs linked as its interest.

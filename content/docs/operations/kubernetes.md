@@ -113,7 +113,7 @@ Every change is a reviewed, auditable commit, which is also the change-managemen
 
 Kubernetes ships a minor release roughly three times a year and patches each for about a year, so you upgrade at least yearly. Falling behind is the most common way clusters become unmaintainable: each skipped version adds removed APIs, and eventually the managed provider forces the upgrade on its schedule. The control plane goes first, one minor at a time; nodes may lag it by up to three minors and must never be newer. Before each upgrade, scan manifests and Helm charts for APIs removed in the target version (Pluto or kubent do this).
 
-Treat upgrades as routine work, the posture of [Dependencies & Upgrades](/docs/engineering/dependencies): a non-production cluster first, the workload's tests against it, then node pools rolled with surge capacity and PDBs in place. Clusters you're afraid to upgrade are clusters you'll be forced to upgrade at a bad time.
+Treat upgrades as routine work, the posture of [Dependencies & Upgrades](/docs/development/dependencies): a non-production cluster first, the workload's tests against it, then node pools rolled with surge capacity and PDBs in place. Clusters you're afraid to upgrade are clusters you'll be forced to upgrade at a bad time.
 
 ## Observability and Cost
 

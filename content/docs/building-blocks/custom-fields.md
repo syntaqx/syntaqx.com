@@ -1,8 +1,9 @@
 +++
 title = "Custom Fields"
 description = "Per-tenant custom fields: JSONB with a definitions table, validation, indexing, option lists, changing definitions, limits, and exposing them everywhere."
-category = "Architecture"
-order = 409
+category = "Building Blocks"
+aliases = ["architecture/custom-fields"]
+order = 453
 tags = ["architecture", "custom-fields", "multi-tenancy", "postgres", "jsonb"]
 +++
 
@@ -118,7 +119,7 @@ Past a few hundred thousand records per tenant, or when users want full-text sea
 | **Change type** | Don't. Create a new field, copy and convert values in a [background job](/docs/architecture/background-jobs) with a report of what didn't convert, then archive the old field |
 | **Delete** | Archive first: hidden, read-only, values kept. A purge job removes values from records after a grace period, and only then is the definition deleted |
 
-Every definition change is a recorded event with the actor and the before and after ([Audit Trails](/docs/architecture/audit-trails)). Deleting a field deletes customer data, so it deserves the same confirmation and delay as deleting records.
+Every definition change is a recorded event with the actor and the before and after ([Audit Trails](/docs/building-blocks/audit-trails)). Deleting a field deletes customer data, so it deserves the same confirmation and delay as deleting records.
 
 ## Limits Per Tenant
 
@@ -137,10 +138,10 @@ A custom field is only as useful as the places it appears. Treat this as the def
 - **The API.** Custom values in a nested object keyed by field key (`"custom_fields": {"po_number": "4471-A"}`), never mixed in with built-in attributes where a tenant's key could collide with a future built-in one. A definitions endpoint lets integrations discover keys, types and options.
 - **Webhooks and events** carry custom values in the same shape ([Webhooks](/docs/api-design/webhooks)).
 - **Search.** Map each type to a typed field in the search index, keyed by tenant and field ID, and reindex when a definition's type or options change. Dynamic mapping that infers types from the first value will guess wrong for some tenant.
-- **Exports and reports.** One column per active field, headed by the label, in the definition's order. In the warehouse, flatten custom values into a long table (`record_id, field_key, typed value columns`) so analysts can pivot what they need ([Data Pipelines & Analytics](/docs/architecture/data-pipelines)).
+- **Exports and reports.** One column per active field, headed by the label, in the definition's order. In the warehouse, flatten custom values into a long table (`record_id, field_key, typed value columns`) so analysts can pivot what they need ([Data Pipelines & Analytics](/docs/data/data-pipelines)).
 - **The audit trail,** field by field, exactly like built-in fields.
 - **Permissions.** A field marked restricted is hidden from roles that can't see it in the UI, the API, exports and search results alike.
-- **Sensitive data.** Customers will put personal and sensitive data in free-text custom fields whatever the label says. Treat custom values as personal data for retention and erasure ([Data Retention](/docs/architecture/data-retention#erasure-requests)), and offer an explicit "sensitive" flag that redacts the value from logs and analytics.
+- **Sensitive data.** Customers will put personal and sensitive data in free-text custom fields whatever the label says. Treat custom values as personal data for retention and erasure ([Data Retention](/docs/building-blocks/data-retention#erasure-requests)), and offer an explicit "sensitive" flag that redacts the value from logs and analytics.
 
 ## Checklist
 

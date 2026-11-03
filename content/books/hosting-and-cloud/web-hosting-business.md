@@ -210,7 +210,7 @@ CREATE TABLE upsell_attaches (           -- every time an offer was shown, and w
 Notes on the shape:
 
 - **A bundled item becomes a subscription when it starts its own clock.** At checkout, every `plan_bundle_items` row with `after_free = 'auto_renews'` creates a subscription on `then_plan_version_id`, with a first period whose amount is zero and `pricing_phase = 'intro'`, and its own `renewal_consents` row pointing at the disclosure that named its renewal price. The domain's subscription renews a `domains` resource; the mailbox trial's renews a `mailboxes` resource. Each gets its own notices, which is what the law asks for and what customers expect.
-- **Eligibility is a rule, not code.** Which plans and terms an offer applies to, in which markets, and whether it may be pre-selected are rows with effective dates, per [Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions).
+- **Eligibility is a rule, not code.** Which plans and terms an offer applies to, in which markets, and whether it may be pre-selected are rows with effective dates, per [Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions).
 - **Declines are data.** A declined offer is a row, so the same offer isn't shown again at the next step and the cancellation flow can prove it didn't loop a customer through save offers.
 - **Standalone prices feed revenue.** `standalone_amount` is what the revenue schedule allocates by and what a refund deducts; it is recorded on the plan version so the allocation for a 2026 sale is computed from 2026's terms.
 
@@ -319,4 +319,4 @@ Events: `bundle.item_started`, `bundle.item_converted` (a trial became paid), `u
 
 - [Subscriptions](/docs/money/subscriptions#the-law-of-automatic-renewal), the law of automatic renewal, consent and reminders as data
 - [Accounting & Revenue Recognition](/docs/money/accounting#asc-606-and-ifrs-15-in-five-steps), contract liabilities, allocation by standalone selling price, recognition schedules
-- [Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions), offer eligibility as effective-dated rules
+- [Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions), offer eligibility as effective-dated rules

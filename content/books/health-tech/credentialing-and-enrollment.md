@@ -69,7 +69,7 @@ curl -s "https://npiregistry.cms.hhs.gov/api/?version=2.1&number=$NPI" \
   | jq '.results[0] | {number, enumeration_type, taxonomies}'
 ```
 
-My rule: look up every NPI a user types against the registry before saving it, store the response as an observation with its fetch time, and re-check on a schedule, because the registry is the source and the user's typing is not ([Observations, Not Overwrites](/docs/architecture/record-linkage#observations-not-overwrites)).
+My rule: look up every NPI a user types against the registry before saving it, store the response as an observation with its fetch time, and re-check on a schedule, because the registry is the source and the user's typing is not ([Observations, Not Overwrites](/docs/building-blocks/record-linkage#observations-not-overwrites)).
 
 ## Medicare Enrollment
 
@@ -218,9 +218,9 @@ HAVING MAX(a.attested_at) IS NULL
 Design notes:
 
 - **Enrollment is per role, payer, network and date.** One practitioner has many: the same NPI at two locations, in three networks of one payer, under two TINs after a group change. A claim validator checks the rendering NPI, billing TIN, location and taxonomy against an active enrollment on the date of service before the claim leaves.
-- **Verifications are evidence.** Each primary source check keeps its response, because an accreditation audit asks to see the verification, not a checkbox ([What a Record Holds](/docs/architecture/audit-trails#what-a-record-holds)).
-- **Deadlines are computed and stored:** license and DEA expiries, recredentialing due dates, Medicare revalidation, retro-billing windows and directory verification, each with the rule that set it ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
-- **External IDs are a crosswalk.** NPI, PTAN, Medicaid numbers, CAQH ID and each payer's provider ID map to one practitioner ([Crosswalks of External IDs](/docs/architecture/record-linkage#crosswalks-of-external-ids)).
+- **Verifications are evidence.** Each primary source check keeps its response, because an accreditation audit asks to see the verification, not a checkbox ([What a Record Holds](/docs/building-blocks/audit-trails#what-a-record-holds)).
+- **Deadlines are computed and stored:** license and DEA expiries, recredentialing due dates, Medicare revalidation, retro-billing windows and directory verification, each with the rule that set it ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
+- **External IDs are a crosswalk.** NPI, PTAN, Medicaid numbers, CAQH ID and each payer's provider ID map to one practitioner ([Crosswalks of External IDs](/docs/building-blocks/record-linkage#crosswalks-of-external-ids)).
 
 ## Auditing
 

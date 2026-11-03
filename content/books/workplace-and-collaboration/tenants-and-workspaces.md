@@ -191,7 +191,7 @@ Notes on the sketch:
 - **Every change to the tenant structure:** workspaces attached to or detached from an organization, with the consenting owner; OUs created, moved or deleted.
 - **Join rules and what they admitted:** who added a domain rule, when, and every member admitted by it.
 - **Tenant moves end to end:** who requested and approved, the id map, counts copied and verified per object type, holds carried, and the cut-over time.
-- **Cross-tenant reads:** org-wide search, admin views across workspaces and vendor support sessions, logged as access, not just changes ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Cross-tenant reads:** org-wide search, admin views across workspaces and vendor support sessions, logged as access, not just changes ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

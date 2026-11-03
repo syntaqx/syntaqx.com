@@ -173,7 +173,7 @@ Vendor choices create records that matter later:
 - **Which system was the record, when.** For every property and date, which platform held the lease and the ledger, so a disputed balance from before a migration is answered from the right place.
 - **Integration consents.** Which third party the operator authorized to read or write which data, under which program and agreement, and when it was revoked: residents' data leaves through these doors.
 - **Resident-paid vendor fees.** Which vendor charged residents what, under which agreement, and what was shared back to the owner or manager: the evidence in a fee disclosure dispute and an owner's audit.
-- **Who did the work.** Central staff, outsourced teams and AI agents act on properties they don't sit at; record the actor, the team and the property for each action ([Audit Trails](/docs/architecture/audit-trails)).
+- **Who did the work.** Central staff, outsourced teams and AI agents act on properties they don't sit at; record the actor, the team and the property for each action ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

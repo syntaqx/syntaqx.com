@@ -185,14 +185,14 @@ CREATE TABLE spend_requests (                -- request, approve, mint
 
 Design notes:
 
-- **Programs compile, cards inherit.** Publishing a program version writes `spend_control_rules` rows (scope `card`, one set per card it governs) and records them in `spend_program_rules`; a new version supersedes the old rows with an `effective_to` instead of editing them, so every past authorization still points at the rule version that decided it ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
-- **Budgets are counters with a ledger behind them.** The authorization handler locks the `budget_periods` row, checks `amount - cleared - held` (plus the buffer for a soft budget), writes a `budget_entries` hold and updates `held` in the same transaction as its `auth_decisions` row; clearing moves the amount from held to cleared, and the counters can always be rebuilt from the entries. Locking one row per budget serializes only that budget's authorizations, which is what the worked numbers need ([Preventing Double-Booking](/docs/architecture/reservations-and-holds#preventing-double-booking)).
+- **Programs compile, cards inherit.** Publishing a program version writes `spend_control_rules` rows (scope `card`, one set per card it governs) and records them in `spend_program_rules`; a new version supersedes the old rows with an `effective_to` instead of editing them, so every past authorization still points at the rule version that decided it ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
+- **Budgets are counters with a ledger behind them.** The authorization handler locks the `budget_periods` row, checks `amount - cleared - held` (plus the buffer for a soft budget), writes a `budget_entries` hold and updates `held` in the same transaction as its `auth_decisions` row; clearing moves the amount from held to cleared, and the counters can always be rebuilt from the entries. Locking one row per budget serializes only that budget's authorizations, which is what the worked numbers need ([Preventing Double-Booking](/docs/building-blocks/reservations-and-holds#preventing-double-booking)).
 - **The handler stays inside its deadline.** The budget check is one indexed row lock, not a query over the month's transactions; if it can't finish within the program's internal deadline, the handler answers with the fallback the budget's enforcement implies.
 - **Every card has a reason.** `card_scopes` makes "which program, which budget, which request, which vendor" a join, which is what an admin needs to clean up cards and what an auditor needs to see that each card was approved.
 
 ## Auditing
 
-Customers' finance teams and auditors, and the issuing bank, read these records. The general design is in [Audit Trails](/docs/architecture/audit-trails). Make sure the record shows:
+Customers' finance teams and auditors, and the issuing bank, read these records. The general design is in [Audit Trails](/docs/building-blocks/audit-trails). Make sure the record shows:
 
 - **Every program and budget version,** who created or changed it, and the rules it compiled to.
 - **Every card's reason:** its program version, budget, request and approver, and its holder or vendor.

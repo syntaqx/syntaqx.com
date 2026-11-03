@@ -247,7 +247,7 @@ Notes on the sketch:
 - **Notice is enforced, not remembered.** A change whose effective date comes before announcement plus required notice can't be inserted, and the recipients table is the proof each affected account was told.
 - **Snapshots prove the page.** Every rendering of prices is a publication with a hash and an immutable copy, so "what did the pricing page say on March 3" has an answer.
 - **The price book defaults to list.** [Metering & Rating](/books/hosting-and-cloud/metering-and-rating#how-to-build-it) adds `accounts.price_book`; contract books are price versions under a contract id, and commitment rates are books [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#how-to-build-it) applies at its own stage.
-- **Events:** `price_change.announced`, `price_change.effective`, `price_list.published` and `sku.retired` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the pricing site, the price list API, the rater's cache, cost exports and the notification service ([Notifications & Consent](/docs/architecture/notifications)).
+- **Events:** `price_change.announced`, `price_change.effective`, `price_list.published` and `sku.retired` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to the pricing site, the price list API, the rater's cache, cost exports and the notification service ([Notifications & Consent](/docs/building-blocks/notifications)).
 
 ## Auditing
 
@@ -257,7 +257,7 @@ Notes on the sketch:
 - **Pass-through changes against suppliers.** Each pass-through price version tied to the supplier's notice, so a registry or carrier change and the provider's own change can be told apart.
 - **Retirements.** Retired SKUs with resources still running on them, and the legacy price versions still in use, so nothing is silently moved to a new price.
 
-Publications, versions and notices are kept for as long as any invoice priced from them can be disputed or audited, and consent records for subscription prices for as long as the strictest renewal rule requires ([Data Retention & Deletion](/docs/architecture/data-retention#erasure-vs-append-only-records)).
+Publications, versions and notices are kept for as long as any invoice priced from them can be disputed or audited, and consent records for subscription prices for as long as the strictest renewal rule requires ([Data Retention & Deletion](/docs/building-blocks/data-retention#erasure-vs-append-only-records)).
 
 ## What This Means for the System You Build
 

@@ -88,7 +88,7 @@ Most of US health care's codes are free, two are licensed, and one umbrella lice
 - **CDT** is licensed by the ADA on the same principle for dental software.
 - **ICD-10-CM, ICD-10-PCS, HCPCS Level II, NDC, CVX and taxonomy codes** are public files.
 
-A vendor's terminology inventory is a compliance artifact: which code systems it loads, under which license, in which products, with the annual reports and royalty counts the licenses require. The licensed-data rules in the playbook's [Licensed Data](/docs/architecture/record-linkage#licensed-data) apply directly.
+A vendor's terminology inventory is a compliance artifact: which code systems it loads, under which license, in which products, with the annual reports and royalty counts the licenses require. The licensed-data rules in the playbook's [Licensed Data](/docs/building-blocks/record-linkage#licensed-data) apply directly.
 
 ## Value Sets
 
@@ -187,7 +187,7 @@ Design decisions:
 
 - **A code is a tuple.** System, code, display and version, every time; the core's short `code_system` keys resolve to a `code_systems` row by `key` and the release in force on the date of service. A bare `'E11.9'` loses which system and which year; the display shows what the clinician saw even after the descriptor changes.
 - **Codes are text.** NDCs have leading zeros and are growing to 12 digits, ICD-10 and HCPCS Level II codes contain letters, and a numeric column drops what the code system put there. No numeric columns.
-- **Releases are effective-dated.** `effective_during` resolves which release applies to a date of service, so a claim corrected next year validates against the codes in force when the care happened ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Releases are effective-dated.** `effective_during` resolves which release applies to a date of service, so a claim corrected next year validates against the codes in force when the care happened ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Concepts are loaded, never edited.** A new release is new rows; inactive codes stay, because old records reference them.
 - **Licenses are tracked per system.** The `license` and `license_scope` columns let a product refuse to display CPT or CDT descriptors to a tenant whose license doesn't cover them, and produce the usage counts a license requires.
 - **Expansions remember their inputs.** A `value_sets` row records the code system versions its expansion used, and `value_set_members` points at those exact releases, so a measure result can be reproduced.

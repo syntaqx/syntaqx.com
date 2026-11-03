@@ -105,7 +105,7 @@ The alternative is a custom protocol over a WebSocket or the game's own connecti
 - **Match chat** is ephemeral by design: delivered to the match's participants, logged for moderation, and kept only as long as policy says.
 - **Whispers and group chat** need offline delivery and history, which means durable storage with a retention period, not forever.
 - **Every message gets a server-assigned id and timestamp,** so moderation, reports and deletion refer to the same record the recipient saw.
-- **Retention is per channel type and per outcome.** VALORANT's voice evaluation post is a published example of outcome-based retention for voice: recordings are kept 24 hours, 7 days if reported, and up to 2 years if a penalty was applied (up to 7 years in Brazil). Text deserves the same treatment ([Data Retention](/docs/architecture/data-retention#retention-windows)).
+- **Retention is per channel type and per outcome.** VALORANT's voice evaluation post is a published example of outcome-based retention for voice: recordings are kept 24 hours, 7 days if reported, and up to 2 years if a penalty was applied (up to 7 years in Brazil). Text deserves the same treatment ([Data Retention](/docs/building-blocks/data-retention#retention-windows)).
 
 ### Filtering and Moderation Hooks
 
@@ -126,7 +126,7 @@ Presence and chat need a connection from the client to the social tier, and so d
 - **Discord** has the same split: each WebSocket gets a session process, and guild processes on other nodes fan every event out to the sessions connected to them.
 - **Xbox's Real-Time Activity service** offers it to titles as a platform feature: a WebSocket over which a title subscribes to presence, statistics and state, "without you having to constantly poll."
 
-That split (independent edges holding sockets, a routing layer that knows where each session is, any backend service able to publish) is the general shape in [Realtime Connections](/docs/architecture/realtime-connections#edge-and-routing), which also covers authenticating on connect, heartbeats, catch-up and reconnect storms; the game twist is that one connection carries the whole social tier for the length of a session, so it's the shape I'd build that tier's connection layer on. Presence fan-out, chat delivery, invites and notifications all become publishes to a set of players; the routing layer turns them into deliveries. Messages that must survive a player being offline (a friend request, a gift) belong in a durable store with the push as a hint to refresh, and anything that must reach a player who isn't connected at all goes through [Notifications](/docs/architecture/notifications#push-notifications) instead.
+That split (independent edges holding sockets, a routing layer that knows where each session is, any backend service able to publish) is the general shape in [Realtime Connections](/docs/architecture/realtime-connections#edge-and-routing), which also covers authenticating on connect, heartbeats, catch-up and reconnect storms; the game twist is that one connection carries the whole social tier for the length of a session, so it's the shape I'd build that tier's connection layer on. Presence fan-out, chat delivery, invites and notifications all become publishes to a set of players; the routing layer turns them into deliveries. Messages that must survive a player being offline (a friend request, a gift) belong in a durable store with the push as a hint to refresh, and anything that must reach a player who isn't connected at all goes through [Notifications](/docs/building-blocks/notifications#push-notifications) instead.
 
 ## Voice
 
@@ -289,11 +289,11 @@ The design rules that hold it together:
 
 ## Auditing
 
-- **Graph changes:** friend added and removed, block and unblock, with time and source. A harassment or grooming investigation starts with who could reach whom, and when ([Audit Trails](/docs/architecture/audit-trails)).
+- **Graph changes:** friend added and removed, block and unblock, with time and source. A harassment or grooming investigation starts with who could reach whom, and when ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Setting changes,** especially communication and visibility settings for younger players, with who changed them (the player, a parent through a platform control, an age check).
-- **Messages and their filter results,** kept for the retention period, with every moderator view logged ([Audit Trails](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Messages and their filter results,** kept for the retention period, with every moderator view logged ([Audit Trails](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Voice recordings,** if any: what was recorded, under which notice, when it was deleted.
-- **Erasure:** a deleted account's messages, graph edges and settings are removed or anonymized on the schedule, while the moderation records the law requires you to keep are kept ([Data Retention](/docs/architecture/data-retention#erasure-requests); [Erasure Against Append-Only Records](/books/gaming/saves-and-player-data#erasure-against-append-only-records)).
+- **Erasure:** a deleted account's messages, graph edges and settings are removed or anonymized on the schedule, while the moderation records the law requires you to keep are kept ([Data Retention](/docs/building-blocks/data-retention#erasure-requests); [Erasure Against Append-Only Records](/books/gaming/saves-and-player-data#erasure-against-append-only-records)).
 
 ## What This Means for the System You Build
 

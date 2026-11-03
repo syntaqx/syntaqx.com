@@ -201,13 +201,13 @@ WHERE r.status = 'changed' AND r.trigger = 'interval'
 
 ## Auditing
 
-- **Every change to every machine, with its cause.** Which run changed which resource, under which `config_revision`, triggered by whom; the commit behind the revision is the change-management record ([Typed Actors](/docs/architecture/audit-trails#typed-actors)).
+- **Every change to every machine, with its cause.** Which run changed which resource, under which `config_revision`, triggered by whom; the commit behind the revision is the change-management record ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)).
 - **Dry runs before risky changes.** A noop run's report, kept with the change request, shows what reviewers expected the change to do; comparing it with the real run's report shows whether it did.
 - **Drift corrections.** Changed runs with no new revision are unrecorded changes the tool undid; each is worth a look, and some are incidents.
 - **Coverage.** Which machines ran in the last interval, which didn't, and which are outside convergence entirely, so "all servers are hardened" can be shown rather than asserted.
 - **License counts.** Node counts per vendor over time, against what the license or the developer EULA allows.
 
-Reports are amended by later runs, never edited ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)), and kept as long as the compliance program that relies on them requires.
+Reports are amended by later runs, never edited ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)), and kept as long as the compliance program that relies on them requires.
 
 ## What This Means for the System You Build
 

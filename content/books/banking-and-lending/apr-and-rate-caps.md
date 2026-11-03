@@ -123,7 +123,7 @@ Section 525 of DIDMCA lets a state opt out of section 521 "with respect to loans
 - **En banc (April 2, 2026):** the court vacated the panel opinion and granted rehearing; the injunction stayed in effect. The FDIC and OCC filed amicus briefs for the plaintiffs, as did banking trade groups and 21 state attorneys general; argument was set for August 18, 2026.
 - **As of October 2026:** I found no en banc decision. Congress has bills (the American Lending Fairness Act of 2026, S. 3889 and H.R. 7866) that would repeal section 525 and let states opt out only for banks they charter.
 
-For a program, the outcome decides whether a Colorado or Oregon borrower can get an out-of-state state bank's exported rate. The system needs the borrower's state at application, the lender of record's charter type, each opt-out as a rule with an effective date and the litigation status as of the offer date, and the ability to reprice or decline a state when a court rules ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+For a program, the outcome decides whether a Colorado or Oregon borrower can get an out-of-state state bank's exported rate. The system needs the borrower's state at application, the lender of record's charter type, each opt-out as a rule with an effective date and the litigation status as of the offer date, and the ability to reprice or decline a state when a court rules ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## Madden and Valid When Made
 
@@ -218,7 +218,7 @@ How it runs:
 2. **Check the borrower before pricing.** `covered_borrower_checks` runs before any offer; a covered result switches the cap evaluation to the MAPR, computed with `in_mapr` charges, and writes a second `apr_computations` row.
 3. **Evaluate every applicable cap** from `rate_cap_rules` on the borrower's state, the lender of record's charter and `rate_authority`, and the date, including opt-out rules and their litigation status, and write `rate_cap_evaluations` for each, pass or fail.
 4. **Mortgage tests read the same row:** the APR, APOR, rate-set date, points and fees and the result go on `atr_qm_determinations`, which [Mortgages & Home Equity](/books/banking-and-lending/mortgages#how-to-build-it) defines; the APR it stores is the `apr_computations` rate, never a recomputation.
-5. **SCRA benefits repost history.** Applying a benefit reverses and reposts interest from the start of `benefit_period` at the capped rate, records the forgiven amount as a journal entry against interest income, and regenerates the payment schedule as a new version ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+5. **SCRA benefits repost history.** Applying a benefit reverses and reposts interest from the start of `benefit_period` at the capped rate, records the forgiven amount as a journal entry against interest income, and regenerates the payment schedule as a new version ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 6. **Ownership history supports the partnership.** Every sale of a bank-originated loan keeps the original lender of record and `rate_authority` on the loan, which is what a valid-when-made defense and a true lender inquiry both read.
 
 ## Auditing

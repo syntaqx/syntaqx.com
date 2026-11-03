@@ -41,7 +41,7 @@ People can **access** a copy of their data, **rectify** it, **erase** it, **rest
 Each right is a feature, and they share one prerequisite: finding everything you hold about a person.
 
 - **Access and portability** are an export: a job that walks every store keyed by the person's identifiers and produces a JSON or CSV bundle. Build it once as a real feature, not ad hoc queries per request.
-- **Erasure** is the hard one, because data has copies: replicas, caches, search indexes, warehouses, logs, backups, and third parties. It doesn't apply where the law requires you to keep data, so the system has to know *why* each record is held. [Data Retention](/docs/architecture/data-retention) covers the mechanics, including letting backups age out instead of editing them.
+- **Erasure** is the hard one, because data has copies: replicas, caches, search indexes, warehouses, logs, backups, and third parties. It doesn't apply where the law requires you to keep data, so the system has to know *why* each record is held. [Data Retention](/docs/building-blocks/data-retention) covers the mechanics, including letting backups age out instead of editing them.
 - **Rectification and restriction** need a way to correct data everywhere it was copied, and a flag that stops processing without deleting.
 
 ## Privacy by Design and by Default

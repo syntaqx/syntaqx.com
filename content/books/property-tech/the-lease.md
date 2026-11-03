@@ -37,7 +37,7 @@ Association forms invert this: the association revises the form and the operator
 
 ### Addenda and required disclosures
 
-Addenda attach by rule: a pet addendum because the household has a pet, a parking addendum because a space is on the charge schedule, a lead disclosure because of the building's year, a flood disclosure because of the property's state. Those rules are data, resolved from the property's jurisdiction and attributes ([Rules as Data](/docs/architecture/rules-as-data)), and each attached addendum records the rule and version that required it.
+Addenda attach by rule: a pet addendum because the household has a pet, a parking addendum because a space is on the charge schedule, a lead disclosure because of the building's year, a flood disclosure because of the property's state. Those rules are data, resolved from the property's jurisdiction and attributes ([Rules as Data](/docs/building-blocks/rules-as-data)), and each attached addendum records the rule and version that required it.
 
 Disclosures are where the law reaches into the packet. A sample, as of October 2026:
 
@@ -65,7 +65,7 @@ The general rules for electronic signatures are in [Electronic Signatures & Reco
 
 **Every financially responsible adult signs.** Each leaseholder signs the lease; occupants, including every minor, don't. A guarantor signs the guaranty and whatever lease acknowledgments the form calls for. The lease is not signed until every required signer has signed, so the platform derives "fully signed" from the signature requests against the lease's members, never from a flag set by the first signature to come back.
 
-**The landlord's agent countersigns, last.** The operator's staff member signs for the landlord of record after the residents and guarantors. Countersigning last means the landlord signs exactly what the household signed, and gives the operator a final check: the rent quote is still valid, the screening decision still stands, the unit is still held ([Reservations & Holds](/docs/architecture/reservations-and-holds)). The countersigner is a staff user with a grant to bind that landlord entity ([Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants)), and the record names both.
+**The landlord's agent countersigns, last.** The operator's staff member signs for the landlord of record after the residents and guarantors. Countersigning last means the landlord signs exactly what the household signed, and gives the operator a final check: the rent quote is still valid, the screening decision still stands, the unit is still held ([Reservations & Holds](/docs/building-blocks/reservations-and-holds)). The countersigner is a staff user with a grant to bind that landlord entity ([Users, Roles and Grants](/books/property-tech/platform-architecture#users-roles-and-grants)), and the record names both.
 
 **Signing order is a choice.** E-signature providers route by order number: recipients who share a number sign in parallel, and different numbers sign in sequence. My default is residents in parallel, then guarantors, then the countersignature, so one slow roommate delays only the end of the line. A long lag carries risk: if the quote or the hold expires before the last signature, the platform voids the packet and reissues it at the current price, rather than countersigning a stale offer.
 
@@ -147,7 +147,7 @@ Federal e-signature law draws a line here too. ESIGN's rule that electronic reco
 
 ### Deadlines are computed and stored
 
-Every notice produces dates: when it takes effect, the earliest date a rent increase applies, the last day to cure, the last day the household may give notice. They're computed once at service and stored with the inputs, as [Rules as Data](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored) describes, never recomputed on read. A California rent increase above 10% served by hand on October 26, 2026:
+Every notice produces dates: when it takes effect, the earliest date a rent increase applies, the last day to cure, the last day the household may give notice. They're computed once at service and stored with the inputs, as [Rules as Data](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored) describes, never recomputed on read. A California rent increase above 10% served by hand on October 26, 2026:
 
 ```json
 {
@@ -438,7 +438,7 @@ A lease is evidence in rent disputes, fair housing complaints, deposit claims, e
 - **Concession terms and clawback computations,** with the termination that triggered them.
 - **Coverage determinations** under good cause laws, with their inputs as of the notice date.
 
-Statutory termination documents (military orders, protective orders, third-party statements) are kept under restricted access with their own retention ([Data Retention & Deletion](/docs/architecture/data-retention#retention-schedules-by-record-type)). Record mechanics are in [Audit Trails](/docs/architecture/audit-trails); what each regulator asks for is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#regulatory-and-commission-audits).
+Statutory termination documents (military orders, protective orders, third-party statements) are kept under restricted access with their own retention ([Data Retention & Deletion](/docs/building-blocks/data-retention#retention-schedules-by-record-type)). Record mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); what each regulator asks for is in [Records, Privacy & Audits](/books/property-tech/records-privacy-and-audits#regulatory-and-commission-audits).
 
 ## What This Means for the System You Build
 

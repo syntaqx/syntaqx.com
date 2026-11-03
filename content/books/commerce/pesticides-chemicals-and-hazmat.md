@@ -94,7 +94,7 @@ What a seller or marketplace does about it is the same either way:
 - **Screen claims, not just categories.** Listings that say "kills," "repels," "disinfects," "antimicrobial" or "antibacterial" are pesticide claims; a listing pipeline that flags them and requires a registration number (or a documented exemption) before the listing goes live catches the most common violation, the unregistered product with a pesticidal claim.
 - **Verify the registration number.** Check it against PPLS and against the label image; a number that belongs to a different product is a red flag for counterfeit or relabeled goods (counterfeits are [Brand Protection](/books/commerce/brand-protection#counterfeits)'s subject).
 - **Respect state registrations at checkout,** as above.
-- **Keep the label with the listing.** The label image and its version date are the evidence that the page's claims match the registration ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Keep the label with the listing.** The label image and its version date are the evidence that the page's claims match the registration ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## DIY Pesticide Subscriptions
 
@@ -262,7 +262,7 @@ Design notes:
 
 - **One product record across both volumes.** `product_registrations` with `regime = 'fifra'` holds the same EPA registration number as Field Operations' `chemical_items.epa_reg_no`, and its label document corresponds to a Field Operations `label_versions` row. A merchant that sells and applies the same products links the two by registration number; the Commerce side decides whether it may be sold and shipped, the Field Operations side whether it was applied correctly.
 - **Restricted use never reaches a consumer cart.** A restricted use registration blocks a consumer sale outright; a B2B order for one needs the buyer's certified applicator license on file, in the [Licenses & Permits](/books/field-operations/licensing-and-permits) shape.
-- **Registrations are versioned facts.** The exclusion constraint keeps one standing per item, regime and jurisdiction at a time; a lapse is a new row with `status = 'lapsed'`, so "was this product registered in Ohio on the day it shipped" is a query ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+- **Registrations are versioned facts.** The exclusion constraint keeps one standing per item, regime and jurisdiction at a time; a lapse is a new row with `status = 'lapsed'`, so "was this product registered in Ohio on the day it shipped" is a query ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Classification feeds shipping.** The label purchase reads `hazmat_classifications` for every line in the package, refuses services that don't accept the class, sends the hazmat indicators and prints the marks; rate shopping filters on `air_allowed` before comparing prices ([Rate Shopping](/books/commerce/shipping-and-carriers#rate-shopping)).
 - **Hazmat packages ship separately.** A power bank and a phone case in the same order may need two packages, because the case could go by air and the power bank can't; sourcing and packing read the classification ([Order Management](/books/commerce/order-management)).
 - **Warnings render from data.** The product page, the cart, the checkout and the feed render `prop65_warnings` by the rule's placement, and the order records which warning text was shown before purchase.
@@ -272,7 +272,7 @@ Design notes:
 
 - **Registration status at the time of each sale:** for every pesticide line, the federal and state registration (or exemption) relied on, its verification date and the destination state.
 - **Every listing's claims review:** the pesticidal claims detected, the registration or exemption attached, and who approved the listing.
-- **Every hazmat shipment:** the classification used, the carrier service and hazmat code, the marks printed and the trained person who classified the item ([Audit Trails](/docs/architecture/audit-trails)).
+- **Every hazmat shipment:** the classification used, the carrier service and hazmat code, the marks printed and the trained person who classified the item ([Audit Trails](/docs/building-blocks/audit-trails)).
 - **Hazmat training records** for every employee who packs or prepares hazmat, for the preceding three years.
 - **Every Prop 65 warning shown before purchase** on California orders, with the text version.
 - **SDS versions and deliveries** to business customers.

@@ -252,7 +252,7 @@ The rules:
 - **Library access changes** and default-library settings, with the admin who made them.
 - **Token changes:** renames, deprecations, removals and value changes per mode, because a contrast regression is a value change in one mode.
 - **Code connection edits** with source (CLI or UI) and repository.
-- **API and MCP access:** which app or agent read or wrote variables or files, on whose token, with scopes ([Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions)).
+- **API and MCP access:** which app or agent read or wrote variables or files, on whose token, with scopes ([Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions)).
 - **Dev status changes,** since "it was marked ready on this version" is often the question in a dispute about what was built.
 
 ## What This Means for the System You Build

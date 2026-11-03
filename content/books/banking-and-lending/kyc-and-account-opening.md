@@ -105,7 +105,7 @@ Why ordinary checks miss them:
 - **The SSN may be valid and unused in any visible way,** which is exactly what eCBSV was created to test: SSA knows whose SSN it is.
 - **Documents can be forged to match,** and a selfie matches the forged document.
 
-Signals that work are about the identity's history and its neighbors, not its fields: an SSN that SSA's eCBSV won't confirm with the name and date of birth, credit history that begins in adulthood with authorized-user tradelines, a phone or email with no history before the application, and many applications sharing an address, device, phone or email. That last one is a graph problem: link applications by shared attributes and look for clusters ([Record Linkage](/docs/architecture/record-linkage#match-before-create) covers the matching side). Vendors sell synthetic-specific scores (Socure's Sigma Synthetic Fraud among them), and a bank combines them with eCBSV and its own linkage.
+Signals that work are about the identity's history and its neighbors, not its fields: an SSN that SSA's eCBSV won't confirm with the name and date of birth, credit history that begins in adulthood with authorized-user tradelines, a phone or email with no history before the application, and many applications sharing an address, device, phone or email. That last one is a graph problem: link applications by shared attributes and look for clusters ([Record Linkage](/docs/building-blocks/record-linkage#match-before-create) covers the matching side). Vendors sell synthetic-specific scores (Socure's Sigma Synthetic Fraud among them), and a bank combines them with eCBSV and its own linkage.
 
 ## KYB: Business Accounts
 
@@ -209,9 +209,9 @@ ALTER TABLE parties
 Design notes:
 
 - **CIP belongs to the party and the application, beneficial ownership to the business.** `cip_determinations` is per application and per customer on it, because each new account is a CIP event unless the existing-customer exclusion applies; `party_relationships` and `beneficial_owners_verified_at` are on the business, because after February 2026 a bank may verify owners once and refresh them on a trigger.
-- **Vendor output is stored, then interpreted.** `identity_verifications.checks` and `vendor_outcome` are as returned; the CIP outcome is the bank's, with its version. When the vendor template changes, old decisions still show what ran ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Vendor output is stored, then interpreted.** `identity_verifications.checks` and `vendor_outcome` are as returned; the CIP outcome is the bank's, with its version. When the vendor template changes, old decisions still show what ran ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Restricted opening is a status and controls.** `open_restricted` sets the account to `restricted` with an expiry and blocks outbound rails until `verified`; a scheduled job closes accounts whose restriction expired, through the CIP failure procedure.
-- **Identity data is the most sensitive data you hold.** SSNs, ID images and selfies are vaulted, tokenized and access-logged ([Encryption at Rest](/docs/security/encryption-at-rest), [Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)), and retention follows the CIP schedule, not a product's general deletion policy ([Retention Schedules by Record Type](/docs/architecture/data-retention#retention-schedules-by-record-type)).
+- **Identity data is the most sensitive data you hold.** SSNs, ID images and selfies are vaulted, tokenized and access-logged ([Encryption at Rest](/docs/security/encryption-at-rest), [Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)), and retention follows the CIP schedule, not a product's general deletion policy ([Retention Schedules by Record Type](/docs/building-blocks/data-retention#retention-schedules-by-record-type)).
 - **Emit `party.verified`, `application.cip_decided` and `party.owners_changed`,** which monitoring, sanctions rescreening and the program's dashboards subscribe to.
 
 The control query: every open account has a verified CIP determination for each owner, or a restriction that hasn't expired.
@@ -242,7 +242,7 @@ CIP and beneficial ownership are tested in every BSA/AML exam and every sponsor 
 - **For businesses,** the owners and control person identified, the certification or other means, their verification, and when the information was last verified or refreshed.
 - **For deposit screening,** the report used and any adverse action notice sent.
 
-Retention: CIP identifying information five years after the account closes, verification records five years after they are made, and the same split for beneficial ownership. A program that exits a sponsor bank, or a bank that converts its core, must carry these records with the accounts, because the clock runs from closure, not from migration. The record mechanics are in [Audit Trails](/docs/architecture/audit-trails).
+Retention: CIP identifying information five years after the account closes, verification records five years after they are made, and the same split for beneficial ownership. A program that exits a sponsor bank, or a bank that converts its core, must carry these records with the accounts, because the clock runs from closure, not from migration. The record mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 ## What This Means for the System You Build
 

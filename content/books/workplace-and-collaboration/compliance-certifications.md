@@ -212,7 +212,7 @@ Notes on the sketch:
 ## Auditing
 
 - **Every attestation with its scope history,** so coverage of any product, feature and environment on any date can be shown, and bridge letters issued for every period gap.
-- **Every gated document released,** to whom, under which NDA, approved by whom ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)); a SOC 2 report describes the vendor's controls in detail and is itself sensitive.
+- **Every gated document released,** to whom, under which NDA, approved by whom ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)); a SOC 2 report describes the vendor's controls in detail and is itself sensitive.
 - **Every agreement accepted,** the template version, who clicked accept for the customer and when, and the features it covered at the time.
 - **Configuration drift against the agreement:** features or apps enabled in a regulated workspace outside what its agreement covers, and how the console responded.
 - **Questionnaire answers as sent:** which version of which answer went to which customer, with the evidence it cited.

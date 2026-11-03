@@ -1,8 +1,9 @@
 +++
 title = "Automated Risk Decisions"
 description = "Rules and models that decide about people: score bands with a human middle, decision records, late labels, holdouts, error costs, fail-open or closed, appeals."
-category = "Architecture"
-order = 421
+category = "Building Blocks"
+aliases = ["architecture/risk-scoring"]
+order = 462
 tags = ["architecture", "risk", "fraud", "machine-learning", "decisions", "rules"]
 +++
 
@@ -33,11 +34,11 @@ Three kinds of detector feed the score, and they fail differently:
 - **Rules and thresholds** are cheap and explainable, and easy to evade once attackers learn them.
 - **Classifiers** find new patterns, produce probabilities rather than answers, and drift as behavior changes.
 
-Thresholds, lists and rule parameters live in data with effective dates and versions, the shape in [Rules as Data](/docs/architecture/rules-as-data), so changing one is a reviewed row and not a deploy. The models themselves go through a registry and a promotion process ([Experiments and the Model Registry](/docs/data/data-science-platforms#experiments-and-the-model-registry)).
+Thresholds, lists and rule parameters live in data with effective dates and versions, the shape in [Rules as Data](/docs/building-blocks/rules-as-data), so changing one is a reviewed row and not a deploy. The models themselves go through a registry and a promotion process ([Experiments and the Model Registry](/docs/data/data-science-platforms#experiments-and-the-model-registry)).
 
 ## Scores, Bands and the Human Middle
 
-A score becomes a decision through **bands**: above an upper threshold the system acts on its own, below a lower one it does nothing, and between them a person decides. The same shape decides record merges in [Review Bands](/docs/architecture/record-linkage#review-bands) and moderation in [Automated Detection, Human Review](/docs/security/trust-and-safety#automated-detection-human-review). Stripe's defaults show it concretely: scores run 0 to 99, 65 and above is elevated risk, which is allowed by default and can go to a review queue, and 75 and above is high risk, which is blocked by default ([Stripe: Risk evaluation](https://docs.stripe.com/radar/risk-evaluation)).
+A score becomes a decision through **bands**: above an upper threshold the system acts on its own, below a lower one it does nothing, and between them a person decides. The same shape decides record merges in [Review Bands](/docs/building-blocks/record-linkage#review-bands) and moderation in [Automated Detection, Human Review](/docs/security/trust-and-safety#automated-detection-human-review). Stripe's defaults show it concretely: scores run 0 to 99, 65 and above is elevated risk, which is allowed by default and can go to a review queue, and 75 and above is high risk, which is blocked by default ([Stripe: Risk evaluation](https://docs.stripe.com/radar/risk-evaluation)).
 
 - **Bands per category, set by cost.** Auto-removing spam at a 2% false positive rate may be fine; auto-suspending accounts at that rate means a steady stream of wrongful suspensions, each one a support ticket and an appeal. Set each category's thresholds from its costs and its volume, and write down why.
 - **The middle band is sized to the reviewers.** If a band sends more cases than people can review within the time the decision can wait, cases age out or get rubber-stamped. Widen the automated bands, add reviewers, or narrow what the review covers, deliberately.
@@ -61,7 +62,7 @@ A challenge is the most underused outcome: on an uncertain case with the person 
 
 ## The Decision Record
 
-Every decision is recorded with what produced it, in append-only storage, the shape [Automated and AI Decisions](/docs/architecture/audit-trails#automated-and-ai-decisions) gives every automated choice:
+Every decision is recorded with what produced it, in append-only storage, the shape [Automated and AI Decisions](/docs/building-blocks/audit-trails#automated-and-ai-decisions) gives every automated choice:
 
 ```sql
 CREATE TABLE risk_decisions (
@@ -89,8 +90,8 @@ CREATE INDEX risk_decisions_subject_idx ON risk_decisions (subject_type, subject
 
 - **Inputs as they were.** The features the scorer saw, not a pointer to tables that will have changed by the time anyone asks. They're also the next training set: logged features from production avoid the skew of recomputing them later ([Features and Training/Serving Skew](/docs/data/data-science-platforms#features-and-training-serving-skew)).
 - **Versions, not just a score.** A decision is only explainable against the model and rule set that made it. "The model said so" isn't an answer to a customer, a support agent or a regulator; the matched rules, the score and the versions are.
-- **Reviews and appeals add records.** A reviewer approving a held payment, or an appeal reversing a ban, writes a new decision with `supersedes_id` pointing at the one it changed, never an edit ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
-- **Personal data rules apply.** Features often include device, location and behavior data. Keep what explaining and retraining need, for as long as disputes and appeals can arrive, and no longer ([Data Retention & Deletion](/docs/architecture/data-retention)).
+- **Reviews and appeals add records.** A reviewer approving a held payment, or an appeal reversing a ban, writes a new decision with `supersedes_id` pointing at the one it changed, never an edit ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
+- **Personal data rules apply.** Features often include device, location and behavior data. Keep what explaining and retraining need, for as long as disputes and appeals can arrive, and no longer ([Data Retention & Deletion](/docs/building-blocks/data-retention)).
 
 ## Labels Arrive Late
 
@@ -156,7 +157,7 @@ Automated decisions about people make mistakes, and appeals are how you find the
 - **Reversals feed back.** Each one is a labeled false positive, with the model version and rules that produced it. Report reversal rates by category, detection source and model version, and treat a rising rate as an incident.
 - **Support can override, on-call can switch off.** Support reverses a decision for one person through a named, logged operation ([Support Access & Internal Tools](/docs/security/support-access)); on-call can turn a model off and fall back to rules for everyone ([Kill Switches](/docs/delivery/feature-flags#kill-switches)).
 
-Anything built on a language model inherits the issues in [AI & LLM Security](/docs/security/ai-security): the content being judged is attacker-controlled input. A model that classifies is safer than one that acts; keep the action in code, as [Decide in Code](/docs/architecture/ai-agents#decide-in-code) requires.
+Anything built on a language model inherits the issues in [AI & LLM Security](/docs/security/ai-security): the content being judged is attacker-controlled input. A model that classifies is safer than one that acts; keep the action in code, as [Decide in Code](/docs/building-blocks/ai-agents#decide-in-code) requires.
 
 ## Checklist
 

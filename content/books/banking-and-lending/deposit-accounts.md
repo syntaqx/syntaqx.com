@@ -185,7 +185,7 @@ CREATE TABLE time_deposits (                 -- the instance: one per CD account
 );
 ```
 
-Each renewal is a new `time_deposits` row on the product version in force at maturity, and the maturity notice is a `disclosures` row whose send date a job checks against the clock in [Maturity and Renewal](#maturity-and-renewal). An early withdrawal posts the penalty as a `fee_assessments` row (kind `early_withdrawal_penalty`) with a journal entry that debits accrued interest payable first and the deposit liability for any excess, so the cap is visible in the ledger, not just in the arithmetic. Product attributes and the account's version are both effective-dated, the pattern in [Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions); the money in them is integer minor units ([Money](/docs/money/amounts)).
+Each renewal is a new `time_deposits` row on the product version in force at maturity, and the maturity notice is a `disclosures` row whose send date a job checks against the clock in [Maturity and Renewal](#maturity-and-renewal). An early withdrawal posts the penalty as a `fee_assessments` row (kind `early_withdrawal_penalty`) with a journal entry that debits accrued interest payable first and the deposit liability for any excess, so the cap is visible in the ledger, not just in the arithmetic. Product attributes and the account's version are both effective-dated, the pattern in [Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions); the money in them is integer minor units ([Money](/docs/money/amounts)).
 
 The ownership type maps to `accounts.ownership_category` and to `account_parties` roles (`owner`, `joint_owner`, `authorized_signer`, `beneficiary`, `custodian`, `beneficial_owner`), with a stated `share` where the records give one. Validation runs at opening and on every party change: a joint account has at least two owners with the same withdrawal rights, a POD account has named beneficiaries, a custodial account has exactly one minor owner and one custodian.
 
@@ -197,7 +197,7 @@ Truth in Savings evidence is about proving what a consumer was told and when. Ke
 - **The product version each account was opened under and every version it moved to,** with the change notice and its send date, so "was this fee change noticed 30 days ahead" is a query.
 - **Maturity notices** with their computed due date and actual send date for each term.
 - **Advertisements:** the published copy and the product version it was generated from, by date, because an ad's APY has to have been true on the day it ran.
-- **Penalty and bonus computations** with their inputs, recorded as the decision they were ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Penalty and bonus computations** with their inputs, recorded as the decision they were ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 
 ## What This Means for the System You Build
 

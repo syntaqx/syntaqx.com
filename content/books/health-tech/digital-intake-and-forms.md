@@ -167,7 +167,7 @@ Notes on the sketch:
 - **Signature evidence:** who signed, in what relationship, on whose device, when, and the consent and wording it created.
 - **Where each answer went:** applied to which field, written back by which request, or left for review, and who reviewed it.
 - **Translation and accessibility reviews** per template version, which practices will need for Section 1557 and Section 504 questions.
-- **Access to submissions and card images,** which are PHI and identity documents ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Access to submissions and card images,** which are PHI and identity documents ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 
 ## What This Means for the System You Build
 

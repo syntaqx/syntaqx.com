@@ -95,11 +95,11 @@ Two rules follow. **The pin is the offer's clock, set by the server.** Viewers a
 
 ### Inventory Under Bursts
 
-The worst moment for a stock system is a host saying "the first 200 get it at half price" to an audience of 20,000. Every buyer taps at once, most will fail, and none should be sold a unit that doesn't exist. The general machinery is [Reservations & Holds](/docs/architecture/reservations-and-holds): a pooled counter decremented with a conditional update ([Counters for Pooled Inventory](/docs/architecture/reservations-and-holds#counters-for-pooled-inventory)), a short hold while the buyer pays, and release on abandonment ([Releasing on Abandonment](/docs/architecture/reservations-and-holds#releasing-on-abandonment)). The live twist:
+The worst moment for a stock system is a host saying "the first 200 get it at half price" to an audience of 20,000. Every buyer taps at once, most will fail, and none should be sold a unit that doesn't exist. The general machinery is [Reservations & Holds](/docs/building-blocks/reservations-and-holds): a pooled counter decremented with a conditional update ([Counters for Pooled Inventory](/docs/building-blocks/reservations-and-holds#counters-for-pooled-inventory)), a short hold while the buyer pays, and release on abandonment ([Releasing on Abandonment](/docs/building-blocks/reservations-and-holds#releasing-on-abandonment)). The live twist:
 
 - **Allocate the show's stock up front.** The offer takes a quantity from the listing's stock when it's scheduled, so buyers in search and in the stream compete for different pools, and a sellout in the stream doesn't oversell the listing.
 - **Hold for less time than a normal checkout.** A live offer's hold should be short, measured in a minute or two, because the units unclaimed by failed payments need to go back while the host is still talking about the product. Saved payment methods and one-tap purchase are what make a short hold fair.
-- **Cap per buyer and per payment instrument.** A flash price is what resellers and bots come for; the cap is enforced on the hold, not on the order, and linked accounts count together ([Caps and Abuse](/docs/architecture/reservations-and-holds#caps-and-abuse)).
+- **Cap per buyer and per payment instrument.** A flash price is what resellers and bots come for; the cap is enforced on the hold, not on the order, and linked accounts count together ([Caps and Abuse](/docs/building-blocks/reservations-and-holds#caps-and-abuse)).
 - **Make the counter the only source of truth.** The "12 left" in the stream overlay is read from the offer's counter and pushed over the same channel as chat events, never computed by clients.
 
 TikTok's Fulfillment Policy names the cost of getting this wrong: lack of inventory and inaccurate pricing are seller-fault cancellations, and the seller-fault cancellation rate has to stay at 2.5% or lower.
@@ -148,7 +148,7 @@ Closed-loop platforms publish fulfilment deadlines and measure every seller agai
 | On-time delivery rate | 80% or higher, measured weekly on orders the platform doesn't fulfil |
 | Seller-fault cancellation rate | 2.5% or lower; creator sample orders excluded |
 
-Business days exclude weekends and US federal holidays, and penalties run from account health point deductions through reduced visibility and order volume limits to suspension. The pattern is general enough to model: each order gets computed deadlines (`dispatch_by`, `deliver_by`) from the product's handling type, the seller's handling time and a business-day calendar, stored on the order when it's placed ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)); carrier events set the facts; and the rates are queries over a window, kept with the deadline rule's version so a seller who disputes a late-dispatch count can see which calendar and which rule produced it.
+Business days exclude weekends and US federal holidays, and penalties run from account health point deductions through reduced visibility and order volume limits to suspension. The pattern is general enough to model: each order gets computed deadlines (`dispatch_by`, `deliver_by`) from the product's handling type, the seller's handling time and a business-day calendar, stored on the order when it's placed ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)); carrier events set the facts; and the rates are queries over a window, kept with the deadline rule's version so a seller who disputes a late-dispatch count can see which calendar and which rule produced it.
 
 ### Seller Performance Scores
 
@@ -602,9 +602,9 @@ Design decisions behind it:
 
 Commerce records are what sellers, creators, buyers, tax authorities and consumer regulators ask about:
 
-- **Every commission back to its order, touch, plan version and rule,** with the base lines it was computed on, so a creator's statement and a seller's deductions agree line by line ([Record Which Rule Decided](/docs/architecture/rules-as-data#record-which-rule-decided)).
+- **Every commission back to its order, touch, plan version and rule,** with the base lines it was computed on, so a creator's statement and a seller's deductions agree line by line ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Attribution changes,** with the invalid-traffic or linked-account finding that caused them and the commissions reversed.
-- **Every plan and rate change,** with its effective time and who made it, and the precedence rule in force, because a creator who promoted a product at 20% will ask why an order paid 10% ([Snapshot What Changes Underneath You](/docs/architecture/audit-trails#snapshot-what-changes-underneath-you)).
+- **Every plan and rate change,** with its effective time and who made it, and the precedence rule in force, because a creator who promoted a product at 20% will ask why an order paid 10% ([Snapshot What Changes Underneath You](/docs/building-blocks/audit-trails#snapshot-what-changes-underneath-you)).
 - **Every live offer change and every auction bid,** with server times and the account that acted, including extensions, voided lots and their reasons.
 - **Performance evaluations and their consequences:** the metrics, the deadline rules behind them, the score, and the settlement tier and reserve level they set, kept with the program version.
 - **Reserves and releases** per order and per seller, reconciled to payouts ([Reconciliation](/books/payments/payouts-and-settlement#reconciliation)).

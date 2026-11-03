@@ -105,7 +105,7 @@ A returned debit leaves two decisions: whether to charge the payer for it, and w
 | Texas (Bus. & Com. Code 3.506) | $30 | Paper or electronic payments |
 | New York (General Obligations Law 5-328) | $20, or a landlord's actual costs if higher and the lease provides for it | Checks |
 
-Canada's Rule H1 lets a dishonored debit be re-presented only for the same amount, with no fee added ([Payments in Canada](/books/payments/canada)). Keep return fees as data per jurisdiction with effective dates ([Rules as Data](/docs/architecture/rules-as-data#effective-dates-and-versions)), the same way [Surcharging & Fees](/books/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
+Canada's Rule H1 lets a dishonored debit be re-presented only for the same amount, with no fee added ([Payments in Canada](/books/payments/canada)). Keep return fees as data per jurisdiction with effective dates ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)), the same way [Surcharging & Fees](/books/payments/surcharging-and-fees) keeps its rules, and charge one only where the payer agreed to it in advance.
 
 **Blocks.** The return code decides what happens to the account:
 
@@ -281,11 +281,11 @@ CREATE TABLE payment_method_restrictions (
 );
 ```
 
-A return posts a `ledger_transactions` row with `source_type = 'ach_return'`, reversing whatever the entry funded, and moves the entry to `returned`; the `available` and `final` transitions are computed from `settled_on` and the banking calendar, not set by hand ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+A return posts a `ledger_transactions` row with `source_type = 'ach_return'`, reversing whatever the entry funded, and moves the entry to `returned`; the `available` and `final` transitions are computed from `settled_on` and the banking calendar, not set by hand ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 
 ## Auditing
 
-An ACH program is audited from two sides: your ODFI's Rules compliance audit reaches down to you, and an RDFI's request for proof of authorization arrives one entry at a time. The general design is in [Audit Trails](/docs/architecture/audit-trails); for ACH, keep:
+An ACH program is audited from two sides: your ODFI's Rules compliance audit reaches down to you, and an RDFI's request for proof of authorization arrives one entry at a time. The general design is in [Audit Trails](/docs/building-blocks/audit-trails); for ACH, keep:
 
 - **Every authorization, for two years after it ends.** Nacha requires the Originator to keep the original or a copy for two years from its termination or revocation, so the clock starts when the payer revokes or the agreement ends, not when it was signed. Keep the accepted terms version, the evidence of acceptance, the SEC code it justifies and the revocation event, retrievable by entry: the 10-banking-day deadline for proof of authorization runs per request.
 - **Return-rate evidence you computed yourself.** Daily unauthorized, administrative and overall return rates per Originator, with the entries and return codes behind each number and the measurement window used, so a Nacha inquiry is answered from the same figures you monitored, not reconstructed after the letter arrives.

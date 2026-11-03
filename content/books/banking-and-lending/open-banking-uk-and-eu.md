@@ -132,7 +132,7 @@ AISPs are supervised by the FCA or their national authority; banks are examined 
 - **The bank's SCA record** per connection: when applied, the exemption relied on for each access, and the reason whenever SCA was required anyway.
 - **Interface performance and availability,** the figures the RTS and the UK standard ask banks to report.
 - **Third-party registration checks,** against the regulator's register, at onboarding and on change.
-- **Retention and deletion** of account data after consent ends ([Retention Windows](/docs/architecture/data-retention#retention-windows)).
+- **Retention and deletion** of account data after consent ends ([Retention Windows](/docs/building-blocks/data-retention#retention-windows)).
 
 ## What This Means for the System You Build
 

@@ -408,14 +408,14 @@ The card's status changes only by writing a lifecycle event in the same transact
 
 ## Auditing
 
-The sponsor bank, its examiners, the networks and the CFPB can each ask for an issuing program's records, and the general design is in [Audit Trails](/docs/architecture/audit-trails). For card issuing, make sure the record shows:
+The sponsor bank, its examiners, the networks and the CFPB can each ask for an issuing program's records, and the general design is in [Audit Trails](/docs/building-blocks/audit-trails). For card issuing, make sure the record shows:
 
 - **The program as approved:** the bank's approval, the products and fees it covered, and each later change with its approval, so any card can be traced to an approved product.
 - **Each cardholder's identification:** what was collected, from whom, which vendor verified it and the result, the bank procedure it ran under, and sanctions screening with its list version, kept for the BSA retention period.
-- **Every card's life:** request, production, shipping, activation, PIN events, locks, replacement and closing, with the actor, from `card_lifecycle_events` ([Amend, Don't Overwrite](/docs/architecture/audit-trails#amend-don-t-overwrite)).
+- **Every card's life:** request, production, shipping, activation, PIN events, locks, replacement and closing, with the actor, from `card_lifecycle_events` ([Amend, Don't Overwrite](/docs/building-blocks/audit-trails#amend-don-t-overwrite)).
 - **Every token decision:** the request, each party's recommendation, the decision, the ID&V method and its outcome, because provisioning fraud is investigated from these.
 - **Disclosures as shown:** the version of the prepaid short and long form or credit agreement each cardholder received, and when.
-- **Who saw a full card number or PIN-related data,** including support agents revealing a card in the console ([Log Access, Not Just Changes](/docs/architecture/audit-trails#log-access-not-just-changes)).
+- **Who saw a full card number or PIN-related data,** including support agents revealing a card in the console ([Log Access, Not Just Changes](/docs/building-blocks/audit-trails#log-access-not-just-changes)).
 - **Every conversion on a crypto-linked card:** the asset, amount, rate and time of each pull, return and refund, matched to its authorization and to the chain, for disputes, the bank and tax reporting.
 - **Balances the bank can rely on:** the daily per-cardholder file, its reconciliation to the bank's account, and every break and how it was resolved.
 

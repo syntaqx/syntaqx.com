@@ -289,7 +289,7 @@ Notes on the sketch:
 - **Every SLA version.** The document, its dates and its definitions, because a claim from March is judged by March's terms.
 - **Every measurement behind a decision.** The intervals or minutes, the request counts and errors, the excluded windows and why they were excluded, so the uptime can be recomputed from usage events.
 - **Every claim and its outcome.** Submission time against the deadline, the evidence, the incidents cited, the basis, the tier, the cap, the decision and who made it, and the credit grant it produced.
-- **Credits as a cost.** Approved credits by service, region and incident, reconciled to the credit lines on invoices, for finance and for the reliability review that should follow a costly month ([Audit Trails](/docs/architecture/audit-trails)).
+- **Credits as a cost.** Approved credits by service, region and incident, reconciled to the credit lines on invoices, for finance and for the reliability review that should follow a costly month ([Audit Trails](/docs/building-blocks/audit-trails)).
 
 ## What This Means for the System You Build
 

@@ -48,15 +48,15 @@ Management agreements filed with the SEC show what the contract governs. Two of 
 | Audit | Owner may examine records; manager cooperates with audits | Owner may audit at its cost; the manager reimburses the audit if it finds overpayments above 5% |
 | Other | Contracts cancelable on 30 days' notice; insurance claims over $1,500 need approval; signatories bonded for at least $100,000 | Contracts may not exceed budgeted costs without written approval |
 
-Each of those is a check the platform can run or a deadline it can compute. My rule: store the agreement's operational terms as versioned data attached to the agreement, not as a PDF and a memory ([Rules as Data](/docs/architecture/rules-as-data#the-shape-of-a-rule)):
+Each of those is a check the platform can run or a deadline it can compute. My rule: store the agreement's operational terms as versioned data attached to the agreement, not as a PDF and a memory ([Rules as Data](/docs/building-blocks/rules-as-data#the-shape-of-a-rule)):
 
-- **Dates and deadlines.** Report due days, budget submission lead time, termination notice. The platform computes and stores the due dates and shows what's late ([Deadlines Are Computed and Stored](/docs/architecture/rules-as-data#deadlines-are-computed-and-stored)).
+- **Dates and deadlines.** Report due days, budget submission lead time, termination notice. The platform computes and stores the due dates and shows what's late ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Spending authority.** The budget tolerance, the approval threshold for unbudgeted items and contracts, the emergency rule. Purchase orders and invoices check against them ([Vendors, Procurement & Payables](/books/property-tech/vendors-and-payables#purchase-orders)).
 - **Fee rules.** Below, with their own versions.
 - **Reserve and distribution terms.** Minimum reserve, distribution timing and method.
 - **Reimbursable costs.** Which payroll, which central services, at what rates.
 
-Agreements are amended: a fee drops from 3% to 2.75% on renewal, a reserve is raised after a roof leak. Every term has a `valid_during`, and a fee run for March uses the terms in force in March, even when it's rerun in June ([Effective Dates and Versions](/docs/architecture/rules-as-data#effective-dates-and-versions)).
+Agreements are amended: a fee drops from 3% to 2.75% on renewal, a reserve is raised after a roof leak. Every term has a `valid_during`, and a fee run for March uses the terms in force in March, even when it's rerun in June ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
 ## Management Fees
 
