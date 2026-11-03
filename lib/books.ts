@@ -113,6 +113,18 @@ export const BOOKS: Book[] = [
     ],
   },
   {
+    slug: "payments",
+    type: "industry",
+    name: "Payments",
+    cover: "tender",
+    summary:
+      "How the payments industry works, from a card tap to running a provider, and what each of its rules means for the systems you build.",
+    intro: [
+      "The playbook's Payments section is about handling money correctly anywhere: amounts, idempotency, state machines and ledgers. This book is about the industry those systems plug into. Card networks, banks, processors and regulators each set rules, and almost every hard problem in a payments platform is one of them doing exactly what it's supposed to.",
+      "It reads in seven parts. How Money Moves: the parties and the companies that fill each role, a payment by card and terminal and what it costs, then by bank transfer, check, cash and wallet, in stablecoins, across borders and currencies, and all of them compared. The Rules: who sets them, what you may pass on to the payer, and how they change in Canada and in the EU and UK. Taking Payments: onboarding merchants, the API they integrate with, the checkout pages, invoices and payment links built on it, authenticating cardholders, keeping cards on file, taking payments by phone, and defending against fraud and disputes. Paying Out: paying merchants, the bank accounts and files behind it, reconciling every balance against processors and banks, and paying vendors. Issuing Cards: how a card program is structured, BIN sponsorship and issuer processors, the businesses built on issuing, the authorization decision and just-in-time funding, and the issuer's side of disputes. Running a Provider: serving software platforms, selling through partners and paying their residuals, what changes by vertical, routing across processors and switching between them, running a card vault and its keys, what a processor runs, certification, architecture at scale, operations, AI and agentic payments, the metrics a provider runs on, and becoming the provider everyone else builds on. Reference: a glossary of every term.",
+    ],
+  },
+  {
     slug: "property-tech",
     type: "industry",
     name: "Property Tech",
@@ -123,18 +135,6 @@ export const BOOKS: Book[] = [
     intro: [
       "A rental property looks simple from outside: a unit, a lease, rent on the first. Underneath it run three ledgers that must never mix (the owner's, the manager's and the resident's), money held in trust under each state's rules, prices that antitrust enforcers now read line by line, screening governed by credit reporting and fair housing law, and a different body of landlord-tenant law at every state and city line. This book surveys how the industry's platforms handle each piece, benchmarked across Entrata, Yardi, RealPage, AppFolio, MRI, ResMan, Rent Manager, Buildium and the specialists around them, with no single vendor as the model, and how you'd build it, extending one core data model chapter by chapter.",
       "It reads in eight parts, plus a reference. The Business: how property earns money, who the parties are, how big the market is, the core data model, and the software landscape of suites, specialists, AI packaging and consolidation. Properties, Owners and Investors: portfolios, properties and units, management agreements and owner distributions, funds, waterfalls and asset management, trust accounting and three-way reconciliation, and budgets and capital projects. Leasing: listings and all-in pricing laws, leads, tours and the leasing center, revenue management and the RealPage antitrust record as design constraints, applications and screening, the lease, and move-in and move-out with deposit deadlines. Rent and Resident Money: charges and resident ledgers, collecting rent and who holds it, resident financial products, insurance, deposits and guarantees, utilities and energy, subsidized and affordable housing, and delinquency, collections and eviction. Operations: maintenance and work orders, vendors and payables, access, smart buildings and parking, and resident experience. Other Property Types: student housing by the bed, military and specialty housing, senior living, community associations, commercial property, self storage and lien sales, and short-term rentals. The Rules: fair housing, landlord-tenant law modeled as effective-dated data, records, privacy and audits, and what changes in Canada, the UK, Australia and the EU. Running the Platform: architecture, users and integrations, AI agents and their governance, operating metrics, and switching platforms and onboarding acquisitions. Reference: a glossary of every term, grouped by part.",
-    ],
-  },
-  {
-    slug: "payments",
-    type: "industry",
-    name: "Payments",
-    cover: "tender",
-    summary:
-      "How the payments industry works, from a card tap to running a provider, and what each of its rules means for the systems you build.",
-    intro: [
-      "The playbook's Payments section is about handling money correctly anywhere: amounts, idempotency, state machines and ledgers. This book is about the industry those systems plug into. Card networks, banks, processors and regulators each set rules, and almost every hard problem in a payments platform is one of them doing exactly what it's supposed to.",
-      "It reads in seven parts. How Money Moves: the parties and the companies that fill each role, a payment by card and terminal and what it costs, then by bank transfer, check, cash and wallet, in stablecoins, across borders and currencies, and all of them compared. The Rules: who sets them, what you may pass on to the payer, and how they change in Canada and in the EU and UK. Taking Payments: onboarding merchants, the API they integrate with, the checkout pages, invoices and payment links built on it, authenticating cardholders, keeping cards on file, taking payments by phone, and defending against fraud and disputes. Paying Out: paying merchants, the bank accounts and files behind it, reconciling every balance against processors and banks, and paying vendors. Issuing Cards: how a card program is structured, BIN sponsorship and issuer processors, the businesses built on issuing, the authorization decision and just-in-time funding, and the issuer's side of disputes. Running a Provider: serving software platforms, selling through partners and paying their residuals, what changes by vertical, routing across processors and switching between them, running a card vault and its keys, what a processor runs, certification, architecture at scale, operations, AI and agentic payments, the metrics a provider runs on, and becoming the provider everyone else builds on. Reference: a glossary of every term.",
     ],
   },
   {
