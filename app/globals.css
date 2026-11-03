@@ -254,6 +254,11 @@ body {
 .search-input:focus-visible {
   outline: none;
 }
+/* The diagram viewer focuses its panel on open so + - 0 work at once; the
+   panel's own border already marks it. */
+.diagram-dialog:focus-visible {
+  outline: none;
+}
 
 /* Selection */
 ::selection {
@@ -581,7 +586,7 @@ body {
 }
 .prose figure.diagram > svg { min-width: 560px; cursor: zoom-in; }
 .prose figure.diagram { position: relative; }
-/* Opens the diagram full screen (components/diagram-viewer.tsx); so does a
+/* Opens the diagram in a modal (components/diagram-viewer.tsx); so does a
    click or tap on the diagram itself. */
 [data-diagram-expand] {
   position: absolute;

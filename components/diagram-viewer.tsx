@@ -24,9 +24,10 @@ interface Open {
 
 /**
  * Opens an article's diagrams (figure.diagram, inlined by rehypeDiagrams)
- * full screen: fit to the screen, zoom with the buttons, the keyboard, a
- * pinch or Ctrl and the wheel, and pan by scrolling or dragging. On a phone
- * it opens at a readable width rather than shrunk to fit.
+ * in a large modal over a backdrop (a click outside closes it): fit to the
+ * modal, zoom with the buttons, the keyboard, a pinch or Ctrl and the wheel,
+ * and pan by scrolling or dragging. On a phone it opens at a readable width
+ * rather than shrunk to fit.
  */
 export function DiagramViewer() {
   const [open, setOpen] = useState<Open | null>(null);
@@ -159,62 +160,65 @@ export function DiagramViewer() {
   return (
     <Dialog.Root open={!!open} onOpenChange={(o) => !o && setOpen(null)}>
       <Dialog.Portal>
-        <Dialog.Content
-          onKeyDown={onKeyDown}
-          // Focus the dialog, not its first button, so + - 0 work at once.
-          onOpenAutoFocus={(e) => {
-            e.preventDefault();
-            (e.currentTarget as HTMLElement).focus();
-          }}
-          className="fixed inset-0 z-100 flex flex-col bg-background outline-none"
-        >
-          <div className="flex items-center gap-3 border-b border-border px-4 py-2.5">
-            <Dialog.Title className="inst min-w-0 flex-1 truncate text-dim">Diagram</Dialog.Title>
-            <Dialog.Description className="sr-only">{open?.label}</Dialog.Description>
-            <div className="flex items-center gap-1.5">
-              <button type="button" onClick={() => zoomTo(width / STEP)} aria-label="Zoom out" className={control}>
-                <Minus size={14} />
-              </button>
-              <span className="inst w-12 text-center text-dim tabular-nums" aria-live="polite">
-                {fit ? Math.round((width / fit) * 100) : 100}%
-              </span>
-              <button type="button" onClick={() => zoomTo(width * STEP)} aria-label="Zoom in" className={control}>
-                <Plus size={14} />
-              </button>
-              <button type="button" onClick={() => zoomTo(fit)} aria-label="Fit to screen" className={control}>
-                <Maximize size={14} />
-              </button>
-              <Dialog.Close aria-label="Close" className={cn(control, "ml-2")}>
-                <X size={14} />
-              </Dialog.Close>
-            </div>
-          </div>
-          <div
-            ref={attachBody}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
-            // Auto margins center the drawing and fall back to 0 once it
-            // overflows, so every edge stays in reach. One finger pans; the
-            // pinch is handled above.
-            className="flex min-h-0 flex-1 cursor-grab touch-pan-x touch-pan-y overflow-auto overscroll-contain select-none active:cursor-grabbing"
+        <Dialog.Overlay className="fixed inset-0 z-100 bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in" />
+        <div className="pointer-events-none fixed inset-0 z-100 flex items-center justify-center p-2 sm:p-6">
+          <Dialog.Content
+            onKeyDown={onKeyDown}
+            // Focus the dialog, not its first button, so + - 0 work at once.
+            onOpenAutoFocus={(e) => {
+              e.preventDefault();
+              (e.currentTarget as HTMLElement).focus();
+            }}
+            className="diagram-dialog pointer-events-auto flex h-full max-h-[60rem] w-full max-w-7xl flex-col overflow-hidden border border-border bg-background shadow-2xl outline-none animate-in fade-in zoom-in-95 duration-150"
           >
-            {open && width > 0 && (
-              <div
-                className="diagram diagram-viewer m-auto shrink-0 p-4"
-                style={{ width: width + 32 }}
-                dangerouslySetInnerHTML={{ __html: open.svg }}
+            <div className="flex items-center gap-3 border-b border-border px-4 py-2.5">
+              <Dialog.Title className="inst min-w-0 flex-1 truncate text-dim">Diagram</Dialog.Title>
+              <Dialog.Description className="sr-only">{open?.label}</Dialog.Description>
+              <div className="flex items-center gap-1.5">
+                <button type="button" onClick={() => zoomTo(width / STEP)} aria-label="Zoom out" className={control}>
+                  <Minus size={14} />
+                </button>
+                <span className="inst w-12 text-center text-dim tabular-nums" aria-live="polite">
+                  {fit ? Math.round((width / fit) * 100) : 100}%
+                </span>
+                <button type="button" onClick={() => zoomTo(width * STEP)} aria-label="Zoom in" className={control}>
+                  <Plus size={14} />
+                </button>
+                <button type="button" onClick={() => zoomTo(fit)} aria-label="Fit to screen" className={control}>
+                  <Maximize size={14} />
+                </button>
+                <Dialog.Close aria-label="Close" className={cn(control, "ml-2")}>
+                  <X size={14} />
+                </Dialog.Close>
+              </div>
+            </div>
+            <div
+              ref={attachBody}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerUp}
+              // Auto margins center the drawing and fall back to 0 once it
+              // overflows, so every edge stays in reach. One finger pans; the
+              // pinch is handled above.
+              className="flex min-h-0 flex-1 cursor-grab touch-pan-x touch-pan-y overflow-auto overscroll-contain select-none active:cursor-grabbing"
+            >
+              {open && width > 0 && (
+                <div
+                  className="diagram diagram-viewer m-auto shrink-0 p-4"
+                  style={{ width: width + 32 }}
+                  dangerouslySetInnerHTML={{ __html: open.svg }}
+                />
+              )}
+            </div>
+            {open?.caption && (
+              <p
+                className="max-h-[30vh] overflow-y-auto border-t border-border px-4 py-3 text-sm leading-relaxed text-muted [&_strong]:font-semibold [&_strong]:text-foreground"
+                dangerouslySetInnerHTML={{ __html: open.caption }}
               />
             )}
-          </div>
-          {open?.caption && (
-            <p
-              className="max-h-[30vh] overflow-y-auto border-t border-border px-4 py-3 text-sm leading-relaxed text-muted [&_strong]:font-semibold [&_strong]:text-foreground"
-              dangerouslySetInnerHTML={{ __html: open.caption }}
-            />
-          )}
-        </Dialog.Content>
+          </Dialog.Content>
+        </div>
       </Dialog.Portal>
     </Dialog.Root>
   );
