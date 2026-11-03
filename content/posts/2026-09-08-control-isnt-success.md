@@ -3,7 +3,7 @@ title = "Control Isn't Success"
 date = 2026-09-08T19:04:00Z
 description = "I turned a dying CRM rebuild into a real platform and shipped a year early. Then I started fixing the problem statements myself, which broke everything else."
 categories = ["Software Engineering", "Engineering Leadership"]
-tags = ["Engineering Leadership", "Product", "Software Architecture", "Developer Experience"]
+tags = ["Engineering Leadership", "Product Management", "Software Architecture", "Developer Experience"]
 layout = "feature"
 hero = "weld"
 +++

@@ -3,7 +3,7 @@ title = "Shipping It Isn't Owning It"
 date = 2026-11-09T00:00:00Z
 description = "An agent will build anything you ask for. Deciding what deserves to exist, and who will own it once it does, didn't get any cheaper."
 categories = ["AI", "Engineering Leadership"]
-tags = ["AI", "Engineering Leadership", "Product", "Software Architecture"]
+tags = ["AI", "Engineering Leadership", "Product Management", "Software Architecture"]
 layout = "feature"
 hero = "handoff"
 +++
