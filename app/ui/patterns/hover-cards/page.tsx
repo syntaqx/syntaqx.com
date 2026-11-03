@@ -21,7 +21,7 @@ export default function HoverCardsPage() {
 
       <DemoSection
         title="Time, in your timezone"
-        install={["local-time"]}
+        install={["timestamp"]}
         sources={[{ name: "Stripe", href: "https://stripe.com" }]}
         blurb={
           <>

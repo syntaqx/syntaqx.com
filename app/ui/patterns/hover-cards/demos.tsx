@@ -3,7 +3,7 @@
 import { useCallback, useState, type ReactNode } from "react";
 import { Card } from "@/components/card";
 import { HoverCard } from "@/registry/syntaqx/ui/hover-card";
-import { LocalTime } from "@/registry/syntaqx/ui/local-time";
+import { Timestamp } from "@/registry/syntaqx/ui/timestamp";
 
 function TimeDemo() {
   // One representative event. The reader's local tz is what changes the
@@ -20,13 +20,13 @@ function TimeDemo() {
         <div className="flex items-baseline justify-between gap-4">
           <dt className="text-muted-foreground">Created</dt>
           <dd>
-            <LocalTime {...sample} />
+            <Timestamp {...sample} />
           </dd>
         </div>
         <div className="flex items-baseline justify-between gap-4">
           <dt className="text-muted-foreground">Created (date only)</dt>
           <dd>
-            <LocalTime {...sample} variant="date" />
+            <Timestamp {...sample} variant="date" />
           </dd>
         </div>
       </dl>

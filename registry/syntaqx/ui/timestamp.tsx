@@ -8,7 +8,7 @@ import { HoverCard } from "@/registry/syntaqx/ui/hover-card";
 // always visible. On intent, a card shows the same instant where it happened
 // and in UTC.
 
-export interface LocalTimeProps {
+export interface TimestampProps {
   // RFC 3339 / ISO 8601 instant.
   iso: string;
   // IANA tz where the event actually happened.
@@ -50,13 +50,13 @@ function tzAbbr(date: Date, tz: string) {
   return parts.find((p) => p.type === "timeZoneName")?.value ?? tz;
 }
 
-export function LocalTime({
+export function Timestamp({
   iso,
   sourceTz,
   sourceLabel,
   variant = "datetime",
   align = "end",
-}: LocalTimeProps) {
+}: TimestampProps) {
   const date = new Date(iso);
   const [viewerTz, setViewerTz] = useState<string | null>(null);
 
