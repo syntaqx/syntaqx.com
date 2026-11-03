@@ -45,12 +45,9 @@ export interface UpcomingBook extends FutureBook {
 }
 
 /**
- * Written books, each with a cover at /books/<slug>. Listed in the order of
- * my career, earliest first: commerce (SoftwareMedia), hosting (BetterServers,
- * Bluehost), gaming (Riot), user-generated platforms (Imgur, Outdoorsy),
- * banking (Even), property (Entrata), payments (Entrata into Aptive), field
- * operations (Aptive). Books with no employer behind them follow, in the
- * order they were written.
+ * Written books, each with a cover at /books/<slug>. Listed in the order I
+ * worked in each industry, earliest first; books outside my career follow,
+ * in the order they were written.
  */
 export const BOOKS: Book[] = [
   {
