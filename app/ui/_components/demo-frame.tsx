@@ -13,12 +13,10 @@ export function DemoFrame({
   className?: string;
 }) {
   return (
-    <div className="border border-border bg-card">
+    <div className="overflow-hidden rounded-lg border bg-card">
       <div className={className}>{children}</div>
       {note && (
-        <div className="border-t border-border px-6 py-3 text-xs/relaxed text-muted-foreground">
-          {note}
-        </div>
+        <div className="border-t px-6 py-3 text-xs/relaxed text-muted-foreground">{note}</div>
       )}
     </div>
   );

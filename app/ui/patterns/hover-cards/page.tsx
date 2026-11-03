@@ -28,7 +28,7 @@ const demos: Demo[] = [
   {
     id: "user-previews-loaded-on-intent",
     title: "User previews, loaded on intent",
-    install: ["github-hover-card"],
+    install: ["hover-card"],
     sources: [
       { name: "GitHub", href: "https://github.com" },
       { name: "Linear", href: "https://linear.app" },

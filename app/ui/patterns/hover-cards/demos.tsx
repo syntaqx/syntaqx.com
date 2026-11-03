@@ -1,7 +1,7 @@
 "use client";
 
 import { DemoFrame } from "@/app/ui/_components/demo-frame";
-import { GitHubHoverCard } from "@/registry/syntaqx/ui/github-hover-card";
+import { GitHubUser } from "@/app/ui/components/_examples/hover-card-github";
 import { Timestamp } from "@/registry/syntaqx/ui/timestamp";
 
 function TimeDemo() {
@@ -40,7 +40,7 @@ function UserDemo() {
       Thanks to{" "}
       {handles.map((h, i) => (
         <span key={h}>
-          <GitHubHoverCard login={h} />
+          <GitHubUser login={h} />
           {i < handles.length - 2 ? ", " : i === handles.length - 2 ? ", and " : ""}
         </span>
       ))}{" "}
@@ -58,7 +58,7 @@ function AvatarDemo() {
   return (
     <div className="flex flex-wrap items-center gap-3">
       {handles.map((h) => (
-        <GitHubHoverCard key={h} login={h}>
+        <GitHubUser key={h} login={h}>
           <a
             href={`https://github.com/${h}`}
             target="_blank"
@@ -77,7 +77,7 @@ function AvatarDemo() {
               className="size-full object-cover"
             />
           </a>
-        </GitHubHoverCard>
+        </GitHubUser>
       ))}
     </div>
   );

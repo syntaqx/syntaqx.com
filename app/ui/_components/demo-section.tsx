@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getRegistryItem } from "@/lib/registry";
 import { CodeBlock } from "./code-block";
-import { ComponentInstall } from "./component-install";
+import Link from "next/link";
+import { SITE_URL } from "@/lib/constants";
+import { components } from "@/lib/ui";
 
 export interface DemoSource {
   name: string;
@@ -53,9 +55,7 @@ export function DemoSection({ id, title, blurb, sources, install, demo }: Demo) 
       ) : (
         demo
       )}
-      {install?.map((name) => (
-        <ComponentInstall key={name} name={name} />
-      ))}
+      {install?.length ? <BuiltWith names={install} /> : null}
     </section>
   );
 }
@@ -82,5 +82,30 @@ function Credit({ sources }: { sources: DemoSource[] }) {
         </span>
       ))}
     </p>
+  );
+}
+
+/** The components a demo is made of, each linked to its page, and one command for all of them. */
+function BuiltWith({ names }: { names: string[] }) {
+  const command = `npx shadcn@latest add ${names.map((n) => `${SITE_URL}/r/${n}.json`).join(" ")}`;
+  return (
+    <div className="mt-4 space-y-3">
+      <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+        Built with
+        {names.map((n) => {
+          const c = components.find((x) => x.name === n);
+          return (
+            <Link
+              key={n}
+              href={c?.href ?? "/ui/installation"}
+              className="rounded-md border bg-card px-2 py-0.5 text-sm text-foreground transition-colors hover:border-primary/50 hover:text-primary"
+            >
+              {c?.title ?? n}
+            </Link>
+          );
+        })}
+      </p>
+      <CodeBlock code={command} lang="bash" />
+    </div>
   );
 }

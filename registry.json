@@ -209,7 +209,7 @@
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Hover Card",
-      "description": "shadcn's HoverCard plus intent delays tuned for previews, an onOpen that fires once for loading on intent, and opening on keyboard focus.",
+      "description": "shadcn's HoverCard that can load its content on intent: give it a load function and a cache key, and render the loading, loaded and error states.",
       "files": [
         {
           "path": "registry/syntaqx/ui/hover-card.tsx",
@@ -222,24 +222,12 @@
         "shadcn": "hover-card",
         "changes": [
           "Opens after 120ms and closes after 100ms, tuned for previews, in place of Radix's 700/300.",
-          "`onOpen` fires once, the first time the card opens: start a load-on-intent fetch there.",
-          "Keyboard focus on the trigger opens it too."
+          "Keyboard focus on the trigger opens it too.",
+          "`load` fetches the card's content the first time it opens, and `cacheKey` shares the result across cards for the session. A failed load retries on the next open.",
+          "HoverCardContent's children can be a function of the load state (`idle`, `loading`, `success`, `error`), and `useHoverCard()` reads it anywhere inside.",
+          "`onOpen` fires once, the first time the card opens."
         ]
       }
-    },
-    {
-      "name": "github-hover-card",
-      "type": "registry:ui",
-      "title": "GitHub Hover Card",
-      "description": "A GitHub profile card that loads on intent: nothing is fetched until the reader hovers or tabs to it, results are cached for the session, and a skeleton holds the card's shape meanwhile.",
-      "registryDependencies": ["https://www.syntaqx.com/r/hover-card.json", "skeleton"],
-      "files": [
-        {
-          "path": "registry/syntaqx/ui/github-hover-card.tsx",
-          "type": "registry:ui"
-        }
-      ],
-      "categories": ["overlays"]
     },
     {
       "name": "timestamp",

@@ -8,33 +8,82 @@ import { cn } from "@/lib/utils";
 // - intent delays tuned for previews (120ms to open filters out a cursor
 //   passing through; 100ms to close lets it travel into the card), in place
 //   of Radix's 700/300;
-// - `onOpen`, fired once, the first time the card opens: start a "load on
-//   intent" fetch there;
 // - keyboard focus on the trigger opens the card too, which Radix's hover
-//   card leaves to the pointer.
+//   card leaves to the pointer;
+// - loading on intent: give the card a `load` function and nothing is
+//   fetched until the card first opens. HoverCardContent's children can be a
+//   function of the load's state, to show a skeleton, the data or an error.
+//   A `cacheKey` shares the result across cards for the session, so a second
+//   hover is instant; a failed load is dropped so the next open retries.
+
+export type HoverCardLoadState<T = unknown> =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: T }
+  | { status: "error"; error: unknown };
+
+const cache = new Map<string, Promise<unknown>>();
 
 interface HoverCardContextValue {
   schedule: (open: boolean) => void;
+  state: HoverCardLoadState;
 }
 
 const HoverCardContext = React.createContext<HoverCardContextValue | null>(null);
+
+/** The load state of the HoverCard around it. */
+function useHoverCard<T = unknown>() {
+  return (React.useContext(HoverCardContext)?.state ?? { status: "idle" }) as HoverCardLoadState<T>;
+}
 
 function HoverCard({
   open: openProp,
   defaultOpen = false,
   onOpenChange,
   onOpen,
+  load,
+  cacheKey,
   openDelay = 120,
   closeDelay = 100,
   ...props
 }: React.ComponentProps<typeof HoverCardPrimitive.Root> & {
   /** Fires once, the first time the card opens. */
   onOpen?: () => void;
+  /** Loads the card's content the first time it opens. */
+  load?: () => Promise<unknown>;
+  /** Shares the load's result with every card using the same key. */
+  cacheKey?: string;
 }) {
   const [inner, setInner] = React.useState(defaultOpen);
+  const [state, setState] = React.useState<HoverCardLoadState>({ status: "idle" });
   const open = openProp ?? inner;
   const fired = React.useRef(false);
+  const loading = React.useRef<"idle" | "pending" | "done">("idle");
   const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const startLoad = React.useCallback(() => {
+    if (!load || loading.current !== "idle") return;
+    loading.current = "pending";
+    setState({ status: "loading" });
+    let pending = cacheKey ? cache.get(cacheKey) : undefined;
+    if (!pending) {
+      pending = load();
+      if (cacheKey) {
+        cache.set(cacheKey, pending);
+        pending.catch(() => cache.delete(cacheKey));
+      }
+    }
+    pending.then(
+      (data) => {
+        loading.current = "done";
+        setState({ status: "success", data });
+      },
+      (error) => {
+        loading.current = "idle";
+        setState({ status: "error", error });
+      },
+    );
+  }, [load, cacheKey]);
 
   const setOpen = React.useCallback(
     (next: boolean) => {
@@ -42,10 +91,11 @@ function HoverCard({
         fired.current = true;
         onOpen?.();
       }
+      if (next) startLoad();
       if (openProp === undefined) setInner(next);
       onOpenChange?.(next);
     },
-    [onOpen, onOpenChange, openProp],
+    [onOpen, startLoad, onOpenChange, openProp],
   );
 
   const schedule = React.useCallback(
@@ -64,7 +114,7 @@ function HoverCard({
   );
 
   return (
-    <HoverCardContext.Provider value={{ schedule }}>
+    <HoverCardContext.Provider value={{ schedule, state }}>
       <HoverCardPrimitive.Root
         data-slot="hover-card"
         open={open}
@@ -99,16 +149,23 @@ function HoverCardTrigger({
   );
 }
 
-function HoverCardContent({
+function HoverCardContent<T = unknown>({
   className,
   align = "center",
   sideOffset = 4,
+  children,
   ...props
-}: React.ComponentProps<typeof HoverCardPrimitive.Content>) {
+}: Omit<React.ComponentProps<typeof HoverCardPrimitive.Content>, "children"> & {
+  /** Content, or a function of the card's load state. */
+  children?: React.ReactNode | ((state: HoverCardLoadState<T>) => React.ReactNode);
+}) {
+  const state = useHoverCard<T>();
   return (
     <HoverCardPrimitive.Portal data-slot="hover-card-portal">
       <HoverCardPrimitive.Content
         data-slot="hover-card-content"
+        data-status={state.status}
+        aria-busy={state.status === "loading" || undefined}
         align={align}
         sideOffset={sideOffset}
         className={cn(
@@ -116,9 +173,11 @@ function HoverCardContent({
           className,
         )}
         {...props}
-      />
+      >
+        {typeof children === "function" ? children(state) : children}
+      </HoverCardPrimitive.Content>
     </HoverCardPrimitive.Portal>
   );
 }
 
-export { HoverCard, HoverCardTrigger, HoverCardContent };
+export { HoverCard, HoverCardTrigger, HoverCardContent, useHoverCard };
