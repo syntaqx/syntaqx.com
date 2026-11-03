@@ -2,7 +2,7 @@
 title = "Metrics"
 description = "Instrument types, temporality, histograms that aggregate, RED and USE, cardinality and its bill, exemplars, recording rules, and pull versus push."
 category = "Observability"
-order = 1236
+order = 1233
 tags = ["observability", "metrics", "prometheus", "opentelemetry", "histograms", "cardinality"]
 +++
 

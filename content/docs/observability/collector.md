@@ -3,7 +3,7 @@ title = "Running the OpenTelemetry Collector"
 nav_title = "The Collector"
 description = "Deployment patterns, an annotated agent and gateway config, distributions and ocb, queues and retries, monitoring, securing, and managing a fleet with OpAMP."
 category = "Observability"
-order = 1233
+order = 1236
 tags = ["observability", "opentelemetry", "collector", "kubernetes", "operations"]
 +++
 
