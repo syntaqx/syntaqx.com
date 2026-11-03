@@ -1,8 +1,9 @@
 +++
 title = "Trust & Safety"
 description = "Moderation for any product where people post, chat or trade: policies, report queues, automated detection with review, penalties, appeals and reporting duties."
-category = "Security"
-order = 714
+category = "Building Blocks"
+aliases = ["security/trust-and-safety"]
+order = 463
 tags = ["security", "trust-and-safety", "moderation", "abuse", "child-safety", "audit"]
 +++
 

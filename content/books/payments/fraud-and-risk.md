@@ -71,7 +71,7 @@ Everything above is about the payer. On a platform, the merchant can be the frau
 - **Collusion and self-dealing.** A merchant charging its own or accomplices' stolen cards, or cycling money through refunds to cards that never paid. Refunds without a matching earlier payment on the same card are a signal on their own, which is also why the networks require refunds to go to the original card.
 - **Account takeover.** Someone else controlling a legitimate merchant's account changes the payout bank account and cashes out, the case [Vendor Payouts](/books/payments/vendor-payouts#stopping-the-changed-bank-account) defends against.
 
-Merchant fraud signals feed the same [onboarding](/books/payments/merchant-onboarding#ongoing-monitoring) tiers and payout controls as underwriting, and a merchant terminated for fraud goes on the networks' terminated-merchant lists. Acting against a merchant is an enforcement decision like any other on a platform: a written policy, a graduated response from payout hold to restriction to termination, a notice that says why, and a way to appeal ([Trust & Safety](/docs/security/trust-and-safety#penalties-and-escalation-ladders)).
+Merchant fraud signals feed the same [onboarding](/books/payments/merchant-onboarding#ongoing-monitoring) tiers and payout controls as underwriting, and a merchant terminated for fraud goes on the networks' terminated-merchant lists. Acting against a merchant is an enforcement decision like any other on a platform: a written policy, a graduated response from payout hold to restriction to termination, a notice that says why, and a way to appeal ([Trust & Safety](/docs/building-blocks/trust-and-safety#penalties-and-escalation-ladders)).
 
 ## Card Testing
 

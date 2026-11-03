@@ -367,7 +367,7 @@ CREATE TABLE penalties (                   -- the playbook's table, scoped to a 
 );
 ```
 
-`penalties` is the playbook's [penalties table](/docs/security/trust-and-safety#penalties-and-escalation-ladders) with two game-specific changes: `game_id` scopes a penalty to one title, and `restricted_feature` names the game features a ladder restricts (chat, a queue, ranked play, trading). Who issued it, under which policy version and on what evidence lives on the playbook's `moderation_decisions` row that `decision_id` points to, so cheating and conduct penalties share one decision record and one appeal path.
+`penalties` is the playbook's [penalties table](/docs/building-blocks/trust-and-safety#penalties-and-escalation-ladders) with two game-specific changes: `game_id` scopes a penalty to one title, and `restricted_feature` names the game features a ladder restricts (chat, a queue, ranked play, trading). Who issued it, under which policy version and on what evidence lives on the playbook's `moderation_decisions` row that `decision_id` points to, so cheating and conduct penalties share one decision record and one appeal path.
 
 Design decisions behind it:
 

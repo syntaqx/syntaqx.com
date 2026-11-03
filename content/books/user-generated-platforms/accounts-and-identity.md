@@ -31,7 +31,7 @@ A handle is a public, mentionable, impersonable name, and three rules follow:
 
 - **Normalize for uniqueness, display as typed.** Two handles that look the same to a reader must collide: fold case, map confusable characters (Latin "a" and Cyrillic "а"), and decide what you do with dots and underscores. The core model's `handle_key` is the normalized form with the unique constraint; `handle` is what the user typed.
 - **Changes are history, not edits.** A handle change keeps the old one in a history table, redirects mentions and profile links for a period, and holds the old name back from reuse, because links, screenshots and other people's memories still point at it. Releasing a popular handle the day it's abandoned invites impersonation of its former owner.
-- **Reserve and protect.** Brand and public-figure names, staff-like names ("admin", "support", "trust-and-safety") and names of banned accounts are reserved. A trademark claim on a handle is a moderation case like any other, with the [Trust & Safety](/docs/security/trust-and-safety#reports-and-queues) machinery.
+- **Reserve and protect.** Brand and public-figure names, staff-like names ("admin", "support", "trust-and-safety") and names of banned accounts are reserved. A trademark claim on a handle is a moderation case like any other, with the [Trust & Safety](/docs/building-blocks/trust-and-safety#reports-and-queues) machinery.
 
 ### Handles You Don't Own: DIDs and Domain Handles
 
@@ -75,7 +75,7 @@ The model that holds up:
 
 - **Identity is per account; roles are per profile and per relationship.** Sign-in, contact points, the security setup and identity verification live on the account. Being a host, a seller or a creator is a profile with its own public face and its own role-specific state (listings, payout readiness, tax interview), and being a moderator is a role in one community ([The Core Data Model](/books/user-generated-platforms/platform-business#the-core-data-model)).
 - **The payee is a legal entity, not a profile.** A host who switches from hosting personally to hosting through an LLC keeps the same account and profile but a different payee, tax form and payout account. Payout and tax data hang off the Payments volume's merchant record for that entity ([Merchant Onboarding](/books/payments/merchant-onboarding#the-application-is-not-the-merchant)); [Paying Creators & Sellers](/books/user-generated-platforms/paying-creators-and-sellers#who-the-payee-is) owns the flow.
-- **Penalties name the role they restrict.** A host who cancels repeatedly loses instant book or visibility; a guest who damages a vehicle loses booking; a member who harasses loses chat in one community. The [Trust & Safety](/docs/security/trust-and-safety#penalties-and-escalation-ladders) principle (restrict the feature that was abused) becomes "restrict the role that was abused," with a sitewide account suspension reserved for conduct that makes the person unsafe in every role.
+- **Penalties name the role they restrict.** A host who cancels repeatedly loses instant book or visibility; a guest who damages a vehicle loses booking; a member who harasses loses chat in one community. The [Trust & Safety](/docs/building-blocks/trust-and-safety#penalties-and-escalation-ladders) principle (restrict the feature that was abused) becomes "restrict the role that was abused," with a sitewide account suspension reserved for conduct that makes the person unsafe in every role.
 - **Deleting a role isn't deleting the account.** Closing a host profile unpublishes listings and stops new bookings; the account, its trips as a guest and its records stay.
 - **Shared and team accounts are delegation.** A co-host, a brand's social team or a channel editor acts on someone else's profile; give them their own accounts with a scoped grant, never shared credentials, so every action has a person behind it ([Authorization](/docs/security/authorization#least-privilege)).
 
@@ -85,9 +85,9 @@ Standing is the user-facing summary of the penalties in force against an account
 
 What standing is for:
 
-- **Telling the user.** A user who can see why they're restricted, and when it ends, appeals less and reoffends less than one who can't; the DSA requires a statement of reasons for most restrictions anyway ([Notices and Statements of Reasons](/docs/security/trust-and-safety#notices-and-statements-of-reasons)).
+- **Telling the user.** A user who can see why they're restricted, and when it ends, appeals less and reoffends less than one who can't; the DSA requires a statement of reasons for most restrictions anyway ([Notices and Statements of Reasons](/docs/building-blocks/trust-and-safety#notices-and-statements-of-reasons)).
 - **Gating privileges.** Monetization, verification badges, moderator roles, instant book and higher API limits all depend on standing. Discord's Server Subscriptions launched open only to owners in good standing with no recent Terms of Service or Community Guidelines violations; YouTube's strikes freeze uploads and live streaming. Each gate reads standing at the moment of the action, not a cached flag set when the user enrolled.
-- **Driving the ladder.** The next penalty depends on the penalties in force, which is why strikes carry validity ranges and expire ([Penalties and Escalation Ladders](/docs/security/trust-and-safety#penalties-and-escalation-ladders)).
+- **Driving the ladder.** The next penalty depends on the penalties in force, which is why strikes carry validity ranges and expire ([Penalties and Escalation Ladders](/docs/building-blocks/trust-and-safety#penalties-and-escalation-ladders)).
 
 My rule: standing is derived, never stored. It's a query over `penalties` in force (sitewide and per community, per role), plus verifications and any open safety holds; a cached summary is fine for display but is recomputed whenever a penalty starts, expires or is overturned, and gates call the query.
 
@@ -124,7 +124,7 @@ The records that outlive closure, and why:
 | Open claims, deposits, payouts and disputes | Money still owed in either direction | Outdoorsy requires no open reservations or unresolved deposits, payouts, claims or disputes before full erasure |
 | Content and data reported to NCMEC | A completed CyberTipline report is a request to preserve for one year | 18 U.S.C. 2258A(h) |
 | Trader identity data | The DSA requires marketplaces to keep traders' data for six months after the relationship ends | DSA Article 30 |
-| Moderation decisions and statements of reasons | Appeals, out-of-court disputes and transparency reporting | The [Trust & Safety](/docs/security/trust-and-safety#auditing-moderation-decisions) audit model |
+| Moderation decisions and statements of reasons | Appeals, out-of-court disputes and transparency reporting | The [Trust & Safety](/docs/building-blocks/trust-and-safety#auditing-moderation-decisions) audit model |
 | Data under a preservation letter or litigation hold | A court or law enforcement asked | [Law Enforcement Requests & User Data](/books/user-generated-platforms/law-enforcement-requests#the-us-framework) |
 | Suspended federated account data | Reinstatement window | Mastodon keeps suspended data 30 days, then purges it from the server |
 
@@ -237,7 +237,7 @@ Notes on the sketch:
 
 - **Every handle an account has held,** with the dates, so a screenshot, a harassment report or a court order naming an old handle resolves to the right account.
 - **Every verification and badge,** with method, verifier, evidence reference and revocation reason. Regulators asked X what its checkmark meant; the answer has to be a record, not a design document.
-- **Every standing change,** which is every penalty with its decision, notice and appeal ([Auditing Moderation Decisions](/docs/security/trust-and-safety#auditing-moderation-decisions)).
+- **Every standing change,** which is every penalty with its decision, notice and appeal ([Auditing Moderation Decisions](/docs/building-blocks/trust-and-safety#auditing-moderation-decisions)).
 - **Every security event:** sign-ins, challenges chosen, recoveries, locks, step-ups, and changes to contact points, payout accounts and handles, with the session and, for support, the agent and reason.
 - **Every deletion request and its outcome,** including which records were kept under which hold or retention rule and when they were finally erased.
 
