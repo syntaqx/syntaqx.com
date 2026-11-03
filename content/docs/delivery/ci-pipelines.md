@@ -27,7 +27,7 @@ Parallelism costs setup: every job installs dependencies on its own, so splittin
 ## Secure
 
 - **Least privilege.** Workflows default to `permissions: contents: read` and request more per job.
-- **Third-party actions pinned to a full commit SHA,** because a tag can be moved by whoever compromises its owner. See [Dependencies & Upgrades](/docs/development/dependencies#supply-chain).
+- **Actions referenced by full version and locked** (`actions/checkout@v7.0.1`), with [GitHub's workflow lockfile](https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles) recording the commit each version resolved to and the Require lockfile policy enforcing it, so a moved tag can't change what runs. SHA pins in the workflow file are the fallback only where no lockfile exists. The rest of this list limits what a compromised action could reach: a read-only token, short-lived federated credentials instead of stored keys, and few third-party actions, allowed by name. See [Dependencies & Upgrades](/docs/development/dependencies#supply-chain).
 - **No secrets for fork pull requests.** A fork's PR runs code anyone wrote; `pull_request_target` checking out the fork's branch with your secrets is the classic ["pwn request"](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/). Jobs that need secrets run only on trusted events, with secrets scoped per [environment](/docs/operations/environments).
 
 ## Delivery vs. Deployment
@@ -58,7 +58,7 @@ Some releases genuinely need a human gate: app store submissions ([Mobile Releas
 - [GitHub Actions: About service containers](https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/about-service-containers), real databases in CI
 - [GitHub Actions: Concurrency](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs), cancelling superseded runs
 - [GitHub Actions: Creating a composite action](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action), shared setup across jobs
-- [GitHub: Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions), least privilege and SHA pinning
+- [GitHub: Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions), least privilege and the risks of third-party actions
 - [GitHub Security Lab: Preventing pwn requests](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/), secrets and untrusted code from forks
 - [Vercel: Preview deployments](https://vercel.com/docs/deployments/environments#preview-environment-pre-production), a deployment for every pull request
 - [Vercel: Instant rollback](https://vercel.com/docs/instant-rollback), one-step rollback to a previous deployment
