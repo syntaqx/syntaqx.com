@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Heart, Star, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { DemoFrame } from "../_components/demo-frame";
+import { DemoFrame } from "@/app/ui/_components/demo-frame";
 
 // ---------------------------------------------------------------------------
 // Copy with confirmation

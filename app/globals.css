@@ -1,6 +1,24 @@
 @import "tailwindcss";
 
 /*
+ * `dark:` follows the theme the page is actually in, the same way the
+ * variables below do: the OS preference, unless the toggle chose a theme.
+ * shadcn components lean on it.
+ */
+@custom-variant dark {
+  @media not (prefers-color-scheme: light) {
+    &:not(:where(.light, .light *)) {
+      @slot;
+    }
+  }
+  @media (prefers-color-scheme: light) {
+    &:where(.dark, .dark *) {
+      @slot;
+    }
+  }
+}
+
+/*
  * Theme variables.
  *
  * The CSS itself respects `prefers-color-scheme` so the FIRST paint is
@@ -624,6 +642,22 @@ body {
 }
 .light .prose pre code span {
   color: var(--shiki-light) !important;
+}
+/* CodeBlock (the /ui code and install tabs): the same dual theme. */
+.code-block pre {
+  margin: 0;
+  background: transparent !important;
+}
+.code-block span {
+  color: var(--shiki-dark);
+}
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) .code-block span {
+    color: var(--shiki-light);
+  }
+}
+.light .code-block span {
+  color: var(--shiki-light);
 }
 .prose pre code {
   background: none;

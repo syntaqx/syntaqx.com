@@ -3,7 +3,7 @@
 import { useId, useRef, useState } from "react";
 import { Check, Circle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { Compare, DemoFrame } from "../_components/demo-frame";
+import { Compare, DemoFrame } from "@/app/ui/_components/demo-frame";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

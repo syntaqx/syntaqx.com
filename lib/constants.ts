@@ -44,20 +44,15 @@ export const bio = [
 export type NavLink = { href: string; label: string };
 export type NavGroup = { label: string; links: NavLink[] };
 
-// Header navigation. A group renders as a disclosure ("lab") in the header
-// and as a labeled group in the mobile menu.
+// Header navigation. A group renders as a disclosure in the header and as a
+// labeled group in the mobile menu.
 export const nav: (NavLink | NavGroup)[] = [
   { href: "/posts", label: "posts" },
   { href: "/projects", label: "projects" },
   { href: "/docs", label: "docs" },
   { href: "/books", label: "books" },
-  {
-    label: "lab",
-    links: [
-      { href: "/ui", label: "ui" },
-      { href: "/tools", label: "tools" },
-    ],
-  },
+  { href: "/ui", label: "ui" },
+  { href: "/tools", label: "tools" },
   { href: "/about", label: "about" },
 ];
 

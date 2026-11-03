@@ -177,9 +177,12 @@ export function SidebarNav({
   home,
   pages = [],
   groups,
+  openAll = false,
   onNavigate,
 }: {
   title: string;
+  /** Start with every section open, for a sidebar short enough to show whole. */
+  openAll?: boolean;
   /** A link back up a level, as a chevron before the title. */
   back?: { href: string; label: string };
   home: { href: string; label: string };
@@ -196,7 +199,9 @@ export function SidebarNav({
   const sections = groups.flatMap((g) => g.sections);
   const activeSection = sections.find((s) => s.items.some((i) => isActive(i, pathname)))?.name;
 
-  const [open, setOpen] = useState<string[]>(activeSection ? [activeSection] : []);
+  const [open, setOpen] = useState<string[]>(
+    openAll ? sections.map((s) => s.name) : activeSection ? [activeSection] : [],
+  );
   // Open the current page's section on navigation, leaving the rest as the
   // reader left them.
   const [lastPath, setLastPath] = useState(pathname);

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 
 import { Bold, Code, Italic, Link2, Underline, X } from "lucide-react";
 import { Modal } from "@/components/modal";
 import { cn } from "@/lib/cn";
-import { DemoFrame } from "../_components/demo-frame";
+import { DemoFrame } from "@/app/ui/_components/demo-frame";
 
 const btn =
   "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";

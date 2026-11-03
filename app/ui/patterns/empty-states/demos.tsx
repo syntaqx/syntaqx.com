@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Check, FolderPlus, Inbox, RotateCcw, Search, X } from "lucide-react";
-import { DemoFrame } from "../_components/demo-frame";
+import { DemoFrame } from "@/app/ui/_components/demo-frame";
 
 const btn =
   "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
