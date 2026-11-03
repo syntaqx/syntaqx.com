@@ -199,6 +199,10 @@ export default withSentryConfig(nextConfig, {
   sourcemaps: {
     disable: process.env.VERCEL_ENV !== "production",
   },
+  // Same for the release: SENTRY_AUTH_TOKEN is only set for Production.
+  release: {
+    create: process.env.VERCEL_ENV === "production",
+  },
 
   // Don't send build telemetry to Sentry.
   telemetry: false,
