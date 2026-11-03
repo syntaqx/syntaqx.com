@@ -3,8 +3,13 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Heart, Star, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { DemoFrame } from "@/app/ui/_components/demo-frame";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
+import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { Input } from "@/registry/syntaqx/ui/input";
 
 // ---------------------------------------------------------------------------
 // Copy with confirmation
@@ -19,7 +24,7 @@ function CopyDemo() {
 
   return (
     <DemoFrame
-      className="flex items-center justify-between gap-3 p-4"
+      className="flex items-center justify-between gap-3 p-6"
       note={
         <>
           The button is the trigger and the confirmation. State reverts after 1.5s so the user can
@@ -27,7 +32,7 @@ function CopyDemo() {
         </>
       }
     >
-      <code className="truncate font-mono text-xs text-foreground">{sample}</code>
+      <code className="truncate font-mono text-sm text-foreground">{sample}</code>
       <CopyButton text={sample} label className="shrink-0" />
     </DemoFrame>
   );
@@ -105,29 +110,28 @@ function OptimisticToggle({
   };
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="outline"
+      aria-pressed={on}
       onClick={toggle}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded border px-2.5 py-1.5 text-xs transition-colors cursor-pointer",
-        on
-          ? "border-primary/40 bg-primary/10 text-primary"
-          : "border-border text-muted-foreground hover:text-foreground hover:border-border-hover",
-        error && "border-destructive/50 text-destructive",
+        on && "border-primary/40 bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary",
+        error &&
+          "border-destructive/50 text-destructive hover:border-destructive/50 hover:text-destructive",
       )}
     >
-      <Icon size={12} className={on ? "fill-current" : ""} aria-hidden />
+      <Icon aria-hidden className={cn(on && "fill-current")} />
       <span>{label}</span>
-      <span className="tabular-nums text-[10px] text-muted-foreground">{count}</span>
-      {error && <span className="ml-1 text-[10px]">failed</span>}
-    </button>
+      <span className="text-xs text-muted-foreground tabular-nums">{count}</span>
+      {error && <span className="text-xs">failed</span>}
+    </Button>
   );
 }
 
 function OptimisticDemo() {
   return (
     <DemoFrame
-      className="flex flex-wrap items-center gap-3 p-4"
+      className="flex flex-wrap items-center gap-3 p-6"
       note={
         <>
           Clicks apply immediately. The first toggle resolves cleanly; the second always fails after
@@ -155,12 +159,9 @@ function GuardDemo() {
         level="No guard"
         desc="Reversible, low blast radius (dismiss a notification, hide a row)."
       >
-        <button
-          type="button"
-          className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
-        >
-          <X size={12} /> Dismiss
-        </button>
+        <Button variant="outline" size="sm">
+          <X /> Dismiss
+        </Button>
       </GuardRow>
       <GuardRow
         level="Soft confirm"
@@ -180,10 +181,10 @@ function GuardDemo() {
 
 function GuardRow({ level, desc, children }: { level: string; desc: string; children: ReactNode }) {
   return (
-    <div className="p-4 flex items-start justify-between gap-4">
+    <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-start sm:justify-between">
       <div className="min-w-0">
-        <div className="text-[10px] font-medium text-muted-foreground mb-1">{level}</div>
-        <p className="text-xs/relaxed text-muted-foreground ">{desc}</p>
+        <div className="mb-1 text-sm font-medium text-foreground">{level}</div>
+        <p className="text-sm/relaxed text-muted-foreground">{desc}</p>
       </div>
       <div className="shrink-0">{children}</div>
     </div>
@@ -204,54 +205,51 @@ function SoftConfirm() {
 
   if (done) {
     return (
-      <button
-        type="button"
-        onClick={() => setDone(false)}
-        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
-      >
+      <Button variant="outline" size="sm" onClick={() => setDone(false)}>
         Reset
-      </button>
+      </Button>
     );
   }
 
   if (armed) {
     return (
-      <div className="inline-flex items-center gap-1.5">
-        <button
-          type="button"
+      <div className="inline-flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => {
             if (timer.current) clearTimeout(timer.current);
             setArmed(false);
           }}
-          className="rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
         >
           Cancel
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="destructive"
+          size="sm"
           onClick={() => {
             setArmed(false);
             setDone(true);
           }}
-          className="inline-flex items-center gap-1.5 rounded border border-destructive/50 bg-destructive/10 px-2 py-1 text-xs text-destructive hover:bg-destructive/20 cursor-pointer"
         >
-          <Trash2 size={12} /> Really delete
-        </button>
+          <Trash2 /> Really delete
+        </Button>
       </div>
     );
   }
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="outline"
+      size="sm"
       onClick={() => {
         setArmed(true);
         timer.current = setTimeout(() => setArmed(false), 4000);
       }}
-      className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-destructive hover:border-destructive/40 cursor-pointer"
+      className="hover:border-destructive/40 hover:text-destructive"
     >
-      <Trash2 size={12} /> Delete
-    </button>
+      <Trash2 /> Delete
+    </Button>
   );
 }
 
@@ -262,45 +260,40 @@ function TypeToConfirm({ target }: { target: string }) {
 
   if (done) {
     return (
-      <button
-        type="button"
+      <Button
+        variant="outline"
+        size="sm"
         onClick={() => {
           setDone(false);
           setInput("");
         }}
-        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
       >
         Reset
-      </button>
+      </Button>
     );
   }
 
   return (
-    <div className="inline-flex flex-col items-end gap-1.5">
-      <div className="text-[10px] text-muted-foreground">
-        Type <code className="font-mono text-foreground">{target}</code> to confirm
-      </div>
-      <div className="inline-flex items-center gap-1.5">
-        <input
-          type="text"
+    <Field className="w-auto">
+      <FieldLabel>
+        Type <code className="font-mono">{target}</code> to confirm
+      </FieldLabel>
+      <div className="flex items-center gap-2">
+        <Input
+          size="sm"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={target}
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
-          className="rounded border border-border bg-background px-2 py-1 font-mono text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50"
+          className="w-44 font-mono"
         />
-        <button
-          type="button"
-          disabled={!matches}
-          onClick={() => setDone(true)}
-          className="inline-flex items-center gap-1.5 rounded border border-destructive/50 bg-destructive/10 px-2 py-1 text-xs text-destructive hover:bg-destructive/20 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-        >
-          <Trash2 size={12} /> Delete
-        </button>
+        <Button variant="destructive" size="sm" disabled={!matches} onClick={() => setDone(true)}>
+          <Trash2 /> Delete
+        </Button>
       </div>
-    </div>
+    </Field>
   );
 }
 
@@ -373,22 +366,18 @@ function SkeletonDemo() {
         </>
       }
     >
-      <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-        <div className="text-[10px] font-medium text-muted-foreground">Loading state</div>
-        <div className="inline-flex items-center gap-2">
-          <span className="text-[10px] tabular-nums text-muted-foreground" aria-live="off">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-3">
+        <div className="text-sm font-medium text-foreground">Loading state</div>
+        <div className="inline-flex items-center gap-3">
+          <span className="text-xs text-muted-foreground tabular-nums" aria-live="off">
             Auto-reload in {secondsLeft}s
           </span>
-          <button
-            type="button"
-            onClick={reload}
-            className="rounded border border-border px-2 py-1 text-[10px] text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
-          >
+          <Button variant="outline" size="sm" onClick={reload}>
             Reload now
-          </button>
+          </Button>
         </div>
       </div>
-      <div className="grid grid-cols-3 divide-x divide-border">
+      <div className="grid divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         <SkeletonColumn label="Skeleton">
           {loading ? <SkeletonRow /> : <LoadedRow />}
         </SkeletonColumn>
@@ -403,20 +392,26 @@ function SkeletonDemo() {
 
 function SkeletonColumn({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="p-4">
-      <div className="mb-3 text-[10px] font-medium text-muted-foreground">{label}</div>
+    <div className="p-6">
+      <div className="mb-3 text-sm font-medium text-muted-foreground">{label}</div>
       {children}
     </div>
   );
 }
 
+// Each bar sits in a box the height of the line it stands in for, so the
+// row is exactly as tall loading as loaded.
 function SkeletonRow() {
   return (
     <div className="flex items-center gap-3">
-      <div className="size-10  rounded-full bg-border/40 animate-pulse" />
-      <div className="flex-1 space-y-2">
-        <div className="h-3 w-32 rounded bg-border/40 animate-pulse" />
-        <div className="h-2 w-48 rounded bg-border/30 animate-pulse" />
+      <Skeleton className="size-10 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1">
+        <div className="flex h-5 items-center">
+          <Skeleton className="h-3.5 w-28 max-w-full" />
+        </div>
+        <div className="flex h-5 items-center">
+          <Skeleton className="h-3 w-40 max-w-full" />
+        </div>
       </div>
     </div>
   );
@@ -426,7 +421,7 @@ function SpinnerRow({ loading }: { loading: boolean }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-2">
-        <div className="size-4  rounded-full border-2 border-border border-t-primary animate-spin" />
+        <Spinner className="text-primary" />
       </div>
     );
   }
@@ -436,12 +431,12 @@ function SpinnerRow({ loading }: { loading: boolean }) {
 function LoadedRow() {
   return (
     <div className="flex items-center gap-3">
-      <div className="size-10  rounded-full bg-primary/30 flex items-center justify-center text-xs font-semibold text-foreground/80">
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/30 text-sm font-semibold text-foreground/80">
         CP
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-xs font-medium text-foreground truncate">Chase Pierce</div>
-        <div className="text-[11px] text-muted-foreground truncate">
+        <div className="truncate text-sm font-medium text-foreground">Chase Pierce</div>
+        <div className="truncate text-sm text-muted-foreground">
           Hacker, open sorcerer, software engineer, cloudified.
         </div>
       </div>
