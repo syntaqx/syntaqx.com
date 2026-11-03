@@ -2,7 +2,7 @@
 
 import { useState, useCallback, type KeyboardEvent } from "react";
 import { Info, ExternalLink, Trash2, Settings2 } from "lucide-react";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { PasteButton } from "@/components/paste-button";
 import { Select } from "@/components/select";
 import * as yaml from "js-yaml";
@@ -636,9 +636,9 @@ export default function ConvertPage() {
                 attributes, namespaces, and schemas.
               </p>
               <p>
-                <span className="text-subtle">ENV</span> (dotenv) is a flat key=value format used for
-                environment variables. Natively flat with string values, though some tools support
-                variable expansion and prefixed key conventions for grouping.
+                <span className="text-subtle">ENV</span> (dotenv) is a flat key=value format used
+                for environment variables. Natively flat with string values, though some tools
+                support variable expansion and prefixed key conventions for grouping.
               </p>
               <p>
                 <span className="text-subtle">CSV</span> (Comma-Separated Values) is a tabular
@@ -646,9 +646,9 @@ export default function ConvertPage() {
                 emulated with dot-notation column names, but isn&apos;t part of the spec.
               </p>
               <p>
-                <span className="text-subtle">Query String</span> is the key=value format from URLs (
-                {`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket nesting
-                ({`user[name]=x`}) in many frameworks.
+                <span className="text-subtle">Query String</span> is the key=value format from URLs
+                ({`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket
+                nesting ({`user[name]=x`}) in many frameworks.
               </p>
               <p>
                 Each format has tradeoffs. Some conversions may be lossy, e.g. TOML can&apos;t

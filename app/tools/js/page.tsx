@@ -5,7 +5,7 @@ import { Trash2, Upload, FileText, Info, ExternalLink, Play, Loader2 } from "luc
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Segmented } from "@/components/segmented";
 import { cn } from "@/lib/cn";
 
@@ -481,9 +481,9 @@ export default function JsToolPage() {
               </p>
               <p>
                 <span className="text-subtle">Minify</span> uses{" "}
-                <span className="text-subtle">Terser</span> to compress and mangle JavaScript. Output
-                is functionally equivalent but significantly smaller. Mangling can break code that
-                introspects
+                <span className="text-subtle">Terser</span> to compress and mangle JavaScript.
+                Output is functionally equivalent but significantly smaller. Mangling can break code
+                that introspects
                 <span className="text-subtle"> Function.name</span> or relies on exact identifier
                 names.
               </p>

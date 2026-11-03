@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { InstallCommand } from "./install-command";
 
 export interface DemoSource {
   name: string;
@@ -12,11 +13,14 @@ export function DemoSection({
   title,
   blurb,
   sources,
+  install,
   children,
 }: {
   title: string;
   blurb: ReactNode;
   sources: DemoSource[];
+  /** Registry items the demo is built from, shown as shadcn install commands. */
+  install?: string[];
   children: ReactNode;
 }) {
   return (
@@ -48,6 +52,9 @@ export function DemoSection({
         </div>
       </div>
       {children}
+      {install?.map((name) => (
+        <InstallCommand key={name} name={name} />
+      ))}
     </section>
   );
 }

@@ -23,8 +23,7 @@ export function Button({
   const variants = {
     primary:
       "text-primary-foreground before:border-primary before:bg-primary hover:text-background hover:before:border-foreground hover:before:bg-foreground",
-    secondary:
-      "text-foreground before:border-border before:bg-card hover:before:border-foreground",
+    secondary: "text-foreground before:border-border before:bg-card hover:before:border-foreground",
   };
 
   const className = `${base} ${variants[variant]}`;

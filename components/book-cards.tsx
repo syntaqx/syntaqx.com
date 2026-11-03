@@ -60,7 +60,11 @@ function CardText({ book }: { book: BookCard }) {
   const live = !!book.href;
   return (
     <span className="block p-5">
-      <span className={cn("inst block", live ? "text-muted-foreground" : "text-muted-foreground/70")}>{book.eyebrow}</span>
+      <span
+        className={cn("inst block", live ? "text-muted-foreground" : "text-muted-foreground/70")}
+      >
+        {book.eyebrow}
+      </span>
       <span
         className={cn(
           "font-voice mt-2 block text-2xl leading-none font-semibold uppercase transition-colors",

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { RefreshCw, Info, ExternalLink } from "lucide-react";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { cn } from "@/lib/cn";
 
 function Row({ label, value, mono }: { label: string; value: string | null; mono?: boolean }) {
@@ -216,7 +216,9 @@ export default function WhoamiPage() {
                     <span
                       className={cn(
                         "text-xs",
-                        loading ? "text-transparent bg-border/30 animate-pulse" : "text-muted-foreground/50",
+                        loading
+                          ? "text-transparent bg-border/30 animate-pulse"
+                          : "text-muted-foreground/50",
                       )}
                     >
                       {loading ? "0000:0000:0000:0000:0000:0000" : "Unavailable"}

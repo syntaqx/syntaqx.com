@@ -172,7 +172,9 @@ export function DiagramViewer() {
             className="diagram-dialog pointer-events-auto flex size-full max-h-240  max-w-7xl flex-col overflow-hidden border border-border bg-background shadow-2xl outline-none animate-in fade-in zoom-in-95 duration-150"
           >
             <div className="flex items-center gap-3 border-b border-border px-4 py-2.5">
-              <Dialog.Title className="inst min-w-0 flex-1 truncate text-muted-foreground">Diagram</Dialog.Title>
+              <Dialog.Title className="inst min-w-0 flex-1 truncate text-muted-foreground">
+                Diagram
+              </Dialog.Title>
               <Dialog.Description className="sr-only">{open?.label}</Dialog.Description>
               <div className="flex items-center gap-1.5">
                 <button
@@ -183,7 +185,10 @@ export function DiagramViewer() {
                 >
                   <Minus size={14} />
                 </button>
-                <span className="inst w-12 text-center text-muted-foreground tabular-nums" aria-live="polite">
+                <span
+                  className="inst w-12 text-center text-muted-foreground tabular-nums"
+                  aria-live="polite"
+                >
                   {fit ? Math.round((width / fit) * 100) : 100}%
                 </span>
                 <button

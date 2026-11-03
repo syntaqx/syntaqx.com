@@ -367,7 +367,10 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
         {loading ? (
           <Loader2 size={17} className="shrink-0 animate-spin text-primary" />
         ) : (
-          <Search size={17} className={cn("shrink-0", term ? "text-primary" : "text-muted-foreground")} />
+          <Search
+            size={17}
+            className={cn("shrink-0", term ? "text-primary" : "text-muted-foreground")}
+          />
         )}
         <input
           ref={inputRef}

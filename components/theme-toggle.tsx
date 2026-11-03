@@ -75,7 +75,9 @@ export function ThemeToggle() {
                 value={t.value}
                 className={cn(
                   "w-full items-center gap-2 py-1.5 text-xs",
-                  active ? "text-primary" : "text-muted-foreground data-highlighted:text-foreground",
+                  active
+                    ? "text-primary"
+                    : "text-muted-foreground data-highlighted:text-foreground",
                 )}
               >
                 <Icon size={12} />

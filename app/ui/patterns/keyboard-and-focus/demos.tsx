@@ -4,20 +4,12 @@ import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 
 import { Bold, Code, Italic, Link2, Underline, X } from "lucide-react";
 import { Modal } from "@/components/modal";
 import { cn } from "@/lib/cn";
+import { DemoFrame } from "../_components/demo-frame";
 
 const btn =
   "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
 const field =
   "w-full rounded border border-border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/60";
-
-function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-border bg-card">
-      {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">{note}</div>
-    </div>
-  );
-}
 
 function Kbd({ children }: { children: ReactNode }) {
   return (
@@ -67,7 +59,7 @@ function RovingDemo() {
   };
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           Tab into the toolbar from the first field, use <Kbd>←</Kbd> <Kbd>→</Kbd> <Kbd>Home</Kbd>{" "}
@@ -112,7 +104,7 @@ function RovingDemo() {
         </div>
         <textarea aria-label="Body" placeholder="Body" rows={2} className={field} />
       </div>
-    </Frame>
+    </DemoFrame>
   );
 }
 
@@ -181,7 +173,7 @@ function FocusReturnDemo() {
   const [naive, setNaive] = useState(false);
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           Open each with the keyboard and close with <Kbd>Esc</Kbd>. The managed one hands focus
@@ -210,7 +202,7 @@ function FocusReturnDemo() {
         </button>
       </Modal>
       {naive && <NaiveDialog onClose={() => setNaive(false)} />}
-    </Frame>
+    </DemoFrame>
   );
 }
 
@@ -252,7 +244,7 @@ function ShortcutsDemo() {
   };
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           Click the list (or Tab to it), then press <Kbd>?</Kbd>. The keys work only while the list
@@ -321,7 +313,7 @@ function ShortcutsDemo() {
           </div>
         )}
       </div>
-    </Frame>
+    </DemoFrame>
   );
 }
 

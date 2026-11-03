@@ -29,7 +29,9 @@ export default function LegalPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Legal</h1>
-        <p className="max-w-2xl text-muted-foreground">The terms and privacy policy for syntaqx.com.</p>
+        <p className="max-w-2xl text-muted-foreground">
+          The terms and privacy policy for syntaqx.com.
+        </p>
       </div>
 
       <div className="grid gap-3">

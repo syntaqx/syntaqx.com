@@ -123,7 +123,9 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
         )}
       />
       <span className="mb-4 flex items-center justify-between gap-4">
-        <span className={cn("inst", lead ? "text-primary" : "text-muted-foreground")}>{item.kicker}</span>
+        <span className={cn("inst", lead ? "text-primary" : "text-muted-foreground")}>
+          {item.kicker}
+        </span>
         <ArrowUpRight
           size={16}
           className="text-muted-foreground transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
@@ -153,7 +155,9 @@ function SectionHead({ label, count }: { label: string; count: number }) {
     <div className="mb-8 flex items-center gap-4">
       <h2 className="eyebrow">{label}</h2>
       <span className="h-px flex-1 bg-border" />
-      <span className="inst text-muted-foreground tabular-nums">{String(count).padStart(2, "0")}</span>
+      <span className="inst text-muted-foreground tabular-nums">
+        {String(count).padStart(2, "0")}
+      </span>
     </div>
   );
 }

@@ -42,7 +42,9 @@ export function Segmented<T extends string>({
           className={cn(
             "cursor-pointer py-1.5 text-xs font-medium transition-colors",
             size === "sm" ? "px-3" : "px-4",
-            o.value === value ? "bg-primary text-background" : "text-muted-foreground hover:text-foreground",
+            o.value === value
+              ? "bg-primary text-background"
+              : "text-muted-foreground hover:text-foreground",
           )}
         >
           {o.label}

@@ -1,21 +1,13 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { Check, FolderPlus, Inbox, RotateCcw, Search, X } from "lucide-react";
+import { DemoFrame } from "../_components/demo-frame";
 
 const btn =
   "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
 const primary =
   "inline-flex items-center gap-1.5 rounded border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs text-primary transition-colors hover:bg-primary/20 cursor-pointer";
-
-function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-border bg-card">
-      {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">{note}</div>
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // First run
@@ -30,7 +22,7 @@ function FirstRunDemo() {
   const [projects, setProjects] = useState<string[]>([]);
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           One sentence on what lives here, one primary action, one low-stakes way to see it full. No
@@ -71,7 +63,7 @@ function FirstRunDemo() {
           </div>
         </div>
       )}
-    </Frame>
+    </DemoFrame>
   );
 }
 
@@ -100,7 +92,7 @@ function NoResultsDemo() {
   const hiddenByFilter = matching.length - visible.length;
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           The empty state knows why it&apos;s empty. Here a match exists, but the archived filter
@@ -155,7 +147,9 @@ function NoResultsDemo() {
             </>
           ) : (
             <>
-              <p className="mb-4 text-xs text-muted-foreground">Check the spelling, or try fewer words.</p>
+              <p className="mb-4 text-xs text-muted-foreground">
+                Check the spelling, or try fewer words.
+              </p>
               <button type="button" className={btn} onClick={() => setQuery("")}>
                 <X size={12} /> Clear search
               </button>
@@ -163,7 +157,7 @@ function NoResultsDemo() {
           )}
         </div>
       )}
-    </Frame>
+    </DemoFrame>
   );
 }
 
@@ -180,7 +174,7 @@ function AllDoneDemo() {
   const remaining = TASKS.filter((t) => !done.includes(t));
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           Same empty list as the first run, different meaning. Reusing the first-run copy here would
@@ -214,7 +208,7 @@ function AllDoneDemo() {
           </button>
         </div>
       )}
-    </Frame>
+    </DemoFrame>
   );
 }
 

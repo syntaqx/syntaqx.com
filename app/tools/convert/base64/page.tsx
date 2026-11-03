@@ -5,7 +5,7 @@ import { Trash2, Upload, FileText, Info, ExternalLink } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Segmented } from "@/components/segmented";
 import { cn } from "@/lib/cn";
 
@@ -327,9 +327,9 @@ export default function Base64Page() {
               </p>
               <p>
                 A URL-safe variant replaces <span className="text-subtle">+</span> and{" "}
-                <span className="text-subtle">/</span> with <span className="text-subtle">-</span> and{" "}
-                <span className="text-subtle">_</span> to avoid conflicts in URLs and filenames (RFC
-                4648 &sect;5).
+                <span className="text-subtle">/</span> with <span className="text-subtle">-</span>{" "}
+                and <span className="text-subtle">_</span> to avoid conflicts in URLs and filenames
+                (RFC 4648 &sect;5).
               </p>
               <p>
                 Base64 is <span className="text-subtle">not encryption</span>. It provides no

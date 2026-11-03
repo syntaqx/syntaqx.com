@@ -44,7 +44,9 @@ export default function Home() {
           className="beams pointer-events-none absolute -inset-x-6 -top-12 bottom-0 -z-10 mask-[linear-gradient(to_bottom,transparent,black_20%,black_50%,transparent)]"
         />
         <div>
-          <p className="inst mb-5 tracking-[0.3em] text-muted-foreground">software engineering leader</p>
+          <p className="inst mb-5 tracking-[0.3em] text-muted-foreground">
+            software engineering leader
+          </p>
           <h1 className="mb-8 text-[clamp(3rem,6vw,4.75rem)] leading-[0.9]">
             Chase <span className="text-primary">Pierce</span>
           </h1>
@@ -52,7 +54,9 @@ export default function Home() {
             {bio.map((item) => (
               <div key={item.label}>
                 <dt className="inst mb-1.5 text-primary">{item.label}</dt>
-                <dd className="text-[0.95rem] leading-relaxed text-muted-foreground">{item.text}</dd>
+                <dd className="text-[0.95rem] leading-relaxed text-muted-foreground">
+                  {item.text}
+                </dd>
               </div>
             ))}
           </dl>

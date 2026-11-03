@@ -17,7 +17,9 @@ export default function ConvertIndexPage() {
       />
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Converters</h1>
-        <p className="max-w-2xl text-muted-foreground">Conversion tools for text, images, and more.</p>
+        <p className="max-w-2xl text-muted-foreground">
+          Conversion tools for text, images, and more.
+        </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {converters.map((item) => (

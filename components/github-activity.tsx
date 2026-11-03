@@ -63,7 +63,13 @@ export async function fetchGitHubContributions(username: string): Promise<Contri
   }
 }
 
-const LEVEL_COLORS = ["bg-border/50", "bg-primary/20", "bg-primary/40", "bg-primary/60", "bg-primary"];
+const LEVEL_COLORS = [
+  "bg-border/50",
+  "bg-primary/20",
+  "bg-primary/40",
+  "bg-primary/60",
+  "bg-primary",
+];
 
 const VACATION_RING = "ring-1 ring-amber-500/60 ring-inset";
 // A dot, not a ring: it reads on any fill level and leaves the ring free
@@ -217,7 +223,9 @@ export function GitHubActivity({
           <span className="font-voice block text-5xl leading-[0.85] font-semibold text-foreground transition-colors group-hover:text-primary">
             {total.toLocaleString()}
           </span>
-          <span className="inst mt-3 block text-muted-foreground">contributions, last 12 months ↗</span>
+          <span className="inst mt-3 block text-muted-foreground">
+            contributions, last 12 months ↗
+          </span>
         </a>
       </div>
 

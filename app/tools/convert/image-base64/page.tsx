@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, useEffect, type DragEvent } from "react"
 import { Trash2, Upload, ImageIcon, Download, Info, ExternalLink } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Segmented } from "@/components/segmented";
 import { cn } from "@/lib/cn";
 
@@ -493,8 +493,8 @@ export default function ImageBase64Page() {
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
                 A data URI embeds a file directly into a URL using the form{" "}
-                <span className="text-subtle">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It can be
-                used anywhere a URL is accepted &mdash; including
+                <span className="text-subtle">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It can
+                be used anywhere a URL is accepted &mdash; including
                 <span className="text-subtle"> img src</span>, CSS{" "}
                 <span className="text-subtle">background-image</span>, and SVG.
               </p>

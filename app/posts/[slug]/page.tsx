@@ -214,7 +214,9 @@ export default async function PostPage({ params }: Props) {
                         className="flex items-baseline justify-between gap-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary"
                       >
                         {tag}
-                        <span className="inst text-muted-foreground tabular-nums">{tagCounts.get(slug)}</span>
+                        <span className="inst text-muted-foreground tabular-nums">
+                          {tagCounts.get(slug)}
+                        </span>
                       </Link>
                     </li>
                   );

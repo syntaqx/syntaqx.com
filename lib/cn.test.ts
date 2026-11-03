@@ -21,7 +21,9 @@ describe("cn", () => {
 
   it("drops falsy values", () => {
     expect(cn("flex", false, undefined, null, "", "gap-2")).toBe("flex gap-2");
-    expect(cn("flex", { "text-primary": true, "text-muted-foreground": false })).toBe("flex text-primary");
+    expect(cn("flex", { "text-primary": true, "text-muted-foreground": false })).toBe(
+      "flex text-primary",
+    );
   });
 
   it("lets a text size replace an earlier leading, but not a later one", () => {

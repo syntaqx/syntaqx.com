@@ -72,7 +72,9 @@ function Featured({ category }: { category: DocsIndexCategory }) {
                 <h3 className="text-xl/tight  text-foreground transition-colors group-hover:text-primary">
                   {doc.title}
                 </h3>
-                <p className="mt-1.5 max-w-2xl text-sm/relaxed  text-muted-foreground">{doc.description}</p>
+                <p className="mt-1.5 max-w-2xl text-sm/relaxed  text-muted-foreground">
+                  {doc.description}
+                </p>
               </div>
               <ArrowRight
                 size={18}

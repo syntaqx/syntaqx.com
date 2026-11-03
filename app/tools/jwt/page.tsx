@@ -14,7 +14,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Select } from "@/components/select";
 import { Segmented } from "@/components/segmented";
 import { cn } from "@/lib/cn";
@@ -793,7 +793,9 @@ export default function JwtPage() {
                     <CopyButton text={headerJson} label disabled={!headerJson} />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
-                    {headerJson || <span className="text-muted-foreground/30">{"{\n  ...\n}"}</span>}
+                    {headerJson || (
+                      <span className="text-muted-foreground/30">{"{\n  ...\n}"}</span>
+                    )}
                   </pre>
                 </div>
 
@@ -803,7 +805,9 @@ export default function JwtPage() {
                     <CopyButton text={payloadJson} label disabled={!payloadJson} />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
-                    {payloadJson || <span className="text-muted-foreground/30">{"{\n  ...\n}"}</span>}
+                    {payloadJson || (
+                      <span className="text-muted-foreground/30">{"{\n  ...\n}"}</span>
+                    )}
                   </pre>
                 </div>
               </div>
@@ -852,7 +856,9 @@ export default function JwtPage() {
                                 {ts ? (
                                   <span>
                                     <span className="text-subtle">{ts}</span>
-                                    <span className="text-muted-foreground ml-1.5">({String(value)})</span>
+                                    <span className="text-muted-foreground ml-1.5">
+                                      ({String(value)})
+                                    </span>
                                   </span>
                                 ) : typeof value === "object" ? (
                                   JSON.stringify(value)
@@ -1017,7 +1023,9 @@ export default function JwtPage() {
                   ) : (
                     <>
                       <div>
-                        <label className="text-[10px] text-muted-foreground mb-1 block">Private Key</label>
+                        <label className="text-[10px] text-muted-foreground mb-1 block">
+                          Private Key
+                        </label>
                         <textarea
                           value={encodePrivateKey}
                           onChange={(e) => setEncodePrivateKey(e.target.value)}
@@ -1084,7 +1092,9 @@ export default function JwtPage() {
                       );
                     })()
                   ) : (
-                    <span className="text-muted-foreground/30">Enter a secret to generate a signed JWT...</span>
+                    <span className="text-muted-foreground/30">
+                      Enter a secret to generate a signed JWT...
+                    </span>
                   )}
                 </pre>
               </div>

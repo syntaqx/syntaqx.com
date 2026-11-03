@@ -1,8 +1,9 @@
 "use client";
 
-import { useId, useRef, useState, type ReactNode } from "react";
+import { useId, useRef, useState } from "react";
 import { Check, Circle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { Compare, DemoFrame } from "../_components/demo-frame";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -13,23 +14,18 @@ const primary =
 
 const inputClass = (state: "idle" | "error" | "ok") =>
   `w-full rounded border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none transition-colors focus:border-primary/60 ${
-    state === "error" ? "border-red-500/50" : state === "ok" ? "border-primary/40" : "border-border"
+    state === "error"
+      ? "border-destructive/50"
+      : state === "ok"
+        ? "border-primary/40"
+        : "border-border"
   }`;
-
-function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-border bg-card">
-      {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">{note}</div>
-    </div>
-  );
-}
 
 function Message({ id, error, ok }: { id: string; error?: string; ok?: string }) {
   return (
     <p id={id} className="mt-1.5 min-h-4 text-[11px]" aria-live="polite">
       {error ? (
-        <span className="text-red-400">{error}</span>
+        <span className="text-destructive">{error}</span>
       ) : ok ? (
         <span className="inline-flex items-center gap-1 text-primary">
           <Check size={11} /> {ok}
@@ -103,7 +99,7 @@ function RewardingField() {
 
 function TimingDemo() {
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           Type an address slowly into each. The left field flags &ldquo;y&rdquo; as an error; the
@@ -111,11 +107,8 @@ function TimingDemo() {
         </>
       }
     >
-      <div className="grid gap-5 p-4 sm:grid-cols-2">
-        <EagerField />
-        <RewardingField />
-      </div>
-    </Frame>
+      <Compare wrong={<EagerField />} right={<RewardingField />} />
+    </DemoFrame>
   );
 }
 
@@ -177,7 +170,7 @@ function SummaryDemo() {
 
   if (sent) {
     return (
-      <Frame note="Valid on submit: no summary, no detour.">
+      <DemoFrame note="Valid on submit: no summary, no detour.">
         <div className="flex items-center justify-between gap-3 p-4">
           <span className="inline-flex items-center gap-1.5 text-xs text-primary">
             <Check size={12} /> Submitted
@@ -193,12 +186,12 @@ function SummaryDemo() {
             <RotateCcw size={12} /> Reset
           </button>
         </div>
-      </Frame>
+      </DemoFrame>
     );
   }
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           Submit it empty. Focus jumps to the summary, each link moves focus to its field, and the
@@ -211,9 +204,9 @@ function SummaryDemo() {
           <div
             ref={summary}
             tabIndex={-1}
-            className="rounded border border-red-500/50 bg-red-500/5 p-3 outline-none focus:ring-1 focus:ring-red-500/60"
+            className="rounded border border-destructive/50 bg-destructive/5 p-3 outline-none focus:ring-1 focus:ring-destructive/60"
           >
-            <p className="mb-2 text-xs font-medium text-red-400">
+            <p className="mb-2 text-xs font-medium text-destructive">
               {errorKeys.length === 1
                 ? "There's 1 problem"
                 : `There are ${errorKeys.length} problems`}
@@ -227,7 +220,7 @@ function SummaryDemo() {
                       e.preventDefault();
                       document.getElementById(`${id}-${key}`)?.focus();
                     }}
-                    className="text-[11px] text-red-400 underline underline-offset-2 hover:text-red-300"
+                    className="text-[11px] text-destructive underline underline-offset-2 hover:text-destructive/80"
                   >
                     {errors?.[key]}
                   </a>
@@ -262,7 +255,7 @@ function SummaryDemo() {
           Start trial
         </button>
       </form>
-    </Frame>
+    </DemoFrame>
   );
 }
 
@@ -285,7 +278,7 @@ function RulesDemo() {
   const met = RULES.filter((r) => r.test(value)).length;
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           The rules are visible before you type, and each ticks off as it&apos;s met. The screen
@@ -297,7 +290,10 @@ function RulesDemo() {
         <div>
           <p className="mb-1.5 text-[10px] font-medium text-muted-foreground">Username</p>
           <p className="mb-4 font-mono text-xs text-foreground">syntaqx</p>
-          <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-muted-foreground">
+          <label
+            htmlFor={id}
+            className="mb-1.5 block text-[10px] font-medium text-muted-foreground"
+          >
             New password
           </label>
           <input
@@ -329,7 +325,7 @@ function RulesDemo() {
           })}
         </ul>
       </div>
-    </Frame>
+    </DemoFrame>
   );
 }
 

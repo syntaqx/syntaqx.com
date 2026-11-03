@@ -72,7 +72,7 @@ const METHOD_COLORS: Record<string, string> = {
   post: "text-blue-400 bg-blue-400/10 border-blue-400/20",
   put: "text-amber-400 bg-amber-400/10 border-amber-400/20",
   patch: "text-orange-400 bg-orange-400/10 border-orange-400/20",
-  delete: "text-red-400 bg-red-400/10 border-red-400/20",
+  delete: "text-destructive bg-destructive/10 border-destructive/20",
   query: "text-violet-400 bg-violet-400/10 border-violet-400/20",
 };
 
@@ -174,9 +174,11 @@ function SchemaTable({ spec, schema }: { spec: OpenApiSpec; schema: SchemaObject
           >
             <span className="font-mono text-foreground">
               {name}
-              {required.includes(name) && <span className="text-red-400 ml-0.5">*</span>}
+              {required.includes(name) && <span className="text-destructive ml-0.5">*</span>}
             </span>
-            <span className="text-muted-foreground">{p.const ? `"${p.const}"` : p.type || "object"}</span>
+            <span className="text-muted-foreground">
+              {p.const ? `"${p.const}"` : p.type || "object"}
+            </span>
             <span className="text-subtle">{p.description || ""}</span>
           </div>
         );
@@ -200,7 +202,7 @@ function ParamTable({ params }: { params: ParameterObject[] }) {
         >
           <span className="font-mono text-foreground break-all">
             {p.name}
-            {p.required && <span className="text-red-400 ml-0.5">*</span>}
+            {p.required && <span className="text-destructive ml-0.5">*</span>}
           </span>
           <span className="text-muted-foreground">
             {p.in}
@@ -378,7 +380,9 @@ function Endpoint({
               <div className="px-4 py-3 border-b border-border space-y-3">
                 <h4 className="inst text-muted-foreground">
                   Request Body
-                  {op.requestBody?.required && <span className="text-red-400 ml-1">required</span>}
+                  {op.requestBody?.required && (
+                    <span className="text-destructive ml-1">required</span>
+                  )}
                 </h4>
                 {resolvedReqBody?.properties && (
                   <SchemaTable spec={spec} schema={resolvedReqBody} />
@@ -407,7 +411,7 @@ function Endpoint({
                             ? "text-emerald-400"
                             : code.startsWith("4")
                               ? "text-amber-400"
-                              : "text-red-400",
+                              : "text-destructive",
                         )}
                       >
                         {code}
@@ -533,7 +537,7 @@ function Endpoint({
                 <span className="inst text-border-hover">ctrl/⌘ + enter</span>
               </div>
 
-              {error && <p className="text-xs text-red-400">{error}</p>}
+              {error && <p className="text-xs text-destructive">{error}</p>}
 
               {(result || trying) && (
                 <div aria-live="polite" className={cn("relative", trying && "opacity-50")}>
@@ -545,7 +549,7 @@ function Endpoint({
                             "text-xs font-mono font-bold",
                             result.status >= 200 && result.status < 300
                               ? "text-emerald-400"
-                              : "text-red-400",
+                              : "text-destructive",
                           )}
                         >
                           {result.status || "Error"} {result.statusText}
@@ -707,7 +711,9 @@ export default function ApiDocsPage() {
                 aria-pressed={active}
                 className={cn(
                   "relative border-r border-border px-4 py-3 font-mono text-sm break-all transition-colors cursor-pointer after:absolute after:inset-x-4 after:-bottom-px after:h-0.5",
-                  active ? "text-foreground after:bg-primary" : "text-muted-foreground hover:text-foreground",
+                  active
+                    ? "text-foreground after:bg-primary"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {s.url}

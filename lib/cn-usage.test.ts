@@ -23,7 +23,7 @@ const sameGroupOnly = createTailwindMerge(() => ({
   conflictingClassGroupModifiers: {},
 }));
 
-const ROOTS = ["app", "components"];
+const ROOTS = ["app", "components", "registry"];
 // Combinations per call before giving up on enumerating them.
 const MAX_COMBOS = 512;
 

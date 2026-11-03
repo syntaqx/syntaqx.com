@@ -18,7 +18,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { Checkbox } from "@/components/checkbox";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { PasteButton } from "@/components/paste-button";
 import { Select } from "@/components/select";
 import {
@@ -304,7 +304,12 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
           </label>
           <div className="flex items-center gap-1.5">
             {secret && (
-              <span className={cn("text-[10px] tabular-nums", tooBig ? "text-pink" : "text-muted-foreground")}>
+              <span
+                className={cn(
+                  "text-[10px] tabular-nums",
+                  tooBig ? "text-pink" : "text-muted-foreground",
+                )}
+              >
                 {byteSize(bytes)} / {byteSize(MAX_PLAINTEXT_BYTES)}
               </span>
             )}
@@ -657,8 +662,8 @@ export default function SecretsPage() {
               </li>
               <li>
                 Only the ciphertext is sent. The key goes after the{" "}
-                <span className="text-subtle">#</span> in the link, and browsers never send that part
-                to a server.
+                <span className="text-subtle">#</span> in the link, and browsers never send that
+                part to a server.
               </li>
               <li>
                 The server keeps the ciphertext in Redis until it&apos;s read once or expires,

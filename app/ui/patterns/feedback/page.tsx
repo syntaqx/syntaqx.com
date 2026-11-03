@@ -21,6 +21,7 @@ export default function FeedbackPage() {
 
       <DemoSection
         title="Copy with confirmation"
+        install={["copy-button"]}
         sources={[{ name: "GitHub" }]}
         blurb={
           <>

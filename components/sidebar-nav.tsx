@@ -404,7 +404,10 @@ export function MobileSidebar({
         <span className="truncate">{current}</span>
         <ChevronDown
           size={14}
-          className={cn("shrink-0 text-muted-foreground transition-transform", open && "rotate-180")}
+          className={cn(
+            "shrink-0 text-muted-foreground transition-transform",
+            open && "rotate-180",
+          )}
         />
       </button>
       {open && (

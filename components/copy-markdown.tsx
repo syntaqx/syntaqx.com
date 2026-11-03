@@ -81,7 +81,9 @@ export function MarkdownMenu({ href }: { href: string }) {
               <FileText size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
               <span className="flex-1">
                 <span className="block text-foreground">View as Markdown</span>
-                <span className="block text-xs text-muted-foreground">Open the page in a new tab</span>
+                <span className="block text-xs text-muted-foreground">
+                  Open the page in a new tab
+                </span>
               </span>
               <ArrowUpRight size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
             </a>

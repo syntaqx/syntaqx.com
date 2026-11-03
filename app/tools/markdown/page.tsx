@@ -11,7 +11,7 @@ import {
 } from "react";
 import { Trash2, Upload, FileText, Info, ExternalLink, Loader2 } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
 import { Segmented } from "@/components/segmented";
@@ -475,7 +475,9 @@ export default function MarkdownToolPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                     Rendered preview
-                    {running && <Loader2 size={10} className="animate-spin text-muted-foreground" />}
+                    {running && (
+                      <Loader2 size={10} className="animate-spin text-muted-foreground" />
+                    )}
                   </label>
                 </div>
                 <div
@@ -490,7 +492,9 @@ export default function MarkdownToolPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                     {mode === "html-to-md" ? "Markdown output" : "HTML output"}
-                    {running && <Loader2 size={10} className="animate-spin text-muted-foreground" />}
+                    {running && (
+                      <Loader2 size={10} className="animate-spin text-muted-foreground" />
+                    )}
                   </label>
                   <div className="flex items-center gap-1.5">
                     {output && (
@@ -521,9 +525,13 @@ export default function MarkdownToolPage() {
             </h3>
             <dl className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed grid grid-cols-2 gap-y-1.5">
               <dt>Characters</dt>
-              <dd className="text-right tabular-nums text-subtle">{stats.chars.toLocaleString()}</dd>
+              <dd className="text-right tabular-nums text-subtle">
+                {stats.chars.toLocaleString()}
+              </dd>
               <dt>Words</dt>
-              <dd className="text-right tabular-nums text-subtle">{stats.words.toLocaleString()}</dd>
+              <dd className="text-right tabular-nums text-subtle">
+                {stats.words.toLocaleString()}
+              </dd>
               <dt>Headings</dt>
               <dd className="text-right tabular-nums text-subtle">{stats.headings}</dd>
               <dt>Reading time</dt>

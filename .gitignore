@@ -52,3 +52,6 @@ next-env.d.ts
 
 # private resume details and the full PDF (npm run resume:pdf)
 /.private/
+
+# shadcn registry (generated at build time from registry.json)
+/public/r

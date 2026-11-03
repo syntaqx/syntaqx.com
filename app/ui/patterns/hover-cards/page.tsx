@@ -21,6 +21,7 @@ export default function HoverCardsPage() {
 
       <DemoSection
         title="Time, in your timezone"
+        install={["local-time"]}
         sources={[{ name: "Stripe", href: "https://stripe.com" }]}
         blurb={
           <>
@@ -35,6 +36,7 @@ export default function HoverCardsPage() {
 
       <DemoSection
         title="User previews, loaded on intent"
+        install={["intent-hover-card"]}
         sources={[
           { name: "GitHub", href: "https://github.com" },
           { name: "Linear", href: "https://linear.app" },
