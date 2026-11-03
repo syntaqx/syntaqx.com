@@ -1,23 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Bold, Code, Italic, Link2, Underline, X } from "lucide-react";
 import { Modal } from "@/components/modal";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { cn } from "@/lib/cn";
 import { DemoFrame } from "@/app/ui/_components/demo-frame";
-
-const btn =
-  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
-const field =
-  "w-full rounded border border-border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/60";
-
-function Kbd({ children }: { children: ReactNode }) {
-  return (
-    <kbd className="inline-flex min-w-4 items-center justify-center rounded-sm border border-border px-1 font-mono text-[10px]/4  text-muted-foreground">
-      {children}
-    </kbd>
-  );
-}
+import { Button } from "@/registry/syntaqx/ui/button";
+import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { Input } from "@/registry/syntaqx/ui/input";
+import { Textarea } from "@/registry/syntaqx/ui/textarea";
 
 // ---------------------------------------------------------------------------
 // Roving focus
@@ -68,23 +61,22 @@ function RovingDemo() {
         </>
       }
     >
-      <div className="space-y-3 p-4">
-        <input aria-label="Title" placeholder="Title" className={field} />
-        <div
-          role="toolbar"
-          aria-label="Formatting"
-          onKeyDown={onKeyDown}
-          className="inline-flex rounded border border-border"
-        >
+      <div className="max-w-md space-y-4 p-6">
+        <Field>
+          <FieldLabel>Title</FieldLabel>
+          <Input />
+        </Field>
+        <ButtonGroup role="toolbar" aria-label="Formatting" onKeyDown={onKeyDown}>
           {TOOLS.map(({ label, icon: Icon }, i) => {
             const on = pressed.includes(label);
             return (
-              <button
+              <Button
                 key={label}
                 ref={(el) => {
                   refs.current[i] = el;
                 }}
-                type="button"
+                variant="outline"
+                size="icon"
                 tabIndex={i === active ? 0 : -1}
                 aria-label={label}
                 aria-pressed={on}
@@ -93,16 +85,20 @@ function RovingDemo() {
                   setPressed((p) => (on ? p.filter((x) => x !== label) : [...p, label]))
                 }
                 className={cn(
-                  "flex size-8 items-center justify-center border-r border-border last:border-r-0 outline-none transition-colors focus-visible:bg-primary/10 focus-visible:text-primary cursor-pointer",
-                  on ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                  on
+                    ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary"
+                    : "text-muted-foreground",
                 )}
               >
-                <Icon size={13} />
-              </button>
+                <Icon />
+              </Button>
             );
           })}
-        </div>
-        <textarea aria-label="Body" placeholder="Body" rows={2} className={field} />
+        </ButtonGroup>
+        <Field>
+          <FieldLabel>Body</FieldLabel>
+          <Textarea rows={2} />
+        </Field>
       </div>
     </DemoFrame>
   );
@@ -138,7 +134,7 @@ function FocusWatcher() {
   }, []);
 
   return (
-    <p className="text-[11px] text-muted-foreground" aria-hidden>
+    <p className="text-sm text-muted-foreground" aria-hidden>
       Focus is on: <span className="text-foreground">{where}</span>
     </p>
   );
@@ -152,14 +148,14 @@ function NaiveDialog({ onClose }: { onClose: () => void }) {
         if (e.key === "Escape") onClose();
       }}
     >
-      <div className="w-full max-w-sm border border-border bg-card p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-sm text-foreground">Hand-rolled dialog</p>
-          <button type="button" autoFocus aria-label="Close" onClick={onClose} className={btn}>
-            <X size={12} />
-          </button>
+      <div className="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-lg">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <p className="text-base font-medium text-foreground">Hand-rolled dialog</p>
+          <Button variant="ghost" size="icon-sm" autoFocus aria-label="Close" onClick={onClose}>
+            <X />
+          </Button>
         </div>
-        <p className="text-xs/relaxed  text-muted-foreground">
+        <p className="text-sm/relaxed text-muted-foreground">
           Focus came in because the close button autofocuses. Tab can still walk out behind this
           overlay, and closing it drops focus on the page.
         </p>
@@ -181,25 +177,23 @@ function FocusReturnDemo() {
         </>
       }
     >
-      <div className="space-y-3 p-4">
+      <div className="space-y-4 p-6">
         <div className="flex flex-wrap gap-2">
-          <button type="button" className={btn} onClick={() => setManaged(true)}>
+          <Button variant="outline" onClick={() => setManaged(true)}>
             Open managed dialog
-          </button>
-          <button type="button" className={btn} onClick={() => setNaive(true)}>
+          </Button>
+          <Button variant="outline" onClick={() => setNaive(true)}>
             Open hand-rolled dialog
-          </button>
+          </Button>
         </div>
         <FocusWatcher />
       </div>
       <Modal open={managed} onClose={() => setManaged(false)} title="Managed dialog">
-        <p className="mb-4 text-xs/relaxed  text-muted-foreground">
+        <p className="mb-4 text-sm/relaxed text-muted-foreground">
           Focus is trapped in here. Close it any way you like and it goes back to the button that
           opened it.
         </p>
-        <button type="button" className={btn} onClick={() => setManaged(false)}>
-          Done
-        </button>
+        <Button onClick={() => setManaged(false)}>Done</Button>
       </Modal>
       {naive && <NaiveDialog onClose={() => setNaive(false)} />}
     </DemoFrame>
@@ -257,13 +251,13 @@ function ShortcutsDemo() {
         role="group"
         aria-label="Tasks. Press question mark for keyboard shortcuts."
         onKeyDown={onKeyDown}
-        className="relative outline-none focus-visible:ring-1 focus-visible:ring-primary/60"
+        className="relative outline-none focus-visible:ring-3 focus-visible:ring-ring/40"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2 text-[11px] text-muted-foreground">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-3 text-sm text-muted-foreground">
           <span>{selected.length} selected</span>
-          <button type="button" tabIndex={-1} className={btn} onClick={() => toggle(cursor)}>
+          <Button variant="outline" size="sm" tabIndex={-1} onClick={() => toggle(cursor)}>
             Select <Kbd>X</Kbd>
-          </button>
+          </Button>
         </div>
         <ul>
           {ROWS.map((row, i) => (
@@ -271,7 +265,7 @@ function ShortcutsDemo() {
               key={row}
               onClick={() => setCursor(i)}
               className={cn(
-                "flex items-center gap-3 border-l-2 px-4 py-2 text-xs cursor-pointer",
+                "flex cursor-pointer items-center gap-3 border-l-2 px-6 py-3 text-sm",
                 i === cursor
                   ? "border-primary bg-primary/5 text-foreground"
                   : "border-transparent text-muted-foreground",
@@ -279,8 +273,8 @@ function ShortcutsDemo() {
             >
               <span
                 className={cn(
-                  "size-3 shrink-0 rounded-sm border",
-                  selected.includes(i) ? "border-primary bg-primary" : "border-border",
+                  "size-4 shrink-0 rounded-sm border",
+                  selected.includes(i) ? "border-primary bg-primary" : "border-input",
                 )}
               />
               {row}
@@ -289,11 +283,14 @@ function ShortcutsDemo() {
         </ul>
         {help && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-4">
-            <div className="w-full max-w-xs border border-border bg-card p-4">
-              <p className="mb-3 text-xs text-foreground">Keyboard shortcuts</p>
-              <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[11px] text-muted-foreground">
+            <div className="w-full max-w-xs rounded-lg border border-border bg-card p-6 shadow-lg">
+              <p className="mb-4 text-sm font-medium text-foreground">Keyboard shortcuts</p>
+              <dl className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                 <dt>
-                  <Kbd>J</Kbd> <Kbd>K</Kbd>
+                  <KbdGroup>
+                    <Kbd>J</Kbd>
+                    <Kbd>K</Kbd>
+                  </KbdGroup>
                 </dt>
                 <dd>Next, previous</dd>
                 <dt>

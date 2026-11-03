@@ -1,13 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Check, FolderPlus, Inbox, RotateCcw, Search, X } from "lucide-react";
+import { Check, FolderPlus, Inbox, RotateCcw, Search, SearchX, X } from "lucide-react";
 import { DemoFrame } from "@/app/ui/_components/demo-frame";
-
-const btn =
-  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
-const primary =
-  "inline-flex items-center gap-1.5 rounded border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs text-primary transition-colors hover:bg-primary/20 cursor-pointer";
+import { Badge } from "@/components/ui/badge";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/registry/syntaqx/ui/input-group";
 
 // ---------------------------------------------------------------------------
 // First run
@@ -31,35 +37,37 @@ function FirstRunDemo() {
       }
     >
       {projects.length === 0 ? (
-        <div className="flex flex-col items-center px-6 py-10 text-center">
-          <FolderPlus size={20} className="mb-3 text-muted-foreground" />
-          <p className="mb-1 text-sm text-foreground">No projects yet</p>
-          <p className="mb-5 max-w-sm text-xs/relaxed  text-muted-foreground">
-            A project groups the services you deploy together, so their logs and alerts live in one
-            place.
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            <button type="button" className={primary} onClick={() => setProjects(["new-project"])}>
-              Create a project
-            </button>
-            <button type="button" className={btn} onClick={() => setProjects(SAMPLE_PROJECTS)}>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FolderPlus />
+            </EmptyMedia>
+            <EmptyTitle>No projects yet</EmptyTitle>
+            <EmptyDescription>
+              A project groups the services you deploy together, so their logs and alerts live in
+              one place.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent className="flex-row flex-wrap justify-center gap-2">
+            <Button onClick={() => setProjects(["new-project"])}>Create a project</Button>
+            <Button variant="outline" onClick={() => setProjects(SAMPLE_PROJECTS)}>
               Load sample projects
-            </button>
-          </div>
-        </div>
+            </Button>
+          </EmptyContent>
+        </Empty>
       ) : (
         <div>
           <ul className="divide-y divide-border">
             {projects.map((p) => (
-              <li key={p} className="px-4 py-2.5 font-mono text-xs text-foreground">
+              <li key={p} className="px-6 py-3 font-mono text-sm text-foreground">
                 {p}
               </li>
             ))}
           </ul>
-          <div className="border-t border-border p-3">
-            <button type="button" className={btn} onClick={() => setProjects([])}>
-              <RotateCcw size={12} /> Reset
-            </button>
+          <div className="border-t border-border px-6 py-4">
+            <Button variant="outline" size="sm" onClick={() => setProjects([])}>
+              <RotateCcw /> Reset
+            </Button>
           </div>
         </div>
       )}
@@ -100,62 +108,62 @@ function NoResultsDemo() {
         </>
       }
     >
-      <div className="flex flex-wrap items-center gap-2 border-b border-border p-3">
-        <label className="flex min-w-0 flex-1 items-center gap-2 rounded border border-border px-2 py-1">
-          <Search size={12} className="shrink-0 text-muted-foreground" />
-          <input
+      <div className="flex flex-wrap items-center gap-2 border-b border-border p-6">
+        <InputGroup className="flex-1 basis-48">
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+          <InputGroupInput
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Search issues"
-            className="min-w-0 flex-1 bg-transparent text-xs text-foreground outline-none"
           />
-        </label>
-        <button
-          type="button"
+        </InputGroup>
+        <Button
+          variant="outline"
           aria-pressed={showArchived}
           onClick={() => setShowArchived((v) => !v)}
-          className={btn}
         >
           {showArchived ? "Showing archived" : "Hiding archived"}
-        </button>
+        </Button>
       </div>
       {visible.length > 0 ? (
         <ul className="divide-y divide-border">
           {visible.map((i) => (
             <li
               key={i.title}
-              className="flex items-center justify-between gap-3 px-4 py-2.5 text-xs text-foreground"
+              className="flex items-center justify-between gap-3 px-6 py-3 text-sm text-foreground"
             >
               {i.title}
-              {i.archived && <span className="text-[10px] text-muted-foreground">archived</span>}
+              {i.archived && <Badge variant="outline">archived</Badge>}
             </li>
           ))}
         </ul>
       ) : (
-        <div className="px-6 py-8 text-center" aria-live="polite">
-          <p className="mb-1 text-sm text-foreground">
-            No {showArchived ? "" : "open "}issues match &ldquo;{query}&rdquo;
-          </p>
-          {hiddenByFilter > 0 ? (
-            <>
-              <p className="mb-4 text-xs text-muted-foreground">
-                {hiddenByFilter} archived {hiddenByFilter === 1 ? "issue matches" : "issues match"}.
-              </p>
-              <button type="button" className={primary} onClick={() => setShowArchived(true)}>
-                Include archived
-              </button>
-            </>
-          ) : (
-            <>
-              <p className="mb-4 text-xs text-muted-foreground">
-                Check the spelling, or try fewer words.
-              </p>
-              <button type="button" className={btn} onClick={() => setQuery("")}>
-                <X size={12} /> Clear search
-              </button>
-            </>
-          )}
-        </div>
+        <Empty aria-live="polite">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <SearchX />
+            </EmptyMedia>
+            <EmptyTitle>
+              No {showArchived ? "" : "open "}issues match &ldquo;{query}&rdquo;
+            </EmptyTitle>
+            <EmptyDescription>
+              {hiddenByFilter > 0
+                ? `${hiddenByFilter} archived ${hiddenByFilter === 1 ? "issue matches" : "issues match"}.`
+                : "Check the spelling, or try fewer words."}
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            {hiddenByFilter > 0 ? (
+              <Button onClick={() => setShowArchived(true)}>Include archived</Button>
+            ) : (
+              <Button variant="outline" onClick={() => setQuery("")}>
+                <X /> Clear search
+              </Button>
+            )}
+          </EmptyContent>
+        </Empty>
       )}
     </DemoFrame>
   );
@@ -185,28 +193,35 @@ function AllDoneDemo() {
       {remaining.length > 0 ? (
         <ul className="divide-y divide-border">
           {remaining.map((t) => (
-            <li key={t} className="flex items-center gap-3 px-4 py-2.5">
-              <button
-                type="button"
+            <li key={t} className="flex items-center gap-3 px-6 py-3">
+              <Button
+                variant="outline"
+                size="icon-sm"
                 aria-label={`Mark "${t}" done`}
                 onClick={() => setDone((d) => [...d, t])}
-                className="flex size-4 shrink-0 items-center justify-center rounded-sm border border-border text-transparent transition-colors hover:border-primary hover:text-primary cursor-pointer"
+                className="text-transparent hover:border-primary hover:bg-transparent hover:text-primary focus-visible:text-primary"
               >
-                <Check size={10} />
-              </button>
-              <span className="text-xs text-foreground">{t}</span>
+                <Check />
+              </Button>
+              <span className="text-sm text-foreground">{t}</span>
             </li>
           ))}
         </ul>
       ) : (
-        <div className="flex flex-col items-center px-6 py-10 text-center">
-          <Inbox size={20} className="mb-3 text-primary" />
-          <p className="mb-1 text-sm text-foreground">All caught up</p>
-          <p className="mb-5 text-xs text-muted-foreground">Nothing needs you right now.</p>
-          <button type="button" className={btn} onClick={() => setDone((d) => d.slice(0, -1))}>
-            <RotateCcw size={12} /> Undo last
-          </button>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon" className="text-primary">
+              <Inbox />
+            </EmptyMedia>
+            <EmptyTitle>All caught up</EmptyTitle>
+            <EmptyDescription>Nothing needs you right now.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button variant="outline" size="sm" onClick={() => setDone((d) => d.slice(0, -1))}>
+              <RotateCcw /> Undo last
+            </Button>
+          </EmptyContent>
+        </Empty>
       )}
     </DemoFrame>
   );
