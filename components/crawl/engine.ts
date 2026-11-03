@@ -22,10 +22,10 @@ const MIN_BOOST_MASS = 11;
 const radiusFor = (m: number) => Math.min(30, 6 + Math.sqrt(m) * 0.34);
 const lengthFor = (m: number) => 46 + m * 2.4;
 const turnFor = (r: number) => 6.6 / (1 + (r - 6) / 12);
-// Boosting burns a flat 15 length a second, whatever your size, the way the
-// genre does it: ruinous when you're small, a fair trade when you're huge.
-// At 11 or less you can't boost at all.
-const BURN = 15;
+// Boosting burns a flat amount of length a second, whatever your size, the
+// way the genre does it: costly when you're small, a fair trade when you're
+// huge. At 11 or less you can't boost at all.
+const BURN = 6;
 
 interface Hue {
   edge: string;
@@ -1089,10 +1089,11 @@ export function createCrawl({ canvas, boostButton, onEnd, still = false }: Crawl
       ease = state === "play" ? 7 : 1.2;
     cam.x += (h.x - cam.x) * Math.min(1, dt * ease);
     cam.y += (h.y - cam.y) * Math.min(1, dt * ease);
-    // Pull out as the chain grows, and on small screens.
+    // Pull out as the chain grows, so a long chain can see around itself,
+    // and a little more on small screens.
     const fitScreen = Math.min(1, Math.min(VW, VH) / 720) * 0.35 + 0.65;
-    const z =
-      (state === "play" ? Math.max(0.36, 1.05 / (1 + (target.r - 6) / 18)) : 0.55) * fitScreen;
+    const grown = Math.max(0.3, 1.1 * Math.pow(1 + target.mass / 120, -0.4));
+    const z = (state === "play" ? grown : 0.55) * fitScreen;
     cam.z += (z - cam.z) * Math.min(1, dt * 1.5);
   };
 
