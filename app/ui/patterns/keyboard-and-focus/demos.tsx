@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Bold, Code, Italic, Link2, Underline, X } from "lucide-react";
 import { Modal } from "@/components/modal";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { ButtonGroup } from "@/registry/syntaqx/ui/button-group";
+import { Kbd, KbdGroup } from "@/registry/syntaqx/ui/kbd";
 import { cn } from "@/lib/cn";
 import { DemoFrame } from "@/app/ui/_components/demo-frame";
 import { Button } from "@/registry/syntaqx/ui/button";

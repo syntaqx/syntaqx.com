@@ -1,5 +1,7 @@
-// Generated alongside the files beside it: each registry item's examples,
-// in the order its page shows them.
+// Each registry item's examples, in the order its page shows them. An
+// example is one file beside this one; its page shows the file's source.
+// A description says why the example does what it does (backticks mark
+// code); sources credit where the idea came from.
 import type { ComponentType } from "react";
 import ButtonVariants from "./button-variants";
 import ButtonSizes from "./button-sizes";
@@ -23,6 +25,8 @@ import TimestampDemo from "./timestamp-demo";
 export interface Example {
   slug: string;
   title: string;
+  description?: string;
+  sources?: { name: string; href?: string }[];
   Component: ComponentType;
 }
 

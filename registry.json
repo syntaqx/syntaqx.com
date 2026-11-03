@@ -243,6 +243,107 @@
       ],
       "categories": ["data"],
       "dependencies": []
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "shadcn's Separator.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/separator.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["data"]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "shadcn's Skeleton: a placeholder sized to the content that's coming.",
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["feedback"]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "shadcn's Spinner, for waits with no shape to hold.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["feedback"]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "shadcn's Empty: what goes where there's nothing yet, nothing matching, or nothing left.",
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/empty.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["feedback"],
+      "dependencies": ["class-variance-authority"]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "shadcn's Kbd, for showing the key next to the action it triggers.",
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/kbd.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["data"]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "Button Group",
+      "description": "shadcn's ButtonGroup: related actions in one row, which works as a toolbar.",
+      "registryDependencies": [
+        "https://www.syntaqx.com/r/button.json",
+        "https://www.syntaqx.com/r/separator.json"
+      ],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/button-group.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["actions"],
+      "dependencies": ["class-variance-authority", "radix-ui"]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "shadcn's Dialog: a modal that traps focus while open and hands it back when it closes.",
+      "dependencies": ["lucide-react", "radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["overlays"],
+      "registryDependencies": ["https://www.syntaqx.com/r/button.json"]
     }
   ]
 }

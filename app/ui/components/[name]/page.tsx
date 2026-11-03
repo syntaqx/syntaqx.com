@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { ComponentInstall } from "@/app/ui/_components/component-install";
 import { ExamplePreview } from "@/app/ui/_components/example-preview";
@@ -7,7 +6,7 @@ import { examples } from "@/app/ui/components/_examples";
 import { DocsHeader } from "@/components/docs-header";
 import { DocsToc } from "@/components/docs-toc";
 import { pageMetadata } from "@/lib/metadata";
-import { componentGroups, components, patterns } from "@/lib/ui";
+import { componentGroups, components } from "@/lib/ui";
 import registry from "@/registry.json";
 
 type Props = { params: Promise<{ name: string }> };
@@ -31,13 +30,11 @@ export default async function ComponentPage({ params }: Props) {
   const item = registry.items.find((i) => i.name === name)!;
   const changes = (item as { meta?: { changes?: string[] } }).meta?.changes;
   const [first, ...rest] = examples[name] ?? [];
-  const usedIn = patterns.filter((p) => p.components?.includes(name));
 
   const sections = [
     { id: "installation", text: "Installation" },
     ...(changes ? [{ id: "changes", text: "Changes from shadcn" }] : []),
     ...(rest.length ? [{ id: "examples", text: "Examples" }] : []),
-    ...(usedIn.length ? [{ id: "used-in", text: "Used in" }] : []),
   ];
 
   return (
@@ -81,9 +78,16 @@ export default async function ComponentPage({ params }: Props) {
             <div className="space-y-10">
               {rest.map((ex) => (
                 <div key={ex.slug}>
-                  <h3 className="mb-3 font-sans text-base/snug font-semibold normal-case">
+                  <h3 className="mb-2 font-sans text-base/snug font-semibold normal-case">
                     {ex.title}
                   </h3>
+                  {ex.description && (
+                    <p className="mb-2 max-w-3xl text-sm/relaxed text-muted-foreground">
+                      <Inline text={ex.description} />
+                    </p>
+                  )}
+                  {ex.sources?.length ? <Credit sources={ex.sources} /> : null}
+                  <div className="mb-3" />
                   <ExamplePreview slug={ex.slug} Component={ex.Component} />
                 </div>
               ))}
@@ -91,23 +95,6 @@ export default async function ComponentPage({ params }: Props) {
           </Section>
         )}
 
-        {usedIn.length > 0 && (
-          <Section id="used-in" title="Used in">
-            <ul className="space-y-2 text-sm">
-              {usedIn.map((p) => (
-                <li key={p.href}>
-                  <Link
-                    href={p.href}
-                    className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
-                  >
-                    {p.title}
-                  </Link>
-                  <span className="text-muted-foreground"> · {p.category}</span>
-                </li>
-              ))}
-            </ul>
-          </Section>
-        )}
       </div>
       <aside data-pagefind-ignore className="hidden xl:block">
         <DocsToc
@@ -142,5 +129,30 @@ function Inline({ text }: { text: string }) {
         ),
       )}
     </>
+  );
+}
+
+function Credit({ sources }: { sources: { name: string; href?: string }[] }) {
+  return (
+    <p className="text-xs text-muted-foreground">
+      Inspired by{" "}
+      {sources.map((src, i) => (
+        <span key={src.name}>
+          {src.href ? (
+            <a
+              href={src.href}
+              target="_blank"
+              rel="noreferrer"
+              className="text-foreground underline decoration-border underline-offset-4 hover:text-primary"
+            >
+              {src.name}
+            </a>
+          ) : (
+            <span className="text-foreground">{src.name}</span>
+          )}
+          {i < sources.length - 2 ? ", " : i === sources.length - 2 ? " and " : ""}
+        </span>
+      ))}
+    </p>
   );
 }

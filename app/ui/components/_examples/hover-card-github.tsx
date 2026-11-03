@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/registry/syntaqx/ui/skeleton";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/registry/syntaqx/ui/hover-card";
 
 interface GitHubProfile {
