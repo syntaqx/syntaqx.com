@@ -101,7 +101,11 @@ export default async function PostPage({ params }: Props) {
   const older = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
   // Older reads as previous (←), newer as next (→), labelled by date.
   const neighbor = (p: (typeof all)[number] | null): Neighbor | null =>
-    p && { href: `/posts/${p.slug}`, label: format(postDay(p.date), "MMM d, yyyy"), title: p.title };
+    p && {
+      href: `/posts/${p.slug}`,
+      label: format(postDay(p.date), "MMM d, yyyy"),
+      title: p.title,
+    };
   const words = post.content.split(/\s+/).filter(Boolean).length;
   const feature = post.layout === "feature" && post.hero;
   const tagCounts = new Map(getAllTags(all).map((t) => [t.slug, t.count]));
@@ -114,7 +118,7 @@ export default async function PostPage({ params }: Props) {
           <SceneArt
             scene={post.hero!}
             wide
-            className="aspect-16/9 sm:aspect-16/7"
+            className="aspect-video sm:aspect-16/7"
             label={`Illustration for ${post.title}`}
           />
           <div className="pointer-events-none grid justify-items-start gap-5 px-6 pt-2 pb-8 sm:absolute sm:inset-x-0 sm:bottom-0 sm:pt-0">
@@ -157,8 +161,10 @@ export default async function PostPage({ params }: Props) {
           {post.description && (
             <p
               className={cn(
-                "mb-8 max-w-[44rem]",
-                feature ? "text-[1.2rem] font-semibold text-foreground" : "text-lg text-muted",
+                "mb-8 max-w-176",
+                feature
+                  ? "text-[1.2rem] font-semibold text-foreground"
+                  : "text-lg text-muted",
                 "leading-snug",
               )}
             >
@@ -171,7 +177,10 @@ export default async function PostPage({ params }: Props) {
           />
           <Pager prev={neighbor(older)} next={neighbor(newer)} />
         </div>
-        <aside data-pagefind-ignore className="hidden self-start xl:sticky xl:top-24 xl:grid xl:gap-8">
+        <aside
+          data-pagefind-ignore
+          className="hidden self-start xl:sticky xl:top-24 xl:grid xl:gap-8"
+        >
           <dl className="border-t border-border">
             {[
               [
@@ -211,7 +220,9 @@ export default async function PostPage({ params }: Props) {
                         className="flex items-baseline justify-between gap-4 py-2.5 text-sm text-foreground transition-colors hover:text-accent"
                       >
                         {tag}
-                        <span className="inst text-dim tabular-nums">{tagCounts.get(slug)}</span>
+                        <span className="inst text-dim tabular-nums">
+                          {tagCounts.get(slug)}
+                        </span>
                       </Link>
                     </li>
                   );
