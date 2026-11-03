@@ -117,19 +117,19 @@ export function ActivityGridTooltips({
               top: pos?.top ?? 0,
               visibility: pos ? "visible" : "hidden",
             }}
-            className="pointer-events-none z-200 border border-border bg-surface px-2 py-1 text-[10px] leading-snug shadow-lg"
+            className="pointer-events-none z-200 border border-border bg-card px-2 py-1 text-[10px] leading-snug shadow-lg"
           >
             {day.label && <span className="block font-medium text-foreground">{day.label}</span>}
             <span className="block text-foreground">
               {day.count} contribution{day.count === 1 ? "" : "s"}
             </span>
-            <span className="block text-dim">{active.date}</span>
+            <span className="block text-muted-foreground">{active.date}</span>
             <svg
               width={ARROW_W}
               height={ARROW_H}
               viewBox="0 0 30 10"
               preserveAspectRatio="none"
-              className="absolute fill-surface"
+              className="absolute fill-card"
               style={{
                 left: pos?.arrowLeft ?? 0,
                 ...(pos?.below ? { bottom: "100%", transform: "rotate(180deg)" } : { top: "100%" }),

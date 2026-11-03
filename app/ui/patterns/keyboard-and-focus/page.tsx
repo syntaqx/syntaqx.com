@@ -13,7 +13,7 @@ export default function KeyboardAndFocusPage() {
     <div>
       <div className="mb-10">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Keyboard &amp; Focus</h1>
-        <p className="max-w-2xl text-dim leading-relaxed">
+        <p className="max-w-2xl text-muted-foreground leading-relaxed">
           Focus is the keyboard user&apos;s cursor. My rule is that it always lands somewhere
           sensible: one stop per widget, home again after a detour, and shortcuts that say they
           exist.

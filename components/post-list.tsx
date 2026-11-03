@@ -20,22 +20,22 @@ export function PostList({ posts, newestSlug = null }: PostListProps) {
       {posts.map((post) => (
         <li key={post.slug} className="border-b border-border">
           <Link href={`/posts/${post.slug}`} className="post-row group">
-            <time dateTime={post.date} className="inst text-dim tabular-nums">
+            <time dateTime={post.date} className="inst text-muted-foreground tabular-nums">
               {format(postDay(post.date), "yyyy.MM.dd")}
             </time>
             <div className="min-w-0">
               <h2 className="post-row-title">{post.title}</h2>
               {post.description && (
-                <p className="mt-1.5 max-w-2xl text-[0.9rem] leading-snug text-dim line-clamp-2">
+                <p className="mt-1.5 max-w-2xl text-[0.9rem] leading-snug text-muted-foreground line-clamp-2">
                   {post.description}
                 </p>
               )}
             </div>
-            <span className="inst flex items-center gap-3 text-dim sm:justify-end">
+            <span className="inst flex items-center gap-3 text-muted-foreground sm:justify-end">
               {post.draft ? (
                 <span className="text-pink">draft</span>
               ) : (
-                post.slug === newestSlug && <span className="text-accent">new</span>
+                post.slug === newestSlug && <span className="text-primary">new</span>
               )}
               {post.readingTimeMinutes} min
             </span>

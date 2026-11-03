@@ -208,7 +208,7 @@ export default function JsToolPage() {
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
           JavaScript Beautify / Minify / Obfuscate
         </h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Format, compress, or obfuscate JavaScript and JSON. Everything runs in your browser,
           nothing is sent to a server.
         </p>
@@ -239,15 +239,15 @@ export default function JsToolPage() {
               }}
               onDragLeave={() => setDragging(false)}
               className={cn(
-                "border bg-surface transition-colors",
-                dragging ? "border-accent border-dashed" : "border-border",
+                "border bg-card transition-colors",
+                dragging ? "border-primary border-dashed" : "border-border",
               )}
             >
               <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                <label className="text-xs text-dim flex items-center gap-1.5">
+                <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                   Source
                   {fileName && (
-                    <span className="inline-flex items-center gap-1 text-accent">
+                    <span className="inline-flex items-center gap-1 text-primary">
                       <FileText size={10} />
                       {fileName}
                     </span>
@@ -255,13 +255,13 @@ export default function JsToolPage() {
                 </label>
                 <div className="flex items-center gap-1.5">
                   {input && (
-                    <span className="text-[10px] text-dim tabular-nums">
+                    <span className="text-[10px] text-muted-foreground tabular-nums">
                       {input.length.toLocaleString()} chars &middot; {byteSize(input)}
                     </span>
                   )}
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
                   >
                     <Upload size={12} />
                     File
@@ -278,7 +278,7 @@ export default function JsToolPage() {
                   {input && (
                     <button
                       onClick={clear}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -305,7 +305,7 @@ export default function JsToolPage() {
                 placeholder="Paste, drop a file, or type code here..."
                 rows={10}
                 spellCheck={false}
-                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
+                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
               />
 
               {/* Options */}
@@ -405,7 +405,7 @@ export default function JsToolPage() {
               <button
                 onClick={run}
                 disabled={running || !input.trim()}
-                className="inline-flex items-center gap-2 border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {running ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
                 {running
@@ -427,10 +427,10 @@ export default function JsToolPage() {
             {/* Output */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs text-dim">Output</label>
+                <label className="text-xs text-muted-foreground">Output</label>
                 <div className="flex items-center gap-1.5">
                   {output && (
-                    <span className="text-[10px] text-dim tabular-nums">
+                    <span className="text-[10px] text-muted-foreground tabular-nums">
                       {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                       {beforeBytes > 0 && (
                         <>
@@ -459,7 +459,7 @@ export default function JsToolPage() {
                 readOnly
                 rows={10}
                 placeholder="Output will appear here..."
-                className="w-full border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
+                className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
               />
             </div>
           </div>
@@ -467,29 +467,29 @@ export default function JsToolPage() {
 
         {/* Right: info */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <Info size={12} className="text-primary" />
               About this tool
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                <span className="text-muted">Beautify</span> uses{" "}
-                <span className="text-muted">Prettier</span> to reformat source with consistent
+                <span className="text-subtle">Beautify</span> uses{" "}
+                <span className="text-subtle">Prettier</span> to reformat source with consistent
                 indentation, quoting, and line breaks. Choose the{" "}
-                <span className="text-muted">JSON</span> parser for strict JSON input.
+                <span className="text-subtle">JSON</span> parser for strict JSON input.
               </p>
               <p>
-                <span className="text-muted">Minify</span> uses{" "}
-                <span className="text-muted">Terser</span> to compress and mangle JavaScript. Output
+                <span className="text-subtle">Minify</span> uses{" "}
+                <span className="text-subtle">Terser</span> to compress and mangle JavaScript. Output
                 is functionally equivalent but significantly smaller. Mangling can break code that
                 introspects
-                <span className="text-muted"> Function.name</span> or relies on exact identifier
+                <span className="text-subtle"> Function.name</span> or relies on exact identifier
                 names.
               </p>
               <p>
-                <span className="text-muted">Obfuscate</span> uses{" "}
-                <span className="text-muted">javascript-obfuscator</span> to make code harder to
+                <span className="text-subtle">Obfuscate</span> uses{" "}
+                <span className="text-subtle">javascript-obfuscator</span> to make code harder to
                 read. This is not encryption and can be reversed with effort. Higher presets add
                 significant runtime overhead.
               </p>
@@ -500,9 +500,9 @@ export default function JsToolPage() {
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
@@ -511,7 +511,7 @@ export default function JsToolPage() {
                   href="https://prettier.io/docs/options"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   Prettier - Options
                 </a>
@@ -521,7 +521,7 @@ export default function JsToolPage() {
                   href="https://terser.org/docs/options/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   Terser - Options
                 </a>
@@ -531,7 +531,7 @@ export default function JsToolPage() {
                   href="https://github.com/javascript-obfuscator/javascript-obfuscator"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   javascript-obfuscator
                 </a>

@@ -30,7 +30,7 @@ export function PostsBrowser({ posts, tags, newestSlug }: PostsBrowserProps) {
             checked={picked.includes(tag.slug)}
             onChange={(on) => toggle(tag.slug, on)}
           />
-          <span className="inst text-dim tabular-nums">{tag.count}</span>
+          <span className="inst text-muted-foreground tabular-nums">{tag.count}</span>
         </li>
       ))}
     </ul>
@@ -38,14 +38,14 @@ export function PostsBrowser({ posts, tags, newestSlug }: PostsBrowserProps) {
 
   const header = (
     <div className="mb-4 flex items-baseline justify-between gap-3">
-      <Link href="/tags" className="eyebrow transition-colors hover:text-accent">
+      <Link href="/tags" className="eyebrow transition-colors hover:text-primary">
         topics
       </Link>
       {picked.length > 0 && (
         <button
           type="button"
           onClick={() => setPicked([])}
-          className="inst text-dim transition-colors hover:text-accent"
+          className="inst text-muted-foreground transition-colors hover:text-primary"
         >
           clear
         </button>
@@ -57,7 +57,7 @@ export function PostsBrowser({ posts, tags, newestSlug }: PostsBrowserProps) {
     <div className="grid gap-x-12 gap-y-8 lg:grid-cols-[minmax(0,1fr)_13rem]">
       <aside aria-label="Filter by topic" className="lg:order-last">
         <details className="border border-border px-4 py-3 lg:hidden">
-          <summary className="inst cursor-pointer text-dim">
+          <summary className="inst cursor-pointer text-muted-foreground">
             filter by topic{picked.length > 0 && ` · ${picked.length}`}
           </summary>
           <div className="mt-4">
@@ -72,7 +72,7 @@ export function PostsBrowser({ posts, tags, newestSlug }: PostsBrowserProps) {
       </aside>
       <div className="min-w-0">
         {picked.length > 0 && (
-          <p className="inst mb-4 text-dim" aria-live="polite">
+          <p className="inst mb-4 text-muted-foreground" aria-live="polite">
             {shown.length} of {posts.length} posts
           </p>
         )}

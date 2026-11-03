@@ -75,12 +75,12 @@ export async function DocArticle({
       />
       <div className="min-w-0">
         <DocsHeader title={doc.title} eyebrow={eyebrow}>
-          {doc.description && <p className="max-w-3xl text-dim">{doc.description}</p>}
+          {doc.description && <p className="max-w-3xl text-muted-foreground">{doc.description}</p>}
           <div
             data-pagefind-ignore
             className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3"
           >
-            <div className="inst flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
+            <div className="inst flex flex-wrap items-center gap-x-5 gap-y-2 text-muted-foreground">
               <span>{doc.readingMinutes} min read</span>
               {modified && (
                 <span>
@@ -94,7 +94,7 @@ export async function DocArticle({
                 <a
                   href={`${REPO}/blob/main/${source}`}
                   aria-label="Edit on GitHub"
-                  className="flex items-center border border-border bg-surface px-2 text-dim transition-colors hover:text-foreground active:bg-background"
+                  className="flex items-center border border-border bg-card px-2 text-muted-foreground transition-colors hover:text-foreground active:bg-background"
                 >
                   <Pencil size={12} aria-hidden />
                 </a>

@@ -24,7 +24,7 @@ export function BookCards({ books }: { books: BookCard[] }) {
           {book.href ? (
             <Link
               href={book.href}
-              className="group flex h-full flex-col border border-border transition-colors hover:border-accent"
+              className="group flex h-full flex-col border border-border transition-colors hover:border-primary"
             >
               <SceneArt
                 scene={book.cover}
@@ -60,11 +60,11 @@ function CardText({ book }: { book: BookCard }) {
   const live = !!book.href;
   return (
     <span className="block p-5">
-      <span className={cn("inst block", live ? "text-dim" : "text-dim/70")}>{book.eyebrow}</span>
+      <span className={cn("inst block", live ? "text-muted-foreground" : "text-muted-foreground/70")}>{book.eyebrow}</span>
       <span
         className={cn(
           "font-voice mt-2 block text-2xl leading-none font-semibold uppercase transition-colors",
-          live ? "text-foreground group-hover:text-accent" : "text-dim",
+          live ? "text-foreground group-hover:text-primary" : "text-muted-foreground",
         )}
       >
         {book.name}
@@ -72,7 +72,7 @@ function CardText({ book }: { book: BookCard }) {
       <span
         className={cn(
           "mt-2 min-h-[3lh] text-sm/relaxed  line-clamp-3",
-          live ? "text-dim" : "text-dim/70",
+          live ? "text-muted-foreground" : "text-muted-foreground/70",
         )}
       >
         {book.summary}
@@ -98,7 +98,7 @@ function PlaceholderCover() {
       aria-hidden
       className={cn(
         COVER,
-        "border-dashed border-border text-accent mask-[radial-gradient(closest-side,black_70%,transparent)]",
+        "border-dashed border-border text-primary mask-[radial-gradient(closest-side,black_70%,transparent)]",
       )}
     >
       <defs>
@@ -127,7 +127,7 @@ function PlaceholderCover() {
             [6, 6, 0],
             [-2, 6, 0],
           ])}
-          stroke="var(--dim)"
+          stroke="var(--muted-foreground)"
           opacity="0.5"
         />
         <polyline

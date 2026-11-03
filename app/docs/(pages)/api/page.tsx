@@ -68,7 +68,7 @@ interface SchemaObject {
 // ---------------------------------------------------------------------------
 
 const METHOD_COLORS: Record<string, string> = {
-  get: "text-accent bg-accent/10 border-accent/25",
+  get: "text-primary bg-primary/10 border-primary/25",
   post: "text-blue-400 bg-blue-400/10 border-blue-400/20",
   put: "text-amber-400 bg-amber-400/10 border-amber-400/20",
   patch: "text-orange-400 bg-orange-400/10 border-orange-400/20",
@@ -141,7 +141,7 @@ function CopyBtn({ text }: { text: string }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
       }}
-      className="text-dim hover:text-accent transition-colors"
+      className="text-muted-foreground hover:text-primary transition-colors"
       aria-label="Copy"
     >
       {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -160,7 +160,7 @@ function SchemaTable({ spec, schema }: { spec: OpenApiSpec; schema: SchemaObject
 
   return (
     <div className="border border-border overflow-hidden">
-      <div className="inst grid grid-cols-[1fr_1fr_2fr] text-dim px-4 py-2.5 border-b border-border bg-surface">
+      <div className="inst grid grid-cols-[1fr_1fr_2fr] text-muted-foreground px-4 py-2.5 border-b border-border bg-card">
         <span>Field</span>
         <span>Type</span>
         <span>Description</span>
@@ -176,8 +176,8 @@ function SchemaTable({ spec, schema }: { spec: OpenApiSpec; schema: SchemaObject
               {name}
               {required.includes(name) && <span className="text-red-400 ml-0.5">*</span>}
             </span>
-            <span className="text-dim">{p.const ? `"${p.const}"` : p.type || "object"}</span>
-            <span className="text-muted">{p.description || ""}</span>
+            <span className="text-muted-foreground">{p.const ? `"${p.const}"` : p.type || "object"}</span>
+            <span className="text-subtle">{p.description || ""}</span>
           </div>
         );
       })}
@@ -188,7 +188,7 @@ function SchemaTable({ spec, schema }: { spec: OpenApiSpec; schema: SchemaObject
 function ParamTable({ params }: { params: ParameterObject[] }) {
   return (
     <div className="border border-border overflow-hidden">
-      <div className="inst grid grid-cols-[1fr_1fr_2fr] text-dim px-4 py-2.5 border-b border-border bg-surface">
+      <div className="inst grid grid-cols-[1fr_1fr_2fr] text-muted-foreground px-4 py-2.5 border-b border-border bg-card">
         <span>Name</span>
         <span>In</span>
         <span>Description</span>
@@ -202,11 +202,11 @@ function ParamTable({ params }: { params: ParameterObject[] }) {
             {p.name}
             {p.required && <span className="text-red-400 ml-0.5">*</span>}
           </span>
-          <span className="text-dim">
+          <span className="text-muted-foreground">
             {p.in}
             {p.schema?.type ? ` · ${p.schema.type}` : ""}
           </span>
-          <span className="text-muted">{p.description || ""}</span>
+          <span className="text-subtle">{p.description || ""}</span>
         </div>
       ))}
     </div>
@@ -321,7 +321,7 @@ function Endpoint({
   };
 
   const inputClass =
-    "w-full font-mono text-[11px] bg-background border border-border px-3 py-2 text-foreground focus:outline-none focus:border-accent/50";
+    "w-full font-mono text-[11px] bg-background border border-border px-3 py-2 text-foreground focus:outline-none focus:border-primary/50";
   const idBase = anchor ?? path;
 
   return (
@@ -330,23 +330,23 @@ function Endpoint({
       <button
         onClick={() => setOpen(!open)}
         aria-expanded={open}
-        className="w-full flex items-center gap-4 px-3 py-3.5 text-left hover:bg-surface transition-colors cursor-pointer"
+        className="w-full flex items-center gap-4 px-3 py-3.5 text-left hover:bg-card transition-colors cursor-pointer"
       >
         {open ? (
-          <ChevronDown size={14} className="text-dim shrink-0" />
+          <ChevronDown size={14} className="text-muted-foreground shrink-0" />
         ) : (
-          <ChevronRight size={14} className="text-dim shrink-0" />
+          <ChevronRight size={14} className="text-muted-foreground shrink-0" />
         )}
         <span
           className={cn(
             "inst w-19 shrink-0 border py-1 text-center",
-            METHOD_COLORS[method] || "text-dim",
+            METHOD_COLORS[method] || "text-muted-foreground",
           )}
         >
           {method}
         </span>
         <span className="font-mono text-sm text-foreground">{path}</span>
-        <span className="ml-auto hidden text-sm text-dim sm:inline">{op.summary}</span>
+        <span className="ml-auto hidden text-sm text-muted-foreground sm:inline">{op.summary}</span>
       </button>
 
       {open && (
@@ -355,11 +355,11 @@ function Endpoint({
           <div className="min-w-0 xl:border-r xl:border-border">
             {(op.description || anchor) && (
               <div className="px-4 py-3 border-b border-border">
-                {op.description && <p className="text-xs text-muted">{op.description}</p>}
+                {op.description && <p className="text-xs text-subtle">{op.description}</p>}
                 {anchor && (
                   <a
                     href={`#${anchor}`}
-                    className="inst mt-2 inline-block text-dim hover:text-accent transition-colors"
+                    className="inst mt-2 inline-block text-muted-foreground hover:text-primary transition-colors"
                   >
                     #{anchor}
                   </a>
@@ -369,14 +369,14 @@ function Endpoint({
 
             {params.length > 0 && (
               <div className="px-4 py-3 border-b border-border space-y-3">
-                <h4 className="inst text-dim">Parameters</h4>
+                <h4 className="inst text-muted-foreground">Parameters</h4>
                 <ParamTable params={params} />
               </div>
             )}
 
             {hasBody && (
               <div className="px-4 py-3 border-b border-border space-y-3">
-                <h4 className="inst text-dim">
+                <h4 className="inst text-muted-foreground">
                   Request Body
                   {op.requestBody?.required && <span className="text-red-400 ml-1">required</span>}
                 </h4>
@@ -387,7 +387,7 @@ function Endpoint({
             )}
 
             <div className="px-4 py-3 space-y-4 border-b border-border xl:border-b-0">
-              <h4 className="inst text-dim">Responses</h4>
+              <h4 className="inst text-muted-foreground">Responses</h4>
               {Object.entries(responses).map(([code, res]) => {
                 const resObj = res as ResponseObject;
                 const jsonContent = resObj.content?.["application/json"];
@@ -412,7 +412,7 @@ function Endpoint({
                       >
                         {code}
                       </span>
-                      <span className="text-xs text-dim">{resObj.description}</span>
+                      <span className="text-xs text-muted-foreground">{resObj.description}</span>
                     </div>
                     {resolvedSchema?.properties && (
                       <SchemaTable spec={spec} schema={resolvedSchema} />
@@ -422,7 +422,7 @@ function Endpoint({
                         <div className="absolute top-2 right-2">
                           <CopyBtn text={example} />
                         </div>
-                        <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-muted">
+                        <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-subtle">
                           {example}
                         </pre>
                       </div>
@@ -434,10 +434,10 @@ function Endpoint({
           </div>
 
           {/* Try it console */}
-          <div className="min-w-0 bg-surface/40">
+          <div className="min-w-0 bg-card/40">
             <div className="space-y-4 p-4  xl:sticky xl:top-20">
               <h4 className="inst flex items-center gap-2 text-foreground">
-                <Play size={11} className="text-accent" />
+                <Play size={11} className="text-primary" />
                 Try it
               </h4>
 
@@ -449,7 +449,7 @@ function Endpoint({
                     const options = p.schema?.enum;
                     return (
                       <label key={key} htmlFor={id} className="grid gap-1.5">
-                        <span className="inst text-dim">
+                        <span className="inst text-muted-foreground">
                           {p.name}
                           <span className="ml-1.5 normal-case tracking-normal text-border-hover">
                             {p.in}
@@ -487,13 +487,13 @@ function Endpoint({
               {hasBody && (
                 <div>
                   <div className="mb-1.5 flex items-center justify-between">
-                    <label htmlFor={`${idBase}-body`} className="inst text-dim">
+                    <label htmlFor={`${idBase}-body`} className="inst text-muted-foreground">
                       Body
                     </label>
                     {reqBody !== defaultBody && (
                       <button
                         onClick={() => setReqBody(defaultBody)}
-                        className="inst text-dim hover:text-accent transition-colors"
+                        className="inst text-muted-foreground hover:text-primary transition-colors"
                       >
                         reset
                       </button>
@@ -512,11 +512,11 @@ function Endpoint({
               )}
 
               <div className="relative">
-                <div className="inst mb-1.5 text-dim">Request</div>
+                <div className="inst mb-1.5 text-muted-foreground">Request</div>
                 <div className="absolute top-0 right-0">
                   <CopyBtn text={request.curl} />
                 </div>
-                <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-muted">
+                <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-subtle">
                   {request.curl}
                 </pre>
               </div>
@@ -525,7 +525,7 @@ function Endpoint({
                 <button
                   onClick={tryIt}
                   disabled={trying}
-                  className="inst inline-flex items-center gap-2 border border-accent bg-accent px-3.5 py-2 text-background transition-colors hover:bg-accent/85 disabled:opacity-50"
+                  className="inst inline-flex items-center gap-2 border border-primary bg-primary px-3.5 py-2 text-background transition-colors hover:bg-primary/85 disabled:opacity-50"
                 >
                   <Play size={11} />
                   {trying ? "Sending..." : "Send request"}
@@ -550,14 +550,14 @@ function Endpoint({
                         >
                           {result.status || "Error"} {result.statusText}
                         </span>
-                        <span className="inst text-dim">{result.ms} ms</span>
+                        <span className="inst text-muted-foreground">{result.ms} ms</span>
                       </div>
                       {result.headers.length > 0 && (
                         <dl className="mb-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 border border-border bg-background px-3 py-2 font-mono text-[11px]">
                           {result.headers.map(([k, v]) => (
                             <div key={k} className="contents">
-                              <dt className="text-dim">{k}</dt>
-                              <dd className="break-all text-muted">{v}</dd>
+                              <dt className="text-muted-foreground">{k}</dt>
+                              <dd className="break-all text-subtle">{v}</dd>
                             </div>
                           ))}
                         </dl>
@@ -566,7 +566,7 @@ function Endpoint({
                         <div className="absolute top-2 right-2">
                           <CopyBtn text={result.body} />
                         </div>
-                        <pre className="max-h-96 overflow-auto text-[11px] font-mono bg-background border border-border p-3 text-muted">
+                        <pre className="max-h-96 overflow-auto text-[11px] font-mono bg-background border border-border p-3 text-subtle">
                           {result.body}
                         </pre>
                       </div>
@@ -600,9 +600,9 @@ function ApiHeader({
     <header className="mb-8 border-b border-border pb-8">
       <p className="eyebrow mb-5">api reference</p>
       <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">{title}</h1>
-      <p className="max-w-2xl text-dim">{description}</p>
+      <p className="max-w-2xl text-muted-foreground">{description}</p>
       {meta ? (
-        <p className="inst mt-5 text-dim">{meta}</p>
+        <p className="inst mt-5 text-muted-foreground">{meta}</p>
       ) : (
         <div className="mt-5 h-3 w-56 bg-border/40 animate-pulse" />
       )}
@@ -686,8 +686,8 @@ export default function ApiDocsPage() {
       {/* Base URL */}
       {servers.length > 0 && (
         <div className="mb-12 flex flex-wrap items-stretch border border-border">
-          <span className="inst flex items-center gap-2 border-r border-border bg-surface px-4 py-3 text-dim">
-            <Server size={12} className="text-accent" />
+          <span className="inst flex items-center gap-2 border-r border-border bg-card px-4 py-3 text-muted-foreground">
+            <Server size={12} className="text-primary" />
             base url
           </span>
           {servers.map((s, i) => {
@@ -707,7 +707,7 @@ export default function ApiDocsPage() {
                 aria-pressed={active}
                 className={cn(
                   "relative border-r border-border px-4 py-3 font-mono text-sm break-all transition-colors cursor-pointer after:absolute after:inset-x-4 after:-bottom-px after:h-0.5",
-                  active ? "text-foreground after:bg-accent" : "text-dim hover:text-foreground",
+                  active ? "text-foreground after:bg-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {s.url}

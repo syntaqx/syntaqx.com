@@ -11,11 +11,11 @@ const lastUpdated = "September 2026";
 
 export default function TermsPage() {
   return (
-    <article className="mx-auto max-w-2xl py-8 text-sm/relaxed text-muted ">
+    <article className="mx-auto max-w-2xl py-8 text-sm/relaxed text-subtle ">
       <header className="mb-10">
-        <p className="text-xs text-accent font-medium tracking-wider uppercase mb-3">Legal</p>
+        <p className="text-xs text-primary font-medium tracking-wider uppercase mb-3">Legal</p>
         <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">Terms of Service</h1>
-        <p className="text-xs text-dim">Last updated: {lastUpdated}</p>
+        <p className="text-xs text-muted-foreground">Last updated: {lastUpdated}</p>
       </header>
 
       <section className="space-y-4">
@@ -68,16 +68,16 @@ export default function TermsPage() {
       <Section title="6. Contact">
         <p>
           Questions? Open an issue on{" "}
-          <a href="https://github.com/syntaqx" className="text-accent hover:underline">
+          <a href="https://github.com/syntaqx" className="text-primary hover:underline">
             GitHub
           </a>
           .
         </p>
       </Section>
 
-      <p className="mt-12 text-xs text-dim">
+      <p className="mt-12 text-xs text-muted-foreground">
         See also:{" "}
-        <Link href="/legal/privacy" className="hover:text-accent">
+        <Link href="/legal/privacy" className="hover:text-primary">
           Privacy
         </Link>
         .

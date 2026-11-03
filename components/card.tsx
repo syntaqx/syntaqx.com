@@ -11,7 +11,7 @@ export function Card({ children, className, hover = false }: CardProps) {
   return (
     <div
       className={cn(
-        "border border-border bg-surface p-4",
+        "border border-border bg-card p-4",
         hover && "transition-colors hover:border-border-hover hover:handles",
         className,
       )}

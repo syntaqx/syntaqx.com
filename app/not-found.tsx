@@ -14,11 +14,11 @@ export default function NotFound() {
       <h1 className="mb-5 max-w-2xl text-3xl leading-[0.95] sm:text-4xl">
         These aren&apos;t the droids you&apos;re looking for.
       </h1>
-      <p className="mb-3 max-w-md text-muted">
+      <p className="mb-3 max-w-md text-subtle">
         The page you requested has mass, but it exists in a superposition of &ldquo;here&rdquo; and
         &ldquo;not here,&rdquo; and upon observation it collapsed to &ldquo;not here.&rdquo;
       </p>
-      <p className="text-xs text-dim mb-10">HTTP 404 &middot; ERR_EXISTENTIAL_CRISIS</p>
+      <p className="text-xs text-muted-foreground mb-10">HTTP 404 &middot; ERR_EXISTENTIAL_CRISIS</p>
       <div className="flex flex-wrap items-center gap-3">
         <Button href="/">
           Go home

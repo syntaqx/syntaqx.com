@@ -6,7 +6,7 @@ import { describe, it, expect } from "vitest";
 
 /*
  * cn() drops a class when a later one overrides it. Within one property
- * (bg-surface then bg-accent) that's the point. Across properties it can
+ * (bg-card then bg-primary) that's the point. Across properties it can
  * change what renders: tailwind-merge counts text-lg as also setting
  * line height, so cn("leading-snug", "text-lg") drops leading-snug, though
  * in the stylesheet leading-snug comes later and would have won.

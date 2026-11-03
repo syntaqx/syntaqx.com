@@ -13,7 +13,7 @@ export default function InlineValidationPage() {
     <div>
       <div className="mb-10">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Inline Validation</h1>
-        <p className="max-w-2xl text-dim leading-relaxed">
+        <p className="max-w-2xl text-muted-foreground leading-relaxed">
           Validation is mostly a question of timing. Tell people what passes before they start,
           confirm success the moment it happens, and hold errors until they&apos;ve had a fair
           chance to finish.

@@ -63,7 +63,7 @@ export async function fetchGitHubContributions(username: string): Promise<Contri
   }
 }
 
-const LEVEL_COLORS = ["bg-border/50", "bg-accent/20", "bg-accent/40", "bg-accent/60", "bg-accent"];
+const LEVEL_COLORS = ["bg-border/50", "bg-primary/20", "bg-primary/40", "bg-primary/60", "bg-primary"];
 
 const VACATION_RING = "ring-1 ring-amber-500/60 ring-inset";
 // A dot, not a ring: it reads on any fill level and leaves the ring free
@@ -214,10 +214,10 @@ export function GitHubActivity({
           rel="noopener noreferrer"
           className="group block"
         >
-          <span className="font-voice block text-5xl leading-[0.85] font-semibold text-foreground transition-colors group-hover:text-accent">
+          <span className="font-voice block text-5xl leading-[0.85] font-semibold text-foreground transition-colors group-hover:text-primary">
             {total.toLocaleString()}
           </span>
-          <span className="inst mt-3 block text-dim">contributions, last 12 months ↗</span>
+          <span className="inst mt-3 block text-muted-foreground">contributions, last 12 months ↗</span>
         </a>
       </div>
 
@@ -245,7 +245,7 @@ export function GitHubActivity({
                   {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
                     <span
                       key={`${day}-${index}`}
-                      className="inst flex h-2.5 w-3 items-center justify-center text-[0.5rem] leading-none text-dim sm:h-3 md:h-3.25"
+                      className="inst flex h-2.5 w-3 items-center justify-center text-[0.5rem] leading-none text-muted-foreground sm:h-3 md:h-3.25"
                     >
                       {day}
                     </span>
@@ -264,7 +264,7 @@ export function GitHubActivity({
                     {/* Month label. A month only one week wide (usually the
                         partial month at the start) can't fit three letters,
                         so it keeps its column but not its label. */}
-                    <span className="inst mb-1.5 text-center text-[0.5rem] text-dim">
+                    <span className="inst mb-1.5 text-center text-[0.5rem] text-muted-foreground">
                       {group.weeks.length >= 2 ? group.label : "\u00a0"}
                     </span>
                     {/* Weeks in this month */}
@@ -297,22 +297,22 @@ export function GitHubActivity({
         <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-2 mt-3">
           <div className="flex items-center gap-1.5">
             <div className="size-2.5  rounded-xs ring-1 ring-foreground ring-inset" />
-            <span className="inst text-[0.5rem] text-dim">Today</span>
+            <span className="inst text-[0.5rem] text-muted-foreground">Today</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className={cn("size-2.5  rounded-xs bg-border/50", VACATION_RING)} />
-            <span className="inst text-[0.5rem] text-dim">Vacation</span>
+            <span className="inst text-[0.5rem] text-muted-foreground">Vacation</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className={cn("size-2.5  rounded-xs bg-border/50", HOLIDAY_DOT)} />
-            <span className="inst text-[0.5rem] text-dim">US Holiday</span>
+            <span className="inst text-[0.5rem] text-muted-foreground">US Holiday</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="inst text-[0.5rem] text-dim">Less</span>
+            <span className="inst text-[0.5rem] text-muted-foreground">Less</span>
             {LEVEL_COLORS.map((color, i) => (
               <div key={i} className={cn("size-2.5  rounded-xs", color)} />
             ))}
-            <span className="inst text-[0.5rem] text-dim">More</span>
+            <span className="inst text-[0.5rem] text-muted-foreground">More</span>
           </div>
         </div>
       </div>

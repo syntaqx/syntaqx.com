@@ -31,7 +31,7 @@ export function Segmented<T extends string>({
     <div
       role="group"
       aria-label={ariaLabel}
-      className={cn("inline-flex border border-border bg-surface p-0.5", className)}
+      className={cn("inline-flex border border-border bg-card p-0.5", className)}
     >
       {options.map((o) => (
         <button
@@ -42,7 +42,7 @@ export function Segmented<T extends string>({
           className={cn(
             "cursor-pointer py-1.5 text-xs font-medium transition-colors",
             size === "sm" ? "px-3" : "px-4",
-            o.value === value ? "bg-accent text-background" : "text-dim hover:text-foreground",
+            o.value === value ? "bg-primary text-background" : "text-muted-foreground hover:text-foreground",
           )}
         >
           {o.label}

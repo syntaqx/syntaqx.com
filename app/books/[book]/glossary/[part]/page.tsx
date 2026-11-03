@@ -101,11 +101,11 @@ export default async function GlossaryPartPage({ params }: Props) {
       ]}
       eyebrow={
         <>
-          <Link href={cover} className="text-accent transition-colors hover:text-foreground">
+          <Link href={cover} className="text-primary transition-colors hover:text-foreground">
             {book.name}
           </Link>
           <span aria-hidden> · </span>
-          <Link href={home} className="text-accent transition-colors hover:text-foreground">
+          <Link href={home} className="text-primary transition-colors hover:text-foreground">
             {glossary.title}
           </Link>
           <span aria-hidden> · </span>

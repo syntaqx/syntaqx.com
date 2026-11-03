@@ -137,7 +137,7 @@ export function TopProgressBar() {
       style={{ opacity: visible ? 1 : 0, transition: "opacity 200ms ease" }}
     >
       <div
-        className="h-full bg-accent"
+        className="h-full bg-primary"
         style={{
           width: `${width}%`,
           transition: "width 200ms ease",

@@ -95,7 +95,7 @@ function Tags({ tags }: { tags: string[] }) {
   return (
     <ul className="flex flex-wrap gap-x-4 gap-y-1">
       {tags.map((tag) => (
-        <li key={tag} className="inst text-dim">
+        <li key={tag} className="inst text-muted-foreground">
           {tag}
         </li>
       ))}
@@ -116,29 +116,29 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
       <span
         aria-hidden="true"
         className={cn(
-          "absolute inset-0 -z-10 border transition-colors before:absolute before:-top-px before:left-0 before:h-0.5 before:w-12 before:bg-accent before:transition-[width] before:duration-300 before:ease-out group-hover:before:w-full md:slant",
+          "absolute inset-0 -z-10 border transition-colors before:absolute before:-top-px before:left-0 before:h-0.5 before:w-12 before:bg-primary before:transition-[width] before:duration-300 before:ease-out group-hover:before:w-full md:slant",
           lead
-            ? "beams border-accent/50 bg-surface group-hover:border-accent"
-            : "border-border bg-surface group-hover:border-border-hover",
+            ? "beams border-primary/50 bg-card group-hover:border-primary"
+            : "border-border bg-card group-hover:border-border-hover",
         )}
       />
       <span className="mb-4 flex items-center justify-between gap-4">
-        <span className={cn("inst", lead ? "text-accent" : "text-dim")}>{item.kicker}</span>
+        <span className={cn("inst", lead ? "text-primary" : "text-muted-foreground")}>{item.kicker}</span>
         <ArrowUpRight
           size={16}
-          className="text-dim transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
+          className="text-muted-foreground transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
         />
       </span>
       <h3
         className={cn(
-          "mb-3 wrap-break-word text-foreground transition-colors group-hover:text-accent",
+          "mb-3 wrap-break-word text-foreground transition-colors group-hover:text-primary",
           lead ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl",
           "leading-[0.95]",
         )}
       >
         {item.title}
       </h3>
-      <p className={cn("mb-6 text-[0.95rem] leading-relaxed text-muted", lead && "max-w-xl")}>
+      <p className={cn("mb-6 text-[0.95rem] leading-relaxed text-subtle", lead && "max-w-xl")}>
         {item.description}
       </p>
       <div className="mt-auto">
@@ -153,7 +153,7 @@ function SectionHead({ label, count }: { label: string; count: number }) {
     <div className="mb-8 flex items-center gap-4">
       <h2 className="eyebrow">{label}</h2>
       <span className="h-px flex-1 bg-border" />
-      <span className="inst text-dim tabular-nums">{String(count).padStart(2, "0")}</span>
+      <span className="inst text-muted-foreground tabular-nums">{String(count).padStart(2, "0")}</span>
     </div>
   );
 }
@@ -196,21 +196,21 @@ export default function ProjectsPage() {
                 {/* Diagonal wipe on hover */}
                 <span
                   aria-hidden="true"
-                  className="slant absolute inset-y-0 -left-8 -z-10 w-0 bg-surface transition-[width] duration-300 ease-out group-hover:w-[calc(100%+4rem)]"
+                  className="slant absolute inset-y-0 -left-8 -z-10 w-0 bg-card transition-[width] duration-300 ease-out group-hover:w-[calc(100%+4rem)]"
                 />
-                <span className="font-voice text-xl leading-none font-bold text-accent">
+                <span className="font-voice text-xl leading-none font-bold text-primary">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
+                <h3 className="text-xl leading-none text-foreground transition-colors group-hover:text-primary">
                   {p.title}
                 </h3>
                 <div className="grid gap-3">
-                  <p className="text-[0.95rem] leading-snug text-muted">{p.description}</p>
+                  <p className="text-[0.95rem] leading-snug text-subtle">{p.description}</p>
                   <Tags tags={p.tags} />
                 </div>
                 <ArrowUpRight
                   size={16}
-                  className="hidden text-dim transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent sm:block"
+                  className="hidden text-muted-foreground transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary sm:block"
                 />
               </a>
             </li>

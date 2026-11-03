@@ -32,7 +32,7 @@ function CopyDemo() {
   };
 
   return (
-    <div className="rounded-lg border border-border bg-surface">
+    <div className="rounded-lg border border-border bg-card">
       <div className="p-4 flex items-center justify-between gap-3">
         <code className="font-mono text-xs text-foreground truncate">{sample}</code>
         <button
@@ -42,15 +42,15 @@ function CopyDemo() {
           className={cn(
             "shrink-0 inline-flex items-center gap-1.5 rounded border px-2 py-1 text-xs transition-colors cursor-pointer",
             copied
-              ? "border-accent/40 text-accent"
-              : "border-border text-dim hover:text-foreground hover:border-border-hover",
+              ? "border-primary/40 text-primary"
+              : "border-border text-muted-foreground hover:text-foreground hover:border-border-hover",
           )}
         >
           {copied ? <Check size={12} /> : <Copy size={12} />}
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">
         The button is the trigger and the confirmation. State reverts after 1.5s so the user can
         copy again without thinking about it.
       </div>
@@ -136,14 +136,14 @@ function OptimisticToggle({
       className={cn(
         "inline-flex items-center gap-1.5 rounded border px-2.5 py-1.5 text-xs transition-colors cursor-pointer",
         on
-          ? "border-accent/40 bg-accent/10 text-accent"
-          : "border-border text-dim hover:text-foreground hover:border-border-hover",
+          ? "border-primary/40 bg-primary/10 text-primary"
+          : "border-border text-muted-foreground hover:text-foreground hover:border-border-hover",
         error && "border-red-500/50 text-red-400",
       )}
     >
       <Icon size={12} className={on ? "fill-current" : ""} aria-hidden />
       <span>{label}</span>
-      <span className="tabular-nums text-[10px] text-dim">{count}</span>
+      <span className="tabular-nums text-[10px] text-muted-foreground">{count}</span>
       {error && <span className="ml-1 text-[10px]">failed</span>}
     </button>
   );
@@ -151,12 +151,12 @@ function OptimisticToggle({
 
 function OptimisticDemo() {
   return (
-    <div className="rounded-lg border border-border bg-surface">
+    <div className="rounded-lg border border-border bg-card">
       <div className="p-4 flex flex-wrap items-center gap-3">
         <OptimisticToggle icon={Heart} label="Always succeeds" initial={42} />
         <OptimisticToggle icon={Star} label="Always fails" initial={128} shouldFail />
       </div>
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">
         Clicks apply immediately. The first toggle resolves cleanly; the second always fails after
         600ms and the UI rolls back with a brief error state. Click rapidly to feel the difference
         vs a request-then-update flow.
@@ -173,7 +173,7 @@ function OptimisticDemo() {
 
 function GuardDemo() {
   return (
-    <div className="rounded-lg border border-border bg-surface">
+    <div className="rounded-lg border border-border bg-card">
       <div className="divide-y divide-border">
         <GuardRow
           level="No guard"
@@ -181,7 +181,7 @@ function GuardDemo() {
         >
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-foreground hover:border-border-hover cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
           >
             <X size={12} /> Dismiss
           </button>
@@ -207,8 +207,8 @@ function GuardRow({ level, desc, children }: { level: string; desc: string; chil
   return (
     <div className="p-4 flex items-start justify-between gap-4">
       <div className="min-w-0">
-        <div className="text-[10px] font-medium text-dim mb-1">{level}</div>
-        <p className="text-xs/relaxed text-dim ">{desc}</p>
+        <div className="text-[10px] font-medium text-muted-foreground mb-1">{level}</div>
+        <p className="text-xs/relaxed text-muted-foreground ">{desc}</p>
       </div>
       <div className="shrink-0">{children}</div>
     </div>
@@ -232,7 +232,7 @@ function SoftConfirm() {
       <button
         type="button"
         onClick={() => setDone(false)}
-        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-foreground hover:border-border-hover cursor-pointer"
+        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
       >
         Reset
       </button>
@@ -248,7 +248,7 @@ function SoftConfirm() {
             if (timer.current) clearTimeout(timer.current);
             setArmed(false);
           }}
-          className="rounded border border-border px-2 py-1 text-xs text-dim hover:text-foreground hover:border-border-hover cursor-pointer"
+          className="rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
         >
           Cancel
         </button>
@@ -273,7 +273,7 @@ function SoftConfirm() {
         setArmed(true);
         timer.current = setTimeout(() => setArmed(false), 4000);
       }}
-      className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-red-400 hover:border-red-500/40 cursor-pointer"
+      className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-red-400 hover:border-red-500/40 cursor-pointer"
     >
       <Trash2 size={12} /> Delete
     </button>
@@ -293,7 +293,7 @@ function TypeToConfirm({ target }: { target: string }) {
           setDone(false);
           setInput("");
         }}
-        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim hover:text-foreground hover:border-border-hover cursor-pointer"
+        className="inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
       >
         Reset
       </button>
@@ -302,7 +302,7 @@ function TypeToConfirm({ target }: { target: string }) {
 
   return (
     <div className="inline-flex flex-col items-end gap-1.5">
-      <div className="text-[10px] text-dim">
+      <div className="text-[10px] text-muted-foreground">
         Type <code className="font-mono text-foreground">{target}</code> to confirm
       </div>
       <div className="inline-flex items-center gap-1.5">
@@ -314,7 +314,7 @@ function TypeToConfirm({ target }: { target: string }) {
           spellCheck={false}
           autoCorrect="off"
           autoCapitalize="off"
-          className="rounded border border-border bg-background px-2 py-1 font-mono text-xs text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50"
+          className="rounded border border-border bg-background px-2 py-1 font-mono text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50"
         />
         <button
           type="button"
@@ -389,17 +389,17 @@ function SkeletonDemo() {
   const secondsLeft = Math.max(0, Math.ceil((nextReloadAt - now) / 1000));
 
   return (
-    <div className="rounded-lg border border-border bg-surface">
+    <div className="rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-        <div className="text-[10px] font-medium text-dim">Loading state</div>
+        <div className="text-[10px] font-medium text-muted-foreground">Loading state</div>
         <div className="inline-flex items-center gap-2">
-          <span className="text-[10px] tabular-nums text-dim" aria-live="off">
+          <span className="text-[10px] tabular-nums text-muted-foreground" aria-live="off">
             Auto-reload in {secondsLeft}s
           </span>
           <button
             type="button"
             onClick={reload}
-            className="rounded border border-border px-2 py-1 text-[10px] text-dim hover:text-foreground hover:border-border-hover cursor-pointer"
+            className="rounded border border-border px-2 py-1 text-[10px] text-muted-foreground hover:text-foreground hover:border-border-hover cursor-pointer"
           >
             Reload now
           </button>
@@ -414,7 +414,7 @@ function SkeletonDemo() {
         </SkeletonColumn>
         <SkeletonColumn label="Nothing">{loading ? null : <LoadedRow />}</SkeletonColumn>
       </div>
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">
         Auto-cycles every 10s. Watch the middle and right columns: the spinner collapses the row,
         the empty state collapses the whole box. The skeleton on the left holds its shape so nothing
         reflows when content lands.
@@ -426,7 +426,7 @@ function SkeletonDemo() {
 function SkeletonColumn({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="p-4">
-      <div className="mb-3 text-[10px] font-medium text-dim">{label}</div>
+      <div className="mb-3 text-[10px] font-medium text-muted-foreground">{label}</div>
       {children}
     </div>
   );
@@ -448,7 +448,7 @@ function SpinnerRow({ loading }: { loading: boolean }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-2">
-        <div className="size-4  rounded-full border-2 border-border border-t-accent animate-spin" />
+        <div className="size-4  rounded-full border-2 border-border border-t-primary animate-spin" />
       </div>
     );
   }
@@ -458,12 +458,12 @@ function SpinnerRow({ loading }: { loading: boolean }) {
 function LoadedRow() {
   return (
     <div className="flex items-center gap-3">
-      <div className="size-10  rounded-full bg-accent/30 flex items-center justify-center text-xs font-semibold text-foreground/80">
+      <div className="size-10  rounded-full bg-primary/30 flex items-center justify-center text-xs font-semibold text-foreground/80">
         CP
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-xs font-medium text-foreground truncate">Chase Pierce</div>
-        <div className="text-[11px] text-dim truncate">
+        <div className="text-[11px] text-muted-foreground truncate">
           Hacker, open sorcerer, software engineer, cloudified.
         </div>
       </div>

@@ -161,7 +161,7 @@ export default function Base64Page() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Base64 Decode / Encode</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Decode or encode Base64 strings. Everything runs in your browser, nothing is sent to a
           server.
         </p>
@@ -189,15 +189,15 @@ export default function Base64Page() {
               onDragOver={onDragOver}
               onDragLeave={() => setDragging(false)}
               className={cn(
-                "border bg-surface transition-colors",
-                dragging ? "border-accent border-dashed" : "border-border",
+                "border bg-card transition-colors",
+                dragging ? "border-primary border-dashed" : "border-border",
               )}
             >
               <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                <label className="text-xs text-dim flex items-center gap-1.5">
+                <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                   {inputLabel}
                   {fileName && (
-                    <span className="inline-flex items-center gap-1 text-accent">
+                    <span className="inline-flex items-center gap-1 text-primary">
                       <FileText size={10} />
                       {fileName}
                     </span>
@@ -205,13 +205,13 @@ export default function Base64Page() {
                 </label>
                 <div className="flex items-center gap-1.5">
                   {input && (
-                    <span className="text-[10px] text-dim tabular-nums">
+                    <span className="text-[10px] text-muted-foreground tabular-nums">
                       {input.length.toLocaleString()} chars &middot; {byteSize(input)}
                     </span>
                   )}
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
                   >
                     <Upload size={12} />
                     File
@@ -226,7 +226,7 @@ export default function Base64Page() {
                   {input && (
                     <button
                       onClick={clear}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -252,7 +252,7 @@ export default function Base64Page() {
                 placeholder={placeholder}
                 rows={8}
                 spellCheck={false}
-                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
+                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
               />
               {/* Card footer: options */}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
@@ -280,10 +280,10 @@ export default function Base64Page() {
             {/* Output */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs text-dim">{outputLabel}</label>
+                <label className="text-xs text-muted-foreground">{outputLabel}</label>
                 <div className="flex items-center gap-1.5">
                   {output && (
-                    <span className="text-[10px] text-dim tabular-nums">
+                    <span className="text-[10px] text-muted-foreground tabular-nums">
                       {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                     </span>
                   )}
@@ -294,7 +294,7 @@ export default function Base64Page() {
                 value={output}
                 readOnly
                 rows={8}
-                className="w-full border border-border bg-surface px-3 py-2 text-sm text-foreground focus:outline-none resize-y font-mono"
+                className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground focus:outline-none resize-y font-mono"
               />
             </div>
           </div>
@@ -303,45 +303,45 @@ export default function Base64Page() {
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           {/* Info */}
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <Info size={12} className="text-primary" />
               About Base64
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
                 Base64 is an encoding scheme that converts binary data into ASCII text using a
-                64-character alphabet: <span className="text-muted">A-Z</span>,{" "}
-                <span className="text-muted">a-z</span>, <span className="text-muted">0-9</span>,{" "}
-                <span className="text-muted">+</span>, and <span className="text-muted">/</span>,
-                with <span className="text-muted">=</span> for padding.
+                64-character alphabet: <span className="text-subtle">A-Z</span>,{" "}
+                <span className="text-subtle">a-z</span>, <span className="text-subtle">0-9</span>,{" "}
+                <span className="text-subtle">+</span>, and <span className="text-subtle">/</span>,
+                with <span className="text-subtle">=</span> for padding.
               </p>
               <p>
                 Every 3 bytes of input produce 4 characters of output, increasing size by roughly
                 33%.
               </p>
               <p>
-                <span className="text-muted">Common uses:</span> email attachments (MIME), data
+                <span className="text-subtle">Common uses:</span> email attachments (MIME), data
                 URIs, JSON Web Tokens (JWTs), embedding images in CSS/HTML, and transmitting binary
                 data through text-only protocols.
               </p>
               <p>
-                A URL-safe variant replaces <span className="text-muted">+</span> and{" "}
-                <span className="text-muted">/</span> with <span className="text-muted">-</span> and{" "}
-                <span className="text-muted">_</span> to avoid conflicts in URLs and filenames (RFC
+                A URL-safe variant replaces <span className="text-subtle">+</span> and{" "}
+                <span className="text-subtle">/</span> with <span className="text-subtle">-</span> and{" "}
+                <span className="text-subtle">_</span> to avoid conflicts in URLs and filenames (RFC
                 4648 &sect;5).
               </p>
               <p>
-                Base64 is <span className="text-muted">not encryption</span>. It provides no
+                Base64 is <span className="text-subtle">not encryption</span>. It provides no
                 security. Anyone can decode it.
               </p>
             </div>
           </div>
 
           {/* References */}
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
@@ -350,7 +350,7 @@ export default function Base64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc4648"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 4648 - Base Encodings
                 </a>
@@ -360,7 +360,7 @@ export default function Base64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc2045#section-6.8"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 2045 &sect;6.8 - MIME Base64
                 </a>
@@ -370,7 +370,7 @@ export default function Base64Page() {
                   href="https://developer.mozilla.org/en-US/docs/Glossary/Base64"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   MDN - Base64 glossary
                 </a>
@@ -380,7 +380,7 @@ export default function Base64Page() {
                   href="https://en.wikipedia.org/wiki/Base64"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   Wikipedia - Base64
                 </a>

@@ -20,20 +20,20 @@ function ToolGrid({ items }: { items: Tool[] }) {
         <Link key={item.href} href={item.href} className="group flex flex-col">
           <Card hover className="flex flex-col h-full">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
+              <h2 className="text-xl leading-none text-foreground transition-colors group-hover:text-primary">
                 {item.title}
               </h2>
               <ArrowRight
                 size={12}
-                className="text-dim group-hover:text-accent transition-colors"
+                className="text-muted-foreground group-hover:text-primary transition-colors"
               />
             </div>
-            <p className="text-xs/relaxed text-dim ">{item.description}</p>
+            <p className="text-xs/relaxed text-muted-foreground ">{item.description}</p>
             <div className="mt-3 flex flex-wrap gap-1">
               {item.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-block border border-border px-1.5 py-0.5 text-[10px] text-dim"
+                  className="inline-block border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground"
                 >
                   {tag}
                 </span>
@@ -79,7 +79,7 @@ export default function ToolsPage() {
 
         <section>
           <Link href="/tools/convert" className="group">
-            <h2 className="eyebrow mb-4 group-hover:text-accent transition-colors">Converters</h2>
+            <h2 className="eyebrow mb-4 group-hover:text-primary transition-colors">Converters</h2>
           </Link>
           <ToolGrid items={converters} />
         </section>

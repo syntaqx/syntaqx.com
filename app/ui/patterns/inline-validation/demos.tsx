@@ -7,20 +7,20 @@ import { cn } from "@/lib/cn";
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const btn =
-  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
+  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
 const primary =
-  "inline-flex items-center gap-1.5 rounded border border-accent/40 bg-accent/10 px-2.5 py-1.5 text-xs text-accent transition-colors hover:bg-accent/20 cursor-pointer";
+  "inline-flex items-center gap-1.5 rounded border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs text-primary transition-colors hover:bg-primary/20 cursor-pointer";
 
 const inputClass = (state: "idle" | "error" | "ok") =>
-  `w-full rounded border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none transition-colors focus:border-accent/60 ${
-    state === "error" ? "border-red-500/50" : state === "ok" ? "border-accent/40" : "border-border"
+  `w-full rounded border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none transition-colors focus:border-primary/60 ${
+    state === "error" ? "border-red-500/50" : state === "ok" ? "border-primary/40" : "border-border"
   }`;
 
 function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
   return (
-    <div className="rounded-lg border border-border bg-surface">
+    <div className="rounded-lg border border-border bg-card">
       {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">{note}</div>
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">{note}</div>
     </div>
   );
 }
@@ -31,7 +31,7 @@ function Message({ id, error, ok }: { id: string; error?: string; ok?: string })
       {error ? (
         <span className="text-red-400">{error}</span>
       ) : ok ? (
-        <span className="inline-flex items-center gap-1 text-accent">
+        <span className="inline-flex items-center gap-1 text-primary">
           <Check size={11} /> {ok}
         </span>
       ) : null}
@@ -55,7 +55,7 @@ function EagerField() {
 
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-dim">
+      <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-muted-foreground">
         Every keystroke
       </label>
       <input
@@ -82,7 +82,7 @@ function RewardingField() {
 
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-dim">
+      <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-muted-foreground">
         Reward early, punish late
       </label>
       <input
@@ -179,7 +179,7 @@ function SummaryDemo() {
     return (
       <Frame note="Valid on submit: no summary, no detour.">
         <div className="flex items-center justify-between gap-3 p-4">
-          <span className="inline-flex items-center gap-1.5 text-xs text-accent">
+          <span className="inline-flex items-center gap-1.5 text-xs text-primary">
             <Check size={12} /> Submitted
           </span>
           <button
@@ -241,7 +241,7 @@ function SummaryDemo() {
             <div key={key}>
               <label
                 htmlFor={`${id}-${key}`}
-                className="mb-1.5 block text-[10px] font-medium text-dim"
+                className="mb-1.5 block text-[10px] font-medium text-muted-foreground"
               >
                 {LABELS[key]}
               </label>
@@ -295,9 +295,9 @@ function RulesDemo() {
     >
       <div className="grid gap-5 p-4 sm:grid-cols-2">
         <div>
-          <p className="mb-1.5 text-[10px] font-medium text-dim">Username</p>
+          <p className="mb-1.5 text-[10px] font-medium text-muted-foreground">Username</p>
           <p className="mb-4 font-mono text-xs text-foreground">syntaqx</p>
-          <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-dim">
+          <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-muted-foreground">
             New password
           </label>
           <input
@@ -319,7 +319,7 @@ function RulesDemo() {
                 key={r.label}
                 className={cn(
                   "flex items-center gap-2 text-[11px] transition-colors",
-                  ok ? "text-accent" : "text-dim",
+                  ok ? "text-primary" : "text-muted-foreground",
                 )}
               >
                 {ok ? <Check size={11} /> : <Circle size={9} className="mx-px" />}

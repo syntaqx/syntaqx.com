@@ -71,7 +71,7 @@ export default async function DocPage({ params }: Props) {
           <>
             <Link
               href={`/docs#${category.section}`}
-              className="text-accent transition-colors hover:text-foreground"
+              className="text-primary transition-colors hover:text-foreground"
             >
               {category.name}
             </Link>

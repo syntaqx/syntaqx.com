@@ -73,7 +73,7 @@ function HoverCard({ trigger, children, onOpen, className = "", align = "start" 
           className={cn(
             "absolute",
             align === "end" ? "right-0" : "left-0",
-            "top-full z-50 mt-2 block rounded-lg border border-border bg-surface p-3 shadow-lg",
+            "top-full z-50 mt-2 block rounded-lg border border-border bg-card p-3 shadow-lg",
             className || "w-72",
           )}
         >
@@ -155,13 +155,13 @@ function TimeHover({ iso, sourceTz, sourceLabel, variant = "datetime" }: TimePro
       trigger={
         <time
           dateTime={iso}
-          className="cursor-help underline decoration-dim decoration-dotted underline-offset-4 text-foreground whitespace-nowrap"
+          className="cursor-help underline decoration-muted-foreground decoration-dotted underline-offset-4 text-foreground whitespace-nowrap"
         >
           {trigger}
         </time>
       }
     >
-      <div className="text-[10px] font-medium text-dim mb-2">Time conversion</div>
+      <div className="text-[10px] font-medium text-muted-foreground mb-2">Time conversion</div>
       <div className="space-y-1.5">
         <TzRow
           label={sourceLabel}
@@ -207,20 +207,20 @@ function TzRow({
 }) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-baseline gap-x-3">
-      <span className="min-w-0 truncate text-[11px] text-dim">
+      <span className="min-w-0 truncate text-[11px] text-muted-foreground">
         {label}
-        {label !== tz && <span className="ml-1 text-[10px] text-dim/70">({tz})</span>}
+        {label !== tz && <span className="ml-1 text-[10px] text-muted-foreground/70">({tz})</span>}
       </span>
-      <span className={cn("whitespace-nowrap text-xs", accent ? "text-accent" : "text-foreground")}>
+      <span className={cn("whitespace-nowrap text-xs", accent ? "text-primary" : "text-foreground")}>
         {date}
       </span>
       <span
         className={cn(
           "whitespace-nowrap text-xs tabular-nums",
-          accent ? "text-accent" : "text-foreground",
+          accent ? "text-primary" : "text-foreground",
         )}
       >
-        {time} <span className="text-dim">{abbr}</span>
+        {time} <span className="text-muted-foreground">{abbr}</span>
       </span>
     </div>
   );
@@ -239,13 +239,13 @@ function TimeDemo() {
     <Card>
       <dl className="space-y-3 text-xs">
         <div className="flex items-baseline justify-between gap-4">
-          <dt className="text-dim">Created</dt>
+          <dt className="text-muted-foreground">Created</dt>
           <dd>
             <TimeHover {...sample} />
           </dd>
         </div>
         <div className="flex items-baseline justify-between gap-4">
-          <dt className="text-dim">Created (date only)</dt>
+          <dt className="text-muted-foreground">Created (date only)</dt>
           <dd>
             <TimeHover {...sample} variant="date" />
           </dd>
@@ -317,7 +317,7 @@ function UserHover({ login, trigger }: { login: string; trigger?: ReactNode }) {
             href={`https://github.com/${login}`}
             target="_blank"
             rel="noreferrer"
-            className="text-accent hover:underline"
+            className="text-primary hover:underline"
           >
             @{login}
           </a>
@@ -327,7 +327,7 @@ function UserHover({ login, trigger }: { login: string; trigger?: ReactNode }) {
       {state.status === "loading" || state.status === "idle" ? (
         <UserSkeleton />
       ) : state.status === "error" ? (
-        <p className="text-xs text-dim">Couldn&apos;t load @{login}.</p>
+        <p className="text-xs text-muted-foreground">Couldn&apos;t load @{login}.</p>
       ) : (
         <UserBody data={state.data} />
       )}
@@ -364,13 +364,13 @@ function UserBody({ data }: { data: GhUser }) {
           <div className="text-xs font-medium text-foreground truncate">
             {data.name ?? data.login}
           </div>
-          <div className="text-[11px] text-dim truncate">@{data.login}</div>
+          <div className="text-[11px] text-muted-foreground truncate">@{data.login}</div>
         </div>
       </div>
       {data.bio && (
-        <p className="mt-2 text-[11px] text-muted leading-relaxed line-clamp-3">{data.bio}</p>
+        <p className="mt-2 text-[11px] text-subtle leading-relaxed line-clamp-3">{data.bio}</p>
       )}
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-dim">
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
         {data.location && <span>{data.location}</span>}
         {data.company && <span>{data.company}</span>}
         <span>{data.followers.toLocaleString()} followers</span>
@@ -413,7 +413,7 @@ function AvatarDemo({ bare = false }: { bare?: boolean } = {}) {
             <button
               type="button"
               aria-label={`Open profile for @${h}`}
-              className="block size-10  overflow-hidden rounded-full border border-border bg-surface transition-colors hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/40"
+              className="block size-10  overflow-hidden rounded-full border border-border bg-card transition-colors hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

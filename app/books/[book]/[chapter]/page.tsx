@@ -79,7 +79,7 @@ export default async function ChapterPage({ params }: Props) {
       ]}
       eyebrow={
         <>
-          <Link href={cover} className="text-accent transition-colors hover:text-foreground">
+          <Link href={cover} className="text-primary transition-colors hover:text-foreground">
             {book.name}
           </Link>
           <span aria-hidden> · </span>

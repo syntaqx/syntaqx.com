@@ -13,7 +13,7 @@ export const metadata = pageMetadata(
   "The resume of Chase Pierce (syntaqx), software architect and engineering leader: two decades of platforms, teams and delivery. Also available as a PDF.",
 );
 
-const link = "text-foreground underline decoration-accent underline-offset-4 hover:text-accent";
+const link = "text-foreground underline decoration-primary underline-offset-4 hover:text-primary";
 
 export default function ResumePage() {
   return (
@@ -34,8 +34,8 @@ export default function ResumePage() {
         sceneLabel="A career as a skyline of roles along a timeline, a playhead lighting each in turn"
         hideSceneOnMobile
       >
-        <p className="mb-6 text-lg text-muted">{resume.title}</p>
-        <p className="mb-8 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
+        <p className="mb-6 text-lg text-subtle">{resume.title}</p>
+        <p className="mb-8 flex flex-wrap gap-x-4 gap-y-1 text-sm text-subtle">
           <span>{PUBLIC_CONTACT.location}</span>
           <a href={`mailto:${PUBLIC_CONTACT.email}`} className={link}>
             {PUBLIC_CONTACT.email}
@@ -65,7 +65,7 @@ export default function ResumePage() {
       <div className="max-w-3xl">
         <section className="mb-14">
           <h2 className="eyebrow mb-6">summary</h2>
-          <div className="space-y-5 text-[1.0625rem] leading-relaxed text-muted">
+          <div className="space-y-5 text-[1.0625rem] leading-relaxed text-subtle">
             {resume.summary.map((p) => (
               <p key={p}>{p}</p>
             ))}
@@ -74,7 +74,7 @@ export default function ResumePage() {
 
         <section className="mb-14">
           <h2 className="eyebrow mb-2">technical skills</h2>
-          <p className="mb-6 text-dim">{resume.skillsIntro}</p>
+          <p className="mb-6 text-muted-foreground">{resume.skillsIntro}</p>
           <dl className="border-t border-border">
             {resume.skills.map((k) => (
               <div
@@ -82,7 +82,7 @@ export default function ResumePage() {
                 className="grid gap-1 border-b border-border py-3 sm:grid-cols-[10rem_1fr] sm:gap-6"
               >
                 <dt className="font-semibold text-foreground">{k.label}</dt>
-                <dd className="leading-relaxed text-muted">{k.items}</dd>
+                <dd className="leading-relaxed text-subtle">{k.items}</dd>
               </div>
             ))}
           </dl>
@@ -95,17 +95,17 @@ export default function ResumePage() {
               <li key={`${job.company} ${job.title}`} className="border-b border-border py-6">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                   <h3 className="text-lg font-semibold text-foreground">
-                    {job.title} <span className="text-muted">at</span> {job.company}
+                    {job.title} <span className="text-subtle">at</span> {job.company}
                   </h3>
-                  <p className="inst text-dim">
+                  <p className="inst text-muted-foreground">
                     {job.start} - {job.end}
                   </p>
                 </div>
                 {job.progression && (
-                  <p className="mt-1 text-sm text-dim">{job.progression.join(" → ")}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{job.progression.join(" → ")}</p>
                 )}
                 {job.highlights && (
-                  <ul className="mt-4 list-disc space-y-2 pl-5 leading-relaxed text-muted marker:text-accent">
+                  <ul className="mt-4 list-disc space-y-2 pl-5 leading-relaxed text-subtle marker:text-primary">
                     {job.highlights.map((h) => (
                       <li key={h}>{h}</li>
                     ))}
@@ -119,12 +119,12 @@ export default function ResumePage() {
                 {resume.earlier.map((job) => (
                   <li
                     key={job.company}
-                    className="flex flex-wrap items-baseline justify-between gap-x-6 text-muted"
+                    className="flex flex-wrap items-baseline justify-between gap-x-6 text-subtle"
                   >
                     <span>
-                      {job.title} <span className="text-dim">at</span> {job.company}
+                      {job.title} <span className="text-muted-foreground">at</span> {job.company}
                     </span>
-                    <span className="inst text-dim">
+                    <span className="inst text-muted-foreground">
                       {job.start} - {job.end}
                     </span>
                   </li>
@@ -132,7 +132,7 @@ export default function ResumePage() {
               </ul>
             </li>
           </ol>
-          <p className="mt-6 text-muted">
+          <p className="mt-6 text-subtle">
             {resume.more.text}{" "}
             <a href={resume.more.href} className={link}>
               {resume.more.label}
@@ -147,7 +147,7 @@ export default function ResumePage() {
               <h3 className="text-lg font-semibold text-foreground">
                 {resume.education.selfTaught.title}
               </h3>
-              <p className="mt-1 text-muted">{resume.education.selfTaught.details}</p>
+              <p className="mt-1 text-subtle">{resume.education.selfTaught.details}</p>
             </li>
           </ul>
         </section>

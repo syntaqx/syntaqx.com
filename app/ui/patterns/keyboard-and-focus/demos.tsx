@@ -6,22 +6,22 @@ import { Modal } from "@/components/modal";
 import { cn } from "@/lib/cn";
 
 const btn =
-  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
+  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
 const field =
-  "w-full rounded border border-border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-accent/60";
+  "w-full rounded border border-border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary/60";
 
 function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
   return (
-    <div className="rounded-lg border border-border bg-surface">
+    <div className="rounded-lg border border-border bg-card">
       {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">{note}</div>
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">{note}</div>
     </div>
   );
 }
 
 function Kbd({ children }: { children: ReactNode }) {
   return (
-    <kbd className="inline-flex min-w-4 items-center justify-center rounded-sm border border-border px-1 font-mono text-[10px]/4  text-dim">
+    <kbd className="inline-flex min-w-4 items-center justify-center rounded-sm border border-border px-1 font-mono text-[10px]/4  text-muted-foreground">
       {children}
     </kbd>
   );
@@ -101,8 +101,8 @@ function RovingDemo() {
                   setPressed((p) => (on ? p.filter((x) => x !== label) : [...p, label]))
                 }
                 className={cn(
-                  "flex size-8 items-center justify-center border-r border-border last:border-r-0 outline-none transition-colors focus-visible:bg-accent/10 focus-visible:text-accent cursor-pointer",
-                  on ? "text-accent" : "text-dim hover:text-foreground",
+                  "flex size-8 items-center justify-center border-r border-border last:border-r-0 outline-none transition-colors focus-visible:bg-primary/10 focus-visible:text-primary cursor-pointer",
+                  on ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 <Icon size={13} />
@@ -146,7 +146,7 @@ function FocusWatcher() {
   }, []);
 
   return (
-    <p className="text-[11px] text-dim" aria-hidden>
+    <p className="text-[11px] text-muted-foreground" aria-hidden>
       Focus is on: <span className="text-foreground">{where}</span>
     </p>
   );
@@ -160,14 +160,14 @@ function NaiveDialog({ onClose }: { onClose: () => void }) {
         if (e.key === "Escape") onClose();
       }}
     >
-      <div className="w-full max-w-sm border border-border bg-surface p-5">
+      <div className="w-full max-w-sm border border-border bg-card p-5">
         <div className="mb-3 flex items-center justify-between">
           <p className="text-sm text-foreground">Hand-rolled dialog</p>
           <button type="button" autoFocus aria-label="Close" onClick={onClose} className={btn}>
             <X size={12} />
           </button>
         </div>
-        <p className="text-xs/relaxed  text-dim">
+        <p className="text-xs/relaxed  text-muted-foreground">
           Focus came in because the close button autofocuses. Tab can still walk out behind this
           overlay, and closing it drops focus on the page.
         </p>
@@ -201,7 +201,7 @@ function FocusReturnDemo() {
         <FocusWatcher />
       </div>
       <Modal open={managed} onClose={() => setManaged(false)} title="Managed dialog">
-        <p className="mb-4 text-xs/relaxed  text-dim">
+        <p className="mb-4 text-xs/relaxed  text-muted-foreground">
           Focus is trapped in here. Close it any way you like and it goes back to the button that
           opened it.
         </p>
@@ -265,9 +265,9 @@ function ShortcutsDemo() {
         role="group"
         aria-label="Tasks. Press question mark for keyboard shortcuts."
         onKeyDown={onKeyDown}
-        className="relative outline-none focus-visible:ring-1 focus-visible:ring-accent/60"
+        className="relative outline-none focus-visible:ring-1 focus-visible:ring-primary/60"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2 text-[11px] text-dim">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2 text-[11px] text-muted-foreground">
           <span>{selected.length} selected</span>
           <button type="button" tabIndex={-1} className={btn} onClick={() => toggle(cursor)}>
             Select <Kbd>X</Kbd>
@@ -281,14 +281,14 @@ function ShortcutsDemo() {
               className={cn(
                 "flex items-center gap-3 border-l-2 px-4 py-2 text-xs cursor-pointer",
                 i === cursor
-                  ? "border-accent bg-accent/5 text-foreground"
-                  : "border-transparent text-dim",
+                  ? "border-primary bg-primary/5 text-foreground"
+                  : "border-transparent text-muted-foreground",
               )}
             >
               <span
                 className={cn(
                   "size-3 shrink-0 rounded-sm border",
-                  selected.includes(i) ? "border-accent bg-accent" : "border-border",
+                  selected.includes(i) ? "border-primary bg-primary" : "border-border",
                 )}
               />
               {row}
@@ -297,9 +297,9 @@ function ShortcutsDemo() {
         </ul>
         {help && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/80 p-4">
-            <div className="w-full max-w-xs border border-border bg-surface p-4">
+            <div className="w-full max-w-xs border border-border bg-card p-4">
               <p className="mb-3 text-xs text-foreground">Keyboard shortcuts</p>
-              <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[11px] text-dim">
+              <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[11px] text-muted-foreground">
                 <dt>
                   <Kbd>J</Kbd> <Kbd>K</Kbd>
                 </dt>

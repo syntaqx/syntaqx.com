@@ -44,7 +44,7 @@ export function PasteButton({ onPaste, label = false, size = "md", className }: 
     <button
       onClick={paste}
       className={cn(
-        "inline-flex items-center text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer",
+        "inline-flex items-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer",
         s.button,
         className,
       )}

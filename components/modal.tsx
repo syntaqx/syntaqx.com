@@ -59,7 +59,7 @@ export function Modal({
               if (!dismissable) e.preventDefault();
             }}
             className={cn(
-              "pointer-events-auto relative w-full sm:max-w-lg sm:border bg-surface shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-full",
+              "pointer-events-auto relative w-full sm:max-w-lg sm:border bg-card shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-full",
               isDanger ? "border-pink/50" : "border-border",
             )}
           >
@@ -74,7 +74,7 @@ export function Modal({
                   {title}
                 </Dialog.Title>
                 {description && (
-                  <Dialog.Description className="text-xs/relaxed text-dim mt-1 ">
+                  <Dialog.Description className="text-xs/relaxed text-muted-foreground mt-1 ">
                     {description}
                   </Dialog.Description>
                 )}
@@ -82,7 +82,7 @@ export function Modal({
               {dismissable && (
                 <Dialog.Close
                   aria-label="Close"
-                  className="shrink-0 -mr-1 -mt-1 p-1 text-dim hover:text-foreground hover:bg-background/40 transition-colors cursor-pointer"
+                  className="shrink-0 -mr-1 -mt-1 p-1 text-muted-foreground hover:text-foreground hover:bg-background/40 transition-colors cursor-pointer"
                 >
                   <X size={16} />
                 </Dialog.Close>

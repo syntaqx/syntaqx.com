@@ -60,11 +60,11 @@ export function PostToc({
     <nav aria-label="Contents" className={className}>
       <p className="inst mb-3 flex justify-between text-foreground">
         contents
-        <span className="text-dim tabular-nums">{Math.round(progress * 100)}%</span>
+        <span className="text-muted-foreground tabular-nums">{Math.round(progress * 100)}%</span>
       </p>
       <div className="relative mb-2 h-px bg-border">
         <div
-          className="absolute inset-y-0 left-0 bg-accent transition-[width] duration-150"
+          className="absolute inset-y-0 left-0 bg-primary transition-[width] duration-150"
           style={{ width: `${progress * 100}%` }}
         />
       </div>
@@ -76,16 +76,16 @@ export function PostToc({
             href={`#${h.id}`}
             aria-current={on ? "location" : undefined}
             className={cn(
-              "relative grid grid-cols-[2rem_1fr] py-2 pl-2 text-[0.8rem] leading-snug transition-colors before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:bg-accent before:transition-transform before:duration-200",
+              "relative grid grid-cols-[2rem_1fr] py-2 pl-2 text-[0.8rem] leading-snug transition-colors before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:bg-primary before:transition-transform before:duration-200",
               on
                 ? "text-foreground before:scale-y-100"
-                : "text-dim before:scale-y-0 hover:text-foreground",
+                : "text-muted-foreground before:scale-y-0 hover:text-foreground",
             )}
           >
             <span
               className={cn(
                 "font-voice text-base leading-none font-semibold",
-                on ? "text-accent" : "text-border-hover",
+                on ? "text-primary" : "text-border-hover",
               )}
             >
               {String(i + 1).padStart(2, "0")}

@@ -44,15 +44,15 @@ export default function Home() {
           className="beams pointer-events-none absolute -inset-x-6 -top-12 bottom-0 -z-10 mask-[linear-gradient(to_bottom,transparent,black_20%,black_50%,transparent)]"
         />
         <div>
-          <p className="inst mb-5 tracking-[0.3em] text-dim">software engineering leader</p>
+          <p className="inst mb-5 tracking-[0.3em] text-muted-foreground">software engineering leader</p>
           <h1 className="mb-8 text-[clamp(3rem,6vw,4.75rem)] leading-[0.9]">
-            Chase <span className="text-accent">Pierce</span>
+            Chase <span className="text-primary">Pierce</span>
           </h1>
           <dl className="grid max-w-xl gap-5">
             {bio.map((item) => (
               <div key={item.label}>
-                <dt className="inst mb-1.5 text-accent">{item.label}</dt>
-                <dd className="text-[0.95rem] leading-relaxed text-dim">{item.text}</dd>
+                <dt className="inst mb-1.5 text-primary">{item.label}</dt>
+                <dd className="text-[0.95rem] leading-relaxed text-muted-foreground">{item.text}</dd>
               </div>
             ))}
           </dl>
@@ -72,7 +72,7 @@ export default function Home() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex size-9 items-center justify-center text-dim transition-colors hover:text-accent"
+                  className="flex size-9 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
                   aria-label={s.label}
                   title={s.label}
                 >
@@ -104,7 +104,7 @@ export default function Home() {
           <h2 className="eyebrow">tools</h2>
           <Link
             href="/tools"
-            className="inst flex items-center gap-1.5 text-dim transition-colors hover:text-accent"
+            className="inst flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
           >
             all tools <ArrowRight size={11} />
           </Link>
@@ -113,10 +113,10 @@ export default function Home() {
           {featuredTools.map((tool) => (
             <Link key={tool.href} href={tool.href} className="group flex flex-col">
               <Card hover className="flex h-full flex-col">
-                <h3 className="mb-2 text-lg leading-none text-foreground transition-colors group-hover:text-accent">
+                <h3 className="mb-2 text-lg leading-none text-foreground transition-colors group-hover:text-primary">
                   {tool.title}
                 </h3>
-                <p className="text-xs/relaxed  text-dim">{tool.description}</p>
+                <p className="text-xs/relaxed  text-muted-foreground">{tool.description}</p>
               </Card>
             </Link>
           ))}
@@ -128,7 +128,7 @@ export default function Home() {
           <h2 className="eyebrow">writing</h2>
           <Link
             href="/posts"
-            className="inst flex items-center gap-1.5 text-dim transition-colors hover:text-accent"
+            className="inst flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
           >
             all posts <ArrowRight size={11} />
           </Link>

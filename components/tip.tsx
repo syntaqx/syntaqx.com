@@ -14,10 +14,10 @@ export function Tip({ label, children }: { label: string; children: ReactNode })
             side="top"
             sideOffset={6}
             collisionPadding={8}
-            className="z-100 border border-border bg-surface px-2.5 py-1.5 text-[10px] leading-snug text-dim shadow-lg"
+            className="z-100 border border-border bg-card px-2.5 py-1.5 text-[10px] leading-snug text-muted-foreground shadow-lg"
           >
             {label}
-            <Tooltip.Arrow className="fill-surface" />
+            <Tooltip.Arrow className="fill-card" />
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>
