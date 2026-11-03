@@ -2,7 +2,7 @@
 title = "Rules as Data"
 description = "Policies that vary by jurisdiction, channel and date as versioned, sourced data: stages, final checks, precedence, stored deadlines and decision records."
 category = "Architecture"
-order = 414
+order = 410
 tags = ["architecture", "rules", "compliance", "configuration"]
 +++
 

@@ -2,7 +2,7 @@
 title = "Code Ownership"
 description = "Every service and directory has an owning team: CODEOWNERS for reviews, a catalog entry for operations, and a README that gets anyone running in one command."
 category = "Engineering Practice"
-order = 1003
+order = 1023
 tags = ["ownership", "process", "documentation", "codeowners"]
 +++
 

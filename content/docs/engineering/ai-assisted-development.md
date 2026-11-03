@@ -2,7 +2,7 @@
 title = "AI-Assisted Development"
 description = "Working with AI coding agents: a person owns every change, review follows measured risk, standards live in the repo, CI enforces them, nothing ships unverified."
 category = "Engineering Practice"
-order = 1007
+order = 1026
 tags = ["ai", "agents", "process", "security"]
 +++
 

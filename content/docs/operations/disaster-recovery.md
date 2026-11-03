@@ -2,7 +2,7 @@
 title = "Disaster Recovery"
 description = "Recovery targets set from business impact, backups you've actually restored, the four DR strategies and their cost, and infrastructure rebuilt from code."
 category = "Operations"
-order = 1206
+order = 1236
 tags = ["operations", "reliability", "backups", "disaster-recovery"]
 +++
 

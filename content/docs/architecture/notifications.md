@@ -2,7 +2,7 @@
 title = "Notifications & Consent"
 description = "Sending email, texts and push safely: a consent ledger per contact point and purpose, one outbound gate, send-time re-checks, templates, and the message log."
 category = "Architecture"
-order = 410
+order = 417
 tags = ["architecture", "notifications", "consent", "email", "sms", "push"]
 aliases = ["notifications"]
 +++

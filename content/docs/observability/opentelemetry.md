@@ -3,7 +3,7 @@ title = "Instrumenting with OpenTelemetry"
 nav_title = "OpenTelemetry"
 description = "API and SDK, zero-code agents and the Kubernetes Operator, resources, failing open, semantic conventions, OTLP, propagation, signal status and GenAI spans."
 category = "Observability"
-order = 1235
+order = 1205
 tags = ["observability", "opentelemetry", "instrumentation", "tracing", "kubernetes"]
 +++
 

@@ -3,7 +3,7 @@ title = "Problem Statements & Acceptance Criteria"
 nav_title = "Problem Statements"
 description = "Problem statements that set the frame, acceptance criteria that state outcomes and leave room for the solution, and hearing the pain behind a request."
 category = "Product"
-order = 1021
+order = 1001
 tags = ["product", "requirements", "acceptance-criteria", "planning"]
 +++
 

@@ -2,7 +2,7 @@
 title = "Realtime Connections"
 description = "Pushing changes to connected clients: an edge and routing tier, auth on connect, heartbeats, fan-out, resume and catch-up, and surviving reconnect storms."
 category = "Architecture"
-order = 419
+order = 406
 tags = ["architecture", "realtime", "websockets", "sse", "presence", "scaling"]
 aliases = ["realtime-connections"]
 +++

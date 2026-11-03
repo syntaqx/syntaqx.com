@@ -2,7 +2,7 @@
 title = "Incidents & Postmortems"
 description = "Running an incident: declare early, a commander who doesn't debug, mitigate before diagnosing, update on a clock, then a blameless postmortem that sticks."
 category = "Operations"
-order = 1205
+order = 1235
 tags = ["incidents", "operations", "on-call", "reliability", "postmortems"]
 aliases = ["engineering/postmortems", "postmortems"]
 +++

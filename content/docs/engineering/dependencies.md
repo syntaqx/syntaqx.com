@@ -2,7 +2,7 @@
 title = "Dependencies & Upgrades"
 description = "Lockfiles, SemVer, small continuous upgrades, an LTS runtime policy, vetting new dependencies, and supply-chain safeguards like provenance and pinned CI."
 category = "Engineering Practice"
-order = 1005
+order = 1024
 tags = ["dependencies", "security", "supply-chain", "process", "upgrades", "maintenance"]
 aliases = ["dependencies", "delivery/staying-current"]
 +++

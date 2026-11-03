@@ -2,7 +2,7 @@
 title = "Customer Support Operations"
 description = "Running support as a system: channels, tickets with states and context, classify and route, macros, bots that hand off, escalation, metrics and QA."
 category = "Operations"
-order = 1210
+order = 1238
 tags = ["operations", "support", "customer-service", "automation", "tickets"]
 +++
 

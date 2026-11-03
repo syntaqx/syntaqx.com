@@ -2,7 +2,7 @@
 title = "Tech Debt"
 description = "Treat tech debt like a loan: know which kind you took on, track the interest you pay, budget a steady share to repay it, and modernize with strangler figs."
 category = "Engineering Practice"
-order = 1006
+order = 1025
 tags = ["tech-debt", "process", "architecture", "planning"]
 +++
 

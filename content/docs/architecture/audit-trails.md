@@ -2,7 +2,7 @@
 title = "Audit Trails"
 description = "Recording who did what, when and why: typed actors, before and after values, same-transaction capture, snapshots, tamper evidence, access logs and exports."
 category = "Architecture"
-order = 409
+order = 411
 tags = ["architecture", "audit", "compliance", "security", "records"]
 aliases = ["audit-trails", "audit-log"]
 +++

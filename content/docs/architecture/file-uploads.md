@@ -2,7 +2,7 @@
 title = "File Uploads"
 description = "Uploads straight to storage on a scoped credential, resumable protocols, checks on what arrived, hostile files, and a gate before a file is usable."
 category = "Architecture"
-order = 423
+order = 415
 tags = ["architecture", "uploads", "storage", "security", "mobile"]
 +++
 

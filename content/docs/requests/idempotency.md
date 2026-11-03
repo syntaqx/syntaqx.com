@@ -2,7 +2,7 @@
 title = "Idempotency"
 description = "Safe retries for any write with the Idempotency-Key header: how keys are stored and replayed, and what happens on conflicting or concurrent requests."
 category = "Requests & Responses"
-order = 311
+order = 303
 tags = ["api", "payments", "idempotency", "headers"]
 aliases = ["payments/idempotency", "idempotency"]
 +++

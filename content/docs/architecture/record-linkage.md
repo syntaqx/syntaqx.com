@@ -3,7 +3,7 @@ title = "Matching, Merging & Many Sources"
 nav_title = "Record Linkage"
 description = "Reconciling one real thing reported by many sources: observations, per-field survivorship, crosswalks, match-before-create, reversible merges and overrides."
 category = "Architecture"
-order = 412
+order = 413
 tags = ["architecture", "data-modeling", "record-linkage", "deduplication", "data-quality"]
 +++
 

@@ -2,7 +2,7 @@
 title = "Tracing & Sampling"
 description = "Spans, kinds, status and attributes, what deserves a span, tracing through queues, batches and webhooks with span links, and head and tail sampling."
 category = "Observability"
-order = 1234
+order = 1204
 tags = ["observability", "tracing", "opentelemetry", "sampling", "messaging"]
 +++
 

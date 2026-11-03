@@ -2,7 +2,7 @@
 title = "SLOs & Error Budgets"
 description = "Picking SLIs that reflect what users feel, setting SLO targets, spending error budgets deliberately, and alerting on burn rate instead of raw thresholds."
 category = "Operations"
-order = 1203
+order = 1233
 tags = ["reliability", "slo", "alerting", "operations"]
 aliases = ["slos"]
 +++
