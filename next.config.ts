@@ -199,6 +199,10 @@ export default withSentryConfig(nextConfig, {
   sourcemaps: {
     disable: process.env.VERCEL_ENV !== "production",
   },
+  // SENTRY_AUTH_TOKEN is only set for Production, so skip the after-compile
+  // step (upload and release) entirely everywhere else, instead of letting it
+  // warn that it has no token.
+  useRunAfterProductionCompileHook: process.env.VERCEL_ENV === "production",
 
   // Don't send build telemetry to Sentry.
   telemetry: false,
