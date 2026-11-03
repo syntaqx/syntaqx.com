@@ -230,12 +230,12 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-go@v7.0.0
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
       - run: test -z "$(gofmt -l .)"
-      - uses: golangci/golangci-lint-action@v9.3.0
+      - uses: golangci/golangci-lint-action@v9
       - run: cargo fmt --all -- --check
       - run: cargo clippy --workspace --all-targets -- -D warnings
 ```
