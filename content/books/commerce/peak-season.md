@@ -2,7 +2,7 @@
 title = "Peak Season & Drops"
 description = "BFCM load and capacity planning, load tests with real carts, code freezes, waiting rooms, fair limited drops, carrier peak surcharges and incident readiness."
 category = "Commerce Industry"
-order = 2361
+order = 2362
 part = "Running the Platform"
 tags = ["commerce", "peak-season", "bfcm", "waiting-rooms", "capacity-planning", "drops"]
 +++

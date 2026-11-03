@@ -2,7 +2,7 @@
 title = "Commerce Fraud & Abuse"
 description = "Card testing, bots and inventory hoarding, resellers and the BOTS Act, promo abuse, account takeover, refund and return fraud, friendly fraud, and the vendors."
 category = "Commerce Industry"
-order = 2359
+order = 2360
 part = "Running the Platform"
 tags = ["commerce", "fraud", "bots", "account-takeover", "chargebacks"]
 +++

@@ -3,7 +3,7 @@ title = "Alcohol, Tobacco & Age-Restricted Goods"
 nav_title = "Age-Restricted Goods"
 description = "Selling alcohol, tobacco, vapes, firearms and other age-gated goods: three-tier law, DTC shipping, the PACT Act, FFL transfers and age checks."
 category = "Commerce Industry"
-order = 2348
+order = 2349
 part = "Regulated Goods"
 tags = ["commerce", "alcohol", "tobacco", "firearms", "age-verification", "compliance"]
 +++

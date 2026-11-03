@@ -2,7 +2,7 @@
 title = "AI in Commerce"
 description = "AI inside the store as of October 2026: generated product content and its disclosure, AI search, support agents, forecasting, pricing limits, images and evals."
 category = "Commerce Industry"
-order = 2362
+order = 2363
 part = "Running the Platform"
 tags = ["commerce", "ai", "generative-ai", "search", "customer-service", "governance"]
 +++

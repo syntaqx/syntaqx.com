@@ -326,28 +326,40 @@ Commerce borrows its words from restaurants, grocery, logistics, payments and co
 ## Point of Sale and Stores
 
 - **Blind close:** counting a cash drawer without being shown the expected amount, then revealing the over or short ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **Card guarantee (reservation):** a card saved at booking under a stated policy and charged only for a no-show or late cancellation, as a merchant-initiated charge ([Restaurant Reservations](/books/commerce/restaurant-reservations#deposits-cancellation-fees-and-tickets)).
 - **Check (restaurant):** what one guest or group pays for an order; an order can have several, split by item, seat or evenly ([Restaurants & Food Service](/books/commerce/restaurants#tables-seats-and-checks)).
 - **Coursing:** grouping a table's items into courses that the kitchen receives as separate tickets and fires in turn ([Restaurants & Food Service](/books/commerce/restaurants#coursing-and-firing)).
+- **Cover:** one diner; restaurants count reservations, pacing and network fees in covers, not parties ([Restaurant Reservations](/books/commerce/restaurant-reservations#inventory-tables-shifts-and-pacing)).
 - **Drop:** excess cash moved from a drawer to the safe during a shift, counted and recorded on both sides ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
 - **Expediter (expo):** the kitchen station between front and back of house that sees every item on an order and releases it when all stations are done ([Restaurants & Food Service](/books/commerce/restaurants#the-kitchen-tickets-stations-and-the-kds)).
 - **Fire by prep time:** staggering when each item starts cooking by its prep time so a table's items finish together ([Restaurants & Food Service](/books/commerce/restaurants#coursing-and-firing)).
 - **Float:** the counted cash a drawer opens with ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **Guest book:** the restaurant's own record of its guests (visits, notes, allergies, spend), kept separately from a reservation network's diner account and linked to it by consent ([Restaurant Reservations](/books/commerce/restaurant-reservations#who-owns-the-guest)).
+- **Host stand:** the front-of-house station that runs the reservation book, waitlist and floor plan; the source of truth for the room that every booking channel reads ([Restaurant Reservations](/books/commerce/restaurant-reservations#waitlists-walk-ins-and-the-host-stand)).
 - **KDS (kitchen display system):** screens that replace printed kitchen tickets; cooks bump items when done and the times are recorded ([Restaurants & Food Service](/books/commerce/restaurants#the-kitchen-tickets-stations-and-the-kds)).
 - **Manager approval:** a second staff member's PIN on someone else's void, refund or override, recorded with both names ([Store Operations](/books/commerce/store-operations#staff-roles-and-permissions)).
+- **Network cover:** a diner a reservation network delivered, billed to the restaurant per seated cover under a per-cover plan, unlike covers from the restaurant's own channels ([Restaurant Reservations](/books/commerce/restaurant-reservations#where-a-cover-came-from)).
 - **No-sale:** opening the cash drawer without a sale; sometimes needed and watched in aggregate ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **No-show fee:** a charge under the reservation's frozen policy when a party doesn't arrive, confirmed by the host after a grace period ([Restaurant Reservations](/books/commerce/restaurant-reservations#deposits-cancellation-fees-and-tickets)).
 - **Offline mode (POS):** taking sales and stored card payments without a connection, within vendor limits and at the merchant's risk ([Point of Sale](/books/commerce/point-of-sale#offline-mode-and-its-limits)).
 - **Organized retail crime (ORC):** theft by groups who steal goods to resell them, often online ([Store Operations](/books/commerce/store-operations#organized-retail-crime-and-the-law)).
 - **Over/short:** counted cash minus expected cash at a drawer's close ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
+- **Pacing (flow control):** the maximum covers that may start in each reservation increment, the kitchen's limit on top of the tables' ([Restaurant Reservations](/books/commerce/restaurant-reservations#inventory-tables-shifts-and-pacing)).
 - **Paid in / paid out:** cash added to or removed from a drawer for something other than a sale, each with a reason ([Point of Sale](/books/commerce/point-of-sale#registers-and-cash)).
+- **Prepaid ticket (restaurant):** a seat at a set time paid in full in advance, priced like an event and often non-refundable, the model Tock started with ([Restaurant Reservations](/books/commerce/restaurant-reservations#deposits-cancellation-fees-and-tickets)).
 - **Register session:** one drawer from its opening float to its closing count ([Store Operations](/books/commerce/store-operations#how-to-build-it)).
+- **Reservation anti-piracy law:** a state law against reselling restaurant reservations, either requiring the restaurant's written agreement to list them (New York, Louisiana, Illinois) or capping resale at the price paid (California) ([Restaurant Reservations](/books/commerce/restaurant-reservations#bots-resale-and-the-law)).
 - **Sales receipt:** the customer's record of a sale, printed or digital, rendered from the order; distinct from a goods receipt ([Point of Sale](/books/commerce/point-of-sale#receipts-and-privacy)).
 - **Service charge:** a mandatory charge on a restaurant bill; the employer's revenue, and wages if distributed, never a tip ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
 - **Shrink event:** a known loss (theft, damage, expiry, vendor shortage) recorded when it happens, with retail and cost value ([Store Operations](/books/commerce/store-operations#shrink-and-loss-prevention)).
+- **Table combination:** adjacent tables defined in advance as one bookable unit for a larger party, claiming every member table ([Restaurant Reservations](/books/commerce/restaurant-reservations#inventory-tables-shifts-and-pacing)).
 - **Tender:** one way a sale was paid (card, cash, gift card, store credit, EBT, house account); a sale can have several ([Point of Sale](/books/commerce/point-of-sale#tenders)).
 - **Tip credit:** counting tips toward a tipped employee's federal minimum wage, at most $5.12 an hour over a $2.13 cash wage ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
 - **Tip pool:** tips gathered and divided among eligible staff by a formula; never shared with managers ([Restaurants & Food Service](/books/commerce/restaurants#tip-pools)).
 - **Tip (restaurant):** a voluntary payment from the guest that belongs to the employee; the employer may not keep any of it ([Restaurants & Food Service](/books/commerce/restaurants#tips-service-charges-and-the-law)).
+- **Turn time:** how long a party is expected to hold a table, set by party size, shift and dining area, and used to generate bookable slots ([Restaurant Reservations](/books/commerce/restaurant-reservations#generating-bookable-slots)).
 - **Void:** cancelling a line or sale before it closes; nothing was sold, unlike a return ([Point of Sale](/books/commerce/point-of-sale#the-sale-at-the-register)).
+- **Waitlist:** walk-in parties queued with a party size and a quoted wait, notified when a table opens ([Restaurant Reservations](/books/commerce/restaurant-reservations#waitlists-walk-ins-and-the-host-stand)).
 - **X report / Z report:** a mid-shift snapshot of a register session, and the end-of-day close that locks the day ([Store Operations](/books/commerce/store-operations#cash-management-and-end-of-day)).
 
 ## On-Demand Delivery

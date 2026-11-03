@@ -2,7 +2,7 @@
 title = "Automotive Retail"
 description = "How cars are sold: dealer management systems, F&I and lending law, the vacated CARS Rule, window stickers and disclosures, titling, online car retail."
 category = "Commerce Industry"
-order = 2352
+order = 2353
 part = "Regulated Goods"
 tags = ["commerce", "automotive", "dealers", "f-and-i", "titling", "compliance"]
 +++

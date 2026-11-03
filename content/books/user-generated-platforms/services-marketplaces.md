@@ -10,22 +10,24 @@ tags = ["marketplaces", "services", "pet-care", "background-checks", "fcra"]
 
 The other chapters in this part rent things: a room, an RV, a car, a jacket. A services marketplace rents a person's time. The dog walker, the house sitter, the handyman and the babysitter are the inventory, and they do the work inside the customer's home, often alone, often with a key, and often in charge of something that can't be repaired or replaced at actual cash value: a dog, a cat, a child, an elderly parent. That changes what onboarding has to check (a criminal record matters more than a VIN), what a guarantee is promising (a vet bill, not a dent), what the calendar is counting (a caregiver's hours and a boarding facility's capacity, not one asset's nights), and what the platform's control over the work implies about whether the worker is its employee.
 
-This chapter covers what is different when the listing is a person doing a service: how the platforms do it across pet care (Rover, Wag!, Yourgi), home services (Angi, Thumbtack, Taskrabbit) and family care (Care.com, Sittercity); the split between lead generation and booked-and-paid models; two-tier supply, where independent caregivers sit beside licensed businesses that run their own software; background checks under the FCRA and what they can't prove; boarding and kennel licensing; where a guarantee stops and insurance starts, with the vet emergency as the worked case; in-home access and visit evidence; recurring care; and guarantee credits and rewards as a liability. It doesn't repeat the gates, calendars, fees, claims, reviews and cancellations the earlier chapters cover; it extends them. Whether a caregiver is an employee, and the gig-worker law around it, belongs to [Gig Work & Worker Law](/books/user-generated-platforms/gig-work-and-worker-law).
+This chapter covers what is different when the listing is a person doing a service: how the platforms do it across pet care (Rover, Wag!, Yourgi), home services (Angi, Thumbtack, Taskrabbit) and family care (Care.com, Sittercity); the split between lead generation and booked-and-paid models; two-tier supply, where independent caregivers sit beside licensed businesses that run their own software, and the reservation network model that sells bookings to those businesses the way OpenTable sells tables to restaurants; background checks under the FCRA and what they can't prove; boarding and kennel licensing; where a guarantee stops and insurance starts, with the vet emergency as the worked case; in-home access and visit evidence; recurring care; and guarantee credits and rewards as a liability. It doesn't repeat the gates, calendars, fees, claims, reviews and cancellations the earlier chapters cover; it extends them. Whether a caregiver is an employee, and the gig-worker law around it, belongs to [Gig Work & Worker Law](/books/user-generated-platforms/gig-work-and-worker-law).
 
 ## How the Platforms Do It
 
-As of October 2026:
+As of November 2026:
 
 | Platform | Supply | How it makes money | Vetting | Guarantee |
 | --- | --- | --- | --- | --- |
-| **Rover** (pet care; private since February 2024) | Over 870,000 pet care providers by the end of 2022, in North America, the UK and Western Europe; boarding in the sitter's home, house sitting, drop-ins, day care, walking, training | Service fees from both pet parents and providers | All new US and Canadian providers pass third-party background checks; over half had also passed an enhanced check by the end of 2022; identity verification in the UK and Europe | Rover Guarantee: reimbursement up to $25,000 for certain injuries or damages, up to $1 million for owner property damage or certain third-party injuries, described as a commercial agreement |
-| **Wag!** (pet care; reorganized in 2025) | Over 500,000 approved Pet Caregivers; scheduled and on-demand walks, drop-ins, boarding in the caregiver's home, in-home sitting, training | Fees charged to caregivers per completed service; a flat $14.99 booking fee on sitting, waived by Wag! Premium | All new caregivers pass a third-party criminal background check | Wag! Guarantee: $25,000 lifetime for pet injury, $100,000 lifetime for property, $200 minimum per request, "NOT INSURANCE" |
+| **Rover** (pet care; owned by Blackstone, private since February 2024) | Over 870,000 pet care providers by the end of 2022, its last published count; 16 countries in North America and Europe by June 2025, after buying the Dublin sitting platform Gudog in April 2025; boarding in the sitter's home, house sitting, drop-ins, day care, walking, training | Service fees from both pet parents and providers | All new US and Canadian providers pass third-party background checks; over half had also passed an enhanced check by the end of 2022; identity verification in the UK and Europe | Rover Guarantee: reimbursement up to $25,000 for certain injuries or damages, up to $1 million for owner property damage or certain third-party injuries, described as a commercial agreement (its 2022 10-K) |
+| **Wag!** (pet care; private since September 2025, wholly owned by its lender Retriever LLC after a prepackaged Chapter 11) | Over 500,000 approved Pet Caregivers; scheduled and on-demand walks, drop-ins, boarding in the caregiver's home, in-home sitting, training | Fees charged to caregivers per completed service; booking fees of $14.99 on overnight sitting and $2.99 on walks and drop-ins, waived by Wag! Premium | All new caregivers pass a third-party criminal background check | Wag! Guarantee: $25,000 lifetime for pet injury, $100,000 lifetime for property, $200 minimum per request, "NOT INSURANCE" |
 | **Yourgi** (pet care) | "Yourgi Pros" and local pet resorts; boarding, walking, house sitting, daycare, grooming, training, vet care; Denver, Dallas, Fort Worth, Houston, Boston and Portland | A percentage service fee on providers, service fees from pet parents, a profile review fee at signup | "Vetted" and "hand-picked"; its terms say it doesn't independently verify background check results | Yourgi Guarantee: coupon codes, not cash, up to $300 a month and $1,200 a year, Pro services only |
 | **Care.com** (child, senior and pet care) | Individual caregivers and families | Premium subscriptions to hire | An initial criminal check on every individual caregiver, renewed annually while active; optional paid checks | None published as a guarantee |
 | **Sittercity** (child, senior and pet care) | Individual sitters | Premium membership, required for a parent to run a check | Not automatic: the sitter or a parent buys a Checkr check (basic criminal, enhanced criminal, motor vehicle); the badge lasts 90 days | None published |
 | **Angi** (home services; independent since March 2025) | About 111,000 average monthly active pros at the end of 2025 | Lead fees ($587.1 million in 2025), advertising, memberships, referral fees on pre-priced jobs | Owners or principals of pro businesses pass certain criminal background checks | A service guarantee, expensed in selling and marketing |
 | **Thumbtack** (home services) | Pros who set their own lead budget | Pros pay for leads; no membership fee | Every account owner passes a criminal check by a "nationally accredited third-party provider" at sign-up, with continuous checks annually; the owner answers for their employees and contractors | Money-back up to $2,500; property damage up to $100,000 |
 | **Taskrabbit** (home services) | "Independent business owners" who set their own rates | Platform fees, with Tasker rates set "without deduction by Taskrabbit" | Identity and criminal checks "to the extent permitted by applicable law" | Taskprotect, at Taskrabbit's discretion and after personal insurance |
+
+Rover's guarantee limits come from its last annual report before it went private; it no longer files with the SEC, and its own guarantee page didn't load for me, so I couldn't confirm the current terms. <!-- source-gap: rover-guarantee-current | status | the Rover Guarantee's current limits and terms after Rover stopped filing with the SEC in 2024 | closes with: Rover's guarantee terms page (rover.com/rover-guarantee), which returned 403 to every fetch | checked: 2026-11-03 -->
 
 Five patterns run through the table:
 
@@ -63,6 +65,33 @@ The two tiers break different assumptions in the core model. The core `bookings`
 ### Integrating a Facility's System
 
 A resort's inventory lives in its own software. Gingr's published API functions read reservations by date range (at most 30 days), by pet or by owner, plus a per-day count of check-ins, check-outs and overnights; capacity limits are a setting inside the product, and the reference lists no availability or capacity call and no call that books a stay. PetExec's API reference can schedule, modify and delete a boarding appointment and list an owner's boardings in a date range, but its boarding and calendar sections have no availability or capacity call either (only its group training classes report spots left). So a marketplace derives open capacity from the facility's reservation list or asks the facility to hold an allotment. The patterns from [External Calendars](/books/user-generated-platforms/availability-and-booking#external-calendars) apply with one difference: iCal blocks a whole listing, while a facility needs counts by unit type (runs by dog size, suites, cat condos), and a booking has to land in the facility's system with the pet's vaccination records before check-in. My default is an allotment the facility controls, written back to its system on every booking, with the facility's confirmation as the step that moves the marketplace booking from requested to confirmed.
+
+### The Reservation Network Model
+
+There is a third way to bring licensed facilities onto a marketplace, and restaurants show it at scale: build it like OpenTable. The platform sells the facility the software it runs every day (the booking calendar, runs and suites as inventory, client and pet records, check-in and check-out) and, separately, a consumer network that sends bookings into that software. The facility owns the booking and the client relationship; the platform charges a subscription for the software and a fee per booking its network delivered, and nothing extra for bookings the facility took itself by phone, at the desk or on its own website. Booking Holdings describes OpenTable's revenue in exactly those two parts, reservation services and "subscription fees for restaurant management services," and the per-cover fee, its attribution and its rivals' flat-fee pricing are in [Restaurant Reservations](/books/commerce/restaurant-reservations#software-and-a-network).
+
+That is a different business from Rover's and Wag!'s, where the platform owns the booking, takes the payment from both sides and stands behind the stay with its own guarantee:
+
+| | Booked marketplace (Rover, Wag!) | Reservation network |
+| --- | --- | --- |
+| **Whose book is the truth** | The platform's; the provider's calendar is a view of it | The facility's, run on the platform's software; the network reads it |
+| **Who confirms** | The provider accepts in the platform, or the booking is instant | The facility's book, under its own capacity rules; a network booking is a request until the book accepts it |
+| **Whose cancellation policy** | The platform's catalog, chosen by the provider ([Cancellation Policy Catalogs](/books/user-generated-platforms/cancellations-and-disputes#cancellation-policy-catalogs)) | The facility's own, shown and frozen at booking, enforced by the platform as its processor |
+| **Who is paid, and who is the merchant** | The platform charges the customer and pays the provider | The facility is the merchant; the platform processes for it, often as a payment facilitator ([Where the Money Goes](/books/payments/software-platforms#where-the-money-goes)) |
+| **Who answers for harm** | The platform's guarantee, then the provider's insurance | The facility, under its license and its own care, custody and control coverage; any network program is a stated extra, not the default |
+| **What the platform earns** | Service fees on every booking from both sides | A subscription, plus a fee per network booking |
+| **Who owns the client** | The platform's account; leakage off-platform is the risk | The facility's client record; the network has its own account for the same pet parent |
+
+The design consequences, each a decision to make explicitly:
+
+- **Confirmation follows the book.** A facility on the platform's software needs no integration, because its inventory is the platform's own data; a facility on Gingr or PetExec needs the allotment pattern above, and its system's acceptance is the confirmation either way. The network never sells a run the facility's book hasn't released to it.
+- **The facility's policy applies.** Cancellation windows, deposits and no-show fees are the facility's, versioned and frozen on the booking, with the platform charging the saved card on the facility's behalf. The customer has to see whose policy it is before paying, because the platform's name is on the app.
+- **The guarantee has an owner.** A pet parent who booked a licensed kennel through a network app will assume the app stands behind the stay. Either the network runs a program and says what it covers (with everything in [Why They Aren't Insurance](#why-they-aren-t-insurance)), or the booking page names the facility as responsible and shows its license, and the incident flow routes to the facility and, where the law requires it, to the licensing authority. A platform that runs both models needs both answers, per booking.
+- **Every booking carries its attribution.** Network, the facility's own channel or a partner surface is recorded at booking with the plan in force, because it decides the fee, and billed on what happened (a completed stay, not a request). Facilities will steer repeat clients to book direct; points, rewards and guarantees that apply only to network bookings are how a network competes for them, and they're the facility's cost, not its benefit.
+- **The pet exists twice.** The network keeps the pet parent's account and the pet's profile across facilities; the facility keeps its own client record with vaccination proofs it verified. Linking them, and what crosses the link, is consent and contract, not a merge.
+- **Classification mostly drops away.** The facility's staff are its employees, so the referral agency questions in [Control and Classification](#control-and-classification) apply to the independents the platform books itself, not to the facilities it serves as a vendor.
+
+My default for a pet care marketplace with both tiers is to book and guarantee independents as a marketplace, and to offer licensed facilities the network model with the facility as merchant and owner of the stay, recorded per provider and frozen on each booking, so the confirmation path, the policy, the guarantee and the fee all follow from one field.
 
 ### Licensing: Boarding in Someone's Home
 
@@ -195,8 +224,15 @@ CREATE TABLE service_providers (         -- the supply side of a services listin
   service_area     JSONB,                -- radius or polygon for visits
   external_system  TEXT,                 -- 'gingr', 'petexec', ... for businesses
   external_ref     TEXT,                 -- location id in that system
-  sync_mode        TEXT CHECK (sync_mode IN ('allotment', 'reservation_list', 'manual'))
+  sync_mode        TEXT CHECK (sync_mode IN ('allotment', 'reservation_list', 'manual')),
+  booking_model    TEXT NOT NULL DEFAULT 'marketplace' CHECK (booking_model IN
+                     ('marketplace', 'network'))  -- network: the facility is merchant and owns the stay
 );
+
+ALTER TABLE bookings                     -- frozen per booking under the network model
+  ADD COLUMN booking_model TEXT NOT NULL DEFAULT 'marketplace',
+  ADD COLUMN attribution   TEXT CHECK (attribution IN ('network', 'direct', 'partner_surface')),
+  ADD COLUMN network_fee   BIGINT;       -- billed on completion, from the plan in force
 
 CREATE TABLE capacity_counters (         -- pooled inventory: pets a night, runs, slots
   provider_id   UUID NOT NULL REFERENCES service_providers (account_id),
@@ -402,6 +438,7 @@ GROUP BY b.guest_account_id;
 Design decisions behind it:
 
 - **Capacity and exclusion are both kept, on different things.** A boarding booking claims counters (pets a night at a sitter's home, runs at a resort) and sets `exclusive` false; a visit excludes on the caregiver's time, because one person can't be in two homes. Counters are capped by the lower of the provider's setting and any license threshold, so a Colorado sitter without a PACFA license can't be sold a fourth concurrent dog.
+- **The booking model is one field.** `booking_model` on the provider, copied to each booking, decides whose book confirms, whose policy and guarantee apply, who is the merchant and whether a network fee is billed; `attribution` records whether a network-model booking came from the network or the facility's own channel.
 - **Care subjects are first-class.** The pet's vaccinations, care notes and bite history follow the animal across providers and bookings; the booking freezes the instructions given for it. For people, the record holds what the care needs and no more, and medical details live in the vault.
 - **A background check is a consumer report workflow, not a boolean.** Disclosure version, authorization, the pre-adverse notice, the stored waiting period, disputes and the final notice are columns; the passing check becomes a `verifications` row with a validity range so the provider gate reads one model. Monitoring hits arrive as new checks with `package = 'monitoring_hit'` and go through the same flow.
 - **Licenses gate offers.** A credential is per location and jurisdiction with a validity range; a boarding offer checks it at publish and at booking, as asset eligibility does for vehicles ([Asset Eligibility](/books/user-generated-platforms/supply-onboarding#asset-eligibility)).
@@ -434,6 +471,7 @@ Design decisions behind it:
 
 - **Treat the provider as the inventory:** time exclusion on the caregiver, capacity counters on homes and facilities, and the core model's one-booking-per-period rule only where it still fits.
 - **Pick leads or bookings deliberately,** knowing a lead marketplace can only guarantee what the customer can prove.
+- **Offer licensed facilities the reservation network model where it fits,** with the facility's book confirming, its policy and responsibility shown, and every booking attributed to the network or the facility's own channel.
 - **Run the full FCRA flow for contractors,** with stand-alone disclosure, authorization, pre-adverse notice, a stored waiting period and the final notice, and route monitoring hits through the same flow.
 - **Don't let a badge say more than the check proved,** and expire it.
 - **Gate boarding offers on location licenses** where state or local law reaches into homes (Colorado above three animals, Massachusetts kennels including private residences).
@@ -480,9 +518,14 @@ Design decisions behind it:
 - [Rover Group: Form 10-K for 2022](https://www.sec.gov/Archives/edgar/data/1826018/000182601823000015/rovr-20221231.htm), providers, services, fees from both sides, background checks, the Rover Guarantee and its insurance, repeat bookings, the classification risk factor and the referral agency exemption, coupons as a reduction of revenue
 - [Rover Group: Fourth quarter and full year 2022 results (8-K exhibit)](https://www.sec.gov/Archives/edgar/data/1826018/000182601823000008/ex991_20230227.htm), revenue, gross booking value and bookings for 2022
 - [Rover Group: Completion of the Blackstone acquisition (8-K exhibit, February 27, 2024)](https://www.sec.gov/Archives/edgar/data/1826018/000162828024007068/exhibit991-8xk22724.htm), private since February 2024 at $11.00 a share
+- [Rover: CEO succession (June 12, 2025, GlobeNewswire via Wedbush)](https://investor.wedbush.com/wedbush/article/gnwcq-2025-6-12-rover-announces-ceo-succession), sixteen countries in North America and Europe
+- [The Irish Times: Blackstone-backed Rover buys Gudog (April 29, 2025)](https://www.irishtimes.com/business/2025/04/29/blackstone-backed-rover-group-buys-dublin-dog-sitting-platform-gudog/), the acquisition and Blackstone's ownership
 - [Wag! Group: Form 10-K for 2024](https://www.sec.gov/Archives/edgar/data/1842356/000184235625000029/pet-20241231.htm), caregivers, services, Wag! Premium, background checks, report cards and GPS, the $1 million property damage description, the classification risk factor, the licensed insurance producer subsidiary
 - [Wag! Group: 8-K on the Chapter 11 filing (July 2025)](https://www.sec.gov/Archives/edgar/data/0001842356/000184235625000090/pet-20250720.htm), the prepackaged plan with the lender taking the equity
-- [Wag! Group: 8-K on plan confirmation (September 2025)](https://www.sec.gov/Archives/edgar/data/1842356/000184235625000098/pet-20250829.htm), confirmation on August 29 and consummation on September 1, 2025
+- [Wag! Group: 8-K on plan confirmation (September 2025)](https://www.sec.gov/Archives/edgar/data/1842356/000184235625000098/pet-20250829.htm), confirmation on August 29 and consummation on September 1, 2025, the old stock cancelled and 100% of the new equity issued to Retriever
+- [Wag! Group: 8-K on the Blue Torch loan assignment (April 2025)](https://www.sec.gov/Archives/edgar/data/1842356/000184235625000041/pet-20250411.htm), the term loans assigned to Retriever LLC
+- [Wag! Group: Emergence from Chapter 11 (September 2, 2025, via Yahoo Finance)](https://finance.yahoo.com/news/wag-group-co-successfully-completes-100000822.html), a privately held company wholly owned by Retriever LLC
+- [Booking Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1075531/000107553126000009/bkng-20251231.htm), OpenTable's reservation services and subscription fees for restaurant management services
 - [Angi: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1705110/000170511026000011/angi-20251231.htm), the spin-off from IAC, active pros, lead, advertising and services revenue, pre-priced offerings, pro background checks, service guarantee expense, the network revenue decline and the classification risk factor
 - [Care.com: Press release correcting media reports (8-K exhibit, April 1, 2019)](https://www.sec.gov/Archives/edgar/data/1412270/000141227019000015/ex991-pressrelease.htm), three tiers of checks families could buy
 - [Care.com: Form 10-Q for the first quarter of 2019](https://www.sec.gov/Archives/edgar/data/1412270/000141227019000029/fy19q110-q.htm), the decision to add screening, the securities class action and the district attorneys' settlement
@@ -494,6 +537,8 @@ Design decisions behind it:
 - [Wag!: Wag! Guarantee terms of service](https://wagwalking.com/terms-wag-guarantee-terms-of-service), "NOT INSURANCE," lifetime limits, the $200 minimum, notice, documentation and cost windows, excess of insurance and exclusions
 - [Wag!: Safety](https://wagwalking.com/safety), background checks for every applicant and 24/7 support
 - [Wag!: Pet sitting](https://wagwalking.com/pet-sitting), the $14.99 booking fee waived by Premium and GPS walk tracking
+- [Wag!: Wag! Premium](https://wagwalking.com/wag-premium), booking fees of $2.99 on walks and drop-ins and $14.99 on overnights, waived for members
+- [Wag!](https://wagwalking.com/), 500K+ Pet Caregivers nationwide
 - [Yourgi](https://www.yourgi.com/), services, Pros and local pet resorts, and markets
 - [Yourgi: Guarantee](https://www.yourgi.com/guarantee), coupon remedies, monthly and annual caps, the 7-day window and the provider cancellation guarantee
 - [Yourgi: Rewards](https://www.yourgi.com/rewards), tiers, rates and thresholds, and no cash redemption

@@ -2,7 +2,7 @@
 title = "Pesticides, Chemicals & Hazmat"
 description = "Selling and shipping pesticides and hazmat: FIFRA seller duties, 25(b) products, state registration, marketplaces, DOT rules, lithium batteries, SDS, Prop 65."
 category = "Commerce Industry"
-order = 2350
+order = 2351
 part = "Regulated Goods"
 tags = ["commerce", "pesticides", "hazmat", "lithium-batteries", "prop-65", "compliance"]
 +++
