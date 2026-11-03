@@ -2,7 +2,7 @@
 title = "Transactions & Concurrency"
 description = "What isolation levels really guarantee, stopping lost updates with optimistic or pessimistic locking, retrying serialization failures, and avoiding deadlocks."
 category = "Database"
-order = 502
+order = 252
 tags = ["database", "postgres", "transactions", "concurrency"]
 +++
 

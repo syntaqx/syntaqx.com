@@ -2,7 +2,7 @@
 title = "Error Responses"
 description = "One error shape for every failure, status codes that carry the outcome, and the 400 vs 422 and 403 vs 404 calls clients branch on to recover."
 category = "Requests & Responses"
-order = 302
+order = 352
 tags = ["api", "errors", "standards"]
 aliases = ["error-responses"]
 +++

@@ -2,7 +2,7 @@
 title = "Naming Conventions"
 description = "How API paths are named: plural kebab-case nouns, one level of nesting, IDs not names in URLs, actions as sub-resources, and no formats or versions in paths."
 category = "API Design"
-order = 202
+order = 302
 tags = ["api", "naming", "rest"]
 aliases = ["naming-conventions"]
 +++

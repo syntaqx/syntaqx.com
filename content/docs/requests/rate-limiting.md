@@ -2,7 +2,7 @@
 title = "Rate Limiting"
 description = "Why every endpoint is rate limited, what to key limits on, the headers that report them, enforcing them in Redis, and staying up when the limiter fails."
 category = "Requests & Responses"
-order = 308
+order = 358
 tags = ["api", "rate-limiting", "headers"]
 aliases = ["rate-limiting", "operations/rate-limiting"]
 +++

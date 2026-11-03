@@ -2,7 +2,7 @@
 title = "JSON Field Conventions"
 description = "How fields are named and typed in JSON bodies: snake_case, absent versus null, string enums, boolean prefixes, and safe handling of 64-bit numbers."
 category = "Requests & Responses"
-order = 301
+order = 351
 tags = ["api", "json", "naming", "standards"]
 aliases = ["json-conventions"]
 +++

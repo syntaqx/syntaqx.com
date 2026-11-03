@@ -2,7 +2,7 @@
 title = "Application Caching"
 description = "When a cache earns its place, the patterns for filling and invalidating one, surviving stampedes and cold starts, and what a cache must never be trusted with."
 category = "Architecture"
-order = 405
+order = 205
 tags = ["architecture", "caching", "performance", "redis"]
 +++
 

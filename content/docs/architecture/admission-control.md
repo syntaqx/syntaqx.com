@@ -3,7 +3,7 @@ title = "Waiting Rooms & Admission Control"
 nav_title = "Admission Control"
 description = "Admitting users at the rate a system can serve: capacity per scope, queues with ceilings, honest wait estimates, signed admission tokens and fairness."
 category = "Architecture"
-order = 407
+order = 207
 tags = ["architecture", "admission-control", "waiting-room", "capacity", "reliability"]
 aliases = ["admission-control", "waiting-rooms"]
 +++

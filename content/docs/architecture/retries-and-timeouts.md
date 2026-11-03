@@ -2,7 +2,7 @@
 title = "Retries & Timeouts"
 description = "When to retry, how long to wait, and when to give up: timeouts on every call, exponential backoff with jitter, retry budgets, and what is safe to retry."
 category = "Architecture"
-order = 402
+order = 202
 tags = ["reliability", "retries", "timeouts", "operations"]
 aliases = ["retries-and-timeouts", "operations/retries-and-timeouts"]
 +++

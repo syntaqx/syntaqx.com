@@ -2,7 +2,7 @@
 title = "Service Boundaries"
 description = "Where to draw lines in a system: start with a modular monolith, split only for a reason, give every piece of data one owner, and never share a database."
 category = "Architecture"
-order = 401
+order = 201
 tags = ["architecture", "microservices", "monolith", "design"]
 aliases = ["service-boundaries"]
 +++

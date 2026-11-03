@@ -2,7 +2,7 @@
 title = "Database Performance"
 description = "Measure before you optimize: reading query plans, designing indexes that earn their write cost, catching N+1 queries, pooling connections, and timeouts."
 category = "Database"
-order = 503
+order = 253
 tags = ["database", "postgres", "performance", "indexes"]
 +++
 

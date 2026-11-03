@@ -2,7 +2,7 @@
 title = "Filtering & Sorting"
 description = "Query parameter conventions for filtering and sorting collections: field filters, range operators, sort=-created_at, allowlists, and when to use QUERY."
 category = "Requests & Responses"
-order = 305
+order = 355
 tags = ["api", "filtering", "sorting", "standards"]
 aliases = ["filtering-and-sorting"]
 +++

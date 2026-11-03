@@ -3,7 +3,7 @@ title = "GraphQL in Depth"
 nav_title = "GraphQL"
 description = "Designing a GraphQL schema that survives years of change: nullability, connections, mutation payloads, N+1, cost limits, authorization, caching and federation."
 category = "API Design"
-order = 207
+order = 307
 tags = ["graphql", "api", "schema", "performance", "security"]
 +++
 

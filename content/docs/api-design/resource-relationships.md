@@ -2,7 +2,7 @@
 title = "Relationships & Expansion"
 description = "Links between resources as their own sub-resources (PUT to link, DELETE to unlink), and related objects as IDs unless the client asks to expand them."
 category = "API Design"
-order = 203
+order = 303
 tags = ["api", "rest", "relationships", "expand", "design"]
 aliases = ["resource-relationships", "requests/expanding-responses", "expanding-responses"]
 +++

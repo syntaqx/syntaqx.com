@@ -2,7 +2,7 @@
 title = "Error & Empty States"
 description = "Designing every view's loading, empty, error, partial and success states up front, with messages that explain what to do, retries, and no blank pages."
 category = "Frontend"
-order = 605
+order = 405
 tags = ["frontend", "ux", "errors", "resilience"]
 +++
 

@@ -3,7 +3,7 @@ title = "API Authentication"
 nav_title = "Authentication"
 description = "How API callers prove who they are: prefixed, hashed API keys, restricted by default, OAuth 2.0 for delegated access, scopes, and 401 vs 403 vs 404."
 category = "API Design"
-order = 204
+order = 304
 tags = ["api", "authentication", "oauth", "security"]
 aliases = ["api-authentication"]
 +++
