@@ -59,7 +59,7 @@ Logs are copied, shipped to vendors, kept for months and searched by many people
 
 ## Access
 
-- **Production access is just-in-time,** approved and time-boxed. Standing access means every engineer's laptop is a path to customer data.
+- **Production access is [just-in-time](/docs/security/infrastructure-access#just-in-time-access-and-break-glass),** approved and time-boxed. Standing access means every engineer's laptop is a path to customer data.
 - **Every read of sensitive data through support tooling is an audited event:** who, what, when and why. Audits don't only catch abuse; they answer the customer who asks who looked at their account.
 - **Test and staging use synthetic data.** A production copy in staging is production data with weaker controls. See [Environments](/docs/operations/environments).
 

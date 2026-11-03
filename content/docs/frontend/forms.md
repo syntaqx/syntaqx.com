@@ -13,7 +13,7 @@ Forms are where users give you something: their money, their data, their time. A
 Every piece of a form the browser handles is one you don't build, test or get wrong.
 
 - **A visible `<label>` for every input,** connected with `for`/`id`. Clicking it focuses the field, screen readers announce it, and it's still there after the user starts typing, which a placeholder isn't.
-- **The right `type`.** `email`, `tel`, `url` and `number` change the mobile keyboard, so someone typing a phone number gets a keypad. A usability win for one attribute.
+- **The right `type`.** `email`, `tel`, `url` and `number` change the mobile keyboard, so someone typing a phone number gets a keypad. A usability win for one attribute. What the server does with those values is in [Phone Numbers & Email Addresses](/docs/fundamentals/phones-and-emails).
 - **`autocomplete` with real tokens.** `given-name`, `email`, `street-address`, `postal-code`, `cc-number`, `one-time-code` and the rest are defined by the [HTML standard](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html) and let the browser fill a whole checkout in one tap. Getting them wrong, or turning them `off`, makes people retype what their browser already knows (and on login fields most browsers ignore `off` anyway, so password managers keep working, per [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete)).
 - **Constraint attributes** (`required`, `minlength`, `pattern`, `min`, `max`) give you [constraint validation](https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Constraint_validation) and the `:invalid` state for free, with the rules in the markup where the next engineer will find them.
 

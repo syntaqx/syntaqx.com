@@ -32,7 +32,7 @@ The common mistake is reaching for consent for everything. It's the most fragile
 - **A controller** decides why and how personal data is processed: a business, for its customer and employee data.
 - **A processor** processes it on a controller's behalf and instructions. An API platform storing its customers' end users' data is a processor for that data, and a controller for its own customers' account data.
 
-A controller may only use processors under a contract with the terms Article 28 requires: process only on documented instructions, keep it confidential and secure, use subprocessors only with authorization and on the same terms, help with requests and breaches, and delete or return data at the end. That's the **data processing agreement (DPA)**. Expect every business customer to ask you to sign theirs or offer yours, and keep a published list of your **subprocessors**, updated before you add one.
+A controller may only use processors under a contract with the terms Article 28 requires: process only on documented instructions, keep it confidential and secure, use subprocessors only with authorization and on the same terms, help with requests and breaches, and delete or return data at the end. That's the **data processing agreement (DPA)**. Expect every business customer to ask you to sign theirs or offer yours, review the DPA of every [vendor](/docs/development/build-vs-buy) you add, and keep a published list of your **subprocessors**, updated before you add one.
 
 ## Data Subject Rights
 
@@ -40,7 +40,7 @@ People can **access** a copy of their data, **rectify** it, **erase** it, **rest
 
 Each right is a feature, and they share one prerequisite: finding everything you hold about a person.
 
-- **Access and portability** are an export: a job that walks every store keyed by the person's identifiers and produces a JSON or CSV bundle. Build it once as a real feature, not ad hoc queries per request.
+- **Access and portability** are an export: a job that walks every store keyed by the person's identifiers and produces a JSON or CSV bundle ([Imports & Exports](/docs/building-blocks/imports-and-exports#exporting-for-data-portability)). Build it once as a real feature, not ad hoc queries per request.
 - **Erasure** is the hard one, because data has copies: replicas, caches, search indexes, warehouses, logs, backups, and third parties. It doesn't apply where the law requires you to keep data, so the system has to know *why* each record is held. [Data Retention](/docs/building-blocks/data-retention) covers the mechanics, including letting backups age out instead of editing them.
 - **Rectification and restriction** need a way to correct data everywhere it was copied, and a flag that stops processing without deleting.
 

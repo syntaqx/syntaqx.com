@@ -2,7 +2,7 @@
 title = "Dependencies & Upgrades"
 description = "Lockfiles, SemVer, small continuous upgrades, an LTS runtime policy, vetting new dependencies, and supply-chain safeguards like provenance and pinned CI."
 category = "Development"
-order = 1024
+order = 1026
 tags = ["dependencies", "security", "supply-chain", "process", "upgrades", "maintenance"]
 aliases = ["engineering/dependencies", "dependencies", "delivery/staying-current"]
 +++
@@ -52,7 +52,7 @@ Each new dependency is a permanent maintenance and security commitment:
 - **Do we need it?** A dependency for 20 lines of code costs more than the 20 lines.
 - **Is it maintained?** Recent releases, responsive issues, more than one maintainer. A single maintainer is a single account away from compromise.
 - **What does it pull in?** Every transitive dependency is a trust decision you're making implicitly.
-- **Is the license compatible?** Checked automatically in CI.
+- **Is the [license](/docs/compliance/open-source-licenses) compatible?** Checked automatically in CI.
 - **Does it run code on install?** Install scripts run with your credentials before any of your code does. Disable them by default and allow them per package. In September 2025 the [Shai-Hulud worm](https://www.cisa.gov/news-events/alerts/2025/09/23/widespread-supply-chain-compromise-impacting-npm-ecosystem) compromised over 500 npm packages this way: each infection stole the developer's npm token and published infected versions of their other packages.
 
 Prefer boring technology. Every new tool carries costs its demo doesn't show: unknown failure modes, thin documentation, a small hiring pool. Dan McKinley's [Choose Boring Technology](https://mcfunley.com/choose-boring-technology) gives each team a few "innovation tokens" to spend on what makes the product different. A [tech radar](https://www.thoughtworks.com/radar) (Adopt, Trial, Assess, Hold) records what the defaults are. Boring and current aren't opposites: Postgres is boring, Postgres three majors behind is a liability.

@@ -22,7 +22,7 @@ Don't, or not yet, when the API is small and stable, consumers are few, or plain
 | Hand-written | Idiomatic, ergonomic, deliberate behavior | Drifts from the API; every new endpoint is manual work in every language |
 | Generated core, hand-written layer | Coverage and sync from generation, ergonomics where they matter | Two layers to understand and test |
 
-I use the hybrid: generate the types and request plumbing from the [OpenAPI document](/docs/api) so nothing drifts, and hand-write the thin layer developers touch (retries, pagination, errors, configuration). It's also why the spec must be complete: a generated SDK turns every gap in it into a bug in every language at once.
+I use the hybrid: generate the types and request plumbing from the [OpenAPI document](/docs/api) so nothing drifts, and hand-write the thin layer developers touch (retries, pagination, errors, configuration). It's also why [the spec must be complete](/docs/development/documentation#api-reference-from-openapi): a generated SDK turns every gap in it into a bug in every language at once.
 
 ## Idiomatic per Language
 

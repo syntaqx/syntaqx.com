@@ -10,7 +10,7 @@ In the cloud, every engineer is a purchasing department. A config change, a log 
 
 ## Measure Cost per Unit, Not Just in Total
 
-A bill that went from $40,000 to $55,000 tells you nothing alone. If traffic grew 60%, that's an efficiency win; if it was flat, something is wrong. A unit cost can tell the two apart. Pick a unit that matches how the business earns money (cost per thousand API requests, per active customer per month, per payment processed) and track it over time.
+A bill that went from $40,000 to $55,000 tells you nothing alone. If traffic grew 60%, that's an efficiency win; if it was flat, something is wrong. A unit cost can tell the two apart. Pick a unit that matches how the business earns money (cost per thousand API requests, per active customer per month, per payment processed, per document an [LLM feature](/docs/building-blocks/llm-features#cost) summarizes) and track it over time.
 
 The [FinOps Foundation](https://www.finops.org/framework/capabilities/unit-economics/) frames unit economics as connecting technology spend to the value it creates; its own example is cost per API call. Once you have the number, "should we cache this?" becomes "this cuts cost per request by 30%", and a design review can ask what a feature does to unit cost the way it asks about latency.
 
@@ -38,7 +38,7 @@ A handful of levers account for most savings. Work on them in order of size, not
 | **Storage lifecycle** | Data accumulates forever by default: logs, backups, old artifacts | Retention rules per [Data Retention & Deletion](/docs/building-blocks/data-retention); move cold data to cheaper tiers |
 | **Idle environments** | Preview, staging and load-test environments running nights and weekends | Make them ephemeral or scheduled ([Environments & Configuration](/docs/operations/environments)) |
 
-Rightsizing and idle environments are low-risk and fast. Commitments save the most but lock you in, so they come after rightsizing; committing to an oversized baseline locks in the waste.
+Rightsizing and idle environments are low-risk and fast. Commitments save the most but lock you in, so they come after rightsizing; committing to an oversized baseline locks in the waste. None of these touch the cost that never shows up on the bill: the people who run the platform ([What It Costs to Own](/docs/delivery/where-to-run#what-it-costs-to-own)).
 
 ## Free Tiers and Their Cliffs
 

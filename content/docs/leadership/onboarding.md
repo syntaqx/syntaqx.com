@@ -16,7 +16,7 @@ Accounts, laptop, repository access, chat, the on-call tool, the cloud console w
 
 ## One Command to Run It
 
-The README should take someone from a fresh clone to a running system with one command, as [Code Ownership](/docs/development/code-ownership) requires. If setup is ten manual steps in a wiki, the first job of the new hire, with a buddy, is to fix that. It's the most valuable onboarding task there is: they're the only person on the team who can still see what's confusing.
+The README should take someone from a fresh clone to [a running system with one command](/docs/development/repositories#one-command-to-a-running-system), as [Code Ownership](/docs/development/code-ownership) requires. If setup is ten manual steps in a wiki, the first job of the new hire, with a buddy, is to fix that. It's the most valuable onboarding task there is: they're the only person on the team who can still see what's confusing.
 
 ## A Buddy, Not Just a Manager
 
@@ -40,7 +40,7 @@ Starter tasks should be real: a small feature, a bug users hit, a gap in monitor
 
 ## The Docs Are the Onboarding Path
 
-The best onboarding program is documentation good enough that a new engineer finds answers without asking. This playbook is exactly that: "how we do things here", learned by reading instead of by being corrected in review. Where the docs are wrong or missing, the new hire fixes them; they're the best-placed person to notice.
+The best onboarding program is [documentation](/docs/development/documentation) good enough that a new engineer finds answers without asking. This playbook is exactly that: "how we do things here", learned by reading instead of by being corrected in review. Where the docs are wrong or missing, the new hire fixes them; they're the best-placed person to notice.
 
 ## On-Call by Stages
 

@@ -18,7 +18,7 @@ Almost every product analytics question is one of these:
 - **How far?** Of the people who started a flow (signup, checkout, onboarding, booking a visit, opening an account), what share finished each step. That is a funnel.
 - **Did they come back?** Of the people who started in a given week, what share was still active a week, a month, a quarter later. That is retention, measured on cohorts.
 - **Who?** Which segments (plan, platform, country, acquisition channel, device class) behave differently on any of the above.
-- **Why?** Which change, campaign or feature caused a difference. Analytics can only suggest an answer; proving it takes a controlled experiment ([Experimentation & A/B Testing](/docs/telemetry/experimentation)).
+- **Why?** Which change, campaign or feature caused a difference. Analytics can only suggest an answer; proving it takes a controlled experiment ([Experimentation & A/B Testing](/docs/telemetry/experimentation)), and understanding it takes [talking to users](/docs/product/discovery).
 
 Keeping the last one separate is the most useful discipline in the field. A chart that shows users of feature X retain better than users who never touched it shows correlation. The users who found X were probably more engaged to begin with.
 

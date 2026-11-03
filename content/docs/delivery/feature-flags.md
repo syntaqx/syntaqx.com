@@ -8,7 +8,7 @@ tags = ["process", "feature-flags", "deployment", "reliability"]
 aliases = ["feature-flags", "engineering/feature-flags"]
 +++
 
-Deploying code and releasing a feature are different events. Feature flags separate them: code ships dark, turns on for a few users, then everyone, and turns off in seconds if something goes wrong. That separation is what makes [continuous deployment](/docs/delivery/ci-pipelines) safe, because unfinished work can merge and deploy every day without anyone seeing it.
+Deploying code and releasing a feature are different events. Feature flags separate them: code ships dark, turns on for a few users, then everyone, and turns off in seconds if something goes wrong. That separation is what makes [continuous deployment](/docs/delivery/ci-pipelines) safe, because unfinished work can [merge to trunk](/docs/development/repositories#trunk-based-development) and deploy every day without anyone seeing it.
 
 The cost is real. Every flag is a branch in production that tests may not cover, and old flags are the most dangerous kind. In 2012, Knight Capital deployed new trading code that [repurposed a flag](https://www.sec.gov/litigation/admin/2013/34-70694.pdf) once used by functionality retired years earlier. One server never got the new code, the flag woke the old code up there, and in about 45 minutes the firm lost over $460 million. The dead code should have been deleted with its flag. Everything below is about getting the benefit without that risk.
 

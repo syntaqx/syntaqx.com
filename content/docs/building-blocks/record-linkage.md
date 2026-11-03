@@ -4,7 +4,7 @@ nav_title = "Record Linkage"
 description = "Reconciling one real thing reported by many sources: observations, per-field survivorship, crosswalks, match-before-create, reversible merges and overrides."
 category = "Building Blocks"
 aliases = ["architecture/record-linkage"]
-order = 455
+order = 456
 tags = ["architecture", "data-modeling", "record-linkage", "deduplication", "data-quality"]
 +++
 
@@ -100,10 +100,10 @@ When the winner of a field changes, emit an event only if the value changed. A h
 
 ## Match Before Create
 
-Every incoming record from every source looks for an existing entity before creating one, in order of strength:
+Every incoming record from every source, including every row of an [import](/docs/building-blocks/imports-and-exports), looks for an existing entity before creating one, in order of strength:
 
 1. **Exact key.** The source key is already in the crosswalk. Link and stop.
-2. **Standardized key.** The same normalized email, phone in E.164, address plus unit after standardization, or product GTIN. Normalize both sides the same way, with the same library version, or identical things won't compare equal.
+2. **Standardized key.** The same [normalized email, phone in E.164](/docs/fundamentals/phones-and-emails), address plus unit after standardization, or product GTIN. Normalize both sides the same way, with the same library version, or identical things won't compare equal.
 3. **Fuzzy match plus gates.** Similar names or titles, close coordinates, overlapping attributes. PostgreSQL's [pg_trgm](https://www.postgresql.org/docs/current/pgtrgm.html) gives a `similarity()` score from 0 to 1 with GIN and GiST index support, which is enough for many systems. Then apply **gates**: hard disagreements that veto a match whatever the score. "123 Main St" and "123 Main St Apt 4" are near-identical strings and different homes; two players with the same display name and different dates of birth are different people; two catalog items with the same title and different pack sizes are different products.
 
 Fuzzy matching across a whole table is quadratic, so compare only within **blocks**: candidates sharing a postal code, a name prefix, a brand. Pick blocking keys that true matches almost always share, and check the blocks' sizes, because one giant block (everyone with no postal code) turns the job back into a full comparison.

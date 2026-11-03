@@ -2,7 +2,7 @@
 title = "Infrastructure as Code"
 description = "Infrastructure declared in code and changed by review: remote locked state, plan and apply from CI, drift detection, modules, and secrets kept out of state."
 category = "Delivery"
-order = 1105
+order = 1106
 tags = ["iac", "terraform", "opentofu", "delivery"]
 +++
 

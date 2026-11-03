@@ -3,12 +3,12 @@ title = "Subscriptions & Recurring Billing"
 nav_title = "Subscriptions"
 description = "Subscription states, billing periods and anchors, idempotent renewals, proration, dunning, cancellation, and the automatic renewal laws that govern all of it."
 category = "Money"
-order = 807
+order = 806
 tags = ["payments", "subscriptions", "recurring", "billing", "consumer-protection"]
 aliases = ["payments/subscriptions"]
 +++
 
-A subscription is a promise to charge someone again, on a schedule, with nobody watching. A SaaS seat, a game's battle pass, a gym membership, a lawn care agreement and a streaming plan share one skeleton: the customer agreed once, a job charges them every period, and the business must be able to prove, months later, what they agreed to, what they paid for, and when they asked to stop. This chapter builds on [Money & Amounts](/docs/money/amounts), [Idempotency](/docs/requests/idempotency) and [Payment States & Ledgers](/docs/money/payment-states). Charging a stored card under the network rules is the layer below, in [Stored Cards & Recurring Billing](/books/payments/stored-credentials).
+A subscription is a promise to charge someone again, on a schedule, with nobody watching. A SaaS seat, a game's battle pass, a gym membership, a lawn care agreement and a streaming plan share one skeleton: the customer agreed once, a job charges them every period, and the business must be able to prove, months later, what they agreed to, what they paid for, and when they asked to stop. Charging for what someone used instead of a fixed price is [Usage-Based Billing](/docs/money/usage-based-billing). This chapter builds on [Money & Amounts](/docs/money/amounts), [Idempotency](/docs/requests/idempotency) and [Payment States & Ledgers](/docs/money/payment-states). Charging a stored card under the network rules is the layer below, in [Stored Cards & Recurring Billing](/books/payments/stored-credentials).
 
 ## Subscription States
 

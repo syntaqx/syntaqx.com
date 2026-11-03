@@ -60,7 +60,7 @@ If confirming a theory takes thirty minutes and rolling back takes two, roll bac
 
 ## Communicate on a Clock
 
-Silence reads as "they don't know" or "they don't care", and both cost more trust than the outage. Post the first update fast, even if it only says "we're investigating elevated errors on checkout". Give every update a next-update time and keep it even when nothing changed: "no change; next update at 14:30 UTC" is a real update. Write for the reader: customers need impact and workaround, executives need exposure and expected duration, nobody outside needs your connection-pool hypothesis. The communications lead writes them, so the people fixing the problem aren't interrupted.
+Silence reads as "they don't know" or "they don't care", and both cost more trust than the outage. Post the first update fast, even if it only says "we're investigating elevated errors on checkout". Give every update a next-update time and keep it even when nothing changed: "no change; next update at 14:30 UTC" is a real update. [Write for the reader](/docs/leadership/communication): customers need impact and workaround, executives need exposure and expected duration, nobody outside needs your connection-pool hypothesis. The communications lead writes them, so the people fixing the problem aren't interrupted.
 
 ## Escalate Early
 

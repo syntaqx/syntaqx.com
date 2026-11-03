@@ -158,7 +158,7 @@ Identity providers are the other credential lock-in. Whether password hashes can
 
 ## Plan the Exit Before You Enter
 
-Every system you adopt is a replacement project you'll run later. A few decisions at the start make that project ordinary instead of heroic:
+Every system you adopt (or [buy](/docs/development/build-vs-buy)) is a replacement project you'll run later. A few decisions at the start make that project ordinary instead of heroic:
 
 - **Your own primary keys everywhere.** Vendor IDs live in crosswalks or mapped columns keyed by source, never as the key other tables reference.
 - **One boundary per vendor.** If your code talks to the payment processor, the identity provider or the tax engine through one module, swapping what's behind it is a project, not a rewrite.

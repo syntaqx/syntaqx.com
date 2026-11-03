@@ -3,7 +3,7 @@ title = "Code Ownership"
 description = "Every service and directory has an owning team: CODEOWNERS for reviews, a catalog entry for operations, and a README that gets anyone running in one command."
 category = "Development"
 aliases = ["engineering/code-ownership"]
-order = 1023
+order = 1024
 tags = ["ownership", "process", "documentation", "codeowners"]
 +++
 
@@ -57,7 +57,7 @@ An entry that's wrong is worse than none, so the catalog file lives next to the 
 Someone new should go from clone to running in minutes, without asking anyone.
 
 1. **What it is,** in two sentences, and who owns it.
-2. **Run it locally, in one command,** with every dependency it needs (`docker compose up`, `npm run dev`). If it takes a wiki page, it's a bug.
+2. **Run it locally, in one command,** with every dependency it needs (`docker compose up`, `npm run dev`). If it takes a wiki page, it's a bug; see [Repositories](/docs/development/repositories).
 3. **Test it,** in one command.
 4. **How it deploys,** and how to roll back.
 5. **Where the rest lives:** ADRs, design docs, runbook, dashboards.

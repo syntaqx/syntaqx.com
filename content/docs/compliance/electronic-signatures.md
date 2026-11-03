@@ -155,7 +155,7 @@ The ESIGN consent record has the same lifecycle: a change to the formats or soft
 
 ESIGN's retention rule is the storage spec. An electronic record satisfies a retention requirement only if it "accurately reflects" the original and "remains accessible to all persons who are entitled to access" for the required period, "in a form that is capable of being accurately reproduced for later reference" (7001(d)). And where a contract must be in writing, an electronic version "may be denied" effect if it can't be "retained and accurately reproduced for later reference by all parties" (7001(e)). In practice:
 
-- **Keep the signed artifact, not the inputs.** The sealed PDF, its hash and the certificate. A template plus field values re-rendered next year by different code is not the record that was signed.
+- **Keep the signed artifact, not the inputs.** The sealed PDF, its hash and the certificate. A template plus field values [re-rendered](/docs/building-blocks/generated-documents) next year by different code is not the record that was signed.
 - **Write once.** Store signed documents in object storage with write-once retention, keyed by the agreement's ID, and verify the stored hash on read.
 - **The signer can get a copy, any time.** "All parties" means the customer too: a download link in their account, and a support path for the customer who has since lost access.
 - **Retention follows the contract.** Keep it for the life of the agreement plus whatever period counsel sets for disputes, then delete on schedule. Signature evidence is a textbook case for [legal holds and pseudonymization rather than erasure](/docs/building-blocks/data-retention#erasure-vs-append-only-records) when a person asks to be forgotten ([GDPR & Privacy](/docs/compliance/gdpr)).

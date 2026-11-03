@@ -2,7 +2,7 @@
 title = "Notifications & Consent"
 description = "Sending email, texts and push safely: a consent ledger per contact point and purpose, one outbound gate, send-time re-checks, templates, and the message log."
 category = "Building Blocks"
-order = 456
+order = 460
 tags = ["architecture", "notifications", "consent", "email", "sms", "push"]
 aliases = ["architecture/notifications", "notifications"]
 +++
@@ -27,7 +27,7 @@ Purpose is a property of the template, set when the template is written, never i
 
 ## The Consent Ledger
 
-A boolean `sms_opt_in` on the user row can't answer the questions that matter when consent is disputed: when, how, for what, shown which wording, and has it been revoked since? And it's on the wrong thing. Consent belongs to a **contact point** (a phone number, an email address, a device), not a person: two accounts share a family phone, a number gets reassigned to a stranger, one person has a work and a personal email.
+A boolean `sms_opt_in` on the user row can't answer the questions that matter when consent is disputed: when, how, for what, shown which wording, and has it been revoked since? And it's on the wrong thing. Consent belongs to a **contact point** ([a phone number, an email address](/docs/fundamentals/phones-and-emails), a device), not a person: two accounts share a family phone, a number gets reassigned to a stranger, one person has a work and a personal email.
 
 So consent is an append-only ledger keyed by contact point and purpose, and current consent is a projection of it:
 

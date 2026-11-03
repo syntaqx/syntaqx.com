@@ -12,7 +12,7 @@ So the rule for everything below: **measure outcomes at the team or service leve
 
 ## Delivery Stability: DORA
 
-DORA's research splits software delivery performance into throughput and instability. Two of its five metrics are quality metrics in all but name:
+DORA's research splits software delivery performance into throughput and instability ([Measuring Engineering](/docs/leadership/measuring-engineering) covers the full set). Two of its five metrics are quality metrics in all but name:
 
 - **Change fail rate:** the ratio of deployments that require immediate intervention after they ship (a rollback, a hotfix, a flag turned off). It's the most direct measure of how much broken work gets past everything before production.
 - **Failed deployment recovery time:** how long it takes to recover from a deployment that fails and needs immediate intervention. It replaced MTTR in DORA's model.

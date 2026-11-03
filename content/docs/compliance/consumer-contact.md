@@ -65,7 +65,7 @@ For the system, that means a STOP is recorded against the purpose of the message
 
 ## Reassigned Numbers
 
-Phone numbers are reassigned, so consent from a customer three years ago may now belong to a stranger, who never consented. The FCC's Reassigned Numbers Database answers whether a number has been permanently disconnected since a given date. A caller who checks it and gets an erroneous "no" has a safe harbor, and bears the burden of proving it checked. Record the date of each check against the contact point, and check before automated messages to numbers whose consent is old.
+[Phone numbers are reassigned](/docs/fundamentals/phones-and-emails), so consent from a customer three years ago may now belong to a stranger, who never consented. The FCC's Reassigned Numbers Database answers whether a number has been permanently disconnected since a given date. A caller who checks it and gets an erroneous "no" has a safe harbor, and bears the burden of proving it checked. Record the date of each check against the contact point, and check before automated messages to numbers whose consent is old.
 
 ## Artificial and AI Voices
 

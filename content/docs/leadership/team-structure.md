@@ -47,7 +47,7 @@ A platform team's customers are the other engineers, and I hold it to the standa
 
 ## Small Teams
 
-Amazon's two-pizza rule says a team should be no larger than two pizzas can feed. I read that as roughly five to nine people, because coordination cost grows faster than the team: past a certain size it's quietly two teams sharing a standup. Below about four, vacations and on-call make it fragile, and one departure takes half its knowledge. When a team grows past nine, I split it along a seam in the work, so each half owns something whole.
+Amazon's two-pizza rule says a team should be no larger than two pizzas can feed. I read that as roughly five to nine people, because coordination cost grows faster than the team: past a certain size it's quietly two teams sharing a standup. Below about four, vacations and on-call make it fragile, and one departure takes half its knowledge. When a team grows past nine, I split it along a seam in the work, so each half owns something whole. Where I can, I also keep a team within a few time zones, so it has [overlap hours](/docs/leadership/communication#working-across-time-zones) to work in.
 
 ## Avoid Component Teams and Handoffs
 

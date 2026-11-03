@@ -12,7 +12,7 @@ The fix is structural: commit to problems instead of features, and give engineer
 
 ## Commit to Problems, Not Features
 
-A roadmap is a statement of intent, and its job is alignment: everyone knows which problems the team is working on now, which come next, and which are on the horizon. A dated list of features does that badly, because it commits to solutions before anyone has learned enough to pick them, and it turns every change of plan into a missed promise.
+A roadmap is a statement of intent, and its job is alignment: everyone knows which problems the team is working on now, which come next, and which are on the horizon. A dated list of features does that badly, because it commits to solutions before anyone has [learned enough](/docs/product/discovery) to pick them, and it turns every change of plan into a missed promise.
 
 - **Rows are problems.** Each one points at a [problem statement](/docs/product/problem-statements): who has it, what better looks like, and how much it's worth.
 - **Now, next, later.** Detail drops off with distance. "Now" is shaped and committed. "Later" is a direction, and it's allowed to change.

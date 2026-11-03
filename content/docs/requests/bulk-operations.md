@@ -78,7 +78,7 @@ The whole batch takes one [Idempotency-Key](/docs/requests/idempotency). A retry
 
 ## When to Go Async
 
-If a batch can't reliably finish in a few seconds, make it a [long-running operation](/docs/requests/long-running-operations): return `202 Accepted` with an operation to poll, and put the per-item results at the operation's `result_url` when it's done. Imports of thousands of rows always go this way.
+If a batch can't reliably finish in a few seconds, make it a [long-running operation](/docs/requests/long-running-operations): return `202 Accepted` with an operation to poll, and put the per-item results at the operation's `result_url` when it's done. [Imports](/docs/building-blocks/imports-and-exports) of thousands of rows always go this way.
 
 ## References
 

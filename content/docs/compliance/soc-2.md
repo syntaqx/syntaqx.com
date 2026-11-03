@@ -49,10 +49,10 @@ A well-run team already produces most of the evidence. The work is making it aut
 | Control area | What the auditor wants | Where it comes from |
 | --- | --- | --- |
 | **Change management** | Every production change reviewed, tested and approved by someone other than the author | Branch protection with required reviews and checks; [Commits & Code Review](/docs/development/commits-and-reviews), [CI Pipelines](/docs/delivery/ci-pipelines). The pull request *is* the change ticket |
-| **Logical access** | Access by role, removed promptly on departure, reviewed on a schedule | SSO everywhere, group grants, a recorded quarterly access review |
+| **Logical access** | Access by role, removed promptly on departure, reviewed on a schedule | SSO everywhere, group grants, a recorded quarterly access review; [Infrastructure Access](/docs/security/infrastructure-access) |
 | **Incident response** | Incidents detected, tracked, communicated and learned from | Alerting, an incident channel and a written review; [Incident Response](/docs/operations/incident-response) |
 | **Vulnerability management** | Vulnerabilities fixed within defined windows | Scanning with SLAs by severity; [Vulnerability Management](/docs/security/vulnerability-management) |
-| **Vendor management** | Vendors assessed before use and yearly | A vendor inventory with their SOC reports and a named reviewer |
+| **Vendor management** | Vendors assessed before use and yearly | A vendor inventory with their SOC reports and a named reviewer; [Build vs Buy](/docs/development/build-vs-buy#third-party-risk-proportionate-to-access) |
 | **Backups and recovery** | Backups run and restores are tested | Recorded restore tests; [Disaster Recovery](/docs/operations/disaster-recovery) |
 | **Monitoring** | Security events logged and looked at | Centralized logs, alerts with owners; [Observability](/docs/observability/overview) |
 | **Risk and policy** | Risks assessed, policies current and acknowledged | A yearly risk assessment and signed policies |

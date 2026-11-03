@@ -98,6 +98,7 @@ Don't use v5 where a user can guess the input. Anyone who knows the namespace an
 
 - **The ID is opaque to clients.** It's a string to them, even though it's time-ordered; parsing timestamps out of IDs couples clients to the format.
 - **Public IDs never change.** If an internal key has to change, the public one doesn't.
+- **Usernames and handles aren't IDs.** They're text, with [Unicode rules of their own](/docs/fundamentals/text-and-unicode#identifiers-and-usernames).
 - **Column names describe roles, not types:** `id`, `user_id`, `stripe_charge_xid` for external IDs. See [Database Naming Conventions](/docs/database/naming-conventions).
 
 ## References

@@ -3,7 +3,7 @@ title = "Offline-First Sync"
 description = "Apps that work without a network: a scoped local store, commands in a device outbox, attachments apart, two clocks, and conflict rules decided per command type."
 category = "Building Blocks"
 aliases = ["architecture/offline-sync"]
-order = 459
+order = 464
 tags = ["architecture", "offline", "sync", "mobile", "conflicts"]
 +++
 
@@ -132,7 +132,7 @@ Some operations depend on state only the server has right now. Mark them online-
 | **React Native** | One JavaScript codebase rendered with native code, with native modules where needed | Native work still appears at the edges (background sync, payments, printers); upgrades take discipline |
 | **Progressive web app** | One codebase, instant deployment, no store review | The Background Synchronization API is not Baseline and doesn't work in some widely used browsers; browser storage can be evicted, and Safari can clear a site's data after seven days of use without interaction unless the PWA is installed |
 
-For an app that must work offline for days, take payments or talk to scanners and printers, a PWA is the wrong default: the parts it can't do reliably are the parts that matter. It's fine for light needs, like queueing a form while the tab is open. A web view inside a native shell suits content-heavy screens, as long as the database, outbox and background sync live in native code.
+[Mobile Apps](/docs/frontend/mobile-apps) covers the choice in general. For an app that must work offline for days, take payments or talk to scanners and printers, a PWA is the wrong default: the parts it can't do reliably are the parts that matter. It's fine for light needs, like queueing a form while the tab is open. A web view inside a native shell suits content-heavy screens, as long as the database, outbox and background sync live in native code.
 
 Whatever the choice, the sync protocol and the local database are the product, and they deserve the most senior engineers on the team. A local schema migration runs on every device and can't be rolled back, so it ships behind a kill switch, per [Mobile Releases](/docs/delivery/mobile-releases).
 

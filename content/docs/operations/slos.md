@@ -7,7 +7,7 @@ tags = ["reliability", "slo", "alerting", "operations"]
 aliases = ["slos"]
 +++
 
-"Is it reliable enough?" needs a number, agreed on before the incident, not argued about during it. Service level objectives give you that number, and error budgets turn it into a decision rule.
+"Is it reliable enough?" needs a number, agreed on before the incident, not argued about during it. (How fast the team ships is a separate question, answered in [Measuring Engineering](/docs/leadership/measuring-engineering).) Service level objectives give you that number, and error budgets turn it into a decision rule.
 
 The point isn't maximum reliability. 100% is the wrong target for nearly everything: users can't tell 99.99% from 100% through their own flaky Wi-Fi, and chasing the difference costs releases you could have shipped. An SLO says how much unreliability is acceptable, which turns the rest into a budget for moving fast. The vocabulary and burn-rate math come from Google's [SRE Book](https://sre.google/sre-book/service-level-objectives/) and [Workbook](https://sre.google/workbook/implementing-slos/), now the industry's common language.
 

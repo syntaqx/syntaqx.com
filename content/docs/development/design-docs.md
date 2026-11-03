@@ -26,7 +26,7 @@ Requiring approval for two-way doors doesn't make them better; it teaches people
 The commonest failure isn't the wrong answer. It's no answer: a thread that grows for three weeks, a doc with forty comments and no conclusion, while the team quietly waits or builds on assumptions that may not survive. Before a discussion starts, settle two things:
 
 - **Who decides.** One named person, not "the team". Everyone else informs the decision. A group can't be accountable, and accountability is what makes a decision stick.
-- **By when.** A date, chosen by asking what waiting costs. Usually someone is blocked.
+- **By when.** A date, chosen by asking what waiting costs. Usually someone is blocked. The outcome goes in a [decision log](/docs/leadership/communication#decision-logs).
 
 Bezos's [2016 letter](https://www.aboutamazon.com/news/company-news/2016-letter-to-shareholders) argues most decisions should be made with "somewhere around 70% of the information you wish you had". Waiting for 90% is usually slower than being wrong and correcting, especially on a two-way door.
 
@@ -84,7 +84,7 @@ Review it async first, since comments scale, leave a record and give quieter peo
 
 ## ADRs Record Departures
 
-An architecture decision record captures one decision in about a page, in the repository it affects, in [Michael Nygard's format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions): context, decision, consequences. Where a design doc explores, an ADR concludes.
+An architecture decision record captures one decision in about a page, in the repository it affects (alongside the rest of its [documentation](/docs/development/documentation)), in [Michael Nygard's format](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions): context, decision, consequences. Where a design doc explores, an ADR concludes.
 
 A team with written standards doesn't need one for every choice. When the code does what the playbook says, the playbook is the explanation, and an ADR restating it is noise that buries the records that matter. An ADR earns its place when a system **departs** from the standard: integer keys for one warehouse, no deprecation window for an API nobody uses yet. Those are exactly the choices a new engineer will assume are mistakes and "fix". Teams without written standards are different: every decision departs from nothing, so ADRs are how the standard gets built, and repeated patterns get promoted into the playbook.
 

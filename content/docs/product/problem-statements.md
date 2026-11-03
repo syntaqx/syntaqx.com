@@ -7,7 +7,7 @@ order = 1001
 tags = ["product", "requirements", "acceptance-criteria", "planning"]
 +++
 
-A problem statement decides most of a project before anyone picks a solution: who it's for, what they're trying to get done, and what "better" means. Get it right and a hundred small decisions make themselves. Get it wrong and the team builds exactly what was asked for, ships it on time, and watches people go back to the spreadsheet they were using before.
+A problem statement decides most of a project before anyone picks a solution: who it's for, what they're trying to get done, and what "better" means. Get it right and a hundred small decisions make themselves. Get it wrong and the team builds exactly what was asked for, ships it on time, and watches people go back to the spreadsheet they were using before. The evidence for one comes from [discovery](/docs/product/discovery).
 
 ## What a Problem Statement Holds
 

@@ -2,7 +2,7 @@
 title = "Commits, PRs & Code Review"
 description = "Conventional Commits, small squash-merged pull requests with a real description, and code reviews that are fast, labeled, and focused on what matters."
 category = "Development"
-order = 1022
+order = 1023
 tags = ["process", "git", "code-review", "commits"]
 aliases = ["engineering/commits-and-reviews", "commits-and-reviews"]
 +++
@@ -50,7 +50,7 @@ BREAKING CHANGE: `amount` is now an integer, see /docs/money/amounts.
 
 ## Pull Requests
 
-- **Small.** Aim for under about 400 changed lines. Past that, reviewers stop reading and start skimming, and approval becomes a formality. Big changes ship as a stack of small PRs, or land dark behind a [feature flag](/docs/delivery/feature-flags) so each step is reviewable and deployable on its own.
+- **Small.** Aim for under about 400 changed lines. Past that, reviewers stop reading and start skimming, and approval becomes a formality. Big changes ship as a stack of small PRs on [a short-lived branch](/docs/development/repositories#trunk-based-development), or land dark behind a [feature flag](/docs/delivery/feature-flags) so each step is reviewable and deployable on its own.
 - **One concern per PR.** A refactor and a behavior change in one diff means nobody can tell which lines change behavior, so neither gets a real review. Land the refactor first, then the change on top of it.
 - **Squash merge.** One PR becomes one commit on `main`, with the PR title as its message, so `git bisect` lands on a change reviewed as a unit rather than a "fix typo" halfway through someone's branch. Small PRs make the lost intermediate commits cheap.
 - **Green before review.** A reviewer's attention is the scarcest thing in the process; spending it on something [CI](/docs/delivery/ci-pipelines) would have flagged wastes it twice.
