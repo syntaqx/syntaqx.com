@@ -435,7 +435,7 @@ function Endpoint({
 
           {/* Try it console */}
           <div className="min-w-0 bg-surface/40">
-            <div className="space-y-4 px-4 py-4 xl:sticky xl:top-20">
+            <div className="space-y-4 p-4  xl:sticky xl:top-20">
               <h4 className="inst flex items-center gap-2 text-foreground">
                 <Play size={11} className="text-accent" />
                 Try it

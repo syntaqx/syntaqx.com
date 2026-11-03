@@ -104,7 +104,7 @@ export default function draw() {
     ["F1", "merchant discount, blended", "2.9% × W1 + 0.30 = 3.20"],
     ["I1", "interchange", "1.65% × W1 + 0.15 = 1.80"],
     ["N1", "network fees, illustrative", "0.14"],
-    ["K1", "markup", "F1 − I1 − N1 = 1.26"],
+    ["K1", "markup", `F1 − I1 − N1 = ${K1.toFixed(2)}`],
     ["M1", "merchant funding", "W1 − F1 = 96.80"],
   ];
   const widths = [50, 230, 190];

@@ -150,7 +150,7 @@ export default function draw() {
     ["F1", "frame at 60 Hz, ms", "1000 ÷ 60 = 16.67"],
     ["P1", "predicted before the late input, ms", "4 × F1 = 66.67"],
     ["R1", "frames simulated in frame 9", "P1 ÷ F1 + 1 = 5"],
-    ["M1", "prediction limit, frames", "8"],
+    ["M1", "prediction limit, frames", String(M1)],
     ["A1", "load the saved state of frame 4, ms", "0.20"],
     ["S1", "simulate one frame without rendering, ms", "1.50"],
     ["G1", "render and present, ms", "5.00"],

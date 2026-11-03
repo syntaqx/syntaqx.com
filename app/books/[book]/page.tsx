@@ -132,7 +132,7 @@ export default async function BookCover({ params }: Props) {
                       <span className="block font-semibold text-foreground transition-colors group-hover:text-accent">
                         {doc.title}
                       </span>
-                      <span className="mt-1 block text-sm leading-relaxed text-dim">
+                      <span className="mt-1 block text-sm/relaxed  text-dim">
                         {doc.description}
                       </span>
                     </span>

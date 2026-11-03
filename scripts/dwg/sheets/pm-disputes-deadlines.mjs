@@ -2,7 +2,7 @@
 // the filing window, then each step's clock, with the merchant's own
 // evidence deadline inside the acquirer's response.
 // Embedded in content/books/payments/disputes-and-chargebacks.md.
-import { sheet, widthOf } from "../kit.mjs";
+import { sheet } from "../kit.mjs";
 
 // Calendar days, Visa Rules Table 11-2 (April 2026); P1 from a provider.
 const F1 = 120;

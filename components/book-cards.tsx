@@ -71,7 +71,7 @@ function CardText({ book }: { book: BookCard }) {
       </span>
       <span
         className={cn(
-          "mt-2 min-h-[3lh] text-sm leading-relaxed line-clamp-3",
+          "mt-2 min-h-[3lh] text-sm/relaxed  line-clamp-3",
           live ? "text-dim" : "text-dim/70",
         )}
       >

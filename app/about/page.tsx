@@ -183,8 +183,8 @@ export default function AboutPage() {
               <span className="font-voice text-xl leading-none font-semibold text-accent">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <h3 className="mt-3 mb-3 text-xl leading-none text-foreground">{item.title}</h3>
-              <p className="text-base leading-relaxed text-muted">{item.description}</p>
+              <h3 className="my-3  text-xl leading-none text-foreground">{item.title}</h3>
+              <p className="text-base/relaxed  text-muted">{item.description}</p>
             </li>
           ))}
         </ol>

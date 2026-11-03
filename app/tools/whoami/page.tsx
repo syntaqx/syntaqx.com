@@ -22,7 +22,7 @@ function Row({ label, value, mono }: { label: string; value: string | null; mono
         ) : (
           <div className="flex items-center gap-1.5">
             <div className="h-4 w-20 bg-border/40 animate-pulse" />
-            <div className="w-6.5 h-6.5 border border-border/40 bg-border/20 animate-pulse" />
+            <div className="size-6.5  border border-border/40 bg-border/20 animate-pulse" />
           </div>
         )}
       </div>

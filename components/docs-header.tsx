@@ -21,7 +21,7 @@ export function DocsHeader({
           {eyebrow}
         </p>
       )}
-      <h1 className="mb-2 text-2xl leading-snug wrap-break-word sm:text-[1.75rem]">{title}</h1>
+      <h1 className="mb-2 text-2xl/snug  wrap-break-word sm:text-[1.75rem]">{title}</h1>
       {children}
     </header>
   );

@@ -169,7 +169,7 @@ export default function draw() {
   // ---- Variable table ----
   s.comment("Variable table");
   const tb = s.table(400, rowTop + 16, "Variables · ms", [
-    ["R1", "rewind depth", "L1+I1+L1+S1 = 66.25"],
+    ["R1", "rewind depth", `L1+I1+L1+S1 = ${R1.toFixed(2)}`],
     ["C1", "fire to confirmation", "L1+S1+L1 = 50.63"],
     ["R2", "rewind cap", "[TBD]"],
     ["L1", "one-way latency", "35 ÷ 2 = 17.50"],

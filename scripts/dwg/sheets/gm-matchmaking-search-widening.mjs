@@ -68,7 +68,7 @@ export default function draw() {
       s.rect(X(a), cy - h * ks, (b - a) * kt, 2 * h * ks, "obj fill-2");
     s.line(X(0) - 6, cy, X(END) + 6, cy, "ctr");
     s.text(X(0) - 12, cy + 3.5, "R0", "dt", "end");
-    steps.forEach(([a, b, h], i) => s.dimV(cy, cy - h * ks, X(a) + 22, `S${i}`, { side: "r" }));
+    steps.forEach(([a, , h], i) => s.dimV(cy, cy - h * ks, X(a) + 22, `S${i}`, { side: "r" }));
 
     const [mt, md] = MATCH;
     const mx = X(mt),

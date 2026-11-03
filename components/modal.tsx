@@ -74,7 +74,7 @@ export function Modal({
                   {title}
                 </Dialog.Title>
                 {description && (
-                  <Dialog.Description className="text-xs text-dim mt-1 leading-relaxed">
+                  <Dialog.Description className="text-xs/relaxed text-dim mt-1 ">
                     {description}
                   </Dialog.Description>
                 )}

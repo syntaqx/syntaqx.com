@@ -116,7 +116,7 @@ export default function Home() {
                 <h3 className="mb-2 text-lg leading-none text-foreground transition-colors group-hover:text-accent">
                   {tool.title}
                 </h3>
-                <p className="text-xs leading-relaxed text-dim">{tool.description}</p>
+                <p className="text-xs/relaxed  text-dim">{tool.description}</p>
               </Card>
             </Link>
           ))}

@@ -208,7 +208,7 @@ function GuardRow({ level, desc, children }: { level: string; desc: string; chil
     <div className="p-4 flex items-start justify-between gap-4">
       <div className="min-w-0">
         <div className="text-[10px] font-medium text-dim mb-1">{level}</div>
-        <p className="text-xs text-dim leading-relaxed">{desc}</p>
+        <p className="text-xs/relaxed text-dim ">{desc}</p>
       </div>
       <div className="shrink-0">{children}</div>
     </div>
@@ -435,7 +435,7 @@ function SkeletonColumn({ label, children }: { label: string; children: ReactNod
 function SkeletonRow() {
   return (
     <div className="flex items-center gap-3">
-      <div className="h-10 w-10 rounded-full bg-border/40 animate-pulse" />
+      <div className="size-10  rounded-full bg-border/40 animate-pulse" />
       <div className="flex-1 space-y-2">
         <div className="h-3 w-32 rounded bg-border/40 animate-pulse" />
         <div className="h-2 w-48 rounded bg-border/30 animate-pulse" />
@@ -448,7 +448,7 @@ function SpinnerRow({ loading }: { loading: boolean }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-2">
-        <div className="h-4 w-4 rounded-full border-2 border-border border-t-accent animate-spin" />
+        <div className="size-4  rounded-full border-2 border-border border-t-accent animate-spin" />
       </div>
     );
   }
@@ -458,7 +458,7 @@ function SpinnerRow({ loading }: { loading: boolean }) {
 function LoadedRow() {
   return (
     <div className="flex items-center gap-3">
-      <div className="h-10 w-10 rounded-full bg-accent/30 flex items-center justify-center text-xs font-semibold text-foreground/80">
+      <div className="size-10  rounded-full bg-accent/30 flex items-center justify-center text-xs font-semibold text-foreground/80">
         CP
       </div>
       <div className="min-w-0 flex-1">

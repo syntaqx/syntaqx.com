@@ -21,7 +21,6 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "tm-ex", width: W });
   const CX = W / 2;
-  const ah = `url(#${s.id("ah")})`;
 
   s.comment("Notes");
   const ny = s.notes(

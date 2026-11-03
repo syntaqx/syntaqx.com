@@ -13,7 +13,6 @@ const STATES = [
 
 export default function draw() {
   const W = 760,
-    x = 20,
     w = 122,
     h = 30,
     ch = 24,
