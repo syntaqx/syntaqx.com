@@ -123,7 +123,7 @@ A fake door (or painted door) is the desirability test that goes furthest: a rea
 - **Small exposure, short duration.** Show it to a sample, for days, not to everyone for a quarter. The same [experimentation](/docs/telemetry/experimentation#ethics-and-consent) rules apply as for any test on live users.
 - **Clicks are not commitment.** A click says the label was interesting. Follow up with a few of the people who clicked before reading demand into it.
 
-I don't know of an independent standard for fake-door ethics; the published guidance is mostly from vendors who sell experimentation tools, so the rules above are my own floor. <!-- source-gap: fake-door-ethics | missing | no independent standard or research on fake-door test ethics, only vendor guidance | closes with: an academic, regulator or professional-body publication on painted-door tests | checked: 2026-11-03 -->
+The closest independent standard is research ethics on deception, not product practice. The American Psychological Association's Ethics Code (Standard 8.07) allows a deceptive study only when its value justifies it and "effective nondeceptive alternative procedures are not feasible," and requires explaining the deception to participants "as early as is feasible" and letting them withdraw their data. A fake door is not a study under that code, but the same tests apply: is there an honest way to learn this, and does the person find out right away. I don't know of a standard written for fake-door tests specifically; the published guidance is mostly from vendors who sell experimentation tools, so the rules above are my own floor. <!-- source-gap: fake-door-ethics | missing | no independent standard or research on fake-door test ethics specifically, only vendor guidance; nearest is general research-deception ethics (APA 8.07) | closes with: an academic, regulator or professional-body publication on painted-door tests | checked: 2026-11-03 -->
 
 ## Usability Testing: Small and Often
 
@@ -189,6 +189,7 @@ Discovery doesn't end; the tree keeps changing. But a given opportunity is ready
 - [How Many Test Users in a Usability Study?](https://www.nngroup.com/articles/how-many-test-users/), NN/g: when five is right, and when you need more
 - [First Rule of Usability? Don't Listen to Users](https://www.nngroup.com/articles/first-rule-of-usability-dont-listen-to-users/), Jakob Nielsen (2001): watch behavior, distrust self-report
 - [When to Use Which User-Experience Research Methods](https://www.nngroup.com/articles/which-ux-research-methods/), NN/g: attitudinal versus behavioral methods and what surveys measure
+- [APA: Ethical Principles of Psychologists and Code of Conduct](https://www.apa.org/ethics/code), Standard 8.07 on when deception is justified and debriefing as early as feasible
 
 **Reference**
 
