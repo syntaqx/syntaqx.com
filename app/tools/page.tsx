@@ -10,7 +10,7 @@ import { pageMetadata } from "@/lib/metadata";
 export const metadata = pageMetadata(
   "/tools",
   "Developer Tools",
-  "Free browser-based developer tools: a JWT debugger, UUID and ULID generator, format converters, JavaScript and Markdown tools, and end-to-end encrypted one-time secrets.",
+  "Free developer tools in your browser: a JWT debugger, UUID and ULID generators, format converters, JavaScript and Markdown tools, encrypted one-time secrets.",
 );
 
 function ToolGrid({ items }: { items: Tool[] }) {
@@ -67,10 +67,9 @@ export default function ToolsPage() {
         sceneLabel="An opened box of small tools with its lid floating above"
       >
         <p>
-          Small tools I use often enough to keep. They run in your browser,
-          so nothing you paste is sent anywhere. One-time secrets is the
-          exception, by design: it encrypts in your browser and sends only
-          the ciphertext.
+          Small tools I use often enough to keep. They run in your browser, so
+          nothing you paste is sent anywhere. One-time secrets is the exception,
+          by design: it encrypts in your browser and sends only the ciphertext.
         </p>
       </PageHeader>
 
