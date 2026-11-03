@@ -3,7 +3,7 @@ title = "Effective Dating & History"
 nav_title = "Effective Dating"
 description = "Valid time and recorded time, effective-dated rows and as-of queries in PostgreSQL ranges, versioned plans and prices, snapshots and scheduled changes."
 category = "Database"
-order = 505
+order = 255
 tags = ["database", "postgres", "temporal", "history", "versioning"]
 +++
 

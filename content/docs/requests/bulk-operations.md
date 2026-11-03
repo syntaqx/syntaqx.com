@@ -2,7 +2,7 @@
 title = "Bulk Operations"
 description = "Batch endpoints that create or update many resources in one call: size limits, per-item results, partial failure, idempotency, and when to go async."
 category = "Requests & Responses"
-order = 310
+order = 360
 tags = ["api", "bulk", "batch", "design"]
 aliases = ["bulk-operations"]
 +++

@@ -2,7 +2,7 @@
 title = "Versioning & Deprecation"
 description = "Header-selected, date-named API versions, what counts as a breaking change, and announcing removals on the wire with the Deprecation and Sunset headers."
 category = "API Design"
-order = 205
+order = 305
 tags = ["api", "versioning", "deprecation", "headers"]
 aliases = ["versioning", "operations/versioning"]
 +++

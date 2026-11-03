@@ -2,7 +2,7 @@
 title = "Zero-Downtime Migrations"
 description = "Changing a live schema without downtime: the expand and contract pattern, safe backfills, lock-aware DDL, and the order to ship code and migrations in."
 category = "Database"
-order = 504
+order = 254
 tags = ["database", "migrations", "postgres", "operations"]
 aliases = ["zero-downtime-migrations"]
 +++

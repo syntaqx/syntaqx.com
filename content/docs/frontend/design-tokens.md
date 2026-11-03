@@ -2,7 +2,7 @@
 title = "Design Tokens & Theming"
 description = "Named, semantic design tokens as the only source of color, type and spacing, so light and dark themes are one redefinition away and can never drift apart."
 category = "Frontend"
-order = 603
+order = 403
 tags = ["design-tokens", "theming", "css", "frontend"]
 +++
 

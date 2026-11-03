@@ -2,7 +2,7 @@
 title = "SEO"
 description = "Search engine optimization for engineers: crawling, indexing controls, canonicals, sitemaps, structured data, rendering, redirects, migrations and AI search."
 category = "Frontend"
-order = 607
+order = 407
 tags = ["seo", "search", "crawling", "structured-data", "frontend"]
 +++
 

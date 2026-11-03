@@ -3,7 +3,7 @@ title = "Repositories & Local Development"
 nav_title = "Repos & Local Dev"
 description = "One repository per product, trunk-based development with short branches, one command from clone to running, and formatters and linters CI enforces."
 category = "Development"
-order = 1022
+order = 122
 tags = ["process", "git", "monorepo", "local-development", "tooling"]
 +++
 

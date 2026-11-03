@@ -2,7 +2,7 @@
 title = "Choosing an API Style"
 description = "REST, GraphQL, gRPC and events: what each one optimizes for, what it costs, and how to pick by who the consumer is rather than by what's fashionable."
 category = "API Design"
-order = 206
+order = 306
 tags = ["api", "rest", "graphql", "grpc", "architecture"]
 +++
 

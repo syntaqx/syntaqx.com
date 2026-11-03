@@ -2,7 +2,7 @@
 title = "Backlogs"
 description = "One backlog for features, bugs and tech debt, sized to what the team can build, with stale items closed on a schedule and important ideas left to come back."
 category = "Product"
-order = 1002
+order = 113
 tags = ["product", "backlog", "planning", "prioritization"]
 +++
 

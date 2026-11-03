@@ -2,7 +2,7 @@
 title = "Link Previews & Social Cards"
 description = "How a page looks when shared, unfurled or installed: Open Graph, X Cards, each unfurler's rules, oEmbed, generated images, icons, the manifest and theme color."
 category = "Frontend"
-order = 608
+order = 408
 tags = ["open-graph", "social", "unfurling", "icons", "frontend"]
 +++
 

@@ -2,7 +2,7 @@
 title = "Mobile Apps"
 description = "Building iOS and Android apps: native or cross-platform, an API that serves old versions, push, deep links, secure storage, OAuth, store rules and startup."
 category = "Frontend"
-order = 609
+order = 409
 tags = ["mobile", "ios", "android", "frontend", "security"]
 +++
 

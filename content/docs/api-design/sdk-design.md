@@ -2,7 +2,7 @@
 title = "SDK Design"
 description = "When to ship client libraries, generated versus hand-written, and the behavior every SDK should build in: retries, idempotency, pagination and errors."
 category = "API Design"
-order = 208
+order = 308
 tags = ["api", "sdk", "clients", "developer-experience"]
 +++
 
