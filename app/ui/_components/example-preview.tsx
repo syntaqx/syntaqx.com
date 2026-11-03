@@ -27,7 +27,7 @@ export function ExamplePreview({ slug, Component }: { slug: string; Component: C
         </div>
       </TabsContent>
       <TabsContent value="code">
-        <CodeBlock code={source} className="rounded-lg" />
+        <CodeBlock code={source} />
       </TabsContent>
     </Tabs>
   );

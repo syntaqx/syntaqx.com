@@ -7,7 +7,7 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "shadcn's Button sized to match the inputs (32, 40 and 48px), with theme colors throughout and a loading state that keeps the button's width.",
+      "description": "shadcn's Button with a loading state: a spinner over the label, and the button keeps its width.",
       "dependencies": ["radix-ui", "class-variance-authority", "lucide-react"],
       "files": [
         {
@@ -43,7 +43,7 @@
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
-      "description": "shadcn's Label in the theme's foreground color.",
+      "description": "shadcn's Label, which dims with a disabled Field.",
       "dependencies": ["radix-ui"],
       "files": [
         {
@@ -85,7 +85,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "shadcn's Input at 32, 40 or 48px, with 16px text on phones, a visible focus ring and an invalid state that survives focus. Inside a Field it wires itself up.",
+      "description": "shadcn's Input with sm, default and lg sizes to match the Button. Inside a Field it wires itself up.",
       "dependencies": ["class-variance-authority"],
       "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
       "files": [
@@ -107,7 +107,7 @@
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
-      "description": "shadcn's Textarea with the Input's states, growing with its content up to a limit.",
+      "description": "shadcn's Textarea that grows with its content up to a limit, then scrolls. Inside a Field it wires itself up.",
       "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
       "files": [
         {
@@ -125,7 +125,7 @@
       "name": "input-group",
       "type": "registry:ui",
       "title": "Input Group",
-      "description": "shadcn's InputGroup, sized and stated like the Input: icons, text and buttons inside one border.",
+      "description": "shadcn's InputGroup with the Input's sizes: icons, text and buttons inside one border.",
       "dependencies": ["class-variance-authority"],
       "registryDependencies": [
         "https://www.syntaqx.com/r/button.json",
@@ -226,6 +226,20 @@
           "Keyboard focus on the trigger opens it too."
         ]
       }
+    },
+    {
+      "name": "github-hover-card",
+      "type": "registry:ui",
+      "title": "GitHub Hover Card",
+      "description": "A GitHub profile card that loads on intent: nothing is fetched until the reader hovers or tabs to it, results are cached for the session, and a skeleton holds the card's shape meanwhile.",
+      "registryDependencies": ["https://www.syntaqx.com/r/hover-card.json", "skeleton"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/github-hover-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["overlays"]
     },
     {
       "name": "timestamp",

@@ -43,7 +43,7 @@ export const patterns: UiPage[] = [
     lead: "Defer expensive context to intent. The page renders only what every reader needs; the rest waits behind a hover, a focus, or a long press.",
     category: "Overlays",
     tags: ["ux", "intent"],
-    components: ["timestamp", "hover-card"],
+    components: ["timestamp", "github-hover-card", "hover-card"],
   },
   {
     title: "Feedback & Affordance",

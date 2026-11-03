@@ -26,7 +26,7 @@ export default function UiPage() {
       />
       <DocsIndex
         eyebrow="UI"
-        title="Interface patterns"
+        title="Components and patterns"
         intro={
           <p>
             The patterns I reach for when I build an interface: when to use each one, and why. Every

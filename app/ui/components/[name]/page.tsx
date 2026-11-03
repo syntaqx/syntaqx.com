@@ -50,7 +50,7 @@ export default async function ComponentPage({ params }: Props) {
         {first && <ExamplePreview slug={first.slug} Component={first.Component} />}
 
         <Section id="installation" title="Installation">
-          <ComponentInstall name={name} />
+          <ComponentInstall name={name} heading={false} />
         </Section>
 
         {changes && (

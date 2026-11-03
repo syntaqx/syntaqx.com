@@ -24,7 +24,7 @@ export async function CodeBlock({
   });
 
   return (
-    <div className={cn("relative border border-border bg-card", className)}>
+    <div className={cn("relative overflow-hidden rounded-lg border bg-card", className)}>
       {title && (
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2">
           <span className="truncate font-mono text-xs text-muted-foreground">{title}</span>

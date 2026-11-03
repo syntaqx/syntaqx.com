@@ -6,15 +6,17 @@ import { CodeBlock } from "./code-block";
  * How to add a registry item to another app, the way shadcn's docs show it:
  * the CLI command, or the dependencies and files to copy by hand.
  */
-export function ComponentInstall({ name }: { name: string }) {
+export function ComponentInstall({ name, heading = true }: { name: string; heading?: boolean }) {
   const item = getRegistryItem(name);
   const npm = item.dependencies.length ? `npm install ${item.dependencies.join(" ")}` : null;
 
   return (
-    <div className="mt-6">
-      <h3 className="mb-3 font-sans text-base/snug font-semibold normal-case">
-        Install <code className="font-mono text-sm text-primary">{item.name}</code>
-      </h3>
+    <div className={heading ? "mt-6" : undefined}>
+      {heading && (
+        <h3 className="mb-3 font-sans text-base/snug font-semibold normal-case">
+          Install <code className="font-mono text-sm text-primary">{item.name}</code>
+        </h3>
+      )}
       <Tabs defaultValue="cli">
         <TabsList variant="line">
           <TabsTrigger value="cli">CLI</TabsTrigger>

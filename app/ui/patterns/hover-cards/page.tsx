@@ -28,7 +28,7 @@ const demos: Demo[] = [
   {
     id: "user-previews-loaded-on-intent",
     title: "User previews, loaded on intent",
-    install: ["hover-card"],
+    install: ["github-hover-card"],
     sources: [
       { name: "GitHub", href: "https://github.com" },
       { name: "Linear", href: "https://linear.app" },
@@ -48,11 +48,11 @@ const demos: Demo[] = [
       >
         <div className="p-6">
           <div className="mb-3 text-sm font-medium text-muted-foreground">As mentions</div>
-          <UserDemo bare />
+          <UserDemo />
         </div>
         <div className="p-6">
           <div className="mb-3 text-sm font-medium text-muted-foreground">As avatars</div>
-          <AvatarDemo bare />
+          <AvatarDemo />
         </div>
       </DemoFrame>
     ),

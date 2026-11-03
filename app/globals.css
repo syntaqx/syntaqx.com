@@ -180,6 +180,11 @@ body {
 }
 
 @layer base {
+  /* shadcn's base rule: a bare `border` takes the theme's border color, not
+     Tailwind v4's currentColor. Its components rely on it. */
+  * {
+    @apply border-border outline-ring/50;
+  }
   h1,
   h2,
   h3 {

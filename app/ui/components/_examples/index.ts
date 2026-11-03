@@ -17,6 +17,8 @@ import NumberInputDemo from "./number-input-demo";
 import ErrorSummaryDemo from "./error-summary-demo";
 import RequirementListDemo from "./requirement-list-demo";
 import HoverCardDemo from "./hover-card-demo";
+import GithubHoverCardDemo from "./github-hover-card-demo";
+import GithubHoverCardAvatar from "./github-hover-card-avatar";
 import TimestampDemo from "./timestamp-demo";
 
 export interface Example {
@@ -64,5 +66,9 @@ export const examples: Record<string, Example[]> = {
     },
   ],
   "hover-card": [{ slug: "hover-card-demo", title: "Preview on intent", Component: HoverCardDemo }],
+  "github-hover-card": [
+    { slug: "github-hover-card-demo", title: "In a sentence", Component: GithubHoverCardDemo },
+    { slug: "github-hover-card-avatar", title: "On an avatar", Component: GithubHoverCardAvatar },
+  ],
   timestamp: [{ slug: "timestamp-demo", title: "In running text", Component: TimestampDemo }],
 };

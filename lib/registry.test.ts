@@ -212,8 +212,11 @@ describe("registry.json", () => {
         (item.registryDependencies ?? []).map((d) => ITEM_URL.exec(d)?.[1] ?? d),
       );
 
-      it("depends only on items in this registry", () => {
-        expect([...regDeps].filter((d) => !names.has(d))).toEqual([]);
+      // A URL names an item here, which has to exist; a bare name is one of
+      // shadcn's own components, which the CLI fetches from shadcn.
+      it("depends only on items that exist", () => {
+        const urls = (item.registryDependencies ?? []).filter((d) => d.startsWith("http"));
+        expect(urls.filter((d) => !names.has(ITEM_URL.exec(d)?.[1] ?? ""))).toEqual([]);
       });
 
       for (const { path } of item.files) {
@@ -226,6 +229,9 @@ describe("registry.json", () => {
             if (spec === "react" || spec.startsWith("react/") || spec === "@/lib/utils") {
               return false;
             }
+            // shadcn's own components, by the name the item declares.
+            const stock = /^@\/components\/ui\/([a-z0-9-]+)$/.exec(spec);
+            if (stock) return !regDeps.has(stock[1]);
             const own = /^@\/registry\/syntaqx\/[a-z]+\/([a-z0-9-]+)$/.exec(spec);
             if (own) return !regDeps.has(own[1]) && own[1] !== item.name;
             return spec.startsWith("@/") || !deps.has(packageName(spec));
