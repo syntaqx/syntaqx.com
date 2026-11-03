@@ -21,22 +21,19 @@ describe("meta descriptions", () => {
   it("keeps every post and doc description within 160 characters", () => {
     for (const item of [...getAllPosts(), ...getAllDocs(), ...getAllBookChapters()]) {
       expect(item.description, item.slug).toBeTruthy();
-      expect(item.description!.length, item.slug).toBeLessThanOrEqual(
-        MAX_DESCRIPTION,
-      );
+      expect(item.description!.length, item.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);
     }
   });
 
   it("keeps every book's summary, its cover's description, within 160 characters", () => {
-    for (const book of BOOKS) expect(book.summary.length, book.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);
+    for (const book of BOOKS)
+      expect(book.summary.length, book.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);
   });
 
   it("gives every tag archive a description that fits", () => {
     const posts = getAllPosts();
     for (const tag of getAllTags(posts)) {
-      const tagged = posts.filter((p) =>
-        (p.tags ?? []).some((t) => slugifyTag(t) === tag.slug),
-      );
+      const tagged = posts.filter((p) => (p.tags ?? []).some((t) => slugifyTag(t) === tag.slug));
       const d = tagDescription(tag.label, tagged);
       expect(d.startsWith(`Posts about ${tag.label} by Chase Pierce`)).toBe(true);
       // Crawlers flag descriptions under ~110 characters as too short.
@@ -49,7 +46,9 @@ describe("meta descriptions", () => {
 describe("titleIn()", () => {
   it("adds where a short title sits, and leaves a long one alone", () => {
     expect(titleIn("Logs", "Observability")).toBe("Logs · Observability");
-    expect(titleIn("Idempotency Keys and Retries", "Payments")).toBe("Idempotency Keys and Retries");
+    expect(titleIn("Idempotency Keys and Retries", "Payments")).toBe(
+      "Idempotency Keys and Retries",
+    );
   });
 });
 
@@ -122,9 +121,7 @@ describe("sitemap", () => {
 
 describe("schema builders", () => {
   it("links Organization, Person and WebSite on the homepage graph", () => {
-    const graph = siteGraph({ description: "d", personDescription: "p" })[
-      "@graph"
-    ];
+    const graph = siteGraph({ description: "d", personDescription: "p" })["@graph"];
     const byType: Record<string, Record<string, unknown>> = Object.fromEntries(
       graph.map((n) => [n["@type"], n]),
     );
@@ -156,9 +153,7 @@ describe("schema builders", () => {
   });
 
   it("numbers breadcrumbs from Home with absolute URLs", () => {
-    expect(
-      breadcrumbList([{ name: "Docs", path: "/docs" }]).itemListElement,
-    ).toEqual([
+    expect(breadcrumbList([{ name: "Docs", path: "/docs" }]).itemListElement).toEqual([
       { "@type": "ListItem", position: 1, name: "Home", item: "https://www.syntaqx.com" },
       { "@type": "ListItem", position: 2, name: "Docs", item: "https://www.syntaqx.com/docs" },
     ]);
@@ -202,7 +197,12 @@ describe("schema builders", () => {
       "@type": "ItemList",
       name: "More tools",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Other", url: "https://www.syntaqx.com/tools/other" },
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Other",
+          url: "https://www.syntaqx.com/tools/other",
+        },
       ],
     });
     const node = graph[0];
@@ -232,8 +232,14 @@ describe("schema builders", () => {
       "ItemList",
       "BreadcrumbList",
     ]);
-    expect(page).toMatchObject({ mainEntity: { "@id": list["@id"] }, about: { "@id": book["@id"] } });
-    expect(intro).toMatchObject({ "@id": "https://www.syntaqx.com/books/payments#article", isPartOf: { "@id": book["@id"] } });
+    expect(page).toMatchObject({
+      mainEntity: { "@id": list["@id"] },
+      about: { "@id": book["@id"] },
+    });
+    expect(intro).toMatchObject({
+      "@id": "https://www.syntaqx.com/books/payments#article",
+      isPartOf: { "@id": book["@id"] },
+    });
     // schema.org: hasPart takes CreativeWorks, so the chapters' articles, never the ItemList.
     expect(book).toMatchObject({
       ...bookRef("Payments", "/books/payments"),
@@ -243,15 +249,27 @@ describe("schema builders", () => {
   });
 
   it("puts the person at the center of the profile page", () => {
-    const graph = profilePage({ path: "/resume", headline: "Resume", description: "p", crumbs: [] })[
-      "@graph"
-    ] as Record<string, unknown>[];
+    const graph = profilePage({
+      path: "/resume",
+      headline: "Resume",
+      description: "p",
+      crumbs: [],
+    })["@graph"] as Record<string, unknown>[];
     expect(graph[0]).toMatchObject({
       "@type": "ProfilePage",
-      mainEntity: { "@type": "Person", "@id": "https://www.syntaqx.com/#person", name: "Chase Pierce" },
+      mainEntity: {
+        "@type": "Person",
+        "@id": "https://www.syntaqx.com/#person",
+        name: "Chase Pierce",
+      },
     });
-    expect((graph[0].mainEntity as { sameAs: string[] }).sameAs).toContain("https://github.com/syntaqx");
-    expect(graph[1]).toMatchObject({ "@type": "Article", about: { "@id": "https://www.syntaqx.com/#person" } });
+    expect((graph[0].mainEntity as { sameAs: string[] }).sameAs).toContain(
+      "https://github.com/syntaqx",
+    );
+    expect(graph[1]).toMatchObject({
+      "@type": "Article",
+      about: { "@id": "https://www.syntaqx.com/#person" },
+    });
   });
 
   it("links an article to the book it's part of", () => {

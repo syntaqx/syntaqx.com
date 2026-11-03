@@ -18,12 +18,19 @@ const RECV = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, titleW = 130, w = 128, h = 28;
+  const W = 760,
+    x = 20,
+    titleW = 130,
+    w = 128,
+    h = 28;
   const s = sheet({ prefix: "fo-paw", width: W });
   const gap = (W - x - (x + titleW) - 4 * w) / 3;
   const X = (i) => x + titleW + i * (w + gap);
   const [A, B] = s.lanes({
-    x, y: 20, w: W - 2 * x, titleW,
+    x,
+    y: 20,
+    w: W - 2 * x,
+    titleW,
     lanes: [
       { label: "sending", sub: "the platform", h: 118 },
       { label: "receiving", sub: "the receiver", h: 84 },
@@ -42,7 +49,14 @@ export default function draw() {
   s.connect(snd[0], snd[1], { hl: true });
   s.connect(snd[1], snd[2], { hl: true });
   s.connect(snd[2], snd[3], { alt: true });
-  s.connect(snd[3], snd[2], { from: "t", to: "t", via: snd[2].y - 16, alt: true, label: "non-2xx: try again", side: "above" });
+  s.connect(snd[3], snd[2], {
+    from: "t",
+    to: "t",
+    via: snd[2].y - 16,
+    alt: true,
+    label: "non-2xx: try again",
+    side: "above",
+  });
 
   s.comment("Receiving");
   const rcv = row(B, RECV, 22);

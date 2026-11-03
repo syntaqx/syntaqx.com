@@ -11,7 +11,8 @@ const JwtDecodeRequest = z
   .object({
     token: z.string().openapi({
       description: "The JWT to decode (no verification)",
-      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      example:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
     }),
   })
   .openapi("JwtDecodeRequest");
@@ -80,9 +81,7 @@ function decodeBase64Url(str: string): string {
   let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
   const pad = (4 - (base64.length % 4)) % 4;
   base64 += "=".repeat(pad);
-  return new TextDecoder().decode(
-    Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)),
-  );
+  return new TextDecoder().decode(Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)));
 }
 
 export async function POST(request: NextRequest) {
@@ -96,9 +95,7 @@ export async function POST(request: NextRequest) {
   const parsed = JwtDecodeRequest.safeParse(body);
   if (!parsed.success) {
     return errorResponse(422, "The given data was invalid.", {
-      errors: Object.fromEntries(
-        parsed.error.issues.map((i) => [i.path.join("."), [i.message]]),
-      ),
+      errors: Object.fromEntries(parsed.error.issues.map((i) => [i.path.join("."), [i.message]])),
     });
   }
 

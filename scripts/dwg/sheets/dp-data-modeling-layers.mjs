@@ -6,7 +6,8 @@ import { sheet, text, widthOf } from "../kit.mjs";
 
 // Plate 290 x 200; with a 66 step a lower plate shows only local y > ~76,
 // so lower layers keep their modules in the front band y 88..186.
-const W = 290, D = 200;
+const W = 290,
+  D = 200;
 
 const layers = [
   {
@@ -28,8 +29,15 @@ const layers = [
       // One model per source table: a typed header row over its columns.
       ...[0, 1, 2].flatMap((c) =>
         [0, 1].flatMap((r) => {
-          const x = 16 + c * 92, y = 92 + r * 48;
-          return [p.rect(x, y, 74, 40, "obj fill-2"), p.rect(x, y, 74, 10, "obj fill-1"), ...[28.5, 47, 65.5].map((cx) => p.line(x + cx - 10, y + 10, x + cx - 10, y + 40, "ext"))];
+          const x = 16 + c * 92,
+            y = 92 + r * 48;
+          return [
+            p.rect(x, y, 74, 40, "obj fill-2"),
+            p.rect(x, y, 74, 10, "obj fill-1"),
+            ...[28.5, 47, 65.5].map((cx) =>
+              p.line(x + cx - 10, y + 10, x + cx - 10, y + 40, "ext"),
+            ),
+          ];
         }),
       ),
     ],
@@ -53,7 +61,15 @@ const layers = [
     sub: "facts · conformed dimensions · wide tables",
     draw: (p) => [
       // A fact table with its conformed dimensions.
-      ...[[16, 94], [116, 94], [16, 160], [116, 160]].flatMap(([x, y]) => [p.line(x + 15, y + 12, 81, 137, "ext"), p.rect(x, y, 30, 24, "obj fill-2")]),
+      ...[
+        [16, 94],
+        [116, 94],
+        [16, 160],
+        [116, 160],
+      ].flatMap(([x, y]) => [
+        p.line(x + 15, y + 12, 81, 137, "ext"),
+        p.rect(x, y, 30, 24, "obj fill-2"),
+      ]),
       p.rect(56, 118, 50, 38, "obj fill-1"),
       // A wide table: many columns.
       p.rect(170, 100, 104, 76, "obj fill-2"),
@@ -66,10 +82,19 @@ const layers = [
     sub: "metrics · entities · dimensions",
     draw: (p) => [
       // Metrics.
-      ...[[46, 46], [94, 46], [46, 94], [94, 94]].map(([x, y]) => p.circle(x, y, 16, "obj fill-1")),
+      ...[
+        [46, 46],
+        [94, 46],
+        [46, 94],
+        [94, 94],
+      ].map(([x, y]) => p.circle(x, y, 16, "obj fill-1")),
       // Entities, joined.
-      p.rect(140, 30, 56, 34, "obj fill-2"), p.rect(214, 30, 56, 34, "obj fill-2"), p.line(196, 47, 214, 47, "obj"),
-      p.rect(177, 92, 56, 34, "obj fill-2"), p.line(168, 64, 196, 92, "obj"), p.line(242, 64, 214, 92, "obj"),
+      p.rect(140, 30, 56, 34, "obj fill-2"),
+      p.rect(214, 30, 56, 34, "obj fill-2"),
+      p.line(196, 47, 214, 47, "obj"),
+      p.rect(177, 92, 56, 34, "obj fill-2"),
+      p.line(168, 64, 196, 92, "obj"),
+      p.line(242, 64, 214, 92, "obj"),
       // Dimensions: tags.
       ...[0, 1, 2, 3].map((i) => p.rect(24 + i * 64, 152, 52, 16, "obj fill-2", 8)),
     ],
@@ -89,14 +114,24 @@ export default function draw() {
   const CX = 380;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Each layer reads only the layer beneath it. Dashboards never read raw or staging."],
-    [2, "Staging as views; intermediate ephemeral or views in a restricted schema; marts start as views, become tables when slow to query, incremental when slow to build."],
-    [0, "Not to scale. Layers separated along the build axis; plate contents are schematic."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [1, "Each layer reads only the layer beneath it. Dashboards never read raw or staging."],
+      [
+        2,
+        "Staging as views; intermediate ephemeral or views in a restricted schema; marts start as views, become tables when slow to query, incremental when slow to build.",
+      ],
+      [0, "Not to scale. Layers separated along the build axis; plate contents are schematic."],
+    ],
+    { width: 690 },
+  );
 
-  const gap = 66, top = (layers.length - 1) * gap;
-  const tx = 392, ty = ny + 30 + top;
+  const gap = 66,
+    top = (layers.length - 1) * gap;
+  const tx = 392,
+    ty = ny + 30 + top;
   s.comment("Exploded view");
   const P = s.exploded({ tx, ty, w: W, d: D, gap, labelX: 284, layers });
 
@@ -112,13 +147,20 @@ export default function draw() {
 
   const left = P(0, D, 0)[0];
   const vy = yBot + 34;
-  s.viewTitle((left + P(W, 0, 0)[0]) / 2, vy, "Exploded view · model layers", "Axonometric · not to scale · 01 at the bottom");
+  s.viewTitle(
+    (left + P(W, 0, 0)[0]) / 2,
+    vy,
+    "Exploded view · model layers",
+    "Axonometric · not to scale · 01 at the bottom",
+  );
 
   // ---- Layer table (four columns, same rules as the kit's table) ----
   s.comment("Layer table");
   const ws = [40, 100, 150, 170];
   const tw = ws.reduce((a, b) => a + b, 0);
-  const x0 = CX - tw / 2, y0 = vy + 13 + 52, rowH = 15;
+  const x0 = CX - tw / 2,
+    y0 = vy + 13 + 52,
+    rowH = 15;
   const all = [["No", "Layer", "Materialized as", "Read by"], ...TABLE];
   const h = all.length * rowH;
   s.text(x0, y0 - 7, "Layers · materialization", "vt");

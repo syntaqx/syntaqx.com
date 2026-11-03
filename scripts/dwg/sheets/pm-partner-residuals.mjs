@@ -14,7 +14,11 @@ const LEVELS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, rowH = 40, h = 26, top = 44;
+  const W = 760,
+    x = 20,
+    rowH = 40,
+    h = 26,
+    top = 44;
   const s = sheet({ prefix: "pm-pr", width: W });
   const cols = [270, 440, 640];
 
@@ -24,7 +28,9 @@ export default function draw() {
   s.line(x, 34, W - x, 34, "tbl");
 
   const nodes = LEVELS.map(([label]) => ({ label, children: [] }));
-  nodes.slice(0, -1).forEach((n, i) => { n.children = [nodes[i + 1]]; });
+  nodes.slice(0, -1).forEach((n, i) => {
+    n.children = [nodes[i + 1]];
+  });
   const rows = s.tree(nodes[0], { x, y: top, w: 110, h, indent: 30, rowH });
 
   s.comment("Each level's buy rate is its parent's sell rate; it keeps the difference");
@@ -43,7 +49,12 @@ export default function draw() {
   s.text(cols[0], ty, "$2.05", "tc");
   s.text(cols[1], ty, "interchange, network and processing", "sl");
   const fy = ty + 28;
-  s.text(x, fy, "$2.05 + $0.20 + $0.23 + $0.17 + $0.55 = $3.20, the merchant's fee to the cent", "sl hl");
+  s.text(
+    x,
+    fy,
+    "$2.05 + $0.20 + $0.23 + $0.17 + $0.55 = $3.20, the merchant's fee to the cent",
+    "sl hl",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

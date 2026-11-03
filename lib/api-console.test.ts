@@ -25,9 +25,7 @@ describe("buildRequest()", () => {
     expect(r.method).toBe("GET");
     expect(r.headers).toEqual({ "Api-Version": "2026-10-22" });
     expect(r.body).toBeUndefined();
-    expect(r.curl).toBe(
-      `curl '${base}/random?count=5' \\\n  -H 'Api-Version: 2026-10-22'`,
-    );
+    expect(r.curl).toBe(`curl '${base}/random?count=5' \\\n  -H 'Api-Version: 2026-10-22'`);
   });
 
   it("encodes query values and substitutes path params", () => {

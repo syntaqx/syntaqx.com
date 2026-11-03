@@ -19,9 +19,13 @@ const PANELS = [
 const STAT_LABELS = ["order", "drive", "day", "cost"];
 
 export default function draw() {
-  const W = 760, pw = 350, ph = 200, gy = 40;
+  const W = 760,
+    pw = 350,
+    ph = 200,
+    gy = 40;
   const s = sheet({ prefix: "fo-rowt", width: W });
-  const sw = 26, sh = 22; // a stop
+  const sw = 26,
+    sh = 22; // a stop
   let bottom = 0;
 
   PANELS.forEach((p, k) => {
@@ -37,10 +41,15 @@ export default function draw() {
 
     // Stops on a grid: A B C over F E D, the depot left of the middle.
     const cols = [gx + 130, gx + 210, gx + 290];
-    const r1 = gy + 88, r2 = gy + 150;
+    const r1 = gy + 88,
+      r2 = gy + 150;
     const stop = (c, cy, l) => s.node(cols[c] - sw / 2, cy - sh / 2, sw, sh, l);
-    const A = stop(0, r1, "A"), B = stop(1, r1, "B"), C = stop(2, r1, "C");
-    const F = stop(0, r2, "F"), E = stop(1, r2, "E"), D = stop(2, r2, "D");
+    const A = stop(0, r1, "A"),
+      B = stop(1, r1, "B"),
+      C = stop(2, r1, "C");
+    const F = stop(0, r2, "F"),
+      E = stop(1, r2, "E"),
+      D = stop(2, r2, "D");
     const depot = s.node(gx + 22, (r1 + r2) / 2 - 12, 60, 24, "depot", { end: true });
 
     const o = { hl: p.hl };
@@ -76,7 +85,12 @@ export default function draw() {
 
   s.comment("Assumptions");
   const fy = bottom + 24;
-  s.text(20, fy, "illustrative: 270 service minutes, 8 h regular day, $45/h labor, $67.50/h overtime, $0.76/mi", "tc");
+  s.text(
+    20,
+    fy,
+    "illustrative: 270 service minutes, 8 h regular day, $45/h labor, $67.50/h overtime, $0.76/mi",
+    "tc",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

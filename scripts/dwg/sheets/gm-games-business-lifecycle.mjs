@@ -13,7 +13,10 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, w = 120, gap = 30, y = 70;
+  const W = 760,
+    w = 120,
+    gap = 30,
+    y = 70;
   const s = sheet({ prefix: "gm-gbl", width: W });
   const x0 = (W - (STAGES.length * w + (STAGES.length - 1) * gap)) / 2;
 
@@ -27,7 +30,11 @@ export default function draw() {
 
   s.comment("Cancelled");
   const cancelled = s.node(prototype.x, bottom + 48, w, 30, "cancelled", { end: true, fill: 1 });
-  s.wire([[prototype.cx, bottom + 6], cancelled.port("t")], { alt: true, side: "right", label: "not fun" });
+  s.wire([[prototype.cx, bottom + 6], cancelled.port("t")], {
+    alt: true,
+    side: "right",
+    label: "not fun",
+  });
 
   s.comment("Legend, beside cancelled");
   s.legend(nodes[1].x, cancelled.cy, [

@@ -25,12 +25,29 @@ export default function draw() {
   };
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Good LCP is 2.5 s or less; the split is published guidance on where the time goes, not a rule."],
-    [2, "Each metric is judged at the 75th percentile of real page loads, for mobile and desktop separately."],
-    [3, "About 40% each for TTFB and load duration, under 10% each for the delays, drawn at their ceiling."],
-    [0, "Values in s unless marked. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Good LCP is 2.5 s or less; the split is published guidance on where the time goes, not a rule.",
+      ],
+      [
+        2,
+        "Each metric is judged at the 75th percentile of real page loads, for mobile and desktop separately.",
+      ],
+      [
+        3,
+        "About 40% each for TTFB and load duration, under 10% each for the delays, drawn at their ceiling.",
+      ],
+      [
+        0,
+        "Values in s unless marked. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: LCP budget by subpart, 1 s = 240 px ----
   s.comment("Plan view: LCP budget");
@@ -39,8 +56,12 @@ export default function draw() {
     const k = 240;
     const x0 = CX - (L1 * k) / 2;
     const xs = T.reduce((acc, t) => [...acc, acc[acc.length - 1] + t * k], [x0]);
-    const top = ny + 56, h = 36, bot = top + h;
-    T.forEach((_, i) => s.rect(xs[i], top, xs[i + 1] - xs[i], h, i % 2 ? "obj fill-1" : "obj fill-2"));
+    const top = ny + 56,
+      h = 36,
+      bot = top + h;
+    T.forEach((_, i) =>
+      s.rect(xs[i], top, xs[i + 1] - xs[i], h, i % 2 ? "obj fill-1" : "obj fill-2"),
+    );
     s.label(xs[0], top, xs[1] - xs[0], h, "time to first byte");
     s.label(xs[2], top, xs[3] - xs[2], h, "load duration");
     const m = (i) => (xs[i] + xs[i + 1]) / 2;
@@ -60,12 +81,16 @@ export default function draw() {
   s.comment("Plan view: thresholds");
   let bandBottom;
   {
-    const h = 24, pitch = 56, len = 540;
+    const h = 24,
+      pitch = 56,
+      len = 540;
     const x0 = CX - len / 2 + 20;
     const top = budgetBottom + 64;
     BANDS.forEach(([name, good, poor, end, k, codes], i) => {
       const y = top + i * pitch;
-      const xg = x0 + good * k, xp = x0 + poor * k, xe = x0 + end * k;
+      const xg = x0 + good * k,
+        xp = x0 + poor * k,
+        xe = x0 + end * k;
       s.rect(x0, y, xg - x0, h, "obj fill-2");
       s.rect(xg, y, xp - xg, h, "obj fill-1");
       s.rect(xp, y, xe - xp, h, "hatch", { fill: s.hatch });
@@ -81,7 +106,13 @@ export default function draw() {
       }
     });
     const last = top + (BANDS.length - 1) * pitch + h;
-    titled(CX, last + 44, "Plan view · thresholds at the 75th percentile", "LCP 1 s = 108 px · INP 100 ms = 72 px · CLS 0.1 = 108 px", 2);
+    titled(
+      CX,
+      last + 44,
+      "Plan view · thresholds at the 75th percentile",
+      "LCP 1 s = 108 px · INP 100 ms = 72 px · CLS 0.1 = 108 px",
+      2,
+    );
     bandBottom = last + 57;
   }
 
@@ -100,7 +131,13 @@ export default function draw() {
   ];
   const widths = [60, 220, 190];
   const tw = widths.reduce((a, b) => a + b, 0);
-  const tb = s.table((W - tw) / 2, bandBottom + 60, "Variables · published LCP guidance and thresholds", rows, { widths });
+  const tb = s.table(
+    (W - tw) / 2,
+    bandBottom + 60,
+    "Variables · published LCP guidance and thresholds",
+    rows,
+    { widths },
+  );
   s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

@@ -30,7 +30,10 @@ export function MarkdownMenu({ href }: { href: string }) {
       .then((t) => new Blob([t], { type: "text/plain" }));
     navigator.clipboard
       .write([new ClipboardItem({ "text/plain": text })])
-      .then(() => setState("copied"), () => setState("failed"))
+      .then(
+        () => setState("copied"),
+        () => setState("failed"),
+      )
       .finally(() => setTimeout(() => setState("idle"), 2000));
   };
 
@@ -46,7 +49,13 @@ export function MarkdownMenu({ href }: { href: string }) {
             state === "copied" && "text-accent",
           )}
         >
-          {state === "copied" ? <Check size={12} aria-hidden /> : state === "failed" ? <X size={12} aria-hidden /> : <Copy size={12} aria-hidden />}
+          {state === "copied" ? (
+            <Check size={12} aria-hidden />
+          ) : state === "failed" ? (
+            <X size={12} aria-hidden />
+          ) : (
+            <Copy size={12} aria-hidden />
+          )}
           <span aria-live="polite" className="sr-only">
             {state === "idle" ? "" : labels[state]}
           </span>

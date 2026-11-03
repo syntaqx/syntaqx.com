@@ -17,14 +17,17 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "ugp-sun", width: W });
 
-  const n = STATES.length, w = 112, h = 30;
+  const n = STATES.length,
+    w = 112,
+    h = 30;
   const gap = (W - 40 - n * w) / (n - 1);
   const X = (i) => 20 + i * (w + gap);
   const y = 30;
 
   s.comment("States");
   const nodes = STATES.map(([label], i) =>
-    s.node(X(i), y, w, h, label, { kind: "state", code: true, end: i === n - 1 }));
+    s.node(X(i), y, w, h, label, { kind: "state", code: true, end: i === n - 1 }),
+  );
   nodes.slice(1).forEach((b, i) => s.connect(nodes[i], b, { hl: true }));
 
   s.comment("What each state means");
@@ -36,16 +39,30 @@ export default function draw() {
 
   s.comment("Holds survive the erasure");
   const del = nodes[n - 1];
-  const hy = bottom + 30, hw = 236;
-  const held = s.node(W - 20 - hw, hy, hw, 30, "records under holds or retention", { kind: "store" });
-  s.wire([[del.cx, bottom + 8], [del.cx, hy]], { alt: true, label: "kept, reported", side: "left" });
+  const hy = bottom + 30,
+    hw = 236;
+  const held = s.node(W - 20 - hw, hy, hw, 30, "records under holds or retention", {
+    kind: "store",
+  });
+  s.wire(
+    [
+      [del.cx, bottom + 8],
+      [del.cx, hy],
+    ],
+    { alt: true, label: "kept, reported", side: "left" },
+  );
 
   s.comment("Legend");
-  const lg = s.legend(20, held.y + held.h / 2, [
-    { kind: "hl", label: "dated sequence" },
-    { kind: "alt", label: "skips the erasure" },
-    { kind: "end", label: "terminal state" },
-  ], { width: held.x - 40 });
+  const lg = s.legend(
+    20,
+    held.y + held.h / 2,
+    [
+      { kind: "hl", label: "dated sequence" },
+      { kind: "alt", label: "skips the erasure" },
+      { kind: "end", label: "terminal state" },
+    ],
+    { width: held.x - 40 },
+  );
   s.height = Math.ceil(Math.max(lg.y, held.y2) + 18);
   return s.toString();
 }

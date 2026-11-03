@@ -1,11 +1,7 @@
 import { UiJsonLd } from "@/components/ui-json-ld";
 import { MobileUiSidebar, UiSidebar } from "@/components/ui-sidebar";
 
-export default function UiPatternsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function UiPatternsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <UiJsonLd />

@@ -12,13 +12,11 @@ export default function KeyboardAndFocusPage() {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Keyboard &amp; Focus
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Keyboard &amp; Focus</h1>
         <p className="max-w-2xl text-dim leading-relaxed">
-          Focus is the keyboard user&apos;s cursor. My rule is that it always
-          lands somewhere sensible: one stop per widget, home again after a
-          detour, and shortcuts that say they exist.
+          Focus is the keyboard user&apos;s cursor. My rule is that it always lands somewhere
+          sensible: one stop per widget, home again after a detour, and shortcuts that say they
+          exist.
         </p>
       </div>
 
@@ -32,9 +30,9 @@ export default function KeyboardAndFocusPage() {
         ]}
         blurb={
           <>
-            A group of controls is one Tab stop. Arrow keys move inside it,
-            Tab moves past it, and coming back lands on the control you left.
-            Five buttons shouldn&apos;t cost five presses of Tab.
+            A group of controls is one Tab stop. Arrow keys move inside it, Tab moves past it, and
+            coming back lands on the control you left. Five buttons shouldn&apos;t cost five presses
+            of Tab.
           </>
         }
       >
@@ -51,9 +49,8 @@ export default function KeyboardAndFocusPage() {
         ]}
         blurb={
           <>
-            Opening a dialog moves focus into it; closing it puts focus back on
-            whatever opened it. Without that, a keyboard user who closes a
-            dialog starts over from the top of the page.
+            Opening a dialog moves focus into it; closing it puts focus back on whatever opened it.
+            Without that, a keyboard user who closes a dialog starts over from the top of the page.
           </>
         }
       >
@@ -65,10 +62,9 @@ export default function KeyboardAndFocusPage() {
         sources={[{ name: "GitHub" }, { name: "Linear" }]}
         blurb={
           <>
-            Show the key next to the action it triggers, and keep a cheat sheet
-            behind <code className="font-mono">?</code>. Scope single-key
-            shortcuts to where they apply, so typing a &ldquo;j&rdquo; in a
-            search box never moves a list.
+            Show the key next to the action it triggers, and keep a cheat sheet behind{" "}
+            <code className="font-mono">?</code>. Scope single-key shortcuts to where they apply, so
+            typing a &ldquo;j&rdquo; in a search box never moves a list.
           </>
         }
       >

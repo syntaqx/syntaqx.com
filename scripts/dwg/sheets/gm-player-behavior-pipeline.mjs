@@ -3,24 +3,46 @@
 // variable tables. Embedded in content/books/gaming/player-behavior.md.
 import { sheet } from "../kit.mjs";
 
-const M2 = 12.8, A2 = 355.1; // M, proactive
-const M1 = 1.3, A1 = 2.4; // M, reported
-const N1 = 85, N2 = 247; // K, appeals
+const M2 = 12.8,
+  A2 = 355.1; // M, proactive
+const M1 = 1.3,
+  A1 = 2.4; // M, reported
+const N1 = 85,
+  N2 = 247; // K, appeals
 
 export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "gm-pbp", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "A platform transparency report, Jan 1 to Dec 31, 2025. Stage boxes are not to scale; split bars are."],
-    [2, "Per the report, 65% of user reports and 97% of total reports were processed using automated systems."],
-    [3, "A human agent reviews each appeal; reinstated when an error is found or reconsideration is warranted."],
-    [0, "Counts per year. The drawing carries codes; values and formulas are in the tables."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "A platform transparency report, Jan 1 to Dec 31, 2025. Stage boxes are not to scale; split bars are.",
+      ],
+      [
+        2,
+        "Per the report, 65% of user reports and 97% of total reports were processed using automated systems.",
+      ],
+      [
+        3,
+        "A human agent reviews each appeal; reinstated when an error is found or reconsideration is warranted.",
+      ],
+      [0, "Counts per year. The drawing carries codes; values and formulas are in the tables."],
+    ],
+    { width: 690 },
+  );
 
-  const bw = 120, bh = 40, gapA = 34, barW = 300;
-  const bx1 = 70, bx2 = bx1 + bw + gapA, barX = bx2 + bw + gapA;
+  const bw = 120,
+    bh = 40,
+    gapA = 34,
+    barW = 300;
+  const bx1 = 70,
+    bx2 = bx1 + bw + gapA,
+    barX = bx2 + bw + gapA;
   const ah = `url(#${s.id("ah")})`;
   const box = (x, y, label, code) => {
     s.rect(x, y, bw, bh, "obj fill-2");
@@ -43,26 +65,42 @@ export default function draw() {
     s.label(xa, y, barX + barW - xa, bh, lb);
     s.dimH(barX, barX + barW, y - 14, ct, { from: [y, y] });
     const narrow = xa - barX < 22;
-    s.dimH(barX, xa, y + bh + 18, ca, { from: [y + bh, y + bh], below: true, dx: narrow ? -24 : 0 });
+    s.dimH(barX, xa, y + bh + 18, ca, {
+      from: [y + bh, y + bh],
+      below: true,
+      dx: narrow ? -24 : 0,
+    });
     s.dimH(xa, barX + barW, y + bh + 18, cb, { from: [null, y + bh], below: true, hl: hlB });
     return y + bh + 30;
   };
-  const title = (y, t) => s.viewTitle(W / 2, y + 32, t, "Plan view · split bar to scale · boxes not to scale");
+  const title = (y, t) =>
+    s.viewTitle(W / 2, y + 32, t, "Plan view · split bar to scale · boxes not to scale");
 
   s.comment("Lane 1: proactive detection");
   let y = ny + 50;
-  let b = lane(y, ["scanned", "S1"], ["violating", "D1"], [M2, A2], ["M2", "A2", "D1"], { lb: "automated" });
+  let b = lane(y, ["scanned", "S1"], ["violating", "D1"], [M2, A2], ["M2", "A2", "D1"], {
+    lb: "automated",
+  });
   title(b, "Lane 1 · proactive detection");
 
   s.comment("Lane 2: player reports");
   y = b + 45 + 50;
-  b = lane(y, ["reports", "R1"], ["actioned", "R2"], [M1, A1], ["M1", "A1", "U1"], { la: "manual", lb: "automated", hlB: true, labelA: true });
+  b = lane(y, ["reports", "R1"], ["actioned", "R2"], [M1, A1], ["M1", "A1", "U1"], {
+    la: "manual",
+    lb: "automated",
+    hlB: true,
+    labelA: true,
+  });
   s.nb(barX + barW - 30, y - 21.5, 2);
   title(b, "Lane 2 · player reports");
 
   s.comment("Lane 3: appeals");
   y = b + 45 + 50;
-  b = lane(y, ["appeals", "P1"], ["case review", null], [N1, N2], ["N1", "N2", "P1"], { la: "reinstated", lb: "upheld", labelA: true });
+  b = lane(y, ["appeals", "P1"], ["case review", null], [N1, N2], ["N1", "N2", "P1"], {
+    la: "reinstated",
+    lb: "upheld",
+    labelA: true,
+  });
   s.nb(bx2 + bw / 2, y - 10, 3);
   title(b, "Lane 3 · appeals");
 

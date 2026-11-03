@@ -9,14 +9,24 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "pt-a2", width: W });
 
-  const h = 40, rowGap = 40, top = 24;
-  const y1 = top, y2 = top + h + rowGap;
-  const cw = 150, chw = 190, pw = 124;
-  const cx = 20, chx = cx + cw + 44, px = chx + chw + 80;
+  const h = 40,
+    rowGap = 40,
+    top = 24;
+  const y1 = top,
+    y2 = top + h + rowGap;
+  const cw = 150,
+    chw = 190,
+    pw = 124;
+  const cx = 20,
+    chx = cx + cw + 44,
+    px = chx + chw + 80;
   const tx = px + pw + 3 + 24;
 
   s.comment("The certification splits rent");
-  const cert = s.node(cx, (y1 + y2 + h) / 2 - 30, cw, 60, "certification", { kind: "store", sub: ["tenant rent and", "assistance computed"] });
+  const cert = s.node(cx, (y1 + y2 + h) / 2 - 30, cw, 60, "certification", {
+    kind: "store",
+    sub: ["tenant rent and", "assistance computed"],
+  });
   const res = s.node(chx, y1, chw, h, "tenant rent", { kind: "store", hl: true });
   s.note(res, "ledger_party = 'resident'", { cls: "tc", dy: 16 });
   const sub = s.node(chx, y2, chw, h, "assistance payment", { kind: "store" });

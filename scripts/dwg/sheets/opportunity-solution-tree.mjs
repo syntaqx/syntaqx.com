@@ -7,7 +7,12 @@ import { sheet } from "../kit.mjs";
 const LEVELS = ["outcome", "opportunities", "solutions", "assumption tests"];
 
 export default function draw() {
-  const W = 760, w = 120, h = 40, gapX = 24, levelH = 72, leaves = 4;
+  const W = 760,
+    w = 120,
+    h = 40,
+    gapX = 24,
+    levelH = 72,
+    leaves = 4;
   const s = sheet({ prefix: "ost", width: W });
   const treeW = leaves * w + (leaves - 1) * gapX;
   const colW = 130;
@@ -20,14 +25,26 @@ export default function draw() {
       {
         label: "don't know\nwho to invite",
         children: [
-          { label: "suggest from\nwork domain", children: [{ label: "domain match\nin the data" }] },
-          { label: "invite from\nfirst shared doc", children: [{ label: "5 usability\nsessions" }] },
+          {
+            label: "suggest from\nwork domain",
+            children: [{ label: "domain match\nin the data" }],
+          },
+          {
+            label: "invite from\nfirst shared doc",
+            children: [{ label: "5 usability\nsessions" }],
+          },
         ],
       },
       {
         label: "afraid of\nspamming them",
         hl: true,
-        children: [{ label: "preview what\nthey'll get", hl: true, children: [{ label: "prototype\nwith 5 users", hl: true }] }],
+        children: [
+          {
+            label: "preview what\nthey'll get",
+            hl: true,
+            children: [{ label: "prototype\nwith 5 users", hl: true }],
+          },
+        ],
       },
       { label: "invite lost\nin the inbox" },
     ],

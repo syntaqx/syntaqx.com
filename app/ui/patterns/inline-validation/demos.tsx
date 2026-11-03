@@ -13,20 +13,14 @@ const primary =
 
 const inputClass = (state: "idle" | "error" | "ok") =>
   `w-full rounded border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none transition-colors focus:border-accent/60 ${
-    state === "error"
-      ? "border-red-500/50"
-      : state === "ok"
-        ? "border-accent/40"
-        : "border-border"
+    state === "error" ? "border-red-500/50" : state === "ok" ? "border-accent/40" : "border-border"
   }`;
 
 function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
   return (
     <div className="rounded-lg border border-border bg-surface">
       {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-        {note}
-      </div>
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">{note}</div>
     </div>
   );
 }
@@ -112,9 +106,8 @@ function TimingDemo() {
     <Frame
       note={
         <>
-          Type an address slowly into each. The left field flags
-          &ldquo;y&rdquo; as an error; the right one waits until you leave the
-          field, then clears its error the moment you fix it.
+          Type an address slowly into each. The left field flags &ldquo;y&rdquo; as an error; the
+          right one waits until you leave the field, then clears its error the moment you fix it.
         </>
       }
     >
@@ -208,8 +201,8 @@ function SummaryDemo() {
     <Frame
       note={
         <>
-          Submit it empty. Focus jumps to the summary, each link moves focus to
-          its field, and the summary shrinks as you fix things.
+          Submit it empty. Focus jumps to the summary, each link moves focus to its field, and the
+          summary shrinks as you fix things.
         </>
       }
     >
@@ -221,7 +214,9 @@ function SummaryDemo() {
             className="rounded border border-red-500/50 bg-red-500/5 p-3 outline-none focus:ring-1 focus:ring-red-500/60"
           >
             <p className="mb-2 text-xs font-medium text-red-400">
-              {errorKeys.length === 1 ? "There's 1 problem" : `There are ${errorKeys.length} problems`}
+              {errorKeys.length === 1
+                ? "There's 1 problem"
+                : `There are ${errorKeys.length} problems`}
             </p>
             <ul className="space-y-1">
               {errorKeys.map((key) => (
@@ -244,7 +239,10 @@ function SummaryDemo() {
         <div className="grid gap-4 sm:grid-cols-3">
           {(Object.keys(LABELS) as (keyof Fields)[]).map((key) => (
             <div key={key}>
-              <label htmlFor={`${id}-${key}`} className="mb-1.5 block text-[10px] font-medium text-dim">
+              <label
+                htmlFor={`${id}-${key}`}
+                className="mb-1.5 block text-[10px] font-medium text-dim"
+              >
                 {LABELS[key]}
               </label>
               <input
@@ -290,9 +288,8 @@ function RulesDemo() {
     <Frame
       note={
         <>
-          The rules are visible before you type, and each ticks off as
-          it&apos;s met. The screen reader hears the list once, through
-          aria-describedby, not after every keystroke.
+          The rules are visible before you type, and each ticks off as it&apos;s met. The screen
+          reader hears the list once, through aria-describedby, not after every keystroke.
         </>
       }
     >
@@ -320,7 +317,10 @@ function RulesDemo() {
             return (
               <li
                 key={r.label}
-                className={cn("flex items-center gap-2 text-[11px] transition-colors", ok ? "text-accent" : "text-dim")}
+                className={cn(
+                  "flex items-center gap-2 text-[11px] transition-colors",
+                  ok ? "text-accent" : "text-dim",
+                )}
               >
                 {ok ? <Check size={11} /> : <Circle size={9} className="mx-px" />}
                 {r.label}

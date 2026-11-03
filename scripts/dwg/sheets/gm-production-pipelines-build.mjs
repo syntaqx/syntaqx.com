@@ -14,22 +14,44 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "A studio's published 2016 figure: about 5,500 tests in about 18 minutes per build, reported within about an hour of check-in. Every other value is illustrative."],
-    [2, "Symbols go to a store keyed by build ID; only the ID ships. Off the critical path: no time in B1."],
-    [3, "One serial critical path; a build graph runs independent nodes (per platform, per chunk) on separate agents."],
-    [0, "Values in minutes. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "A studio's published 2016 figure: about 5,500 tests in about 18 minutes per build, reported within about an hour of check-in. Every other value is illustrative.",
+      ],
+      [
+        2,
+        "Symbols go to a store keyed by build ID; only the ID ships. Off the critical path: no time in B1.",
+      ],
+      [
+        3,
+        "One serial critical path; a build graph runs independent nodes (per platform, per chunk) on separate agents.",
+      ],
+      [0, "Values in minutes. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: one change through the farm, 1 min = 10 px ----
   s.comment("Plan view: one change through the farm");
   const k = 10;
   const x0 = CX - (B1 * k) / 2 + 10;
   const xs = S.reduce((acc, t) => [...acc, acc[acc.length - 1] + t * k], [x0]);
-  const top = ny + 66, h = 34, bot = top + h;
+  const top = ny + 66,
+    h = 34,
+    bot = top + h;
   const names = [null, "compile", "cook", "package", null, "tests", null];
   S.forEach((_, i) => {
-    s.rect(xs[i], top, xs[i + 1] - xs[i], h, i === 5 ? "obj hl" : i === 1 || i === 2 ? "obj fill-1" : "obj fill-2");
+    s.rect(
+      xs[i],
+      top,
+      xs[i + 1] - xs[i],
+      h,
+      i === 5 ? "obj hl" : i === 1 || i === 2 ? "obj fill-1" : "obj fill-2",
+    );
     if (names[i]) s.label(xs[i], top, xs[i + 1] - xs[i], h, names[i]);
   });
   s.text(x0 - 12, top + h / 2 + 3, "main", "sl ink", "end");
@@ -37,7 +59,12 @@ export default function draw() {
 
   s.dimH(xs[0], xs[7], top - 22, "B1", { from: [top, top] });
   const cy = bot + 20;
-  s.chainH(xs, cy, S.map((_, i) => `S${i + 1}`), { from: xs.map(() => bot), below: true, hl: [5] });
+  s.chainH(
+    xs,
+    cy,
+    S.map((_, i) => `S${i + 1}`),
+    { from: xs.map(() => bot), below: true, hl: [5] },
+  );
   s.nb((xs[5] + xs[6]) / 2 + 20, cy + 8.5, 1);
 
   // Start and finish on centerlines below the chain.
@@ -48,7 +75,8 @@ export default function draw() {
   s.text(xs[7], ey + 12, "results", "sl ink", "middle");
 
   // Side lane: uploads start after packaging, off the critical path.
-  const sy = ey + 26, sh = 24;
+  const sy = ey + 26,
+    sh = 24;
   const ux = xs[4];
   s.line(ux, cy + 18, ux, sy - 3, "phantom");
   s.rect(ux, sy, U1 * k, sh, "obj fill-2");
@@ -58,7 +86,12 @@ export default function draw() {
   s.nb(ux + U1 * k + 16, sy + sh / 2, 2);
 
   const vb = sy + sh + 20;
-  s.viewTitle(CX, vb + 46, "Plan view · one change through the farm", "Scale 1 min = 10 px · timeline · serial critical path");
+  s.viewTitle(
+    CX,
+    vb + 46,
+    "Plan view · one change through the farm",
+    "Scale 1 min = 10 px · timeline · serial critical path",
+  );
   const viewBottom = vb + 59;
 
   // ---- Variable table ----
@@ -74,7 +107,8 @@ export default function draw() {
     ["S7", "report, label the build good or bad", "3 · illustrative"],
     ["U1", "upload symbols and the build", "5 · illustrative"],
   ];
-  const widths = [44, 200, 120], tw = widths.reduce((a, b) => a + b, 0);
+  const widths = [44, 200, 120],
+    tw = widths.reduce((a, b) => a + b, 0);
   const t = s.table(CX - tw / 2, viewBottom + 56, "Variables · minutes", rows, { widths });
   s.height = Math.ceil(t.y + 30);
   return s.toString();

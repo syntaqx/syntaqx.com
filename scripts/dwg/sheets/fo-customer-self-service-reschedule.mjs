@@ -14,10 +14,16 @@ const EXITS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, w = 124, h = 28, gap = (W - 2 * x - STEPS.length * w) / (STEPS.length - 1);
+  const W = 760,
+    x = 20,
+    w = 124,
+    h = 28,
+    gap = (W - 2 * x - STEPS.length * w) / (STEPS.length - 1);
   const s = sheet({ prefix: "fo-cssr", width: W });
   const X = (i) => x + i * (w + gap);
-  const y0 = 46, y1 = y0 + h + 52, h2 = 36;
+  const y0 = 46,
+    y1 = y0 + h + 52,
+    h2 = 36;
 
   s.text(x, 26, "the portal calls the same scheduling service the office uses", "lt");
 
@@ -30,7 +36,13 @@ export default function draw() {
     if (!e) return;
     const [why, label, solid] = e;
     const n = s.node(X(i), y1, w, h2, label, solid ? { sub: "audit, confirm" } : { kind: "ghost" });
-    s.connect(top[i], n, { from: "b", to: "t", alt: !solid, label: why ?? undefined, side: "right" });
+    s.connect(top[i], n, {
+      from: "b",
+      to: "t",
+      alt: !solid,
+      label: why ?? undefined,
+      side: "right",
+    });
   });
 
   const fy = y1 + h2 + 28;

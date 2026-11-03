@@ -31,8 +31,8 @@ export default function UiPage() {
         sceneLabel="An interface exploded into layers: the layout at the bottom, components above it, and a button on top that a cursor comes down to press"
       >
         <p>
-          The patterns I reach for when I build an interface: when to use
-          each one, and why. Every page has live demos to poke at.
+          The patterns I reach for when I build an interface: when to use each one, and why. Every
+          page has live demos to poke at.
         </p>
       </PageHeader>
 
@@ -51,9 +51,7 @@ export default function UiPage() {
                     className="text-dim group-hover:text-accent transition-colors"
                   />
                 </div>
-                <p className="text-xs text-dim leading-relaxed">
-                  {item.description}
-                </p>
+                <p className="text-xs text-dim leading-relaxed">{item.description}</p>
                 <div className="mt-3 flex flex-wrap gap-1">
                   {item.tags.map((tag) => (
                     <span

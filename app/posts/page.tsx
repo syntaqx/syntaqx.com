@@ -33,10 +33,7 @@ export default function PostsPage() {
         sceneLabel="A pen writing a page line by line, lifted off a stack of drafts"
         hideSceneOnMobile
       >
-        <p>
-          Thoughts on building products, leading teams, and everything in
-          between.
-        </p>
+        <p>Thoughts on building products, leading teams, and everything in between.</p>
         <a
           href="/feed.xml"
           className="mt-6 inline-flex items-center gap-1.5 font-mono text-xs text-dim transition-colors hover:text-accent"

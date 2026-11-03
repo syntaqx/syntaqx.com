@@ -4,14 +4,9 @@
 // private copy next to the private PDF.
 import { resume, type ResumeContact, type ResumeJob } from "@/lib/resume";
 
-export function renderResumeText(
-  contact: ResumeContact,
-  title = resume.title,
-): string {
+export function renderResumeText(contact: ResumeContact, title = resume.title): string {
   const dates = (j: { start: string; end: string }) => `${j.start} - ${j.end}`;
-  const reach = [contact.location, contact.email, contact.phone]
-    .filter(Boolean)
-    .join(" | ");
+  const reach = [contact.location, contact.email, contact.phone].filter(Boolean).join(" | ");
   const jobs = [...resume.experience, ...resume.earlier].map((job: ResumeJob) =>
     [
       `${job.title} | ${job.company} | ${dates(job)}`,

@@ -3,7 +3,17 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ArrowRight, BookOpen, CornerDownLeft, FileText, Hash, History, Loader2, Search, X } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  CornerDownLeft,
+  FileText,
+  Hash,
+  History,
+  Loader2,
+  Search,
+  X,
+} from "lucide-react";
 import { BOOKS, getBook } from "@/lib/books";
 import { cn } from "@/lib/cn";
 
@@ -36,7 +46,9 @@ interface PagefindResultData {
 
 interface PagefindApi {
   init: () => Promise<void>;
-  debouncedSearch: (term: string) => Promise<{ results: { data: () => Promise<PagefindResultData> }[] } | null>;
+  debouncedSearch: (
+    term: string,
+  ) => Promise<{ results: { data: () => Promise<PagefindResultData> }[] } | null>;
 }
 
 interface Hit {
@@ -108,7 +120,10 @@ function saveRecent(term: string) {
   const t = term.trim();
   if (!t) return;
   try {
-    localStorage.setItem(RECENT_KEY, JSON.stringify([t, ...readRecent().filter((r) => r !== t)].slice(0, 5)));
+    localStorage.setItem(
+      RECENT_KEY,
+      JSON.stringify([t, ...readRecent().filter((r) => r !== t)].slice(0, 5)),
+    );
   } catch {
     // Private mode or blocked storage: recent searches just don't persist.
   }
@@ -134,8 +149,7 @@ function shortcutHint(): string | null {
 function isTyping(target: EventTarget | null) {
   return (
     target instanceof HTMLElement &&
-    (target.isContentEditable ||
-      ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+    (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
   );
 }
 
@@ -148,13 +162,7 @@ export function SearchButton() {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setOpen((o) => !o);
-      } else if (
-        e.key === "/" &&
-        !e.metaKey &&
-        !e.ctrlKey &&
-        !e.altKey &&
-        !isTyping(e.target)
-      ) {
+      } else if (e.key === "/" && !e.metaKey && !e.ctrlKey && !e.altKey && !isTyping(e.target)) {
         e.preventDefault();
         setOpen(true);
       }
@@ -272,7 +280,10 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
   // otherwise each page then its headings.
   const rows: Row[] = term
     ? groups.flatMap(([, list]) =>
-        list.flatMap((h) => [{ url: h.url, key: h.url }, ...h.headings.map((s) => ({ url: s.url, key: s.url }))]),
+        list.flatMap((h) => [
+          { url: h.url, key: h.url },
+          ...h.headings.map((s) => ({ url: s.url, key: s.url })),
+        ]),
       )
     : [
         ...recent.map((r) => ({ url: `?q=${r}`, key: `recent:${r}` })),
@@ -403,7 +414,11 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
       </div>
 
       {term && searched && hits.length > 0 && (
-        <div role="tablist" aria-label="Filter results" className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3 sm:px-4">
+        <div
+          role="tablist"
+          aria-label="Filter results"
+          className="flex shrink-0 gap-1 overflow-x-auto border-b border-border px-3 sm:px-4"
+        >
           {SCOPES.filter((s) => s.value === "all" || counts[s.value] > 0).map((s) => (
             <button
               key={s.value}
@@ -417,7 +432,9 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
               }}
               className={cn(
                 "inst -mb-px flex shrink-0 cursor-pointer items-center gap-1.5 border-b-2 px-2 py-2.5 transition-colors",
-                scope === s.value ? "border-accent text-foreground" : "border-transparent text-dim hover:text-foreground",
+                scope === s.value
+                  ? "border-accent text-foreground"
+                  : "border-transparent text-dim hover:text-foreground",
               )}
             >
               {s.label}
@@ -427,14 +444,24 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
         </div>
       )}
 
-      <div ref={listRef} id="search-listbox" role="listbox" aria-label="Search results" className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      <div
+        ref={listRef}
+        id="search-listbox"
+        role="listbox"
+        aria-label="Search results"
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+      >
         {!term && !error && (
           <>
             {recent.length > 0 && (
               <section className="py-2">
                 <h3 className="inst px-4 pb-1.5 pt-2 text-dim">Recent</h3>
                 {recent.map((r) => (
-                  <div key={r} {...rowProps(`recent:${r}`, `?q=${r}`)} className={rowClass(`recent:${r}`)}>
+                  <div
+                    key={r}
+                    {...rowProps(`recent:${r}`, `?q=${r}`)}
+                    className={rowClass(`recent:${r}`)}
+                  >
                     <History size={14} className="mt-0.5 shrink-0 text-dim" />
                     <span className="flex-1 truncate text-sm">{r}</span>
                   </div>
@@ -444,7 +471,12 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
             <section className="py-2">
               <h3 className="inst px-4 pb-1.5 pt-2 text-dim">Jump to</h3>
               {JUMP_TO.map((j) => (
-                <a key={j.url} href={j.url} {...rowProps(`jump:${j.url}`, j.url)} className={rowClass(`jump:${j.url}`)}>
+                <a
+                  key={j.url}
+                  href={j.url}
+                  {...rowProps(`jump:${j.url}`, j.url)}
+                  className={rowClass(`jump:${j.url}`)}
+                >
                   {j.url.startsWith("/books/") ? (
                     <BookOpen size={14} className="mt-0.5 shrink-0 text-dim" />
                   ) : (
@@ -466,19 +498,36 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
                 <a href={h.url} {...rowProps(h.url, h.url)} className={rowClass(h.url)}>
                   <FileText size={14} className="mt-0.5 shrink-0 text-dim" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium text-foreground">{h.title}</span>
-                    <span className={excerptClass} dangerouslySetInnerHTML={{ __html: h.excerpt }} />
+                    <span className="block truncate text-sm font-medium text-foreground">
+                      {h.title}
+                    </span>
+                    <span
+                      className={excerptClass}
+                      dangerouslySetInnerHTML={{ __html: h.excerpt }}
+                    />
                   </span>
-                  {active === h.url && <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />}
+                  {active === h.url && (
+                    <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />
+                  )}
                 </a>
                 {h.headings.map((s) => (
-                  <a key={s.url} href={s.url} {...rowProps(s.url, s.url)} className={cn(rowClass(s.url), "pl-10")}>
+                  <a
+                    key={s.url}
+                    href={s.url}
+                    {...rowProps(s.url, s.url)}
+                    className={cn(rowClass(s.url), "pl-10")}
+                  >
                     <Hash size={12} className="mt-1 shrink-0 text-dim" />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[0.8rem]">{s.title}</span>
-                      <span className={cn(excerptClass, "line-clamp-1!")} dangerouslySetInnerHTML={{ __html: s.excerpt }} />
+                      <span
+                        className={cn(excerptClass, "line-clamp-1!")}
+                        dangerouslySetInnerHTML={{ __html: s.excerpt }}
+                      />
                     </span>
-                    {active === s.url && <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />}
+                    {active === s.url && (
+                      <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />
+                    )}
                   </a>
                 ))}
               </div>
@@ -489,11 +538,16 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
         {term && searched === term && !loading && shown.length === 0 && !error && (
           <div className="px-6 py-14 text-center">
             <p className="text-sm text-foreground">
-              No results for &ldquo;{term}&rdquo;{scope !== "all" && ` in ${SCOPES.find((s) => s.value === scope)?.label}`}
+              No results for &ldquo;{term}&rdquo;
+              {scope !== "all" && ` in ${SCOPES.find((s) => s.value === scope)?.label}`}
             </p>
             <p className="mt-2 text-xs text-dim">
               {scope !== "all" ? (
-                <button type="button" onClick={() => setScope("all")} className="cursor-pointer text-accent hover:underline">
+                <button
+                  type="button"
+                  onClick={() => setScope("all")}
+                  className="cursor-pointer text-accent hover:underline"
+                >
                   Search everything
                 </button>
               ) : (

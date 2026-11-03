@@ -45,9 +45,7 @@ function parseTomlFrontmatter(fileContents: string): {
   data: Record<string, unknown>;
   content: string;
 } {
-  const match = fileContents.match(
-    /^\+\+\+\s*\n([\s\S]*?)\n\+\+\+\s*\n?([\s\S]*)$/,
-  );
+  const match = fileContents.match(/^\+\+\+\s*\n([\s\S]*?)\n\+\+\+\s*\n?([\s\S]*)$/);
   if (!match) return { data: {}, content: fileContents };
 
   const raw = match[1];

@@ -13,9 +13,7 @@ const FlakyResponse = z
       .string()
       .uuid()
       .openapi({ description: "Unique ID for this attempt (useful for log correlation)" }),
-    latency_ms: z
-      .number()
-      .openapi({ description: "Artificial delay applied (milliseconds)" }),
+    latency_ms: z.number().openapi({ description: "Artificial delay applied (milliseconds)" }),
   })
   .openapi("FlakyResponse");
 
@@ -29,32 +27,21 @@ registry.registerPath({
   tags: ["Testing"],
   request: {
     query: z.object({
-      rate: z
-        .string()
-        .optional()
-        .openapi({
-          description:
-            "Success rate as a percentage (0–100, default 50). 0 = always fail, 100 = always succeed.",
-        }),
-      status: z
-        .string()
-        .optional()
-        .openapi({
-          description:
-            "HTTP status code to return on failure (400–599, default 500)",
-        }),
-      delay: z
-        .string()
-        .optional()
-        .openapi({
-          description:
-            "Maximum random delay in milliseconds before responding (0–10000, default 0)",
-        }),
+      rate: z.string().optional().openapi({
+        description:
+          "Success rate as a percentage (0–100, default 50). 0 = always fail, 100 = always succeed.",
+      }),
+      status: z.string().optional().openapi({
+        description: "HTTP status code to return on failure (400–599, default 500)",
+      }),
+      delay: z.string().optional().openapi({
+        description: "Maximum random delay in milliseconds before responding (0–10000, default 0)",
+      }),
     }),
   },
   responses: {
     200: {
-      description: "Success: the request \"survived\"",
+      description: 'Success: the request "survived"',
       content: { "application/json": { schema: FlakyResponse } },
     },
     500: {
@@ -121,20 +108,14 @@ export async function GET(request: NextRequest) {
   const rawStatus = searchParams.get("status");
   const failStatus = rawStatus !== null ? parseInt(rawStatus, 10) : 500;
   if (isNaN(failStatus) || failStatus < 400 || failStatus > 599) {
-    return invalidField(
-      "status",
-      "status must be an integer between 400 and 599.",
-    );
+    return invalidField("status", "status must be an integer between 400 and 599.");
   }
 
   // Delay
   const rawDelay = searchParams.get("delay");
   const maxDelay = rawDelay !== null ? parseInt(rawDelay, 10) : 0;
   if (isNaN(maxDelay) || maxDelay < 0 || maxDelay > 10000) {
-    return invalidField(
-      "delay",
-      "delay must be an integer between 0 and 10000.",
-    );
+    return invalidField("delay", "delay must be an integer between 0 and 10000.");
   }
 
   // Apply random delay
@@ -153,8 +134,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const message =
-    STATUS_MESSAGES[failStatus] || `Error ${failStatus} (simulated)`;
+  const message = STATUS_MESSAGES[failStatus] || `Error ${failStatus} (simulated)`;
 
   return errorResponse(failStatus, message, { headers: { "Cache-Control": CACHE.none } });
 }

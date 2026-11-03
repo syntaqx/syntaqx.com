@@ -152,19 +152,13 @@ export default async function PostPage({ params }: Props) {
       {/* Contents | reading column | details. The reading column holds its
           measure; the rails share whatever width is left. */}
       <div className="grid gap-10 pt-12 lg:grid-cols-[minmax(0,16rem)_minmax(0,44rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,44rem)_minmax(0,1fr)]">
-        {toc.length > 1 ? (
-          <PostToc headings={toc} />
-        ) : (
-          <div className="hidden lg:block" />
-        )}
+        {toc.length > 1 ? <PostToc headings={toc} /> : <div className="hidden lg:block" />}
         <div className="min-w-0" data-toc-body>
           {post.description && (
             <p
               className={cn(
                 "mb-8 max-w-176",
-                feature
-                  ? "text-[1.2rem] font-semibold text-foreground"
-                  : "text-lg text-muted",
+                feature ? "text-[1.2rem] font-semibold text-foreground" : "text-lg text-muted",
                 "leading-snug",
               )}
             >
@@ -220,9 +214,7 @@ export default async function PostPage({ params }: Props) {
                         className="flex items-baseline justify-between gap-4 py-2.5 text-sm text-foreground transition-colors hover:text-accent"
                       >
                         {tag}
-                        <span className="inst text-dim tabular-nums">
-                          {tagCounts.get(slug)}
-                        </span>
+                        <span className="inst text-dim tabular-nums">{tagCounts.get(slug)}</span>
                       </Link>
                     </li>
                   );

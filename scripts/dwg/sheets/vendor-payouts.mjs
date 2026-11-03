@@ -13,17 +13,32 @@ const METHODS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, rowH = 30, nh = 22, top = 24;
+  const W = 760,
+    x = 20,
+    rowH = 30,
+    nh = 22,
+    top = 24;
   const s = sheet({ prefix: "vp", width: W });
   const widths = [118, 112, 150];
   const gx = W - x - widths.reduce((a, b) => a + b, 0);
-  const mw = 130, mx = gx - 16 - mw, bus = mx - 22;
+  const mw = 130,
+    mx = gx - 16 - mw,
+    bus = mx - 22;
 
   s.comment("Rails");
-  const g = s.grid(gx, top, null, ["arrives", "final", "how it fails"], METHODS.map((m) => m.slice(1)), { widths, rowH, align: ["start", "start", "start"] });
+  const g = s.grid(
+    gx,
+    top,
+    null,
+    ["arrives", "final", "how it fails"],
+    METHODS.map((m) => m.slice(1)),
+    { widths, rowH, align: ["start", "start", "start"] },
+  );
   s.text(mx, top + rowH / 2 + 2.7, "method", "th");
   // Each method sits level with its row of the table.
-  const methods = METHODS.map(([label], i) => s.node(mx, g.rows[i].cy - nh / 2, mw, nh, label, { hl: i === 0 }));
+  const methods = METHODS.map(([label], i) =>
+    s.node(mx, g.rows[i].cy - nh / 2, mw, nh, label, { hl: i === 0 }),
+  );
 
   s.comment("One payable");
   const payable = s.node(x, g.rows[2].cy - 15, 110, 30, "payable");
@@ -34,7 +49,13 @@ export default function draw() {
   s.fanOut(payable, methods, { via: bus, hl: 0 });
 
   const fy = top + rowH * 6 + 22;
-  s.text(W - x, fy, "ACH credit is the default: cheap, universal, carries remittance data", "sl hl", "end");
+  s.text(
+    W - x,
+    fy,
+    "ACH credit is the default: cheap, universal, carries remittance data",
+    "sl hl",
+    "end",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

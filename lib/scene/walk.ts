@@ -1,4 +1,14 @@
-import { CYL_FRONT, circle, cylSide, type NoteLine, type Projector, type Scene, type SceneState, type V2, type V3 } from "./iso";
+import {
+  CYL_FRONT,
+  circle,
+  cylSide,
+  type NoteLine,
+  type Projector,
+  type Scene,
+  type SceneState,
+  type V2,
+  type V3,
+} from "./iso";
 
 /*
  * One traversal of a scene's line work, in painter's order. A Pen decides
@@ -10,7 +20,10 @@ export type Ink = "fg" | "dim" | "acc" | "warn" | "good" | "orange";
 
 export interface Pen {
   occlude(pts: V2[], alpha: number): void;
-  path(pts: V2[], o: { alpha: number; ink: Ink; width?: number; close?: boolean; dash?: boolean }): void;
+  path(
+    pts: V2[],
+    o: { alpha: number; ink: Ink; width?: number; close?: boolean; dash?: boolean },
+  ): void;
   dot(x: number, y: number, ink: Ink, size?: number): void;
   handle(x: number, y: number): void;
   label?(from: V2, to: V2, text: string, accent: boolean): void;
@@ -37,7 +50,9 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
             seg([x + i, y, z], [x + i, y + p.grid, z], 0.08);
             seg([x, y + i, z], [x + p.grid, y + i, z], 0.08);
           }
-        if (p.drops) for (const [dx, dy] of p.drops.at) seg([dx, dy, p.drops.from], [dx, dy, z], 0.35, "fg", true);
+        if (p.drops)
+          for (const [dx, dy] of p.drops.at)
+            seg([dx, dy, p.drops.from], [dx, dy, z], 0.35, "fg", true);
         if (p.window) {
           const w = p.pts[1][0] - x;
           seg([x, y + 0.8, z], [x + w, y + 0.8, z], 0.6);
@@ -49,7 +64,12 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
         if (p.rows) {
           p.rows.lengths.forEach((len, i) => {
             const yy = y + 1.5 + i * 0.55;
-            seg([x + 0.5, yy, z], [x + 0.5 + len * 0.55, yy, z], i === p.rows!.accentRow ? 1 : 0.55, i === p.rows!.accentRow ? "acc" : "fg");
+            seg(
+              [x + 0.5, yy, z],
+              [x + 0.5 + len * 0.55, yy, z],
+              i === p.rows!.accentRow ? 1 : 0.55,
+              i === p.rows!.accentRow ? "acc" : "fg",
+            );
           });
         }
         if (p.handles) p.pts.forEach((v) => pen.handle(...P(v)));
@@ -57,7 +77,15 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
       }
       case "box": {
         const b = p.box;
-        const ink: Ink = p.warn ? "warn" : p.good ? "good" : p.orange ? "orange" : p.accent ? "acc" : "fg";
+        const ink: Ink = p.warn
+          ? "warn"
+          : p.good
+            ? "good"
+            : p.orange
+              ? "orange"
+              : p.accent
+                ? "acc"
+                : "fg";
         const lit = p.accent || p.warn || p.good || p.orange;
         const alpha = p.ghost ? 0.55 : lit ? 1 : p.small ? 0.65 : 0.9;
         if (!p.ghost) [b.left, b.right, b.top].forEach((f) => pen.occlude(pts(f), 1));
@@ -72,7 +100,11 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
           }
         if (p.vents)
           for (let k = 1; k < 6; k++)
-            seg([b.x + b.a, b.y + 0.3 + k * 0.25, b.z + 0.3], [b.x + b.a, b.y + 0.3 + k * 0.25, b.z + b.h - 0.3], 0.45);
+            seg(
+              [b.x + b.a, b.y + 0.3 + k * 0.25, b.z + 0.3],
+              [b.x + b.a, b.y + 0.3 + k * 0.25, b.z + b.h - 0.3],
+              0.45,
+            );
         if (p.handles) b.top.forEach((v) => pen.handle(...P(v)));
         break;
       }
@@ -86,22 +118,42 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
         pen.path(pts(circle(p.cx, p.cy, p.z + p.h, rt)), { alpha: 0.9, ink, close: false });
         pen.path(pts(circle(p.cx, p.cy, p.z, p.r, f0, f1)), { alpha: 0.9, ink, close: false });
         [0.33, 0.66].forEach((k) =>
-          pen.path(pts(circle(p.cx, p.cy, p.z + p.h * k, rAt(k), f0, f1)), { alpha: 0.45, ink, close: false }),
+          pen.path(pts(circle(p.cx, p.cy, p.z + p.h * k, rAt(k), f0, f1)), {
+            alpha: 0.45,
+            ink,
+            close: false,
+          }),
         );
         [f0, f1].forEach((t) => {
           const [cx, cy] = [Math.cos(t), Math.sin(t)];
-          seg([p.cx + p.r * cx, p.cy + p.r * cy, p.z], [p.cx + rt * cx, p.cy + rt * cy, p.z + p.h], 0.9, ink);
+          seg(
+            [p.cx + p.r * cx, p.cy + p.r * cy, p.z],
+            [p.cx + rt * cx, p.cy + rt * cy, p.z + p.h],
+            0.9,
+            ink,
+          );
         });
         break;
       }
       case "cable": {
         const c = pts(p.pts);
-        pen.path(c, { alpha: p.accent ? 1 : 0.42, ink: p.accent ? "acc" : "fg", close: false, width: p.accent ? 1.4 : 1 });
+        pen.path(c, {
+          alpha: p.accent ? 1 : 0.42,
+          ink: p.accent ? "acc" : "fg",
+          close: false,
+          width: p.accent ? 1.4 : 1,
+        });
         if (pen.packet) for (const k of [0, 0.5]) pen.packet(c, (s.flow * p.speed + k) % 1);
         break;
       }
       case "line":
-        seg(p.a, p.b, p.alpha ?? 0.5, p.good ? "good" : p.warn ? "warn" : p.accent ? "acc" : "fg", p.dashed);
+        seg(
+          p.a,
+          p.b,
+          p.alpha ?? 0.5,
+          p.good ? "good" : p.warn ? "warn" : p.accent ? "acc" : "fg",
+          p.dashed,
+        );
         break;
       case "label":
         if (pen.label) {

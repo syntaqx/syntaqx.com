@@ -21,31 +21,51 @@ export default function draw() {
   const s = sheet({ prefix: "fd-tu", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "UTF-8: one to four bytes per code point. This is what a database column, a file and the wire hold."],
-    [2, "UTF-16: one code unit below U+10000, two (a surrogate pair) above. JavaScript, Java and C# lengths count these."],
-    [3, "Code points: what Go's runes and Rust's chars count. A combining accent and a skin tone are code points of their own."],
-    [4, "Grapheme clusters (UAX #29): what a reader sees as one character. Limits, truncation and cursors use these."],
-    [0, "Every row is aligned to the UTF-8 bytes of the same text. Values in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "UTF-8: one to four bytes per code point. This is what a database column, a file and the wire hold.",
+      ],
+      [
+        2,
+        "UTF-16: one code unit below U+10000, two (a surrogate pair) above. JavaScript, Java and C# lengths count these.",
+      ],
+      [
+        3,
+        "Code points: what Go's runes and Rust's chars count. A combining accent and a skin tone are code points of their own.",
+      ],
+      [
+        4,
+        "Grapheme clusters (UAX #29): what a reader sees as one character. Limits, truncation and cursors use these.",
+      ],
+      [0, "Every row is aligned to the UTF-8 bytes of the same text. Values in the table."],
+    ],
+    { width: 690 },
+  );
 
   const totalBytes = CPS.reduce((n, c) => n + c.bytes.length, 0);
   const k = 52; // px per byte
   const x0 = (W - totalBytes * k) / 2 + 30;
   const starts = CPS.reduce((acc, c) => [...acc, acc[acc.length - 1] + c.bytes.length], [0]);
   const X = (byteIndex) => x0 + byteIndex * k;
-  const h = 26, gap = 18;
+  const h = 26,
+    gap = 18;
   const rowY = [0, 1, 2, 3].map((i) => ny + 46 + i * (h + gap));
   const names = ["bytes", "UTF-16", "code points", "clusters"];
   names.forEach((n, i) => s.text(x0 - 12, rowY[i] + h / 2 + 3, n, "sl ink", "end"));
   names.forEach((_, i) => s.nb(x0 - 12 - 92, rowY[i] + h / 2 - 7.5, i + 1));
 
   s.comment("Row 1: UTF-8 bytes");
-  CPS.forEach((c, ci) => c.bytes.forEach((b, bi) => {
-    const x = X(starts[ci] + bi);
-    s.rect(x, rowY[0], k, h, "obj fill-2");
-    s.label(x, rowY[0], k, h, b);
-  }));
+  CPS.forEach((c, ci) =>
+    c.bytes.forEach((b, bi) => {
+      const x = X(starts[ci] + bi);
+      s.rect(x, rowY[0], k, h, "obj fill-2");
+      s.label(x, rowY[0], k, h, b);
+    }),
+  );
 
   s.comment("Row 2: UTF-16 code units");
   CPS.forEach((c, ci) => {
@@ -59,7 +79,8 @@ export default function draw() {
 
   s.comment("Row 3: code points");
   CPS.forEach((c, ci) => {
-    const x = X(starts[ci]), w = c.bytes.length * k;
+    const x = X(starts[ci]),
+      w = c.bytes.length * k;
     s.rect(x, rowY[2], w, h, "obj fill-1");
     s.label(x, rowY[2], w, h, c.cp);
   });
@@ -67,7 +88,8 @@ export default function draw() {
   s.comment("Row 4: grapheme clusters");
   const clusterXs = [X(0)];
   CLUSTERS.forEach((g) => {
-    const a = X(starts[g.cps[0]]), b = X(starts[g.cps[g.cps.length - 1] + 1]);
+    const a = X(starts[g.cps[0]]),
+      b = X(starts[g.cps[g.cps.length - 1] + 1]);
     s.rect(a, rowY[3], b - a, h, "obj fill-1");
     s.label(a, rowY[3], b - a, h, g.label);
     clusterXs.push(b);
@@ -77,7 +99,12 @@ export default function draw() {
   s.chainH(clusterXs, bot + 20, ["G1", "G2"], { from: clusterXs.map(() => bot), below: true });
   s.dimH(X(0), X(totalBytes), rowY[0] - 18, "B1", { from: [rowY[0], rowY[0]], hl: true });
 
-  s.viewTitle(X(totalBytes / 2), bot + 64, "Plan view · one string, four lengths", "Scale 1 byte = 52 px · aligned to UTF-8");
+  s.viewTitle(
+    X(totalBytes / 2),
+    bot + 64,
+    "Plan view · one string, four lengths",
+    "Scale 1 byte = 52 px · aligned to UTF-8",
+  );
 
   s.comment("Variable table");
   const tb = s.table(X(totalBytes / 2) - 200, bot + 100, "Variables", [

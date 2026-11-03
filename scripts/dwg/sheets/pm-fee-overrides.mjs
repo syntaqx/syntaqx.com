@@ -12,10 +12,18 @@ const LEVELS = [
   ["merchant A", [null, null, "$15.00"], true],
   ["merchant B", [null, null, null]],
 ];
-const RESOLVED = [["2.60%", "from organization"], ["$0.30", "from sub-organization"], ["$15.00", "from merchant A"]];
+const RESOLVED = [
+  ["2.60%", "from organization"],
+  ["$0.30", "from sub-organization"],
+  ["$15.00", "from merchant A"],
+];
 
 export default function draw() {
-  const W = 760, x = 20, rowH = 40, h = 26, top = 44;
+  const W = 760,
+    x = 20,
+    rowH = 40,
+    h = 26,
+    top = 44;
   const s = sheet({ prefix: "pm-fo", width: W });
   const cols = [340, 480, 620];
 
@@ -33,7 +41,9 @@ export default function draw() {
   s.comment("What each level sets; blank lines inherit");
   rows.forEach((n, i) => {
     const [, values, hl] = LEVELS[i];
-    values.forEach((v, j) => s.text(cols[j], n.cy + 3, v ?? "inherits", v ? (hl ? "tc hl" : "tc") : "sl"));
+    values.forEach((v, j) =>
+      s.text(cols[j], n.cy + 3, v ?? "inherits", v ? (hl ? "tc hl" : "tc") : "sl"),
+    );
     const ry = n.y + h + (rowH - h) / 2;
     s.line(cols[0], ry, W - x, ry, "tbl");
   });

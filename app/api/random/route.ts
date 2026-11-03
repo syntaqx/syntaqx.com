@@ -26,21 +26,11 @@ registry.registerPath({
   tags: ["Utilities"],
   request: {
     query: z.object({
-      length: z
-        .string()
-        .optional()
-        .openapi({ description: "String length (1–1024, default 32)" }),
-      charset: z
-        .string()
-        .optional()
-        .openapi({
-          description:
-            "Character set: alphanumeric (default), alpha, numeric, hex",
-        }),
-      count: z
-        .string()
-        .optional()
-        .openapi({ description: "Number of strings (1–100)" }),
+      length: z.string().optional().openapi({ description: "String length (1–1024, default 32)" }),
+      charset: z.string().optional().openapi({
+        description: "Character set: alphanumeric (default), alpha, numeric, hex",
+      }),
+      count: z.string().optional().openapi({ description: "Number of strings (1–100)" }),
     }),
   },
   responses: {
@@ -95,10 +85,7 @@ export function GET(request: NextRequest) {
   const charsetName = searchParams.get("charset") || "alphanumeric";
   const chars = CHARSETS[charsetName];
   if (!chars) {
-    return invalidField(
-      "charset",
-      `charset must be one of: ${CHARSET_NAMES.join(", ")}.`,
-    );
+    return invalidField("charset", `charset must be one of: ${CHARSET_NAMES.join(", ")}.`);
   }
 
   // Count
@@ -109,8 +96,6 @@ export function GET(request: NextRequest) {
     return invalidField("count", "count must be an integer between 1 and 100.");
   }
 
-  const strings = Array.from({ length: count }, () =>
-    randomString(length, chars),
-  );
+  const strings = Array.from({ length: count }, () => randomString(length, chars));
   return json(strings, { headers: { "Cache-Control": CACHE.none } });
 }

@@ -15,16 +15,35 @@ export default function draw() {
   const s = sheet({ prefix: "pad", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "The payor gets the confirmation at least N1 before the first debit, unless they waive or shorten it."],
-    [2, "A bank dishonour, such as insufficient funds or a closed account, comes back by the next business day."],
-    [3, "A claim isn't contested inside the system: the payee's remedy is outside it. After P1 the debit is final."],
-    [0, "Business days unless noted. Not to scale across breaks. The drawing carries codes; values are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "The payor gets the confirmation at least N1 before the first debit, unless they waive or shorten it.",
+      ],
+      [
+        2,
+        "A bank dishonour, such as insufficient funds or a closed account, comes back by the next business day.",
+      ],
+      [
+        3,
+        "A claim isn't contested inside the system: the payee's remedy is outside it. After P1 the debit is final.",
+      ],
+      [
+        0,
+        "Business days unless noted. Not to scale across breaks. The drawing carries codes; values are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 business day = 76 px, with breaks ----
   s.comment("Plan view: one personal debit");
-  const k = 76, h = 24, laneX = 140;
+  const k = 76,
+    h = 24,
+    laneX = 140;
   const xC = laneX + 14; // confirmation
   const bL = [xC + 90, xC + 104]; // break before exchange
   const X = (d) => bL[1] + 10 + (d + 1) * k; // d = -1 is exchange E, 0 is S
@@ -35,7 +54,15 @@ export default function draw() {
   const xFinal = W - 24;
   const axY = ny + 46;
 
-  const ticks = [[xC, "C"], [X(-1), "E"], [X(0), "S"], [X(1), "S+1"], [X(2), "S+2"], [x10, `S+${B1}`], [xEnd, `S+${P1}`]];
+  const ticks = [
+    [xC, "C"],
+    [X(-1), "E"],
+    [X(0), "S"],
+    [X(1), "S+1"],
+    [X(2), "S+2"],
+    [x10, `S+${B1}`],
+    [xEnd, `S+${P1}`],
+  ];
   const tl = s.timeline({ x1: xC, x2: xEnd, y: axY, breaks: [bL, bA, bB], ticks, laneX, h });
   s.nb(xC + 16, axY - 13.5, 1);
 
@@ -75,7 +102,12 @@ export default function draw() {
   s.line(X(0), axY + 6, X(0), y4 + h + 30, "ctr");
 
   const vy = y4 + h + 72;
-  s.viewTitle(W / 2, vy, "Plan view · one personal pre-authorized debit", `Scale 1 business day = ${k} px · not to scale across breaks`);
+  s.viewTitle(
+    W / 2,
+    vy,
+    "Plan view · one personal pre-authorized debit",
+    `Scale 1 business day = ${k} px · not to scale across breaks`,
+  );
 
   // ---- Variable table ----
   s.comment("Variable table");
@@ -90,7 +122,9 @@ export default function draw() {
   ];
   const widths = [40, 310, 150];
   const tw = widths.reduce((a, b) => a + b, 0);
-  const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · Payments Canada Rule H1", rows, { widths });
+  const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · Payments Canada Rule H1", rows, {
+    widths,
+  });
   s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

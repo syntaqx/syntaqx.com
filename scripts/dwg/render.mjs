@@ -22,8 +22,24 @@ let rules = css
   .slice(css.indexOf(".diagram .frame"), css.indexOf("/* GFM tables */"))
   .replace(/\.diagram \.dwg /g, "")
   .replace(/\.diagram /g, "");
-const light = { paper: "#fcfbfd", shade: "#f2f1f3", shade2: "#e7e6e8", ink: "#2a2a2e", line: "#8a8a90", accent: "#0f8a85", accentFill: "#dff0ee" };
-const night = { paper: "#121214", shade: "#1b1b1e", shade2: "#242428", ink: "#d6d6da", line: "#8a8a90", accent: "#3fb8b0", accentFill: "#15302e" };
+const light = {
+  paper: "#fcfbfd",
+  shade: "#f2f1f3",
+  shade2: "#e7e6e8",
+  ink: "#2a2a2e",
+  line: "#8a8a90",
+  accent: "#0f8a85",
+  accentFill: "#dff0ee",
+};
+const night = {
+  paper: "#121214",
+  shade: "#1b1b1e",
+  shade2: "#242428",
+  ink: "#d6d6da",
+  line: "#8a8a90",
+  accent: "#3fb8b0",
+  accentFill: "#15302e",
+};
 const c = dark ? night : light;
 const vars = {
   "--fig-paper": c.paper,
@@ -41,6 +57,9 @@ for (const [k, v] of Object.entries(vars)) rules = rules.split(`var(${k})`).join
 
 const svg = fs
   .readFileSync(inp, "utf8")
-  .replace(/(<svg[^>]*>)/, `$1<style><![CDATA[${rules}]]></style><rect width="100%" height="100%" fill="${c.paper}"/>`);
+  .replace(
+    /(<svg[^>]*>)/,
+    `$1<style><![CDATA[${rules}]]></style><rect width="100%" height="100%" fill="${c.paper}"/>`,
+  );
 await sharp(Buffer.from(svg), { density: 200 }).png().toFile(out);
 console.log(out);

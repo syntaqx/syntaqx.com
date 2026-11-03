@@ -22,12 +22,26 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Typical: for services paid in advance the window starts at the event, so L1 grows."],
-    [2, `Providers ask merchants for evidence well inside R1 to leave room for their own review (one processor: ${P1[0]} to ${P1[1]} days).`],
-    [3, "Each step runs from the processing date of the one before, so this is the longest case; a missed step loses."],
-    [0, "Calendar days, from one card network's rules, table 11-2 (April 2026). Values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [1, "Typical: for services paid in advance the window starts at the event, so L1 grows."],
+      [
+        2,
+        `Providers ask merchants for evidence well inside R1 to leave room for their own review (one processor: ${P1[0]} to ${P1[1]} days).`,
+      ],
+      [
+        3,
+        "Each step runs from the processing date of the one before, so this is the longest case; a missed step loses.",
+      ],
+      [
+        0,
+        "Calendar days, from one card network's rules, table 11-2 (April 2026). Values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 day = 2.6 px ----
   s.comment("Plan view: one dispute");
@@ -35,7 +49,9 @@ export default function draw() {
   const x0 = CX - (L1 * k) / 2;
   const xs = [x0, x0 + F1 * k];
   for (const t of STEPS) xs.push(xs[xs.length - 1] + t.days * k);
-  const top = ny + 76, h = 34, bot = top + h;
+  const top = ny + 76,
+    h = 34,
+    bot = top + h;
 
   s.rect(xs[0], top, xs[1] - xs[0], h, "slot");
   s.label(xs[0], top, xs[1] - xs[0], h, "filing window");
@@ -47,15 +63,20 @@ export default function draw() {
   s.callout(a3, top + h / 2, a3 - 12, top - 12, "arbitration", { dir: -1 });
 
   // Overall and cycle dimensions, then the chain of steps.
-  const ly = top - 54, cy = top - 30;
+  const ly = top - 54,
+    cy = top - 30;
   s.dimH(xs[0], xs[5], ly, "L1", { from: [top, top], hl: true });
   s.nb(CX + 20, ly - 7.5, 1);
   s.dimH(xs[1], xs[5], cy, "C1", { from: [top, top] });
   s.nb((xs[1] + xs[5]) / 2 + 20, cy - 7.5, 3);
-  s.chainH(xs, bot + 20, ["F1", ...STEPS.map((t) => t.code)], { from: xs.map(() => bot), below: true });
+  s.chainH(xs, bot + 20, ["F1", ...STEPS.map((t) => t.code)], {
+    from: xs.map(() => bot),
+    below: true,
+  });
 
   // Merchant's deadline: the shortest of the range solid, the rest dashed.
-  const my = bot + 52, mh = 20;
+  const my = bot + 52,
+    mh = 20;
   s.text(xs[1] - 12, my + mh / 2 + 3, "merchant", "sl ink", "end");
   s.rect(xs[1], my, P1[0] * k, mh, "obj fill-2");
   s.rect(xs[1] + P1[0] * k, my, (P1[1] - P1[0]) * k, mh, "slot");
@@ -63,7 +84,12 @@ export default function draw() {
   s.nb(xs[1] + (P1[1] * k) / 2 + 20, my + mh + 24.5, 2);
 
   const vy = my + mh + 70;
-  s.viewTitle(CX, vy, "Plan view · one dispute, network categories 12 and 13", `Scale 1 day = ${k} px · calendar days · longest case`);
+  s.viewTitle(
+    CX,
+    vy,
+    "Plan view · one dispute, network categories 12 and 13",
+    `Scale 1 day = ${k} px · calendar days · longest case`,
+  );
 
   // ---- Variable table ----
   s.comment("Variable table");

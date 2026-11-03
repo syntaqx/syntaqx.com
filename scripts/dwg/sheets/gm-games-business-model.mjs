@@ -5,7 +5,9 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, h = 26, gap = 48;
+  const W = 760,
+    h = 26,
+    gap = 48;
   const s = sheet({ prefix: "gm-gbmo", width: W });
 
   // Five columns, each as wide as its widest table name.

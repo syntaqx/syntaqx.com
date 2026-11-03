@@ -39,9 +39,7 @@ export async function GET() {
         `      <link>${url}</link>`,
         `      <guid isPermaLink="true">${url}</guid>`,
         `      <pubDate>${new Date(post.date).toUTCString()}</pubDate>`,
-        post.description
-          ? `      <description>${cdata(post.description)}</description>`
-          : "",
+        post.description ? `      <description>${cdata(post.description)}</description>` : "",
         `      <content:encoded>${cdata(html)}</content:encoded>`,
         categories ? `      ${categories}` : "",
         "    </item>",
@@ -51,9 +49,7 @@ export async function GET() {
     }),
   );
 
-  const lastBuildDate = posts[0]
-    ? new Date(posts[0].date).toUTCString()
-    : new Date().toUTCString();
+  const lastBuildDate = posts[0] ? new Date(posts[0].date).toUTCString() : new Date().toUTCString();
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">

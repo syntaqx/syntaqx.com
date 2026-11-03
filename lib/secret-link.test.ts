@@ -15,7 +15,11 @@ describe("secret-link", () => {
 
   it("parses the links it makes", () => {
     const key = newKey();
-    expect(parseLink(pageLink("https://www.syntaqx.com", id, key))).toEqual({ kind: "browser", id, key });
+    expect(parseLink(pageLink("https://www.syntaqx.com", id, key))).toEqual({
+      kind: "browser",
+      id,
+      key,
+    });
     expect(parseLink(pageLink("https://www.syntaqx.com", id))).toEqual({ kind: "browser", id });
     expect(parseFragment(`#${id}/${key}`)).toEqual({ kind: "browser", id, key });
   });

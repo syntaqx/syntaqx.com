@@ -14,7 +14,10 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, n = STAGES.length, w = 124, gap = (W - 40 - n * w) / (n - 1);
+  const W = 760,
+    n = STAGES.length,
+    w = 124,
+    gap = (W - 40 - n * w) / (n - 1);
   const s = sheet({ prefix: "fo-cpa", width: W });
 
   s.comment("Pipeline");
@@ -23,16 +26,35 @@ export default function draw() {
 
   s.comment("Failure: review");
   const ry = bottom + 34;
-  const review = s.node(validate.x, ry, geocode.x + w - validate.x, 28, "no match or low precision: review", { kind: "ghost" });
+  const review = s.node(
+    validate.x,
+    ry,
+    geocode.x + w - validate.x,
+    28,
+    "no match or low precision: review",
+    { kind: "ghost" },
+  );
   // Each drop starts under its own sub text, not the pipeline's lowest.
   for (const i of [2, 3]) {
     const nd = nodes[i];
     const top = nd.y + nd.h + 16 + (STAGES[i].sub.length - 1) * 11.5 + 10;
-    s.wire([[nd.cx, top], [nd.cx, ry]], { alt: true });
+    s.wire(
+      [
+        [nd.cx, top],
+        [nd.cx, ry],
+      ],
+      { alt: true },
+    );
   }
 
   const fy = ry + 28 + 30;
-  s.text(W - 20, fy, "keep the raw input, the result, and which vendor version produced it", "sl", "end");
+  s.text(
+    W - 20,
+    fy,
+    "keep the raw input, the result, and which vendor version produced it",
+    "sl",
+    "end",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

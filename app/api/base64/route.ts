@@ -11,7 +11,9 @@ const ACTIONS = ["encode", "decode"] as const;
 
 const Base64Request = z
   .object({
-    input: z.string().openapi({ description: "The string to encode or decode", example: "hello world" }),
+    input: z
+      .string()
+      .openapi({ description: "The string to encode or decode", example: "hello world" }),
     action: z
       .enum(ACTIONS)
       .default("encode")
@@ -92,9 +94,7 @@ export async function POST(request: NextRequest) {
   const parsed = Base64Request.safeParse(body);
   if (!parsed.success) {
     return errorResponse(422, "The given data was invalid.", {
-      errors: Object.fromEntries(
-        parsed.error.issues.map((i) => [i.path.join("."), [i.message]]),
-      ),
+      errors: Object.fromEntries(parsed.error.issues.map((i) => [i.path.join("."), [i.message]])),
     });
   }
 
@@ -108,9 +108,7 @@ export async function POST(request: NextRequest) {
 
   if (action === "encode") {
     output = btoa(
-      Array.from(new TextEncoder().encode(input), (b) =>
-        String.fromCharCode(b),
-      ).join(""),
+      Array.from(new TextEncoder().encode(input), (b) => String.fromCharCode(b)).join(""),
     );
     if (url_safe) {
       output = output.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -123,9 +121,7 @@ export async function POST(request: NextRequest) {
         const pad = (4 - (normalized.length % 4)) % 4;
         normalized += "=".repeat(pad);
       }
-      output = new TextDecoder().decode(
-        Uint8Array.from(atob(normalized), (c) => c.charCodeAt(0)),
-      );
+      output = new TextDecoder().decode(Uint8Array.from(atob(normalized), (c) => c.charCodeAt(0)));
     } catch {
       return invalidField("input", "Invalid base64 input.");
     }

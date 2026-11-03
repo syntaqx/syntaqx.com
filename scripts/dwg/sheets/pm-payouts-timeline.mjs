@@ -5,7 +5,10 @@ import { sheet, widthOf } from "../kit.mjs";
 
 // Business days. S1 and P1 illustrative [1]; A1 published US standard [2];
 // R1 ACH return window in banking days; D1 calendar days, drawn past a break.
-const S1 = 1, A1 = 2, P1 = 1, R1 = 2;
+const S1 = 1,
+  A1 = 2,
+  P1 = 1,
+  R1 = 2;
 const DAYS = 5; // ruler T..T+5 before the break
 
 export default function draw() {
@@ -13,18 +16,39 @@ export default function draw() {
   const s = sheet({ prefix: "pm-pt", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative: settlement on T+1 and a next-day ACH payout are one common schedule; banks and providers vary."],
-    [2, "A processor's published standard timing for US accounts. A new account's first payout waits 7 to 14 days instead."],
-    [3, "A payout can still come back as an ACH return after it shows paid; the amount returns to the balance."],
-    [4, "Disputes keep arriving after the money has left, which is what reserves are for."],
-    [0, "Values in business days unless noted. Not to scale after the break. Codes on the drawing; values in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Illustrative: settlement on T+1 and a next-day ACH payout are one common schedule; banks and providers vary.",
+      ],
+      [
+        2,
+        "A processor's published standard timing for US accounts. A new account's first payout waits 7 to 14 days instead.",
+      ],
+      [
+        3,
+        "A payout can still come back as an ACH return after it shows paid; the amount returns to the balance.",
+      ],
+      [4, "Disputes keep arriving after the money has left, which is what reserves are for."],
+      [
+        0,
+        "Values in business days unless noted. Not to scale after the break. Codes on the drawing; values in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   s.comment("Plan view: one payment");
-  const k = 110, x0 = 120, BRK = 6, TAIL = 26;
+  const k = 110,
+    x0 = 120,
+    BRK = 6,
+    TAIL = 26;
   const X = (d) => x0 + d * k;
-  const xBreak = X(DAYS), xEnd = xBreak + 2 * BRK + 8 + TAIL; // break gap, then the tail to day 120
+  const xBreak = X(DAYS),
+    xEnd = xBreak + 2 * BRK + 8 + TAIL; // break gap, then the tail to day 120
   const tailX = xEnd - TAIL;
 
   // Ruler
@@ -36,10 +60,12 @@ export default function draw() {
     s.text(X(d), R - 10, d ? `T+${d}` : "T", "sl ink", "middle");
   }
   s.line(xEnd, R - 4, xEnd, R + 4, "obj");
-  const brk = (x, y) => s.path(`M${x + 1},${y + 5}L${x + 7},${y - 5}M${x + 7},${y + 5}L${x + 13},${y - 5}`, "obj");
+  const brk = (x, y) =>
+    s.path(`M${x + 1},${y + 5}L${x + 7},${y - 5}M${x + 7},${y + 5}L${x + 13},${y - 5}`, "obj");
   brk(xBreak + 1, R);
 
-  const h = 28, rowLabel = (y, t) => s.text(x0 - 14, y + h / 2 + 3, t, "sl ink", "end");
+  const h = 28,
+    rowLabel = (y, t) => s.text(x0 - 14, y + h / 2 + 3, t, "sl ink", "end");
 
   // Payment row
   const pay = R + 58;
@@ -74,14 +100,22 @@ export default function draw() {
   s.label(X(A1), po, P1 * k, h, "in transit");
   s.label(X(A1 + P1), po, R1 * k, h, "paid, may fail");
   s.nb(X(A1 + P1 + R1 / 2) + widthOf("paid, may fail", "sl") / 2 + 12, po + h / 2 - 0.5, 3);
-  s.chainH([X(A1), X(A1 + P1), X(A1 + P1 + R1)], po + h + 20, ["P1", "R1"], { from: [po + h, po + h, po + h], below: true });
+  s.chainH([X(A1), X(A1 + P1), X(A1 + P1 + R1)], po + h + 20, ["P1", "R1"], {
+    from: [po + h, po + h, po + h],
+    below: true,
+  });
   s.nb(X(A1 + P1 / 2) + 20, po + h + 28.5, 1);
 
   // Available-balance line: where the balance becomes available and the payout starts.
   s.line(X(A1), bal - 10, X(A1), po - 4, "ctr");
 
   const vy = po + h + 70;
-  s.viewTitle((x0 + xEnd) / 2, vy, "Plan view · one US card payment, established merchant", "Scale 1 business day = 110 px · timeline");
+  s.viewTitle(
+    (x0 + xEnd) / 2,
+    vy,
+    "Plan view · one US card payment, established merchant",
+    "Scale 1 business day = 110 px · timeline",
+  );
 
   s.comment("Variable table");
   const rows = [

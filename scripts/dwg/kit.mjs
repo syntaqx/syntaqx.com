@@ -16,7 +16,11 @@ const TAIL = 10; // length of an outside arrow's tail
 export const f = (n) => String(Math.round(n * 100) / 100);
 
 const esc = (s) =>
-  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 
 /** One element. `attrs` with null/undefined values are skipped; numbers are rounded. */
 export function el(tag, attrs = {}, inner) {
@@ -89,7 +93,16 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
   const marker = (name, cls) =>
     el(
       "marker",
-      { id: id(name), viewBox: "0 0 10 10", refX: 10, refY: 5, markerWidth: 6, markerHeight: 6, markerUnits: "userSpaceOnUse", orient: "auto-start-reverse" },
+      {
+        id: id(name),
+        viewBox: "0 0 10 10",
+        refX: 10,
+        refY: 5,
+        markerWidth: 6,
+        markerHeight: 6,
+        markerUnits: "userSpaceOnUse",
+        orient: "auto-start-reverse",
+      },
       el("path", { class: cls, d: "M0,1.6L10,5L0,8.4Z" }),
     );
   const defs = el(
@@ -98,7 +111,17 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
     [
       marker("ah", "ah ink"),
       marker("ah-hl", "ah hl"),
-      el("pattern", { id: id("hatch"), width: 5, height: 5, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, el("path", { class: "hatch-ln", d: "M0,0V5" })),
+      el(
+        "pattern",
+        {
+          id: id("hatch"),
+          width: 5,
+          height: 5,
+          patternUnits: "userSpaceOnUse",
+          patternTransform: "rotate(45)",
+        },
+        el("path", { class: "hatch-ln", d: "M0,0V5" }),
+      ),
     ].join(""),
   );
 
@@ -135,7 +158,10 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
 
     /** Boxed note number, centered on (x, y). */
     nb(x, y, n) {
-      return s.add(el("rect", { class: "nb", x: x - 5.5, y: y - 5.5, width: 11, height: 11 }), text(x, y + 2.7, String(n), "nbt", "middle"));
+      return s.add(
+        el("rect", { class: "nb", x: x - 5.5, y: y - 5.5, width: 11, height: 11 }),
+        text(x, y + 2.7, String(n), "nbt", "middle"),
+      );
     },
 
     /**
@@ -144,7 +170,10 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * `width`. Returns the y below the last line.
      */
     notes(x, y, items, { width = 600, lineH = 13, gap = 4 } = {}) {
-      s.add(text(x, y, "NOTES:", "nth"), text(x + widthOf("NOTES:", "nth") + 6, y, "(UNLESS OTHERWISE SPECIFIED)", "nt"));
+      s.add(
+        text(x, y, "NOTES:", "nth"),
+        text(x + widthOf("NOTES:", "nth") + 6, y, "(UNLESS OTHERWISE SPECIFIED)", "nt"),
+      );
       let yy = y + 22;
       for (const [n, t] of items) {
         const tx = x + 18;
@@ -160,7 +189,10 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
 
     /** View title centered on cx with its subtitle (scale, view type) under it. */
     viewTitle(cx, y, title, sub) {
-      return s.add(text(cx, y, title, "vt", "middle"), sub ? text(cx, y + 13, sub, "vs", "middle") : null);
+      return s.add(
+        text(cx, y, title, "vt", "middle"),
+        sub ? text(cx, y + 13, sub, "vs", "middle") : null,
+      );
     },
 
     /**
@@ -169,7 +201,13 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * above the line, or below with `below`. Spans under 22 get arrows
      * outside. `hl` uses the accent.
      */
-    dimH(x1, x2, y, label, { from = [null, null], below = false, dx = 0, dy = 0, hl = false, cls } = {}) {
+    dimH(
+      x1,
+      x2,
+      y,
+      label,
+      { from = [null, null], below = false, dx = 0, dy = 0, hl = false, cls } = {},
+    ) {
       [
         [x1, from[0]],
         [x2, from[1]],
@@ -179,7 +217,16 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         s.line(x, e + sg * GAP, x, y + sg * OVER, "ext");
       });
       s.add(arrowLine([x1, y], [x2, y], hl));
-      if (label != null) s.add(text((x1 + x2) / 2 + dx, (below ? y + 12 : y - 4) + dy, label, cls ?? (hl ? "dt hl" : "dt"), "middle"));
+      if (label != null)
+        s.add(
+          text(
+            (x1 + x2) / 2 + dx,
+            (below ? y + 12 : y - 4) + dy,
+            label,
+            cls ?? (hl ? "dt hl" : "dt"),
+            "middle",
+          ),
+        );
       return s;
     },
 
@@ -188,7 +235,13 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       xs.slice(1).forEach((x2, i) => {
         const x1 = xs[i];
         const fr = from ? [i === 0 ? from[i] : null, from[i + 1]] : [null, null];
-        s.dimH(x1, x2, y, labels[i], { from: fr, below, dx: offsets[i]?.[0] ?? 0, dy: offsets[i]?.[1] ?? 0, hl: hl.includes(i) });
+        s.dimH(x1, x2, y, labels[i], {
+          from: fr,
+          below,
+          dx: offsets[i]?.[0] ?? 0,
+          dy: offsets[i]?.[1] ?? 0,
+          hl: hl.includes(i),
+        });
       });
       return s;
     },
@@ -210,8 +263,22 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       if (label == null) return s;
       const c = (y1 + y2) / 2;
       const k = cls ?? (hl ? "dt hl" : "dt");
-      if (side) s.add(text(side === "r" ? x + 6 + dx : x - 6 + dx, c + 3.5 + dy, label, k, side === "r" ? "start" : "end"));
-      else s.add(text(x - 4 + dx, c + dy, label, k, "middle", { transform: `rotate(-90 ${f(x - 4 + dx)} ${f(c + dy)})` }));
+      if (side)
+        s.add(
+          text(
+            side === "r" ? x + 6 + dx : x - 6 + dx,
+            c + 3.5 + dy,
+            label,
+            k,
+            side === "r" ? "start" : "end",
+          ),
+        );
+      else
+        s.add(
+          text(x - 4 + dx, c + dy, label, k, "middle", {
+            transform: `rotate(-90 ${f(x - 4 + dx)} ${f(c + dy)})`,
+          }),
+        );
       return s;
     },
 
@@ -220,7 +287,10 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       const d = dir ?? (ex >= px ? 1 : -1);
       s.add(
         el("circle", { class: "dot", cx: px, cy: py, r: 1.6 }),
-        el("path", { class: "leader", d: `M${f(px)},${f(py)}L${f(ex)},${f(ey)}H${f(ex + d * 10)}` }),
+        el("path", {
+          class: "leader",
+          d: `M${f(px)},${f(py)}L${f(ex)},${f(ey)}H${f(ex + d * 10)}`,
+        }),
         text(ex + d * 14, ey + 3, label, cls, d > 0 ? "start" : "end"),
         sub ? text(ex + d * 14, ey + 14, sub, "vs", d > 0 ? "start" : "end") : null,
       );
@@ -242,7 +312,10 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       const left = lx < cx;
       s.add(
         el("circle", { class: "detail", cx, cy, r }),
-        el("path", { class: "leader", d: `M${f(cx + r * Math.cos(a))},${f(cy + r * Math.sin(a))}L${f(lx)},${f(ly)}` }),
+        el("path", {
+          class: "leader",
+          d: `M${f(cx + r * Math.cos(a))},${f(cy + r * Math.sin(a))}L${f(lx)},${f(ly)}`,
+        }),
         text(lx + (left ? -4 : 4), ly + 3, label, "sl ink", left ? "end" : "start"),
       );
       return s;
@@ -254,7 +327,12 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * { y: bottom, width }.
      */
     table(x, y, title, rows, { widths, rowH = 15, minWidths = [30, 80, 60], ...o } = {}) {
-      return s.grid(x, y, title, ["CODE", "VARIABLE", "VALUE"], rows, { widths, rowH, minWidths, ...o });
+      return s.grid(x, y, title, ["CODE", "VARIABLE", "VALUE"], rows, {
+        widths,
+        rowH,
+        minWidths,
+        ...o,
+      });
     },
 
     /**
@@ -268,11 +346,25 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * Returns { y: bottom, width, widths, rows } where rows[i] is body row
      * i's { y, cy } (top and center), for placing nodes level with it.
      */
-    grid(x, y, title, head, rows, { widths, rowH = 15, headH = rowH, minWidths = [], align = [], hl = [], hlHead = [] } = {}) {
+    grid(
+      x,
+      y,
+      title,
+      head,
+      rows,
+      { widths, rowH = 15, headH = rowH, minWidths = [], align = [], hl = [], hlHead = [] } = {},
+    ) {
       const all = [head, ...rows];
       const ws =
         widths ??
-        head.map((_, j) => Math.max(minWidths[j] ?? 30, Math.ceil(Math.max(...rows.map((r) => widthOf(r[j] ?? "", "tc")), widthOf(head[j], "th")) + 14)));
+        head.map((_, j) =>
+          Math.max(
+            minWidths[j] ?? 30,
+            Math.ceil(
+              Math.max(...rows.map((r) => widthOf(r[j] ?? "", "tc")), widthOf(head[j], "th")) + 14,
+            ),
+          ),
+        );
       const w = ws.reduce((a, b) => a + b, 0);
       const h = headH + rows.length * rowH;
       const top = (i) => (i ? y + headH + (i - 1) * rowH : y); // i over all rows, head first
@@ -285,7 +377,13 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       all.forEach((r, i) => {
         let c = x;
         r.forEach((v, j) => {
-          const cls = i ? (hl.includes(i - 1) ? "tc hl" : "tc") : hlHead.includes(j) ? "th hl" : "th";
+          const cls = i
+            ? hl.includes(i - 1)
+              ? "tc hl"
+              : "tc"
+            : hlHead.includes(j)
+              ? "th hl"
+              : "th";
           const yy = top(i) + (i ? rowH : headH) / 2 + (i ? 3.2 : 2.7);
           const a = align[j] ?? (j === 0 ? "start" : "middle");
           const tx = a === "start" ? c + 6 : a === "end" ? c + ws[j] - 6 : c + ws[j] / 2;
@@ -293,7 +391,12 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
           c += ws[j];
         });
       });
-      return { y: y + h, width: w, widths: ws, rows: rows.map((_, i) => ({ y: top(i + 1), cy: top(i + 1) + rowH / 2 })) };
+      return {
+        y: y + h,
+        width: w,
+        widths: ws,
+        rows: rows.map((_, i) => ({ y: top(i + 1), cy: top(i + 1) + rowH / 2 })),
+      };
     },
 
     // ---- Standard diagrams: nodes, connectors, lanes, trees, pipelines,
@@ -322,33 +425,62 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      */
     node(x, y, w, h, label, opts = {}) {
       const bad = Object.keys(opts).filter((k) => !NODE_OPTS.has(k));
-      if (bad.length) throw new Error(`node "${label}": unknown option ${bad.map((k) => `"${k}"`).join(", ")}; size goes in the positional w and h`);
+      if (bad.length)
+        throw new Error(
+          `node "${label}": unknown option ${bad.map((k) => `"${k}"`).join(", ")}; size goes in the positional w and h`,
+        );
       const { kind = "process", end = false, hl = false, fill, code = false, sub, cls } = opts;
       const lines = label == null ? [] : String(label).split("\n");
       const subs = sub == null ? [] : Array.isArray(sub) ? sub : String(sub).split("\n");
       const lcls = cls ?? (code ? "tc" : "sl ink") + (hl ? " hl" : "");
-      if (w == null) w = Math.ceil(Math.max(...lines.map((l) => widthOf(l, lcls)), ...subs.map((l) => widthOf(l, "vs")), 0) + 28);
+      if (w == null)
+        w = Math.ceil(
+          Math.max(...lines.map((l) => widthOf(l, lcls)), ...subs.map((l) => widthOf(l, "vs")), 0) +
+            28,
+        );
       const lh = 11.5;
       const block = lines.length * lh + subs.length * 11;
       if (h == null) h = Math.max(28, Math.ceil(block + 16));
       const sh = kind === "actor" ? 3 : 0; // the actor's offset shadow
       if (x < 20 - 0.01 || x + w + sh > s.width - 20 + 0.01)
-        throw new Error(`node "${label}" (x ${f(x)} to ${f(x + w + sh)}${sh ? ", shadow included" : ""}) crosses the 20 margin of a ${s.width} sheet`);
+        throw new Error(
+          `node "${label}" (x ${f(x)} to ${f(x + w + sh)}${sh ? ", shadow included" : ""}) crosses the 20 margin of a ${s.width} sheet`,
+        );
       const fc = `fill-${fill ?? (kind === "actor" ? 1 : 2)}`;
       const box = hl ? "obj hl" : kind === "ghost" ? "slot" : `obj ${fc}`;
       if (kind === "decision") {
-        s.path(`M${f(x + w / 2)},${f(y)}L${f(x + w)},${f(y + h / 2)}L${f(x + w / 2)},${f(y + h)}L${f(x)},${f(y + h / 2)}Z`, box);
+        s.path(
+          `M${f(x + w / 2)},${f(y)}L${f(x + w)},${f(y + h / 2)}L${f(x + w / 2)},${f(y + h)}L${f(x)},${f(y + h / 2)}Z`,
+          box,
+        );
       } else {
         if (kind === "actor") s.rect(x + 3, y + 3, w, h, hl ? "obj hl" : "obj fill-1");
-        s.rect(x, y, w, h, kind === "actor" && !hl ? "obj plate" : box, { rx: kind === "state" ? 6 : null });
+        s.rect(x, y, w, h, kind === "actor" && !hl ? "obj plate" : box, {
+          rx: kind === "state" ? 6 : null,
+        });
         // A ghost's inner outline is dashed too: a solid one inside a dashed box reads as broken.
-        if (end) s.rect(x + 3, y + 3, w - 6, h - 6, hl ? "obj hl" : kind === "ghost" ? "slot" : "obj", { rx: kind === "state" ? 4 : null });
+        if (end)
+          s.rect(x + 3, y + 3, w - 6, h - 6, hl ? "obj hl" : kind === "ghost" ? "slot" : "obj", {
+            rx: kind === "state" ? 4 : null,
+          });
         if (kind === "store") s.line(x + 9, y, x + 9, y + h, hl ? "obj hl" : "obj");
       }
       const dx = kind === "store" ? 4.5 : 0;
       const ty = y + h / 2 - block / 2 + lh / 2 + 3;
-      lines.forEach((l, i) => s.add(text(x + w / 2 + dx, ty + i * lh, l, kind === "ghost" && !hl && !cls ? lcls.replace(" ink", "") : lcls, "middle")));
-      subs.forEach((l, j) => s.add(text(x + w / 2 + dx, ty + lines.length * lh + 0.5 + j * 11, l, "vs", "middle")));
+      lines.forEach((l, i) =>
+        s.add(
+          text(
+            x + w / 2 + dx,
+            ty + i * lh,
+            l,
+            kind === "ghost" && !hl && !cls ? lcls.replace(" ink", "") : lcls,
+            "middle",
+          ),
+        ),
+      );
+      subs.forEach((l, j) =>
+        s.add(text(x + w / 2 + dx, ty + lines.length * lh + 0.5 + j * 11, l, "vs", "middle")),
+      );
       return nodeOf(x, y, w, h, sh);
     },
 
@@ -361,11 +493,19 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * the nodes, with `bottom` (the lowest node's bottom edge) on the array.
      */
     row(x, y, w, items, { h = 26, gap = 12, arrows = false, ...o } = {}) {
-      if (arrows && gap < 16) throw new Error(`row: gap ${gap} is too short for an arrow; use 16 or more`);
+      if (arrows && gap < 16)
+        throw new Error(`row: gap ${gap} is too short for an arrow; use 16 or more`);
       const nw = (w - gap * (items.length - 1)) / items.length;
       const its = items.map((it) => (typeof it === "string" ? { label: it } : it));
-      const nodes = its.map(({ label, h: ih, ...io }, i) => s.node(x + i * (nw + gap), y, nw, ih ?? h, label, { ...o, ...io }));
-      if (arrows) nodes.slice(1).forEach((n, i) => s.connect(nodes[i], n, { hl: !!((its[i].hl ?? o.hl) && (its[i + 1].hl ?? o.hl)) }));
+      const nodes = its.map(({ label, h: ih, ...io }, i) =>
+        s.node(x + i * (nw + gap), y, nw, ih ?? h, label, { ...o, ...io }),
+      );
+      if (arrows)
+        nodes
+          .slice(1)
+          .forEach((n, i) =>
+            s.connect(nodes[i], n, { hl: !!((its[i].hl ?? o.hl) && (its[i + 1].hl ?? o.hl)) }),
+          );
       nodes.bottom = Math.max(...nodes.map((n) => n.y2));
       return nodes;
     },
@@ -385,18 +525,44 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * on its `side`, for a tall drop with no room beside it. Returns the
      * points.
      */
-    wire(points, { hl = false, alt = false, arrow = "end", start, label, seg, side, shift = 0, off = 0, cls, labelCls, rotate = false } = {}) {
+    wire(
+      points,
+      {
+        hl = false,
+        alt = false,
+        arrow = "end",
+        start,
+        label,
+        seg,
+        side,
+        shift = 0,
+        off = 0,
+        cls,
+        labelCls,
+        rotate = false,
+      } = {},
+    ) {
       const d = points.map(([x, y], i) => `${i ? "L" : "M"}${f(x)},${f(y)}`).join("");
       const m = hl ? ahHl : ah;
       s.path(d, cls ?? `flow${hl ? " hl" : ""}${alt ? " alt" : ""}`, {
         "marker-end": arrow === "none" ? null : m,
         "marker-start": arrow === "both" ? m : null,
       });
-      if (start === "dot") s.add(el("circle", { class: "dot", cx: points[0][0], cy: points[0][1], r: 1.8 }));
+      if (start === "dot")
+        s.add(el("circle", { class: "dot", cx: points[0][0], cy: points[0][1], r: 1.8 }));
       if (label != null) {
         const segs = points.slice(1).map((p, i) => [points[i], p]);
         const k = seg ?? segs.reduce((best, sg, i) => (len(sg) > len(segs[best]) ? i : best), 0);
-        s.add(edgeLabel(segs[k < 0 ? segs.length + k : k], label, { side, shift, off, hl, labelCls, rotate }));
+        s.add(
+          edgeLabel(segs[k < 0 ? segs.length + k : k], label, {
+            side,
+            shift,
+            off,
+            hl,
+            labelCls,
+            rotate,
+          }),
+        );
       }
       return points;
     },
@@ -417,7 +583,8 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       let pts;
       if (H(from) && H(to)) {
         if (from === to) {
-          const mx = via ?? (from === "r" ? Math.max(p0[0], p1[0]) + 20 : Math.min(p0[0], p1[0]) - 20);
+          const mx =
+            via ?? (from === "r" ? Math.max(p0[0], p1[0]) + 20 : Math.min(p0[0], p1[0]) - 20);
           pts = [p0, [mx, p0[1]], [mx, p1[1]], p1];
         } else if (Math.abs(p0[1] - p1[1]) < 0.5 && via == null) pts = [p0, p1];
         else {
@@ -426,7 +593,8 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         }
       } else if (!H(from) && !H(to)) {
         if (from === to) {
-          const my = via ?? (from === "b" ? Math.max(p0[1], p1[1]) + 20 : Math.min(p0[1], p1[1]) - 20);
+          const my =
+            via ?? (from === "b" ? Math.max(p0[1], p1[1]) + 20 : Math.min(p0[1], p1[1]) - 20);
           pts = [p0, [p0[0], my], [p1[0], my], p1];
         } else if (Math.abs(p0[0] - p1[0]) < 0.5 && via == null) pts = [p0, p1];
         else {
@@ -446,8 +614,17 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
     loop(n, side = "t", { at = [0.35, 0.65], reach = 18, ...o } = {}) {
       const [p0, p1] = [n.port(side, at[0]), n.port(side, at[1])];
       const v = { t: [0, -1], b: [0, 1], l: [-1, 0], r: [1, 0] }[side];
-      const pts = [p0, [p0[0] + v[0] * reach, p0[1] + v[1] * reach], [p1[0] + v[0] * reach, p1[1] + v[1] * reach], p1];
-      return s.wire(pts, { seg: 1, side: { t: "above", b: "below", l: "left", r: "right" }[side], ...o });
+      const pts = [
+        p0,
+        [p0[0] + v[0] * reach, p0[1] + v[1] * reach],
+        [p1[0] + v[0] * reach, p1[1] + v[1] * reach],
+        p1,
+      ];
+      return s.wire(pts, {
+        seg: 1,
+        side: { t: "above", b: "below", l: "left", r: "right" }[side],
+        ...o,
+      });
     },
 
     /**
@@ -466,7 +643,17 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         for (const ln of L) {
           s.add(text(x, yy + 17, ln.label, ln.hl ? "lt hl" : "lt"));
           subLines(ln.sub).forEach((t, i) => s.add(text(x, yy + 30 + i * 11, t, "vs")));
-          out.push({ ...ln, x, y: yy, w, h: ln.h, cx: x + w / 2, cy: yy + ln.h / 2, x0: x + titleW, y0: yy });
+          out.push({
+            ...ln,
+            x,
+            y: yy,
+            w,
+            h: ln.h,
+            cx: x + w / 2,
+            cy: yy + ln.h / 2,
+            x0: x + titleW,
+            y0: yy,
+          });
           yy += ln.h;
           s.line(x, yy, x + w, yy, "tbl");
         }
@@ -477,9 +664,21 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         L.forEach((ln, i) => {
           const lw = ln.w ?? cw;
           s.add(text(xx + lw / 2, y + 15, ln.label, ln.hl ? "lt hl" : "lt", "middle"));
-          subLines(ln.sub).forEach((t, i) => s.add(text(xx + lw / 2, y + 27 + i * 11, t, "vs", "middle")));
+          subLines(ln.sub).forEach((t, i) =>
+            s.add(text(xx + lw / 2, y + 27 + i * 11, t, "vs", "middle")),
+          );
           if (i) s.line(xx, y, xx, y + h, "tbl");
-          out.push({ ...ln, x: xx, y, w: lw, h, cx: xx + lw / 2, cy: y + h / 2, x0: xx, y0: y + headH });
+          out.push({
+            ...ln,
+            x: xx,
+            y,
+            w: lw,
+            h,
+            cx: xx + lw / 2,
+            cy: y + h / 2,
+            x0: xx,
+            y0: y + headH,
+          });
           xx += lw;
         });
       }
@@ -495,16 +694,41 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * Nodes are `w` x `h`. Returns the placed nodes in row order, each
      * { ...node, data, depth, row }.
      */
-    tree(root, { x, y, w = 150, h = 26, layout = "indent", indent = 50, rowH = 40, gapX = 16, levelH = 60, stub = 0.4, hl } = {}) {
+    tree(
+      root,
+      {
+        x,
+        y,
+        w = 150,
+        h = 26,
+        layout = "indent",
+        indent = 50,
+        rowH = 40,
+        gapX = 16,
+        levelH = 60,
+        stub = 0.4,
+        hl,
+      } = {},
+    ) {
       const placed = [];
       if (layout === "indent") {
         let row = 0;
         const walk = (d, depth, parent) => {
-          const nx = x + depth * indent, ny = y + row * rowH;
-          const n = s.node(nx, ny, w, h, d.label, { kind: d.kind, hl: d.hl, code: d.code, sub: d.sub, end: d.end });
+          const nx = x + depth * indent,
+            ny = y + row * rowH;
+          const n = s.node(nx, ny, w, h, d.label, {
+            kind: d.kind,
+            hl: d.hl,
+            code: d.code,
+            sub: d.sub,
+            end: d.end,
+          });
           if (parent) {
             const sx = parent.x + indent * stub;
-            s.path(`M${f(sx)},${f(parent.y + parent.h)}V${f(n.cy)}H${f(n.x)}`, d.hl || hl ? "flow hl" : "flow");
+            s.path(
+              `M${f(sx)},${f(parent.y + parent.h)}V${f(n.cy)}H${f(n.x)}`,
+              d.hl || hl ? "flow hl" : "flow",
+            );
           }
           const p = { ...n, data: d, depth, row: row++ };
           placed.push(p);
@@ -527,11 +751,18 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       measure(root, 0);
       const draw = (d, parent) => {
         const { cx, depth } = pos.get(d);
-        const n = s.node(cx - w / 2, y + depth * levelH, w, h, d.label, { kind: d.kind, hl: d.hl, code: d.code, sub: d.sub, end: d.end });
+        const n = s.node(cx - w / 2, y + depth * levelH, w, h, d.label, {
+          kind: d.kind,
+          hl: d.hl,
+          code: d.code,
+          sub: d.sub,
+          end: d.end,
+        });
         if (parent) {
           // The trunk is shared, so only the branch to an accented child is accented.
           const by = parent.y + parent.h + (levelH - h) / 2;
-          if (d === parent.data.children[0]) s.path(`M${f(parent.cx)},${f(parent.y + parent.h)}V${f(by)}`, "flow");
+          if (d === parent.data.children[0])
+            s.path(`M${f(parent.cx)},${f(parent.y + parent.h)}V${f(by)}`, "flow");
           s.path(`M${f(parent.cx)},${f(by)}H${f(n.cx)}V${f(n.y)}`, d.hl ? "flow hl" : "flow");
         }
         const p = { ...n, data: d, depth, row: depth };
@@ -555,19 +786,43 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * bottoms[i] the y under stage i's own (its box when it has none).
      * Start a downstream wire at its stage's bottoms[i], not at the box.
      */
-    pipeline(x, y, stages, { w = 100, h = 28, gap = 16, headGap = 12, subGap = 16, hlArrows = [] } = {}) {
+    pipeline(
+      x,
+      y,
+      stages,
+      { w = 100, h = 28, gap = 16, headGap = 12, subGap = 16, hlArrows = [] } = {},
+    ) {
       const nodes = stages.map((st, i) => {
         const nx = x + i * (w + gap);
-        if (st.head) s.add(text(nx + w / 2, y - headGap, st.head, st.headHl ? "sl hl" : "sl", "middle"));
-        return s.node(nx, y, w, h, st.label, { kind: st.kind, hl: st.hl, code: st.code, end: st.end });
+        if (st.head)
+          s.add(text(nx + w / 2, y - headGap, st.head, st.headHl ? "sl hl" : "sl", "middle"));
+        return s.node(nx, y, w, h, st.label, {
+          kind: st.kind,
+          hl: st.hl,
+          code: st.code,
+          end: st.end,
+        });
       });
       const hlA = (i) => hlArrows === true || (Array.isArray(hlArrows) && hlArrows.includes(i));
-      nodes.slice(1).forEach((n, i) => s.wire([nodes[i].port("r"), n.port("l")], { hl: (stages[i].hl && stages[i + 1].hl) || hlA(i) }));
+      nodes.slice(1).forEach((n, i) =>
+        s.wire([nodes[i].port("r"), n.port("l")], {
+          hl: (stages[i].hl && stages[i + 1].hl) || hlA(i),
+        }),
+      );
       const bottoms = stages.map((st, i) => {
-        const lines = st.sub == null ? [] : Array.isArray(st.sub) ? st.sub : wrap(st.sub, w + gap - 6, "sl");
+        const lines =
+          st.sub == null ? [] : Array.isArray(st.sub) ? st.sub : wrap(st.sub, w + gap - 6, "sl");
         lines.forEach((l, j) => {
           const [t, lhl] = typeof l === "object" ? [l.text, l.hl] : [l, false];
-          s.add(text(nodes[i].cx, y + h + subGap + j * 11.5, t, st.hl || lhl ? "sl hl" : "sl", "middle"));
+          s.add(
+            text(
+              nodes[i].cx,
+              y + h + subGap + j * 11.5,
+              t,
+              st.hl || lhl ? "sl hl" : "sl",
+              "middle",
+            ),
+          );
         });
         return lines.length ? y + h + subGap + (lines.length - 1) * 11.5 + 4 : y + h;
       });
@@ -582,9 +837,14 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      */
     tAccount(x, y, w, title, left, right, { heads = ["IN", "OUT"], rowH = 15, hl = false } = {}) {
       const n = Math.max(left.length, right.length, 1);
-      const cx = x + w / 2, top = y + 16, bot = top + 4 + n * rowH;
+      const cx = x + w / 2,
+        top = y + 16,
+        bot = top + 4 + n * rowH;
       if (title) s.add(text(cx, y - 2, title, "vt", "middle"));
-      s.add(text(x + w / 4, top - 4, heads[0], "th", "middle"), text(x + (3 * w) / 4, top - 4, heads[1], "th", "middle"));
+      s.add(
+        text(x + w / 4, top - 4, heads[0], "th", "middle"),
+        text(x + (3 * w) / 4, top - 4, heads[1], "th", "middle"),
+      );
       s.line(x, top, x + w, top, hl ? "obj hl" : "obj");
       s.line(cx, top, cx, bot, hl ? "obj hl" : "obj");
       left.forEach((t, i) => s.add(text(x + 6, top + 4 + (i + 0.5) * rowH + 3.2, t, "tc")));
@@ -599,7 +859,8 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * room left before the 20 margin. Returns { y: bottom }.
      */
     legend(x, y, items, { width = s.width - 20 - x, gap = 22 } = {}) {
-      let xx = x, yy = y;
+      let xx = x,
+        yy = y;
       for (const it of items) {
         const iw = 30 + widthOf(it.label, "sl");
         if (xx > x && xx + iw > x + width) {
@@ -608,9 +869,21 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         }
         const k = it.kind;
         if (k === "flow" || k === "hl" || k === "alt")
-          s.wire([[xx, yy], [xx + 22, yy]], { hl: k === "hl", alt: k === "alt" });
-        else if (k === "group") s.line(xx, yy, xx + 22, yy, "phantom"); // a box would show only its corners at this size
-        else s.node(xx, yy - 5, 22, 10, null, { kind: k === "end" || k === "node" ? "process" : k, end: k === "end", hl: it.hl });
+          s.wire(
+            [
+              [xx, yy],
+              [xx + 22, yy],
+            ],
+            { hl: k === "hl", alt: k === "alt" },
+          );
+        else if (k === "group")
+          s.line(xx, yy, xx + 22, yy, "phantom"); // a box would show only its corners at this size
+        else
+          s.node(xx, yy - 5, 22, 10, null, {
+            kind: k === "end" || k === "node" ? "process" : k,
+            end: k === "end",
+            hl: it.hl,
+          });
         s.add(text(xx + 30, yy + 3, it.label, "sl"));
         xx += iw + gap;
       }
@@ -640,12 +913,26 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * branches, and the shared stub and trunk stay ink. `label` and the
      * other wire() options go on the stub. Returns { via }.
      */
-    fanOut(src, targets, { from = "r", to = "l", via, hl = false, at = 0.5, alt = false, ...o } = {}) {
-      const g = fanGeom(src.port(from, at), targets.map((t) => t.port(to)), from, via);
+    fanOut(
+      src,
+      targets,
+      { from = "r", to = "l", via, hl = false, at = 0.5, alt = false, ...o } = {},
+    ) {
+      const g = fanGeom(
+        src.port(from, at),
+        targets.map((t) => t.port(to)),
+        from,
+        via,
+      );
       const all = hl === true;
       s.wire([g.p, g.T(g.c(g.p))], { hl: all, alt, arrow: "none", ...o });
       if (g.hi - g.lo > 0.5) s.wire([g.T(g.lo), g.T(g.hi)], { hl: all, alt, arrow: "none" });
-      g.ends.forEach((e, i) => s.wire([g.T(g.c(e)), e], { hl: all || hl === i || (Array.isArray(hl) && hl.includes(i)), alt }));
+      g.ends.forEach((e, i) =>
+        s.wire([g.T(g.c(e)), e], {
+          hl: all || hl === i || (Array.isArray(hl) && hl.includes(i)),
+          alt,
+        }),
+      );
       return { via: g.m };
     },
 
@@ -657,10 +944,25 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * branches only. `label` and the other wire() options go on the last
      * run into `dst`. Returns { via }.
      */
-    fanIn(sources, dst, { from = "r", to = "l", via, hl = false, at = 0.5, alt = false, ...o } = {}) {
-      const g = fanGeom(dst.port(to, at), sources.map((n) => n.port(from)), to, via);
+    fanIn(
+      sources,
+      dst,
+      { from = "r", to = "l", via, hl = false, at = 0.5, alt = false, ...o } = {},
+    ) {
+      const g = fanGeom(
+        dst.port(to, at),
+        sources.map((n) => n.port(from)),
+        to,
+        via,
+      );
       const all = hl === true;
-      g.ends.forEach((e, i) => s.wire([e, g.T(g.c(e))], { hl: all || hl === i || (Array.isArray(hl) && hl.includes(i)), alt, arrow: "none" }));
+      g.ends.forEach((e, i) =>
+        s.wire([e, g.T(g.c(e))], {
+          hl: all || hl === i || (Array.isArray(hl) && hl.includes(i)),
+          alt,
+          arrow: "none",
+        }),
+      );
       if (g.hi - g.lo > 0.5) s.wire([g.T(g.lo), g.T(g.hi)], { hl: all, alt, arrow: "none" });
       s.wire([g.T(g.c(g.p)), g.p], { hl: all, alt, ...o });
       return { via: g.m };
@@ -695,7 +997,9 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       const lines = subLines(label);
       const lx = side === "l" ? x - 12 : x + 12;
       const y0 = (y1 + y2) / 2 + 3 - ((lines.length - 1) * 11) / 2;
-      lines.forEach((l, i) => s.text(lx, y0 + i * 11, l, hl ? "sl hl" : "sl", side === "l" ? "end" : "start"));
+      lines.forEach((l, i) =>
+        s.text(lx, y0 + i * 11, l, hl ? "sl hl" : "sl", side === "l" ? "end" : "start"),
+      );
       return lx;
     },
 
@@ -708,11 +1012,20 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      */
     note(n, label, { anchor = "center", dy = 18, cls = "sl" } = {}) {
       const lines = subLines(label);
-      const [x, a] = anchor === "left" ? [n.x, "start"] : anchor === "right" ? [n.x + n.w, "end"] : [n.cx, "middle"];
+      const [x, a] =
+        anchor === "left"
+          ? [n.x, "start"]
+          : anchor === "right"
+            ? [n.x + n.w, "end"]
+            : [n.cx, "middle"];
       for (const l of lines) {
         const tw = widthOf(l, cls);
-        const [l0, l1] = a === "start" ? [x, x + tw] : a === "end" ? [x - tw, x] : [x - tw / 2, x + tw / 2];
-        if (l0 < 20 - 0.01 || l1 > s.width - 20 + 0.01) throw new Error(`note "${l}" crosses the 20 margin; anchor it to the box's ${l0 < 20 ? "left" : "right"} edge`);
+        const [l0, l1] =
+          a === "start" ? [x, x + tw] : a === "end" ? [x - tw, x] : [x - tw / 2, x + tw / 2];
+        if (l0 < 20 - 0.01 || l1 > s.width - 20 + 0.01)
+          throw new Error(
+            `note "${l}" crosses the 20 margin; anchor it to the box's ${l0 < 20 ? "left" : "right"} edge`,
+          );
       }
       const y = n.y + n.h + dy;
       lines.forEach((l, i) => s.text(x, y + i * 11, l, cls, a));
@@ -728,14 +1041,35 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * `labelCls` 'tc' keeps identifiers' case. Other options are wire()'s.
      * Returns the points.
      */
-    message(x1, x2, y, label, { lifelines = [], near = "start", hl = false, labelCls = "sl", ...o } = {}) {
-      const pts = s.wire([[x1, y], [x2, y]], { hl, start: "dot", ...o });
+    message(
+      x1,
+      x2,
+      y,
+      label,
+      { lifelines = [], near = "start", hl = false, labelCls = "sl", ...o } = {},
+    ) {
+      const pts = s.wire(
+        [
+          [x1, y],
+          [x2, y],
+        ],
+        { hl, start: "dot", ...o },
+      );
       if (label == null) return pts;
       const dir = Math.sign(x2 - x1);
-      const inner = lifelines.filter((lx) => (lx - x1) * dir > 0.5 && (x2 - lx) * dir > 0.5).sort((a, b) => (a - b) * dir);
-      const [a, b] = !inner.length ? [x1, x2] : near === "end" ? [inner.at(-1), x2] : [x1, inner[0]];
+      const inner = lifelines
+        .filter((lx) => (lx - x1) * dir > 0.5 && (x2 - lx) * dir > 0.5)
+        .sort((a, b) => (a - b) * dir);
+      const [a, b] = !inner.length
+        ? [x1, x2]
+        : near === "end"
+          ? [inner.at(-1), x2]
+          : [x1, inner[0]];
       const tw = widthOf(label, labelCls);
-      if (tw > Math.abs(b - a)) throw new Error(`message "${label}" (about ${Math.round(tw)} wide) does not fit its ${Math.round(Math.abs(b - a))} gap between lifelines`);
+      if (tw > Math.abs(b - a))
+        throw new Error(
+          `message "${label}" (about ${Math.round(tw)} wide) does not fit its ${Math.round(Math.abs(b - a))} gap between lifelines`,
+        );
       s.text((a + b) / 2, y - 6, label, `${labelCls}${hl ? " hl" : ""} ko`, "middle");
       return pts;
     },
@@ -766,7 +1100,13 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       rows.forEach((r, i) => {
         const cy = y + i * rowH + rowH / 2;
         s.text(x, cy + 3.2, r.label, "tc");
-        s.rect(ax, cy - barH / 2, r.value * k, barH, r.hl ? "obj hl" : r.alt ? "slot" : "obj fill-2");
+        s.rect(
+          ax,
+          cy - barH / 2,
+          r.value * k,
+          barH,
+          r.hl ? "obj hl" : r.alt ? "slot" : "obj fill-2",
+        );
         if (r.text != null) s.text(ax + r.value * k + 8, cy + 3.2, r.text, r.hl ? "tc hl" : "tc");
       });
       return { bottom };
@@ -790,7 +1130,14 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         a = b1;
       }
       s.line(a, y, x2, y, "leader");
-      if (bs.length) s.path(bs.flat().map((b) => `M${f(b - 3)},${f(y + 5)}L${f(b + 3)},${f(y - 5)}`).join(""), "leader");
+      if (bs.length)
+        s.path(
+          bs
+            .flat()
+            .map((b) => `M${f(b - 3)},${f(y + 5)}L${f(b + 3)},${f(y - 5)}`)
+            .join(""),
+          "leader",
+        );
       for (const [tx, t] of ticks) {
         s.line(tx, y - 4, tx, y + 4, "leader");
         s.text(tx, y - 10, t, "tc", "middle");
@@ -827,17 +1174,27 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * the screen point helper P(x, y, z).
      */
     exploded({ tx, ty, w, d, gap, k = 1, labelX, layers, plateCls = "obj plate" }) {
-      const a = 0.94 * k, b = 0.17 * k, c = -0.34 * k, e = 0.47 * k;
+      const a = 0.94 * k,
+        b = 0.17 * k,
+        c = -0.34 * k,
+        e = 0.47 * k;
       const P = (x, y, z) => [tx + a * x + c * y, ty + b * x + e * y - z];
       const top = (layers.length - 1) * gap;
-      for (const [x, y] of [[0, 0], [w, 0], [w, d], [0, d]]) {
+      for (const [x, y] of [
+        [0, 0],
+        [w, 0],
+        [w, d],
+        [0, d],
+      ]) {
         const [x1, y1] = P(x, y, 0);
         const [, y2] = P(x, y, top);
         s.line(x1, y1, x1, y2, "phantom");
       }
       const p = {
-        rect: (x, y, ww, hh, cls, rx) => el("rect", { class: cls, x, y, width: ww, height: hh, rx }),
-        line: (x1, y1, x2, y2, cls) => el("path", { class: cls, d: `M${f(x1)},${f(y1)}L${f(x2)},${f(y2)}` }),
+        rect: (x, y, ww, hh, cls, rx) =>
+          el("rect", { class: cls, x, y, width: ww, height: hh, rx }),
+        line: (x1, y1, x2, y2, cls) =>
+          el("path", { class: cls, d: `M${f(x1)},${f(y1)}L${f(x2)},${f(y2)}` }),
         circle: (cx, cy, r, cls) => el("circle", { class: cls, cx, cy, r }),
         path: (dd, cls) => el("path", { class: cls, d: dd }),
       };
@@ -847,7 +1204,10 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         s.add(
           el(
             "g",
-            { class: "iso", transform: `matrix(${f(a)} ${f(b)} ${f(c)} ${f(e)} ${f(tx)} ${f(ty - z)})` },
+            {
+              class: "iso",
+              transform: `matrix(${f(a)} ${f(b)} ${f(c)} ${f(e)} ${f(tx)} ${f(ty - z)})`,
+            },
             [p.rect(0, 0, w, d, plateCls, L.rx), ...[L.draw?.(p) ?? []].flat()].join(""),
           ),
         );
@@ -864,7 +1224,16 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
 
     toString() {
       const { width: w, height: h } = s;
-      const border = frame ? el("rect", { class: "sheet", x: inset, y: inset, width: w - 2 * inset, height: h - 2 * inset, rx: radius }) : "";
+      const border = frame
+        ? el("rect", {
+            class: "sheet",
+            x: inset,
+            y: inset,
+            width: w - 2 * inset,
+            height: h - 2 * inset,
+            rx: radius,
+          })
+        : "";
       return [
         `<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 ${f(w)} ${f(h)}">`,
         `  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->`,
@@ -881,12 +1250,27 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
     const m = hl ? ahHl : ah;
     const cls = hl ? "dim hl" : "dim";
     const len = Math.hypot(x2 - x1, y2 - y1);
-    if (len >= ARROWS_INSIDE) return el("path", { class: cls, d: `M${f(x1)},${f(y1)}L${f(x2)},${f(y2)}`, "marker-start": m, "marker-end": m });
-    const ux = (x2 - x1) / (len || 1), uy = (y2 - y1) / (len || 1);
+    if (len >= ARROWS_INSIDE)
+      return el("path", {
+        class: cls,
+        d: `M${f(x1)},${f(y1)}L${f(x2)},${f(y2)}`,
+        "marker-start": m,
+        "marker-end": m,
+      });
+    const ux = (x2 - x1) / (len || 1),
+      uy = (y2 - y1) / (len || 1);
     return [
       el("path", { class: cls, d: `M${f(x1)},${f(y1)}L${f(x2)},${f(y2)}` }),
-      el("path", { class: cls, d: `M${f(x1 - ux * TAIL)},${f(y1 - uy * TAIL)}L${f(x1)},${f(y1)}`, "marker-end": m }),
-      el("path", { class: cls, d: `M${f(x2 + ux * TAIL)},${f(y2 + uy * TAIL)}L${f(x2)},${f(y2)}`, "marker-end": m }),
+      el("path", {
+        class: cls,
+        d: `M${f(x1 - ux * TAIL)},${f(y1 - uy * TAIL)}L${f(x1)},${f(y1)}`,
+        "marker-end": m,
+      }),
+      el("path", {
+        class: cls,
+        d: `M${f(x2 + ux * TAIL)},${f(y2 + uy * TAIL)}L${f(x2)},${f(y2)}`,
+        "marker-end": m,
+      }),
     ].join("");
   }
 
@@ -924,7 +1308,10 @@ function fanGeom(p, ends, side, via) {
   const H = side === "l" || side === "r";
   const ax = (pt) => (H ? pt[0] : pt[1]);
   const c = (pt) => (H ? pt[1] : pt[0]);
-  const near = ends.reduce((b, e) => (Math.abs(ax(e) - ax(p)) < Math.abs(ax(b) - ax(p)) ? e : b), ends[0]);
+  const near = ends.reduce(
+    (b, e) => (Math.abs(ax(e) - ax(p)) < Math.abs(ax(b) - ax(p)) ? e : b),
+    ends[0],
+  );
   const m = via ?? (ax(p) + ax(near)) / 2;
   const T = (cc) => (H ? [m, cc] : [cc, m]);
   const cs = [c(p), ...ends.map(c)];
@@ -936,7 +1323,11 @@ function fanGeom(p, ends, side, via) {
  * left of a vertical one (or along it with `rotate`), gray caps with a
  * paper knockout (accent with hl), or `labelCls` text.
  */
-function edgeLabel([[x1, y1], [x2, y2]], label, { side, shift = 0, off = 0, hl, labelCls, rotate }) {
+function edgeLabel(
+  [[x1, y1], [x2, y2]],
+  label,
+  { side, shift = 0, off = 0, hl, labelCls, rotate },
+) {
   const lines = String(label).split("\n");
   const cls = labelCls ? `${labelCls}${hl ? " hl" : ""} ko` : hl ? "sl hl ko" : "sl ko";
   const LH = 11;
@@ -944,8 +1335,13 @@ function edgeLabel([[x1, y1], [x2, y2]], label, { side, shift = 0, off = 0, hl, 
     const my = (y1 + y2) / 2 + (shift * Math.abs(y2 - y1)) / 2;
     const n = lines.length;
     // Rotated -90: the text reads bottom to top and its glyphs rise to the left of the baseline.
-    const bx = (i) => (side === "right" ? x1 + 5 + off + 6.5 + i * LH : x1 - 5 - off - (n - 1 - i) * LH);
-    return lines.map((l, i) => text(bx(i), my, l, cls, "middle", { transform: `rotate(-90 ${f(bx(i))} ${f(my)})` })).join("");
+    const bx = (i) =>
+      side === "right" ? x1 + 5 + off + 6.5 + i * LH : x1 - 5 - off - (n - 1 - i) * LH;
+    return lines
+      .map((l, i) =>
+        text(bx(i), my, l, cls, "middle", { transform: `rotate(-90 ${f(bx(i))} ${f(my)})` }),
+      )
+      .join("");
   }
   if (Math.abs(y1 - y2) < 0.5) {
     const mx = (x1 + x2) / 2 + (shift * Math.abs(x2 - x1)) / 2;
@@ -956,7 +1352,11 @@ function edgeLabel([[x1, y1], [x2, y2]], label, { side, shift = 0, off = 0, hl, 
   const my = (y1 + y2) / 2 + (shift * Math.abs(y2 - y1)) / 2;
   const left = side === "left";
   const y0 = my + 3 - ((lines.length - 1) * LH) / 2;
-  return lines.map((l, i) => text(left ? x1 - 6 - off : x1 + 6 + off, y0 + i * LH, l, cls, left ? "end" : "start")).join("");
+  return lines
+    .map((l, i) =>
+      text(left ? x1 - 6 - off : x1 + 6 + off, y0 + i * LH, l, cls, left ? "end" : "start"),
+    )
+    .join("");
 }
 
 /** Greedy word wrap by estimated width for a kit text class. */

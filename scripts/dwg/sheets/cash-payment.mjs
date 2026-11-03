@@ -12,7 +12,11 @@ const PARTIES = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, nh = 28, nw = 130, step = 32;
+  const W = 760,
+    x = 20,
+    nh = 28,
+    nw = 130,
+    step = 32;
   const s = sheet({ prefix: "cash", width: W });
   const cw = (W - 2 * x) / PARTIES.length;
   const CX = (i) => x + (i + 0.5) * cw;
@@ -29,14 +33,50 @@ export default function draw() {
   PARTIES.forEach(([name, kind], i) => s.node(CX(i) - nw / 2, top, nw, nh, name, { kind }));
 
   s.comment("Messages, in seconds");
-  s.wire([[PAYER, Y(0)], [REG, Y(0)]], { start: "dot", label: "barcode and cash" });
-  s.wire([[REG, Y(1)], [NET, Y(1)]], { start: "dot", label: "authorize" });
-  s.wire([[NET, Y(2)], [PLAT, Y(2)]], { start: "dot", label: "validate account and amount" });
-  s.wire([[PLAT, Y(3)], [NET, Y(3)]], { start: "dot", label: "accept, within the deadline" });
-  s.wire([[NET, Y(4)], [PLAT, Y(4)]], { start: "dot", hl: true, label: "confirmed: post it" });
+  s.wire(
+    [
+      [PAYER, Y(0)],
+      [REG, Y(0)],
+    ],
+    { start: "dot", label: "barcode and cash" },
+  );
+  s.wire(
+    [
+      [REG, Y(1)],
+      [NET, Y(1)],
+    ],
+    { start: "dot", label: "authorize" },
+  );
+  s.wire(
+    [
+      [NET, Y(2)],
+      [PLAT, Y(2)],
+    ],
+    { start: "dot", label: "validate account and amount" },
+  );
+  s.wire(
+    [
+      [PLAT, Y(3)],
+      [NET, Y(3)],
+    ],
+    { start: "dot", label: "accept, within the deadline" },
+  );
+  s.wire(
+    [
+      [NET, Y(4)],
+      [PLAT, Y(4)],
+    ],
+    { start: "dot", hl: true, label: "confirmed: post it" },
+  );
 
   const fy = end + 22;
-  s.text(W - x, fy, "all of this in seconds; settlement, net of fees, follows days later", "sl", "end");
+  s.text(
+    W - x,
+    fy,
+    "all of this in seconds; settlement, net of fees, follows days later",
+    "sl",
+    "end",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

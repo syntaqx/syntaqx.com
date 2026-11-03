@@ -14,9 +14,7 @@ function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
   return (
     <div className="rounded-lg border border-border bg-surface">
       {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-        {note}
-      </div>
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">{note}</div>
     </div>
   );
 }
@@ -72,10 +70,9 @@ function RovingDemo() {
     <Frame
       note={
         <>
-          Tab into the toolbar from the first field, use <Kbd>←</Kbd>{" "}
-          <Kbd>→</Kbd> <Kbd>Home</Kbd> <Kbd>End</Kbd> inside it, and one more
-          Tab takes you out. Shift+Tab back in returns to the last button you
-          were on.
+          Tab into the toolbar from the first field, use <Kbd>←</Kbd> <Kbd>→</Kbd> <Kbd>Home</Kbd>{" "}
+          <Kbd>End</Kbd> inside it, and one more Tab takes you out. Shift+Tab back in returns to the
+          last button you were on.
         </>
       }
     >
@@ -171,8 +168,8 @@ function NaiveDialog({ onClose }: { onClose: () => void }) {
           </button>
         </div>
         <p className="text-xs leading-relaxed text-dim">
-          Focus came in because the close button autofocuses. Tab can still
-          walk out behind this overlay, and closing it drops focus on the page.
+          Focus came in because the close button autofocuses. Tab can still walk out behind this
+          overlay, and closing it drops focus on the page.
         </p>
       </div>
     </div>
@@ -187,9 +184,8 @@ function FocusReturnDemo() {
     <Frame
       note={
         <>
-          Open each with the keyboard and close with <Kbd>Esc</Kbd>. The
-          managed one hands focus back to its button; the hand-rolled one
-          leaves it on nothing.
+          Open each with the keyboard and close with <Kbd>Esc</Kbd>. The managed one hands focus
+          back to its button; the hand-rolled one leaves it on nothing.
         </>
       }
     >
@@ -206,8 +202,8 @@ function FocusReturnDemo() {
       </div>
       <Modal open={managed} onClose={() => setManaged(false)} title="Managed dialog">
         <p className="mb-4 text-xs leading-relaxed text-dim">
-          Focus is trapped in here. Close it any way you like and it goes back
-          to the button that opened it.
+          Focus is trapped in here. Close it any way you like and it goes back to the button that
+          opened it.
         </p>
         <button type="button" className={btn} onClick={() => setManaged(false)}>
           Done
@@ -225,7 +221,12 @@ function FocusReturnDemo() {
 // action it triggers, and keep a "?" sheet one key away. The handlers are
 // scoped to this demo, so they never fire while you're typing elsewhere.
 
-const ROWS = ["Rotate signing keys", "Backfill the ledger", "Drain the old queue", "Ship the audit export"];
+const ROWS = [
+  "Rotate signing keys",
+  "Backfill the ledger",
+  "Drain the old queue",
+  "Ship the audit export",
+];
 
 function ShortcutsDemo() {
   const [cursor, setCursor] = useState(0);
@@ -254,8 +255,8 @@ function ShortcutsDemo() {
     <Frame
       note={
         <>
-          Click the list (or Tab to it), then press <Kbd>?</Kbd>. The keys
-          work only while the list has focus.
+          Click the list (or Tab to it), then press <Kbd>?</Kbd>. The keys work only while the list
+          has focus.
         </>
       }
     >
@@ -279,7 +280,9 @@ function ShortcutsDemo() {
               onClick={() => setCursor(i)}
               className={cn(
                 "flex items-center gap-3 border-l-2 px-4 py-2 text-xs cursor-pointer",
-                i === cursor ? "border-accent bg-accent/5 text-foreground" : "border-transparent text-dim",
+                i === cursor
+                  ? "border-accent bg-accent/5 text-foreground"
+                  : "border-transparent text-dim",
               )}
             >
               <span
@@ -297,13 +300,21 @@ function ShortcutsDemo() {
             <div className="w-full max-w-xs border border-border bg-surface p-4">
               <p className="mb-3 text-xs text-foreground">Keyboard shortcuts</p>
               <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[11px] text-dim">
-                <dt><Kbd>J</Kbd> <Kbd>K</Kbd></dt>
+                <dt>
+                  <Kbd>J</Kbd> <Kbd>K</Kbd>
+                </dt>
                 <dd>Next, previous</dd>
-                <dt><Kbd>X</Kbd></dt>
+                <dt>
+                  <Kbd>X</Kbd>
+                </dt>
                 <dd>Select</dd>
-                <dt><Kbd>?</Kbd></dt>
+                <dt>
+                  <Kbd>?</Kbd>
+                </dt>
                 <dd>Show or hide this sheet</dd>
-                <dt><Kbd>Esc</Kbd></dt>
+                <dt>
+                  <Kbd>Esc</Kbd>
+                </dt>
                 <dd>Close</dd>
               </dl>
             </div>

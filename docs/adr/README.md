@@ -6,8 +6,8 @@ An ADR here records a **departure**: a place where the site deliberately does so
 
 They follow [Design Docs & ADRs](https://www.syntaqx.com/docs/development/design-docs): numbered, about a page, and added in the same pull request as the change.
 
-| # | Decision | Departs from | Date |
-| - | -------- | ------------ | ---- |
-| [0001](0001-header-only-api-versioning.md) | Header-only API versioning, no URL version | [Versioning](https://www.syntaqx.com/docs/api-design/versioning): the URL path fallback | 2026-10-22 |
-| [0002](0002-breaking-changes-before-consumers.md) | Breaking changes without a deprecation window, while there are no consumers | [Versioning](https://www.syntaqx.com/docs/api-design/versioning): new versions and 30-day deprecations | 2026-10-22 |
-| [0003](0003-csp-allows-inline-scripts.md) | Content-Security-Policy allows inline scripts, for now | [Security Headers & CSP](https://www.syntaqx.com/docs/security/security-headers): nonces and `strict-dynamic` | 2026-10-22 |
+| #                                                 | Decision                                                                    | Departs from                                                                                                  | Date       |
+| ------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------- |
+| [0001](0001-header-only-api-versioning.md)        | Header-only API versioning, no URL version                                  | [Versioning](https://www.syntaqx.com/docs/api-design/versioning): the URL path fallback                       | 2026-10-22 |
+| [0002](0002-breaking-changes-before-consumers.md) | Breaking changes without a deprecation window, while there are no consumers | [Versioning](https://www.syntaqx.com/docs/api-design/versioning): new versions and 30-day deprecations        | 2026-10-22 |
+| [0003](0003-csp-allows-inline-scripts.md)         | Content-Security-Policy allows inline scripts, for now                      | [Security Headers & CSP](https://www.syntaqx.com/docs/security/security-headers): nonces and `strict-dynamic` | 2026-10-22 |

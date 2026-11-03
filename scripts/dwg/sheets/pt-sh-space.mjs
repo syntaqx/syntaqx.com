@@ -13,16 +13,23 @@ const LEVELS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, rowH = 40, h = 26;
+  const W = 760,
+    x = 20,
+    rowH = 40,
+    h = 26;
   const s = sheet({ prefix: "pt-shs", width: W });
-  const colWhat = 300, top = 44;
+  const colWhat = 300,
+    top = 44;
 
   s.comment("Column heads");
   s.text(x, 26, "level", "th");
   s.text(colWhat, 26, "what lives here", "th");
   s.line(x, 34, W - x, 34, "tbl");
 
-  const root = LEVELS.reduceRight((child, [label, , hl]) => ({ label, hl, children: child ? [child] : [] }), null);
+  const root = LEVELS.reduceRight(
+    (child, [label, , hl]) => ({ label, hl, children: child ? [child] : [] }),
+    null,
+  );
   const rows = s.tree(root, { x, y: top, w: 110, h, indent: 36, rowH });
 
   s.comment("What lives at each level");
@@ -34,7 +41,13 @@ export default function draw() {
 
   const last = rows.at(-1);
   const fy = last.y + h + (rowH - h) / 2 + 22;
-  s.text(W - x, fy, "before placement, a lease is signed against a bed type, not a bed", "sl", "end");
+  s.text(
+    W - x,
+    fy,
+    "before placement, a lease is signed against a bed type, not a bed",
+    "sl",
+    "end",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

@@ -16,11 +16,19 @@ const ROUTES = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, nh = 40, rowGap = 10, pad = 10, titleH = 22;
+  const W = 760,
+    x = 20,
+    nh = 40,
+    rowGap = 10,
+    pad = 10,
+    titleH = 22;
   const s = sheet({ prefix: "pr", width: W });
   const chan = W - x - 10; // settlement channel, inside the margin
-  const pw = 230, px = chan - 20 - pw; // processors flush to the channel
-  const rw = 210, routerW = rw + 2 * pad, top = 20;
+  const pw = 230,
+    px = chan - 20 - pw; // processors flush to the channel
+  const rw = 210,
+    routerW = rw + 2 * pad,
+    top = 20;
   const routerH = titleH + PARTS.length * nh + (PARTS.length - 1) * rowGap + pad;
 
   s.comment("Router");
@@ -29,7 +37,9 @@ export default function draw() {
   const rx = x + cw + gap;
   const router = s.node(rx, top, routerW, routerH, null, { fill: 1 });
   s.text(rx + pad, top + 15, "router", "lt");
-  const parts = PARTS.map(([l, sub], i) => s.node(rx + pad, top + titleH + i * (nh + rowGap), rw, nh, l, { sub }));
+  const parts = PARTS.map(([l, sub], i) =>
+    s.node(rx + pad, top + titleH + i * (nh + rowGap), rw, nh, l, { sub }),
+  );
 
   s.comment("Checkout");
   const checkout = s.node(x, router.cy - 15, cw, 30, "checkout");

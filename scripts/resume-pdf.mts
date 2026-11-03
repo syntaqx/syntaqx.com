@@ -39,7 +39,11 @@ const contact = { ...PUBLIC_CONTACT, ...rest };
 const label = (track: string) =>
   track.length <= 3 ? track.toUpperCase() : track[0].toUpperCase() + track.slice(1);
 const copies = headlines
-  ? Object.entries(headlines).map(([track, t]) => [`.private/${track}`, t, `${label(track)} - ${file}`])
+  ? Object.entries(headlines).map(([track, t]) => [
+      `.private/${track}`,
+      t,
+      `${label(track)} - ${file}`,
+    ])
   : [[".private", resume.title, file]];
 for (const [dir, title, name] of copies) {
   mkdirSync(dir, { recursive: true });

@@ -91,10 +91,7 @@ export function TopProgressBar() {
       if (url.origin !== window.location.origin) return;
       // Same page, or an in-page hash jump — no route transition.
       if (url.href === window.location.href) return;
-      if (
-        url.pathname === window.location.pathname &&
-        url.search === window.location.search
-      ) {
+      if (url.pathname === window.location.pathname && url.search === window.location.search) {
         return;
       }
       start();

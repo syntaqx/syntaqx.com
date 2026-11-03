@@ -19,7 +19,10 @@ const MAX_BODY_BYTES = 16 * 1024;
 
 const Echo = z
   .object({
-    id: z.string().uuid().openapi({ description: "A new UUID v7, different on every non-replayed request" }),
+    id: z
+      .string()
+      .uuid()
+      .openapi({ description: "A new UUID v7, different on every non-replayed request" }),
     created_at: z.string().openapi({ example: "2026-10-22T14:23:45.123Z" }),
     payload: z.record(z.string(), z.unknown()).openapi({ description: "The JSON object you sent" }),
   })
@@ -47,13 +50,24 @@ registry.registerPath({
     }),
     body: {
       required: true,
-      content: { "application/json": { schema: z.record(z.string(), z.unknown()).openapi({ example: { hello: "world" } }) } },
+      content: {
+        "application/json": {
+          schema: z.record(z.string(), z.unknown()).openapi({ example: { hello: "world" } }),
+        },
+      },
     },
   },
   responses: {
-    201: { description: "Echo created (or replayed, with Idempotent-Replayed: true)", content: { "application/json": { schema: Echo } } },
-    400: errorDoc("Malformed JSON, an invalid Idempotency-Key, or a key already used for a different request"),
-    409: errorDoc("A request with this Idempotency-Key is still in progress; retry shortly with the same key"),
+    201: {
+      description: "Echo created (or replayed, with Idempotent-Replayed: true)",
+      content: { "application/json": { schema: Echo } },
+    },
+    400: errorDoc(
+      "Malformed JSON, an invalid Idempotency-Key, or a key already used for a different request",
+    ),
+    409: errorDoc(
+      "A request with this Idempotency-Key is still in progress; retry shortly with the same key",
+    ),
     413: errorDoc("Body over 16 KB"),
     422: errorDoc("The body isn't a JSON object"),
     429: errorDoc("Rate limited"),
@@ -107,18 +121,26 @@ export async function POST(request: Request) {
     claim = await store.claim(scopedKey, print);
   } catch (error) {
     console.error("idempotency: storage unavailable, refusing to run unprotected", error);
-    return errorResponse(503, "Idempotency storage is unavailable. Nothing was created; retry with the same key.", {
-      headers: { "Retry-After": "1" },
-    });
+    return errorResponse(
+      503,
+      "Idempotency storage is unavailable. Nothing was created; retry with the same key.",
+      {
+        headers: { "Retry-After": "1" },
+      },
+    );
   }
 
   switch (claim.kind) {
     case "mismatch":
       return errorResponse(400, "This Idempotency-Key was already used for a different request.");
     case "in_progress":
-      return errorResponse(409, "A request with this Idempotency-Key is still in progress. Retry shortly with the same key.", {
-        headers: { "Retry-After": "1" },
-      });
+      return errorResponse(
+        409,
+        "A request with this Idempotency-Key is still in progress. Retry shortly with the same key.",
+        {
+          headers: { "Retry-After": "1" },
+        },
+      );
     case "completed":
       return new Response(claim.response.body, {
         status: claim.response.status,

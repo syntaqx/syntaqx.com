@@ -18,16 +18,31 @@ export default function draw() {
   const s = sheet({ prefix: "dp-cwb", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "The warehouse bills from start to suspend, whether or not a query is running."],
-    [2, "With A1 the idle gap between the queries never reaches the suspend threshold, so it stays billed."],
-    [3, "With A2 it suspends between queries and resumes on the next one. Each start bills at least M1, and drops the local cache."],
-    [0, "Seconds. Workload illustrative. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [1, "The warehouse bills from start to suspend, whether or not a query is running."],
+      [
+        2,
+        "With A1 the idle gap between the queries never reaches the suspend threshold, so it stays billed.",
+      ],
+      [
+        3,
+        "With A2 it suspends between queries and resumes on the next one. Each start bills at least M1, and drops the local cache.",
+      ],
+      [
+        0,
+        "Seconds. Workload illustrative. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 s = k px ----
   s.comment("Plan view: billed time under two auto-suspend settings");
-  const k = 1.15, x0 = 170;
+  const k = 1.15,
+    x0 = 170;
   const X = (t) => x0 + t * k;
   const axY = ny + 46;
   const h = 24;
@@ -56,7 +71,8 @@ export default function draw() {
 
   // Suspend after A2: two short runs.
   const y3 = y2 + h + 82;
-  const r1 = Q1 + A2, r2 = Q2 + A2;
+  const r1 = Q1 + A2,
+    r2 = Q2 + A2;
   tl.lane(y3, `suspend after A2`);
   tl.bar(y3, X(0), X(r1), "obj fill-2", "billed");
   tl.bar(y3, X(r1), X(T2), "slot", "suspended");
@@ -68,11 +84,17 @@ export default function draw() {
   s.nb(X(0) + 12, axY - 22, 1);
 
   const vy = y3 + h + 62;
-  s.viewTitle((laneX - widthOf("suspend after A2", "sl") + X(SPAN)) / 2, vy, "Plan view · one warehouse, two queries", `Scale 1 s = ${k} px · timeline`);
+  s.viewTitle(
+    (laneX - widthOf("suspend after A2", "sl") + X(SPAN)) / 2,
+    vy,
+    "Plan view · one warehouse, two queries",
+    `Scale 1 s = ${k} px · timeline`,
+  );
 
   // ---- Variable table ----
   s.comment("Variable table");
-  const B1 = T2 + Q2 + A1, B2 = r1 + r2;
+  const B1 = T2 + Q2 + A1,
+    B2 = r1 + r2;
   const rows = [
     ["Q1, Q2", "query run times (illustrative)", `${Q1} s, ${Q2} s`],
     ["T2", "second query arrives", `${T2} s`],

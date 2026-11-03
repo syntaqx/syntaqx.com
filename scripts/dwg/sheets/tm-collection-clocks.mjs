@@ -21,16 +21,28 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "One CDP: event time = server receive time - (client send time - client event time); another pipeline's derived event time matches."],
-    [2, "Q1 is read on one clock, so the skew K1 cancels; what remains, E1, is the transit time."],
-    [3, "Illustrative values in seconds from an arbitrary zero on the true clock."],
-    [0, "The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "One CDP: event time = server receive time - (client send time - client event time); another pipeline's derived event time matches.",
+      ],
+      [
+        2,
+        "Q1 is read on one clock, so the skew K1 cancels; what remains, E1, is the transit time.",
+      ],
+      [3, "Illustrative values in seconds from an arbitrary zero on the true clock."],
+      [0, "The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: one true-time axis, 1 s = 4 px ----
   s.comment("Plan view: device and server clocks");
-  const k = 4, span = 130;
+  const k = 4,
+    span = 130;
   const x0 = CX - (span * k) / 2 + 20;
   const X = (t) => x0 + t * k; // true time to x
   const h = 30;
@@ -72,7 +84,9 @@ export default function draw() {
     s.text(X(SENT_TRUE) - 6, devY + h / 2 + 3.5, "S1", "dt", "end");
 
     // Transit: sent on the device, received on the server.
-    s.path(`M${X(SENT_TRUE)},${devY + h}L${X(R1)},${srvY}`, "leader", { "marker-end": `url(#${s.id("ah")})` });
+    s.path(`M${X(SENT_TRUE)},${devY + h}L${X(R1)},${srvY}`, "leader", {
+      "marker-end": `url(#${s.id("ah")})`,
+    });
     s.detailRef(X(R1) - 1, srvY - 4, 16, "detail A", X(R1) + 60, srvY - 34);
 
     // Below the server axis: Q1 subtracted from R1 lands on T1.
@@ -81,7 +95,12 @@ export default function draw() {
     s.nb((X(T1) + X(R1)) / 2 + 20, qy + 8.5, 1);
     s.dimH(X(0), X(T1), qy, "T1", { from: [srvAxis + 18, null], below: true, hl: true });
 
-    s.viewTitle(CX, qy + 46, "Plan view · device and server clocks", "Scale 1 s = 4 px · one true-time axis");
+    s.viewTitle(
+      CX,
+      qy + 46,
+      "Plan view · device and server clocks",
+      "Scale 1 s = 4 px · one true-time axis",
+    );
     planBottom = qy + 59;
   }
 
@@ -90,16 +109,22 @@ export default function draw() {
   const rowTop = planBottom + 40;
   let detailBottom;
   {
-    const kd = 60, from = SENT_TRUE - 1.5, to = R1 + 1.5;
+    const kd = 60,
+      from = SENT_TRUE - 1.5,
+      to = R1 + 1.5;
     const dx0 = 70;
     const D = (t) => dx0 + (t - from) * kd;
-    const top = rowTop + 24, hh = 26, sy = top + hh + 36;
+    const top = rowTop + 24,
+      hh = 26,
+      sy = top + hh + 36;
     s.rect(D(from), top, D(SENT_TRUE) - D(from), hh, "obj fill-2");
     s.text(D(SENT_TRUE) - 6, top + hh / 2 + 3.5, "S1", "dt", "end");
     s.rect(D(from), sy, D(to) - D(from), hh, "slot");
     s.add(`<circle class="dot" cx="${D(R1)}" cy="${sy + hh / 2}" r="2.6"/>`);
     s.text(D(R1) + 8, sy + hh / 2 + 3.5, "R1", "dt");
-    s.path(`M${D(SENT_TRUE)},${top + hh}L${D(R1)},${sy}`, "leader", { "marker-end": `url(#${s.id("ah")})` });
+    s.path(`M${D(SENT_TRUE)},${top + hh}L${D(R1)},${sy}`, "leader", {
+      "marker-end": `url(#${s.id("ah")})`,
+    });
     s.text((D(SENT_TRUE) + D(R1)) / 2 + 10, (top + hh + sy) / 2 + 3, "transit", "sl ink");
     s.text(D(from) - 10, top + hh / 2 + 3, "device", "sl ink", "end");
     s.text(D(from) - 10, sy + hh / 2 + 3, "server", "sl ink", "end");
@@ -121,7 +146,12 @@ export default function draw() {
     ["T1", "event time on the server clock", "R1 - Q1 = 11.00"],
     ["E1", "error against the true time of 10.00", "T1 - 10.00 = 1.00"],
   ];
-  const tw = [0, 1, 2].reduce((sum, j) => sum + Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)), 0);
+  const tw = [0, 1, 2].reduce(
+    (sum, j) =>
+      sum +
+      Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)),
+    0,
+  );
   const tb = s.table(W - 32 - tw, rowTop + 24, "Variables · s", rows);
   s.height = Math.ceil(Math.max(tb.y, detailBottom) + 30);
   return s.toString();

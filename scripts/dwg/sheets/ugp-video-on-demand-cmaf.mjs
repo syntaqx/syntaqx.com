@@ -6,20 +6,32 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, titleW = 112;
+  const W = 760,
+    titleW = 112;
   const s = sheet({ prefix: "ugp-vcm", width: W });
-  const w = 132, h = 34, rg = 14, laneH = 2 * h + rg + 32;
+  const w = 132,
+    h = 34,
+    rg = 14,
+    laneH = 2 * h + rg + 32;
 
-  const [A, B] = s.lanes({ x: 20, y: 20, w: W - 40, titleW, lanes: [
-    { label: "two formats", sub: "a set of\nsegments each", h: laneH },
-    { label: "CMAF", sub: "one set, two\nmanifests", h: laneH },
-  ] });
+  const [A, B] = s.lanes({
+    x: 20,
+    y: 20,
+    w: W - 40,
+    titleW,
+    lanes: [
+      { label: "two formats", sub: "a set of\nsegments each", h: laneH },
+      { label: "CMAF", sub: "one set, two\nmanifests", h: laneH },
+    ],
+  });
   const gap = 28;
   const X = (i) => A.x0 + i * (w + gap);
   const noteX = X(3);
 
   const lane = (L, middle) => {
-    const t = L.y0 + 16, b = t + h + rg, c = t + h + rg / 2;
+    const t = L.y0 + 16,
+      b = t + h + rg,
+      c = t + h + rg / 2;
     const r = s.node(X(0), c - h / 2, w, h, "renditions", { sub: "aligned keyframes" });
     const hls = s.node(X(2), t, w, h, "HLS playlists", { sub: "multivariant, media" });
     const dash = s.node(X(2), b, w, h, "DASH manifest", { sub: "the MPD" });
@@ -39,7 +51,11 @@ export default function draw() {
 
   s.comment("CMAF: one segment set, both manifests");
   const b = lane(B, (r, t, bb, c, hls, dash) => {
-    const one = s.node(X(1), c - h / 2, w, h, "one segment set", { kind: "store", hl: true, sub: "fragmented MP4" });
+    const one = s.node(X(1), c - h / 2, w, h, "one segment set", {
+      kind: "store",
+      hl: true,
+      sub: "fragmented MP4",
+    });
     s.connect(r, one);
     s.fanOut(one, [hls, dash], { hl: true });
   });

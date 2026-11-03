@@ -4,25 +4,44 @@
 // content/books/gaming/patching.md.
 import { sheet, widthOf } from "../kit.mjs";
 
-const T1 = 480, T2 = 40; // s, bounds: over T1, under T2
-const D1 = 68, D2 = 83; // MB
-const F1 = 2.2, F2 = 0.3; // %
+const T1 = 480,
+  T2 = 40; // s, bounds: over T1, under T2
+const D1 = 68,
+  D2 = 83; // MB
+const F1 = 2.2,
+  F2 = 0.3; // %
 
 export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "gm-pb", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Published patch 9.9 results, July 2019: before is the previous patcher, after is the chunked patcher. By region, updates were up to 14x faster and errors fell by up to 95%."],
-    [2, "A changed byte costs a whole chunk, so the chunked download is larger."],
-    [3, "Bounds: T1 is over 8 min and T2 under 40 s; bars are drawn at the bound."],
-    [0, "Each view has its own scale. Values and formulas are in the table, units in the variable names."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Published patch 9.9 results, July 2019: before is the previous patcher, after is the chunked patcher. By region, updates were up to 14x faster and errors fell by up to 95%.",
+      ],
+      [2, "A changed byte costs a whole chunk, so the chunked download is larger."],
+      [3, "Bounds: T1 is over 8 min and T2 under 40 s; bars are drawn at the bound."],
+      [
+        0,
+        "Each view has its own scale. Values and formulas are in the table, units in the variable names.",
+      ],
+    ],
+    { width: 690 },
+  );
 
-  const x0 = 96, h = 22, rowGap = 14;
+  const x0 = 96,
+    h = 22,
+    rowGap = 14;
   const rows = (top) => [top, top + h + rowGap];
-  const labels = (top) => rows(top).forEach((y, i) => s.text(x0 - 10, y + h / 2 + 3, i ? "after" : "before", "sl ink", "end"));
+  const labels = (top) =>
+    rows(top).forEach((y, i) =>
+      s.text(x0 - 10, y + h / 2 + 3, i ? "after" : "before", "sl ink", "end"),
+    );
   const cx = x0 + 150;
 
   // ---- View 1: average update time, 1 s = 0.9 px ----
@@ -38,7 +57,12 @@ export default function draw() {
     s.dimH(x0, x0 + T1 * k, a - 14, "T1", { from: [a, a] });
     s.nb(x0 + (T1 * k) / 2 + 18, a - 21.5, 3);
     s.dimH(x0, x0 + T2 * k, b + h + 18, "T2", { from: [b + h, b + h], below: true, hl: true });
-    s.viewTitle(cx, b + h + 54, "Plan view · average update time", "Scale 1 s = 0.6 px · bars at the bound");
+    s.viewTitle(
+      cx,
+      b + h + 54,
+      "Plan view · average update time",
+      "Scale 1 s = 0.6 px · bars at the bound",
+    );
     y = b + h + 67;
   }
 
@@ -93,7 +117,19 @@ export default function draw() {
     ["P1", "deploy time, before, h", "5"],
     ["P2", "deploy time, after, min", "< 1"],
   ];
-  const tw = [0, 1, 2].map((j) => Math.max([30, 80, 60][j], Math.ceil(Math.max(...rowsT.map((r) => widthOf(r[j], "tc")), widthOf(["CODE", "VARIABLE", "VALUE"][j], "th")) + 14))).reduce((a, b) => a + b, 0);
+  const tw = [0, 1, 2]
+    .map((j) =>
+      Math.max(
+        [30, 80, 60][j],
+        Math.ceil(
+          Math.max(
+            ...rowsT.map((r) => widthOf(r[j], "tc")),
+            widthOf(["CODE", "VARIABLE", "VALUE"][j], "th"),
+          ) + 14,
+        ),
+      ),
+    )
+    .reduce((a, b) => a + b, 0);
   const tb = s.table(W - 32 - tw, ny + 56, "Variables", rowsT);
   s.height = Math.ceil(Math.max(tb.y, y) + 30);
   return s.toString();

@@ -19,10 +19,7 @@ const WEBCRYPTO_ALGOS: Record<string, string> = {
 const HashRequest = z
   .object({
     input: z.string().openapi({ description: "The text to hash", example: "hello world" }),
-    algorithm: z
-      .enum(ALGORITHMS)
-      .default("SHA-256")
-      .openapi({ description: "Hash algorithm" }),
+    algorithm: z.enum(ALGORITHMS).default("SHA-256").openapi({ description: "Hash algorithm" }),
   })
   .openapi("HashRequest");
 
@@ -108,10 +105,9 @@ function md5(input: string): string {
   }
 
   const s = [
-    7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 5, 9, 14, 20,
-    5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 4, 11, 16, 23, 4, 11, 16, 23,
-    4, 11, 16, 23, 4, 11, 16, 23, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
-    6, 10, 15, 21,
+    7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9,
+    14, 20, 5, 9, 14, 20, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 6, 10, 15, 21,
+    6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
   ];
   const K = Array.from({ length: 64 }, (_, i) =>
     Math.floor(Math.abs(Math.sin(i + 1)) * 0x100000000),
@@ -119,9 +115,7 @@ function md5(input: string): string {
 
   // Pre-processing: pad to 512-bit blocks
   const bitLen = bytes.length * 8;
-  const padded = new Uint8Array(
-    Math.ceil((bytes.length + 9) / 64) * 64,
-  );
+  const padded = new Uint8Array(Math.ceil((bytes.length + 9) / 64) * 64);
   padded.set(bytes);
   padded[bytes.length] = 0x80;
   const view = new DataView(padded.buffer);
@@ -134,10 +128,11 @@ function md5(input: string): string {
   let d0 = 0x10325476;
 
   for (let offset = 0; offset < padded.length; offset += 64) {
-    const M = Array.from({ length: 16 }, (_, j) =>
-      view.getUint32(offset + j * 4, true),
-    );
-    let A = a0, B = b0, C = c0, D = d0;
+    const M = Array.from({ length: 16 }, (_, j) => view.getUint32(offset + j * 4, true));
+    let A = a0,
+      B = b0,
+      C = c0,
+      D = d0;
 
     for (let i = 0; i < 64; i++) {
       let F: number, g: number;
@@ -193,9 +188,7 @@ export async function POST(request: NextRequest) {
   const parsed = HashRequest.safeParse(body);
   if (!parsed.success) {
     return errorResponse(422, "The given data was invalid.", {
-      errors: Object.fromEntries(
-        parsed.error.issues.map((i) => [i.path.join("."), [i.message]]),
-      ),
+      errors: Object.fromEntries(parsed.error.issues.map((i) => [i.path.join("."), [i.message]])),
     });
   }
 

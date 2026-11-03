@@ -26,7 +26,10 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
   // Size by length, then shrink until the longest word fits the column
   // (Big Shoulders caps run about 0.41em wide), since a word can't wrap.
   const longest = Math.max(...title.split(/\s+/).map((w) => w.length));
-  const titleSize = Math.min(title.length > 40 ? 76 : title.length > 22 ? 94 : 120, Math.floor(TEXT / (0.41 * longest)));
+  const titleSize = Math.min(
+    title.length > 40 ? 76 : title.length > 22 ? 94 : 120,
+    Math.floor(TEXT / (0.41 * longest)),
+  );
   const host = `syntaqx.com${path === "/" ? "" : path}`;
   // Tighten the footer's tracking, then its size, so the whole address fits
   // (Michroma caps run about 0.96em wide; the strip has about 1000px).
@@ -35,9 +38,23 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
   const tracking = Math.max(0, Math.min(2.5, perChar - 0.96 * footerSize));
 
   return new ImageResponse(
-    <div style={{ width: "100%", height: "100%", display: "flex", backgroundColor: C.bg, position: "relative" }}>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        backgroundColor: C.bg,
+        position: "relative",
+      }}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={art} width={ART} height={OG_SIZE.height} alt="" style={{ position: "absolute", right: 0, top: 0 }} />
+      <img
+        src={art}
+        width={ART}
+        height={OG_SIZE.height}
+        alt=""
+        style={{ position: "absolute", right: 0, top: 0 }}
+      />
       <div
         style={{
           display: "flex",
@@ -47,7 +64,15 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
           width: 72 + TEXT,
         }}
       >
-        <div style={{ display: "flex", fontFamily: "Michroma", fontSize: 18, letterSpacing: 2.5, color: C.fg }}>
+        <div
+          style={{
+            display: "flex",
+            fontFamily: "Michroma",
+            fontSize: 18,
+            letterSpacing: 2.5,
+            color: C.fg,
+          }}
+        >
           syntaqx
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -105,9 +130,29 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
           color: C.dim,
         }}
       >
-        <div style={{ display: "flex", flexShrink: 0, width: 24, height: 2, backgroundColor: C.acc, marginRight: 14 }} />
-        {stat && <div style={{ display: "flex", flexShrink: 0, color: C.fg, marginRight: 18 }}>{stat.toUpperCase()}</div>}
-        <div style={{ display: "block", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+        <div
+          style={{
+            display: "flex",
+            flexShrink: 0,
+            width: 24,
+            height: 2,
+            backgroundColor: C.acc,
+            marginRight: 14,
+          }}
+        />
+        {stat && (
+          <div style={{ display: "flex", flexShrink: 0, color: C.fg, marginRight: 18 }}>
+            {stat.toUpperCase()}
+          </div>
+        )}
+        <div
+          style={{
+            display: "block",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+        >
           {host.toUpperCase()}
         </div>
       </div>
@@ -118,5 +163,9 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
 
 /** A segment's opengraph-image, carded from its own metadata. */
 export function segmentCard(metadata: Metadata, card: Omit<Card, "title" | "description">) {
-  return ogCard({ ...card, title: String(metadata.title), description: metadata.description ?? undefined });
+  return ogCard({
+    ...card,
+    title: String(metadata.title),
+    description: metadata.description ?? undefined,
+  });
 }

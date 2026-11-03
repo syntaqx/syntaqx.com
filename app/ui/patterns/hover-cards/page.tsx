@@ -12,12 +12,10 @@ export default function HoverCardsPage() {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Hover Cards
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Hover Cards</h1>
         <p className="max-w-2xl text-dim leading-relaxed">
-          Defer expensive context to intent. The page renders only what every
-          reader needs; the rest waits behind a hover, a focus, or a long press.
+          Defer expensive context to intent. The page renders only what every reader needs; the rest
+          waits behind a hover, a focus, or a long press.
         </p>
       </div>
 
@@ -26,10 +24,9 @@ export default function HoverCardsPage() {
         sources={[{ name: "Stripe", href: "https://stripe.com" }]}
         blurb={
           <>
-            The event happened in one timezone, was stored as UTC
-            (RFC&nbsp;3339), and you&apos;re reading it in a third. Render in
-            the viewer&apos;s locale with the tz abbreviation always visible;
-            reveal the source and UTC on intent.
+            The event happened in one timezone, was stored as UTC (RFC&nbsp;3339), and you&apos;re
+            reading it in a third. Render in the viewer&apos;s locale with the tz abbreviation
+            always visible; reveal the source and UTC on intent.
           </>
         }
       >
@@ -44,30 +41,25 @@ export default function HoverCardsPage() {
         ]}
         blurb={
           <>
-            Mentions, avatar stacks, reviewer chips. Anywhere a person appears,
-            the page might want to show who they are. Fetching every profile up
-            front wastes bandwidth and rate limit. Defer the fetch until the
-            reader points at a name or a face; cache the result per session so
-            repeat hovers are instant.
+            Mentions, avatar stacks, reviewer chips. Anywhere a person appears, the page might want
+            to show who they are. Fetching every profile up front wastes bandwidth and rate limit.
+            Defer the fetch until the reader points at a name or a face; cache the result per
+            session so repeat hovers are instant.
           </>
         }
       >
         <div className="border border-border bg-surface">
           <div className="p-4">
-            <div className="mb-2 text-[10px] font-medium text-dim">
-              As mentions
-            </div>
+            <div className="mb-2 text-[10px] font-medium text-dim">As mentions</div>
             <UserDemo bare />
           </div>
           <div className="border-t border-border p-4">
-            <div className="mb-2 text-[10px] font-medium text-dim">
-              As avatars
-            </div>
+            <div className="mb-2 text-[10px] font-medium text-dim">As avatars</div>
             <AvatarDemo bare />
           </div>
           <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-            Data: GitHub public REST API. Unauthenticated requests are rate
-            limited to 60/hour per IP.
+            Data: GitHub public REST API. Unauthenticated requests are rate limited to 60/hour per
+            IP.
           </div>
         </div>
       </DemoSection>

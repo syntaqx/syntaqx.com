@@ -15,7 +15,8 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, gap = 16;
+  const W = 760,
+    gap = 16;
   const w = (W - 40 - (STAGES.length - 1) * gap) / STAGES.length;
   const s = sheet({ prefix: "ugp-pc", width: W });
 
@@ -24,7 +25,12 @@ export default function draw() {
 
   s.comment("Footer");
   const fy = bottom + 30;
-  s.text(20, fy, "exposure outlives the payout: a later refund, chargeback or claim is recovered from the next earnings first", "sl");
+  s.text(
+    20,
+    fy,
+    "exposure outlives the payout: a later refund, chargeback or claim is recovered from the next earnings first",
+    "sl",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

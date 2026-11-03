@@ -12,9 +12,14 @@ const LEVELS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, rowH = 40, h = 26;
+  const W = 760,
+    x = 20,
+    rowH = 40,
+    h = 26;
   const s = sheet({ prefix: "fo-fbh", width: W });
-  const colWhat = 430, colWho = 610, top = 44;
+  const colWhat = 430,
+    colWho = 610,
+    top = 44;
 
   s.comment("Column heads");
   s.text(x, 26, "level", "th");
@@ -23,7 +28,10 @@ export default function draw() {
   s.line(x, 34, W - x, 34, "tbl");
 
   // A chain: each level is the only child of the one above.
-  const root = LEVELS.reduceRight((child, [label, , , hl]) => ({ label, hl, children: child ? [child] : [] }), null);
+  const root = LEVELS.reduceRight(
+    (child, [label, , , hl]) => ({ label, hl, children: child ? [child] : [] }),
+    null,
+  );
   const rows = s.tree(root, { x, y: top, w: 160, h, indent: 50, rowH });
 
   // Values keep their case (tc): caps lettering would turn CSRs into CSRS.

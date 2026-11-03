@@ -36,12 +36,8 @@ Sentry.init({
   // `pagehide` handler when the browser denies `localStorage` (private
   // mode, storage partitioning, extensions). It's third-party code on
   // a third-party event listener — we have no fix and no signal value.
-  ignoreErrors: [
-    /Cannot read properties of null \(reading 'getItem'\)/,
-  ],
-  denyUrls: [
-    /\/_next-live\/feedback\//,
-  ],
+  ignoreErrors: [/Cannot read properties of null \(reading 'getItem'\)/],
+  denyUrls: [/\/_next-live\/feedback\//],
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

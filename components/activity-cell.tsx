@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 export interface ActivityDayInfo {
@@ -41,9 +35,7 @@ export function ActivityGridTooltips({
   days: Record<string, ActivityDayInfo>;
   children: ReactNode;
 }) {
-  const [active, setActive] = useState<{ date: string; rect: DOMRect } | null>(
-    null,
-  );
+  const [active, setActive] = useState<{ date: string; rect: DOMRect } | null>(null);
   const tipRef = useRef<HTMLDivElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const closedAt = useRef(0);
@@ -101,14 +93,11 @@ export function ActivityGridTooltips({
       className="contents"
       onPointerOver={(e) => {
         if (e.pointerType === "touch") return;
-        const cell = (e.target as HTMLElement).closest<HTMLElement>(
-          "[data-date]",
-        );
+        const cell = (e.target as HTMLElement).closest<HTMLElement>("[data-date]");
         const date = cell?.dataset.date;
         if (!cell || !date || !(date in days)) return close();
         if (date === active?.date) return;
-        const show = () =>
-          setActive({ date, rect: cell.getBoundingClientRect() });
+        const show = () => setActive({ date, rect: cell.getBoundingClientRect() });
         clearTimeout(timer.current);
         if (active || Date.now() - closedAt.current < SKIP_DELAY_MS) show();
         else timer.current = setTimeout(show, DELAY_MS);
@@ -130,11 +119,7 @@ export function ActivityGridTooltips({
             }}
             className="pointer-events-none z-200 border border-border bg-surface px-2 py-1 text-[10px] leading-snug shadow-lg"
           >
-            {day.label && (
-              <span className="block font-medium text-foreground">
-                {day.label}
-              </span>
-            )}
+            {day.label && <span className="block font-medium text-foreground">{day.label}</span>}
             <span className="block text-foreground">
               {day.count} contribution{day.count === 1 ? "" : "s"}
             </span>
@@ -147,9 +132,7 @@ export function ActivityGridTooltips({
               className="absolute fill-surface"
               style={{
                 left: pos?.arrowLeft ?? 0,
-                ...(pos?.below
-                  ? { bottom: "100%", transform: "rotate(180deg)" }
-                  : { top: "100%" }),
+                ...(pos?.below ? { bottom: "100%", transform: "rotate(180deg)" } : { top: "100%" }),
               }}
             >
               <polygon points="0,0 30,0 15,10" />

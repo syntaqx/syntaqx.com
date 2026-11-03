@@ -17,7 +17,7 @@ describe("extractLinks()", () => {
   it("ignores URLs inside fenced code blocks, which are examples", () => {
     const md = [
       "```http",
-      "Link: <https://api.syntaqx.com/payments?cursor=abc>; rel=\"next\"",
+      'Link: <https://api.syntaqx.com/payments?cursor=abc>; rel="next"',
       "[not real](https://api.example.com/x)",
       "```",
       "[real](https://www.rfc-editor.org/rfc/rfc8288)",
@@ -53,9 +53,24 @@ describe("classify()", () => {
 
 describe("renderReport()", () => {
   const results = [
-    { url: "https://a.example/gone", status: "dead" as const, detail: "404", citedBy: ["content/docs/x.md"] },
-    { url: "https://b.example/blocked", status: "uncertain" as const, detail: "403", citedBy: ["docs/adr/0001.md"] },
-    { url: "https://c.example/fine", status: "ok" as const, detail: "200", citedBy: ["content/docs/y.md"] },
+    {
+      url: "https://a.example/gone",
+      status: "dead" as const,
+      detail: "404",
+      citedBy: ["content/docs/x.md"],
+    },
+    {
+      url: "https://b.example/blocked",
+      status: "uncertain" as const,
+      detail: "403",
+      citedBy: ["docs/adr/0001.md"],
+    },
+    {
+      url: "https://c.example/fine",
+      status: "ok" as const,
+      detail: "200",
+      citedBy: ["content/docs/y.md"],
+    },
   ];
 
   it("summarizes counts and lists dead and uncertain links with where they're cited", () => {

@@ -24,13 +24,23 @@ const RECORDS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20;
+  const W = 760,
+    x = 20;
   const s = sheet({ prefix: "fo-atr", width: W });
 
   s.comment("Bars on a years axis, ticks only");
-  const { bottom } = s.bars(x, 40, RECORDS.map(([label, value, text, alt]) => ({ label, value, text, alt })), {
-    ax: 220, k: 84, ticks: [0, 1, 2, 3, 4, 5], tick: (yr) => (yr ? `${yr} yr` : "0"), head: "record",
-  });
+  const { bottom } = s.bars(
+    x,
+    40,
+    RECORDS.map(([label, value, text, alt]) => ({ label, value, text, alt })),
+    {
+      ax: 220,
+      k: 84,
+      ticks: [0, 1, 2, 3, 4, 5],
+      tick: (yr) => (yr ? `${yr} yr` : "0"),
+      head: "record",
+    },
+  );
 
   s.comment("Footnotes");
   const fy = bottom + 24;
@@ -38,7 +48,12 @@ export default function draw() {
     { kind: "node", label: "minimum retention" },
     { kind: "ghost", label: "how long a request is honored, not a retention period" },
   ]);
-  s.text(x, fy + 20, "minimums: clocks start at different events, state rules are often longer, holds override all", "sl");
+  s.text(
+    x,
+    fy + 20,
+    "minimums: clocks start at different events, state rules are often longer, holds override all",
+    "sl",
+  );
   s.height = Math.ceil(fy + 38);
   return s.toString();
 }

@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { Redis } from "@upstash/redis";
-import { memoryIdempotencyStore, redisIdempotencyStore, validKey, type IdempotencyStore } from "./idempotency";
+import {
+  memoryIdempotencyStore,
+  redisIdempotencyStore,
+  validKey,
+  type IdempotencyStore,
+} from "./idempotency";
 
 const LOCAL = { url: "http://localhost:8079", token: "local_dev_token" };
 let redisUp = false;
@@ -28,7 +33,11 @@ async function behavesLikeAnIdempotencyStore(store: IdempotencyStore) {
   // A different request with the same key is a mismatch, even mid-flight.
   expect((await store.claim(key, "f2")).kind).toBe("mismatch");
 
-  await store.complete(key, "f1", { status: 201, body: '{"ok":true}', contentType: "application/json" });
+  await store.complete(key, "f1", {
+    status: 201,
+    body: '{"ok":true}',
+    contentType: "application/json",
+  });
   expect(await store.claim(key, "f1")).toEqual({
     kind: "completed",
     response: { status: 201, body: '{"ok":true}', contentType: "application/json" },

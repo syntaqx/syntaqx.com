@@ -33,14 +33,15 @@ export function PageHeader({
         <h1 className="text-[clamp(2.5rem,4.5vw,3.5rem)] leading-[0.92] wrap-break-word">
           {title}
         </h1>
-        {children && (
-          <div className="mt-5 leading-relaxed text-dim">{children}</div>
-        )}
+        {children && <div className="mt-5 leading-relaxed text-dim">{children}</div>}
       </div>
       {scene && (
         <SceneArt
           scene={scene}
-          className={cn("aspect-square max-w-88 justify-self-center md:justify-self-end", hideSceneOnMobile && "max-md:hidden")}
+          className={cn(
+            "aspect-square max-w-88 justify-self-center md:justify-self-end",
+            hideSceneOnMobile && "max-md:hidden",
+          )}
           label={sceneLabel ?? ""}
         />
       )}

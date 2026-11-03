@@ -7,15 +7,30 @@ import { sheet, text, widthOf } from "../kit.mjs";
 // END is past d6 where full_name carries on.
 const END = 6.7;
 const LANES = [
-  ["name", [[0.5, 4, "obj fill-1", "read + write"], [4, 5, "obj fill-2", "write only"], [5, 6, "slot", "unused"]]],
-  ["full_name", [[1, 2, "slot", "unused"], [2, 4, "obj fill-2", "write only"], [4, END, "obj hl", "read + write"]]],
+  [
+    "name",
+    [
+      [0.5, 4, "obj fill-1", "read + write"],
+      [4, 5, "obj fill-2", "write only"],
+      [5, 6, "slot", "unused"],
+    ],
+  ],
+  [
+    "full_name",
+    [
+      [1, 2, "slot", "unused"],
+      [2, 4, "obj fill-2", "write only"],
+      [4, END, "obj hl", "read + write"],
+    ],
+  ],
   ["backfill", [[3, 4, "obj fill-1", "batched job"]]],
 ];
 
 // A table with any columns, styled like the kit's variable table.
 function grid(s, x, y, title, head, rows, ws, rowH = 15) {
   const all = [head, ...rows];
-  const w = ws.reduce((a, b) => a + b, 0), h = all.length * rowH;
+  const w = ws.reduce((a, b) => a + b, 0),
+    h = all.length * rowH;
   s.add(text(x, y - 7, title, "vt"));
   s.rect(x, y, w, h, "tbl");
   for (let i = 1; i < all.length; i++) s.line(x, y + i * rowH, x + w, y + i * rowH, "tbl");
@@ -36,19 +51,41 @@ export default function draw() {
   const s = sheet({ prefix: "pb-zdm", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Old and new code share one schema during every deploy, so each step has to work with the code before it."],
-    [2, "Resumable, keyed on WHERE full_name IS NULL; count the rows that still differ, and contract only at zero."],
-    [3, "The DROP ships alone, at least one deploy cycle after d5 removed the last code that touched name."],
-    [4, "Each deploy runs on the schema the deploy before it left behind, so any deploy rolls back to the one before it."],
-    [0, "Not to scale: one deploy per step, evenly spaced. Schema changes, reads and writes are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Old and new code share one schema during every deploy, so each step has to work with the code before it.",
+      ],
+      [
+        2,
+        "Resumable, keyed on WHERE full_name IS NULL; count the rows that still differ, and contract only at zero.",
+      ],
+      [
+        3,
+        "The DROP ships alone, at least one deploy cycle after d5 removed the last code that touched name.",
+      ],
+      [
+        4,
+        "Each deploy runs on the schema the deploy before it left behind, so any deploy rolls back to the one before it.",
+      ],
+      [
+        0,
+        "Not to scale: one deploy per step, evenly spaced. Schema changes, reads and writes are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: three lanes over six deploys ----
   s.comment("Plan view: lanes over deploys");
   let planBottom;
   {
-    const step = 100, h = 24, pitch = 40;
+    const step = 100,
+      h = 24,
+      pitch = 40;
     const labelW = Math.max(...LANES.map(([l]) => widthOf(l, "sl"))) + 14;
     const x0 = (W + labelW - (END - 0.5) * step) / 2;
     const X = (d) => x0 + (d - 0.5) * step;
@@ -88,15 +125,23 @@ export default function draw() {
   s.comment("Step table");
   const ws = [44, 120, 236, 112, 112];
   const tw = ws.reduce((a, b) => a + b, 0);
-  const tb = grid(s, (W - tw) / 2, planBottom + 60, "Steps · from the chapter's rename example", ["code", "step", "schema or data", "reads", "writes"], [
-    ["d1", "expand", "ADD COLUMN full_name", "name", "name"],
-    ["d2", "write both", "none", "name", "both"],
-    ["d3", "backfill", "UPDATE in batches of 1,000", "name", "both"],
-    ["d4", "read new", "none", "full_name", "both"],
-    ["d5", "stop writing old", "none", "full_name", "full_name"],
-    ["W1", "wait", "at least 1 deploy cycle", "full_name", "full_name"],
-    ["d6", "contract", "DROP COLUMN name", "full_name", "full_name"],
-  ], ws);
+  const tb = grid(
+    s,
+    (W - tw) / 2,
+    planBottom + 60,
+    "Steps · from the chapter's rename example",
+    ["code", "step", "schema or data", "reads", "writes"],
+    [
+      ["d1", "expand", "ADD COLUMN full_name", "name", "name"],
+      ["d2", "write both", "none", "name", "both"],
+      ["d3", "backfill", "UPDATE in batches of 1,000", "name", "both"],
+      ["d4", "read new", "none", "full_name", "both"],
+      ["d5", "stop writing old", "none", "full_name", "full_name"],
+      ["W1", "wait", "at least 1 deploy cycle", "full_name", "full_name"],
+      ["d6", "contract", "DROP COLUMN name", "full_name", "full_name"],
+    ],
+    ws,
+  );
   s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

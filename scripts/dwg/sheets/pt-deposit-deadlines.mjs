@@ -17,13 +17,23 @@ const ROWS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20;
+  const W = 760,
+    x = 20;
   const s = sheet({ prefix: "pt-dd", width: W });
 
   s.comment("Bars on a days axis, ticks only");
-  const { bottom } = s.bars(x, 40, ROWS.map(([label, value, text, alt, hl]) => ({ label, value, text, alt, hl })), {
-    ax: 180, k: 9, ticks: [0, 7, 14, 21, 30], tick: (d) => (d ? `${d} d` : "0"), head: "jurisdiction",
-  });
+  const { bottom } = s.bars(
+    x,
+    40,
+    ROWS.map(([label, value, text, alt, hl]) => ({ label, value, text, alt, hl })),
+    {
+      ax: 180,
+      k: 9,
+      ticks: [0, 7, 14, 21, 30],
+      tick: (d) => (d ? `${d} d` : "0"),
+      head: "jurisdiction",
+    },
+  );
 
   s.comment("Footnotes");
   const fy = bottom + 24;

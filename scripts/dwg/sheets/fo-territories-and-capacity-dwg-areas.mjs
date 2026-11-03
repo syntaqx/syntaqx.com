@@ -5,7 +5,9 @@ import { sheet, el, widthOf } from "../kit.mjs";
 
 // Plate 300 x 200; with a 90 step, a lower plate shows only local y > ~31,
 // so every area sits in y 52..190.
-const W = 300, D = 200, GAP = 90;
+const W = 300,
+  D = 200,
+  GAP = 90;
 // The property's point, in plate coordinates; it lies in the right
 // territory and in its lower leaf.
 const PT = [212, 150];
@@ -44,18 +46,34 @@ export default function draw() {
   const s = sheet({ prefix: "fo-tca", width: 760 });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "The point resolves to the leaf (accent) whose dated area covers it; parents follow parent_id."],
-    [2, "Overlaps: one field-service platform assigns the highest or lowest level by setting; priority breaks ties within a level."],
-    [3, "Every area is versioned with valid_during, so a boundary moving on the 1st is known before it moves."],
-    [0, "Not to scale. Levels separated along the stack axis; areas are schematic."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "The point resolves to the leaf (accent) whose dated area covers it; parents follow parent_id.",
+      ],
+      [
+        2,
+        "Overlaps: one field-service platform assigns the highest or lowest level by setting; priority breaks ties within a level.",
+      ],
+      [
+        3,
+        "Every area is versioned with valid_during, so a boundary moving on the 1st is known before it moves.",
+      ],
+      [0, "Not to scale. Levels separated along the stack axis; areas are schematic."],
+    ],
+    { width: 690 },
+  );
 
   // lift puts the point above the top plate's back edge, clear of its areas.
-  const top = (layers.length - 1) * GAP, lift = 110;
+  const top = (layers.length - 1) * GAP,
+    lift = 110;
   // Place the stack so the property callout sits 44 below the notes.
   const ptY = 0.17 * PT[0] + 0.47 * PT[1] - top - lift; // point height relative to ty
-  const tx = 340, ty = ny + 44 + 24 - ptY;
+  const tx = 340,
+    ty = ny + 44 + 24 - ptY;
   const labelX = 220;
   s.comment("Exploded view");
   const P = s.exploded({ tx, ty, w: W, d: D, gap: GAP, labelX, layers });
@@ -69,7 +87,9 @@ export default function draw() {
   const [px, pTop] = P(...PT, top + lift);
   const [, pBot] = P(...PT, 0);
   s.line(px, pTop, px, pBot, "phantom");
-  s.add(layers.map((_, i) => el("circle", { class: "dot", cx: px, cy: P(...PT, i * GAP)[1], r: 2.2 })));
+  s.add(
+    layers.map((_, i) => el("circle", { class: "dot", cx: px, cy: P(...PT, i * GAP)[1], r: 2.2 })),
+  );
   s.callout(px, pTop, px + 60, pTop - 24, "property", { sub: "one geocoded point" });
   s.nb(px + 60 + 14 + widthOf("property", "sl") + 12, pTop - 24, 1);
 

@@ -29,7 +29,11 @@ export function docRedirects(root = process.cwd()) {
   const redirects: { source: string; destination: string; permanent: true }[] = [
     { source: "/docs/industries", destination: "/books", permanent: true },
     { source: "/docs/industries/:book", destination: "/books/:book", permanent: true },
-    { source: "/docs/industries/:book/:chapter", destination: "/books/:book/:chapter", permanent: true },
+    {
+      source: "/docs/industries/:book/:chapter",
+      destination: "/books/:book/:chapter",
+      permanent: true,
+    },
   ];
   const sections = new Set<string>();
 
@@ -41,9 +45,14 @@ export function docRedirects(root = process.cwd()) {
       const slug = path.relative(dir, file).split(path.sep).join("/").replace(/\.md$/, "");
       if (dir === docsDir && slug.includes("/")) sections.add(slug.slice(0, slug.lastIndexOf("/")));
 
-      const aliases = fs.readFileSync(file, "utf8").match(/^aliases\s*=\s*\[([^\]]*)\]/m)?.[1] ?? "";
+      const aliases =
+        fs.readFileSync(file, "utf8").match(/^aliases\s*=\s*\[([^\]]*)\]/m)?.[1] ?? "";
       for (const alias of aliases.match(/"[^"]+"/g) ?? []) {
-        redirects.push({ source: `/docs/${alias.slice(1, -1)}`, destination: `${base}/${slug}`, permanent: true });
+        redirects.push({
+          source: `/docs/${alias.slice(1, -1)}`,
+          destination: `${base}/${slug}`,
+          permanent: true,
+        });
       }
     }
   }

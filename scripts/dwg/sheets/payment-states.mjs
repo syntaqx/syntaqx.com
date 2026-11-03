@@ -9,11 +9,16 @@ export default function draw() {
 
   // Grid: four columns on the main row, a row above for the detour and a
   // row below for the exits.
-  const w = 108, h = 30, gap = 58;
+  const w = 108,
+    h = 30,
+    gap = 58;
   const x0 = W - 20 - (4 * w + 3 * gap); // flush right; the left exit channel and its label take the left margin
   const X = (i) => x0 + i * (w + gap);
-  const r0 = 24, r1 = 104, r2 = 184;
-  const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
+  const r0 = 24,
+    r1 = 104,
+    r2 = 184;
+  const st = (i, y, label, o = {}) =>
+    s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
 
   s.comment("States");
   const action = st(0, r0, "requires_action");
@@ -31,12 +36,32 @@ export default function draw() {
 
   s.comment("3-D Secure detour");
   s.connect(pending, action, { from: "t", to: "b", at: [0.3, 0.3] });
-  s.connect(action, pending, { from: "b", to: "t", at: [0.7, 0.7], label: "3-D Secure challenge,\nthen back to pending", side: "right" });
+  s.connect(action, pending, {
+    from: "b",
+    to: "t",
+    at: [0.7, 0.7],
+    label: "3-D Secure challenge,\nthen back to pending",
+    side: "right",
+  });
 
   s.comment("Early exits");
-  s.connect(action, failed, { from: "l", to: "l", via: X(0) - 26, alt: true, label: "abandoned\nor expired", side: "left", seg: 1 });
+  s.connect(action, failed, {
+    from: "l",
+    to: "l",
+    via: X(0) - 26,
+    alt: true,
+    label: "abandoned\nor expired",
+    side: "left",
+    seg: 1,
+  });
   s.connect(pending, failed, { from: "b", to: "t", alt: true, label: "declined", side: "right" });
-  s.connect(authorized, voided, { from: "b", to: "t", alt: true, label: "cancelled, or\nexpired uncaptured", side: "right" });
+  s.connect(authorized, voided, {
+    from: "b",
+    to: "t",
+    alt: true,
+    label: "cancelled, or\nexpired uncaptured",
+    side: "right",
+  });
 
   s.comment("Legend");
   const lg = s.legend(X(0) - 26, r2 + h + 34, [

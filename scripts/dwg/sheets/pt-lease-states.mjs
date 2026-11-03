@@ -9,11 +9,14 @@ export default function draw() {
   const s = sheet({ prefix: "pt-ls", width: W });
 
   // Four columns; row A before possession, row B after it.
-  const w = 124, h = 30;
+  const w = 124,
+    h = 30;
   const gap = (W - 40 - 4 * w) / 3;
   const X = (i) => 20 + i * (w + gap);
-  const rA = 60, rB = rA + h + 70;
-  const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
+  const rA = 60,
+    rB = rA + h + 70;
+  const st = (i, y, label, o = {}) =>
+    s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
 
   s.comment("States");
   const draft = st(0, rA, "draft");
@@ -34,12 +37,30 @@ export default function draw() {
   s.text((ofs.cx + cancelled.cx) / 2, bus - 6, "declined, withdrawn or expired", "sl ko", "middle");
 
   s.comment("Possession and after");
-  s.connect(signed, current, { from: "b", to: "t", hl: true, label: "start date, in possession", side: "above" });
+  s.connect(signed, current, {
+    from: "b",
+    to: "t",
+    hl: true,
+    label: "start date, in possession",
+    side: "above",
+  });
   s.connect(current, notice, { at: [0.3, 0.3], hl: true, label: "notice", side: "above" });
-  s.connect(notice, current, { from: "l", to: "r", at: [0.7, 0.7], label: "rescinded", side: "below" });
+  s.connect(notice, current, {
+    from: "l",
+    to: "r",
+    at: [0.7, 0.7],
+    label: "rescinded",
+    side: "below",
+  });
   s.connect(notice, ended, { hl: true, label: "moved out", side: "above" });
   const ch = rB + h + 24;
-  s.connect(current, ended, { from: "b", to: "b", via: ch, label: "renewed, transferred, evicted or abandoned", side: "below" });
+  s.connect(current, ended, {
+    from: "b",
+    to: "b",
+    via: ch,
+    label: "renewed, transferred, evicted or abandoned",
+    side: "below",
+  });
 
   s.comment("Legend");
   const lg = s.legend(20, ch + 36, [

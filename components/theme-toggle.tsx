@@ -65,10 +65,7 @@ export function ThemeToggle() {
         <ActiveIcon size={14} />
       </MenuTrigger>
       <MenuContent className="w-32">
-        <MenuRadioGroup
-          value={theme}
-          onValueChange={(v) => selectTheme(v as Theme)}
-        >
+        <MenuRadioGroup value={theme} onValueChange={(v) => selectTheme(v as Theme)}>
           {themes.map((t) => {
             const Icon = t.icon;
             const active = theme === t.value;

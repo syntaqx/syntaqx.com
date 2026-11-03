@@ -9,11 +9,18 @@ const STAGES = [
   { label: "processor", sub: ["the test plan on", "its test host,", "field by field"] },
   { label: "network, EMV", sub: ["host: interface and", "chip data tests;", "terminals: Level 3"] },
   { label: "pilot", sub: ["a few merchants,", "real cards,", "watched closely"] },
-  { label: "production", sub: ["credentials earned", "for what was", "certified, no more"], hl: true },
+  {
+    label: "production",
+    sub: ["credentials earned", "for what was", "certified, no more"],
+    hl: true,
+  },
 ];
 
 export default function draw() {
-  const W = 760, w = 128, gap = 20, y = 80;
+  const W = 760,
+    w = 128,
+    gap = 20,
+    y = 80;
   const s = sheet({ prefix: "cp", width: W });
   const x0 = (W - (STAGES.length * w + (STAGES.length - 1) * gap)) / 2;
 
@@ -28,7 +35,8 @@ export default function draw() {
     via: y - 22,
     alt: true,
     seg: 1,
-    label: "recertify: an April or October network release,\na new terminal or kernel, a new transaction type or message field",
+    label:
+      "recertify: an April or October network release,\na new terminal or kernel, a new transaction type or message field",
   });
 
   s.height = Math.ceil(bottom + 20);

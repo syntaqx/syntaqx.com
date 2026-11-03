@@ -14,10 +14,14 @@ const ROWS = [
 const SKIP = 2;
 
 export default function draw() {
-  const W = 760, x = 20, rowH = 34, top = 36;
+  const W = 760,
+    x = 20,
+    rowH = 34,
+    top = 36;
   const s = sheet({ prefix: "fo-brm", width: W });
   // Model column, then four value columns sharing the rest.
-  const mw = 150, vw = (W - 2 * x - mw) / 4;
+  const mw = 150,
+    vw = (W - 2 * x - mw) / 4;
   const cx = (j) => (j === 0 ? x : x + mw + (j - 1) * vw);
   const hy = top + 4;
 
@@ -29,7 +33,9 @@ export default function draw() {
   ROWS.forEach((r, i) => {
     const y = hy + i * rowH;
     s.node(x, y + 5, mw - 24, rowH - 10, r[0], { fill: 1 });
-    r.slice(1).forEach((v, k) => s.text(cx(k + 1) + 12, y + rowH / 2 + 3.2, v, k + 1 === SKIP ? "tc hl" : "tc"));
+    r.slice(1).forEach((v, k) =>
+      s.text(cx(k + 1) + 12, y + rowH / 2 + 3.2, v, k + 1 === SKIP ? "tc hl" : "tc"),
+    );
     s.line(x, y + rowH, W - x, y + rowH, "tbl");
   });
 
@@ -39,7 +45,13 @@ export default function draw() {
   s.line(cx(SKIP) + vw, hy, cx(SKIP) + vw, yb, "obj hl");
 
   const fy = yb + 26;
-  s.text(cx(SKIP) + vw / 2, fy, "the visit-skipped column is where billing disputes start", "sl hl", "middle");
+  s.text(
+    cx(SKIP) + vw / 2,
+    fy,
+    "the visit-skipped column is where billing disputes start",
+    "sl hl",
+    "middle",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

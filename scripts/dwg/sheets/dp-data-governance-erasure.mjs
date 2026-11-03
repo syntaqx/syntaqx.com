@@ -4,7 +4,10 @@
 import { sheet, widthOf } from "../kit.mjs";
 
 // Days. P1 illustrative; T1 and T2 BigQuery defaults [1]; M1 drawn as 30 days.
-const P1 = 2, T1 = 7, T2 = 7, M1 = 30;
+const P1 = 2,
+  T1 = 7,
+  T2 = 7,
+  M1 = 30;
 const E1 = P1 + T1 + T2; // 16
 
 export default function draw() {
@@ -13,20 +16,37 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "P1 is illustrative: a nightly purge plus a rebuild. T1 and T2 are a cloud warehouse's documented defaults; an open table format keeps deleted files until VACUUM, which keeps 7 days by default."],
-    [2, "Within the warehouse. Backups, exports, streams and vendors have their own clocks."],
-    [3, "GDPR Article 12(3): within one month of receipt, extendable by two further months for complex or numerous requests, if the person is told why within the first month."],
-    [0, "Values in days; M1 is drawn as 30 days. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "P1 is illustrative: a nightly purge plus a rebuild. T1 and T2 are a cloud warehouse's documented defaults; an open table format keeps deleted files until VACUUM, which keeps 7 days by default.",
+      ],
+      [2, "Within the warehouse. Backups, exports, streams and vendors have their own clocks."],
+      [
+        3,
+        "GDPR Article 12(3): within one month of receipt, extendable by two further months for complex or numerous requests, if the person is told why within the first month.",
+      ],
+      [
+        0,
+        "Values in days; M1 is drawn as 30 days. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 day = 18 px ----
   s.comment("Plan view: one erasure request");
   const k = 18;
   const x0 = CX - (M1 * k) / 2;
   const X = (d) => x0 + d * k;
-  const mY = ny + 36, eY = mY + 24;
-  const top = eY + 22, h = 36, bot = top + h;
+  const mY = ny + 36,
+    eY = mY + 24;
+  const top = eY + 22,
+    h = 36,
+    bot = top + h;
 
   // Deadline and the time until no copy is recoverable (the subject).
   s.dimH(X(0), X(M1), mY, "M1", { from: [top, top] });
@@ -45,7 +65,10 @@ export default function draw() {
 
   // Chain: purge, time travel, fail-safe.
   const cY = bot + 22;
-  s.chainH([X(0), X(P1), X(P1 + T1), X(E1)], cY, ["P1", "T1", "T2"], { from: [bot, bot, bot, bot], below: true });
+  s.chainH([X(0), X(P1), X(P1 + T1), X(E1)], cY, ["P1", "T1", "T2"], {
+    from: [bot, bot, bot, bot],
+    below: true,
+  });
   s.nb(X(0) - 16, cY, 1);
 
   // Axis: days after the request.
@@ -57,7 +80,12 @@ export default function draw() {
   }
   s.callout(X(0), aY, X(0) + 22, aY + 36, "request received");
 
-  s.viewTitle(CX, aY + 76, "Plan view · one erasure request", "Scale 1 day = 18 px · timeline · days after the request");
+  s.viewTitle(
+    CX,
+    aY + 76,
+    "Plan view · one erasure request",
+    "Scale 1 day = 18 px · timeline · days after the request",
+  );
   const viewBottom = aY + 76 + 13;
 
   // ---- Variable table ----

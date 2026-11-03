@@ -12,7 +12,11 @@ const PARTIES = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, nh = 28, nw = 150, step = 34;
+  const W = 760,
+    x = 20,
+    nh = 28,
+    nw = 150,
+    step = 34;
   const s = sheet({ prefix: "ap", width: W });
   const cw = (W - 2 * x) / PARTIES.length;
   const CX = (i) => x + (i + 0.5) * cw;
@@ -39,16 +43,51 @@ export default function draw() {
   PARTIES.forEach(([name, kind], i) => s.node(CX(i) - nw / 2, top, nw, nh, name, { kind }));
 
   s.comment("1. Redirect, approve, maybe come back");
-  s.wire([[CHK, yRedirect], [BANK, yRedirect]], { start: "dot", label: "redirect to bank or app" });
+  s.wire(
+    [
+      [CHK, yRedirect],
+      [BANK, yRedirect],
+    ],
+    { start: "dot", label: "redirect to bank or app" },
+  );
   s.node(BANK - 48, yApprove, 96, 24, "approve");
-  s.wire([[BANK, yBack], [CHK, yBack]], { start: "dot", alt: true, label: "back, if they return" });
+  s.wire(
+    [
+      [BANK, yBack],
+      [CHK, yBack],
+    ],
+    { start: "dot", alt: true, label: "back, if they return" },
+  );
   s.node(CHK - 60, yPending, 120, 24, "order: pending", { kind: "state", code: true });
 
   s.comment("2. The money moves, then the provider says so");
-  s.wire([[BANK, yPush], [PROV, yPush]], { start: "dot", label: "the push settles" });
-  s.wire([[PROV, yHook], [SRV, yHook]], { start: "dot", hl: true, label: "webhook: received" });
-  s.wire([[SRV, yCheck], [PROV, yCheck]], { start: "dot", alt: true, label: "status check, if late" });
-  const paid = s.node(SRV - 60, yPaid, 120, 26, "order: paid", { kind: "state", code: true, hl: true, end: true });
+  s.wire(
+    [
+      [BANK, yPush],
+      [PROV, yPush],
+    ],
+    { start: "dot", label: "the push settles" },
+  );
+  s.wire(
+    [
+      [PROV, yHook],
+      [SRV, yHook],
+    ],
+    { start: "dot", hl: true, label: "webhook: received" },
+  );
+  s.wire(
+    [
+      [SRV, yCheck],
+      [PROV, yCheck],
+    ],
+    { start: "dot", alt: true, label: "status check, if late" },
+  );
+  const paid = s.node(SRV - 60, yPaid, 120, 26, "order: paid", {
+    kind: "state",
+    code: true,
+    hl: true,
+    end: true,
+  });
 
   s.comment("Legend");
   const lg = s.legend(x, paid.y + paid.h + 30, [

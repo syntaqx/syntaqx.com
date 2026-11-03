@@ -3,9 +3,13 @@
 import { sheet, widthOf } from "../kit.mjs";
 
 // Illustrative event times, hours of the day [1].
-const A0 = 4, A1 = 18; // axis
-const V1 = 5, U2 = 11, U3 = 16; // v1 from, v2 written, v3 written
-const T0 = 14, K1 = 8;
+const A0 = 4,
+  A1 = 18; // axis
+const V1 = 5,
+  U2 = 11,
+  U3 = 16; // v1 from, v2 written, v3 written
+const T0 = 14,
+  K1 = 8;
 const G1 = T0 - U2; // 3
 const hh = (h) => `${String(h).padStart(2, "0")}:00`;
 
@@ -15,20 +19,37 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative times. The feature store scans back from each row's timestamp up to the TTL, never forward."],
-    [2, "What happened at T0: a chargeback, a cancellation, a no-show. Features are as served then."],
-    [3, "Written after T0: joining it leaks the future into training. Online, the model never sees it."],
-    [0, "Event time in hours. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Illustrative times. The feature store scans back from each row's timestamp up to the TTL, never forward.",
+      ],
+      [
+        2,
+        "What happened at T0: a chargeback, a cancellation, a no-show. Features are as served then.",
+      ],
+      [
+        3,
+        "Written after T0: joining it leaks the future into training. Online, the model never sees it.",
+      ],
+      [0, "Event time in hours. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 h = 40 px ----
   s.comment("Plan view: one training row");
   const k = 40;
   const x0 = CX - ((A1 - A0) * k) / 2 + 20;
   const X = (h) => x0 + (h - A0) * k;
-  const kY = ny + 34, gY = kY + 24;
-  const top = gY + 22, h = 36, bot = top + h;
+  const kY = ny + 34,
+    gY = kY + 24;
+  const top = gY + 22,
+    h = 36,
+    bot = top + h;
   const lY = bot + 40;
   const aY = lY + 36;
 
@@ -67,7 +88,12 @@ export default function draw() {
     s.text(X(t), aY + 16, hh(t), "tc", "middle");
   }
 
-  s.viewTitle(CX, aY + 58, "Plan view · one training row", "Scale 1 h = 40 px · event time · illustrative");
+  s.viewTitle(
+    CX,
+    aY + 58,
+    "Plan view · one training row",
+    "Scale 1 h = 40 px · event time · illustrative",
+  );
   const viewBottom = aY + 58 + 13;
 
   // ---- Variable table ----

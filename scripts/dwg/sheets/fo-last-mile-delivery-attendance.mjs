@@ -7,15 +7,32 @@ import { sheet } from "../kit.mjs";
 
 // Stop centers in panel units, and the attended windows with where each
 // label sits (a: above, r: right) so it clears the legs.
-const STOPS = { A: [80, 50], B: [170, 30], C: [260, 50], D: [260, 150], E: [170, 170], F: [80, 150] };
-const WINDOWS = { A: ["8-10", "a"], B: ["10-12", "a"], C: ["8-10", "a"], D: ["10-12", "r"], E: ["8-10", "r"], F: ["10-12", "a"] };
-const SW = 24, SH = 20;
+const STOPS = {
+  A: [80, 50],
+  B: [170, 30],
+  C: [260, 50],
+  D: [260, 150],
+  E: [170, 170],
+  F: [80, 150],
+};
+const WINDOWS = {
+  A: ["8-10", "a"],
+  B: ["10-12", "a"],
+  C: ["8-10", "a"],
+  D: ["10-12", "r"],
+  E: ["8-10", "r"],
+  F: ["10-12", "a"],
+};
+const SW = 24,
+  SH = 20;
 
 // Legs as polylines in panel units: ports of the stop boxes and the corners
 // between them.
 const L = (k, side) => {
   const [cx, cy] = STOPS[k];
-  return { l: [cx - SW / 2, cy], r: [cx + SW / 2, cy], t: [cx, cy - SH / 2], b: [cx, cy + SH / 2] }[side];
+  return { l: [cx - SW / 2, cy], r: [cx + SW / 2, cy], t: [cx, cy - SH / 2], b: [cx, cy + SH / 2] }[
+    side
+  ];
 };
 const DEPOT_OUT = [[35, 90], [35, 50], L("A", "l")];
 const DEPOT_IN = [L("F", "l"), [35, 150], [35, 110]];
@@ -39,13 +56,18 @@ const UNATTENDED = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, pw = 345, ph = 222, gy = 34;
+  const W = 760,
+    x = 20,
+    pw = 345,
+    ph = 222,
+    gy = 34;
   const s = sheet({ prefix: "fo-lmd-att", width: W });
 
   const panel = (gx, title, legs, windows, rows, hl) => {
     s.comment(title);
     s.group(gx, gy, pw, ph, title, { hl });
-    const ox = gx + 18, oy = gy + 14;
+    const ox = gx + 18,
+      oy = gy + 14;
     const P = ([px, py]) => [ox + px, oy + py];
     s.node(ox + 10, oy + 90, 50, 20, "depot", { end: true, fill: 1 });
     for (const [k, [cx, cy]] of Object.entries(STOPS)) {
@@ -69,11 +91,18 @@ export default function draw() {
     ["shape", "crosses itself"],
     ["risk", "a missed window"],
   ]);
-  const by = panel(W - x - pw, "unattended: nobody needs to be home", UNATTENDED, null, [
-    ["order", "A B C D E F"],
-    ["shape", "one loop", true],
-    ["risk", "access, theft, proof"],
-  ], true);
+  const by = panel(
+    W - x - pw,
+    "unattended: nobody needs to be home",
+    UNATTENDED,
+    null,
+    [
+      ["order", "A B C D E F"],
+      ["shape", "one loop", true],
+      ["risk", "access, theft, proof"],
+    ],
+    true,
+  );
 
   const fy = by + 28;
   s.text(x, fy, "illustrative: the same six stops and depot; only the windows differ", "sl");

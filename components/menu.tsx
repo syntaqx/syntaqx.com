@@ -73,7 +73,8 @@ export function MenuContent({
   );
 }
 
-const item = "flex cursor-pointer px-3 outline-none transition-colors data-highlighted:bg-background";
+const item =
+  "flex cursor-pointer px-3 outline-none transition-colors data-highlighted:bg-background";
 
 export function MenuItem({ className, ...props }: ComponentProps<typeof DropdownMenu.Item>) {
   return <DropdownMenu.Item className={cn(item, className)} {...props} />;

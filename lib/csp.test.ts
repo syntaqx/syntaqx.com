@@ -56,7 +56,9 @@ describe("Content-Security-Policy", () => {
     const { contentSecurityPolicy: policy } = await import("../next.config");
     vi.unstubAllEnvs();
     const prod = parse(policy);
-    expect(prod["report-uri"]?.[0]).toMatch(/^https:\/\/.+\.ingest\.us\.sentry\.io\/api\/\d+\/security\/\?sentry_key=/);
+    expect(prod["report-uri"]?.[0]).toMatch(
+      /^https:\/\/.+\.ingest\.us\.sentry\.io\/api\/\d+\/security\/\?sentry_key=/,
+    );
     expect(prod["report-to"]).toEqual(["csp"]);
   });
 });

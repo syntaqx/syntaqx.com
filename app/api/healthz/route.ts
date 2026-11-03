@@ -6,9 +6,7 @@ import { registry } from "@/lib/openapi";
 // Schema registration
 // ---------------------------------------------------------------------------
 
-const HealthzResponse = z
-  .object({ status: z.literal("ok") })
-  .openapi("HealthzResponse");
+const HealthzResponse = z.object({ status: z.literal("ok") }).openapi("HealthzResponse");
 
 registry.registerPath({
   method: "get",

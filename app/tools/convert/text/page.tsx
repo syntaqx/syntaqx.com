@@ -12,8 +12,7 @@ import { cn } from "@/lib/cn";
 
 // --- Types ------------------------------------------------------------------
 
-type Format =
-  "json" | "yaml" | "toon" | "toml" | "xml" | "csv" | "querystring" | "env";
+type Format = "json" | "yaml" | "toon" | "toml" | "xml" | "csv" | "querystring" | "env";
 
 type FormatCategory = "structured" | "config" | "flat";
 
@@ -38,8 +37,7 @@ const FORMATS: FormatDef[] = [
     label: "JSON",
     lang: "json",
     category: "structured",
-    placeholder:
-      '{\n  "name": "example",\n  "version": 1,\n  "enabled": true\n}',
+    placeholder: '{\n  "name": "example",\n  "version": 1,\n  "enabled": true\n}',
     default: true,
   },
   {
@@ -112,9 +110,7 @@ function xmlToObj(xml: string): Record<string, unknown> {
       const val = walk(child);
       if (key in obj) {
         const existing = obj[key];
-        obj[key] = Array.isArray(existing)
-          ? [...existing, val]
-          : [existing, val];
+        obj[key] = Array.isArray(existing) ? [...existing, val] : [existing, val];
       } else {
         obj[key] = val;
       }
@@ -160,10 +156,7 @@ function envToObj(text: string): Record<string, string> {
     if (eqIdx === -1) throw new Error(`Invalid line: ${trimmed}`);
     const key = trimmed.slice(0, eqIdx).trim();
     let val = trimmed.slice(eqIdx + 1).trim();
-    if (
-      (val.startsWith('"') && val.endsWith('"')) ||
-      (val.startsWith("'") && val.endsWith("'"))
-    ) {
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
       val = val.slice(1, -1);
     }
     result[key] = val;
@@ -178,9 +171,7 @@ function objToEnv(data: unknown): string {
   return Object.entries(data as Record<string, unknown>)
     .map(([k, v]) => {
       if (typeof v === "object" && v !== null) {
-        throw new Error(
-          `ENV format cannot represent nested value for key "${k}".`,
-        );
+        throw new Error(`ENV format cannot represent nested value for key "${k}".`);
       }
       const val = String(v ?? "");
       const needsQuote = val.includes(" ") || val.includes('"') || val === "";
@@ -241,21 +232,16 @@ function parseCsvLine(line: string): string[] {
 
 function objToCsv(data: unknown): string {
   if (Array.isArray(data)) {
-    if (data.length === 0)
-      throw new Error("Cannot convert empty array to CSV.");
+    if (data.length === 0) throw new Error("Cannot convert empty array to CSV.");
     if (typeof data[0] !== "object" || data[0] === null) {
-      throw new Error(
-        "CSV requires an array of objects (rows with named columns).",
-      );
+      throw new Error("CSV requires an array of objects (rows with named columns).");
     }
     const headers = Object.keys(data[0] as Record<string, unknown>);
     const rows = data.map((row) => {
       if (typeof row !== "object" || row === null) {
         throw new Error("CSV requires uniform objects in the array.");
       }
-      return headers.map((h) =>
-        csvEscape(String((row as Record<string, unknown>)[h] ?? "")),
-      );
+      return headers.map((h) => csvEscape(String((row as Record<string, unknown>)[h] ?? "")));
     });
     return [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
   }
@@ -306,9 +292,7 @@ function objToQs(data: unknown): string {
   return Object.entries(data as Record<string, unknown>)
     .map(([k, v]) => {
       if (typeof v === "object" && v !== null) {
-        throw new Error(
-          `Query string cannot represent nested value for key "${k}".`,
-        );
+        throw new Error(`Query string cannot represent nested value for key "${k}".`);
       }
       return `${encodeURIComponent(k)}=${encodeURIComponent(String(v ?? ""))}`;
     })
@@ -398,18 +382,13 @@ export default function ConvertPage() {
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
   const toggleFormat = (id: Format) => {
-    setEnabled((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
-    );
+    setEnabled((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
   };
 
   const activeFormats = (() => {
     const base = FORMATS.filter((f) => enabled.includes(f.id));
     if (!primary || !enabled.includes(primary)) return base;
-    return [
-      ...base.filter((f) => f.id === primary),
-      ...base.filter((f) => f.id !== primary),
-    ];
+    return [...base.filter((f) => f.id === primary), ...base.filter((f) => f.id !== primary)];
   })();
 
   const handleChange = useCallback(
@@ -478,10 +457,7 @@ export default function ConvertPage() {
         const { selectionStart, selectionEnd } = ta;
         const indent = "  ";
         const val = ta.value;
-        const updated =
-          val.substring(0, selectionStart) +
-          indent +
-          val.substring(selectionEnd);
+        const updated = val.substring(0, selectionStart) + indent + val.substring(selectionEnd);
         handleChange(format, updated);
         requestAnimationFrame(() => {
           ta.selectionStart = ta.selectionEnd = selectionStart + indent.length;
@@ -496,12 +472,9 @@ export default function ConvertPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Text Format Converter
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Text Format Converter</h1>
         <p className="max-w-2xl text-dim">
-          Edit any format and the others update instantly. Everything runs in
-          your browser.
+          Edit any format and the others update instantly. Everything runs in your browser.
         </p>
       </div>
 
@@ -535,17 +508,17 @@ export default function ConvertPage() {
               <div
                 className={cn(
                   "border bg-surface transition-colors",
-                  errors[f.id] ? "border-pink/40" : source === f.id ? "border-accent/40" : "border-border",
+                  errors[f.id]
+                    ? "border-pink/40"
+                    : source === f.id
+                      ? "border-accent/40"
+                      : "border-border",
                 )}
               >
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <span className="text-xs font-medium text-foreground">
                     {f.label}
-                    {errors[f.id] && (
-                      <span className="ml-2 text-pink font-normal">
-                        Invalid
-                      </span>
-                    )}
+                    {errors[f.id] && <span className="ml-2 text-pink font-normal">Invalid</span>}
                   </span>
                   <div className="flex items-center gap-1.5">
                     <span
@@ -556,15 +529,8 @@ export default function ConvertPage() {
                     >
                       {(values[f.id]?.length ?? 0).toLocaleString()} chars
                     </span>
-                    <CopyButton
-                      text={values[f.id] || ""}
-                      label
-                      disabled={!values[f.id]}
-                    />
-                    <PasteButton
-                      onPaste={(text) => handleChange(f.id, text)}
-                      label
-                    />
+                    <CopyButton text={values[f.id] || ""} label disabled={!values[f.id]} />
+                    <PasteButton onPaste={(text) => handleChange(f.id, text)} label />
                   </div>
                 </div>
                 <EditorPane
@@ -622,7 +588,9 @@ export default function ConvertPage() {
                           onClick={() => toggleFormat(f.id)}
                           className={cn(
                             "border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer",
-                            enabled.includes(f.id) ? "border-accent/40 bg-accent/10 text-accent" : "border-border text-dim hover:text-foreground hover:border-border",
+                            enabled.includes(f.id)
+                              ? "border-accent/40 bg-accent/10 text-accent"
+                              : "border-border text-dim hover:text-foreground hover:border-border",
                           )}
                         >
                           {f.label}
@@ -642,58 +610,49 @@ export default function ConvertPage() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                <span className="text-muted">JSON</span> (JavaScript Object
-                Notation) is the most common data interchange format on the web.
-                Strict syntax: double-quoted keys, no comments, no trailing
-                commas. JSONC (JSON with Comments) relaxes some of these rules
-                but isn&apos;t widely supported outside of editors and tooling
-                configs.
+                <span className="text-muted">JSON</span> (JavaScript Object Notation) is the most
+                common data interchange format on the web. Strict syntax: double-quoted keys, no
+                comments, no trailing commas. JSONC (JSON with Comments) relaxes some of these rules
+                but isn&apos;t widely supported outside of editors and tooling configs.
               </p>
               <p>
-                <span className="text-muted">YAML</span> (YAML Ain&apos;t Markup
-                Language) is a human-readable format popular in configuration
-                files. Indentation-based, supports comments and multi-line
-                strings.
+                <span className="text-muted">YAML</span> (YAML Ain&apos;t Markup Language) is a
+                human-readable format popular in configuration files. Indentation-based, supports
+                comments and multi-line strings.
               </p>
               <p>
-                <span className="text-muted">TOON</span> (Token-Oriented Object
-                Notation) is a compact format designed for LLM prompts. Combines
-                YAML-like indentation with CSV-style tabular arrays for 20-40%
-                fewer tokens than JSON.
+                <span className="text-muted">TOON</span> (Token-Oriented Object Notation) is a
+                compact format designed for LLM prompts. Combines YAML-like indentation with
+                CSV-style tabular arrays for 20-40% fewer tokens than JSON.
               </p>
               <p>
-                <span className="text-muted">TOML</span> (Tom&apos;s Obvious
-                Minimal Language) is designed for config files. Explicit typing,
-                clean table syntax, and native datetime support.
+                <span className="text-muted">TOML</span> (Tom&apos;s Obvious Minimal Language) is
+                designed for config files. Explicit typing, clean table syntax, and native datetime
+                support.
               </p>
               <p>
-                <span className="text-muted">XML</span> (Extensible Markup
-                Language) is a verbose but universal format used in configs,
-                APIs, and document interchange. Supports attributes, namespaces,
-                and schemas.
+                <span className="text-muted">XML</span> (Extensible Markup Language) is a verbose
+                but universal format used in configs, APIs, and document interchange. Supports
+                attributes, namespaces, and schemas.
               </p>
               <p>
-                <span className="text-muted">ENV</span> (dotenv) is a flat
-                key=value format used for environment variables. Natively flat
-                with string values, though some tools support variable expansion
-                and prefixed key conventions for grouping.
+                <span className="text-muted">ENV</span> (dotenv) is a flat key=value format used for
+                environment variables. Natively flat with string values, though some tools support
+                variable expansion and prefixed key conventions for grouping.
               </p>
               <p>
-                <span className="text-muted">CSV</span> (Comma-Separated Values)
-                is a tabular format. Works best with flat objects or arrays of
-                uniform objects. Nesting can be emulated with dot-notation
-                column names, but isn&apos;t part of the spec.
+                <span className="text-muted">CSV</span> (Comma-Separated Values) is a tabular
+                format. Works best with flat objects or arrays of uniform objects. Nesting can be
+                emulated with dot-notation column names, but isn&apos;t part of the spec.
               </p>
               <p>
-                <span className="text-muted">Query String</span> is the
-                key=value format from URLs ({`?a=1&b=2`}). Supports array
-                notation ({`key[]=1&key[]=2`}) and dot/bracket nesting (
-                {`user[name]=x`}) in many frameworks.
+                <span className="text-muted">Query String</span> is the key=value format from URLs (
+                {`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket nesting
+                ({`user[name]=x`}) in many frameworks.
               </p>
               <p>
-                Each format has tradeoffs. Some conversions may be lossy, e.g.
-                TOML can&apos;t represent heterogeneous arrays and flat formats
-                can&apos;t represent nesting.
+                Each format has tradeoffs. Some conversions may be lossy, e.g. TOML can&apos;t
+                represent heterogeneous arrays and flat formats can&apos;t represent nesting.
               </p>
             </div>
           </div>

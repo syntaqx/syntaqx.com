@@ -4,9 +4,13 @@
 import { sheet } from "../kit.mjs";
 
 // Published figures [1].
-const T1 = 1, W1 = 5 * T1, A1 = 10 * W1; // multiples of plan
-const H1 = 10000, N1 = 200; // players per process, processes
-const U1 = 70, U2 = 85; // CPU percent
+const T1 = 1,
+  W1 = 5 * T1,
+  A1 = 10 * W1; // multiples of plan
+const H1 = 10000,
+  N1 = 200; // players per process, processes
+const U1 = 70,
+  U2 = 85; // CPU percent
 
 export default function draw() {
   const W = 760;
@@ -14,19 +18,43 @@ export default function draw() {
   const x0 = 150;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Sources: a cloud provider, Sep 29, 2016; a studio, Dec 15 and May 19, 2020; a publisher, Dec 2021."],
-    [2, "About 200 processes ran as containers; the first full 2M run came under two weeks before launch."],
-    [3, "Hatched: above U2. U1 to U2 is headroom for waves, such as a whole tournament round starting at once."],
-    [0, "Figures dated at source. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Sources: a cloud provider, Sep 29, 2016; a studio, Dec 15 and May 19, 2020; a publisher, Dec 2021.",
+      ],
+      [
+        2,
+        "About 200 processes ran as containers; the first full 2M run came under two weeks before launch.",
+      ],
+      [
+        3,
+        "Hatched: above U2. U1 to U2 is headroom for waves, such as a whole tournament round starting at once.",
+      ],
+      [
+        0,
+        "Figures dated at source. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view A: launch traffic against plan, 1x = 11 px ----
   s.comment("View A: traffic against plan");
   let aBottom;
   {
-    const k = 11, top = ny + 56, h = 16, step = 46;
-    const rows = [["target", T1, "T1", "obj fill-2"], ["worst case", W1, "W1", "obj fill-2"], ["actual", A1, "A1", "obj hl"]];
+    const k = 11,
+      top = ny + 56,
+      h = 16,
+      step = 46;
+    const rows = [
+      ["target", T1, "T1", "obj fill-2"],
+      ["worst case", W1, "W1", "obj fill-2"],
+      ["actual", A1, "A1", "obj hl"],
+    ];
     rows.forEach(([lab, v, code, cls], i) => {
       const y = top + i * step;
       s.rect(x0, y, v * k, h, cls);
@@ -35,7 +63,12 @@ export default function draw() {
     });
     const yA = top + 2 * step + h;
     s.dimH(x0, x0 + A1 * k, yA + 20, "A1", { from: [yA, yA], below: true, hl: true });
-    s.viewTitle(x0 + (A1 * k) / 2, yA + 66, "Plan view A · launch traffic against plan", "Scale 1x target = 11 px · bars");
+    s.viewTitle(
+      x0 + (A1 * k) / 2,
+      yA + 66,
+      "Plan view A · launch traffic against plan",
+      "Scale 1x target = 11 px · bars",
+    );
     aBottom = yA + 79;
   }
 
@@ -43,7 +76,10 @@ export default function draw() {
   s.comment("View B: load-test harness");
   let bBottom;
   {
-    const top = aBottom + 74, h = 30, bw = 52, g = 6;
+    const top = aBottom + 74,
+      h = 30,
+      bw = 52,
+      g = 6;
     const xs = [0, 1, 2, 3].map((i) => x0 + i * (bw + g));
     const dots = xs[3] + bw + 14;
     const xl = dots + 40;
@@ -51,13 +87,22 @@ export default function draw() {
       s.rect(x, top, bw, h, "obj fill-2");
       s.label(x, top, bw, h, "H1", "dt");
     });
-    [0, 12, 24].forEach((d) => s.add(`<circle class="dot" cx="${dots + d}" cy="${top + h / 2}" r="1.8"/>`));
+    [0, 12, 24].forEach((d) =>
+      s.add(`<circle class="dot" cx="${dots + d}" cy="${top + h / 2}" r="1.8"/>`),
+    );
     const xe = xl + bw;
     s.dimH(x0, xe, top - 18, "N1", { from: [top, top] });
     s.nb((x0 + xe) / 2 + 18, top - 25.5, 2);
     s.dimH(x0, xe, top + h + 20, "C1", { from: [top + h, top + h], below: true });
-    s.callout(xe, top + h / 2, xe + 26, top + h / 2, "mock shard", { sub: "fake game servers report results" });
-    s.viewTitle((x0 + xe) / 2, top + h + 66, "View B · load test, one shard", "Not to scale · harness processes");
+    s.callout(xe, top + h / 2, xe + 26, top + h / 2, "mock shard", {
+      sub: "fake game servers report results",
+    });
+    s.viewTitle(
+      (x0 + xe) / 2,
+      top + h + 66,
+      "View B · load test, one shard",
+      "Not to scale · harness processes",
+    );
     bBottom = top + h + 79;
   }
 
@@ -65,8 +110,13 @@ export default function draw() {
   s.comment("View C: CPU headroom");
   let cBottom;
   {
-    const k = 5, top = bBottom + 54, h = 30, bot = top + h;
-    const x1 = x0 + U1 * k, x2 = x0 + U2 * k, x3 = x0 + 100 * k;
+    const k = 5,
+      top = bBottom + 54,
+      h = 30,
+      bot = top + h;
+    const x1 = x0 + U1 * k,
+      x2 = x0 + U2 * k,
+      x3 = x0 + 100 * k;
     s.rect(x0, top, x1 - x0, h, "obj fill-1");
     s.rect(x1, top, x2 - x1, h, "obj fill-2");
     s.rect(x2, top, x3 - x2, h, "hatch", { fill: s.hatch });
@@ -76,7 +126,12 @@ export default function draw() {
     s.text(x3 + 8, top + h / 2 + 3.5, "100", "dt");
     s.dimH(x0, x1, bot + 20, "U1", { from: [bot, bot], below: true });
     s.dimH(x0, x2, bot + 46, "U2", { from: [null, bot], below: true });
-    s.viewTitle((x0 + x3) / 2, bot + 96, "Plan view C · game server CPU headroom", "Scale 1% = 5 px · one server");
+    s.viewTitle(
+      (x0 + x3) / 2,
+      bot + 96,
+      "Plan view C · game server CPU headroom",
+      "Scale 1% = 5 px · one server",
+    );
     cBottom = bot + 109;
   }
 

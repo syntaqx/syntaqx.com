@@ -14,24 +14,55 @@ export default function draw() {
   const s = sheet({ prefix: "ugp-ii", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "The clock runs from receipt of a valid request: signature, the depiction located, a good-faith statement, contact details."],
-    [2, "Remove the depiction and make reasonable efforts on known identical copies: both duties sit inside the 48 hours."],
-    [3, "Near matches go to a review lane inside the same 48 hours, not to automatic removal."],
-    [0, "Hours. Only the outer bound is set by law: as soon as possible, not later than D1. Windows are drawn to it."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "The clock runs from receipt of a valid request: signature, the depiction located, a good-faith statement, contact details.",
+      ],
+      [
+        2,
+        "Remove the depiction and make reasonable efforts on known identical copies: both duties sit inside the 48 hours.",
+      ],
+      [3, "Near matches go to a review lane inside the same 48 hours, not to automatic removal."],
+      [
+        0,
+        "Hours. Only the outer bound is set by law: as soon as possible, not later than D1. Windows are drawn to it.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 h = 8.5 px after T0 ----
   s.comment("Plan view: one valid request");
-  const k = 8.5, laneX = 150;
-  const xPre = laneX + 22, pre = 60, brk = 14;
+  const k = 8.5,
+    laneX = 150;
+  const xPre = laneX + 22,
+    pre = 60,
+    brk = 14;
   const x0 = xPre + pre + brk + 26;
   const X = (hr) => x0 + hr * k;
   const xEnd = X(D1) + 44;
-  const axY = ny + 46, h = 24, gap = 14;
+  const axY = ny + 46,
+    h = 24,
+    gap = 14;
 
-  const ticks = [[xPre, "incomplete"], [X(0), "T0"], [X(D1), `T0+${D1} h`]];
-  const tl = s.timeline({ x1: xPre, x2: xEnd, y: axY, breaks: [[xPre + pre, xPre + pre + brk]], ticks, laneX, h });
+  const ticks = [
+    [xPre, "incomplete"],
+    [X(0), "T0"],
+    [X(D1), `T0+${D1} h`],
+  ];
+  const tl = s.timeline({
+    x1: xPre,
+    x2: xEnd,
+    y: axY,
+    breaks: [[xPre + pre, xPre + pre + brk]],
+    ticks,
+    laneX,
+    h,
+  });
   s.nb(X(0) + 14, axY - 13.5, 1);
 
   // Request: the incomplete one is logged, the corrected one starts the clock.
@@ -67,17 +98,28 @@ export default function draw() {
   s.line(X(0), axY + 6, X(0), y + h + 8, "ctr");
 
   const vy = dy + 50;
-  s.viewTitle((laneX - widthOf("own hash list", "sl") + xEnd) / 2, vy, "Plan view · one valid removal request", `Scale 1 h = ${k} px after T0 · not to scale before it`);
+  s.viewTitle(
+    (laneX - widthOf("own hash list", "sl") + xEnd) / 2,
+    vy,
+    "Plan view · one valid removal request",
+    `Scale 1 h = ${k} px after T0 · not to scale before it`,
+  );
 
   // ---- Variable table ----
   s.comment("Variable table");
   const rows = [
     ["T0", "receipt of a valid removal request", "hour 0"],
-    ["D1", "remove the depiction and known identical copies", `as soon as possible, ${D1} h at most`],
+    [
+      "D1",
+      "remove the depiction and known identical copies",
+      `as soon as possible, ${D1} h at most`,
+    ],
   ];
   const widths = [40, 290, 190];
   const tw = widths.reduce((a, b) => a + b, 0);
-  const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · TAKE IT DOWN Act Sec. 3(a)(3)", rows, { widths });
+  const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · TAKE IT DOWN Act Sec. 3(a)(3)", rows, {
+    widths,
+  });
   s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

@@ -5,7 +5,8 @@ import { sheet, el, f, widthOf } from "../kit.mjs";
 
 // Plate 260 x 200; with a 66 step a lower plate shows only local y > ~76,
 // so every module sits in the front band y 88..186.
-const W = 260, D = 200;
+const W = 260,
+  D = 200;
 
 const layers = [
   {
@@ -15,7 +16,10 @@ const layers = [
       // Header: the build ID.
       p.rect(16, 90, 228, 16, "obj fill-1"),
       // One row per file or chunk: name, then its content hash.
-      ...[114, 132, 150, 168].flatMap((y) => [p.rect(16, y, 64, 12, "obj fill-2"), p.rect(88, y, 156, 12, "slot")]),
+      ...[114, 132, 150, 168].flatMap((y) => [
+        p.rect(16, y, 64, 12, "obj fill-2"),
+        p.rect(88, y, 156, 12, "slot"),
+      ]),
     ],
   },
   {
@@ -27,7 +31,11 @@ const layers = [
         const x = 16 + c * 58;
         return [
           p.rect(x, 92, 52, 90, "obj fill-2"),
-          ...[0, 1, 2].flatMap((r) => [0, 1].map((k) => p.rect(x + 6 + k * 21, 100 + r * 26, 19, 20, (r + k + c) % 3 ? "obj fill-1" : "slot"))),
+          ...[0, 1, 2].flatMap((r) =>
+            [0, 1].map((k) =>
+              p.rect(x + 6 + k * 21, 100 + r * 26, 19, 20, (r + k + c) % 3 ? "obj fill-1" : "slot"),
+            ),
+          ),
         ];
       }),
     ],
@@ -39,7 +47,10 @@ const layers = [
       // One block per graphics API, each with its compiled variants.
       ...[0, 1, 2].flatMap((c) => {
         const x = 16 + c * 78;
-        return [p.rect(x, 92, 72, 90, "obj fill-2"), ...[104, 124, 144, 164].map((y) => p.rect(x + 8, y, 56, 10, "obj fill-1"))];
+        return [
+          p.rect(x, 92, 72, 90, "obj fill-2"),
+          ...[104, 124, 144, 164].map((y) => p.rect(x + 8, y, 56, 10, "obj fill-1")),
+        ];
       }),
     ],
   },
@@ -59,14 +70,27 @@ export default function draw() {
   const s = sheet({ prefix: "gm-pa", width: 760 });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Same build, matched to the executable by build ID; crash reports are symbolicated against them, never shipped."],
-    [2, "The manifest is what the launcher and patcher read: it names every file and chunk by content hash."],
-    [0, "Not to scale. Layers separated along the stack axis; plate contents are schematic."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Same build, matched to the executable by build ID; crash reports are symbolicated against them, never shipped.",
+      ],
+      [
+        2,
+        "The manifest is what the launcher and patcher read: it names every file and chunk by content hash.",
+      ],
+      [0, "Not to scale. Layers separated along the stack axis; plate contents are schematic."],
+    ],
+    { width: 690 },
+  );
 
-  const gap = 66, top = (layers.length - 1) * gap;
-  const tx = 300, ty = ny + 30 + top;
+  const gap = 66,
+    top = (layers.length - 1) * gap;
+  const tx = 300,
+    ty = ny + 30 + top;
   s.comment("Exploded view");
   const P = s.exploded({ tx, ty, w: W, d: D, gap, labelX: 200, layers });
   // Note 2 beside the manifest label.
@@ -75,9 +99,15 @@ export default function draw() {
 
   // Symbols: a dashed plate set aside at the executable's level, not in the stack.
   s.comment("Symbols, set aside");
-  const sw = 100, sd = 90, k = 0.94, b = 0.17, c = -0.34, e = 0.47;
+  const sw = 100,
+    sd = 90,
+    k = 0.94,
+    b = 0.17,
+    c = -0.34,
+    e = 0.47;
   const [hx, hy] = P(W - 16, 98, top);
-  const sx = P(W, 0, top)[0] + 56, sy = hy - e * (sd / 2);
+  const sx = P(W, 0, top)[0] + 56,
+    sy = hy - e * (sd / 2);
   const Q = (x, y) => [sx + k * x + c * y, sy + b * x + e * y];
   s.add(
     el(
@@ -85,7 +115,9 @@ export default function draw() {
       { class: "iso", transform: `matrix(${k} ${b} ${c} ${e} ${f(sx)} ${f(sy)})` },
       [
         el("rect", { class: "slot", width: sw, height: sd }),
-        ...[18, 34, 50, 66].map((y, i) => el("path", { class: "ext", d: `M14,${y}H${86 - (i % 2) * 20}` })),
+        ...[18, 34, 50, 66].map((y, i) =>
+          el("path", { class: "ext", d: `M14,${y}H${86 - (i % 2) * 20}` }),
+        ),
       ].join(""),
     ),
   );
@@ -101,7 +133,12 @@ export default function draw() {
 
   const left = P(0, D, 0)[0];
   const [, yBot] = P(W, D, 0);
-  s.viewTitle((left + P(W, 0, 0)[0]) / 2 + 40, yBot + 40, "Exploded view · a shippable build", "Axonometric · not to scale · one platform, 01 at the bottom");
+  s.viewTitle(
+    (left + P(W, 0, 0)[0]) / 2 + 40,
+    yBot + 40,
+    "Exploded view · a shippable build",
+    "Axonometric · not to scale · one platform, 01 at the bottom",
+  );
   s.height = Math.ceil(yBot + 40 + 13 + 30);
   return s.toString();
 }

@@ -11,21 +11,39 @@ const STATES = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, headW = 90, w = 110, h = 30;
+  const W = 760,
+    x = 20,
+    headW = 90,
+    w = 110,
+    h = 30;
   const s = sheet({ prefix: "mst", width: W });
   const gap = (W - 2 * x - headW - STATES.length * w) / (STATES.length - 1);
   const X = (i) => x + headW + i * (w + gap);
-  const busY = 40, r = 96;
+  const busY = 40,
+    r = 96;
 
   s.comment("States");
   const [pending, active, restricted, rejected] = STATES.map((st, i) =>
-    s.node(X(i), r, w, h, st.label, { kind: "state", code: true, hl: st.hl, end: st.end, fill: st.fill }),
+    s.node(X(i), r, w, h, st.label, {
+      kind: "state",
+      code: true,
+      hl: st.hl,
+      end: st.end,
+      fill: st.fill,
+    }),
   );
 
   s.comment("Transitions");
   s.connect(pending, active, { hl: true, label: "verified" });
   s.connect(active, restricted, { alt: true, label: "overdue" });
-  s.connect(restricted, active, { from: "t", to: "t", at: [0.25, 0.75], via: r - 24, label: "requirement met", side: "above" });
+  s.connect(restricted, active, {
+    from: "t",
+    to: "t",
+    at: [0.25, 0.75],
+    via: r - 24,
+    label: "requirement met",
+    side: "above",
+  });
 
   s.comment("From any state to rejected");
   const drops = [pending.port("t", 0.5), active.port("t", 0.25), restricted.port("t", 0.75)];
@@ -37,11 +55,17 @@ export default function draw() {
   drops.slice(1).forEach((p) => s.wire([p, [p[0], busY]], { alt: true, arrow: "none" }));
 
   s.comment("What each state allows");
-  const rowH = 24, t0 = r + h + 10;
-  [["payments", "payments"], ["payouts", "payouts"]].forEach(([head, key], j) => {
+  const rowH = 24,
+    t0 = r + h + 10;
+  [
+    ["payments", "payments"],
+    ["payouts", "payouts"],
+  ].forEach(([head, key], j) => {
     const cy = t0 + j * rowH + rowH / 2;
     s.text(x, cy + 3, head, "th");
-    STATES.forEach((st, i) => s.text(X(i) + w / 2, cy + 3, st[key], st.hl ? "tc hl" : "tc", "middle"));
+    STATES.forEach((st, i) =>
+      s.text(X(i) + w / 2, cy + 3, st[key], st.hl ? "tc hl" : "tc", "middle"),
+    );
   });
   for (let j = 0; j <= 2; j++) s.line(x, t0 + j * rowH, W - x, t0 + j * rowH, "tbl");
 

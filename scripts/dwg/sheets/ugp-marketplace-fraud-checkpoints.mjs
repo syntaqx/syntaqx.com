@@ -13,7 +13,9 @@ const CHECKPOINTS = [
 ];
 
 export default function draw() {
-  const W = 760, gap = 16, h = 30;
+  const W = 760,
+    gap = 16,
+    h = 30;
   const w = (W - 40 - 4 * gap) / 5;
   const s = sheet({ prefix: "ugp-mf", width: W });
 
@@ -21,14 +23,37 @@ export default function draw() {
   const { nodes } = s.pipeline(20, 40, CHECKPOINTS, { w, h, gap });
 
   s.comment("One decision record");
-  const rw = 170, ry = 148, sw = 210;
+  const rw = 170,
+    ry = 148,
+    sw = 210;
   // the outcomes box sets the row's height
-  const out = s.node(W - 20 - sw, ry, sw, null, "restrict, not only block", { sub: ["higher deposit, second driver,", "protection tier, host approval,", "shorter booking window"] });
-  const rec = s.node(W / 2 - rw / 2, ry, rw, out.h, "risk_decisions", { kind: "store", code: true, hl: true, sub: "inputs, versions, outcome" });
-  s.fanIn(nodes, rec, { from: "b", to: "t", via: (40 + h + ry) / 2, hl: true, label: "score", side: "right" });
+  const out = s.node(W - 20 - sw, ry, sw, null, "restrict, not only block", {
+    sub: [
+      "higher deposit, second driver,",
+      "protection tier, host approval,",
+      "shorter booking window",
+    ],
+  });
+  const rec = s.node(W / 2 - rw / 2, ry, rw, out.h, "risk_decisions", {
+    kind: "store",
+    code: true,
+    hl: true,
+    sub: "inputs, versions, outcome",
+  });
+  s.fanIn(nodes, rec, {
+    from: "b",
+    to: "t",
+    via: (40 + h + ry) / 2,
+    hl: true,
+    label: "score",
+    side: "right",
+  });
 
   s.comment("Late labels and outcomes");
-  const late = s.node(20, ry, sw - 40, out.h, "late labels", { kind: "ghost", sub: ["a claim weeks later,", "a chargeback", "months later"] });
+  const late = s.node(20, ry, sw - 40, out.h, "late labels", {
+    kind: "ghost",
+    sub: ["a claim weeks later,", "a chargeback", "months later"],
+  });
   s.connect(late, rec, { label: "joined\nback", side: "above" });
   s.connect(rec, out);
 

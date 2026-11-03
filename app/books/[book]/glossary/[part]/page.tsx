@@ -4,7 +4,12 @@ import type { Metadata } from "next";
 import { docFirstPublished, docLastModified } from "@/lib/doc-dates";
 import { getBookChapters } from "@/lib/docs";
 import { BOOKS, getBook } from "@/lib/books";
-import { glossaryPartDescription as description, glossaryPartTitle, glossaryParts, isGlossary } from "@/lib/glossary";
+import {
+  glossaryPartDescription as description,
+  glossaryPartTitle,
+  glossaryParts,
+  isGlossary,
+} from "@/lib/glossary";
 import { markdownAlternates } from "@/lib/metadata";
 import { bookRef } from "@/lib/schema";
 import { DocArticle } from "@/components/doc-article";
@@ -18,7 +23,9 @@ export const dynamicParams = false;
 export function generateStaticParams() {
   return BOOKS.flatMap((book) => {
     const glossary = getBookChapters(book.slug).find(isGlossary);
-    return glossary ? glossaryParts(glossary).parts.map((p) => ({ book: book.slug, part: p.slug })) : [];
+    return glossary
+      ? glossaryParts(glossary).parts.map((p) => ({ book: book.slug, part: p.slug }))
+      : [];
   });
 }
 
@@ -38,7 +45,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { book, glossary, part } = found;
 
   const title = glossaryPartTitle(book, part);
-  const image = { url: `/og/books/${glossary.slug}`, width: 1200, height: 630, alt: glossary.title };
+  const image = {
+    url: `/og/books/${glossary.slug}`,
+    width: 1200,
+    height: 630,
+    alt: glossary.title,
+  };
   return {
     title,
     description: description(book.name, part),
@@ -100,7 +112,11 @@ export default async function GlossaryPartPage({ params }: Props) {
           Part {index + 1} of {parts.length}
         </>
       }
-      prev={index === 0 ? { href: home, label: book.name, title: glossary.title } : neighbor(parts[index - 1])}
+      prev={
+        index === 0
+          ? { href: home, label: book.name, title: glossary.title }
+          : neighbor(parts[index - 1])
+      }
       next={neighbor(parts[index + 1])}
     />
   );

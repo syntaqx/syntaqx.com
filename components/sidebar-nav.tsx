@@ -41,10 +41,13 @@ const isActive = (item: SidebarItem, pathname: string) =>
 const rowClass = (active: boolean) =>
   cn(
     "flex items-baseline gap-2.5 px-2.5 py-1.5 text-[0.8rem] leading-snug transition-colors",
-    active ? "bg-foreground/7 font-medium text-foreground" : "text-dim hover:bg-foreground/4 hover:text-foreground",
+    active
+      ? "bg-foreground/7 font-medium text-foreground"
+      : "text-dim hover:bg-foreground/4 hover:text-foreground",
   );
 
-const bandClass = "inst border-b border-border bg-surface px-4 py-2.5 text-[0.55rem] leading-[1.6] text-dim";
+const bandClass =
+  "inst border-b border-border bg-surface px-4 py-2.5 text-[0.55rem] leading-[1.6] text-dim";
 
 const sectionRowClass =
   "inst group flex w-full items-center gap-2 py-3 pr-4 pl-4 text-left text-[0.55rem] leading-[1.6] transition-colors hover:bg-surface hover:text-foreground";
@@ -61,7 +64,8 @@ function useCurrentLinkInView() {
     const rail = nav?.closest<HTMLElement>(".rail-scroll");
     const link = nav?.querySelector<HTMLElement>('[aria-current="page"]');
     if (!rail || !link) return;
-    const top = link.getBoundingClientRect().top - rail.getBoundingClientRect().top + rail.scrollTop;
+    const top =
+      link.getBoundingClientRect().top - rail.getBoundingClientRect().top + rail.scrollTop;
     if (top < rail.scrollTop + 80 || top > rail.scrollTop + rail.clientHeight - 40) {
       rail.scrollTop = top - rail.clientHeight / 3;
     }
@@ -96,7 +100,9 @@ function useRevealOpenedSection(navRef: RefObject<HTMLElement | null>) {
     // Without motion there's no animation to wait for.
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
       requestAnimationFrame(() => {
-        const item = navRef.current?.querySelector<HTMLElement>(`[data-section="${CSS.escape(name)}"]`);
+        const item = navRef.current?.querySelector<HTMLElement>(
+          `[data-section="${CSS.escape(name)}"]`,
+        );
         pending.current = null;
         if (item) revealInRail(item);
       });
@@ -151,7 +157,11 @@ function useMiddleDragScroll(navRef: RefObject<HTMLElement | null>) {
         window.removeEventListener("mousemove", onMove);
         window.removeEventListener("mouseup", onUp, true);
         // A drag isn't a click: keep the link from opening in a new tab.
-        if (dragged) window.addEventListener("auxclick", (a) => a.preventDefault(), { capture: true, once: true });
+        if (dragged)
+          window.addEventListener("auxclick", (a) => a.preventDefault(), {
+            capture: true,
+            once: true,
+          });
       };
       window.addEventListener("mousemove", onMove);
       window.addEventListener("mouseup", onUp, true);
@@ -205,7 +215,11 @@ export function SidebarNav({
           aria-label={`${title}, ${back.label.toLowerCase()}`}
           className="group flex items-center gap-1.5 border-b border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface"
         >
-          <ChevronLeft size={15} aria-hidden className="-ml-1.5 text-dim transition-colors group-hover:text-accent" />
+          <ChevronLeft
+            size={15}
+            aria-hidden
+            className="-ml-1.5 text-dim transition-colors group-hover:text-accent"
+          />
           <span className="truncate">{title}</span>
         </Link>
       ) : (
@@ -242,7 +256,12 @@ export function SidebarNav({
             {group.name && <p className={bandClass}>{group.name}</p>}
             {group.sections.map((section) =>
               section.items.length === 1 ? (
-                <SingleRow key={section.name} item={section.items[0]} pathname={pathname} onNavigate={onNavigate} />
+                <SingleRow
+                  key={section.name}
+                  item={section.items[0]}
+                  pathname={pathname}
+                  onNavigate={onNavigate}
+                />
               ) : (
                 <Section
                   key={section.name}
@@ -276,7 +295,11 @@ function SingleRow({
       href={item.href}
       onClick={onNavigate}
       aria-current={pathname === item.href ? "page" : undefined}
-      className={cn(sectionRowClass, "border-b border-border", active ? "bg-surface text-accent" : "text-dim")}
+      className={cn(
+        sectionRowClass,
+        "border-b border-border",
+        active ? "bg-surface text-accent" : "text-dim",
+      )}
     >
       <span className="w-3.5 shrink-0" aria-hidden />
       {item.title}
@@ -297,7 +320,11 @@ function Section({
   onNavigate?: () => void;
 }) {
   return (
-    <Accordion.Item value={section.name} data-section={section.name} className="border-b border-border">
+    <Accordion.Item
+      value={section.name}
+      data-section={section.name}
+      className="border-b border-border"
+    >
       <Accordion.Header>
         <Accordion.Trigger
           // Transparent while closed, so opening doesn't fade the border in from white.
@@ -313,7 +340,10 @@ function Section({
             aria-hidden
             className="shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90"
           />
-          <span className="flex-1" title={sidebarLabel(section.name) === section.name ? undefined : section.name}>
+          <span
+            className="flex-1"
+            title={sidebarLabel(section.name) === section.name ? undefined : section.name}
+          >
             {sidebarLabel(section.name)}
           </span>
           <span className="text-dim tabular-nums">{section.items.length}</span>
@@ -333,7 +363,12 @@ function Section({
                   className={cn(rowClass(active), item.number === undefined && "pl-7.5")}
                 >
                   {item.number !== undefined && (
-                    <span className={cn("w-5 shrink-0 font-mono text-[0.65rem] tabular-nums", active ? "text-accent" : "text-dim")}>
+                    <span
+                      className={cn(
+                        "w-5 shrink-0 font-mono text-[0.65rem] tabular-nums",
+                        active ? "text-accent" : "text-dim",
+                      )}
+                    >
                       {String(item.number).padStart(2, "0")}
                     </span>
                   )}
@@ -367,7 +402,10 @@ export function MobileSidebar({
         className="flex w-full items-center justify-between gap-2 border border-border bg-surface px-3 py-2.5 text-sm text-foreground"
       >
         <span className="truncate">{current}</span>
-        <ChevronDown size={14} className={cn("shrink-0 text-dim transition-transform", open && "rotate-180")} />
+        <ChevronDown
+          size={14}
+          className={cn("shrink-0 text-dim transition-transform", open && "rotate-180")}
+        />
       </button>
       {open && (
         <div className="rail-scroll mt-2 max-h-[70vh] overflow-y-auto border border-border bg-background">

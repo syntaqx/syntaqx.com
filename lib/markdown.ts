@@ -4,7 +4,13 @@
  * app/md/[[...path]]/route.ts), plus /llms.txt.
  */
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
-import { getAllBookChapters, getAllDocs, getBookChapters, getDocBySlug, getDocsByCategory } from "@/lib/docs";
+import {
+  getAllBookChapters,
+  getAllDocs,
+  getBookChapters,
+  getDocBySlug,
+  getDocsByCategory,
+} from "@/lib/docs";
 import { BOOKS, getBook } from "@/lib/books";
 import { glossaryIndex, glossaryPartDescription, glossaryParts, isGlossary } from "@/lib/glossary";
 import { contactChannels, contactIntro } from "@/lib/contact";
@@ -82,9 +88,7 @@ function home(): string {
   return [
     "# Chase Pierce",
     `> ${SUMMARY}`,
-    ...bio.map(
-      (b) => `## ${b.label[0].toUpperCase()}${b.label.slice(1)}\n\n${b.text}`,
-    ),
+    ...bio.map((b) => `## ${b.label[0].toUpperCase()}${b.label.slice(1)}\n\n${b.text}`),
     `## Writing\n\n${postBullets()}`,
     `## Site\n\n${siteLinks()}`,
     `## Elsewhere\n\n${socials.map((s) => bullet(s.label, s.href)).join("\n")}`,
@@ -130,16 +134,8 @@ function docsIndex(): string {
 
 function apiBullets(): string {
   return [
-    bullet(
-      "API reference",
-      url("/docs/api"),
-      "interactive reference for the public syntaqx API",
-    ),
-    bullet(
-      "OpenAPI spec",
-      url("/openapi.json"),
-      "OpenAPI 3.2 document describing every endpoint",
-    ),
+    bullet("API reference", url("/docs/api"), "interactive reference for the public syntaqx API"),
+    bullet("OpenAPI spec", url("/openapi.json"), "OpenAPI 3.2 document describing every endpoint"),
     bullet("API root", API_BASE_URL, "index of endpoint URLs"),
     bullet("Health check", `${API_BASE_URL}/healthz`),
     bullet(
@@ -222,9 +218,7 @@ function contact(): string {
   return [
     "# Contact",
     contactIntro,
-    contactChannels
-      .map((c) => `## ${c.label}\n\n${c.description}\n\n${c.href}`)
-      .join("\n\n"),
+    contactChannels.map((c) => `## ${c.label}\n\n${c.description}\n\n${c.href}`).join("\n\n"),
     `## More\n\n${apiBullets()}\n${bullet("Privacy policy", url("/legal/privacy"))}`,
   ].join("\n\n");
 }
@@ -270,11 +264,7 @@ export function notFoundMarkdown(path: string): string {
     "Try one of these instead:",
     [
       bullet("Home", SITE_URL),
-      bullet(
-        "llms.txt",
-        url("/llms.txt"),
-        "a Markdown index of the whole site",
-      ),
+      bullet("llms.txt", url("/llms.txt"), "a Markdown index of the whole site"),
       bullet("Sitemap", url("/sitemap.xml")),
       bullet("Posts", url("/posts")),
       bullet("Docs", url("/docs")),
@@ -289,8 +279,7 @@ export function renderMarkdownPage(path: string): MarkdownPage {
   let body: string | null = null;
 
   // Docs nest in section folders: /docs/requests/idempotency.
-  if (section === "docs")
-    body = slug ? doc([slug, ...rest].join("/")) : docsIndex();
+  if (section === "docs") body = slug ? doc([slug, ...rest].join("/")) : docsIndex();
   // Books: /books, a cover at /books/payments, a chapter at /books/payments/ach,
   // a glossary part at /books/payments/glossary/the-business.
   else if (section === "books") {
@@ -318,7 +307,11 @@ export function renderLlmsTxt(): string {
   // One entry per book: its cover lists the chapters, so agents follow that
   // instead of reading every chapter link here.
   const books = BOOKS.map((b) =>
-    bullet(b.name, url(`/books/${b.slug}`), `${b.summary} ${getBookChapters(b.slug).length} chapters.`),
+    bullet(
+      b.name,
+      url(`/books/${b.slug}`),
+      `${b.summary} ${getBookChapters(b.slug).length} chapters.`,
+    ),
   ).join("\n");
   return `${[
     "# syntaqx",
@@ -332,11 +325,7 @@ export function renderLlmsTxt(): string {
     `## Optional\n\n${[
       bullet("About", url("/about"), "background on Chase Pierce"),
       bullet("Contact", url("/contact"), "how to get in touch"),
-      bullet(
-        "Resume",
-        url("/resume"),
-        "experience and skills, also as a PDF at /resume.pdf",
-      ),
+      bullet("Resume", url("/resume"), "experience and skills, also as a PDF at /resume.pdf"),
       bullet("Privacy policy", url("/legal/privacy")),
       bullet("Terms of service", url("/legal/terms")),
       bullet("RSS feed", url("/feed.xml")),

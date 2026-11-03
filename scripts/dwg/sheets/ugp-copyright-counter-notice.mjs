@@ -15,25 +15,51 @@ export default function draw() {
   const s = sheet({ prefix: "ugp-cr", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Day 0 is receipt of a valid counter-notice; business days need a holiday calendar and a time zone, stored with the window."],
-    [2, "Promptly forward a copy to the claimant, saying the material will be restored in 10 business days."],
-    [3, "Restore inside the window unless the agent first receives notice that the claimant has filed a court action."],
-    [0, "Business days. The drawing carries codes; values are in the table. Removal keeps the media so it can be restored."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Day 0 is receipt of a valid counter-notice; business days need a holiday calendar and a time zone, stored with the window.",
+      ],
+      [
+        2,
+        "Promptly forward a copy to the claimant, saying the material will be restored in 10 business days.",
+      ],
+      [
+        3,
+        "Restore inside the window unless the agent first receives notice that the claimant has filed a court action.",
+      ],
+      [
+        0,
+        "Business days. The drawing carries codes; values are in the table. Removal keeps the media so it can be restored.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 business day = 34 px after T0 ----
   s.comment("Plan view: restore window after a counter-notice");
-  const k = 30, laneX = 136;
-  const pre = 70, brk = 14; // the takedown, before the break, not to scale
+  const k = 30,
+    laneX = 136;
+  const pre = 70,
+    brk = 14; // the takedown, before the break, not to scale
   const xTk = laneX + 22;
   const x0 = xTk + pre + brk + 26; // T0
   const X = (d) => x0 + d * k;
   const xEnd = X(R2) + 34;
-  const axY = ny + 46, h = 24;
-  const brk0 = xTk + pre, brk1 = brk0 + brk;
+  const axY = ny + 46,
+    h = 24;
+  const brk0 = xTk + pre,
+    brk1 = brk0 + brk;
 
-  const ticks = [[xTk, "takedown"], [X(0), "T0"], [X(R1), `T0+${R1}`], [X(R2), `T0+${R2}`]];
+  const ticks = [
+    [xTk, "takedown"],
+    [X(0), "T0"],
+    [X(R1), `T0+${R1}`],
+    [X(R2), `T0+${R2}`],
+  ];
   const tl = s.timeline({ x1: xTk, x2: xEnd, y: axY, breaks: [[brk0, brk1]], ticks, laneX, h });
   s.nb(X(0) + 14, axY - 13.5, 1);
 
@@ -63,7 +89,8 @@ export default function draw() {
   s.label(X(0), y3, X(R2) - X(0), h, "claimant's notice of suit stops the restore", "sl");
 
   // Dimensions under the material lane: R1, R2, and the window.
-  const dA = y1 + h + 18, dB = dA + 22;
+  const dA = y1 + h + 18,
+    dB = dA + 22;
   s.dimH(X(0), X(R1), dA, "R1", { from: [y1 + h, y1 + h], below: true });
   s.dimH(X(R1), X(R2), dA, "W1", { from: [y1 + h, y1 + h], below: true, hl: true });
   s.dimH(X(0), X(R2), dB, "R2", { from: [y1 + h, y1 + h], below: true });
@@ -72,7 +99,12 @@ export default function draw() {
   s.line(X(0), axY + 6, X(0), y3 + h + 10, "ctr");
 
   const vy = y3 + h + 46;
-  s.viewTitle((laneX - widthOf("court action", "sl") + xEnd) / 2, vy, "Plan view · one counter-notice", `Scale 1 business day = ${k} px after T0 · not to scale before it`);
+  s.viewTitle(
+    (laneX - widthOf("court action", "sl") + xEnd) / 2,
+    vy,
+    "Plan view · one counter-notice",
+    `Scale 1 business day = ${k} px after T0 · not to scale before it`,
+  );
 
   // ---- Variable table ----
   s.comment("Variable table");
@@ -84,7 +116,9 @@ export default function draw() {
   ];
   const widths = [40, 300, 130];
   const tw = widths.reduce((a, b) => a + b, 0);
-  const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · counter-notice window", rows, { widths });
+  const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · counter-notice window", rows, {
+    widths,
+  });
   s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

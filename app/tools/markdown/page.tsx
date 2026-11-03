@@ -9,14 +9,7 @@ import {
   type ClipboardEvent,
   type DragEvent,
 } from "react";
-import {
-  Trash2,
-  Upload,
-  FileText,
-  Info,
-  ExternalLink,
-  Loader2,
-} from "lucide-react";
+import { Trash2, Upload, FileText, Info, ExternalLink, Loader2 } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { CopyButton } from "@/components/copy-button";
 import { Checkbox } from "@/components/checkbox";
@@ -75,10 +68,7 @@ let gfmPlugin: TurndownPlugin | null = null;
 
 async function loadTurndown() {
   if (!turndownCtor) {
-    const [td, gfm] = await Promise.all([
-      import("turndown"),
-      import("turndown-plugin-gfm"),
-    ]);
+    const [td, gfm] = await Promise.all([import("turndown"), import("turndown-plugin-gfm")]);
     const mod = td as unknown as { default?: TurndownCtor } & TurndownCtor;
     turndownCtor = mod.default ?? mod;
     gfmPlugin = gfm.gfm;
@@ -134,9 +124,7 @@ export default function MarkdownToolPage() {
   // Turndown options
   const [headingStyle, setHeadingStyle] = useState<"atx" | "setext">("atx");
   const [bulletMarker, setBulletMarker] = useState<"-" | "*" | "+">("-");
-  const [codeBlockStyle, setCodeBlockStyle] = useState<"fenced" | "indented">(
-    "fenced",
-  );
+  const [codeBlockStyle, setCodeBlockStyle] = useState<"fenced" | "indented">("fenced");
   const [useGfm, setUseGfm] = useState(true);
 
   // --- Mode switching --------------------------------------------------------
@@ -235,14 +223,8 @@ export default function MarkdownToolPage() {
 
   const convertMdToHtml = useCallback(async (md: string): Promise<string> => {
     if (!md.trim()) return "";
-    const {
-      remark,
-      remarkGfm,
-      remarkRehype,
-      rehypeSanitize,
-      defaultSchema,
-      rehypeStringify,
-    } = await loadRemark();
+    const { remark, remarkGfm, remarkRehype, rehypeSanitize, defaultSchema, rehypeStringify } =
+      await loadRemark();
 
     // Security: allow raw HTML through remark-rehype so the input is parsed,
     // then sanitize against the GFM-aware default schema. rehype-stringify is
@@ -330,12 +312,10 @@ export default function MarkdownToolPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Markdown Tools
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Markdown Tools</h1>
         <p className="max-w-2xl text-dim">
-          Convert HTML or pasted rich text to clean Markdown, render Markdown to
-          HTML, or preview it live. Everything runs in your browser.
+          Convert HTML or pasted rich text to clean Markdown, render Markdown to HTML, or preview it
+          live. Everything runs in your browser.
         </p>
       </div>
 
@@ -347,7 +327,11 @@ export default function MarkdownToolPage() {
             value={mode}
             onChange={switchMode}
             ariaLabel="Mode"
-            options={[{ value: "html-to-md", label: "HTML to Markdown" }, { value: "md-to-html", label: "Markdown to HTML" }, { value: "preview", label: "Preview" }]}
+            options={[
+              { value: "html-to-md", label: "HTML to Markdown" },
+              { value: "md-to-html", label: "Markdown to HTML" },
+              { value: "preview", label: "Preview" },
+            ]}
             className="mb-5"
           />
 
@@ -378,8 +362,7 @@ export default function MarkdownToolPage() {
                 <div className="flex items-center gap-1.5">
                   {input && (
                     <span className="text-[10px] text-dim tabular-nums">
-                      {input.length.toLocaleString()} chars &middot;{" "}
-                      {byteSize(input)}
+                      {input.length.toLocaleString()} chars &middot; {byteSize(input)}
                     </span>
                   )}
                   <button
@@ -416,8 +399,7 @@ export default function MarkdownToolPage() {
                         loadFile(file);
                         if (mode === "html-to-md") {
                           const reader = new FileReader();
-                          reader.onload = () =>
-                            convertHtmlToMd(reader.result as string);
+                          reader.onload = () => convertHtmlToMd(reader.result as string);
                           reader.readAsText(file);
                         }
                       }
@@ -465,9 +447,7 @@ export default function MarkdownToolPage() {
                   <Select
                     label="Code blocks"
                     value={codeBlockStyle}
-                    onChange={(v) =>
-                      setCodeBlockStyle(v as "fenced" | "indented")
-                    }
+                    onChange={(v) => setCodeBlockStyle(v as "fenced" | "indented")}
                     options={[
                       { value: "fenced", label: "Fenced ```" },
                       { value: "indented", label: "Indented" },
@@ -495,9 +475,7 @@ export default function MarkdownToolPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs text-dim flex items-center gap-1.5">
                     Rendered preview
-                    {running && (
-                      <Loader2 size={10} className="animate-spin text-dim" />
-                    )}
+                    {running && <Loader2 size={10} className="animate-spin text-dim" />}
                   </label>
                 </div>
                 <div
@@ -512,15 +490,12 @@ export default function MarkdownToolPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-xs text-dim flex items-center gap-1.5">
                     {mode === "html-to-md" ? "Markdown output" : "HTML output"}
-                    {running && (
-                      <Loader2 size={10} className="animate-spin text-dim" />
-                    )}
+                    {running && <Loader2 size={10} className="animate-spin text-dim" />}
                   </label>
                   <div className="flex items-center gap-1.5">
                     {output && (
                       <span className="text-[10px] text-dim tabular-nums">
-                        {output.length.toLocaleString()} chars &middot;{" "}
-                        {byteSize(output)}
+                        {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                       </span>
                     )}
                     {output && <CopyButton text={output} label />}
@@ -546,21 +521,13 @@ export default function MarkdownToolPage() {
             </h3>
             <dl className="px-4 py-3 text-[11px] text-dim leading-relaxed grid grid-cols-2 gap-y-1.5">
               <dt>Characters</dt>
-              <dd className="text-right tabular-nums text-muted">
-                {stats.chars.toLocaleString()}
-              </dd>
+              <dd className="text-right tabular-nums text-muted">{stats.chars.toLocaleString()}</dd>
               <dt>Words</dt>
-              <dd className="text-right tabular-nums text-muted">
-                {stats.words.toLocaleString()}
-              </dd>
+              <dd className="text-right tabular-nums text-muted">{stats.words.toLocaleString()}</dd>
               <dt>Headings</dt>
-              <dd className="text-right tabular-nums text-muted">
-                {stats.headings}
-              </dd>
+              <dd className="text-right tabular-nums text-muted">{stats.headings}</dd>
               <dt>Reading time</dt>
-              <dd className="text-right tabular-nums text-muted">
-                {stats.reading}
-              </dd>
+              <dd className="text-right tabular-nums text-muted">{stats.reading}</dd>
             </dl>
           </div>
 
@@ -571,27 +538,25 @@ export default function MarkdownToolPage() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                <span className="text-muted">HTML to Markdown</span> accepts raw
-                HTML you type or paste. It also intercepts the{" "}
-                <span className="text-muted">text/html</span> entry from your
-                clipboard, so copying from a styled source (a web page, a Google
-                Doc, Notion) preserves headings, links, lists, and tables.
-                Pasting plain text just keeps it as text.
+                <span className="text-muted">HTML to Markdown</span> accepts raw HTML you type or
+                paste. It also intercepts the <span className="text-muted">text/html</span> entry
+                from your clipboard, so copying from a styled source (a web page, a Google Doc,
+                Notion) preserves headings, links, lists, and tables. Pasting plain text just keeps
+                it as text.
               </p>
               <p>
                 <span className="text-muted">Markdown to HTML</span> and{" "}
                 <span className="text-muted">Preview</span> use{" "}
-                <span className="text-muted">remark</span> with GFM extensions
-                (tables, task lists, strikethrough). Output is passed through{" "}
-                <span className="text-muted">rehype-sanitize</span> before
-                rendering, so script tags, event handlers, and{" "}
-                <span className="text-muted">javascript:</span> URLs are
+                <span className="text-muted">remark</span> with GFM extensions (tables, task lists,
+                strikethrough). Output is passed through{" "}
+                <span className="text-muted">rehype-sanitize</span> before rendering, so script
+                tags, event handlers, and <span className="text-muted">javascript:</span> URLs are
                 stripped.
               </p>
               <p>
-                If you paste the converted Markdown or HTML into a downstream
-                system that renders it for other users, sanitize it again there.
-                The sanitizer here only protects this page.
+                If you paste the converted Markdown or HTML into a downstream system that renders it
+                for other users, sanitize it again there. The sanitizer here only protects this
+                page.
               </p>
             </div>
           </div>

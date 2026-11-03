@@ -14,22 +14,39 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "One mark per granule, held in memory; the sort key (tenant_id, occurred_at) finds granules 3 and 4."],
-    [2, "G1 is the engine's documented default; the part size and the query are illustrative."],
-    [3, "C1: the query filters on tenant and time and groups by type; other columns stay closed."],
-    [0, "Not to scale; values in rows. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "One mark per granule, held in memory; the sort key (tenant_id, occurred_at) finds granules 3 and 4.",
+      ],
+      [2, "G1 is the engine's documented default; the part size and the query are illustrative."],
+      [
+        3,
+        "C1: the query filters on tenant and time and groups by type; other columns stay closed.",
+      ],
+      [
+        0,
+        "Not to scale; values in rows. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: one part ----
   s.comment("Plan view: one table part");
-  const cw = 60, ch = 24;
-  const gw = GRANULES * cw, gh = COLS.length * ch;
+  const cw = 60,
+    ch = 24;
+  const gw = GRANULES * cw,
+    gh = COLS.length * ch;
   const x0 = CX - gw / 2;
   const X = (g) => x0 + g * cw;
   const dimY = ny + 40;
   const idxY = dimY + 30;
-  const top = idxY + 20, bot = top + gh;
+  const top = idxY + 20,
+    bot = top + gh;
 
   // Dimensions above: one granule, and the rows read.
   s.dimH(X(0), X(1), dimY, "G1", { from: [idxY - 6, idxY - 6] });
@@ -40,7 +57,8 @@ export default function draw() {
   s.text(x0 - 10, idxY + 3, "index", "sl ink", "end");
   s.nb(x0 - 10 - widthOf("index", "sl") - 12, idxY, 1);
   s.line(x0, idxY, X(GRANULES), idxY, "ext");
-  for (let g = 0; g < GRANULES; g++) s.add(`<circle class="dot" cx="${X(g + 0.5)}" cy="${idxY}" r="2.2"/>`);
+  for (let g = 0; g < GRANULES; g++)
+    s.add(`<circle class="dot" cx="${X(g + 0.5)}" cy="${idxY}" r="2.2"/>`);
 
   // The part: column files by granules; the cells the query reads in accent.
   COLS.forEach((c, r) => {
@@ -49,7 +67,8 @@ export default function draw() {
     for (let g = 0; g < GRANULES; g++) s.rect(X(g), y, cw, ch, "obj fill-2");
   });
   // Accent cells last so their outline is not covered by neighbours.
-  for (let r = 0; r < OPENED; r++) for (const g of READ) s.rect(X(g), top + r * ch, cw, ch, "obj hl");
+  for (let r = 0; r < OPENED; r++)
+    for (const g of READ) s.rect(X(g), top + r * ch, cw, ch, "obj hl");
 
   // Granule numbers under the grid.
   for (let g = 0; g < GRANULES; g++) s.text(X(g + 0.5), bot + 13, String(g + 1), "vs", "middle");
@@ -63,7 +82,12 @@ export default function draw() {
   const py = bot + 34;
   s.dimH(X(0), X(GRANULES), py, "P1", { from: [bot + 18, bot + 18], below: true });
 
-  s.viewTitle(CX, py + 46, "Plan view · one table part", "Not to scale · column files as rows · granules 1 to 8 as columns");
+  s.viewTitle(
+    CX,
+    py + 46,
+    "Plan view · one table part",
+    "Not to scale · column files as rows · granules 1 to 8 as columns",
+  );
   const viewBottom = py + 46 + 13;
 
   // ---- Variable table ----

@@ -16,7 +16,10 @@ interface Props {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getAllBookChapters().map((c) => ({ book: c.section, chapter: c.slug.slice(c.section.length + 1) }));
+  return getAllBookChapters().map((c) => ({
+    book: c.section,
+    chapter: c.slug.slice(c.section.length + 1),
+  }));
 }
 
 async function find(params: Props["params"]) {

@@ -15,7 +15,12 @@ export function ChapterKeys({ prev, next }: { prev?: string; next?: string }) {
     const onKey = (e: KeyboardEvent) => {
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
       const target = e.target as HTMLElement | null;
-      if (target?.closest("input, textarea, select, [contenteditable=''], [contenteditable='true'], pre, table")) return;
+      if (
+        target?.closest(
+          "input, textarea, select, [contenteditable=''], [contenteditable='true'], pre, table",
+        )
+      )
+        return;
       const href = e.key === "ArrowLeft" ? prev : e.key === "ArrowRight" ? next : undefined;
       if (!href) return;
       e.preventDefault();

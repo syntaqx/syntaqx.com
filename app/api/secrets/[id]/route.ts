@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { CACHE, errorResponse, json } from "@/lib/api";
 import { registry } from "@/lib/openapi";
-import { EXPIRES_AT_HEADER, decryptSecret, lookupKey, secretStore, validSecretId } from "@/lib/secrets";
+import {
+  EXPIRES_AT_HEADER,
+  decryptSecret,
+  lookupKey,
+  secretStore,
+  validSecretId,
+} from "@/lib/secrets";
 
 // ---------------------------------------------------------------------------
 // Schema registration
@@ -26,7 +32,10 @@ registry.registerPath({
     params: z.object({ id: z.string().openapi({ example: "pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M" }) }),
   },
   responses: {
-    200: { description: "The secret, now deleted", content: { "application/json": { schema: Secret } } },
+    200: {
+      description: "The secret, now deleted",
+      content: { "application/json": { schema: Secret } },
+    },
     404: errorDoc("No secret with that id: already read, expired, or never created"),
     429: errorDoc("Rate limited"),
     503: errorDoc("Secret storage unavailable; the secret wasn't read"),
@@ -48,7 +57,10 @@ registry.registerPath({
     200: {
       description: "Unread",
       headers: z.object({
-        "Secret-Expires-At": z.string().openapi({ description: "RFC 3339 time the secret expires", example: "2026-10-29T15:23:45.000Z" }),
+        "Secret-Expires-At": z.string().openapi({
+          description: "RFC 3339 time the secret expires",
+          example: "2026-10-29T15:23:45.000Z",
+        }),
       }),
     },
     404: { description: "Already read, expired, or never created" },
@@ -94,11 +106,18 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     stored = await secretStore().take(await lookupKey(id));
   } catch (error) {
     console.error("secrets: storage unavailable", error);
-    return errorResponse(503, "Secret storage is unavailable. The secret wasn't read; try again shortly.", {
-      headers: { "Retry-After": "1", "Cache-Control": CACHE.none },
-    });
+    return errorResponse(
+      503,
+      "Secret storage is unavailable. The secret wasn't read; try again shortly.",
+      {
+        headers: { "Retry-After": "1", "Cache-Control": CACHE.none },
+      },
+    );
   }
   if (stored === null) return notFound();
 
-  return json({ secret: await decryptSecret(id, stored) }, { headers: { "Cache-Control": CACHE.none } });
+  return json(
+    { secret: await decryptSecret(id, stored) },
+    { headers: { "Cache-Control": CACHE.none } },
+  );
 }

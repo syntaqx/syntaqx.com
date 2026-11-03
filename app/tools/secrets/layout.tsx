@@ -6,10 +6,6 @@ export const metadata = pageMetadata(
   "Share a password or token through a one-time link that expires. Encrypted in your browser with AES-256-GCM; the server only holds ciphertext, deleted once read.",
 );
 
-export default function SecretsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SecretsLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

@@ -15,7 +15,11 @@ const ROWS = [
 ];
 
 export default function draw() {
-  const W = 760, cw = 48, gap = 4, ch = 24, rowGap = 8;
+  const W = 760,
+    cw = 48,
+    gap = 4,
+    ch = 24,
+    rowGap = 8;
   const x0 = W - 20 - (DAYS.length * cw + (DAYS.length - 1) * gap); // the row labels take the left
   const X = (i) => x0 + i * (cw + gap);
   const s = sheet({ prefix: "fo-sad", width: W });

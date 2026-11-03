@@ -5,15 +5,25 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, x = 20, pad = 12, rh = 26, rowGap = 8;
+  const W = 760,
+    x = 20,
+    pad = 12,
+    rh = 26,
+    rowGap = 8;
   const s = sheet({ prefix: "ob", width: W });
 
   // Widths per part; the three gaps share what is left.
-  const svcW = 80, grpW = 220, relayW = 112, brokerW = 130;
+  const svcW = 80,
+    grpW = 220,
+    relayW = 112,
+    brokerW = 130;
   const gap = (W - 2 * x - svcW - grpW - relayW - brokerW) / 3;
-  const gx = x + svcW + gap, rx = gx + grpW + gap, bx = rx + relayW + gap;
+  const gx = x + svcW + gap,
+    rx = gx + grpW + gap,
+    bx = rx + relayW + gap;
 
-  const consumersY = 22, nh = 36;
+  const consumersY = 22,
+    nh = 36;
   const gy = consumersY + nh + 22; // group top
   const gh = 2 * rh + rowGap + 2 * pad;
 
@@ -41,7 +51,13 @@ export default function draw() {
   const consumers = s.node(bx, consumersY, brokerW, nh, "consumers", { sub: "dedupe by event ID" });
   s.connect(outbox, relay, { hl: true });
   s.connect(relay, broker, { hl: true, label: "publish" });
-  s.connect(broker, consumers, { from: "t", to: "b", hl: true, label: "at least once", side: "left" });
+  s.connect(broker, consumers, {
+    from: "t",
+    to: "b",
+    hl: true,
+    label: "at least once",
+    side: "left",
+  });
 
   s.comment("Mark published, and where duplicates come from");
   const ly = gy + gh + 24;

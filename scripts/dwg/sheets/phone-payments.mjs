@@ -5,20 +5,30 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, x = 20, h = 40;
+  const W = 760,
+    x = 20,
+    h = 40;
   const s = sheet({ prefix: "ph", width: W });
 
   // Columns: caller, masking service, agent and recorder, vault and platform.
   const cw = [110, 140, 150, 120];
   const gap = (W - 2 * x - cw.reduce((a, b) => a + b, 0)) / 3;
   const cx = cw.reduce((acc, w, i) => [...acc, i ? acc[i - 1] + cw[i - 1] + gap : x], []);
-  const top = 24, mid = top + h + 46, bot = mid + h + 46;
+  const top = 24,
+    mid = top + h + 46,
+    bot = mid + h + 46;
 
   s.comment("The call path");
   const caller = s.node(cx[0], mid, cw[0], h, "caller", { kind: "actor", sub: "keys the card" });
-  const mask = s.node(cx[1], mid, cw[1], h, "masking service", { hl: true, sub: "in the call path" });
+  const mask = s.node(cx[1], mid, cw[1], h, "masking service", {
+    hl: true,
+    sub: "in the call path",
+  });
   const agent = s.node(cx[2], top, cw[2], h, "agent", { sub: "sees **** filling in" });
-  const rec = s.node(cx[2], bot, cw[2], h, "call recorder", { kind: "store", sub: "nothing to protect" });
+  const rec = s.node(cx[2], bot, cw[2], h, "call recorder", {
+    kind: "store",
+    sub: "nothing to protect",
+  });
   const vault = s.node(cx[3], mid, cw[3], h, "card vault", { kind: "store", hl: true });
   const platform = s.node(cx[3], bot, cw[3], h, "platform");
 

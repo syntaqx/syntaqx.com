@@ -11,12 +11,7 @@ interface PasteButtonProps {
   className?: string;
 }
 
-export function PasteButton({
-  onPaste,
-  label = false,
-  size = "md",
-  className,
-}: PasteButtonProps) {
+export function PasteButton({ onPaste, label = false, size = "md", className }: PasteButtonProps) {
   const [pasted, setPasted] = useState(false);
 
   const paste = async () => {

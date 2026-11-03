@@ -53,10 +53,7 @@ export function Select({
   const triggerId = id ?? autoId;
 
   const select = (
-    <RadixSelect.Root
-      value={toRadix(value)}
-      onValueChange={(v) => onChange(fromRadix(v))}
-    >
+    <RadixSelect.Root value={toRadix(value)} onValueChange={(v) => onChange(fromRadix(v))}>
       <RadixSelect.Trigger
         id={triggerId}
         aria-label={ariaLabel}

@@ -15,9 +15,7 @@ interface Repo {
  * cached for a day to stay well inside the rate limit. Returns null on any
  * failure; callers should leave the numbers out rather than show a guess.
  */
-export async function fetchGitHubStats(
-  username: string,
-): Promise<GitHubStats | null> {
+export async function fetchGitHubStats(username: string): Promise<GitHubStats | null> {
   try {
     const own: Repo[] = [];
     for (let page = 1; page <= 5; page++) {

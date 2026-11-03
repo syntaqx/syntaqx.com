@@ -12,7 +12,10 @@ const ROW1 = [
 const CONSUMERS = ["dashboards", "commission runs", "in-app scorecards", "customer exports"];
 
 export default function draw() {
-  const W = 760, x = 20, w = 150, gap = (W - 2 * x - 4 * w) / 3;
+  const W = 760,
+    x = 20,
+    w = 150,
+    gap = (W - 2 * x - 4 * w) / 3;
   const s = sheet({ prefix: "fo-omp", width: W });
 
   s.comment("Out of the platform, into the warehouse");
@@ -22,11 +25,16 @@ export default function draw() {
 
   s.comment("Marts, definitions, consumers");
   const y2 = bottom + 52;
-  const ch = 24, cgap = 8, cn = CONSUMERS.length;
+  const ch = 24,
+    cgap = 8,
+    cn = CONSUMERS.length;
   const block = cn * ch + (cn - 1) * cgap;
   const cy = y2 + block / 2;
   const marts = s.node(nodes[0].x, cy - 14, w, 28, "marts: visits, routes");
-  const defs = s.node(nodes[1].x, cy - 18, w, 36, "metric definitions", { hl: true, sub: "versioned, reviewed" });
+  const defs = s.node(nodes[1].x, cy - 18, w, 36, "metric definitions", {
+    hl: true,
+    sub: "versioned, reviewed",
+  });
   const my = (bottom + y2) / 2 + 4;
   s.wire([[nodes[3].cx, bottom + 6], [nodes[3].cx, my], [marts.cx, my], marts.port("t")]);
   s.connect(marts, defs, { hl: true });

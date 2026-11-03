@@ -13,10 +13,14 @@ const COLLECT = [
 ];
 
 export default function draw() {
-  const W = 760, w = 150, h = 28, gap = (W - 40 - 4 * w) / 3;
+  const W = 760,
+    w = 150,
+    h = 28,
+    gap = (W - 40 - 4 * w) / 3;
   const s = sheet({ prefix: "fo-brs", width: W });
   const X = (i) => 20 + i * (w + gap);
-  const y1 = 40, y2 = 112;
+  const y1 = 40,
+    y2 = 112;
 
   s.comment("What comes due");
   s.text(20, y1 - 12, "what comes due", "lt");
@@ -32,12 +36,18 @@ export default function draw() {
   s.wire([last.port("b"), [last.cx, my], [col[0].cx, my], col[0].port("t")], { hl: true });
   col.slice(1).forEach((n, i) => s.connect(col[i], n, { hl: true }));
   const subY = y2 + h + 16;
-  COLLECT.forEach((c, i) => c.sub && s.text(col[i].cx, subY, c.sub, c.hl ? "sl hl" : "sl", "middle"));
+  COLLECT.forEach(
+    (c, i) => c.sub && s.text(col[i].cx, subY, c.sub, c.hl ? "sl hl" : "sl", "middle"),
+  );
 
   s.comment("No payment method on file");
   const auto = col[1];
   const link = s.node(auto.x, subY + 26, w, h, "send payment link", { kind: "ghost" });
-  s.wire([auto.port("b"), link.port("t")], { alt: true, label: "no method on file", side: "right" });
+  s.wire([auto.port("b"), link.port("t")], {
+    alt: true,
+    label: "no method on file",
+    side: "right",
+  });
 
   s.height = Math.ceil(link.y + h + 20);
   return s.toString();

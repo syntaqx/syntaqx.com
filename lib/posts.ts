@@ -50,9 +50,7 @@ function parseTomlFrontmatter(fileContents: string): {
   data: Record<string, unknown>;
   content: string;
 } {
-  const match = fileContents.match(
-    /^\+\+\+\s*\n([\s\S]*?)\n\+\+\+\s*\n?([\s\S]*)$/,
-  );
+  const match = fileContents.match(/^\+\+\+\s*\n([\s\S]*?)\n\+\+\+\s*\n?([\s\S]*)$/);
   if (!match) {
     return { data: {}, content: fileContents };
   }
@@ -148,9 +146,7 @@ function fileNameToSlug(fileName: string): string {
 }
 
 export function getAllPosts(): PostData[] {
-  const fileNames = fs
-    .readdirSync(postsDirectory)
-    .filter((f) => f.endsWith(".md"));
+  const fileNames = fs.readdirSync(postsDirectory).filter((f) => f.endsWith(".md"));
 
   return fileNames
     .map((fileName) => getPostByFileName(fileName))
@@ -217,26 +213,16 @@ export function getAllTags(posts: PostData[] = getAllPosts()): TagInfo[] {
       }
     }
   }
-  return [...bySlug.values()].sort(
-    (a, b) => b.count - a.count || a.label.localeCompare(b.label),
-  );
+  return [...bySlug.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 }
 
-export function getPostsByTag(
-  slug: string,
-  posts: PostData[] = getAllPosts(),
-): PostData[] {
+export function getPostsByTag(slug: string, posts: PostData[] = getAllPosts()): PostData[] {
   const target = slugifyTag(slug);
-  return posts.filter((post) =>
-    (post.tags ?? []).some((tag) => slugifyTag(tag) === target),
-  );
+  return posts.filter((post) => (post.tags ?? []).some((tag) => slugifyTag(tag) === target));
 }
 
 /** Canonical display label for a tag slug, or null if no post uses it. */
-export function getTagLabel(
-  slug: string,
-  posts: PostData[] = getAllPosts(),
-): string | null {
+export function getTagLabel(slug: string, posts: PostData[] = getAllPosts()): string | null {
   const target = slugifyTag(slug);
   for (const post of posts) {
     for (const tag of post.tags ?? []) {
@@ -278,9 +264,7 @@ export function tagDescription(label: string, posts: PostData[]): string {
 }
 
 export function getPostBySlug(slug: string): PostData | undefined {
-  const fileNames = fs
-    .readdirSync(postsDirectory)
-    .filter((f) => f.endsWith(".md"));
+  const fileNames = fs.readdirSync(postsDirectory).filter((f) => f.endsWith(".md"));
 
   for (const fileName of fileNames) {
     const bare = fileName.replace(/\.md$/, "");
@@ -301,9 +285,7 @@ const NEW_POST_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
 export function getNewestPostSlug(posts: PostData[]): string | null {
   const newest = posts.find((p) => !p.draft);
   if (!newest) return null;
-  return BUILD_TIME - new Date(newest.date).getTime() < NEW_POST_WINDOW_MS
-    ? newest.slug
-    : null;
+  return BUILD_TIME - new Date(newest.date).getTime() < NEW_POST_WINDOW_MS ? newest.slug : null;
 }
 
 export interface Heading {
@@ -347,7 +329,12 @@ function rehypeSectionIds(toc?: Heading[]) {
           {
             type: "element",
             tagName: "a",
-            properties: { href: `#${id}`, className: ["heading-anchor"], ariaLabel: `Link to ${text}`, dataPagefindIgnore: "" },
+            properties: {
+              href: `#${id}`,
+              className: ["heading-anchor"],
+              ariaLabel: `Link to ${text}`,
+              dataPagefindIgnore: "",
+            },
             children: [{ type: "text", value: "#" }],
           },
         ];
@@ -371,7 +358,10 @@ function rehypeDiagrams() {
   return (tree: HastNode) => {
     const walk = (n: HastNode) => {
       n.children = n.children?.map((child) => {
-        const only = child.tagName === "p" ? child.children?.filter((c) => c.type !== "text" || c.value?.trim()) : undefined;
+        const only =
+          child.tagName === "p"
+            ? child.children?.filter((c) => c.type !== "text" || c.value?.trim())
+            : undefined;
         const img = only?.length === 1 && only[0].tagName === "img" ? only[0] : undefined;
         const src = String(img?.properties?.src ?? "");
         if (!img || !/^\/diagrams\/[\w-]+\.svg$/.test(src)) {
@@ -380,8 +370,12 @@ function rehypeDiagrams() {
         }
         const alt = escapeHtml(String(img.properties?.alt ?? ""));
         // The caption's first sentence is its lead, set in bold.
-        const [lead, rest] = escapeHtml(String(img.properties?.title ?? "")).split(/(?<=\.)\s+([\s\S]*)/);
-        const caption = lead ? `<figcaption><strong>${lead}</strong>${rest ? ` ${rest}` : ""}</figcaption>` : "";
+        const [lead, rest] = escapeHtml(String(img.properties?.title ?? "")).split(
+          /(?<=\.)\s+([\s\S]*)/,
+        );
+        const caption = lead
+          ? `<figcaption><strong>${lead}</strong>${rest ? ` ${rest}` : ""}</figcaption>`
+          : "";
         const svg = fs
           .readFileSync(path.join(process.cwd(), "public", src), "utf8")
           .replace(/^<\?xml[^>]*>\s*/, "")
@@ -399,9 +393,12 @@ function rehypeDiagrams() {
 const CALLOUT_ICONS: Record<string, string> = {
   note: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
   tip: '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
-  important: '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 15h.01"/><path d="M12 7v4"/>',
-  warning: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
-  caution: '<path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/>',
+  important:
+    '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M12 15h.01"/><path d="M12 7v4"/>',
+  warning:
+    '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  caution:
+    '<path d="M12 16h.01"/><path d="M12 8v4"/><path d="M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z"/>',
 };
 
 /**
@@ -417,17 +414,25 @@ function rehypeCallouts() {
       if (n.tagName !== "blockquote") return;
       const first = n.children?.find((c) => c.tagName === "p");
       const lead = first?.children?.[0];
-      const match = lead?.type === "text" ? /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*([^\n]*)\n?/i.exec(lead.value ?? "") : null;
+      const match =
+        lead?.type === "text"
+          ? /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*([^\n]*)\n?/i.exec(lead.value ?? "")
+          : null;
       if (!first || !lead || !match) return;
       const kind = match[1].toLowerCase();
       const title = escapeHtml(match[2].trim() || kind[0].toUpperCase() + kind.slice(1));
       lead.value = (lead.value ?? "").slice(match[0].length);
-      if (!lead.value) first.children = first.children?.slice(1).filter((c, i) => i || c.tagName !== "br");
-      if (!first.children?.some((c) => c.type !== "text" || c.value?.trim())) n.children = n.children?.filter((c) => c !== first);
+      if (!lead.value)
+        first.children = first.children?.slice(1).filter((c, i) => i || c.tagName !== "br");
+      if (!first.children?.some((c) => c.type !== "text" || c.value?.trim()))
+        n.children = n.children?.filter((c) => c !== first);
       const icon = `<svg viewBox="0 0 24 24" aria-hidden="true">${CALLOUT_ICONS[kind]}</svg>`;
       n.tagName = "aside";
       n.properties = { className: ["callout", `callout-${kind}`] };
-      n.children = [{ type: "raw", value: `<p class="callout-title">${icon}${title}</p>` }, ...(n.children ?? [])];
+      n.children = [
+        { type: "raw", value: `<p class="callout-title">${icon}${title}</p>` },
+        ...(n.children ?? []),
+      ];
     };
     walk(tree);
   };
@@ -479,14 +484,25 @@ function rehypeCodeTabs() {
               children: labels.map((label, k) => ({
                 type: "element",
                 tagName: "button",
-                properties: { type: "button", role: "tab", ariaSelected: String(k === shown), tabIndex: k === shown ? 0 : -1, dataTab: label },
+                properties: {
+                  type: "button",
+                  role: "tab",
+                  ariaSelected: String(k === shown),
+                  tabIndex: k === shown ? 0 : -1,
+                  dataTab: label,
+                },
                 children: [{ type: "text", value: label }],
               })),
             },
             ...group.map((pre, k) => ({
               type: "element",
               tagName: "div",
-              properties: { role: "tabpanel", ariaLabel: labels[k], dataTab: labels[k], hidden: k !== shown },
+              properties: {
+                role: "tabpanel",
+                ariaLabel: labels[k],
+                dataTab: labels[k],
+                hidden: k !== shown,
+              },
               children: [pre],
             })),
           ],
@@ -501,10 +517,7 @@ function rehypeCodeTabs() {
   };
 }
 
-export async function markdownToHtml(
-  markdown: string,
-  toc?: Heading[],
-): Promise<string> {
+export async function markdownToHtml(markdown: string, toc?: Heading[]): Promise<string> {
   const result = await remark()
     .use(remarkGfm)
     .use(remarkRehype, { allowDangerousHtml: true })

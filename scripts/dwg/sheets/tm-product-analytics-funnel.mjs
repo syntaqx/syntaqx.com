@@ -20,17 +20,27 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative counts for one weekly cohort, not data from any product."],
-    [2, "Each user counts once, entering at their first step-1 event, with a 7-day window from it."],
-    [3, "The lowest step rate; the largest loss in users is S0 to S1 (6,000). Read both."],
-    [4, "C is the product of the step rates, so a gain at any step lifts it by the same factor."],
-    [0, "Users are uniques. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [1, "Illustrative counts for one weekly cohort, not data from any product."],
+      [
+        2,
+        "Each user counts once, entering at their first step-1 event, with a 7-day window from it.",
+      ],
+      [3, "The lowest step rate; the largest loss in users is S0 to S1 (6,000). Read both."],
+      [4, "C is the product of the step rates, so a gain at any step lifts it by the same factor."],
+      [0, "Users are uniques. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1,000 users = 50 px ----
   s.comment("Plan view: four-step funnel");
-  const k = 50 / 1000, h = 28, step = 52;
+  const k = 50 / 1000,
+    h = 28,
+    step = 52;
   const x0 = CX - (STEPS[0][2] * k) / 2;
   const top = ny + 46;
   const ys = STEPS.map((_, i) => top + i * step);
@@ -46,7 +56,10 @@ export default function draw() {
   const rx = x0 + STEPS[0][2] * k + 50;
   STEPS.slice(1).forEach(([, , n], j) => {
     const i = j + 1;
-    s.dimV(mid(i - 1), mid(i), rx, `C${i}`, { from: [x0 + STEPS[i - 1][2] * k, x0 + n * k], side: "r" });
+    s.dimV(mid(i - 1), mid(i), rx, `C${i}`, {
+      from: [x0 + STEPS[i - 1][2] * k, x0 + n * k],
+      side: "r",
+    });
   });
   s.nb(rx + 40, (mid(2) + mid(3)) / 2, 3);
 
@@ -56,7 +69,12 @@ export default function draw() {
   s.nb(lx - 30, (mid(0) + mid(3)) / 2, 4);
 
   const vy = ys[3] + h + 42;
-  s.viewTitle(CX, vy, "Plan view · four-step funnel, cohort W0", "Scale 1,000 users = 50 px · uniques · illustrative");
+  s.viewTitle(
+    CX,
+    vy,
+    "Plan view · four-step funnel, cohort W0",
+    "Scale 1,000 users = 50 px · uniques · illustrative",
+  );
   s.nb(CX + 160, vy - 4, 1);
 
   // ---- Variable table ----
@@ -72,7 +90,12 @@ export default function draw() {
     ["C3", "step rate, step 3 to 4", `S3 ÷ S2 = ${pct(S3 / S2)}`],
     ["C", "overall conversion", `S3 ÷ S0 = C1 × C2 × C3 = ${pct(S3 / S0)}`],
   ];
-  const tw = [0, 1, 2].reduce((sum, j) => sum + Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)), 0);
+  const tw = [0, 1, 2].reduce(
+    (sum, j) =>
+      sum +
+      Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)),
+    0,
+  );
   const tb = s.table(CX - tw / 2, vy + 13 + 50, "Variables · users", rows);
   s.height = Math.ceil(tb.y + 30);
   return s.toString();

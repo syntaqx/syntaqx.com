@@ -17,17 +17,11 @@ export default function ConvertIndexPage() {
       />
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Converters</h1>
-        <p className="max-w-2xl text-dim">
-          Conversion tools for text, images, and more.
-        </p>
+        <p className="max-w-2xl text-dim">Conversion tools for text, images, and more.</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {converters.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="group flex flex-col"
-          >
+          <Link key={item.href} href={item.href} className="group flex flex-col">
             <Card hover className="flex flex-col h-full">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
@@ -38,9 +32,7 @@ export default function ConvertIndexPage() {
                   className="text-dim group-hover:text-accent transition-colors"
                 />
               </div>
-              <p className="text-xs text-dim leading-relaxed">
-                {item.description}
-              </p>
+              <p className="text-xs text-dim leading-relaxed">{item.description}</p>
               <div className="mt-3 flex flex-wrap gap-1">
                 {item.tags.map((tag) => (
                   <span

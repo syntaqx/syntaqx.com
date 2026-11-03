@@ -4,7 +4,9 @@
 import { sheet, widthOf } from "../kit.mjs";
 
 // Seconds, Visa Rules (April 2026) [1]-[3].
-const I1 = 10, A1 = 5, M1 = 15;
+const I1 = 10,
+  A1 = 5,
+  M1 = 15;
 const G1 = M1 - I1; // 5
 
 export default function draw() {
@@ -12,16 +14,39 @@ export default function draw() {
   const s = sheet({ prefix: "pm-ac", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Network rules table 7-1, POS outside Europe: if the issuer misses I1, the network answers by stand-in processing."],
-    [2, "Network rules 7.3.3: in the US the issuer, stand-in included, must average at most A1 over each calendar month."],
-    [3, "Network rules 7.3.4.2: no POS timeout sooner than M1 (not in Europe). My own timeouts sit inside these."],
-    [4, "An approval that arrives after the merchant timed out must be reversed, never left to lapse."],
-    [0, "Values in seconds, one card network's rules, April 2026. Codes on the drawing; values in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Network rules table 7-1, POS outside Europe: if the issuer misses I1, the network answers by stand-in processing.",
+      ],
+      [
+        2,
+        "Network rules 7.3.3: in the US the issuer, stand-in included, must average at most A1 over each calendar month.",
+      ],
+      [
+        3,
+        "Network rules 7.3.4.2: no POS timeout sooner than M1 (not in Europe). My own timeouts sit inside these.",
+      ],
+      [
+        4,
+        "An approval that arrives after the merchant timed out must be reversed, never left to lapse.",
+      ],
+      [
+        0,
+        "Values in seconds, one card network's rules, April 2026. Codes on the drawing; values in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   s.comment("Plan view: one POS authorization");
-  const k = 36, x0 = 110, late = 72, h = 34;
+  const k = 36,
+    x0 = 110,
+    late = 72,
+    h = 34;
   const X = (t) => x0 + t * k;
   const rowLabel = (y, t) => s.text(x0 - 14, y + h / 2 + 3, t, "sl ink", "end");
 
@@ -56,7 +81,12 @@ export default function draw() {
   s.nb(X(M1 / 2) + 20, mer + h + 28.5, 3);
 
   const vy = mer + h + 72;
-  s.viewTitle(X(M1 / 2) + late / 2, vy, "Plan view · one POS authorization, US", "Scale 1 s = 36 px · timeline");
+  s.viewTitle(
+    X(M1 / 2) + late / 2,
+    vy,
+    "Plan view · one POS authorization, US",
+    "Scale 1 s = 36 px · timeline",
+  );
 
   s.comment("Variable table");
   const rows = [

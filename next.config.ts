@@ -97,9 +97,7 @@ export const markdownRewrites = {
     })),
   ],
   afterFiles: [],
-  fallback: [
-    { source: "/:path*", destination: "/md/:path*", ...wantsMarkdown },
-  ],
+  fallback: [{ source: "/:path*", destination: "/md/:path*", ...wantsMarkdown }],
 };
 
 // resume.syntaqx.com is a short link to the resume on the main site. 307s,
@@ -163,7 +161,12 @@ const nextConfig: NextConfig = {
     },
   ],
   rewrites: async () => markdownRewrites,
-  redirects: async () => [...docRedirects(), ...sectionRedirects, ...tagRedirects, ...resumeHostRedirects],
+  redirects: async () => [
+    ...docRedirects(),
+    ...sectionRedirects,
+    ...tagRedirects,
+    ...resumeHostRedirects,
+  ],
   // The Markdown route reads content/ at request time.
   outputFileTracingIncludes: {
     "/md/[[...path]]": ["./content/**/*"],

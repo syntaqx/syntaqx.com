@@ -8,7 +8,10 @@ import { ogCard } from "@/lib/og-card";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getAllBookChapters().map((c) => ({ book: c.section, chapter: c.slug.slice(c.section.length + 1) }));
+  return getAllBookChapters().map((c) => ({
+    book: c.section,
+    chapter: c.slug.slice(c.section.length + 1),
+  }));
 }
 
 export async function GET(

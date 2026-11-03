@@ -14,32 +14,54 @@ const K1 = F1 - I1 - N1; // 1.26
 const M1 = W1 - F1; // 96.80
 
 export default function draw() {
-  const W = 760, CX = W / 2;
+  const W = 760,
+    CX = W / 2;
   const s = sheet({ prefix: "pm-fs", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Card network exempt debit, card-not-present base program, from October 24, 2026. Regulation II debit would be 0.27."],
-    [2, "Illustrative: real network fees are many lines on the acquirer's bill, some billed up to two months later."],
-    [3, "A published blended rate: the merchant pays F1 whatever the card, so K1 shrinks as I1 grows."],
-    [0, "Values in USD. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Card network exempt debit, card-not-present base program, from October 24, 2026. Regulation II debit would be 0.27.",
+      ],
+      [
+        2,
+        "Illustrative: real network fees are many lines on the acquirer's bill, some billed up to two months later.",
+      ],
+      [
+        3,
+        "A published blended rate: the merchant pays F1 whatever the card, so K1 shrinks as I1 grows.",
+      ],
+      [0, "Values in USD. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: the whole payment, 1 USD = 6 px ----
   s.comment("Plan view: one payment");
   let planBottom;
   {
-    const k = 6, h = 34;
+    const k = 6,
+      h = 34;
     const x0 = CX - (W1 * k) / 2;
     const xs = [x0, x0 + M1 * k, x0 + W1 * k];
-    const top = ny + 56, bot = top + h;
+    const top = ny + 56,
+      bot = top + h;
     s.rect(xs[0], top, xs[1] - xs[0], h, "obj fill-2");
     s.rect(xs[1], top, xs[2] - xs[1], h, "obj fill-1");
     s.label(xs[0], top, xs[1] - xs[0], h, "merchant funding");
     s.dimH(xs[0], xs[2], top - 24, "W1", { from: [top, top] });
     s.chainH(xs, bot + 20, ["M1", "F1"], { from: [bot, bot, bot], below: true });
     s.detailRef((xs[1] + xs[2]) / 2, top + h / 2, 18, "detail A", xs[1] - 40, top - 8);
-    s.viewTitle(CX, bot + 66, "Plan view · one card-not-present payment", "Scale 1 USD = 6 px · blended pricing");
+    s.viewTitle(
+      CX,
+      bot + 66,
+      "Plan view · one card-not-present payment",
+      "Scale 1 USD = 6 px · blended pricing",
+    );
     planBottom = bot + 79;
   }
 
@@ -47,10 +69,12 @@ export default function draw() {
   s.comment("Detail A: the merchant discount");
   let detailBottom;
   {
-    const k = 180, h = 34;
+    const k = 180,
+      h = 34;
     const x0 = CX - (F1 * k) / 2;
     const xs = [x0, x0 + I1 * k, x0 + (I1 + N1) * k, x0 + F1 * k];
-    const top = planBottom + 80, bot = top + h;
+    const top = planBottom + 80,
+      bot = top + h;
     s.rect(xs[0], top, xs[1] - xs[0], h, "obj fill-1");
     s.rect(xs[1], top, xs[2] - xs[1], h, "obj fill-2");
     s.rect(xs[2], top, xs[3] - xs[2], h, "obj fill-2");
@@ -64,7 +88,12 @@ export default function draw() {
     s.callout(nx, top + h / 2, nx + 18, top - 14, "network fees");
     s.nb(nx + 32 + widthOf("network fees", "sl") + 10, top - 14 + 0.5, 2);
     s.chainH(xs, bot + 20, ["I1", "N1", "K1"], { from: [bot, bot, bot, bot], below: true });
-    s.viewTitle(CX, bot + 66, "Detail A · the merchant discount, F1", "Scale 30:1 · 1 USD = 180 px");
+    s.viewTitle(
+      CX,
+      bot + 66,
+      "Detail A · the merchant discount, F1",
+      "Scale 30:1 · 1 USD = 180 px",
+    );
     detailBottom = bot + 79;
   }
 

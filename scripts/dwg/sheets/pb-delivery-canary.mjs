@@ -28,19 +28,41 @@ export default function draw() {
   };
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Stages from the chapter; the 30-minute bake is illustrative: long enough for the SLIs to separate."],
-    [2, "At each gate the verdict compares canary to control at the same time, on SLIs, and rolls back by itself."],
-    [3, "Routing the slice back to the old version: the bad release only ever reached the canary's share."],
-    [4, "Exposure counts minutes of full traffic: each stage's share times the time it served, summed."],
-    [0, "Shares in percent of traffic, time in min. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Stages from the chapter; the 30-minute bake is illustrative: long enough for the SLIs to separate.",
+      ],
+      [
+        2,
+        "At each gate the verdict compares canary to control at the same time, on SLIs, and rolls back by itself.",
+      ],
+      [
+        3,
+        "Routing the slice back to the old version: the bad release only ever reached the canary's share.",
+      ],
+      [
+        4,
+        "Exposure counts minutes of full traffic: each stage's share times the time it served, summed.",
+      ],
+      [
+        0,
+        "Shares in percent of traffic, time in min. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: the release passes every gate, 100% = 200 px ----
   s.comment("Plan view: release passes");
   let passBottom;
   {
-    const H = 200, top = ny + 56, bot = top + H;
+    const H = 200,
+      top = ny + 56,
+      bot = top + H;
     const Y = (p) => bot - p * H;
     s.rect(X(0), top, R1 * k, H, "obj fill-2");
     S.slice(0, 3).forEach((p, i) => s.rect(X(i * B), Y(p), B * k, p * H, "obj fill-1"));
@@ -59,7 +81,13 @@ export default function draw() {
     const xs = [0, 1, 2, 3].map((i) => X(i * B));
     s.chainH(xs, bot + 20, ["B", "B", "B"], { from: xs.map(() => bot + 8), below: true });
     s.dimH(X(0), X(R1), bot + 50, "R1", { from: [bot + 24, bot + 24], below: true });
-    titled(CX, bot + 96, "Plan view · canary stages, release passes", "Scale 1 min = 4 px · 100% = 200 px · bake time illustrative", 1);
+    titled(
+      CX,
+      bot + 96,
+      "Plan view · canary stages, release passes",
+      "Scale 1 min = 4 px · 100% = 200 px · bake time illustrative",
+      1,
+    );
     passBottom = bot + 109;
   }
 
@@ -67,12 +95,17 @@ export default function draw() {
   s.comment("Plan view: rolled back at g2");
   let failBottom;
   {
-    const H = 100, top = passBottom + 70, bot = top + H;
+    const H = 100,
+      top = passBottom + 70,
+      bot = top + H;
     const Y = (p) => bot - p * H;
     s.rect(X(0), top, (R1 + AFTER) * k, H, "obj fill-2");
     s.rect(X(0), Y(S[0]), B * k, S[0] * H, "obj fill-1");
     s.rect(X(B), Y(S[1]), B * k, S[1] * H, "obj fill-1");
-    s.path(`M${f(X(2 * B))},${f(Y(S[1]))}V${f(Y(S[2]))}H${f(X(R1))}V${f(Y(1))}H${f(X(R1 + AFTER))}`, "phantom");
+    s.path(
+      `M${f(X(2 * B))},${f(Y(S[1]))}V${f(Y(S[2]))}H${f(X(R1))}V${f(Y(1))}H${f(X(R1 + AFTER))}`,
+      "phantom",
+    );
     s.text(X(R1 + AFTER / 2), Y(0.75) + 3, "planned, never run", "sl", "middle");
     s.text(X(B), Y(0.72) + 3, "control", "sl ink", "middle");
     tick(Y(1), "s4");
@@ -84,7 +117,13 @@ export default function draw() {
     s.nb(X(2 * B) + 42 + widthOf("rolled back", "sl") + 12, Y(0.3), 3);
 
     s.detailRef(X(B), bot - 6, 14, "detail A", X(B) - 44, Y(0.38));
-    titled(CX, bot + 46, "Plan view · release judged bad at the second gate", "Scale 1 min = 4 px · 100% = 100 px", 0);
+    titled(
+      CX,
+      bot + 46,
+      "Plan view · release judged bad at the second gate",
+      "Scale 1 min = 4 px · 100% = 100 px",
+      0,
+    );
     failBottom = bot + 59;
   }
 
@@ -93,7 +132,9 @@ export default function draw() {
   const rowTop = failBottom + 50;
   let detailBottom;
   {
-    const ky = 1000, xd = 76, bot = rowTop + 150;
+    const ky = 1000,
+      xd = 76,
+      bot = rowTop + 150;
     const Xd = (m) => xd + m * k;
     s.line(Xd(0) - 10, bot, Xd(2 * B) + 10, bot, "ext");
     s.rect(Xd(0), bot - S[0] * ky, B * k, S[0] * ky, "obj hl");
@@ -104,12 +145,22 @@ export default function draw() {
     s.chainH(xs, bot + 20, ["B", "B"], { from: xs.map(() => bot), below: true });
 
     // X1: both slivers, one label.
-    const ex = Xd(B) - 20, ey = bot - 72;
+    const ex = Xd(B) - 20,
+      ey = bot - 72;
     s.callout(Xd(1.5 * B), bot - 50, ex, ey, "X1", { cls: "dt" });
-    s.add(el("circle", { class: "dot", cx: Xd(B / 2), cy: bot - 5, r: 1.6 }), el("path", { class: "leader", d: `M${f(Xd(B / 2))},${f(bot - 5)}L${f(ex)},${f(ey)}` }));
+    s.add(
+      el("circle", { class: "dot", cx: Xd(B / 2), cy: bot - 5, r: 1.6 }),
+      el("path", { class: "leader", d: `M${f(Xd(B / 2))},${f(bot - 5)}L${f(ex)},${f(ey)}` }),
+    );
     s.nb(ex - 44, ey, 4);
 
-    titled(Xd(B), bot + 72, "Detail A · exposure before the second gate", "Scale 10:1 vertical · 10% = 100 px", 0);
+    titled(
+      Xd(B),
+      bot + 72,
+      "Detail A · exposure before the second gate",
+      "Scale 10:1 vertical · 10% = 100 px",
+      0,
+    );
     detailBottom = bot + 85;
   }
 
@@ -127,7 +178,9 @@ export default function draw() {
   ];
   const widths = [40, 176, 140];
   const tw = widths.reduce((a, b) => a + b, 0);
-  const tb = s.table(W - 32 - tw, rowTop + 16, "Variables · stages from the chapter", rows, { widths });
+  const tb = s.table(W - 32 - tw, rowTop + 16, "Variables · stages from the chapter", rows, {
+    widths,
+  });
   s.height = Math.ceil(Math.max(tb.y, detailBottom) + 30);
   return s.toString();
 }

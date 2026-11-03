@@ -76,12 +76,16 @@ export async function DocArticle({
       <div className="min-w-0">
         <DocsHeader title={doc.title} eyebrow={eyebrow}>
           {doc.description && <p className="max-w-3xl text-dim">{doc.description}</p>}
-          <div data-pagefind-ignore className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3">
+          <div
+            data-pagefind-ignore
+            className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3"
+          >
             <div className="inst flex flex-wrap items-center gap-x-5 gap-y-2 text-dim">
               <span>{doc.readingMinutes} min read</span>
               {modified && (
                 <span>
-                  Updated <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
+                  Updated{" "}
+                  <time dateTime={modified}>{format(new Date(modified), "MMM d, yyyy")}</time>
                 </span>
               )}
             </div>

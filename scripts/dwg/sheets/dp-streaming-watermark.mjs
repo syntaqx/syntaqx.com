@@ -19,12 +19,23 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, `Values from a stream engine's documented watermark example: a ${D1}-minute delay, newest event ${hhmm(E1)}, watermark ${hhmm(M1)}.`],
-    [2, `Stamped ${hhmm(LATE)}, it arrives after M1 passed ${hhmm(W1)}: dropped, or sent to a side output.`],
-    [3, "Once M1 passes a window's end, the window is emitted and its state cleared."],
-    [0, "Times are event time. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        `Values from a stream engine's documented watermark example: a ${D1}-minute delay, newest event ${hhmm(E1)}, watermark ${hhmm(M1)}.`,
+      ],
+      [
+        2,
+        `Stamped ${hhmm(LATE)}, it arrives after M1 passed ${hhmm(W1)}: dropped, or sent to a side output.`,
+      ],
+      [3, "Once M1 passes a window's end, the window is emitted and its state cleared."],
+      [0, "Times are event time. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: event-time axis, 1 min = 24 px ----
   s.comment("Plan view: event-time axis");
@@ -32,8 +43,11 @@ export default function draw() {
   const x0 = CX - (AXIS * k) / 2;
   const X = (m) => x0 + m * k;
   const dimY = ny + 52;
-  const top = dimY + 22, h = 40, bot = top + h;
-  const evY = bot + 18, axY = evY + 20;
+  const top = dimY + 22,
+    h = 40,
+    bot = top + h;
+  const evY = bot + 18,
+    axY = evY + 20;
 
   // Windows: the closed one and the one still open.
   s.rect(X(0), top, W1 * k, h, "obj fill-1");

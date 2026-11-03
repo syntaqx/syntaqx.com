@@ -2,14 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
-import {
-  Info,
-  ExternalLink,
-  RefreshCw,
-  Trash2,
-  Plus,
-  Minus,
-} from "lucide-react";
+import { Info, ExternalLink, RefreshCw, Trash2, Plus, Minus } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
@@ -50,8 +43,7 @@ function generateUUIDv1(): string {
 
   const timeLow = Number(now100ns & BigInt(0xffffffff));
   const timeMid = Number((now100ns >> BigInt(32)) & BigInt(0xffff));
-  const timeHiAndVersion =
-    Number((now100ns >> BigInt(48)) & BigInt(0x0fff)) | 0x1000;
+  const timeHiAndVersion = Number((now100ns >> BigInt(48)) & BigInt(0x0fff)) | 0x1000;
   const clockSeqHi = ((v1ClockSeq >> 8) & 0x3f) | 0x80;
   const clockSeqLow = v1ClockSeq & 0xff;
 
@@ -95,11 +87,7 @@ function generateULID(): string {
   }
   for (let i = 0; i < 80; i += 5) {
     const val =
-      (bits[i] << 4) |
-      (bits[i + 1] << 3) |
-      (bits[i + 2] << 2) |
-      (bits[i + 3] << 1) |
-      bits[i + 4];
+      (bits[i] << 4) | (bits[i + 1] << 3) | (bits[i + 2] << 2) | (bits[i + 3] << 1) | bits[i + 4];
     rand += CROCKFORD[val];
   }
 
@@ -129,8 +117,7 @@ interface UuidInfo {
   type: "uuid" | "ulid" | "unknown";
 }
 
-const UUID_REGEX =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const ULID_REGEX = /^[0-9A-HJKMNP-TV-Z]{26}$/i;
 
 function parseId(input: string): UuidInfo {
@@ -228,12 +215,10 @@ export default function UuidPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          UUID / ULID Generator
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">UUID / ULID Generator</h1>
         <p className="max-w-2xl text-dim">
-          Generate, validate, and inspect UUIDs and ULIDs. Everything runs in
-          your browser, nothing is sent to a server.
+          Generate, validate, and inspect UUIDs and ULIDs. Everything runs in your browser, nothing
+          is sent to a server.
         </p>
       </div>
 
@@ -295,23 +280,18 @@ export default function UuidPage() {
                 }}
                 ariaLabel="ID type"
                 size="sm"
-                options={(Object.keys(ID_LABELS) as IdType[]).map((type) => ({ value: type, label: ID_LABELS[type] }))}
+                options={(Object.keys(ID_LABELS) as IdType[]).map((type) => ({
+                  value: type,
+                  label: ID_LABELS[type],
+                }))}
                 className="bg-background/50"
               />
 
               {/* Format options */}
               <div className="flex items-center gap-3">
-                <Checkbox
-                  checked={uppercase}
-                  onChange={setUppercase}
-                  label="Uppercase"
-                />
+                <Checkbox checked={uppercase} onChange={setUppercase} label="Uppercase" />
                 {idType !== "ulid" && (
-                  <Checkbox
-                    checked={noDashes}
-                    onChange={setNoDashes}
-                    label="No dashes"
-                  />
+                  <Checkbox checked={noDashes} onChange={setNoDashes} label="No dashes" />
                 )}
               </div>
             </div>
@@ -326,11 +306,7 @@ export default function UuidPage() {
                   : "Output"}
               </span>
               <div className="flex items-center gap-1.5">
-                <CopyButton
-                  text={allText}
-                  label
-                  disabled={displayIds.length === 0}
-                />
+                <CopyButton text={allText} label disabled={displayIds.length === 0} />
                 {displayIds.length > 0 && (
                   <button
                     onClick={() => setGenerated([])}
@@ -345,13 +321,8 @@ export default function UuidPage() {
               {displayIds.length > 0 ? (
                 <div className="space-y-0.5">
                   {displayIds.map((id, i) => (
-                    <div
-                      key={i}
-                      className="group flex items-center justify-between gap-2"
-                    >
-                      <code className="text-sm font-mono text-foreground select-all">
-                        {id}
-                      </code>
+                    <div key={i} className="group flex items-center justify-between gap-2">
+                      <code className="text-sm font-mono text-foreground select-all">{id}</code>
                       <CopyButton
                         text={id}
                         className="opacity-0 group-hover:opacity-100 transition"
@@ -370,9 +341,7 @@ export default function UuidPage() {
           {/* Inspector */}
           <div className="border border-border bg-surface">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <span className="text-xs font-medium text-dim">
-                Inspect / Validate
-              </span>
+              <span className="text-xs font-medium text-dim">Inspect / Validate</span>
               <div className="flex items-center gap-1.5">
                 <PasteButton onPaste={(text) => setInspectInput(text)} label />
                 {inspectInput && (
@@ -399,15 +368,16 @@ export default function UuidPage() {
                 <div className="border border-border bg-background px-3 py-2 space-y-1.5">
                   <div className="flex items-center gap-2">
                     <span
-                      className={cn("text-xs font-medium", inspectResult.valid ? "text-green" : "text-pink")}
+                      className={cn(
+                        "text-xs font-medium",
+                        inspectResult.valid ? "text-green" : "text-pink",
+                      )}
                     >
                       {inspectResult.valid ? "✓ Valid" : "✗ Invalid"}
                     </span>
                     {inspectResult.valid && (
                       <span className="text-xs text-dim font-mono">
-                        {inspectResult.type === "uuid"
-                          ? `UUID v${inspectResult.version}`
-                          : "ULID"}
+                        {inspectResult.type === "uuid" ? `UUID v${inspectResult.version}` : "ULID"}
                       </span>
                     )}
                   </div>
@@ -415,8 +385,7 @@ export default function UuidPage() {
                     <div className="text-xs text-dim space-y-0.5">
                       {inspectResult.variant && (
                         <p>
-                          <span className="text-muted">Variant:</span>{" "}
-                          {inspectResult.variant}
+                          <span className="text-muted">Variant:</span> {inspectResult.variant}
                         </p>
                       )}
                       {inspectResult.timestamp && (
@@ -431,12 +400,9 @@ export default function UuidPage() {
                           </span>
                         </p>
                       )}
-                      {inspectResult.type === "uuid" &&
-                        inspectResult.version === 4 && (
-                          <p className="text-dim">
-                            Random UUID - no embedded timestamp
-                          </p>
-                        )}
+                      {inspectResult.type === "uuid" && inspectResult.version === 4 && (
+                        <p className="text-dim">Random UUID - no embedded timestamp</p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -454,12 +420,12 @@ export default function UuidPage() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                All IDs are generated client-side using the Web Crypto API for
-                cryptographically secure random values.
+                All IDs are generated client-side using the Web Crypto API for cryptographically
+                secure random values.
               </p>
               <p>
-                For a deeper look at UUID versions, ULID, auto-increment
-                tradeoffs, and why UUID v7 is the recommended default, see the{" "}
+                For a deeper look at UUID versions, ULID, auto-increment tradeoffs, and why UUID v7
+                is the recommended default, see the{" "}
                 <Link
                   href="/docs/fundamentals/identifier-conventions"
                   className="text-accent hover:underline"

@@ -8,7 +8,11 @@ const PHONE = { a: [0, 5], u: [5, 7] };
 const LAPTOP = { b: [1, 4], u: [4, 6], c: [6, 7] };
 const DAYS = 7;
 const len = ([a, b]) => b - a;
-const A1 = len(PHONE.a), U2 = len(PHONE.u), A2 = len(LAPTOP.b), U1 = len(LAPTOP.u), C1 = len(LAPTOP.c);
+const A1 = len(PHONE.a),
+  U2 = len(PHONE.u),
+  A2 = len(LAPTOP.b),
+  U1 = len(LAPTOP.u),
+  C1 = len(LAPTOP.c);
 const P1 = A1 + U2;
 
 export default function draw() {
@@ -16,17 +20,32 @@ export default function draw() {
   const s = sheet({ prefix: "tm-ed", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "The first event carrying both the anonymous ID and the user ID records the link (identify at login)."],
-    [2, "Once linked, the earlier anonymous events on both devices count as user u: one person, two devices."],
-    [3, "Logout resets the anonymous ID, so the next person on a shared laptop is not merged into user u."],
-    [4, "Illustrative timeline, not a measurement."],
-    [0, "Values in days. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "The first event carrying both the anonymous ID and the user ID records the link (identify at login).",
+      ],
+      [
+        2,
+        "Once linked, the earlier anonymous events on both devices count as user u: one person, two devices.",
+      ],
+      [
+        3,
+        "Logout resets the anonymous ID, so the next person on a shared laptop is not merged into user u.",
+      ],
+      [4, "Illustrative timeline, not a measurement."],
+      [0, "Values in days. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 day = 80 px ----
   s.comment("Plan view: two devices, one person");
-  const k = 80, lx = 96;
+  const k = 80,
+    lx = 96;
   const x0 = lx + 16 + (W - 32 - lx - 16 - DAYS * k) / 2;
   const X = (d) => x0 + d * k;
   const h = 32;
@@ -43,7 +62,10 @@ export default function draw() {
   s.nb(X(PHONE.u[0]) + 10, phoneY + 10, 1);
   s.dimH(X(0), X(DAYS), phoneY - 22, "P1", { from: [phoneY, phoneY], hl: true });
   s.nb((X(0) + X(DAYS)) / 2 + 20, phoneY - 29.5, 2);
-  s.chainH([X(PHONE.a[0]), X(PHONE.a[1]), X(PHONE.u[1])], phoneY + h + 18, ["A1", "U2"], { from: [phoneY + h, phoneY + h, phoneY + h], below: true });
+  s.chainH([X(PHONE.a[0]), X(PHONE.a[1]), X(PHONE.u[1])], phoneY + h + 18, ["A1", "U2"], {
+    from: [phoneY + h, phoneY + h, phoneY + h],
+    below: true,
+  });
 
   s.text(x0 - 14, laptopY + h / 2 + 3, "laptop", "sl ink", "end");
   box(LAPTOP.b, laptopY, "obj fill-2", "anonymous b");
@@ -51,7 +73,12 @@ export default function draw() {
   box(LAPTOP.c, laptopY, "slot", "anon c");
   s.nb(X(LAPTOP.u[0]) + 10, laptopY + 10, 1);
   s.nb(X(LAPTOP.c[1]) + 14, laptopY + h / 2, 3);
-  s.chainH([X(LAPTOP.b[0]), X(LAPTOP.b[1]), X(LAPTOP.u[1]), X(LAPTOP.c[1])], laptopY + h + 18, ["A2", "U1", "C1"], { from: Array(4).fill(laptopY + h), below: true });
+  s.chainH(
+    [X(LAPTOP.b[0]), X(LAPTOP.b[1]), X(LAPTOP.u[1]), X(LAPTOP.c[1])],
+    laptopY + h + 18,
+    ["A2", "U1", "C1"],
+    { from: Array(4).fill(laptopY + h), below: true },
+  );
 
   const axY = laptopY + h + 54;
   s.line(X(0), axY, X(DAYS), axY, "obj");
@@ -60,7 +87,12 @@ export default function draw() {
     s.text(X(d), axY + 15, String(d), "vs", "middle");
   }
   s.text(x0 - 14, axY + 15, "day", "vs", "end");
-  s.viewTitle((X(0) + X(DAYS)) / 2, axY + 50, "Plan view · two devices, one person", "Scale 1 day = 80 px · timeline");
+  s.viewTitle(
+    (X(0) + X(DAYS)) / 2,
+    axY + 50,
+    "Plan view · two devices, one person",
+    "Scale 1 day = 80 px · timeline",
+  );
   const viewBottom = axY + 63;
 
   // ---- Variable table ----
@@ -74,7 +106,12 @@ export default function draw() {
     ["C1", "laptop, new anonymous ID c after logout, not linked", v(C1)],
     ["P1", "stitched history of user u, first event to last", `A1 + U2 = ${v(P1)}`],
   ];
-  const tw = [0, 1, 2].reduce((sum, j) => sum + Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)), 0);
+  const tw = [0, 1, 2].reduce(
+    (sum, j) =>
+      sum +
+      Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)),
+    0,
+  );
   const tb = s.table((X(0) + X(DAYS)) / 2 - tw / 2, viewBottom + 50, "Variables · days", rows);
   s.height = Math.ceil(tb.y + 30);
   return s.toString();

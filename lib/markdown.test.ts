@@ -30,16 +30,10 @@ describe("renderMarkdownPage()", () => {
 
   it("renders docs, the docs index, the API reference and contact", () => {
     const doc = getAllDocs()[0];
-    expect(renderMarkdownPage(`/docs/${doc.slug}`).body).toContain(
-      `# ${doc.title}`,
-    );
-    expect(renderMarkdownPage("/docs").body).toContain(
-      `https://www.syntaqx.com/docs/${doc.slug}`,
-    );
+    expect(renderMarkdownPage(`/docs/${doc.slug}`).body).toContain(`# ${doc.title}`);
+    expect(renderMarkdownPage("/docs").body).toContain(`https://www.syntaqx.com/docs/${doc.slug}`);
     expect(renderMarkdownPage("/docs/api").body).toContain("# syntaqx API");
-    expect(renderMarkdownPage("/docs/api").body).toContain(
-      "## Versioning and deprecation",
-    );
+    expect(renderMarkdownPage("/docs/api").body).toContain("## Versioning and deprecation");
     const versioning = renderMarkdownPage("/docs/api-design/versioning").body;
     expect(versioning).toContain("## The Lifecycle");
     // Header versioning is the primary recommendation; the URL is the fallback.
@@ -48,16 +42,16 @@ describe("renderMarkdownPage()", () => {
       versioning.indexOf("## URL Versioning (Fallback)"),
     );
     expect(renderMarkdownPage("/contact").body).toContain("# Contact");
-    expect(renderMarkdownPage("/contact").body).toContain(
-      "mailto:syntaqx@gmail.com",
-    );
+    expect(renderMarkdownPage("/contact").body).toContain("mailto:syntaqx@gmail.com");
     expect(renderMarkdownPage("/posts").status).toBe(200);
   });
 
   it("renders books: the index, a cover, a chapter, a glossary and its parts", () => {
     const book = BOOKS[0];
     const chapters = getBookChapters(book.slug);
-    expect(renderMarkdownPage("/books").body).toContain(`https://www.syntaqx.com/books/${book.slug}`);
+    expect(renderMarkdownPage("/books").body).toContain(
+      `https://www.syntaqx.com/books/${book.slug}`,
+    );
     expect(renderMarkdownPage(`/books/${book.slug}`).body).toContain(`# ${book.name}`);
     const chapter = chapters.find((c) => !isGlossary(c))!;
     expect(renderMarkdownPage(`/books/${chapter.slug}`).body).toContain(`# ${chapter.title}`);

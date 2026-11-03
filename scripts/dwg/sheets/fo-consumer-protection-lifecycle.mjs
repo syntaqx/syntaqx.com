@@ -14,14 +14,24 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, h = 28, gap = 18, lineH = 14;
+  const W = 760,
+    x = 20,
+    h = 28,
+    gap = 18,
+    lineH = 14;
   const s = sheet({ prefix: "fo-cpl", width: W });
   const top = 44;
 
   s.comment("Stages");
   s.text(x, 26, "stage", "th");
   s.line(x, 32, W - x, 32, "tbl");
-  const nodes = s.row(x, top, W - 2 * x, STAGES.map(([label, , hl]) => ({ label, hl })), { h, gap });
+  const nodes = s.row(
+    x,
+    top,
+    W - 2 * x,
+    STAGES.map(([label, , hl]) => ({ label, hl })),
+    { h, gap },
+  );
   nodes.slice(1).forEach((n, i) => s.connect(nodes[i], n, { alt: i === nodes.length - 2 }));
 
   s.comment("The rules");
@@ -29,7 +39,9 @@ export default function draw() {
   s.text(x, ry, "the rules", "th");
   s.line(x, ry + 8, W - x, ry + 8, "tbl");
   STAGES.forEach(([, rules, hl], i) =>
-    rules.forEach((r, j) => s.text(nodes[i].cx, ry + 26 + j * lineH, r, hl ? "tc hl" : "tc", "middle")),
+    rules.forEach((r, j) =>
+      s.text(nodes[i].cx, ry + 26 + j * lineH, r, hl ? "tc hl" : "tc", "middle"),
+    ),
   );
   const rb = ry + 26 + 3 * lineH + 8;
 

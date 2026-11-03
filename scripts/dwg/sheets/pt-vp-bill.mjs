@@ -14,7 +14,9 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, w = 100, gap = 20;
+  const W = 760,
+    w = 100,
+    gap = 20;
   const total = STAGES.length * w + (STAGES.length - 1) * gap;
   const x0 = (W - total) / 2;
   const s = sheet({ prefix: "pt-vpb", width: W });
@@ -24,8 +26,15 @@ export default function draw() {
   const match = nodes[2];
 
   s.comment("Outside tolerance goes to people");
-  const q = s.node(match.cx - 70, bottoms[2] + 40, 140, 28, "exception queue", { kind: "store", fill: 1 });
-  s.wire([[match.cx, bottoms[2] + 6], q.port("t")], { alt: true, label: "outside tolerance", side: "right" });
+  const q = s.node(match.cx - 70, bottoms[2] + 40, 140, 28, "exception queue", {
+    kind: "store",
+    fill: 1,
+  });
+  s.wire([[match.cx, bottoms[2] + 6], q.port("t")], {
+    alt: true,
+    label: "outside tolerance",
+    side: "right",
+  });
 
   s.height = Math.ceil(q.y2 + 20);
   return s.toString();

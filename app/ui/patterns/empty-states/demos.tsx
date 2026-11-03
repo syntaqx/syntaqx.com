@@ -12,9 +12,7 @@ function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
   return (
     <div className="rounded-lg border border-border bg-surface">
       {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-        {note}
-      </div>
+      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">{note}</div>
     </div>
   );
 }
@@ -35,8 +33,8 @@ function FirstRunDemo() {
     <Frame
       note={
         <>
-          One sentence on what lives here, one primary action, one low-stakes
-          way to see it full. No illustration carries the message on its own.
+          One sentence on what lives here, one primary action, one low-stakes way to see it full. No
+          illustration carries the message on its own.
         </>
       }
     >
@@ -45,22 +43,14 @@ function FirstRunDemo() {
           <FolderPlus size={20} className="mb-3 text-dim" />
           <p className="mb-1 text-sm text-foreground">No projects yet</p>
           <p className="mb-5 max-w-sm text-xs leading-relaxed text-dim">
-            A project groups the services you deploy together, so their logs
-            and alerts live in one place.
+            A project groups the services you deploy together, so their logs and alerts live in one
+            place.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
-            <button
-              type="button"
-              className={primary}
-              onClick={() => setProjects(["new-project"])}
-            >
+            <button type="button" className={primary} onClick={() => setProjects(["new-project"])}>
               Create a project
             </button>
-            <button
-              type="button"
-              className={btn}
-              onClick={() => setProjects(SAMPLE_PROJECTS)}
-            >
+            <button type="button" className={btn} onClick={() => setProjects(SAMPLE_PROJECTS)}>
               Load sample projects
             </button>
           </div>
@@ -113,9 +103,8 @@ function NoResultsDemo() {
     <Frame
       note={
         <>
-          The empty state knows why it&apos;s empty. Here a match exists, but
-          the archived filter hides it, so the fix is one click away. Clear the
-          search to see the plain list.
+          The empty state knows why it&apos;s empty. Here a match exists, but the archived filter
+          hides it, so the fix is one click away. Clear the search to see the plain list.
         </>
       }
     >
@@ -158,8 +147,7 @@ function NoResultsDemo() {
           {hiddenByFilter > 0 ? (
             <>
               <p className="mb-4 text-xs text-dim">
-                {hiddenByFilter} archived{" "}
-                {hiddenByFilter === 1 ? "issue matches" : "issues match"}.
+                {hiddenByFilter} archived {hiddenByFilter === 1 ? "issue matches" : "issues match"}.
               </p>
               <button type="button" className={primary} onClick={() => setShowArchived(true)}>
                 Include archived
@@ -167,9 +155,7 @@ function NoResultsDemo() {
             </>
           ) : (
             <>
-              <p className="mb-4 text-xs text-dim">
-                Check the spelling, or try fewer words.
-              </p>
+              <p className="mb-4 text-xs text-dim">Check the spelling, or try fewer words.</p>
               <button type="button" className={btn} onClick={() => setQuery("")}>
                 <X size={12} /> Clear search
               </button>
@@ -197,9 +183,8 @@ function AllDoneDemo() {
     <Frame
       note={
         <>
-          Same empty list as the first run, different meaning. Reusing the
-          first-run copy here would tell someone who just finished that they
-          never started.
+          Same empty list as the first run, different meaning. Reusing the first-run copy here would
+          tell someone who just finished that they never started.
         </>
       }
     >
@@ -224,11 +209,7 @@ function AllDoneDemo() {
           <Inbox size={20} className="mb-3 text-accent" />
           <p className="mb-1 text-sm text-foreground">All caught up</p>
           <p className="mb-5 text-xs text-dim">Nothing needs you right now.</p>
-          <button
-            type="button"
-            className={btn}
-            onClick={() => setDone((d) => d.slice(0, -1))}
-          >
+          <button type="button" className={btn} onClick={() => setDone((d) => d.slice(0, -1))}>
             <RotateCcw size={12} /> Undo last
           </button>
         </div>

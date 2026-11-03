@@ -28,7 +28,12 @@ const CHAINS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, w = 200, h = 34, gap = 26, top = 56;
+  const W = 760,
+    x = 20,
+    w = 200,
+    h = 34,
+    gap = 26,
+    top = 56;
   const s = sheet({ prefix: "rc", width: W });
   const CX = [260, 500];
   const Y = (i) => top + i * (h + gap);
@@ -40,15 +45,29 @@ export default function draw() {
     const nodes = c.levels.map(([label, sub], i) =>
       s.node(CX[k] - w / 2, Y(i), w, h, label, { sub: sub ?? undefined, fill: i === 0 ? 1 : 2 }),
     );
-    nodes.slice(1).forEach((n, i) => s.connect(nodes[i], n, { from: "b", to: "t", label: c.levels[i + 1][2], side: c.side }));
+    nodes
+      .slice(1)
+      .forEach((n, i) =>
+        s.connect(nodes[i], n, { from: "b", to: "t", label: c.levels[i + 1][2], side: c.side }),
+      );
   });
 
   s.comment("Rules down, evidence up");
-  const dx = 40, ux = W - 40;
+  const dx = 40,
+    ux = W - 40;
   s.text(dx - 8, 22, "rules, fines, termination", "sl hl");
-  s.wire([[dx, 32], [dx, chainBot]], { hl: true });
+  s.wire(
+    [
+      [dx, 32],
+      [dx, chainBot],
+    ],
+    { hl: true },
+  );
   s.text(ux + 8, 22, "evidence: attestations, proof of authorization", "sl", "end");
-  s.wire([[ux, chainBot], [ux, 32]]);
+  s.wire([
+    [ux, chainBot],
+    [ux, 32],
+  ]);
 
   s.comment("Law at every level");
   const lawY = chainBot + 20;

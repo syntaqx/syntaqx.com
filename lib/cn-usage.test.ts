@@ -38,21 +38,30 @@ function sourceFiles(dir: string): string[] {
 type Alternatives = string[] | null; // null: not statically known
 
 function analyze(file: string) {
-  const sf = ts.createSourceFile(file, readFileSync(file, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const sf = ts.createSourceFile(
+    file,
+    readFileSync(file, "utf8"),
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
 
   // Same-file `const x = ...` initializers, by name.
   const consts = new Map<string, ts.Expression>();
   const collect = (n: ts.Node) => {
     if (ts.isVariableDeclaration(n) && ts.isIdentifier(n.name) && n.initializer) {
       const list = n.parent;
-      if (ts.isVariableDeclarationList(list) && list.flags & ts.NodeFlags.Const) consts.set(n.name.text, n.initializer);
+      if (ts.isVariableDeclarationList(list) && list.flags & ts.NodeFlags.Const)
+        consts.set(n.name.text, n.initializer);
     }
     ts.forEachChild(n, collect);
   };
   collect(sf);
 
   const unwrap = (e: ts.Expression): ts.Expression =>
-    ts.isParenthesizedExpression(e) || ts.isAsExpression(e) || ts.isSatisfiesExpression(e) ? unwrap(e.expression) : e;
+    ts.isParenthesizedExpression(e) || ts.isAsExpression(e) || ts.isSatisfiesExpression(e)
+      ? unwrap(e.expression)
+      : e;
 
   // Every class string an expression can produce.
   const resolve = (expr: ts.Expression, seen = new Set<string>()): Alternatives => {
@@ -60,9 +69,11 @@ function analyze(file: string) {
     if (ts.isStringLiteral(e) || ts.isNoSubstitutionTemplateLiteral(e)) return [e.text];
     if (e.kind === ts.SyntaxKind.FalseKeyword || e.kind === ts.SyntaxKind.NullKeyword) return [""];
     if (ts.isIdentifier(e) && e.text === "undefined") return [""];
-    if (ts.isConditionalExpression(e)) return union(resolve(e.whenTrue, seen), resolve(e.whenFalse, seen));
+    if (ts.isConditionalExpression(e))
+      return union(resolve(e.whenTrue, seen), resolve(e.whenFalse, seen));
     if (ts.isBinaryExpression(e)) {
-      if (e.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken) return union([""], resolve(e.right, seen));
+      if (e.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken)
+        return union([""], resolve(e.right, seen));
       if (
         e.operatorToken.kind === ts.SyntaxKind.BarBarToken ||
         e.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
@@ -93,11 +104,13 @@ function analyze(file: string) {
     }
     if (ts.isCallExpression(e)) {
       const callee = e.expression.getText(sf);
-      if (callee === "cn") return combos(e.arguments.map((a) => resolve(a, seen)))?.map((c) => twMerge(c)) ?? null;
+      if (callee === "cn")
+        return combos(e.arguments.map((a) => resolve(a, seen)))?.map((c) => twMerge(c)) ?? null;
       // A same-file class helper with an expression body, e.g. rowClass(active).
       const fn = consts.get(callee);
       const f = fn && unwrap(fn);
-      if (f && ts.isArrowFunction(f) && !ts.isBlock(f.body)) return resolve(f.body, new Set(seen).add(callee));
+      if (f && ts.isArrowFunction(f) && !ts.isBlock(f.body))
+        return resolve(f.body, new Set(seen).add(callee));
       return null;
     }
     return null;

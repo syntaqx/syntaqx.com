@@ -7,10 +7,14 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "pt-puc", width: W });
 
-  const w = 128, h = 40, cols = 4;
+  const w = 128,
+    h = 40,
+    cols = 4;
   const gap = (W - 40 - cols * w) / (cols - 1);
   const X = (i) => 20 + i * (w + gap);
-  const r0 = 20, r1 = r0 + h + 64, r2 = r1 + h + 64;
+  const r0 = 20,
+    r1 = r0 + h + 64,
+    r2 = r1 + h + 64;
   const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", ...o });
 
   s.comment("States");
@@ -26,11 +30,30 @@ export default function draw() {
   s.connect(vl, occ, { hl: true, label: "move-in", side: "above" });
   s.connect(occ, notice, { hl: true, label: "notice", side: "above" });
   s.connect(notice, turn, { from: "b", to: "t", hl: true, label: "move-out", side: "right" });
-  s.connect(turn, vnl, { from: "l", to: "b", at: [0.7, 0.5], hl: true, label: "ready, not yet leased", side: "below" });
-  s.connect(turn, vl, { from: "l", to: "b", at: [0.3, 0.5], label: "ready, pre-leased", side: "above" });
+  s.connect(turn, vnl, {
+    from: "l",
+    to: "b",
+    at: [0.7, 0.5],
+    hl: true,
+    label: "ready, not yet leased",
+    side: "below",
+  });
+  s.connect(turn, vl, {
+    from: "l",
+    to: "b",
+    at: [0.3, 0.5],
+    label: "ready, pre-leased",
+    side: "above",
+  });
 
   s.comment("Off the market");
-  s.connect(vnl, down, { from: "t", to: "b", arrow: "both", label: "renovation, damage,\nmodel or office;\nback on the market", side: "right" });
+  s.connect(vnl, down, {
+    from: "t",
+    to: "b",
+    arrow: "both",
+    label: "renovation, damage,\nmodel or office;\nback on the market",
+    side: "right",
+  });
 
   s.comment("Legend");
   const lg = s.legend(X(1), r0 + 14, [

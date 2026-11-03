@@ -16,10 +16,15 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "fo-tcf", width: W });
 
-  const h = 24, step = 40, top = 20, wMax = 560, shrink = 60;
+  const h = 24,
+    step = 40,
+    top = 20,
+    wMax = 560,
+    shrink = 60;
   const left = (W - (wMax + 16 + 12 + 90)) / 2; // the funnel, its brackets and their labels, centered
   const cx = left + wMax / 2;
-  const box = (i, label, o) => s.node(cx - (wMax - i * shrink) / 2, top + i * step, wMax - i * shrink, h, label, o);
+  const box = (i, label, o) =>
+    s.node(cx - (wMax - i * shrink) / 2, top + i * step, wMax - i * shrink, h, label, o);
 
   s.comment("The funnel: each step removes resources");
   const all = box(0, "every resource in the tenant", { kind: "ghost" });
@@ -37,7 +42,12 @@ export default function draw() {
 
   s.comment("Footer");
   const fy = cand.y + h + 30;
-  s.text(left, fy, "the same filter answers the phone agent, the portal, the voice agent and the nightly batch", "sl");
+  s.text(
+    left,
+    fy,
+    "the same filter answers the phone agent, the portal, the voice agent and the nightly batch",
+    "sl",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

@@ -25,7 +25,11 @@ export interface GlossaryPart {
 export const isGlossary = (doc: DocData) => doc.slug.endsWith("/glossary");
 
 /** The glossary's intro, its parts in order, and its References section (with heading). */
-export function glossaryParts(doc: DocData): { intro: string; parts: GlossaryPart[]; references: string } {
+export function glossaryParts(doc: DocData): {
+  intro: string;
+  parts: GlossaryPart[];
+  references: string;
+} {
   const [intro, ...sections] = doc.content.split(/^(?=## )/m);
   let references = "";
   const parts: GlossaryPart[] = [];
@@ -51,13 +55,19 @@ export function glossaryParts(doc: DocData): { intro: string; parts: GlossaryPar
 export function glossaryIndex(doc: DocData): string {
   const { intro, parts, references } = glossaryParts(doc);
   const list = parts
-    .map((p) => `- [${p.title}](/books/${doc.slug}/${p.slug}): ${p.terms} ${p.terms === 1 ? "term" : "terms"}`)
+    .map(
+      (p) =>
+        `- [${p.title}](/books/${doc.slug}/${p.slug}): ${p.terms} ${p.terms === 1 ? "term" : "terms"}`,
+    )
     .join("\n");
   return `${intro.trimEnd()}\n\n## Parts\n\n${list}\n\n${references}`;
 }
 
 /** A part's meta description. */
-export function glossaryPartDescription(bookName: string, part: { title: string; terms: number }): string {
+export function glossaryPartDescription(
+  bookName: string,
+  part: { title: string; terms: number },
+): string {
   return `${part.terms} terms from the ${bookName} book's ${part.title} part, each defined in a line and linked to the chapter that explains it.`;
 }
 
@@ -66,7 +76,10 @@ export function glossaryPartDescription(bookName: string, part: { title: string;
  * "Running the Platform"), so it always names the book, by its short name if
  * the full one would run past MAX_TITLE with the site's " - syntaqx".
  */
-export function glossaryPartTitle(book: Pick<Book, "name" | "shortName">, part: { title: string }): string {
+export function glossaryPartTitle(
+  book: Pick<Book, "name" | "shortName">,
+  part: { title: string },
+): string {
   const title = (name: string) => `${part.title} Glossary · ${name}`;
   const full = title(book.name);
   return `${full} - syntaqx`.length > MAX_TITLE && book.shortName ? title(book.shortName) : full;

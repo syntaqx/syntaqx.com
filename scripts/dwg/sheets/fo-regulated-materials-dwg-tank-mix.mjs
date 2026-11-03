@@ -5,7 +5,8 @@
 import { sheet, widthOf } from "../kit.mjs";
 
 // From the chapter's example [1]; a and the label range are [TBD].
-const R1 = 0.8, F1 = 2; // fl oz per gal, gal
+const R1 = 0.8,
+  F1 = 2; // fl oz per gal, gal
 const C1 = R1 * F1; // 1.6 fl oz
 
 export default function draw() {
@@ -13,19 +14,36 @@ export default function draw() {
   const s = sheet({ prefix: "fo-rmt", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Rate and tank from the chapter example; the AI share and range come from the label version in force that day."],
-    [2, "Not to scale: 1.6 fl oz is under 1% of the 256 fl oz in a 2 gal tank."],
-    [3, "Entered: product, mix and F1. From the label version: R1 and the AI share. Computed and stored: C1 and A1, with the entered values and the formula version; a tank mix gets one line per product."],
-    [0, "Volumes in fl oz and gallons. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Rate and tank from the chapter example; the AI share and range come from the label version in force that day.",
+      ],
+      [2, "Not to scale: 1.6 fl oz is under 1% of the 256 fl oz in a 2 gal tank."],
+      [
+        3,
+        "Entered: product, mix and F1. From the label version: R1 and the AI share. Computed and stored: C1 and A1, with the entered values and the formula version; a tank mix gets one line per product.",
+      ],
+      [
+        0,
+        "Volumes in fl oz and gallons. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Section view: one tank, not to scale ----
   s.comment("Section view: one tank");
   const rowTop = ny + 28;
   let secBottom;
   {
-    const tw = 130, th = 190, tx = 210, ty = rowTop + 10;
+    const tw = 130,
+      th = 190,
+      tx = 210,
+      ty = rowTop + 10;
     const fill = ty + 30; // fill line
     s.rect(tx, fill, tw, ty + th - fill, "obj fill-2");
     s.path(`M${tx},${ty}V${ty + th}H${tx + tw}V${ty}`, "obj");
@@ -39,16 +57,24 @@ export default function draw() {
     s.nb(dx + 30, (fill + ty + th) / 2 - 0.5, 1);
 
     // C1: the concentrate measure, poured in (the subject).
-    const mw = 36, mh = 54, mx = tx - 110, my = ty + th - mh;
+    const mw = 36,
+      mh = 54,
+      mx = tx - 110,
+      my = ty + th - mh;
     s.rect(mx, my, mw, mh, "obj hl");
     s.text(mx + mw / 2, my + mh + 16, "concentrate", "sl ink", "middle");
-    const ax = mx + mw / 2, ay = my - 10, ey = fill + 40;
-    s.path(`M${ax},${ay}V${ey + 16}Q${ax},${ey} ${ax + 16},${ey}H${tx - 8}`, "leader", { "marker-end": `url(#${s.id("ah")})` });
+    const ax = mx + mw / 2,
+      ay = my - 10,
+      ey = fill + 40;
+    s.path(`M${ax},${ay}V${ey + 16}Q${ax},${ey} ${ax + 16},${ey}H${tx - 8}`, "leader", {
+      "marker-end": `url(#${s.id("ah")})`,
+    });
     s.text(mx - 8, my + mh / 2 + 3.5, "C1", "dt hl", "end");
     s.nb(mx - 30, my + mh / 2, 3);
 
     secBottom = ty + th + 50;
-    const vt = "Section view · one tank", vcx = (mx - 36 + dx + 36) / 2;
+    const vt = "Section view · one tank",
+      vcx = (mx - 36 + dx + 36) / 2;
     s.viewTitle(vcx, secBottom, vt, "Not to scale · fl oz and gallons");
     s.nb(vcx + widthOf(vt, "vt") / 2 + 12, secBottom - 4, 2);
   }
@@ -69,8 +95,10 @@ export default function draw() {
   // ---- Plan view: rate check at entry, proportional ----
   s.comment("Plan view: rate check");
   {
-    const top = Math.max(secBottom + 13, tb.y) + 70, h = 26;
-    const out = 150, inside = 300; // [TBD] range, drawn proportionally
+    const top = Math.max(secBottom + 13, tb.y) + 70,
+      h = 26;
+    const out = 150,
+      inside = 300; // [TBD] range, drawn proportionally
     const x0 = (W - (2 * out + inside)) / 2;
     const xs = [x0, x0 + out, x0 + out + inside, x0 + 2 * out + inside];
     s.rect(xs[0], top, out, h, "hatch", { fill: s.hatch });

@@ -10,7 +10,8 @@ describe("GET /uuid", () => {
     expect(res.headers.get("Cache-Control")).toBe("no-store");
     const ids = (await res.json()) as string[];
     expect(ids).toHaveLength(3);
-    for (const id of ids) expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+    for (const id of ids)
+      expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
   });
 
   it("returns v4 with ?version=4", async () => {

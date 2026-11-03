@@ -125,6 +125,9 @@ export function validKey(key: string): boolean {
 
 /** What makes two requests "the same request": method, path and body. */
 export async function fingerprint(method: string, path: string, body: string): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${method} ${path}\n${body}`));
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(`${method} ${path}\n${body}`),
+  );
   return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
 }

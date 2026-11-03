@@ -58,7 +58,9 @@ export function renderReport(results: LinkResult[], { deadOnly = false } = {}): 
     ["uncertain", "Uncertain (bot walls, rate limits, server errors, timeouts)"],
     ["ok", "OK"],
   ];
-  const counts = Object.fromEntries(groups.map(([s]) => [s, results.filter((r) => r.status === s).length]));
+  const counts = Object.fromEntries(
+    groups.map(([s]) => [s, results.filter((r) => r.status === s).length]),
+  );
   const lines = [
     `# Playbook link check`,
     "",
@@ -66,10 +68,15 @@ export function renderReport(results: LinkResult[], { deadOnly = false } = {}): 
   ];
   for (const [status, title] of groups) {
     if (deadOnly && status !== "dead") continue;
-    const group = results.filter((r) => r.status === status).sort((a, b) => a.url.localeCompare(b.url));
+    const group = results
+      .filter((r) => r.status === status)
+      .sort((a, b) => a.url.localeCompare(b.url));
     if (group.length === 0 || status === "ok") continue;
     lines.push("", `## ${title}`, "");
-    for (const r of group) lines.push(`- ${r.url} (${r.detail}), cited in ${r.citedBy.map((f) => `\`${f}\``).join(", ")}`);
+    for (const r of group)
+      lines.push(
+        `- ${r.url} (${r.detail}), cited in ${r.citedBy.map((f) => `\`${f}\``).join(", ")}`,
+      );
   }
   return lines.join("\n") + "\n";
 }

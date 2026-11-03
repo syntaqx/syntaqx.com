@@ -29,18 +29,12 @@ export default function LegalPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Legal</h1>
-        <p className="max-w-2xl text-dim">
-          The terms and privacy policy for syntaqx.com.
-        </p>
+        <p className="max-w-2xl text-dim">The terms and privacy policy for syntaqx.com.</p>
       </div>
 
       <div className="grid gap-3">
         {pages.map((page) => (
-          <Link
-            key={page.href}
-            href={page.href}
-            className="group flex flex-col"
-          >
+          <Link key={page.href} href={page.href} className="group flex flex-col">
             <Card hover className="flex flex-col h-full">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl leading-none text-foreground transition-colors group-hover:text-accent">
@@ -51,9 +45,7 @@ export default function LegalPage() {
                   className="text-dim group-hover:text-accent transition-colors"
                 />
               </div>
-              <p className="text-xs text-dim leading-relaxed">
-                {page.description}
-              </p>
+              <p className="text-xs text-dim leading-relaxed">{page.description}</p>
             </Card>
           </Link>
         ))}

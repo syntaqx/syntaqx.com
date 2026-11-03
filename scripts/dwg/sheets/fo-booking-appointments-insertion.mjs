@@ -12,7 +12,11 @@ const PANELS = [
     to: "next stop",
     replaced: "6 min, 2.5 mi",
     legs: ["4 min, 1.5 mi", "5 min, 2.0 mi"],
-    rows: [["added", "3 min, 1.0 mi"], ["cost", "$2.25 + $0.76 = $3.01"], ["day", "+63 min, 60 of them on site"]],
+    rows: [
+      ["added", "3 min, 1.0 mi"],
+      ["cost", "$2.25 + $0.76 = $3.01"],
+      ["day", "+63 min, 60 of them on site"],
+    ],
     hl: true,
   },
   {
@@ -21,14 +25,27 @@ const PANELS = [
     to: "first stop",
     replaced: "12 min, 7 mi",
     legs: ["36 min, 23 mi", "36 min, 23 mi"],
-    rows: [["added", "60 min, 39 mi"], ["cost", "$45.00 + $29.64 = $74.64"], ["day", "7.0 h to 9.0 h, 1 h overtime"]],
+    rows: [
+      ["added", "60 min, 39 mi"],
+      ["cost", "$45.00 + $29.64 = $74.64"],
+      ["day", "7.0 h to 9.0 h, 1 h overtime"],
+    ],
   },
 ];
 
 export default function draw() {
-  const W = 760, x = 20, between = 30, pad = 16, h = 26, sw = 76, nw = 50;
-  const gw = (W - 2 * x - between) / 2, gy = 40;
-  const r1 = gy + 26, r2 = r1 + h + 42, gh = r2 + h + 30 - gy;
+  const W = 760,
+    x = 20,
+    between = 30,
+    pad = 16,
+    h = 26,
+    sw = 76,
+    nw = 50;
+  const gw = (W - 2 * x - between) / 2,
+    gy = 40;
+  const r1 = gy + 26,
+    r2 = r1 + h + 42,
+    gh = r2 + h + 30 - gy;
   const s = sheet({ prefix: "fo-bam", width: W });
 
   PANELS.forEach((p, i) => {
@@ -60,7 +77,12 @@ export default function draw() {
   });
 
   const fy = gy + gh + 26 + 2 * 17 + 30;
-  s.text(x, fy, "illustrative: added = prev to new + new to next - prev to next; $0.75/min labor, $0.76/mi", "tc");
+  s.text(
+    x,
+    fy,
+    "illustrative: added = prev to new + new to next - prev to next; $0.75/min labor, $0.76/mi",
+    "tc",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

@@ -44,10 +44,7 @@ function base64UrlEncode(data: Uint8Array): string {
   for (let i = 0; i < data.length; i++) {
     binary += String.fromCharCode(data[i]);
   }
-  return btoa(binary)
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
 function base64UrlEncodeString(str: string): string {
@@ -60,9 +57,7 @@ function base64UrlDecode(str: string): string {
   if (pad) b64 += "=".repeat(4 - pad);
 
   const raw = atob(b64);
-  return new TextDecoder("utf-8").decode(
-    Uint8Array.from(raw, (c) => c.charCodeAt(0)),
-  );
+  return new TextDecoder("utf-8").decode(Uint8Array.from(raw, (c) => c.charCodeAt(0)));
 }
 
 interface DecodedJwt {
@@ -216,9 +211,7 @@ function getWebCryptoAlgorithm(
   }
 }
 
-function getSignAlgorithm(
-  config: AlgConfig,
-): AlgorithmIdentifier | RsaPssParams | EcdsaParams {
+function getSignAlgorithm(config: AlgConfig): AlgorithmIdentifier | RsaPssParams | EcdsaParams {
   switch (config.family) {
     case "hmac":
       return "HMAC";
@@ -259,9 +252,7 @@ async function importPrivateKey(pem: string, alg: string): Promise<CryptoKey> {
   );
 }
 
-async function generateKeyPair(
-  alg: string,
-): Promise<{ publicKey: string; privateKey: string }> {
+async function generateKeyPair(alg: string): Promise<{ publicKey: string; privateKey: string }> {
   const config = ALG_CONFIG[alg];
   if (!config) throw new Error(`Unknown algorithm: ${alg}`);
 
@@ -293,18 +284,9 @@ async function generateKeyPair(
       throw new Error(`Cannot generate keys for ${alg}`);
   }
 
-  const keyPair = await crypto.subtle.generateKey(genAlg, true, [
-    "sign",
-    "verify",
-  ]);
-  const pubDer = await crypto.subtle.exportKey(
-    "spki",
-    (keyPair as CryptoKeyPair).publicKey,
-  );
-  const privDer = await crypto.subtle.exportKey(
-    "pkcs8",
-    (keyPair as CryptoKeyPair).privateKey,
-  );
+  const keyPair = await crypto.subtle.generateKey(genAlg, true, ["sign", "verify"]);
+  const pubDer = await crypto.subtle.exportKey("spki", (keyPair as CryptoKeyPair).publicKey);
+  const privDer = await crypto.subtle.exportKey("pkcs8", (keyPair as CryptoKeyPair).privateKey);
 
   return {
     publicKey: arrayBufferToPem(pubDer, "PUBLIC KEY"),
@@ -324,17 +306,12 @@ function decodeSignatureBytes(sig: string): Uint8Array<ArrayBuffer> {
   return bytes;
 }
 
-async function verifySignature(
-  jwt: DecodedJwt,
-  secretOrKey: string,
-): Promise<VerifyResult> {
+async function verifySignature(jwt: DecodedJwt, secretOrKey: string): Promise<VerifyResult> {
   const alg = jwt.header.alg;
-  if (typeof alg !== "string")
-    return { status: "error", message: "No alg in header" };
+  if (typeof alg !== "string") return { status: "error", message: "No alg in header" };
 
   const config = ALG_CONFIG[alg];
-  if (!config)
-    return { status: "unsupported", message: `Unknown algorithm: ${alg}` };
+  if (!config) return { status: "unsupported", message: `Unknown algorithm: ${alg}` };
 
   if (config.family === "none") {
     return jwt.parts[2] === "" ? { status: "valid" } : { status: "invalid" };
@@ -387,9 +364,7 @@ async function signJwt(
   if (!config) throw new Error(`Unknown algorithm: ${alg}`);
 
   const encodedHeader = base64UrlEncodeString(JSON.stringify(header));
-  const encodedPayload = base64UrlEncodeString(
-    JSON.stringify(JSON.parse(payloadJson)),
-  );
+  const encodedPayload = base64UrlEncodeString(JSON.stringify(JSON.parse(payloadJson)));
   const signingInput = `${encodedHeader}.${encodedPayload}`;
 
   if (config.family === "none") {
@@ -411,11 +386,7 @@ async function signJwt(
     key = await importPrivateKey(secretOrKey, alg);
   }
 
-  const sig = await crypto.subtle.sign(
-    getSignAlgorithm(config),
-    key,
-    encoder.encode(signingInput),
-  );
+  const sig = await crypto.subtle.sign(getSignAlgorithm(config), key, encoder.encode(signingInput));
   return `${signingInput}.${base64UrlEncode(new Uint8Array(sig))}`;
 }
 
@@ -488,17 +459,12 @@ export default function JwtPage() {
     [decoded.jwt],
   );
 
-  const headerJson = decoded.jwt
-    ? JSON.stringify(decoded.jwt.header, null, 2)
-    : "";
-  const payloadJson = decoded.jwt
-    ? JSON.stringify(decoded.jwt.payload, null, 2)
-    : "";
+  const headerJson = decoded.jwt ? JSON.stringify(decoded.jwt.header, null, 2) : "";
+  const payloadJson = decoded.jwt ? JSON.stringify(decoded.jwt.payload, null, 2) : "";
 
   // Derive algorithm family for UI switching
   const decodeAlgFamily = useMemo(
-    () =>
-      decoded.jwt ? getAlgFamily(decoded.jwt.header.alg) : ("unknown" as const),
+    () => (decoded.jwt ? getAlgFamily(decoded.jwt.header.alg) : ("unknown" as const)),
     [decoded.jwt],
   );
 
@@ -514,22 +480,16 @@ export default function JwtPage() {
   const verifyVersionRef = useRef(0);
   useEffect(() => {
     const keyMaterial =
-      decodeAlgFamily === "hmac" || decodeAlgFamily === "unknown"
-        ? secret
-        : publicKey;
+      decodeAlgFamily === "hmac" || decodeAlgFamily === "unknown" ? secret : publicKey;
 
     if (!decoded.jwt || !keyMaterial) {
       // Schedule to avoid synchronous setState in effect body
-      const id = requestAnimationFrame(() =>
-        setVerifyResult({ status: "unverified" }),
-      );
+      const id = requestAnimationFrame(() => setVerifyResult({ status: "unverified" }));
       return () => cancelAnimationFrame(id);
     }
 
     const version = ++verifyVersionRef.current;
-    const id = requestAnimationFrame(() =>
-      setVerifyResult({ status: "verifying" }),
-    );
+    const id = requestAnimationFrame(() => setVerifyResult({ status: "verifying" }));
 
     verifySignature(decoded.jwt, keyMaterial).then((result) => {
       if (version === verifyVersionRef.current) {
@@ -551,9 +511,7 @@ export default function JwtPage() {
   const encodeVersionRef = useRef(0);
   useEffect(() => {
     const keyMaterial =
-      encodeAlgFamily === "hmac" || encodeAlgFamily === "unknown"
-        ? encodeSecret
-        : encodePrivateKey;
+      encodeAlgFamily === "hmac" || encodeAlgFamily === "unknown" ? encodeSecret : encodePrivateKey;
     const isNone = encodeAlgFamily === "none";
 
     if (!keyMaterial && !isNone) {
@@ -612,13 +570,7 @@ export default function JwtPage() {
       });
 
     return () => cancelAnimationFrame(id);
-  }, [
-    encodeHeader,
-    encodePayload,
-    encodeSecret,
-    encodePrivateKey,
-    encodeAlgFamily,
-  ]);
+  }, [encodeHeader, encodePayload, encodeSecret, encodePrivateKey, encodeAlgFamily]);
 
   const clearEncode = () => {
     setEncodeHeader(DEFAULT_HEADER);
@@ -664,12 +616,10 @@ export default function JwtPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          JWT Debugger
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">JWT Debugger</h1>
         <p className="max-w-2xl text-dim">
-          Decode, encode, and verify JSON Web Tokens. Everything runs in your
-          browser, nothing is sent to a server.
+          Decode, encode, and verify JSON Web Tokens. Everything runs in your browser, nothing is
+          sent to a server.
         </p>
       </div>
 
@@ -679,7 +629,10 @@ export default function JwtPage() {
           value={mode}
           onChange={switchMode}
           ariaLabel="Mode"
-          options={[{ value: "decode", label: "Decoder" }, { value: "encode", label: "Encoder" }]}
+          options={[
+            { value: "decode", label: "Decoder" },
+            { value: "encode", label: "Encoder" },
+          ]}
         />
 
         {mode === "encode" && (
@@ -798,17 +751,11 @@ export default function JwtPage() {
                   >
                     {decoded.jwt ? (
                       <>
-                        <span className="text-pink">
-                          {decoded.jwt.parts[0]}
-                        </span>
+                        <span className="text-pink">{decoded.jwt.parts[0]}</span>
                         <span className="text-dim">.</span>
-                        <span className="text-jwt-purple">
-                          {decoded.jwt.parts[1]}
-                        </span>
+                        <span className="text-jwt-purple">{decoded.jwt.parts[1]}</span>
                         <span className="text-dim">.</span>
-                        <span className="text-jwt-cyan">
-                          {decoded.jwt.parts[2]}
-                        </span>
+                        <span className="text-jwt-cyan">{decoded.jwt.parts[2]}</span>
                       </>
                     ) : (
                       <span className="text-transparent">{input}</span>
@@ -842,37 +789,21 @@ export default function JwtPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-pink">
-                      Header
-                    </span>
-                    <CopyButton
-                      text={headerJson}
-                      label
-                      disabled={!headerJson}
-                    />
+                    <span className="text-xs font-medium text-pink">Header</span>
+                    <CopyButton text={headerJson} label disabled={!headerJson} />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
-                    {headerJson || (
-                      <span className="text-dim/30">{"{\n  ...\n}"}</span>
-                    )}
+                    {headerJson || <span className="text-dim/30">{"{\n  ...\n}"}</span>}
                   </pre>
                 </div>
 
                 <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-jwt-purple">
-                      Payload
-                    </span>
-                    <CopyButton
-                      text={payloadJson}
-                      label
-                      disabled={!payloadJson}
-                    />
+                    <span className="text-xs font-medium text-jwt-purple">Payload</span>
+                    <CopyButton text={payloadJson} label disabled={!payloadJson} />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
-                    {payloadJson || (
-                      <span className="text-dim/30">{"{\n  ...\n}"}</span>
-                    )}
+                    {payloadJson || <span className="text-dim/30">{"{\n  ...\n}"}</span>}
                   </pre>
                 </div>
               </div>
@@ -885,7 +816,11 @@ export default function JwtPage() {
                     <span
                       className={cn(
                         "inline-flex items-center gap-1 text-xs",
-                        expiry.status === "expired" ? "text-pink" : expiry.status === "valid" ? "text-green" : "text-dim",
+                        expiry.status === "expired"
+                          ? "text-pink"
+                          : expiry.status === "valid"
+                            ? "text-green"
+                            : "text-dim",
                       )}
                     >
                       <Clock size={10} />
@@ -897,12 +832,8 @@ export default function JwtPage() {
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="border-b border-border text-dim">
-                        <th className="text-left px-3 py-1.5 font-medium">
-                          Claim
-                        </th>
-                        <th className="text-left px-3 py-1.5 font-medium">
-                          Value
-                        </th>
+                        <th className="text-left px-3 py-1.5 font-medium">Claim</th>
+                        <th className="text-left px-3 py-1.5 font-medium">Value</th>
                         <th className="text-left px-3 py-1.5 font-medium hidden sm:table-cell">
                           Description
                         </th>
@@ -910,46 +841,34 @@ export default function JwtPage() {
                     </thead>
                     <tbody>
                       {decoded.jwt ? (
-                        Object.entries(decoded.jwt.payload).map(
-                          ([key, value]) => {
-                            const ts = TIMESTAMP_CLAIMS.has(key)
-                              ? formatTimestamp(value)
-                              : null;
-                            return (
-                              <tr
-                                key={key}
-                                className="border-b border-border last:border-0"
-                              >
-                                <td className="px-3 py-1.5 font-mono text-accent whitespace-nowrap">
-                                  {key}
-                                </td>
-                                <td className="px-3 py-1.5 font-mono text-foreground break-all">
-                                  {ts ? (
-                                    <span>
-                                      <span className="text-muted">{ts}</span>
-                                      <span className="text-dim ml-1.5">
-                                        ({String(value)})
-                                      </span>
-                                    </span>
-                                  ) : typeof value === "object" ? (
-                                    JSON.stringify(value)
-                                  ) : (
-                                    String(value)
-                                  )}
-                                </td>
-                                <td className="px-3 py-1.5 text-dim hidden sm:table-cell">
-                                  {CLAIM_DESCRIPTIONS[key] || ""}
-                                </td>
-                              </tr>
-                            );
-                          },
-                        )
+                        Object.entries(decoded.jwt.payload).map(([key, value]) => {
+                          const ts = TIMESTAMP_CLAIMS.has(key) ? formatTimestamp(value) : null;
+                          return (
+                            <tr key={key} className="border-b border-border last:border-0">
+                              <td className="px-3 py-1.5 font-mono text-accent whitespace-nowrap">
+                                {key}
+                              </td>
+                              <td className="px-3 py-1.5 font-mono text-foreground break-all">
+                                {ts ? (
+                                  <span>
+                                    <span className="text-muted">{ts}</span>
+                                    <span className="text-dim ml-1.5">({String(value)})</span>
+                                  </span>
+                                ) : typeof value === "object" ? (
+                                  JSON.stringify(value)
+                                ) : (
+                                  String(value)
+                                )}
+                              </td>
+                              <td className="px-3 py-1.5 text-dim hidden sm:table-cell">
+                                {CLAIM_DESCRIPTIONS[key] || ""}
+                              </td>
+                            </tr>
+                          );
+                        })
                       ) : (
                         <tr>
-                          <td
-                            colSpan={3}
-                            className="px-3 py-3 text-dim/30 text-center"
-                          >
+                          <td colSpan={3} className="px-3 py-3 text-dim/30 text-center">
                             No claims to display
                           </td>
                         </tr>
@@ -973,24 +892,20 @@ export default function JwtPage() {
                     Signature Verification
                   </span>
                   <div className="flex items-center gap-2">
-                    {decoded.jwt &&
-                      typeof decoded.jwt.header.alg === "string" && (
-                        <span className="text-[10px] text-dim font-mono">
-                          {decoded.jwt.header.alg}
-                        </span>
-                      )}
+                    {decoded.jwt && typeof decoded.jwt.header.alg === "string" && (
+                      <span className="text-[10px] text-dim font-mono">
+                        {decoded.jwt.header.alg}
+                      </span>
+                    )}
                     {verifyStatusLabel && (
-                      <span
-                        className={cn("text-xs", verifyStatusLabel.className)}
-                      >
+                      <span className={cn("text-xs", verifyStatusLabel.className)}>
                         {verifyStatusLabel.text}
                       </span>
                     )}
                   </div>
                 </div>
                 <div className="px-4 py-3">
-                  {decodeAlgFamily === "hmac" ||
-                  decodeAlgFamily === "unknown" ? (
+                  {decodeAlgFamily === "hmac" || decodeAlgFamily === "unknown" ? (
                     <input
                       type="text"
                       value={secret}
@@ -1002,8 +917,7 @@ export default function JwtPage() {
                     />
                   ) : decodeAlgFamily === "none" ? (
                     <p className="text-xs text-dim">
-                      Algorithm is{" "}
-                      <span className="font-mono text-yellow">none</span> - no
+                      Algorithm is <span className="font-mono text-yellow">none</span> - no
                       verification needed.
                     </p>
                   ) : (
@@ -1026,9 +940,7 @@ export default function JwtPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-pink">
-                      Header
-                    </span>
+                    <span className="text-xs font-medium text-pink">Header</span>
                   </div>
                   <textarea
                     value={encodeHeader}
@@ -1041,9 +953,7 @@ export default function JwtPage() {
 
                 <div className="border border-border bg-surface">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-jwt-purple">
-                      Payload
-                    </span>
+                    <span className="text-xs font-medium text-jwt-purple">Payload</span>
                   </div>
                   <textarea
                     value={encodePayload}
@@ -1077,9 +987,7 @@ export default function JwtPage() {
                               setEncodePublicKey(pair.publicKey);
                             } catch (e) {
                               setEncodeError(
-                                e instanceof Error
-                                  ? e.message
-                                  : "Key generation failed",
+                                e instanceof Error ? e.message : "Key generation failed",
                               );
                             }
                           }}
@@ -1094,12 +1002,10 @@ export default function JwtPage() {
                 <div className="px-4 py-3 space-y-3">
                   {encodeAlgFamily === "none" ? (
                     <p className="text-xs text-dim">
-                      Algorithm is{" "}
-                      <span className="font-mono text-yellow">none</span> - no
-                      signing key needed.
+                      Algorithm is <span className="font-mono text-yellow">none</span> - no signing
+                      key needed.
                     </p>
-                  ) : encodeAlgFamily === "hmac" ||
-                    encodeAlgFamily === "unknown" ? (
+                  ) : encodeAlgFamily === "hmac" || encodeAlgFamily === "unknown" ? (
                     <input
                       type="text"
                       value={encodeSecret}
@@ -1111,9 +1017,7 @@ export default function JwtPage() {
                   ) : (
                     <>
                       <div>
-                        <label className="text-[10px] text-dim mb-1 block">
-                          Private Key
-                        </label>
+                        <label className="text-[10px] text-dim mb-1 block">Private Key</label>
                         <textarea
                           value={encodePrivateKey}
                           onChange={(e) => setEncodePrivateKey(e.target.value)}
@@ -1154,11 +1058,7 @@ export default function JwtPage() {
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <label className="text-xs text-dim">Encoded Token</label>
                   <div className="flex items-center gap-1.5">
-                    <CopyButton
-                      text={encodedOutput}
-                      label
-                      disabled={!encodedOutput}
-                    />
+                    <CopyButton text={encodedOutput} label disabled={!encodedOutput} />
                     {encodedOutput && (
                       <button
                         onClick={clearEncode}
@@ -1184,9 +1084,7 @@ export default function JwtPage() {
                       );
                     })()
                   ) : (
-                    <span className="text-dim/30">
-                      Enter a secret to generate a signed JWT...
-                    </span>
+                    <span className="text-dim/30">Enter a secret to generate a signed JWT...</span>
                   )}
                 </pre>
               </div>
@@ -1203,9 +1101,8 @@ export default function JwtPage() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                A JSON Web Token (JWT) is a compact, URL-safe way to represent
-                claims between two parties. It consists of three
-                Base64URL-encoded parts separated by dots:{" "}
+                A JSON Web Token (JWT) is a compact, URL-safe way to represent claims between two
+                parties. It consists of three Base64URL-encoded parts separated by dots:{" "}
                 <span className="text-pink">header</span>
                 <span className="text-dim">.</span>
                 <span className="text-jwt-purple">payload</span>
@@ -1213,27 +1110,26 @@ export default function JwtPage() {
                 <span className="text-jwt-cyan">signature</span>.
               </p>
               <p>
-                The <span className="text-pink">header</span> specifies the
-                signing algorithm (e.g. HS256, RS256) and token type.
+                The <span className="text-pink">header</span> specifies the signing algorithm (e.g.
+                HS256, RS256) and token type.
               </p>
               <p>
-                The <span className="text-jwt-purple">payload</span> contains
-                claims - statements about the user and metadata. Standard claims
-                include <span className="text-muted">iss</span> (issuer),{" "}
+                The <span className="text-jwt-purple">payload</span> contains claims - statements
+                about the user and metadata. Standard claims include{" "}
+                <span className="text-muted">iss</span> (issuer),{" "}
                 <span className="text-muted">sub</span> (subject),{" "}
                 <span className="text-muted">exp</span> (expiration), and{" "}
                 <span className="text-muted">iat</span> (issued at).
               </p>
               <p>
-                The <span className="text-jwt-cyan">signature</span> is created
-                by signing the header and payload with a secret or private key,
-                allowing recipients to verify authenticity.
+                The <span className="text-jwt-cyan">signature</span> is created by signing the
+                header and payload with a secret or private key, allowing recipients to verify
+                authenticity.
               </p>
               <p>
-                JWTs are{" "}
-                <span className="text-muted">not encrypted by default</span>.
-                Anyone can decode the payload. Never store sensitive data in a
-                JWT unless using JWE (JSON Web Encryption).
+                JWTs are <span className="text-muted">not encrypted by default</span>. Anyone can
+                decode the payload. Never store sensitive data in a JWT unless using JWE (JSON Web
+                Encryption).
               </p>
             </div>
           </div>

@@ -125,7 +125,11 @@ describe("invalidField()", () => {
 
 describe("resolveApiVersion()", () => {
   const versions = [
-    { version: "2026-01-01", deprecatedAt: "2026-11-01T00:00:00Z", sunsetAt: "2026-12-15T00:00:00Z" },
+    {
+      version: "2026-01-01",
+      deprecatedAt: "2026-11-01T00:00:00Z",
+      sunsetAt: "2026-12-15T00:00:00Z",
+    },
     { version: "2026-06-01" },
   ];
   const now = new Date("2026-11-10T00:00:00Z");
@@ -160,9 +164,7 @@ describe("resolveApiVersion()", () => {
     expect(r.ok).toBe(false);
     if (!r.ok) {
       expect(r.body.message).toContain("2026-01-01, 2026-06-01");
-      expect(r.body.errors?.["Api-Version"]).toEqual([
-        "must be one of: 2026-01-01, 2026-06-01",
-      ]);
+      expect(r.body.errors?.["Api-Version"]).toEqual(["must be one of: 2026-01-01, 2026-06-01"]);
     }
   });
 

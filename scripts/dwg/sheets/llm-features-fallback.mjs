@@ -12,7 +12,9 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, w = 140, gap = 40;
+  const W = 760,
+    w = 140,
+    gap = 40;
   const total = STAGES.length * w + (STAGES.length - 1) * gap;
   const x0 = Math.round((W - total) / 2);
   const s = sheet({ prefix: "llm-fb", width: W });
@@ -23,8 +25,14 @@ export default function draw() {
 
   s.comment("Exits");
   const rowY = Math.max(...bottoms) + 56;
-  const fallback = s.node(primary.x, rowY, w, 40, "fallback model", { kind: "ghost", sub: "other provider or size" });
-  const degraded = s.node(result.x, rowY, w, 40, "degraded mode", { end: true, sub: "works without AI" });
+  const fallback = s.node(primary.x, rowY, w, 40, "fallback model", {
+    kind: "ghost",
+    sub: "other provider or size",
+  });
+  const degraded = s.node(result.x, rowY, w, 40, "degraded mode", {
+    end: true,
+    sub: "works without AI",
+  });
 
   s.wire([[primary.cx, bottoms[1] + 6], fallback.port("t")], {
     alt: true,
@@ -36,12 +44,20 @@ export default function draw() {
     side: "above",
     label: "same checks",
   });
-  s.wire([[validate.x2 - 20, bottoms[2] + 6], [validate.x2 - 20, rowY - 20], [degraded.cx, rowY - 20], degraded.port("t")], {
-    alt: true,
-    seg: 1,
-    side: "above",
-    label: "still invalid",
-  });
+  s.wire(
+    [
+      [validate.x2 - 20, bottoms[2] + 6],
+      [validate.x2 - 20, rowY - 20],
+      [degraded.cx, rowY - 20],
+      degraded.port("t"),
+    ],
+    {
+      alt: true,
+      seg: 1,
+      side: "above",
+      label: "still invalid",
+    },
+  );
 
   s.height = Math.ceil(fallback.y2 + 20);
   return s.toString();

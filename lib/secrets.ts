@@ -87,9 +87,13 @@ export function setSecretStore(next: SecretStore | undefined): void {
 const encoder = new TextEncoder();
 
 const base64url = (bytes: Uint8Array) =>
-  btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 
-const sha256 = async (text: string) => new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(text)));
+const sha256 = async (text: string) =>
+  new Uint8Array(await crypto.subtle.digest("SHA-256", encoder.encode(text)));
 
 /** 192 random bits, URL-safe: 32 characters. */
 export function newSecretId(): string {
@@ -106,7 +110,10 @@ export async function lookupKey(id: string): Promise<string> {
 }
 
 const aesKey = async (id: string) =>
-  crypto.subtle.importKey("raw", await sha256(`key:${id}`), "AES-GCM", false, ["encrypt", "decrypt"]);
+  crypto.subtle.importKey("raw", await sha256(`key:${id}`), "AES-GCM", false, [
+    "encrypt",
+    "decrypt",
+  ]);
 
 /** AES-256-GCM under a key derived from the id; returns base64(iv || ciphertext). */
 export async function encryptSecret(id: string, secret: string): Promise<string> {

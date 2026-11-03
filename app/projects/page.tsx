@@ -65,15 +65,13 @@ const projects: Project[] = [
   },
   {
     title: "env",
-    description:
-      "A simple and helpful way to interact with environment variables in Go.",
+    description: "A simple and helpful way to interact with environment variables in Go.",
     tags: ["go", "env", "dotenv"],
     url: "https://github.com/syntaqx/env",
   },
   {
     title: "setup-kustomize",
-    description:
-      "A GitHub Action to download and install kustomize, and add it to your $PATH.",
+    description: "A GitHub Action to download and install kustomize, and add it to your $PATH.",
     tags: ["github-action", "kustomize"],
     url: "https://github.com/syntaqx/setup-kustomize",
   },
@@ -119,13 +117,13 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
         aria-hidden="true"
         className={cn(
           "absolute inset-0 -z-10 border transition-colors before:absolute before:-top-px before:left-0 before:h-0.5 before:w-12 before:bg-accent before:transition-[width] before:duration-300 before:ease-out group-hover:before:w-full md:slant",
-          lead ? "beams border-accent/50 bg-surface group-hover:border-accent" : "border-border bg-surface group-hover:border-border-hover",
+          lead
+            ? "beams border-accent/50 bg-surface group-hover:border-accent"
+            : "border-border bg-surface group-hover:border-border-hover",
         )}
       />
       <span className="mb-4 flex items-center justify-between gap-4">
-        <span className={cn("inst", lead ? "text-accent" : "text-dim")}>
-          {item.kicker}
-        </span>
+        <span className={cn("inst", lead ? "text-accent" : "text-dim")}>{item.kicker}</span>
         <ArrowUpRight
           size={16}
           className="text-dim transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
@@ -140,9 +138,7 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
       >
         {item.title}
       </h3>
-      <p
-        className={cn("mb-6 text-[0.95rem] leading-relaxed text-muted", lead && "max-w-xl")}
-      >
+      <p className={cn("mb-6 text-[0.95rem] leading-relaxed text-muted", lead && "max-w-xl")}>
         {item.description}
       </p>
       <div className="mt-auto">
@@ -157,9 +153,7 @@ function SectionHead({ label, count }: { label: string; count: number }) {
     <div className="mb-8 flex items-center gap-4">
       <h2 className="eyebrow">{label}</h2>
       <span className="h-px flex-1 bg-border" />
-      <span className="inst text-dim tabular-nums">
-        {String(count).padStart(2, "0")}
-      </span>
+      <span className="inst text-dim tabular-nums">{String(count).padStart(2, "0")}</span>
     </div>
   );
 }
@@ -174,9 +168,8 @@ export default function ProjectsPage() {
         sceneLabel="Modules on a grid, with a teal block being lowered into an empty slot"
       >
         <p>
-          Companies, open-source projects, tools, and experiments I&apos;ve
-          built and maintain, from static servers and developer utilities to the
-          occasional community effort.
+          Companies, open-source projects, tools, and experiments I&apos;ve built and maintain, from
+          static servers and developer utilities to the occasional community effort.
         </p>
       </PageHeader>
 
@@ -212,9 +205,7 @@ export default function ProjectsPage() {
                   {p.title}
                 </h3>
                 <div className="grid gap-3">
-                  <p className="text-[0.95rem] leading-snug text-muted">
-                    {p.description}
-                  </p>
+                  <p className="text-[0.95rem] leading-snug text-muted">{p.description}</p>
                   <Tags tags={p.tags} />
                 </div>
                 <ArrowUpRight

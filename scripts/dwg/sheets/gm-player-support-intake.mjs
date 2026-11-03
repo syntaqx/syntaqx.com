@@ -3,8 +3,12 @@
 // content/books/gaming/player-support.md.
 import { sheet } from "../kit.mjs";
 
-const Q1 = 12000, B1 = 2400, H1 = Q1 - B1; // requests a day
-const L1 = 25, L2 = 72, L3 = L2 - L1; // hours
+const Q1 = 12000,
+  B1 = 2400,
+  H1 = Q1 - B1; // requests a day
+const L1 = 25,
+  L2 = 72,
+  L3 = L2 - L1; // hours
 
 export default function draw() {
   const W = 760;
@@ -13,25 +17,48 @@ export default function draw() {
   const ah = `url(#${s.id("ah")})`;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "One studio's published 2017 support-bot figures: a dated baseline, not current. B1 is 20% of Q1."],
-    [2, "Classifiers trained on about 100k completed tickets per major language; C1 and C2 are at launch."],
-    [3, "Before automation, as \"up to\" values. L3 is derived from L2 and L1. Denials stayed with agents."],
-    [4, "E1: the bot's share equals the daily output of about 50 agents."],
-    [0, "Values in requests per day and hours. The drawing carries codes; values and formulas are in the tables."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "One studio's published 2017 support-bot figures: a dated baseline, not current. B1 is 20% of Q1.",
+      ],
+      [
+        2,
+        "Classifiers trained on about 100k completed tickets per major language; C1 and C2 are at launch.",
+      ],
+      [
+        3,
+        'Before automation, as "up to" values. L3 is derived from L2 and L1. Denials stayed with agents.',
+      ],
+      [4, "E1: the bot's share equals the daily output of about 50 agents."],
+      [
+        0,
+        "Values in requests per day and hours. The drawing carries codes; values and formulas are in the tables.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: one day of requests, 1,000 = 30 px ----
   s.comment("Plan view: one day of requests");
   let dayBottom;
   {
     const k = 30 / 1000;
-    const bw = 116, ag = 32, h = 34;
+    const bw = 116,
+      ag = 32,
+      h = 34;
     const total = bw + ag + bw + ag + Q1 * k;
     const x0 = CX - total / 2;
-    const top = ny + 56, bot = top + h, mid = top + h / 2;
-    const xc = x0 + bw + ag, xs = xc + bw + ag;
-    const xb = xs + B1 * k, xe = xs + Q1 * k;
+    const top = ny + 56,
+      bot = top + h,
+      mid = top + h / 2;
+    const xc = x0 + bw + ag,
+      xs = xc + bw + ag;
+    const xb = xs + B1 * k,
+      xe = xs + Q1 * k;
 
     s.rect(x0, top, bw, h, "obj fill-2");
     s.label(x0, top, bw, h, "intake");
@@ -52,7 +79,12 @@ export default function draw() {
     s.dimH(xb, xe, cy, "H1", { from: [null, bot], below: true });
     s.nb(xs + (B1 * k) / 2 + 18, cy + 8.5, 4);
 
-    s.viewTitle(CX, cy + 46, "Plan view · one day of requests", "Scale 1,000 requests = 30 px · flow");
+    s.viewTitle(
+      CX,
+      cy + 46,
+      "Plan view · one day of requests",
+      "Scale 1,000 requests = 30 px · flow",
+    );
     dayBottom = cy + 59;
   }
 
@@ -62,8 +94,12 @@ export default function draw() {
   {
     const k = 8;
     const x0 = CX - (L2 * k) / 2;
-    const x1 = x0 + L1 * k, x2 = x0 + L2 * k;
-    const top = dayBottom + 64, h = 30, bot = top + h, mid = top + h / 2;
+    const x1 = x0 + L1 * k,
+      x2 = x0 + L2 * k;
+    const top = dayBottom + 64,
+      h = 30,
+      bot = top + h,
+      mid = top + h / 2;
     s.rect(x0, top, L1 * k, h, "obj fill-2");
     s.rect(x1, top, L3 * k, h, "obj fill-1");
     s.label(x0, top, L1 * k, h, "queue");
@@ -75,12 +111,21 @@ export default function draw() {
     s.chainH([x0, x1, x2], cy, ["L1", "L3"], { from: [bot, bot, bot], below: true });
 
     // Events on a centerline through the bar ends.
-    for (const [x, t] of [[x0, "opened"], [x1, "first reply"], [x2, "resolved"]]) {
+    for (const [x, t] of [
+      [x0, "opened"],
+      [x1, "first reply"],
+      [x2, "resolved"],
+    ]) {
       s.add(`<circle class="dot" cx="${x}" cy="${mid}" r="2.2"/>`);
       s.text(x, cy + 30, t, "sl ink", "middle");
     }
 
-    s.viewTitle(CX, cy + 64, "Plan view · one ticket before automation", "Scale 1 h = 8 px · timeline");
+    s.viewTitle(
+      CX,
+      cy + 64,
+      "Plan view · one ticket before automation",
+      "Scale 1 h = 8 px · timeline",
+    );
     ticketBottom = cy + 77;
   }
 
