@@ -2,6 +2,7 @@ import { createRequire } from "node:module";
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import betterTailwind from "eslint-plugin-better-tailwindcss";
 
 const require = createRequire(import.meta.url);
 
@@ -13,6 +14,20 @@ const eslintConfig = defineConfig([
   {
     settings: {
       react: { version: require("react/package.json").version },
+    },
+  },
+  // Tailwind's canonical form (max-h-240, not max-h-[60rem]); the same check
+  // the editor shows as suggestCanonicalClasses, failing here instead.
+  {
+    plugins: { "better-tailwindcss": betterTailwind },
+    settings: {
+      "better-tailwindcss": { entryPoint: "app/globals.css" },
+    },
+    rules: {
+      "better-tailwindcss/enforce-canonical-classes": [
+        "error",
+        { collapse: false, rootFontSize: 16 },
+      ],
     },
   },
   // Override default ignores of eslint-config-next.
