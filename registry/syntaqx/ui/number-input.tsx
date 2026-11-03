@@ -17,8 +17,9 @@ import {
 
 export interface NumberInputProps extends Omit<
   React.ComponentProps<typeof InputGroupInput>,
-  "type" | "value" | "defaultValue" | "onChange" | "min" | "max" | "step"
+  "type" | "value" | "defaultValue" | "onChange" | "min" | "max" | "step" | "size"
 > {
+  size?: "sm" | "default" | "lg";
   value?: number | null;
   defaultValue?: number | null;
   onValueChange?: (value: number | null) => void;

@@ -128,7 +128,7 @@
       "name": "copy-button",
       "type": "registry:ui",
       "title": "Copy Button",
-      "description": "A button that is both the copy trigger and its confirmation: the icon swaps to a check for 1.5s.",
+      "description": "The copy button from shadcn's docs as an installable component: built on Button, with a fallback where the Clipboard API is blocked, icon-only or labeled, and its own confirmation for 2s.",
       "dependencies": ["lucide-react"],
       "files": [
         {
@@ -136,20 +136,22 @@
           "type": "registry:ui"
         }
       ],
-      "categories": ["feedback"]
+      "categories": ["feedback"],
+      "registryDependencies": ["https://www.syntaqx.com/r/button.json"]
     },
     {
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Hover Card",
-      "description": "A hover card that opens on intent (hover or focus, with open and close delays) and fires onOpen once, for loading its content on demand.",
+      "description": "shadcn's HoverCard plus intent delays tuned for previews, an onOpen that fires once for loading on intent, and opening on keyboard focus.",
       "files": [
         {
           "path": "registry/syntaqx/ui/hover-card.tsx",
           "type": "registry:ui"
         }
       ],
-      "categories": ["overlays"]
+      "categories": ["overlays"],
+      "dependencies": ["radix-ui"]
     },
     {
       "name": "timestamp",
@@ -163,7 +165,8 @@
           "type": "registry:ui"
         }
       ],
-      "categories": ["overlays", "data"]
+      "categories": ["overlays", "data"],
+      "dependencies": []
     },
     {
       "name": "error-summary",

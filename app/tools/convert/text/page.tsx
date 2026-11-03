@@ -529,7 +529,12 @@ export default function ConvertPage() {
                     >
                       {(values[f.id]?.length ?? 0).toLocaleString()} chars
                     </span>
-                    <CopyButton text={values[f.id] || ""} label disabled={!values[f.id]} />
+                    <CopyButton
+                      value={values[f.id] || ""}
+                      disabled={!values[f.id]}
+                      variant="outline"
+                      size="sm"
+                    />
                     <PasteButton onPaste={(text) => handleChange(f.id, text)} label />
                   </div>
                 </div>

@@ -1,4 +1,5 @@
 import { AvatarDemo, TimeDemo, UserDemo } from "./demos";
+import { DemoFrame } from "@/app/ui/_components/demo-frame";
 import { PatternPage } from "@/app/ui/_components/pattern-page";
 import type { Demo } from "@/app/ui/_components/demo-section";
 import { pageMetadata } from "@/lib/metadata";
@@ -41,19 +42,19 @@ const demos: Demo[] = [
       </>
     ),
     demo: (
-      <div className="border border-border bg-card">
-        <div className="p-4">
-          <div className="mb-2 text-[10px] font-medium text-muted-foreground">As mentions</div>
+      <DemoFrame
+        className="divide-y divide-border"
+        note="Data: GitHub's public REST API, unauthenticated, so it's rate limited to 60 requests an hour per IP."
+      >
+        <div className="p-6">
+          <div className="mb-3 text-sm font-medium text-muted-foreground">As mentions</div>
           <UserDemo bare />
         </div>
-        <div className="border-t border-border p-4">
-          <div className="mb-2 text-[10px] font-medium text-muted-foreground">As avatars</div>
+        <div className="p-6">
+          <div className="mb-3 text-sm font-medium text-muted-foreground">As avatars</div>
           <AvatarDemo bare />
         </div>
-        <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">
-          Data: GitHub public REST API. Unauthenticated requests are rate limited to 60/hour per IP.
-        </div>
-      </div>
+      </DemoFrame>
     ),
   },
 ];

@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { HoverCard } from "@/registry/syntaqx/ui/hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/registry/syntaqx/ui/hover-card";
 
 // An instant rendered in the viewer's timezone with the zone abbreviation
-// always visible. On intent, a card shows the same instant where it happened
-// and in UTC.
+// always visible. On intent (hover or keyboard focus), a card shows the same
+// instant where it happened and in UTC. It takes the size of the text
+// around it.
 
 export interface TimestampProps {
   // RFC 3339 / ISO 8601 instant.
@@ -76,43 +77,43 @@ export function Timestamp({
       : `${formatDate(date, displayTz)} · ${formatTime(date, displayTz)} ${displayAbbr}`;
 
   return (
-    <HoverCard
-      className="w-80"
-      align={align}
-      trigger={
+    <HoverCard>
+      <HoverCardTrigger asChild>
         <time
           dateTime={iso}
-          className="cursor-help whitespace-nowrap text-foreground underline decoration-muted-foreground decoration-dotted underline-offset-4"
+          tabIndex={0}
+          className="cursor-help rounded-sm whitespace-nowrap text-foreground underline decoration-muted-foreground decoration-dotted underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           {label}
         </time>
-      }
-    >
-      <div className="mb-2 text-[10px] font-medium text-muted-foreground">Time conversion</div>
-      <div className="space-y-1.5">
-        <TzRow
-          label={sourceLabel}
-          tz={sourceTz}
-          date={formatDate(date, sourceTz)}
-          time={formatTime(date, sourceTz)}
-          abbr={tzAbbr(date, sourceTz)}
-          highlight
-        />
-        <TzRow
-          label="You"
-          tz={displayTz}
-          date={formatDate(date, displayTz)}
-          time={formatTime(date, displayTz)}
-          abbr={displayAbbr}
-        />
-        <TzRow
-          label="UTC"
-          tz="UTC"
-          date={formatDate(date, "UTC")}
-          time={formatTime(date, "UTC")}
-          abbr="UTC"
-        />
-      </div>
+      </HoverCardTrigger>
+      <HoverCardContent align={align} className="w-80 text-sm">
+        <div className="mb-3 text-xs font-medium text-muted-foreground">Time conversion</div>
+        <div className="space-y-2">
+          <TzRow
+            label={sourceLabel}
+            tz={sourceTz}
+            date={formatDate(date, sourceTz)}
+            time={formatTime(date, sourceTz)}
+            abbr={tzAbbr(date, sourceTz)}
+            highlight
+          />
+          <TzRow
+            label="You"
+            tz={displayTz}
+            date={formatDate(date, displayTz)}
+            time={formatTime(date, displayTz)}
+            abbr={displayAbbr}
+          />
+          <TzRow
+            label="UTC"
+            tz="UTC"
+            date={formatDate(date, "UTC")}
+            time={formatTime(date, "UTC")}
+            abbr="UTC"
+          />
+        </div>
+      </HoverCardContent>
     </HoverCard>
   );
 }
@@ -134,18 +135,16 @@ function TzRow({
 }) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-baseline gap-x-3">
-      <span className="min-w-0 truncate text-[11px] text-muted-foreground">
+      <span className="min-w-0 truncate text-muted-foreground">
         {label}
-        {label !== tz && <span className="ml-1 text-[10px] text-muted-foreground/70">({tz})</span>}
+        {label !== tz && <span className="ml-1 text-xs text-muted-foreground/70">({tz})</span>}
       </span>
-      <span
-        className={cn("whitespace-nowrap text-xs", highlight ? "text-primary" : "text-foreground")}
-      >
+      <span className={cn("whitespace-nowrap", highlight ? "text-primary" : "text-foreground")}>
         {date}
       </span>
       <span
         className={cn(
-          "whitespace-nowrap text-xs tabular-nums",
+          "whitespace-nowrap tabular-nums",
           highlight ? "text-primary" : "text-foreground",
         )}
       >

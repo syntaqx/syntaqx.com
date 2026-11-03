@@ -17,7 +17,7 @@ function Row({ label, value, mono }: { label: string; value: string | null; mono
             >
               {value}
             </span>
-            <CopyButton text={value} size="sm" />
+            <CopyButton value={value} size="icon-xs" />
           </>
         ) : (
           <div className="flex items-center gap-1.5">
@@ -193,7 +193,7 @@ export default function WhoamiPage() {
                       <span className="text-2xl font-bold text-primary font-mono tracking-wide">
                         {ipv4}
                       </span>
-                      <CopyButton text={ipv4} />
+                      <CopyButton value={ipv4} size="icon-sm" />
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
@@ -210,7 +210,7 @@ export default function WhoamiPage() {
                       <span className="text-sm font-medium text-primary font-mono tracking-wide break-all">
                         {ipv6}
                       </span>
-                      <CopyButton text={ipv6} />
+                      <CopyButton value={ipv6} size="icon-sm" />
                     </div>
                   ) : (
                     <span

@@ -28,10 +28,16 @@ export async function CodeBlock({
       {title && (
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2">
           <span className="truncate font-mono text-xs text-muted-foreground">{title}</span>
-          <CopyButton text={code} size="sm" />
+          <CopyButton value={code} size="icon-sm" className="size-7" />
         </div>
       )}
-      {!title && <CopyButton text={code} size="sm" className="absolute top-3 right-3 z-10" />}
+      {!title && (
+        <CopyButton
+          value={code}
+          size="icon-sm"
+          className="absolute top-2.5 right-2.5 z-10 size-7"
+        />
+      )}
       <div
         className="code-block max-h-112 overflow-auto p-4 font-mono text-[0.8125rem]/relaxed"
         dangerouslySetInnerHTML={{ __html: html }}

@@ -1,32 +1,27 @@
 "use client";
 
 import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { useFieldControl } from "@/registry/syntaqx/ui/field";
 
-// shadcn's Input, sized for real use: 40px by default (sm 32px, lg 48px),
-// 16px text on small screens so iOS doesn't zoom in on focus, a visible
-// focus ring, and an invalid state that keeps its ring while focused. Inside
-// a Field it picks up its id, description and state from the Field.
+// shadcn's Input, unchanged in looks, plus sizes to match the Button (sm
+// 32px, default 36px, lg 40px) and Field wiring: inside a Field it picks up
+// its id, description and invalid/disabled/required state. A numeric `size`
+// still sets the native attribute, so existing code keeps working.
 
 const inputVariants = cva(
   [
-    "w-full min-w-0 rounded-md border border-input bg-transparent text-base text-foreground shadow-xs transition-[color,border-color,box-shadow] outline-none sm:text-sm dark:bg-input/30",
-    "placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground",
-    "file:inline-flex file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",
-    "hover:border-ring/40",
-    "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25",
-    "aria-invalid:border-destructive aria-invalid:hover:border-destructive aria-invalid:focus-visible:ring-destructive/25",
-    "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-    "read-only:bg-muted read-only:focus-visible:ring-0",
+    "w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground file:inline-flex file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30",
+    "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+    "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
   ],
   {
     variants: {
       size: {
         sm: "h-8 px-2.5 file:h-6",
-        default: "h-10 px-3 file:h-8",
-        lg: "h-12 px-4 text-base sm:text-base file:h-10",
+        default: "h-9 file:h-7",
+        lg: "h-10 file:h-8",
       },
     },
     defaultVariants: {
@@ -35,19 +30,23 @@ const inputVariants = cva(
   },
 );
 
+type InputSize = "sm" | "default" | "lg";
+
 function Input({
   className,
   type,
   size = "default",
   ...props
-}: Omit<React.ComponentProps<"input">, "size"> & VariantProps<typeof inputVariants>) {
+}: Omit<React.ComponentProps<"input">, "size"> & { size?: InputSize | number }) {
   const control = useFieldControl(props);
+  const variant = typeof size === "number" ? "default" : size;
   return (
     <input
       type={type}
       data-slot="input"
-      data-size={size}
-      className={cn(inputVariants({ size }), className)}
+      data-size={variant}
+      size={typeof size === "number" ? size : undefined}
+      className={cn(inputVariants({ size: variant }), className)}
       {...control}
     />
   );

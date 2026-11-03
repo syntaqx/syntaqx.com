@@ -157,7 +157,7 @@ function CopyField({ label, value }: { label: string; value: string }) {
     <div>
       <div className="mb-1.5 flex items-center justify-between">
         <span className="text-xs text-muted-foreground">{label}</span>
-        <CopyButton text={value} label />
+        <CopyButton value={value} variant="outline" size="sm" />
       </div>
       <input
         readOnly
@@ -546,7 +546,7 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
             {shown ? <EyeOff size={12} /> : <Eye size={12} />}
             {shown ? "Hide" : "Show"}
           </button>
-          <CopyButton text={state.secret} label />
+          <CopyButton value={state.secret} variant="outline" size="sm" />
         </div>
         <pre
           className={cn(

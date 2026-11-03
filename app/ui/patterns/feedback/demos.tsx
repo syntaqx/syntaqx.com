@@ -28,7 +28,7 @@ function CopyDemo() {
       }
     >
       <code className="truncate font-mono text-xs text-foreground">{sample}</code>
-      <CopyButton text={sample} label className="shrink-0" />
+      <CopyButton value={sample} className="shrink-0" variant="outline" size="sm" />
     </DemoFrame>
   );
 }

@@ -71,6 +71,113 @@ function classTokens(sf: ts.SourceFile): string[] {
   return out;
 }
 
+function exportsOf(sf: ts.SourceFile): Set<string> {
+  const names = new Set<string>();
+  for (const s of sf.statements) {
+    if (ts.isExportDeclaration(s) && s.exportClause && ts.isNamedExports(s.exportClause)) {
+      for (const e of s.exportClause.elements) names.add(e.name.text);
+    }
+    const mods = ts.canHaveModifiers(s) ? ts.getModifiers(s) : undefined;
+    if (!mods?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) continue;
+    if ((ts.isFunctionDeclaration(s) || ts.isInterfaceDeclaration(s)) && s.name) {
+      names.add(s.name.text);
+    }
+    if (ts.isVariableStatement(s)) {
+      for (const d of s.declarationList.declarations) {
+        if (ts.isIdentifier(d.name)) names.add(d.name.text);
+      }
+    }
+  }
+  return names;
+}
+
+/** Every cva() call's variant options, as "group.option". */
+function variantsOf(sf: ts.SourceFile): Set<string> {
+  const out = new Set<string>();
+  const visit = (n: ts.Node) => {
+    if (
+      ts.isCallExpression(n) &&
+      ts.isIdentifier(n.expression) &&
+      n.expression.text === "cva" &&
+      n.arguments[1] &&
+      ts.isObjectLiteralExpression(n.arguments[1])
+    ) {
+      const variants = n.arguments[1].properties.find(
+        (p): p is ts.PropertyAssignment =>
+          ts.isPropertyAssignment(p) && p.name.getText(sf) === "variants",
+      );
+      if (variants && ts.isObjectLiteralExpression(variants.initializer)) {
+        for (const group of variants.initializer.properties) {
+          if (!ts.isPropertyAssignment(group) || !ts.isObjectLiteralExpression(group.initializer))
+            continue;
+          for (const option of group.initializer.properties) {
+            if (option.name) {
+              out.add(`${group.name.getText(sf)}.${option.name.getText(sf).replace(/"/g, "")}`);
+            }
+          }
+        }
+      }
+    }
+    n.forEachChild(visit);
+  };
+  visit(sf);
+  return out;
+}
+
+/** Every data-slot="..." the components put on their elements. */
+function slotsOf(sf: ts.SourceFile): Set<string> {
+  const out = new Set<string>();
+  const visit = (n: ts.Node) => {
+    if (
+      ts.isJsxAttribute(n) &&
+      n.name.getText(sf) === "data-slot" &&
+      n.initializer &&
+      ts.isStringLiteral(n.initializer)
+    ) {
+      out.add(n.initializer.text);
+    }
+    n.forEachChild(visit);
+  };
+  visit(sf);
+  return out;
+}
+
+const missing = (upstream: Set<string>, ours: Set<string>) =>
+  [...upstream].filter((x) => !ours.has(x));
+
+/*
+ * Forks of shadcn components install over the originals, so an app's
+ * existing code has to keep working: every export, every variant option and
+ * every data-slot (apps style through them) that shadcn's version has.
+ * registry-upstream/ holds shadcn's source, from `npm run registry:upstream`.
+ */
+describe("forks of shadcn components are drop-in replacements", () => {
+  const forks = existsSync("registry-upstream")
+    ? readdirSync("registry-upstream").map((f) => f.replace(/\.tsx$/, ""))
+    : [];
+
+  it("has upstream snapshots to compare against", () => {
+    expect(forks.length).toBeGreaterThan(0);
+  });
+
+  for (const name of forks) {
+    const item = registry.items.find((i) => i.name === name);
+    if (!item) continue;
+    const upstream = parse(`registry-upstream/${name}.tsx`);
+    const ours = parse(item.files[0].path);
+
+    it(`${name} keeps shadcn's exports`, () => {
+      expect(missing(exportsOf(upstream), exportsOf(ours))).toEqual([]);
+    });
+    it(`${name} keeps shadcn's variants`, () => {
+      expect(missing(variantsOf(upstream), variantsOf(ours))).toEqual([]);
+    });
+    it(`${name} keeps shadcn's data-slots`, () => {
+      expect(missing(slotsOf(upstream), slotsOf(ours))).toEqual([]);
+    });
+  }
+});
+
 const packageName = (spec: string) =>
   spec.startsWith("@") ? spec.split("/").slice(0, 2).join("/") : spec.split("/")[0];
 

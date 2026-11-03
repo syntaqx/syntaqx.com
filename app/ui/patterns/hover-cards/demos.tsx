@@ -2,7 +2,9 @@
 
 import { useCallback, useState, type ReactNode } from "react";
 import { Card } from "@/components/card";
-import { HoverCard } from "@/registry/syntaqx/ui/hover-card";
+import { DemoFrame } from "@/app/ui/_components/demo-frame";
+import { Skeleton } from "@/components/ui/skeleton";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/registry/syntaqx/ui/hover-card";
 import { Timestamp } from "@/registry/syntaqx/ui/timestamp";
 
 function TimeDemo() {
@@ -15,8 +17,8 @@ function TimeDemo() {
   } as const;
 
   return (
-    <Card>
-      <dl className="space-y-3 text-xs">
+    <DemoFrame className="p-6">
+      <dl className="space-y-4 text-sm">
         <div className="flex items-baseline justify-between gap-4">
           <dt className="text-muted-foreground">Created</dt>
           <dd>
@@ -30,7 +32,7 @@ function TimeDemo() {
           </dd>
         </div>
       </dl>
-    </Card>
+    </DemoFrame>
   );
 }
 
@@ -88,28 +90,28 @@ function UserHover({ login, trigger }: { login: string; trigger?: ReactNode }) {
   }, [login]);
 
   return (
-    <HoverCard
-      onOpen={onOpen}
-      trigger={
-        trigger ?? (
+    <HoverCard onOpen={onOpen}>
+      <HoverCardTrigger asChild>
+        {trigger ?? (
           <a
             href={`https://github.com/${login}`}
             target="_blank"
             rel="noreferrer"
-            className="text-primary hover:underline"
+            className="font-medium text-primary underline-offset-4 hover:underline"
           >
             @{login}
           </a>
-        )
-      }
-    >
-      {state.status === "loading" || state.status === "idle" ? (
-        <UserSkeleton />
-      ) : state.status === "error" ? (
-        <p className="text-xs text-muted-foreground">Couldn&apos;t load @{login}.</p>
-      ) : (
-        <UserBody data={state.data} />
-      )}
+        )}
+      </HoverCardTrigger>
+      <HoverCardContent align="start" className="w-80">
+        {state.status === "loading" || state.status === "idle" ? (
+          <UserSkeleton />
+        ) : state.status === "error" ? (
+          <p className="text-sm text-muted-foreground">Couldn&apos;t load @{login}.</p>
+        ) : (
+          <UserBody data={state.data} />
+        )}
+      </HoverCardContent>
     </HoverCard>
   );
 }
@@ -117,11 +119,11 @@ function UserHover({ login, trigger }: { login: string; trigger?: ReactNode }) {
 function UserSkeleton() {
   return (
     <div className="flex gap-3">
-      <div className="size-10  rounded-full bg-border/40 animate-pulse" />
-      <div className="flex-1 space-y-2">
-        <div className="h-3 w-24 rounded bg-border/40 animate-pulse" />
-        <div className="h-2 w-32 rounded bg-border/30 animate-pulse" />
-        <div className="h-2 w-28 rounded bg-border/30 animate-pulse" />
+      <Skeleton className="size-12 rounded-full" />
+      <div className="flex-1 space-y-2 pt-1">
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-3 w-20" />
+        <Skeleton className="h-3 w-full" />
       </div>
     </div>
   );
@@ -129,27 +131,25 @@ function UserSkeleton() {
 
 function UserBody({ data }: { data: GhUser }) {
   return (
-    <div>
+    <div className="space-y-3">
       <div className="flex gap-3">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={data.avatar_url}
-          alt={`${data.login}'s avatar`}
-          width={40}
-          height={40}
-          className="size-10  rounded-full border border-border"
+          alt=""
+          width={48}
+          height={48}
+          className="size-12 rounded-full border"
         />
         <div className="min-w-0 flex-1">
-          <div className="text-xs font-medium text-foreground truncate">
+          <div className="truncate text-sm font-semibold text-foreground">
             {data.name ?? data.login}
           </div>
-          <div className="text-[11px] text-muted-foreground truncate">@{data.login}</div>
+          <div className="truncate text-sm text-muted-foreground">@{data.login}</div>
         </div>
       </div>
-      {data.bio && (
-        <p className="mt-2 text-[11px] text-subtle leading-relaxed line-clamp-3">{data.bio}</p>
-      )}
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+      {data.bio && <p className="line-clamp-3 text-sm/relaxed text-foreground">{data.bio}</p>}
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
         {data.location && <span>{data.location}</span>}
         {data.company && <span>{data.company}</span>}
         <span>{data.followers.toLocaleString()} followers</span>
@@ -162,7 +162,7 @@ function UserBody({ data }: { data: GhUser }) {
 function UserDemo({ bare = false }: { bare?: boolean } = {}) {
   const handles = ["syntaqx", "octocat", "torvalds", "gaearon"];
   const body = (
-    <div className="text-xs/loose text-foreground ">
+    <div className="text-sm/loose text-foreground">
       Thanks to{" "}
       {handles.map((h, i) => (
         <span key={h}>

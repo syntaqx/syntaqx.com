@@ -287,7 +287,7 @@ export default function Base64Page() {
                       {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                     </span>
                   )}
-                  {output && <CopyButton text={output} label />}
+                  {output && <CopyButton value={output} variant="outline" size="sm" />}
                 </div>
               </div>
               <textarea

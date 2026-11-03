@@ -38,6 +38,8 @@ const eslintConfig = defineConfig([
     "public/**",
     // Agent worktrees: separate checkouts with their own lint runs.
     ".claude/**",
+    // shadcn's sources, snapshotted to check forks against (registry:upstream).
+    "registry-upstream/**",
     // Gitignored build output (resume:pdf).
     ".private/**",
   ]),

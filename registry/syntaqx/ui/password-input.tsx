@@ -22,7 +22,9 @@ function PasswordInput({
   onKeyUp,
   onBlur,
   ...props
-}: Omit<React.ComponentProps<typeof InputGroupInput>, "type">) {
+}: Omit<React.ComponentProps<typeof InputGroupInput>, "type" | "size"> & {
+  size?: "sm" | "default" | "lg";
+}) {
   const [visible, setVisible] = React.useState(false);
   const [capsLock, setCapsLock] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);

@@ -4,8 +4,8 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useFieldControl } from "@/registry/syntaqx/ui/field";
 
-// shadcn's Textarea with the Input's states. It grows with its content
-// (field-sizing) up to `max-h-64`, then scrolls.
+// shadcn's Textarea, unchanged in looks, plus Field wiring and a ceiling:
+// it grows with its content up to `max-h-64`, then scrolls.
 
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   const control = useFieldControl(props);
@@ -13,12 +13,7 @@ function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
     <textarea
       data-slot="textarea"
       className={cn(
-        "flex field-sizing-content max-h-64 min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2.5 text-base text-foreground shadow-xs transition-[color,border-color,box-shadow] outline-none sm:text-sm dark:bg-input/30",
-        "placeholder:text-muted-foreground",
-        "hover:border-ring/40",
-        "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/25",
-        "aria-invalid:border-destructive aria-invalid:hover:border-destructive aria-invalid:focus-visible:ring-destructive/25",
-        "disabled:cursor-not-allowed disabled:opacity-50",
+        "flex field-sizing-content max-h-64 min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:ring-destructive/40",
         className,
       )}
       {...control}

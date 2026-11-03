@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 /*
  * `dark:` follows the theme the page is actually in, the same way the
@@ -125,8 +126,8 @@
   --accent-foreground: var(--foreground);
   --input: var(--border);
   --ring: var(--primary);
-  /* Square corners, like the rest of the instrument panel. */
-  --radius: 0rem;
+  /* shadcn's default; the site's own panels and slanted buttons stay square. */
+  --radius: 0.625rem;
 }
 
 @theme inline {
@@ -154,10 +155,10 @@
   --color-jwt-purple: var(--jwt-purple);
   --color-jwt-cyan: var(--jwt-cyan);
   --color-mauve: var(--mauve);
-  --radius-sm: var(--radius);
-  --radius-md: var(--radius);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
   /*
    * Four voices, one job each:
    *   voice      Big Shoulders: names, titles, pull quotes, big numbers
