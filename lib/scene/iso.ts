@@ -64,7 +64,25 @@ export type Part =
   | { kind: "cable"; pts: V3[]; speed: number; accent?: boolean }
   /** `good` inks it green, for something that passed (an approval); `warn` red. */
   | { kind: "line"; a: V3; b: V3; alpha?: number; dashed?: boolean; accent?: boolean; good?: boolean; warn?: boolean }
-  | { kind: "label"; at: V3; text: string; dx: number; dy: number; accent?: boolean };
+  | { kind: "label"; at: V3; text: string; dx: number; dy: number; accent?: boolean }
+  /**
+   * A flat card in the frame's right corner (lower by default), not on the iso
+   * grid: lines of instrument text. `fit` lists the widest values it will ever
+   * show, so it keeps one width.
+   */
+  | { kind: "note"; lines: NoteLine[]; fit?: string[]; top?: boolean };
+
+/** A line on a note: a name, a right-aligned value, and a rule above it to set off a total. */
+export interface NoteLine {
+  text: string;
+  value?: string;
+  accent?: boolean;
+  /** Red, for a line that's gone wrong (over budget). */
+  warn?: boolean;
+  /** Green, for a line that's fine (operational). */
+  good?: boolean;
+  rule?: boolean;
+}
 
 export interface Scene {
   parts: Part[];
