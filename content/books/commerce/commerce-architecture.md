@@ -3,7 +3,7 @@ title = "Commerce Architecture: Building It Yourself"
 nav_title = "Commerce Architecture"
 description = "Bounded contexts, the order pipeline as events, idempotency, stock under load, multi-tenant platforms, apps and functions, rate limits and a reference build."
 category = "Commerce Industry"
-order = 2356
+order = 2357
 part = "Running the Platform"
 tags = ["commerce", "architecture", "events", "webhooks", "multi-tenancy"]
 +++

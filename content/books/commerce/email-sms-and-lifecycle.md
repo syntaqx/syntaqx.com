@@ -3,7 +3,7 @@ title = "Email, SMS & Lifecycle Marketing"
 nav_title = "Email, SMS & Lifecycle"
 description = "Campaigns and flows, segmentation from order data, deliverability after the 2024 bulk-sender rules, CAN-SPAM, TCPA, state texting laws and SMS consent."
 category = "Commerce Industry"
-order = 2353
+order = 2354
 part = "Marketing and Customers"
 tags = ["commerce", "email", "sms", "lifecycle", "consent", "tcpa", "deliverability"]
 +++

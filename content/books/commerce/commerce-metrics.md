@@ -2,7 +2,7 @@
 title = "Commerce Metrics"
 description = "One definition per commerce metric over the book's tables: conversion, AOV, CAC, LTV, margin, returns, turns, GMROI, fill rate, churn and marketplace scores."
 category = "Commerce Industry"
-order = 2363
+order = 2364
 part = "Running the Platform"
 tags = ["commerce", "metrics", "analytics", "unit-economics", "inventory", "data-model"]
 +++

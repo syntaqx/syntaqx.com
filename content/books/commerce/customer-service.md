@@ -2,7 +2,7 @@
 title = "Customer Service"
 description = "WISMO and self-service tracking, helpdesks and order actions, returns and refunds through support, AI agents and disclosure laws, metrics and help-desk fraud."
 category = "Commerce Industry"
-order = 2355
+order = 2356
 part = "Marketing and Customers"
 tags = ["commerce", "customer-service", "support", "helpdesk", "ai-agents", "fraud"]
 +++

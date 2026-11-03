@@ -2,7 +2,7 @@
 title = "ERP & Integrations"
 description = "NetSuite, Business Central, SAP, Acumatica, QuickBooks and Xero; iPaaS; what syncs where, which system owns each object, and handling sync failures."
 category = "Commerce Industry"
-order = 2357
+order = 2358
 part = "Running the Platform"
 tags = ["commerce", "erp", "integrations", "netsuite", "ipaas"]
 +++

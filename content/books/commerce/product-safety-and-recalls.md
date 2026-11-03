@@ -3,7 +3,7 @@ title = "Product Safety, Compliance & Recalls"
 nav_title = "Product Safety & Recalls"
 description = "CPSC, CPSIA testing and certificates, eFiling, 15(b) reports, recalls and marketplaces, FDA cosmetics and supplements, and the EU GPSR, with the schema."
 category = "Commerce Industry"
-order = 2351
+order = 2352
 part = "Regulated Goods"
 tags = ["commerce", "product-safety", "recalls", "cpsc", "compliance", "fda"]
 +++
