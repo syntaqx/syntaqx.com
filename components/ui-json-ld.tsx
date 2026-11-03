@@ -2,25 +2,25 @@
 
 import { usePathname } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
-import { patterns } from "@/lib/ui";
+import { components } from "@/lib/ui";
 import { article, pageRef } from "@/lib/schema";
 
-/** Structured data for every /ui pattern page: each is a technical article. */
+/** Structured data for every /ui component page: each is a technical article. */
 export function UiJsonLd() {
   const pathname = usePathname();
-  const pattern = patterns.find((p) => p.href === pathname);
-  if (!pattern) return null;
+  const component = components.find((c) => c.href === pathname);
+  if (!component) return null;
 
   return (
     <JsonLd
       data={article({
-        headline: pattern.title,
-        description: pattern.description,
-        path: pattern.href,
-        isPartOf: pageRef("UI Patterns", "/ui"),
+        headline: component.title,
+        description: component.description,
+        path: component.href,
+        isPartOf: pageRef("UI", "/ui"),
         crumbs: [
           { name: "UI", path: "/ui" },
-          { name: pattern.title, path: pattern.href },
+          { name: component.title, path: component.href },
         ],
       })}
     />

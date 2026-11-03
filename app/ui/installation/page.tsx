@@ -5,7 +5,7 @@ import { DocsHeader } from "@/components/docs-header";
 import { SITE_URL } from "@/lib/constants";
 import { pageMetadata } from "@/lib/metadata";
 import { getRegistryItem } from "@/lib/registry";
-import { patterns, uiPages } from "@/lib/ui";
+import { uiPages } from "@/lib/ui";
 import registry from "@/registry.json";
 
 const page = uiPages.find((p) => p.href === "/ui/installation")!;
@@ -31,7 +31,6 @@ const TOKENS = [
 
 export default function InstallationPage() {
   const items = registry.items.map((i) => getRegistryItem(i.name));
-  const home = (name: string) => patterns.find((p) => p.components?.includes(name));
 
   return (
     <article className="max-w-3xl">
@@ -86,23 +85,18 @@ export default function InstallationPage() {
 
       <Section title="Components">
         <ul className="divide-y divide-border border-y border-border">
-          {items.map((item) => {
-            const pattern = home(item.name);
-            return (
-              <li key={item.name} className="py-4">
-                <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-4">
-                  <code className="font-mono text-sm text-foreground">{item.name}</code>
-                  {pattern && (
-                    <Link href={pattern.href} className={linkClass}>
-                      {pattern.title}
-                    </Link>
-                  )}
-                </div>
-                <p className="mb-3 text-sm/relaxed text-muted-foreground">{item.description}</p>
-                <CodeBlock code={item.command} lang="bash" />
-              </li>
-            );
-          })}
+          {items.map((item) => (
+            <li key={item.name} className="py-4">
+              <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-4">
+                <code className="font-mono text-sm text-foreground">{item.name}</code>
+                <Link href={`/ui/components/${item.name}`} className={linkClass}>
+                  Examples
+                </Link>
+              </div>
+              <p className="mb-3 text-sm/relaxed text-muted-foreground">{item.description}</p>
+              <CodeBlock code={item.command} lang="bash" />
+            </li>
+          ))}
         </ul>
       </Section>
     </article>

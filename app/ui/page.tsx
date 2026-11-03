@@ -1,24 +1,24 @@
 import { DocsIndex } from "@/components/docs-index";
 import { JsonLd } from "@/components/json-ld";
 import { collectionPage } from "@/lib/schema";
-import { components, patternGroups, patterns, uiPages } from "@/lib/ui";
+import { componentGroups, components, uiPages } from "@/lib/ui";
 import { pageMetadata } from "@/lib/metadata";
 
 const description =
-  "Interaction patterns I reach for, when and why, each with live demos and shadcn components you can add to your own app.";
+  "shadcn components you can add to your own app, each with live examples of how to use it well, and why.";
 
-export const metadata = pageMetadata("/ui", "UI Patterns", description);
+export const metadata = pageMetadata("/ui", "UI Components", description);
 
 export default function UiPage() {
   return (
     <div>
       <JsonLd
         data={collectionPage({
-          name: "UI Patterns",
+          name: "UI Components",
           description,
           path: "/ui",
           crumbs: [{ name: "UI", path: "/ui" }],
-          items: [...uiPages, ...components, ...patterns].map((p) => ({
+          items: [...uiPages, ...components].map((p) => ({
             name: p.title,
             path: p.href,
           })),
@@ -26,21 +26,20 @@ export default function UiPage() {
       />
       <DocsIndex
         eyebrow="UI"
-        title="Components and patterns"
+        title="Components"
         intro={
           <p>
-            The patterns I reach for when I build an interface: when to use each one, and why. Every
-            page has live demos to poke at. Where a pattern comes down to a component, it&apos;s a
-            shadcn component you can add to your own app; it takes on your theme, the way it takes
-            on mine here.
+            The components I reach for when I build an interface, each a shadcn component you can
+            add to your own app; it takes on your theme, the way it takes on mine here. Every page
+            has live examples to poke at, with the reasoning behind each one: when to validate a
+            field, where focus goes after a dialog, what an empty list should say.
           </p>
         }
         categories={[
           { name: "Start here", section: "start", docs: uiPages },
-          { name: "Components", section: "components", docs: components },
-          ...patternGroups.map((g) => ({
+          ...componentGroups.map((g) => ({
             name: g.category,
-            section: g.category.toLowerCase(),
+            section: g.category.toLowerCase().replace(/\s+/g, "-"),
             docs: g.items,
           })),
         ]}

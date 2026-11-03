@@ -94,7 +94,6 @@ export default async function ComponentPage({ params }: Props) {
             </div>
           </Section>
         )}
-
       </div>
       <aside data-pagefind-ignore className="hidden xl:block">
         <DocsToc

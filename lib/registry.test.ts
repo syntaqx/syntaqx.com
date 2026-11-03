@@ -2,7 +2,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import ts from "typescript";
 import { describe, it, expect } from "vitest";
-import { patterns } from "./ui";
+import { componentGroups } from "./ui";
 
 /*
  * Components in registry.json install into other people's shadcn apps, so
@@ -200,9 +200,9 @@ describe("registry.json", () => {
     expect(without.map((i) => i.name)).toEqual([]);
   });
 
-  it("has every item a /ui page names", () => {
-    const named = patterns.flatMap((p) => p.components ?? []);
-    expect(named.filter((n) => !names.has(n))).toEqual([]);
+  it("files every item under a /ui sidebar group", () => {
+    const grouped = new Set(componentGroups.flatMap((g) => g.items.map((c) => c.name)));
+    expect(registry.items.filter((i) => !grouped.has(i.name)).map((i) => i.name)).toEqual([]);
   });
 
   for (const item of registry.items) {

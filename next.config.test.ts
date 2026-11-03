@@ -58,9 +58,17 @@ describe("/misc redirects", () => {
     expect(destination("/misc")).toBe("/tools");
     expect(destination("/misc/jwt")).toBe("/tools/jwt");
     expect(destination("/misc/convert/base64")).toBe("/tools/convert/base64");
-    expect(destination("/misc/hover-cards")).toBe("/ui/patterns/hover-cards");
-    expect(destination("/misc/feedback")).toBe("/ui/patterns/feedback");
-    expect(destination("/ui/patterns")).toBe("/ui");
+    expect(destination("/misc/hover-cards")).toBe("/ui/components/hover-card");
+    expect(destination("/misc/feedback")).toBe("/ui/components/button");
     expect(sectionRedirects.every((r) => r.permanent)).toBe(true);
+  });
+
+  it("send each old /ui pattern page to the component page that took in its examples", () => {
+    expect(destination("/ui/patterns")).toBe("/ui");
+    expect(destination("/ui/patterns/hover-cards")).toBe("/ui/components/hover-card");
+    expect(destination("/ui/patterns/feedback")).toBe("/ui/components/button");
+    expect(destination("/ui/patterns/empty-states")).toBe("/ui/components/empty");
+    expect(destination("/ui/patterns/inline-validation")).toBe("/ui/components/field");
+    expect(destination("/ui/patterns/keyboard-and-focus")).toBe("/ui/components/button-group");
   });
 });

@@ -15,7 +15,7 @@ import {
 } from "./schema";
 import sitemap from "@/app/sitemap";
 import { allTools, moreToolsFor } from "./tools";
-import { patterns } from "./ui";
+import { components } from "./ui";
 
 describe("meta descriptions", () => {
   it("keeps every post and doc description within 160 characters", () => {
@@ -95,8 +95,8 @@ describe("sitemap", () => {
     expect(urls).toContain("https://www.syntaqx.com/docs/api");
   });
 
-  it("lists every tool and UI pattern page", () => {
-    for (const page of [...allTools, ...patterns]) {
+  it("lists every tool and UI component page", () => {
+    for (const page of [...allTools, ...components]) {
       expect(urls).toContain(`https://www.syntaqx.com${page.href}`);
     }
     expect(urls).not.toContain("https://www.syntaqx.com/ui/patterns");
