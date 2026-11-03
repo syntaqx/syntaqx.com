@@ -28,7 +28,7 @@ export const patterns: UiPage[] = [
     href: "/ui/patterns/hover-cards",
     category: "Overlays",
     tags: ["ux", "intent"],
-    components: ["local-time", "intent-hover-card"],
+    components: ["local-time", "hover-card"],
   },
   {
     title: "Feedback & Affordance",

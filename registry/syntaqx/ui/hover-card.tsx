@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 // `onOpen` fires the first time the card is about to become visible: the
 // hook callers use to start a "load on intent" fetch.
 
-export interface IntentHoverCardProps {
+export interface HoverCardProps {
   trigger: ReactNode;
   children: ReactNode;
   onOpen?: () => void;
@@ -21,13 +21,13 @@ export interface IntentHoverCardProps {
   align?: "start" | "end";
 }
 
-export function IntentHoverCard({
+export function HoverCard({
   trigger,
   children,
   onOpen,
   className,
   align = "start",
-}: IntentHoverCardProps) {
+}: HoverCardProps) {
   const [open, setOpen] = useState(false);
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,7 +61,7 @@ export function IntentHoverCard({
 
   return (
     <span
-      data-slot="intent-hover-card"
+      data-slot="hover-card"
       className="relative inline-block"
       onMouseEnter={scheduleOpen}
       onMouseLeave={scheduleClose}
@@ -73,7 +73,7 @@ export function IntentHoverCard({
         <span
           id={id}
           role="tooltip"
-          data-slot="intent-hover-card-content"
+          data-slot="hover-card-content"
           className={cn(
             "absolute top-full z-50 mt-2 block w-72 rounded-lg border border-border bg-popover p-3 text-popover-foreground shadow-lg",
             align === "end" ? "right-0" : "left-0",

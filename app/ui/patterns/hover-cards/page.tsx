@@ -36,7 +36,7 @@ export default function HoverCardsPage() {
 
       <DemoSection
         title="User previews, loaded on intent"
-        install={["intent-hover-card"]}
+        install={["hover-card"]}
         sources={[
           { name: "GitHub", href: "https://github.com" },
           { name: "Linear", href: "https://linear.app" },

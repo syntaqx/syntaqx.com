@@ -2,7 +2,7 @@
 
 import { useCallback, useState, type ReactNode } from "react";
 import { Card } from "@/components/card";
-import { IntentHoverCard } from "@/registry/syntaqx/ui/intent-hover-card";
+import { HoverCard } from "@/registry/syntaqx/ui/hover-card";
 import { LocalTime } from "@/registry/syntaqx/ui/local-time";
 
 function TimeDemo() {
@@ -88,7 +88,7 @@ function UserHover({ login, trigger }: { login: string; trigger?: ReactNode }) {
   }, [login]);
 
   return (
-    <IntentHoverCard
+    <HoverCard
       onOpen={onOpen}
       trigger={
         trigger ?? (
@@ -110,7 +110,7 @@ function UserHover({ login, trigger }: { login: string; trigger?: ReactNode }) {
       ) : (
         <UserBody data={state.data} />
       )}
-    </IntentHoverCard>
+    </HoverCard>
   );
 }
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { IntentHoverCard } from "@/registry/syntaqx/ui/intent-hover-card";
+import { HoverCard } from "@/registry/syntaqx/ui/hover-card";
 
 // An instant rendered in the viewer's timezone with the zone abbreviation
 // always visible. On intent, a card shows the same instant where it happened
@@ -76,7 +76,7 @@ export function LocalTime({
       : `${formatDate(date, displayTz)} · ${formatTime(date, displayTz)} ${displayAbbr}`;
 
   return (
-    <IntentHoverCard
+    <HoverCard
       className="w-80"
       align={align}
       trigger={
@@ -113,7 +113,7 @@ export function LocalTime({
           abbr="UTC"
         />
       </div>
-    </IntentHoverCard>
+    </HoverCard>
   );
 }
 
