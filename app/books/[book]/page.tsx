@@ -79,7 +79,7 @@ export default async function BookCover({ params }: Props) {
         title={book.name}
         eyebrow={
           <>
-            <Link href="/books" className="text-accent transition-colors hover:text-foreground">
+            <Link href="/books" className="text-primary transition-colors hover:text-foreground">
               Books
             </Link>
             <span aria-hidden> · </span>
@@ -91,7 +91,7 @@ export default async function BookCover({ params }: Props) {
       >
         <div className="grid gap-x-10 lg:grid-cols-[minmax(0,1fr)_13rem]">
           <div>
-            <div className="max-w-3xl space-y-3 text-muted">
+            <div className="max-w-3xl space-y-3 text-subtle">
               {book.intro.map((p) => (
                 <p key={p.slice(0, 32)}>{p}</p>
               ))}
@@ -114,7 +114,7 @@ export default async function BookCover({ params }: Props) {
       {bookParts(chapters).map((part) => (
         <section key={part.title || "chapters"}>
           {part.title && (
-            <h2 className="inst border-b border-border pt-8 pb-3 text-[0.6rem] text-dim">
+            <h2 className="inst border-b border-border pt-8 pb-3 text-[0.6rem] text-muted-foreground">
               {part.title}
             </h2>
           )}
@@ -127,16 +127,16 @@ export default async function BookCover({ params }: Props) {
                     href={`/books/${doc.slug}`}
                     className="group grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto]"
                   >
-                    <span className="inst pt-1 text-accent">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="inst pt-1 text-primary">{String(i + 1).padStart(2, "0")}</span>
                     <span>
-                      <span className="block font-semibold text-foreground transition-colors group-hover:text-accent">
+                      <span className="block font-semibold text-foreground transition-colors group-hover:text-primary">
                         {doc.title}
                       </span>
-                      <span className="mt-1 block text-sm/relaxed  text-dim">
+                      <span className="mt-1 block text-sm/relaxed  text-muted-foreground">
                         {doc.description}
                       </span>
                     </span>
-                    <span className="inst col-start-2 mt-2 text-dim sm:col-start-3 sm:mt-0 sm:pt-1">
+                    <span className="inst col-start-2 mt-2 text-muted-foreground sm:col-start-3 sm:mt-0 sm:pt-1">
                       {doc.readingMinutes} min
                     </span>
                   </Link>

@@ -17,7 +17,7 @@ export default function ContactPage() {
         label="contact"
         title={
           <>
-            Get in <span className="text-accent">touch</span>.
+            Get in <span className="text-primary">touch</span>.
           </>
         }
         scene="plug"
@@ -39,42 +39,42 @@ export default function ContactPage() {
                   target: "_blank",
                   rel: "noopener noreferrer",
                 })}
-                className="inline-flex items-center gap-1.5 self-start font-semibold text-foreground transition-colors hover:text-accent"
+                className="inline-flex items-center gap-1.5 self-start font-semibold text-foreground transition-colors hover:text-primary"
               >
                 {c.label}
                 <ArrowUpRight size={13} />
               </a>
-              <p className="leading-relaxed text-muted">{c.description}</p>
+              <p className="leading-relaxed text-subtle">{c.description}</p>
             </li>
           ))}
         </ul>
 
-        <p className="max-w-2xl leading-relaxed text-muted">
+        <p className="max-w-2xl leading-relaxed text-subtle">
           Building against the public API? Start with the{" "}
           <Link
             href="/docs/api"
-            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+            className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
           >
             API reference
           </Link>{" "}
           and the{" "}
           <a
             href="/openapi.json"
-            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+            className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
           >
             OpenAPI spec
           </a>
           . Want new posts without asking? Subscribe to the{" "}
           <a
             href="/feed.xml"
-            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+            className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
           >
             RSS feed
           </a>
           . For how this site handles your data, see the{" "}
           <Link
             href="/legal/privacy"
-            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+            className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
           >
             privacy policy
           </Link>

@@ -11,11 +11,11 @@ const lastUpdated = "September 2026";
 
 export default function PrivacyPage() {
   return (
-    <article className="mx-auto max-w-2xl py-8 text-sm/relaxed text-muted ">
+    <article className="mx-auto max-w-2xl py-8 text-sm/relaxed text-subtle ">
       <header className="mb-10">
-        <p className="text-xs text-accent font-medium tracking-wider uppercase mb-3">Legal</p>
+        <p className="text-xs text-primary font-medium tracking-wider uppercase mb-3">Legal</p>
         <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">Privacy</h1>
-        <p className="text-xs text-dim">Last updated: {lastUpdated}</p>
+        <p className="text-xs text-muted-foreground">Last updated: {lastUpdated}</p>
       </header>
 
       <section className="space-y-4">
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             referrers, no cookies, no cross-site tracking. See{" "}
             <a
               href="https://vercel.com/docs/analytics/privacy-policy"
-              className="text-accent hover:underline"
+              className="text-primary hover:underline"
             >
               Vercel&apos;s privacy policy
             </a>
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
             <strong className="text-foreground">Sentry</strong>: error and performance traces when
             something breaks. May include URL, browser, IP-derived approximate location, and a stack
             trace. See{" "}
-            <a href="https://sentry.io/privacy/" className="text-accent hover:underline">
+            <a href="https://sentry.io/privacy/" className="text-primary hover:underline">
               Sentry&apos;s privacy policy
             </a>
             .
@@ -94,16 +94,16 @@ export default function PrivacyPage() {
       <Section title="Contact">
         <p>
           Questions? Open an issue on{" "}
-          <a href="https://github.com/syntaqx" className="text-accent hover:underline">
+          <a href="https://github.com/syntaqx" className="text-primary hover:underline">
             GitHub
           </a>
           .
         </p>
       </Section>
 
-      <p className="mt-12 text-xs text-dim">
+      <p className="mt-12 text-xs text-muted-foreground">
         See also:{" "}
-        <Link href="/legal/terms" className="hover:text-accent">
+        <Link href="/legal/terms" className="hover:text-primary">
           Terms of Service
         </Link>
         .

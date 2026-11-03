@@ -44,13 +44,13 @@ const css = (c: RGB, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 function palette() {
   const cs = getComputedStyle(document.documentElement);
   const bg = parse(cs.getPropertyValue("--background"));
-  const acc = parse(cs.getPropertyValue("--accent"));
+  const acc = parse(cs.getPropertyValue("--primary"));
   const light = (bg[0] + bg[1] + bg[2]) / 3 > 128;
   return {
     bg,
     acc,
     fg: parse(cs.getPropertyValue("--foreground")),
-    dim: parse(cs.getPropertyValue("--dim")),
+    dim: parse(cs.getPropertyValue("--muted-foreground")),
     ramp: [0.14, 0.3, 0.55, 0.85].map((t) => mix(bg, acc, light ? t * 0.8 : t)),
     hot: mix(acc, light ? bg : [255, 255, 255], 0.35),
     warn: (light ? [196, 55, 47] : [255, 93, 82]) as RGB,

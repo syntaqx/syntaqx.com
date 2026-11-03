@@ -1,21 +1,13 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { Check, FolderPlus, Inbox, RotateCcw, Search, X } from "lucide-react";
+import { DemoFrame } from "../_components/demo-frame";
 
 const btn =
-  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-dim transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
+  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
 const primary =
-  "inline-flex items-center gap-1.5 rounded border border-accent/40 bg-accent/10 px-2.5 py-1.5 text-xs text-accent transition-colors hover:bg-accent/20 cursor-pointer";
-
-function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
-  return (
-    <div className="rounded-lg border border-border bg-surface">
-      {children}
-      <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">{note}</div>
-    </div>
-  );
-}
+  "inline-flex items-center gap-1.5 rounded border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs text-primary transition-colors hover:bg-primary/20 cursor-pointer";
 
 // ---------------------------------------------------------------------------
 // First run
@@ -30,7 +22,7 @@ function FirstRunDemo() {
   const [projects, setProjects] = useState<string[]>([]);
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           One sentence on what lives here, one primary action, one low-stakes way to see it full. No
@@ -40,9 +32,9 @@ function FirstRunDemo() {
     >
       {projects.length === 0 ? (
         <div className="flex flex-col items-center px-6 py-10 text-center">
-          <FolderPlus size={20} className="mb-3 text-dim" />
+          <FolderPlus size={20} className="mb-3 text-muted-foreground" />
           <p className="mb-1 text-sm text-foreground">No projects yet</p>
-          <p className="mb-5 max-w-sm text-xs/relaxed  text-dim">
+          <p className="mb-5 max-w-sm text-xs/relaxed  text-muted-foreground">
             A project groups the services you deploy together, so their logs and alerts live in one
             place.
           </p>
@@ -71,7 +63,7 @@ function FirstRunDemo() {
           </div>
         </div>
       )}
-    </Frame>
+    </DemoFrame>
   );
 }
 
@@ -100,7 +92,7 @@ function NoResultsDemo() {
   const hiddenByFilter = matching.length - visible.length;
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           The empty state knows why it&apos;s empty. Here a match exists, but the archived filter
@@ -110,7 +102,7 @@ function NoResultsDemo() {
     >
       <div className="flex flex-wrap items-center gap-2 border-b border-border p-3">
         <label className="flex min-w-0 flex-1 items-center gap-2 rounded border border-border px-2 py-1">
-          <Search size={12} className="shrink-0 text-dim" />
+          <Search size={12} className="shrink-0 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -135,7 +127,7 @@ function NoResultsDemo() {
               className="flex items-center justify-between gap-3 px-4 py-2.5 text-xs text-foreground"
             >
               {i.title}
-              {i.archived && <span className="text-[10px] text-dim">archived</span>}
+              {i.archived && <span className="text-[10px] text-muted-foreground">archived</span>}
             </li>
           ))}
         </ul>
@@ -146,7 +138,7 @@ function NoResultsDemo() {
           </p>
           {hiddenByFilter > 0 ? (
             <>
-              <p className="mb-4 text-xs text-dim">
+              <p className="mb-4 text-xs text-muted-foreground">
                 {hiddenByFilter} archived {hiddenByFilter === 1 ? "issue matches" : "issues match"}.
               </p>
               <button type="button" className={primary} onClick={() => setShowArchived(true)}>
@@ -155,7 +147,9 @@ function NoResultsDemo() {
             </>
           ) : (
             <>
-              <p className="mb-4 text-xs text-dim">Check the spelling, or try fewer words.</p>
+              <p className="mb-4 text-xs text-muted-foreground">
+                Check the spelling, or try fewer words.
+              </p>
               <button type="button" className={btn} onClick={() => setQuery("")}>
                 <X size={12} /> Clear search
               </button>
@@ -163,7 +157,7 @@ function NoResultsDemo() {
           )}
         </div>
       )}
-    </Frame>
+    </DemoFrame>
   );
 }
 
@@ -180,7 +174,7 @@ function AllDoneDemo() {
   const remaining = TASKS.filter((t) => !done.includes(t));
 
   return (
-    <Frame
+    <DemoFrame
       note={
         <>
           Same empty list as the first run, different meaning. Reusing the first-run copy here would
@@ -196,7 +190,7 @@ function AllDoneDemo() {
                 type="button"
                 aria-label={`Mark "${t}" done`}
                 onClick={() => setDone((d) => [...d, t])}
-                className="flex size-4 shrink-0 items-center justify-center rounded-sm border border-border text-transparent transition-colors hover:border-accent hover:text-accent cursor-pointer"
+                className="flex size-4 shrink-0 items-center justify-center rounded-sm border border-border text-transparent transition-colors hover:border-primary hover:text-primary cursor-pointer"
               >
                 <Check size={10} />
               </button>
@@ -206,15 +200,15 @@ function AllDoneDemo() {
         </ul>
       ) : (
         <div className="flex flex-col items-center px-6 py-10 text-center">
-          <Inbox size={20} className="mb-3 text-accent" />
+          <Inbox size={20} className="mb-3 text-primary" />
           <p className="mb-1 text-sm text-foreground">All caught up</p>
-          <p className="mb-5 text-xs text-dim">Nothing needs you right now.</p>
+          <p className="mb-5 text-xs text-muted-foreground">Nothing needs you right now.</p>
           <button type="button" className={btn} onClick={() => setDone((d) => d.slice(0, -1))}>
             <RotateCcw size={12} /> Undo last
           </button>
         </div>
       )}
-    </Frame>
+    </DemoFrame>
   );
 }
 

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "syntaqx",
+  "homepage": "https://www.syntaqx.com/ui",
+  "items": [
+    {
+      "name": "copy-button",
+      "type": "registry:ui",
+      "title": "Copy Button",
+      "description": "A button that is both the copy trigger and its confirmation: the icon swaps to a check for 1.5s.",
+      "dependencies": ["lucide-react"],
+      "files": [{ "path": "registry/syntaqx/ui/copy-button.tsx", "type": "registry:ui" }],
+      "categories": ["feedback"]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:ui",
+      "title": "Hover Card",
+      "description": "A hover card that opens on intent (hover or focus, with open and close delays) and fires onOpen once, for loading its content on demand.",
+      "files": [{ "path": "registry/syntaqx/ui/hover-card.tsx", "type": "registry:ui" }],
+      "categories": ["overlays"]
+    },
+    {
+      "name": "timestamp",
+      "type": "registry:ui",
+      "title": "Timestamp",
+      "description": "An instant in the viewer's timezone with the zone always visible; on intent, the same instant where it happened and in UTC.",
+      "registryDependencies": ["https://www.syntaqx.com/r/hover-card.json"],
+      "files": [{ "path": "registry/syntaqx/ui/timestamp.tsx", "type": "registry:ui" }],
+      "categories": ["overlays", "data"]
+    }
+  ]
+}

@@ -27,7 +27,7 @@ function SectionHead({ title, count }: { title: string; count: number }) {
   return (
     <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-border pb-3">
       <h2 className="eyebrow">{title}</h2>
-      <span className="inst text-dim">{count}</span>
+      <span className="inst text-muted-foreground">{count}</span>
     </div>
   );
 }
@@ -48,11 +48,11 @@ export default function BooksPage() {
         )}
       />
       <DocsHeader eyebrow="Books" title="Books">
-        <p className="max-w-3xl text-dim">
+        <p className="max-w-3xl text-muted-foreground">
           The{" "}
           <Link
             href="/docs"
-            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+            className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
           >
             playbook
           </Link>{" "}
@@ -95,7 +95,7 @@ export default function BooksPage() {
         {CONSIDERING_BOOKS.length > 0 && (
           <section id="considering" className="scroll-mt-24">
             <SectionHead title="Considering" count={CONSIDERING_BOOKS.length} />
-            <p className="-mt-2 mb-6 max-w-3xl text-sm text-dim">
+            <p className="-mt-2 mb-6 max-w-3xl text-sm text-muted-foreground">
               Industries I might write next, each with its own ledger and rules. One moves up to
               Soon once I commit to it.
             </p>

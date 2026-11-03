@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Info, ExternalLink, RefreshCw, Trash2, Plus, Minus } from "lucide-react";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { uuidv7 } from "@/lib/uuid";
@@ -216,7 +216,7 @@ export default function UuidPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">UUID / ULID Generator</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Generate, validate, and inspect UUIDs and ULIDs. Everything runs in your browser, nothing
           is sent to a server.
         </p>
@@ -226,16 +226,16 @@ export default function UuidPage() {
         {/* Left: generator + inspector */}
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           {/* Generator controls */}
-          <div className="border border-border bg-surface">
+          <div className="border border-border bg-card">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <span className="text-xs font-medium text-dim">Generate</span>
+              <span className="text-xs font-medium text-muted-foreground">Generate</span>
               <div className="flex items-center gap-2">
                 {/* Count controls */}
                 <div className="inline-flex items-center border border-border bg-background">
                   <button
                     onClick={() => setCount((c) => Math.max(1, c - 1))}
                     disabled={count <= 1}
-                    className="px-1.5 py-1 text-dim hover:text-foreground transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
+                    className="px-1.5 py-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
                   >
                     <Minus size={12} />
                   </button>
@@ -250,11 +250,11 @@ export default function UuidPage() {
                     }}
                     className="w-12 text-center bg-transparent text-xs font-mono text-foreground border-x border-border py-1 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
-                  <span className="text-[10px] text-dim/50 px-1">/ 500</span>
+                  <span className="text-[10px] text-muted-foreground/50 px-1">/ 500</span>
                   <button
                     onClick={() => setCount((c) => Math.min(500, c + 1))}
                     disabled={count >= 500}
-                    className="px-1.5 py-1 text-dim hover:text-foreground transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
+                    className="px-1.5 py-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
                   >
                     <Plus size={12} />
                   </button>
@@ -262,7 +262,7 @@ export default function UuidPage() {
                 {/* Generate button */}
                 <button
                   onClick={handleGenerate}
-                  className="inline-flex items-center gap-1.5 bg-accent text-background px-3 py-1.5 text-xs font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                  className="inline-flex items-center gap-1.5 bg-primary text-background px-3 py-1.5 text-xs font-medium hover:opacity-90 transition-opacity cursor-pointer"
                 >
                   <RefreshCw size={12} />
                   Generate
@@ -298,9 +298,9 @@ export default function UuidPage() {
           </div>
 
           {/* Output */}
-          <div className="border border-border bg-surface">
+          <div className="border border-border bg-card">
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              <span className="text-xs text-dim">
+              <span className="text-xs text-muted-foreground">
                 {displayIds.length > 0
                   ? `${displayIds.length} ${displayIds.length === 1 ? "ID" : "IDs"} generated`
                   : "Output"}
@@ -310,7 +310,7 @@ export default function UuidPage() {
                 {displayIds.length > 0 && (
                   <button
                     onClick={() => setGenerated([])}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                   >
                     <Trash2 size={12} />
                   </button>
@@ -331,7 +331,7 @@ export default function UuidPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-dim/30 py-4 text-center">
+                <p className="text-sm text-muted-foreground/30 py-4 text-center">
                   Click Generate to create {ID_LABELS[idType]} identifiers
                 </p>
               )}
@@ -339,15 +339,15 @@ export default function UuidPage() {
           </div>
 
           {/* Inspector */}
-          <div className="border border-border bg-surface">
+          <div className="border border-border bg-card">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <span className="text-xs font-medium text-dim">Inspect / Validate</span>
+              <span className="text-xs font-medium text-muted-foreground">Inspect / Validate</span>
               <div className="flex items-center gap-1.5">
                 <PasteButton onPaste={(text) => setInspectInput(text)} label />
                 {inspectInput && (
                   <button
                     onClick={() => setInspectInput("")}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                   >
                     <Trash2 size={12} />
                   </button>
@@ -361,7 +361,7 @@ export default function UuidPage() {
                 onChange={(e) => setInspectInput(e.target.value)}
                 placeholder="Paste a UUID or ULID to inspect..."
                 spellCheck={false}
-                className="w-full border border-border bg-background px-2 py-1.5 text-sm font-mono text-foreground placeholder:text-dim/50 focus:outline-none focus:border-accent/50"
+                className="w-full border border-border bg-background px-2 py-1.5 text-sm font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50"
               />
 
               {inspectResult && (
@@ -376,32 +376,32 @@ export default function UuidPage() {
                       {inspectResult.valid ? "✓ Valid" : "✗ Invalid"}
                     </span>
                     {inspectResult.valid && (
-                      <span className="text-xs text-dim font-mono">
+                      <span className="text-xs text-muted-foreground font-mono">
                         {inspectResult.type === "uuid" ? `UUID v${inspectResult.version}` : "ULID"}
                       </span>
                     )}
                   </div>
                   {inspectResult.valid && (
-                    <div className="text-xs text-dim space-y-0.5">
+                    <div className="text-xs text-muted-foreground space-y-0.5">
                       {inspectResult.variant && (
                         <p>
-                          <span className="text-muted">Variant:</span> {inspectResult.variant}
+                          <span className="text-subtle">Variant:</span> {inspectResult.variant}
                         </p>
                       )}
                       {inspectResult.timestamp && (
                         <p>
-                          <span className="text-muted">Timestamp:</span>{" "}
+                          <span className="text-subtle">Timestamp:</span>{" "}
                           {inspectResult.timestamp.toLocaleString(undefined, {
                             dateStyle: "medium",
                             timeStyle: "long",
                           })}
-                          <span className="ml-1.5 text-dim">
+                          <span className="ml-1.5 text-muted-foreground">
                             ({inspectResult.timestamp.getTime()})
                           </span>
                         </p>
                       )}
                       {inspectResult.type === "uuid" && inspectResult.version === 4 && (
-                        <p className="text-dim">Random UUID - no embedded timestamp</p>
+                        <p className="text-muted-foreground">Random UUID - no embedded timestamp</p>
                       )}
                     </div>
                   )}
@@ -413,12 +413,12 @@ export default function UuidPage() {
 
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <Info size={12} className="text-primary" />
               About UUIDs & ULIDs
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
                 All IDs are generated client-side using the Web Crypto API for cryptographically
                 secure random values.
@@ -428,7 +428,7 @@ export default function UuidPage() {
                 is the recommended default, see the{" "}
                 <Link
                   href="/docs/fundamentals/identifier-conventions"
-                  className="text-accent hover:underline"
+                  className="text-primary hover:underline"
                 >
                   Identifier Conventions
                 </Link>{" "}
@@ -437,9 +437,9 @@ export default function UuidPage() {
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
@@ -448,7 +448,7 @@ export default function UuidPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc9562"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 9562 - UUIDs (replaces RFC 4122)
                 </a>
@@ -458,7 +458,7 @@ export default function UuidPage() {
                   href="https://github.com/ulid/spec"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   ULID Specification
                 </a>
@@ -468,7 +468,7 @@ export default function UuidPage() {
                   href="https://en.wikipedia.org/wiki/Universally_unique_identifier"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   Wikipedia - UUID
                 </a>

@@ -34,7 +34,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
   return (
     <div>
       <DocsHeader eyebrow="Docs" title="Documentation">
-        <div className="max-w-3xl text-dim">{intro}</div>
+        <div className="max-w-3xl text-muted-foreground">{intro}</div>
       </DocsHeader>
 
       <div className="space-y-16">
@@ -43,7 +43,7 @@ export function DocsIndex({ categories, intro }: DocsIndexProps) {
           <section key={category.section} id={category.section} className="scroll-mt-24">
             <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
               <h2 className="eyebrow">{category.name}</h2>
-              <span className="inst text-dim">{category.docs.length}</span>
+              <span className="inst text-muted-foreground">{category.docs.length}</span>
             </div>
             <ul className="grid sm:grid-cols-2 sm:gap-x-10">
               {category.docs.map((doc) => (
@@ -66,17 +66,19 @@ function Featured({ category }: { category: DocsIndexCategory }) {
           <li key={doc.href}>
             <Link
               href={doc.href}
-              className="group flex items-center justify-between gap-6 border border-border bg-surface p-5 transition-colors hover:border-accent/60"
+              className="group flex items-center justify-between gap-6 border border-border bg-card p-5 transition-colors hover:border-primary/60"
             >
               <div>
-                <h3 className="text-xl/tight  text-foreground transition-colors group-hover:text-accent">
+                <h3 className="text-xl/tight  text-foreground transition-colors group-hover:text-primary">
                   {doc.title}
                 </h3>
-                <p className="mt-1.5 max-w-2xl text-sm/relaxed  text-dim">{doc.description}</p>
+                <p className="mt-1.5 max-w-2xl text-sm/relaxed  text-muted-foreground">
+                  {doc.description}
+                </p>
               </div>
               <ArrowRight
                 size={18}
-                className="shrink-0 text-dim transition-all group-hover:translate-x-0.5 group-hover:text-accent"
+                className="shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:text-primary"
                 aria-hidden
               />
             </Link>
@@ -91,10 +93,10 @@ function DocRow({ doc }: { doc: DocsIndexEntry }) {
   return (
     <li className="border-b border-border">
       <Link href={doc.href} className="group block py-4">
-        <span className="block text-lg/tight  text-foreground transition-colors group-hover:text-accent">
+        <span className="block text-lg/tight  text-foreground transition-colors group-hover:text-primary">
           {doc.title}
         </span>
-        <span className="mt-1 line-clamp-2 block text-[0.8rem] leading-relaxed text-dim">
+        <span className="mt-1 line-clamp-2 block text-[0.8rem] leading-relaxed text-muted-foreground">
           {doc.description}
         </span>
       </Link>

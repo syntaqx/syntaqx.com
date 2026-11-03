@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { RefreshCw, Info, ExternalLink } from "lucide-react";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { cn } from "@/lib/cn";
 
 function Row({ label, value, mono }: { label: string; value: string | null; mono?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-4 min-h-9 py-1.5 border-b border-border last:border-b-0">
-      <span className="text-xs text-dim shrink-0">{label}</span>
+      <span className="text-xs text-muted-foreground shrink-0">{label}</span>
       <div className="flex items-center gap-1.5 min-w-0">
         {value ? (
           <>
@@ -160,7 +160,7 @@ export default function WhoamiPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">whoami</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           See how you appear on the internet. IP, location, browser, device, and more. Nothing is
           stored.
         </p>
@@ -170,13 +170,13 @@ export default function WhoamiPage() {
         {/* Left: main content */}
         <div className="flex-1 min-w-0 flex flex-col gap-6">
           {/* IP hero */}
-          <div className="border border-border bg-surface">
+          <div className="border border-border bg-card">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <span className="text-xs text-dim">Your Public IP</span>
+              <span className="text-xs text-muted-foreground">Your Public IP</span>
               <button
                 onClick={fetchIp}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-30"
+                className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer disabled:opacity-30"
               >
                 <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
                 Refresh
@@ -185,12 +185,12 @@ export default function WhoamiPage() {
             <div className="px-4 py-6 text-center">
               <div className="flex flex-col items-center gap-3">
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-dim">IPv4</span>
+                  <span className="text-[10px] text-muted-foreground">IPv4</span>
                   {error ? (
                     <span className="text-sm text-pink">Could not determine IP</span>
                   ) : ipv4 ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-accent font-mono tracking-wide">
+                      <span className="text-2xl font-bold text-primary font-mono tracking-wide">
                         {ipv4}
                       </span>
                       <CopyButton text={ipv4} />
@@ -204,10 +204,10 @@ export default function WhoamiPage() {
                   )}
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-dim">IPv6</span>
+                  <span className="text-[10px] text-muted-foreground">IPv6</span>
                   {ipv6 ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-accent font-mono tracking-wide break-all">
+                      <span className="text-sm font-medium text-primary font-mono tracking-wide break-all">
                         {ipv6}
                       </span>
                       <CopyButton text={ipv6} />
@@ -216,7 +216,9 @@ export default function WhoamiPage() {
                     <span
                       className={cn(
                         "text-xs",
-                        loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim/50",
+                        loading
+                          ? "text-transparent bg-border/30 animate-pulse"
+                          : "text-muted-foreground/50",
                       )}
                     >
                       {loading ? "0000:0000:0000:0000:0000:0000" : "Unavailable"}
@@ -228,7 +230,7 @@ export default function WhoamiPage() {
                     "text-xs",
                     !location && loading
                       ? "text-transparent bg-border/30 animate-pulse"
-                      : "text-dim",
+                      : "text-muted-foreground",
                   )}
                 >
                   {location || (loading ? "Loading location" : "\u00A0")}
@@ -238,7 +240,7 @@ export default function WhoamiPage() {
           </div>
 
           {/* Network details */}
-          <div className="border border-border bg-surface">
+          <div className="border border-border bg-card">
             <div className="px-4 py-3 border-b border-border">
               <span className="eyebrow">Network</span>
             </div>
@@ -253,7 +255,7 @@ export default function WhoamiPage() {
           </div>
 
           {/* Browser / client details */}
-          <div className="border border-border bg-surface">
+          <div className="border border-border bg-card">
             <div className="px-4 py-3 border-b border-border">
               <span className="eyebrow">Browser &amp; Device</span>
             </div>
@@ -280,14 +282,14 @@ export default function WhoamiPage() {
 
         {/* Right: info sidebar */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <Info size={12} className="text-primary" />
               About IP Addresses
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                Your <span className="text-muted">public IP address</span> is assigned by your ISP
+                Your <span className="text-subtle">public IP address</span> is assigned by your ISP
                 and is how other devices on the internet identify your connection.
               </p>
               <p>
@@ -295,8 +297,8 @@ export default function WhoamiPage() {
                 proxy. It does not reveal your exact address.
               </p>
               <p>
-                <span className="text-muted">IPv4</span> addresses are 32-bit (e.g. 192.168.1.1).{" "}
-                <span className="text-muted">IPv6</span> addresses are 128-bit and look like
+                <span className="text-subtle">IPv4</span> addresses are 32-bit (e.g. 192.168.1.1).{" "}
+                <span className="text-subtle">IPv6</span> addresses are 128-bit and look like
                 2001:db8::1.
               </p>
               <p>
@@ -306,9 +308,9 @@ export default function WhoamiPage() {
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
@@ -317,7 +319,7 @@ export default function WhoamiPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc791"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 791 - Internet Protocol (IPv4)
                 </a>
@@ -327,7 +329,7 @@ export default function WhoamiPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc8200"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 8200 - IPv6 Specification
                 </a>
@@ -337,7 +339,7 @@ export default function WhoamiPage() {
                   href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   MDN - Navigator API
                 </a>
@@ -347,7 +349,7 @@ export default function WhoamiPage() {
                   href="https://en.wikipedia.org/wiki/IP_address"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   Wikipedia - IP address
                 </a>

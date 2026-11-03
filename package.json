@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/git-history.mjs && next build && node scripts/pagefind.mjs",
+    "build": "node scripts/git-history.mjs && shadcn build && next build && node scripts/pagefind.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -19,7 +19,8 @@
     "gaps": "node scripts/source-gaps.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "resume:pdf": "esbuild scripts/resume-pdf.mts --bundle --platform=node --format=esm --packages=external --jsx=automatic --outfile=.private/resume-pdf.mjs --log-level=warning && node .private/resume-pdf.mjs"
+    "resume:pdf": "esbuild scripts/resume-pdf.mts --bundle --platform=node --format=esm --packages=external --jsx=automatic --outfile=.private/resume-pdf.mjs --log-level=warning && node .private/resume-pdf.mjs",
+    "registry": "shadcn build"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^9.1.0",
@@ -78,6 +79,7 @@
     "eslint-config-next": "16.4.5",
     "eslint-plugin-better-tailwindcss": "^4.10.0",
     "pagefind": "^1.6.0",
+    "shadcn": "^4.23.0",
     "tailwindcss": "^4.3.4",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "unpdf": "^2.1.0",

@@ -15,18 +15,19 @@
 :root {
   --background: #0a0c0c;
   --foreground: #e6ece9;
-  --accent: #00d1ca;
-  --on-accent: #041312;
-  --accent-muted: #0c4f4b;
-  --muted: #a7b2b0;
-  --dim: #84908e;
+  --primary: #00d1ca;
+  --primary-foreground: #041312;
+  --accent: #0c4f4b;
+  --subtle: #a7b2b0;
+  --muted-foreground: #84908e;
   --pink: #ff9cc7;
   --jwt-purple: #c4a7ff;
   --jwt-cyan: #7edcdc;
   --mauve: #c86691;
-  --surface: #0f1313;
+  --card: #0f1313;
   --border: #1c2423;
   --border-hover: #2f3a39;
+  --destructive: #f87171;
   color-scheme: dark;
 }
 
@@ -34,18 +35,19 @@
   :root:not(.dark) {
     --background: #e3e7e4;
     --foreground: #141c1a;
-    --accent: #006e68;
-    --on-accent: #ffffff;
-    --accent-muted: #b5e2df;
-    --muted: #3b4644;
-    --dim: #52605d;
+    --primary: #006e68;
+    --primary-foreground: #ffffff;
+    --accent: #b5e2df;
+    --subtle: #3b4644;
+    --muted-foreground: #52605d;
     --pink: #b4527c;
     --jwt-purple: #7c5cbf;
     --jwt-cyan: #0e8585;
     --mauve: #a34f74;
-    --surface: #dbe0dd;
+    --card: #dbe0dd;
     --border: #c9d0cc;
     --border-hover: #afb9b5;
+    --destructive: #dc2626;
     color-scheme: light;
   }
 }
@@ -53,54 +55,91 @@
 .dark {
   --background: #0a0c0c;
   --foreground: #e6ece9;
-  --accent: #00d1ca;
-  --on-accent: #041312;
-  --accent-muted: #0c4f4b;
-  --muted: #a7b2b0;
-  --dim: #84908e;
+  --primary: #00d1ca;
+  --primary-foreground: #041312;
+  --accent: #0c4f4b;
+  --subtle: #a7b2b0;
+  --muted-foreground: #84908e;
   --pink: #ff9cc7;
   --jwt-purple: #c4a7ff;
   --jwt-cyan: #7edcdc;
   --mauve: #c86691;
-  --surface: #0f1313;
+  --card: #0f1313;
   --border: #1c2423;
   --border-hover: #2f3a39;
+  --destructive: #f87171;
   color-scheme: dark;
 }
 
 .light {
   --background: #e3e7e4;
   --foreground: #141c1a;
-  --accent: #006e68;
-  --on-accent: #ffffff;
-  --accent-muted: #b5e2df;
-  --muted: #3b4644;
-  --dim: #52605d;
+  --primary: #006e68;
+  --primary-foreground: #ffffff;
+  --accent: #b5e2df;
+  --subtle: #3b4644;
+  --muted-foreground: #52605d;
   --pink: #b4527c;
   --jwt-purple: #7c5cbf;
   --jwt-cyan: #0e8585;
   --mauve: #a34f74;
-  --surface: #dbe0dd;
+  --card: #dbe0dd;
   --border: #c9d0cc;
   --border-hover: #afb9b5;
+  --destructive: #dc2626;
   color-scheme: light;
+}
+
+/*
+ * The rest of shadcn's token set, derived from the palette above so every
+ * theme gets them for free. Components from the /ui registry style
+ * themselves with these names; this site's look comes from their values.
+ * `subtle`, `border-hover`, `pink`, `jwt-*` and `mauve` are this site's own
+ * additions for roles shadcn has no name for.
+ */
+:root {
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--card);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--card);
+  --accent-foreground: var(--foreground);
+  --input: var(--border);
+  --ring: var(--primary);
+  /* Square corners, like the rest of the instrument panel. */
+  --radius: 0rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-on-accent: var(--on-accent);
-  --color-accent-muted: var(--accent-muted);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
-  --color-dim: var(--dim);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-subtle: var(--subtle);
+  --color-border-hover: var(--border-hover);
   --color-pink: var(--pink);
   --color-jwt-purple: var(--jwt-purple);
   --color-jwt-cyan: var(--jwt-cyan);
   --color-mauve: var(--mauve);
-  --color-surface: var(--surface);
-  --color-border: var(--border);
-  --color-border-hover: var(--border-hover);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
   /*
    * Four voices, one job each:
    *   voice      Big Shoulders: names, titles, pull quotes, big numbers
@@ -156,11 +195,11 @@ body {
   background-image: linear-gradient(
     calc(90deg + var(--tilt-angle)),
     transparent 0 14%,
-    color-mix(in oklab, var(--accent) 7%, transparent) 14% 21%,
+    color-mix(in oklab, var(--primary) 7%, transparent) 14% 21%,
     transparent 21% 57%,
-    color-mix(in oklab, var(--accent) 5%, transparent) 57% 60%,
+    color-mix(in oklab, var(--primary) 5%, transparent) 57% 60%,
     transparent 60% 79%,
-    color-mix(in oklab, var(--accent) 6%, transparent) 79% 88%,
+    color-mix(in oklab, var(--primary) 6%, transparent) 79% 88%,
     transparent 88%
   );
 }
@@ -185,7 +224,7 @@ body {
   letter-spacing: 0.14em;
   line-height: 1.4;
   text-transform: uppercase;
-  color: var(--dim);
+  color: var(--muted-foreground);
 
   &::before {
     @apply tick;
@@ -198,24 +237,25 @@ body {
   width: 2px;
   height: 1.15em;
   flex-shrink: 0;
-  background: var(--accent);
+  background: var(--primary);
   transform: skewX(calc(-1 * var(--tilt-angle)));
 }
 
 /* A post list row and its title (components/post-list.tsx). Kept here, not
    inline, so a long list doesn't repeat these classes on every row. */
 @utility post-row {
-  @apply relative grid gap-x-8 gap-y-2 px-0 py-5 transition-colors before:absolute before:top-1/2 before:-left-4 before:h-3 before:w-0.5 before:-translate-y-1/2 before:-skew-x-(--tilt-angle) before:scale-0 before:bg-accent before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-surface hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4;
+  @apply relative grid gap-x-8 gap-y-2 px-0 py-5 transition-colors before:absolute before:top-1/2 before:-left-4 before:h-3 before:w-0.5 before:-translate-y-1/2 before:-skew-x-(--tilt-angle) before:scale-0 before:bg-primary before:transition-transform before:duration-200 before:ease-[steps(3)] hover:bg-card hover:before:scale-100 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline sm:px-4;
 }
 @utility post-row-title {
-  @apply text-xl leading-none text-foreground transition-[color,translate] duration-200 ease-[steps(4)] group-hover:translate-x-1.5 group-hover:text-accent sm:text-[1.4rem];
+  @apply text-xl leading-none text-foreground transition-[color,translate] duration-200 ease-[steps(4)] group-hover:translate-x-1.5 group-hover:text-primary sm:text-[1.4rem];
 }
 
 /* Four square handles on the corners of a box, like a selected layer. */
 @utility handles {
   background-image:
-    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
-    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent));
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--primary), var(--primary)), linear-gradient(var(--primary), var(--primary));
   background-size: 5px 5px;
   background-position:
     top left,
@@ -242,7 +282,7 @@ body {
  * not mouse clicks, so pointer users never see the ring.
  */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 :focus:not(:focus-visible) {
@@ -325,10 +365,10 @@ body {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-muted);
+  background: var(--accent);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: var(--primary);
 }
 
 /*
@@ -339,7 +379,7 @@ body {
   font-size: 1.0625rem;
   line-height: 1.7;
   max-width: 44rem;
-  color: var(--muted);
+  color: var(--subtle);
   counter-reset: section;
 }
 /* Docs fill their whole column, beside the sidebar: their tables, code and
@@ -370,12 +410,12 @@ body {
   font-size: 0.6rem;
   font-weight: 400;
   letter-spacing: 0.14em;
-  color: var(--accent);
+  color: var(--primary);
 }
 /* Hover a section heading to get its deep link (rehypeSectionIds). */
 .prose .heading-anchor {
   margin-left: 0.4em;
-  color: var(--dim);
+  color: var(--muted-foreground);
   text-decoration: none;
   opacity: 0;
   transition:
@@ -387,7 +427,7 @@ body {
   opacity: 1;
 }
 .prose .heading-anchor:hover {
-  color: var(--accent);
+  color: var(--primary);
 }
 .prose h3,
 .prose h4 {
@@ -410,7 +450,7 @@ body {
 .prose a {
   color: var(--foreground);
   text-decoration: underline;
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--primary);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
   transition:
@@ -418,7 +458,7 @@ body {
     text-decoration-thickness 0.2s;
 }
 .prose a:hover {
-  color: var(--accent);
+  color: var(--primary);
   text-decoration-thickness: 2px;
 }
 .prose strong {
@@ -446,10 +486,10 @@ body {
   padding-left: 0.25em;
 }
 .prose li::marker {
-  color: var(--accent);
+  color: var(--primary);
 }
 .prose blockquote {
-  border-left: 2px solid var(--accent);
+  border-left: 2px solid var(--primary);
   padding-left: 1.25em;
   margin: 1.75em 0;
   color: var(--foreground);
@@ -463,11 +503,11 @@ body {
   border: 1px solid var(--border);
   border-left: 3px solid var(--callout);
   border-radius: 0 6px 6px 0;
-  background: color-mix(in srgb, var(--callout) 7%, var(--surface));
+  background: color-mix(in srgb, var(--callout) 7%, var(--card));
   font-style: normal;
 }
 .prose aside.callout-tip {
-  --callout: var(--accent);
+  --callout: var(--primary);
 }
 .prose aside.callout-important {
   --callout: var(--jwt-purple);
@@ -508,13 +548,13 @@ body {
   flex-wrap: wrap;
   border: 1px solid var(--border);
   border-bottom: none;
-  background: var(--surface);
+  background: var(--card);
 }
 .prose .code-tabs [role="tab"] {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   padding: 0.55em 1em;
-  color: var(--dim);
+  color: var(--muted-foreground);
   border-bottom: 2px solid transparent;
   cursor: pointer;
   transition:
@@ -525,8 +565,8 @@ body {
   color: var(--foreground);
 }
 .prose .code-tabs [role="tab"][aria-selected="true"] {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--primary);
+  border-bottom-color: var(--primary);
 }
 .prose .code-tabs pre {
   margin: 0;
@@ -548,14 +588,14 @@ body {
 }
 .prose-feature blockquote strong,
 .prose-feature blockquote em {
-  color: var(--accent);
+  color: var(--primary);
   font-style: normal;
   font-weight: inherit;
 }
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.82em;
-  background: var(--surface);
+  background: var(--card);
   border: 1px solid var(--border);
   padding: 0.1em 0.35em;
   color: var(--foreground);
@@ -573,14 +613,14 @@ body {
 /* Shiki dual-theme: use dark colors by default, light in .light */
 .dark .prose pre,
 :root .prose pre {
-  background-color: var(--shiki-dark-bg, var(--surface)) !important;
+  background-color: var(--shiki-dark-bg, var(--card)) !important;
 }
 .dark .prose pre code span,
 :root .prose pre code span {
   color: var(--shiki-dark) !important;
 }
 .light .prose pre {
-  background-color: var(--shiki-light-bg, var(--surface)) !important;
+  background-color: var(--shiki-light-bg, var(--card)) !important;
 }
 .light .prose pre code span {
   color: var(--shiki-light) !important;
@@ -611,9 +651,9 @@ body {
   --fig-shade: color-mix(in oklab, var(--foreground) 4%, var(--background));
   --fig-shade-2: color-mix(in oklab, var(--foreground) 9%, var(--background));
   --fig-ink: color-mix(in oklab, var(--foreground) 82%, var(--background));
-  --fig-line: var(--dim);
-  --fig-accent: var(--accent);
-  --fig-accent-fill: color-mix(in oklab, var(--accent) 14%, var(--background));
+  --fig-line: var(--muted-foreground);
+  --fig-accent: var(--primary);
+  --fig-accent-fill: color-mix(in oklab, var(--primary) 14%, var(--background));
 }
 .prose figure.diagram {
   margin: 2.25em 0;
@@ -645,8 +685,8 @@ body {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--dim);
+  background: var(--card);
+  color: var(--muted-foreground);
   cursor: pointer;
   opacity: 0;
   transition:
@@ -669,7 +709,7 @@ body {
   margin-top: 0.9rem;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--muted);
+  color: var(--subtle);
 }
 .prose figure.diagram figcaption strong {
   color: var(--foreground);
@@ -1029,8 +1069,8 @@ body {
   position: relative;
 }
 .prose input[type="checkbox"]:checked {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 .prose input[type="checkbox"]:checked::after {
   content: "✓";
@@ -1043,6 +1083,6 @@ body {
 
 /* GFM strikethrough */
 .prose del {
-  color: var(--dim);
+  color: var(--muted-foreground);
   text-decoration: line-through;
 }

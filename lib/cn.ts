@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 /**
  * Join class names, letting later Tailwind classes win over earlier ones that
  * set the same property. Components put their base classes first and the
- * caller's `className` last, so `cn("px-3 bg-surface", "bg-background")`
+ * caller's `className` last, so `cn("px-3 bg-card", "bg-background")`
  * gives "px-3 bg-background".
  *
  * The site's own multi-property utilities (`inst`, `eyebrow`, `post-row`) are

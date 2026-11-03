@@ -127,7 +127,7 @@ export default async function PostPage({ params }: Props) {
               dateFormat="MMM d, yyyy"
               readingTimeMinutes={post.readingTimeMinutes}
               draft={post.draft}
-              className="border border-border bg-background px-2.5 py-1.5 text-accent!"
+              className="border border-border bg-background px-2.5 py-1.5 text-primary!"
             />
             <h1 className="max-w-[26ch] text-balance text-[clamp(2.6rem,5.5vw,4.5rem)] leading-[0.9] text-foreground wrap-break-word [text-shadow:0_2px_28px_var(--background),0_0_3px_var(--background)]">
               {post.title}
@@ -158,7 +158,7 @@ export default async function PostPage({ params }: Props) {
             <p
               className={cn(
                 "mb-8 max-w-176",
-                feature ? "text-[1.2rem] font-semibold text-foreground" : "text-lg text-muted",
+                feature ? "text-[1.2rem] font-semibold text-foreground" : "text-lg text-subtle",
                 "leading-snug",
               )}
             >
@@ -195,14 +195,14 @@ export default async function PostPage({ params }: Props) {
                 key={k}
                 className="flex items-baseline justify-between gap-4 border-b border-border py-2.5"
               >
-                <dt className="inst text-dim">{k}</dt>
+                <dt className="inst text-muted-foreground">{k}</dt>
                 <dd className="text-sm text-foreground">{v}</dd>
               </div>
             ))}
           </dl>
           {post.tags && post.tags.length > 0 && (
             <nav aria-label="Filed under">
-              <p className="inst mb-1 text-dim">filed under</p>
+              <p className="inst mb-1 text-muted-foreground">filed under</p>
               {/* Rows like the details above, so a long tag stays on one line. */}
               <ul className="border-t border-border">
                 {post.tags.map((tag) => {
@@ -211,10 +211,12 @@ export default async function PostPage({ params }: Props) {
                     <li key={slug} className="border-b border-border">
                       <Link
                         href={`/tags/${slug}`}
-                        className="flex items-baseline justify-between gap-4 py-2.5 text-sm text-foreground transition-colors hover:text-accent"
+                        className="flex items-baseline justify-between gap-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary"
                       >
                         {tag}
-                        <span className="inst text-dim tabular-nums">{tagCounts.get(slug)}</span>
+                        <span className="inst text-muted-foreground tabular-nums">
+                          {tagCounts.get(slug)}
+                        </span>
                       </Link>
                     </li>
                   );
@@ -224,7 +226,7 @@ export default async function PostPage({ params }: Props) {
           )}
           <a
             href="/feed.xml"
-            className="inst flex items-center gap-2 text-dim transition-colors hover:text-accent"
+            className="inst flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
           >
             <span aria-hidden className="tick" />
             subscribe via rss

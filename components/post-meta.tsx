@@ -19,7 +19,12 @@ export function PostMeta({
   className,
 }: PostMetaProps) {
   return (
-    <div className={cn("inst flex flex-wrap items-center gap-x-3 gap-y-1 text-dim", className)}>
+    <div
+      className={cn(
+        "inst flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground",
+        className,
+      )}
+    >
       {draft && <span className="shrink-0 border border-pink px-1.5 text-pink">draft</span>}
       <time dateTime={date} className="shrink-0">
         {format(postDay(date), dateFormat)}

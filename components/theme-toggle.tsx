@@ -60,7 +60,7 @@ export function ThemeToggle() {
     <Menu>
       <MenuTrigger
         aria-label="Toggle theme"
-        className="flex w-12 items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer"
+        className="flex w-12 items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
       >
         <ActiveIcon size={14} />
       </MenuTrigger>
@@ -75,7 +75,9 @@ export function ThemeToggle() {
                 value={t.value}
                 className={cn(
                   "w-full items-center gap-2 py-1.5 text-xs",
-                  active ? "text-accent" : "text-dim data-highlighted:text-foreground",
+                  active
+                    ? "text-primary"
+                    : "text-muted-foreground data-highlighted:text-foreground",
                 )}
               >
                 <Icon size={12} />

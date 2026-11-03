@@ -180,7 +180,7 @@ export function SearchButton() {
         aria-label="Search"
         aria-keyshortcuts="/ Control+K Meta+K"
         title={shortcut ? `Search (/ or ${shortcut})` : "Search"}
-        className="flex w-12 cursor-pointer items-center justify-center gap-2.5 border-l border-border text-dim transition-colors hover:text-foreground focus-visible:-outline-offset-2 md:any-pointer-fine:w-auto md:any-pointer-fine:px-4"
+        className="flex w-12 cursor-pointer items-center justify-center gap-2.5 border-l border-border text-muted-foreground transition-colors hover:text-foreground focus-visible:-outline-offset-2 md:any-pointer-fine:w-auto md:any-pointer-fine:px-4"
       >
         <Search size={14} className="shrink-0" />
         <kbd className="hidden min-w-4.5 justify-center border border-border px-1 font-mono text-[10.4px]/4  md:any-pointer-fine:inline-flex">
@@ -354,20 +354,23 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
     cn(
       "relative flex cursor-pointer gap-3 px-4 py-2.5 transition-colors",
       active === key
-        ? "bg-surface text-foreground before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-accent"
-        : "text-muted",
+        ? "bg-card text-foreground before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-primary"
+        : "text-subtle",
     );
 
   const excerptClass =
-    "line-clamp-2 text-xs leading-relaxed text-dim [&_mark]:bg-transparent [&_mark]:font-medium [&_mark]:text-accent";
+    "line-clamp-2 text-xs leading-relaxed text-muted-foreground [&_mark]:bg-transparent [&_mark]:font-medium [&_mark]:text-primary";
 
   return (
     <>
       <div className="flex shrink-0 items-center gap-3 border-b border-border px-4 sm:px-5">
         {loading ? (
-          <Loader2 size={17} className="shrink-0 animate-spin text-accent" />
+          <Loader2 size={17} className="shrink-0 animate-spin text-primary" />
         ) : (
-          <Search size={17} className={cn("shrink-0", term ? "text-accent" : "text-dim")} />
+          <Search
+            size={17}
+            className={cn("shrink-0", term ? "text-primary" : "text-muted-foreground")}
+          />
         )}
         <input
           ref={inputRef}
@@ -389,7 +392,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
           onKeyDown={onKeyDown}
           placeholder={error ? "Search is unavailable right now" : "Search docs, books and posts"}
           disabled={error}
-          className="search-input h-14 min-w-0 flex-1 bg-transparent text-base text-foreground placeholder:text-dim sm:h-16 sm:text-lg [&::-webkit-search-cancel-button]:hidden"
+          className="search-input h-14 min-w-0 flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground sm:h-16 sm:text-lg [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
           <button
@@ -399,14 +402,14 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
               inputRef.current?.focus();
             }}
             aria-label="Clear search"
-            className="cursor-pointer p-1 text-dim transition-colors hover:text-foreground"
+            className="cursor-pointer p-1 text-muted-foreground transition-colors hover:text-foreground"
           >
             <X size={15} />
           </button>
         )}
         <Dialog.Close
           aria-label="Close search"
-          className="inst cursor-pointer border border-border px-1.5 py-1 text-dim transition-colors hover:text-foreground"
+          className="inst cursor-pointer border border-border px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground"
         >
           <span className="hidden sm:inline">Esc</span>
           <X size={14} className="sm:hidden" />
@@ -433,12 +436,12 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
               className={cn(
                 "inst -mb-px flex shrink-0 cursor-pointer items-center gap-1.5 border-b-2 px-2 py-2.5 transition-colors",
                 scope === s.value
-                  ? "border-accent text-foreground"
-                  : "border-transparent text-dim hover:text-foreground",
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
               {s.label}
-              <span className="tabular-nums text-dim">{counts[s.value]}</span>
+              <span className="tabular-nums text-muted-foreground">{counts[s.value]}</span>
             </button>
           ))}
         </div>
@@ -455,21 +458,21 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
           <>
             {recent.length > 0 && (
               <section className="py-2">
-                <h3 className="inst px-4 pb-1.5 pt-2 text-dim">Recent</h3>
+                <h3 className="inst px-4 pb-1.5 pt-2 text-muted-foreground">Recent</h3>
                 {recent.map((r) => (
                   <div
                     key={r}
                     {...rowProps(`recent:${r}`, `?q=${r}`)}
                     className={rowClass(`recent:${r}`)}
                   >
-                    <History size={14} className="mt-0.5 shrink-0 text-dim" />
+                    <History size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
                     <span className="flex-1 truncate text-sm">{r}</span>
                   </div>
                 ))}
               </section>
             )}
             <section className="py-2">
-              <h3 className="inst px-4 pb-1.5 pt-2 text-dim">Jump to</h3>
+              <h3 className="inst px-4 pb-1.5 pt-2 text-muted-foreground">Jump to</h3>
               {JUMP_TO.map((j) => (
                 <a
                   key={j.url}
@@ -478,12 +481,12 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
                   className={rowClass(`jump:${j.url}`)}
                 >
                   {j.url.startsWith("/books/") ? (
-                    <BookOpen size={14} className="mt-0.5 shrink-0 text-dim" />
+                    <BookOpen size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
                   ) : (
-                    <ArrowRight size={14} className="mt-0.5 shrink-0 text-dim" />
+                    <ArrowRight size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
                   )}
                   <span className="flex-1 truncate text-sm">{j.title}</span>
-                  <span className="text-xs text-dim">{j.hint}</span>
+                  <span className="text-xs text-muted-foreground">{j.hint}</span>
                 </a>
               ))}
             </section>
@@ -492,11 +495,11 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
 
         {groups.map(([section, list]) => (
           <section key={section} className="border-b border-border py-2 last:border-b-0">
-            <h3 className="inst px-4 pb-1.5 pt-2 text-dim">{section}</h3>
+            <h3 className="inst px-4 pb-1.5 pt-2 text-muted-foreground">{section}</h3>
             {list.map((h) => (
               <div key={h.url}>
                 <a href={h.url} {...rowProps(h.url, h.url)} className={rowClass(h.url)}>
-                  <FileText size={14} className="mt-0.5 shrink-0 text-dim" />
+                  <FileText size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium text-foreground">
                       {h.title}
@@ -507,7 +510,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
                     />
                   </span>
                   {active === h.url && (
-                    <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />
+                    <CornerDownLeft size={13} className="mt-1 shrink-0 text-muted-foreground" />
                   )}
                 </a>
                 {h.headings.map((s) => (
@@ -517,7 +520,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
                     {...rowProps(s.url, s.url)}
                     className={cn(rowClass(s.url), "pl-10")}
                   >
-                    <Hash size={12} className="mt-1 shrink-0 text-dim" />
+                    <Hash size={12} className="mt-1 shrink-0 text-muted-foreground" />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[0.8rem]">{s.title}</span>
                       <span
@@ -526,7 +529,7 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
                       />
                     </span>
                     {active === s.url && (
-                      <CornerDownLeft size={13} className="mt-1 shrink-0 text-dim" />
+                      <CornerDownLeft size={13} className="mt-1 shrink-0 text-muted-foreground" />
                     )}
                   </a>
                 ))}
@@ -541,12 +544,12 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
               No results for &ldquo;{term}&rdquo;
               {scope !== "all" && ` in ${SCOPES.find((s) => s.value === scope)?.label}`}
             </p>
-            <p className="mt-2 text-xs text-dim">
+            <p className="mt-2 text-xs text-muted-foreground">
               {scope !== "all" ? (
                 <button
                   type="button"
                   onClick={() => setScope("all")}
-                  className="cursor-pointer text-accent hover:underline"
+                  className="cursor-pointer text-primary hover:underline"
                 >
                   Search everything
                 </button>
@@ -558,13 +561,13 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
         )}
 
         {error && (
-          <div className="px-6 py-14 text-center text-sm text-dim">
+          <div className="px-6 py-14 text-center text-sm text-muted-foreground">
             The search index didn&apos;t load. Try again in a moment.
           </div>
         )}
       </div>
 
-      <div className="hidden shrink-0 items-center gap-4 border-t border-border px-4 py-2.5 text-[10px] text-dim sm:flex">
+      <div className="hidden shrink-0 items-center gap-4 border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground sm:flex">
         <Key keys={["↑", "↓"]} label="navigate" />
         <Key keys={["↵"]} label="open" />
         <Key keys={[mod, "↵"]} label="new tab" />
@@ -583,7 +586,7 @@ function Key({ keys, label }: { keys: string[]; label: string }) {
   return (
     <span className="flex items-center gap-1">
       {keys.map((k) => (
-        <kbd key={k} className="border border-border bg-surface px-1 py-px font-mono">
+        <kbd key={k} className="border border-border bg-card px-1 py-px font-mono">
           {k}
         </kbd>
       ))}

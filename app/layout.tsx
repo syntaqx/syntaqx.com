@@ -124,7 +124,7 @@ export default function RootLayout({
               className="group flex items-center gap-2.5 border-r border-border px-4 sm:pl-0 sm:pr-5"
             >
               <Image src="/brand.svg" alt="" width={22} height={22} className="size-5.5" />
-              <span className="translate-y-[-0.17em] font-inst text-[0.9rem] lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
+              <span className="translate-y-[-0.17em] font-inst text-[0.9rem] lowercase tracking-wide text-foreground transition-colors group-hover:text-primary">
                 syntaqx
               </span>
             </Link>
@@ -142,7 +142,7 @@ export default function RootLayout({
             <div className="grid content-start gap-4">
               <Link href="/" className="group flex w-fit items-center gap-2.5">
                 <Image src="/brand.svg" alt="" width={22} height={22} className="size-5.5" />
-                <span className="translate-y-[-0.17em] font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
+                <span className="translate-y-[-0.17em] font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-primary">
                   syntaqx
                 </span>
               </Link>
@@ -153,7 +153,7 @@ export default function RootLayout({
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-10 items-center justify-center text-dim transition-colors hover:text-accent"
+                    className="flex size-10 items-center justify-center text-muted-foreground transition-colors hover:text-primary"
                     aria-label={s.label}
                   >
                     <SimpleIcon name={s.icon} size={18} />
@@ -168,9 +168,9 @@ export default function RootLayout({
               {footerNav.map((group) => (
                 <div key={group.label}>
                   <p className="eyebrow mb-3">{group.label}</p>
-                  <ul className="inst text-dim">
+                  <ul className="inst text-muted-foreground">
                     {group.links.map((link) => {
-                      const className = "block py-2 transition-colors hover:text-accent sm:py-1.5";
+                      const className = "block py-2 transition-colors hover:text-primary sm:py-1.5";
                       return (
                         <li key={link.href}>
                           {link.file ? (
@@ -191,7 +191,7 @@ export default function RootLayout({
             </nav>
           </div>
           <div className="border-t border-border">
-            <div className="inst mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-5 text-dim">
+            <div className="inst mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-5 text-muted-foreground">
               <p>&copy; {new Date().getFullYear()} Chase Pierce</p>
               {build && (
                 <a
@@ -204,7 +204,7 @@ export default function RootLayout({
                   <span aria-hidden className="tick" />
                   {build.sha.slice(0, 7)}
                   {build.dirty && "-dirty"}
-                  {build.label && <span className="text-accent uppercase">{build.label}</span>}
+                  {build.label && <span className="text-primary uppercase">{build.label}</span>}
                 </a>
               )}
             </div>

@@ -26,7 +26,7 @@ export function CopyCodeScript() {
       btn.setAttribute("data-copy-code", "");
       btn.setAttribute("aria-label", "Copy code");
       btn.className =
-        "absolute top-2 right-2 border border-border bg-surface/80 px-2 py-1 text-[10px] text-dim opacity-0 group-hover:opacity-100 hover:text-accent hover:border-accent/40 transition-all backdrop-blur-sm cursor-pointer";
+        "absolute top-2 right-2 border border-border bg-card/80 px-2 py-1 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-primary hover:border-primary/40 transition-all backdrop-blur-sm cursor-pointer";
       btn.innerHTML = "copy";
       pre.appendChild(btn);
     });
@@ -56,6 +56,6 @@ export function CopyCodeScript() {
   }, []);
 
   return (
-    <style>{`[data-copy-code][data-copied]::after { content: none; } [data-copy-code][data-copied] { color: var(--accent) !important; }`}</style>
+    <style>{`[data-copy-code][data-copied]::after { content: none; } [data-copy-code][data-copied] { color: var(--primary) !important; }`}</style>
   );
 }

@@ -21,7 +21,7 @@ function Marker({ on, list = false }: { on: boolean; list?: boolean }) {
     <span
       aria-hidden
       className={cn(
-        "absolute bg-accent",
+        "absolute bg-primary",
         list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-0 -bottom-px h-0.5",
       )}
     />
@@ -31,7 +31,7 @@ function Marker({ on, list = false }: { on: boolean; list?: boolean }) {
 const itemClass = (active: boolean) =>
   cn(
     "relative flex items-center gap-2 whitespace-nowrap px-3 transition-colors focus-visible:-outline-offset-2",
-    active ? "text-foreground" : "text-dim hover:text-foreground",
+    active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
   );
 
 export function Nav() {
@@ -119,7 +119,7 @@ function NavDisclosure({ group, pathname }: { group: NavGroup; pathname: string 
       <ul
         id={id}
         hidden={!open}
-        className="absolute left-0 top-full z-100 min-w-full border border-border bg-surface py-1 shadow-lg"
+        className="absolute left-0 top-full z-100 min-w-full border border-border bg-card py-1 shadow-lg"
       >
         {group.links.map((link) => {
           const on = isActive(pathname, link.href);
@@ -162,7 +162,7 @@ export function MobileMenu() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         aria-label="Open menu"
-        className="flex w-12 items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer data-[state=open]:opacity-0 lg:hidden"
+        className="flex w-12 items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer data-[state=open]:opacity-0 lg:hidden"
       >
         <Menu size={18} />
       </Dialog.Trigger>
@@ -175,7 +175,7 @@ export function MobileMenu() {
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
           <Dialog.Close
             aria-label="Close menu"
-            className="absolute -top-12 right-0 flex size-12  items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer"
+            className="absolute -top-12 right-0 flex size-12  items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
           >
             <X size={18} />
           </Dialog.Close>
@@ -222,7 +222,7 @@ function MobileLink({
         className={cn(
           "font-voice block px-6 py-4 text-3xl font-semibold uppercase leading-none transition-colors",
           className,
-          on ? "text-accent" : "text-foreground hover:text-accent",
+          on ? "text-primary" : "text-foreground hover:text-primary",
         )}
       >
         {link.label}

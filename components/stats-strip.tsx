@@ -32,9 +32,9 @@ function Strip({ stats }: { stats: Stat[] }) {
           <>
             <span className="font-voice text-4xl leading-[0.85] font-semibold">
               {s.value}
-              {s.unit && <span className="text-[0.5em] text-accent">{s.unit}</span>}
+              {s.unit && <span className="text-[0.5em] text-primary">{s.unit}</span>}
             </span>
-            <span className="inst text-dim transition-colors group-hover:text-accent">
+            <span className="inst text-muted-foreground transition-colors group-hover:text-primary">
               {s.label}
             </span>
           </>
@@ -45,7 +45,7 @@ function Strip({ stats }: { stats: Stat[] }) {
             href={s.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group grid gap-2.5 bg-background px-6 py-5 transition-colors hover:bg-surface"
+            className="group grid gap-2.5 bg-background px-6 py-5 transition-colors hover:bg-card"
           >
             {body}
           </a>

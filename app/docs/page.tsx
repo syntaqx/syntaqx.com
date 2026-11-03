@@ -40,7 +40,7 @@ export default function DocsPage() {
             written down so they don&apos;t get re-argued in every codebase. New here? Start with{" "}
             <Link
               href="/docs/playbook"
-              className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+              className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
             >
               the principles
             </Link>

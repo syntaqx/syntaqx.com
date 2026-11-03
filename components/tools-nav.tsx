@@ -28,7 +28,7 @@ export function ToolsNav() {
           <li key={tool.href}>
             <Link
               href={tool.href}
-              className="inst inline-block border border-border px-2.5 py-1.5 text-muted hover:border-accent hover:text-accent transition-colors"
+              className="inst inline-block border border-border px-2.5 py-1.5 text-subtle hover:border-primary hover:text-primary transition-colors"
             >
               {tool.title}
             </Link>

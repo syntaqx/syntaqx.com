@@ -2,7 +2,7 @@
 
 import { useState, useCallback, type KeyboardEvent } from "react";
 import { Info, ExternalLink, Trash2, Settings2 } from "lucide-react";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { PasteButton } from "@/components/paste-button";
 import { Select } from "@/components/select";
 import * as yaml from "js-yaml";
@@ -365,7 +365,7 @@ function EditorPane({
         placeholder={placeholder}
         rows={12}
         spellCheck={false}
-        className="w-full min-h-72 bg-transparent px-3 py-2 text-sm text-foreground caret-foreground focus:outline-none resize-none font-mono whitespace-pre-wrap wrap-break-word placeholder:text-dim/50"
+        className="w-full min-h-72 bg-transparent px-3 py-2 text-sm text-foreground caret-foreground focus:outline-none resize-none font-mono whitespace-pre-wrap wrap-break-word placeholder:text-muted-foreground/50"
       />
     </div>
   );
@@ -473,7 +473,7 @@ export default function ConvertPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Text Format Converter</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Edit any format and the others update instantly. Everything runs in your browser.
         </p>
       </div>
@@ -497,7 +497,7 @@ export default function ConvertPage() {
             <button
               onClick={clear}
               disabled={!hasContent}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Trash2 size={12} />
               Clear all
@@ -507,11 +507,11 @@ export default function ConvertPage() {
             <div key={f.id}>
               <div
                 className={cn(
-                  "border bg-surface transition-colors",
+                  "border bg-card transition-colors",
                   errors[f.id]
                     ? "border-pink/40"
                     : source === f.id
-                      ? "border-accent/40"
+                      ? "border-primary/40"
                       : "border-border",
                 )}
               >
@@ -523,7 +523,7 @@ export default function ConvertPage() {
                   <div className="flex items-center gap-1.5">
                     <span
                       className={cn(
-                        "text-[10px] text-dim tabular-nums transition-opacity",
+                        "text-[10px] text-muted-foreground tabular-nums transition-opacity",
                         values[f.id] ? "opacity-100" : "opacity-0",
                       )}
                     >
@@ -554,10 +554,10 @@ export default function ConvertPage() {
         {/* Right: info sidebar */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           {/* Format toggles */}
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center justify-between">
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <Settings2 size={12} className="text-accent" />
+                <Settings2 size={12} className="text-primary" />
                 Formats
               </span>
               <button
@@ -568,7 +568,7 @@ export default function ConvertPage() {
                       : FORMATS.map((f) => f.id),
                   )
                 }
-                className="text-[10px] text-dim hover:text-accent transition-colors cursor-pointer font-normal normal-case tracking-normal"
+                className="text-[10px] text-muted-foreground hover:text-primary transition-colors cursor-pointer font-normal normal-case tracking-normal"
               >
                 {enabled.length === FORMATS.length ? "Reset" : "All"}
               </button>
@@ -578,7 +578,7 @@ export default function ConvertPage() {
                 const formats = FORMATS.filter((f) => f.category === cat.id);
                 return (
                   <div key={cat.id}>
-                    <span className="text-[10px] text-dim uppercase tracking-wider">
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
                       {cat.label}
                     </span>
                     <div className="flex flex-wrap gap-1.5 mt-1.5">
@@ -589,8 +589,8 @@ export default function ConvertPage() {
                           className={cn(
                             "border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer",
                             enabled.includes(f.id)
-                              ? "border-accent/40 bg-accent/10 text-accent"
-                              : "border-border text-dim hover:text-foreground hover:border-border",
+                              ? "border-primary/40 bg-primary/10 text-primary"
+                              : "border-border text-muted-foreground hover:text-foreground hover:border-border",
                           )}
                         >
                           {f.label}
@@ -603,52 +603,52 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <Info size={12} className="text-primary" />
               About
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                <span className="text-muted">JSON</span> (JavaScript Object Notation) is the most
+                <span className="text-subtle">JSON</span> (JavaScript Object Notation) is the most
                 common data interchange format on the web. Strict syntax: double-quoted keys, no
                 comments, no trailing commas. JSONC (JSON with Comments) relaxes some of these rules
                 but isn&apos;t widely supported outside of editors and tooling configs.
               </p>
               <p>
-                <span className="text-muted">YAML</span> (YAML Ain&apos;t Markup Language) is a
+                <span className="text-subtle">YAML</span> (YAML Ain&apos;t Markup Language) is a
                 human-readable format popular in configuration files. Indentation-based, supports
                 comments and multi-line strings.
               </p>
               <p>
-                <span className="text-muted">TOON</span> (Token-Oriented Object Notation) is a
+                <span className="text-subtle">TOON</span> (Token-Oriented Object Notation) is a
                 compact format designed for LLM prompts. Combines YAML-like indentation with
                 CSV-style tabular arrays for 20-40% fewer tokens than JSON.
               </p>
               <p>
-                <span className="text-muted">TOML</span> (Tom&apos;s Obvious Minimal Language) is
+                <span className="text-subtle">TOML</span> (Tom&apos;s Obvious Minimal Language) is
                 designed for config files. Explicit typing, clean table syntax, and native datetime
                 support.
               </p>
               <p>
-                <span className="text-muted">XML</span> (Extensible Markup Language) is a verbose
+                <span className="text-subtle">XML</span> (Extensible Markup Language) is a verbose
                 but universal format used in configs, APIs, and document interchange. Supports
                 attributes, namespaces, and schemas.
               </p>
               <p>
-                <span className="text-muted">ENV</span> (dotenv) is a flat key=value format used for
-                environment variables. Natively flat with string values, though some tools support
-                variable expansion and prefixed key conventions for grouping.
+                <span className="text-subtle">ENV</span> (dotenv) is a flat key=value format used
+                for environment variables. Natively flat with string values, though some tools
+                support variable expansion and prefixed key conventions for grouping.
               </p>
               <p>
-                <span className="text-muted">CSV</span> (Comma-Separated Values) is a tabular
+                <span className="text-subtle">CSV</span> (Comma-Separated Values) is a tabular
                 format. Works best with flat objects or arrays of uniform objects. Nesting can be
                 emulated with dot-notation column names, but isn&apos;t part of the spec.
               </p>
               <p>
-                <span className="text-muted">Query String</span> is the key=value format from URLs (
-                {`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket nesting
-                ({`user[name]=x`}) in many frameworks.
+                <span className="text-subtle">Query String</span> is the key=value format from URLs
+                ({`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket
+                nesting ({`user[name]=x`}) in many frameworks.
               </p>
               <p>
                 Each format has tradeoffs. Some conversions may be lossy, e.g. TOML can&apos;t
@@ -657,9 +657,9 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
@@ -668,7 +668,7 @@ export default function ConvertPage() {
                   href="https://www.json.org/json-en.html"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   json.org - JSON specification
                 </a>
@@ -678,7 +678,7 @@ export default function ConvertPage() {
                   href="https://yaml.org/spec/1.2.2/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   YAML 1.2 specification
                 </a>
@@ -688,7 +688,7 @@ export default function ConvertPage() {
                   href="https://toonformat.dev"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   toonformat.dev - TOON specification
                 </a>
@@ -698,7 +698,7 @@ export default function ConvertPage() {
                   href="https://toml.io/en/v1.0.0"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   TOML v1.0.0 specification
                 </a>
@@ -708,7 +708,7 @@ export default function ConvertPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc8259"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 8259 - JSON (IETF)
                 </a>

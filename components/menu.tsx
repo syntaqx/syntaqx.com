@@ -66,7 +66,7 @@ export function MenuContent({
           if (byPointerRef.current) e.preventDefault();
           onCloseAutoFocus?.(e);
         }}
-        className={cn("z-100 border border-border bg-surface py-1 shadow-lg", className)}
+        className={cn("z-100 border border-border bg-card py-1 shadow-lg", className)}
         {...props}
       />
     </DropdownMenu.Portal>

@@ -24,19 +24,19 @@ export function Pager({ prev, next }: { prev?: Neighbor | null; next?: Neighbor 
         {prev && (
           <Link
             href={prev.href}
-            className="group border border-border p-4 transition-colors hover:border-accent"
+            className="group border border-border p-4 transition-colors hover:border-primary"
           >
-            <span className="inst block text-dim">Previous · {prev.label}</span>
-            <span className="mt-1 block group-hover:text-accent">{prev.title}</span>
+            <span className="inst block text-muted-foreground">Previous · {prev.label}</span>
+            <span className="mt-1 block group-hover:text-primary">{prev.title}</span>
           </Link>
         )}
         {next && (
           <Link
             href={next.href}
-            className="group border border-border p-4 text-right transition-colors hover:border-accent sm:col-start-2"
+            className="group border border-border p-4 text-right transition-colors hover:border-primary sm:col-start-2"
           >
-            <span className="inst block text-dim">Next · {next.label}</span>
-            <span className="mt-1 block group-hover:text-accent">{next.title}</span>
+            <span className="inst block text-muted-foreground">Next · {next.label}</span>
+            <span className="mt-1 block group-hover:text-primary">{next.title}</span>
           </Link>
         )}
       </nav>

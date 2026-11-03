@@ -22,9 +22,9 @@ export default function AboutPage() {
           <div>
             <p className="eyebrow mb-6">about</p>
             <h1 className="mb-10 text-[clamp(2.5rem,4.5vw,3.75rem)] leading-[0.92]">
-              Hacker, <span className="text-accent">open sorcerer</span>, leader.
+              Hacker, <span className="text-primary">open sorcerer</span>, leader.
             </h1>
-            <div className="space-y-5 text-[1.0625rem] leading-relaxed text-muted">
+            <div className="space-y-5 text-[1.0625rem] leading-relaxed text-subtle">
               <p>
                 My world is the screen. I&apos;m obsessed with technology: the systems, the
                 architecture, the problem-solving. That&apos;s the engine. But the dopamine hit is
@@ -74,7 +74,7 @@ export default function AboutPage() {
                   href="https://www.meetup.com/slcdevs/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+                  className="text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
                 >
                   Salt Lake City Developers
                 </a>{" "}
@@ -106,23 +106,23 @@ export default function AboutPage() {
                   key={item.label}
                   className="grid grid-cols-[6rem_1fr] gap-4 border-b border-border py-3"
                 >
-                  <dt className="inst pt-1.5 text-dim">{item.label}</dt>
+                  <dt className="inst pt-1.5 text-muted-foreground">{item.label}</dt>
                   <dd className="leading-snug font-semibold text-foreground">{item.value}</dd>
                 </div>
               ))}
               <div className="grid grid-cols-[6rem_1fr] gap-4 border-b border-border py-3">
-                <dt className="inst pt-1.5 text-dim">resume</dt>
+                <dt className="inst pt-1.5 text-muted-foreground">resume</dt>
                 <dd>
                   <Link
                     href="/resume"
-                    className="leading-snug font-semibold text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+                    className="leading-snug font-semibold text-foreground underline decoration-primary underline-offset-4 hover:text-primary"
                   >
                     View or download
                   </Link>
                 </dd>
               </div>
               <div className="grid grid-cols-[6rem_1fr] gap-4 py-3">
-                <dt className="inst pt-1.5 text-dim">connect</dt>
+                <dt className="inst pt-1.5 text-muted-foreground">connect</dt>
                 <dd className="flex flex-col gap-1">
                   {socials.map((s) => (
                     <a
@@ -130,7 +130,7 @@ export default function AboutPage() {
                       href={s.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 py-1 text-sm text-muted hover:text-accent transition-colors"
+                      className="inline-flex items-center gap-2 py-1 text-sm text-subtle hover:text-primary transition-colors"
                     >
                       <SimpleIcon name={s.icon} size={14} />
                       {s.label}
@@ -180,11 +180,11 @@ export default function AboutPage() {
             },
           ].map((item, i) => (
             <li key={item.title} className="border-t border-border pt-5 pb-10">
-              <span className="font-voice text-xl leading-none font-semibold text-accent">
+              <span className="font-voice text-xl leading-none font-semibold text-primary">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3 className="my-3  text-xl leading-none text-foreground">{item.title}</h3>
-              <p className="text-base/relaxed  text-muted">{item.description}</p>
+              <p className="text-base/relaxed  text-subtle">{item.description}</p>
             </li>
           ))}
         </ol>

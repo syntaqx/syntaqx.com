@@ -18,7 +18,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { Checkbox } from "@/components/checkbox";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { PasteButton } from "@/components/paste-button";
 import { Select } from "@/components/select";
 import {
@@ -123,10 +123,10 @@ function byteSize(bytes: number): string {
 // --- Pieces ---------------------------------------------------------------------
 
 const actionClass =
-  "inline-flex items-center justify-center gap-1.5 border border-accent/40 bg-accent/10 px-4 py-2 text-xs text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-1.5 border border-primary/40 bg-primary/10 px-4 py-2 text-xs text-primary hover:bg-primary/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none";
 
 const quietClass =
-  "inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer";
+  "inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer";
 
 function Panel({
   title,
@@ -140,9 +140,9 @@ function Panel({
   footer?: ReactNode;
 }) {
   return (
-    <div className="border border-border bg-surface">
-      <div className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-xs text-dim">
-        <span className="text-accent">{icon}</span>
+    <div className="border border-border bg-card">
+      <div className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-xs text-muted-foreground">
+        <span className="text-primary">{icon}</span>
         {title}
       </div>
       <div className="p-3 ">{children}</div>
@@ -156,7 +156,7 @@ function CopyField({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs text-dim">{label}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
         <CopyButton text={value} label />
       </div>
       <input
@@ -165,7 +165,7 @@ function CopyField({ label, value }: { label: string; value: string }) {
         onFocus={(e) => e.currentTarget.select()}
         spellCheck={false}
         aria-label={label}
-        className="w-full border border-border bg-background px-3 py-2 font-mono text-sm text-foreground focus:border-accent/50 focus:outline-none"
+        className="w-full border border-border bg-background px-3 py-2 font-mono text-sm text-foreground focus:border-primary/50 focus:outline-none"
       />
     </div>
   );
@@ -180,7 +180,7 @@ function Note({
   icon: ReactNode;
   children: ReactNode;
 }) {
-  const tones = { dim: "text-dim", pink: "text-pink", accent: "text-accent" };
+  const tones = { dim: "text-muted-foreground", pink: "text-pink", accent: "text-primary" };
   return (
     <p className={cn("flex items-start gap-1.5 text-xs/relaxed ", tones[tone])}>
       <span className="mt-0.5 shrink-0">{icon}</span>
@@ -253,7 +253,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
           title="Link ready"
           footer={
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="flex items-center gap-1.5 text-xs text-dim">
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Clock size={12} />
                 Works once, or expires in {timeLeft(created.expiresAt, now)} (
                 {clock(created.expiresAt)})
@@ -278,7 +278,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
                   like a GitHub Actions <code>workflow_dispatch</code> input. The server encrypted
                   it, so the server could read it.
                 </Note>
-                <pre className="overflow-x-auto border border-border bg-background px-3 py-2 font-mono text-[11px] text-muted">
+                <pre className="overflow-x-auto border border-border bg-background px-3 py-2 font-mono text-[11px] text-subtle">
                   {`curl -s ${created.link} | jq -r .secret`}
                 </pre>
               </div>
@@ -297,14 +297,19 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="border border-border bg-surface focus-within:border-accent/40 transition-colors">
+      <div className="border border-border bg-card focus-within:border-primary/40 transition-colors">
         <div className="flex items-center justify-between border-b border-border px-3 py-2">
-          <label htmlFor="secret" className="text-xs text-dim">
+          <label htmlFor="secret" className="text-xs text-muted-foreground">
             Secret
           </label>
           <div className="flex items-center gap-1.5">
             {secret && (
-              <span className={cn("text-[10px] tabular-nums", tooBig ? "text-pink" : "text-dim")}>
+              <span
+                className={cn(
+                  "text-[10px] tabular-nums",
+                  tooBig ? "text-pink" : "text-muted-foreground",
+                )}
+              >
                 {byteSize(bytes)} / {byteSize(MAX_PLAINTEXT_BYTES)}
               </span>
             )}
@@ -313,7 +318,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
               <button
                 onClick={() => setSecret("")}
                 aria-label="Clear"
-                className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
               >
                 <Trash2 size={12} />
               </button>
@@ -335,7 +340,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
           spellCheck={false}
           autoComplete="off"
           autoFocus
-          className="w-full resize-y bg-transparent px-3 py-2 font-mono text-sm text-foreground placeholder:text-dim/50 focus:outline-none"
+          className="w-full resize-y bg-transparent px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
         />
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
           <Select label="Expires" value={ttl} onChange={setTtl} options={TTLS} />
@@ -367,11 +372,11 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
           <Link2 size={14} />
           {busy ? "Encrypting..." : "Create one-time link"}
         </button>
-        <span className="hidden text-[11px] text-dim sm:inline">Ctrl / ⌘ + Enter</span>
+        <span className="hidden text-[11px] text-muted-foreground sm:inline">Ctrl / ⌘ + Enter</span>
       </div>
 
       <div className="mt-4 border-t border-border pt-6">
-        <label htmlFor="open-link" className="mb-1.5 block text-xs text-dim">
+        <label htmlFor="open-link" className="mb-1.5 block text-xs text-muted-foreground">
           Got a link? Open it here
         </label>
         <div className="flex gap-2">
@@ -385,7 +390,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
             placeholder="https://www.syntaqx.com/tools/secrets#..."
             spellCheck={false}
             autoComplete="off"
-            className="min-w-0 flex-1 border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-accent/50 focus:outline-none"
+            className="min-w-0 flex-1 border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none"
           />
           <button
             onClick={() => pastedLink && onOpen(pastedLink)}
@@ -398,7 +403,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
         {pasted && !pastedLink && (
           <p className="mt-1.5 text-xs text-pink">That isn&apos;t a secret link or id.</p>
         )}
-        <p className="mt-1.5 text-[11px] text-dim">
+        <p className="mt-1.5 text-[11px] text-muted-foreground">
           Opening checks the link. Nothing is revealed until you say so.
         </p>
       </div>
@@ -502,7 +507,7 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
   if (state.status === "gone") {
     return (
       <Panel icon={<Flame size={12} />} title="This secret is gone" footer={another}>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-subtle">
           It was already viewed, or it expired before anyone opened it. Secrets here work once, so
           if you didn&apos;t open it yourself, let the sender know: someone else may have.
         </p>
@@ -525,8 +530,8 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
         title="Your secret"
         footer={
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="flex items-center gap-1.5 text-xs text-dim">
-              <Flame size={12} className="text-accent" />
+            <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Flame size={12} className="text-primary" />
               Deleted from the server. Copy it now: this page can&apos;t show it again.
             </span>
             <button onClick={done} className={quietClass}>
@@ -561,7 +566,7 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
       title="Someone shared a secret with you"
       footer={
         state.status === "ready" && state.expiresAt ? (
-          <span className="flex items-center gap-1.5 text-xs text-dim">
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Clock size={12} />
             Expires in {timeLeft(state.expiresAt, now)} if nobody opens it
           </span>
@@ -569,13 +574,13 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
       }
     >
       <div className="flex flex-col gap-4">
-        <p className="text-sm text-muted">
+        <p className="text-sm text-subtle">
           You can view it once. Revealing it deletes it from the server, so have somewhere ready to
           put it.
         </p>
         {needsKey && (
           <div>
-            <label htmlFor="key" className="mb-1.5 block text-xs text-dim">
+            <label htmlFor="key" className="mb-1.5 block text-xs text-muted-foreground">
               Key (sent to you separately)
             </label>
             <input
@@ -585,7 +590,7 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
               placeholder="43 characters"
               spellCheck={false}
               autoComplete="off"
-              className="w-full border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-accent/50 focus:outline-none"
+              className="w-full border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none"
             />
             {key && !keyOk && (
               <p className="mt-1.5 text-xs text-pink">A key is 43 letters, digits, - and _.</p>
@@ -628,7 +633,7 @@ export default function SecretsPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">One-Time Secrets</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Share a password or token through a link that works once. It&apos;s encrypted in your
           browser and the key stays in the link, so the server only ever holds ciphertext, and
           deletes it the moment it&apos;s read.
@@ -645,20 +650,20 @@ export default function SecretsPage() {
         </div>
 
         <div className="flex shrink-0 flex-col gap-6 lg:w-80">
-          <div className="border border-border bg-surface">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-muted">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-subtle">
+              <Info size={12} className="text-primary" />
               How it works
             </h3>
-            <ol className="list-decimal space-y-2.5 py-3 pr-4 pl-8 text-[11px] leading-relaxed text-dim">
+            <ol className="list-decimal space-y-2.5 py-3 pr-4 pl-8 text-[11px] leading-relaxed text-muted-foreground">
               <li>
                 Your browser makes a random 256-bit key and encrypts the secret with{" "}
-                <span className="text-muted">AES-256-GCM</span>.
+                <span className="text-subtle">AES-256-GCM</span>.
               </li>
               <li>
                 Only the ciphertext is sent. The key goes after the{" "}
-                <span className="text-muted">#</span> in the link, and browsers never send that part
-                to a server.
+                <span className="text-subtle">#</span> in the link, and browsers never send that
+                part to a server.
               </li>
               <li>
                 The server keeps the ciphertext in Redis until it&apos;s read once or expires,
@@ -669,14 +674,14 @@ export default function SecretsPage() {
                 decrypts it here.
               </li>
             </ol>
-            <p className="border-t border-border px-4 py-3 text-[11px] leading-relaxed text-dim">
-              <span className="text-muted">Still a demo:</span> there&apos;s no SLA, so don&apos;t
+            <p className="border-t border-border px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
+              <span className="text-subtle">Still a demo:</span> there&apos;s no SLA, so don&apos;t
               trust it with production credentials. For that, self-host something like{" "}
               <a
                 href="https://yopass.se/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted hover:text-accent transition-colors"
+                className="text-subtle hover:text-primary transition-colors"
               >
                 Yopass
               </a>
@@ -684,40 +689,40 @@ export default function SecretsPage() {
             </p>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-muted">
-              <Terminal size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-subtle">
+              <Terminal size={12} className="text-primary" />
               From a script
             </h3>
-            <div className="space-y-2 px-4 py-3 text-[11px] leading-relaxed text-dim">
-              <pre className="overflow-x-auto border border-border bg-background px-2 py-1.5 font-mono text-[10px] text-muted">
+            <div className="space-y-2 px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
+              <pre className="overflow-x-auto border border-border bg-background px-2 py-1.5 font-mono text-[10px] text-subtle">
                 {`curl -s https://api.syntaqx.com/secrets \\
   -H 'Content-Type: application/json' \\
   -d '{"secret":"hunter2","ttl":600}'`}
               </pre>
               <p>
-                Returns a <span className="text-muted">url</span> that hands the secret back once.
+                Returns a <span className="text-subtle">url</span> that hands the secret back once.
                 That&apos;s what &quot;For scripts&quot; makes too.
               </p>
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-muted">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-subtle">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="space-y-1.5 px-4 py-3 text-[11px] leading-relaxed">
               <li>
                 <Link
                   href="/posts/github-actions-secret-inputs"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   GitHub Actions &amp; Secret Inputs
                 </Link>
               </li>
               <li>
-                <Link href="/docs/api" className="text-muted hover:text-accent transition-colors">
+                <Link href="/docs/api" className="text-subtle hover:text-primary transition-colors">
                   API reference: /secrets
                 </Link>
               </li>
@@ -726,7 +731,7 @@ export default function SecretsPage() {
                   href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   MDN: AES-GCM in the Web Crypto API
                 </a>

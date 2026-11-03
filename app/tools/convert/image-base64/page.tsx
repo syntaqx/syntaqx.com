@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, useEffect, type DragEvent } from "react"
 import { Trash2, Upload, ImageIcon, Download, Info, ExternalLink } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Segmented } from "@/components/segmented";
 import { cn } from "@/lib/cn";
 
@@ -268,7 +268,7 @@ export default function ImageBase64Page() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Image / Base64 Converter</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Convert images to Base64 data URIs and decode Base64 back into images. Everything runs in
           your browser, nothing is sent to a server.
         </p>
@@ -300,15 +300,15 @@ export default function ImageBase64Page() {
                 }}
                 onDragLeave={() => setEncDragging(false)}
                 className={cn(
-                  "border bg-surface transition-colors",
-                  encDragging ? "border-accent border-dashed" : "border-border",
+                  "border bg-card transition-colors",
+                  encDragging ? "border-primary border-dashed" : "border-border",
                 )}
               >
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                  <label className="text-xs text-dim flex items-center gap-1.5">
+                  <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                     Image
                     {encFileName && (
-                      <span className="inline-flex items-center gap-1 text-accent">
+                      <span className="inline-flex items-center gap-1 text-primary">
                         <ImageIcon size={10} />
                         {encFileName}
                       </span>
@@ -316,13 +316,13 @@ export default function ImageBase64Page() {
                   </label>
                   <div className="flex items-center gap-1.5">
                     {encBytes > 0 && (
-                      <span className="text-[10px] text-dim tabular-nums">
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
                         {encMime || "unknown"} &middot; {byteSize(encBytes)}
                       </span>
                     )}
                     <button
                       onClick={() => encFileRef.current?.click()}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
                     >
                       <Upload size={12} />
                       File
@@ -330,7 +330,7 @@ export default function ImageBase64Page() {
                     {encDataUri && (
                       <button
                         onClick={clearEncode}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -357,9 +357,9 @@ export default function ImageBase64Page() {
                       className="max-h-64 max-w-full border border-border bg-background object-contain"
                     />
                   ) : (
-                    <div className="text-center text-xs text-dim">
-                      <ImageIcon size={24} className="mx-auto mb-2 text-dim/60" />
-                      Drop an image here, or click <span className="text-muted">File</span> to
+                    <div className="text-center text-xs text-muted-foreground">
+                      <ImageIcon size={24} className="mx-auto mb-2 text-muted-foreground/60" />
+                      Drop an image here, or click <span className="text-subtle">File</span> to
                       choose one.
                     </div>
                   )}
@@ -377,10 +377,10 @@ export default function ImageBase64Page() {
               {/* Output */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-dim">Base64 output</label>
+                  <label className="text-xs text-muted-foreground">Base64 output</label>
                   <div className="flex items-center gap-1.5">
                     {encodeOutput && (
-                      <span className="text-[10px] text-dim tabular-nums">
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
                         {encodeOutput.length.toLocaleString()} chars
                       </span>
                     )}
@@ -392,7 +392,7 @@ export default function ImageBase64Page() {
                   readOnly
                   rows={8}
                   placeholder="Encoded Base64 will appear here..."
-                  className="w-full border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono break-all"
+                  className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono break-all"
                 />
               </div>
             </div>
@@ -407,15 +407,15 @@ export default function ImageBase64Page() {
                 }}
                 onDragLeave={() => setDecDragging(false)}
                 className={cn(
-                  "border bg-surface transition-colors",
-                  decDragging ? "border-accent border-dashed" : "border-border",
+                  "border bg-card transition-colors",
+                  decDragging ? "border-primary border-dashed" : "border-border",
                 )}
               >
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                  <label className="text-xs text-dim">Base64 or data URI</label>
+                  <label className="text-xs text-muted-foreground">Base64 or data URI</label>
                   <div className="flex items-center gap-1.5">
                     {decInput && (
-                      <span className="text-[10px] text-dim tabular-nums">
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
                         {decInput.length.toLocaleString()} chars
                       </span>
                     )}
@@ -423,7 +423,7 @@ export default function ImageBase64Page() {
                     {decInput && (
                       <button
                         onClick={clearDecode}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                       >
                         <Trash2 size={12} />
                       </button>
@@ -436,7 +436,7 @@ export default function ImageBase64Page() {
                   placeholder="Paste a Base64 string or a data:image/...;base64,... URI..."
                   rows={8}
                   spellCheck={false}
-                  className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono break-all"
+                  className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono break-all"
                 />
               </div>
 
@@ -445,17 +445,17 @@ export default function ImageBase64Page() {
               {/* Preview */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-dim">Image preview</label>
+                  <label className="text-xs text-muted-foreground">Image preview</label>
                   <div className="flex items-center gap-1.5">
                     {decBytes > 0 && (
-                      <span className="text-[10px] text-dim tabular-nums">
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
                         {decMime} &middot; {byteSize(decBytes)}
                       </span>
                     )}
                     {decUrl && (
                       <button
                         onClick={downloadDecoded}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
                       >
                         <Download size={12} />
                         Download
@@ -463,7 +463,7 @@ export default function ImageBase64Page() {
                     )}
                   </div>
                 </div>
-                <div className="border border-border bg-surface px-3 py-4 flex items-center justify-center min-h-45">
+                <div className="border border-border bg-card px-3 py-4 flex items-center justify-center min-h-45">
                   {decUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -472,8 +472,8 @@ export default function ImageBase64Page() {
                       className="max-h-64 max-w-full border border-border bg-background object-contain"
                     />
                   ) : (
-                    <div className="text-center text-xs text-dim">
-                      <ImageIcon size={24} className="mx-auto mb-2 text-dim/60" />
+                    <div className="text-center text-xs text-muted-foreground">
+                      <ImageIcon size={24} className="mx-auto mb-2 text-muted-foreground/60" />
                       Decoded image will appear here.
                     </div>
                   )}
@@ -485,22 +485,22 @@ export default function ImageBase64Page() {
 
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <Info size={12} className="text-primary" />
               About data URIs
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
                 A data URI embeds a file directly into a URL using the form{" "}
-                <span className="text-muted">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It can be
-                used anywhere a URL is accepted &mdash; including
-                <span className="text-muted"> img src</span>, CSS{" "}
-                <span className="text-muted">background-image</span>, and SVG.
+                <span className="text-subtle">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It can
+                be used anywhere a URL is accepted &mdash; including
+                <span className="text-subtle"> img src</span>, CSS{" "}
+                <span className="text-subtle">background-image</span>, and SVG.
               </p>
               <p>
                 Base64 encoding increases payload size by roughly{" "}
-                <span className="text-muted">33%</span>. It is most useful for small, inlineable
+                <span className="text-subtle">33%</span>. It is most useful for small, inlineable
                 assets like icons; large images are usually better served as separate files.
               </p>
               <p>
@@ -508,15 +508,15 @@ export default function ImageBase64Page() {
                 alphabets. The format is auto-detected from the data when no MIME type is provided.
               </p>
               <p>
-                Files are processed locally with the <span className="text-muted">FileReader</span>{" "}
-                and <span className="text-muted">Blob</span> APIs. Nothing is uploaded.
+                Files are processed locally with the <span className="text-subtle">FileReader</span>{" "}
+                and <span className="text-subtle">Blob</span> APIs. Nothing is uploaded.
               </p>
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
@@ -525,7 +525,7 @@ export default function ImageBase64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc2397"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 2397 - The &quot;data&quot; URL scheme
                 </a>
@@ -535,7 +535,7 @@ export default function ImageBase64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc4648"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   RFC 4648 - Base Encodings
                 </a>
@@ -545,7 +545,7 @@ export default function ImageBase64Page() {
                   href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   MDN - Data URLs
                 </a>

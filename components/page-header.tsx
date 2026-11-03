@@ -33,7 +33,7 @@ export function PageHeader({
         <h1 className="text-[clamp(2.5rem,4.5vw,3.5rem)] leading-[0.92] wrap-break-word">
           {title}
         </h1>
-        {children && <div className="mt-5 leading-relaxed text-dim">{children}</div>}
+        {children && <div className="mt-5 leading-relaxed text-muted-foreground">{children}</div>}
       </div>
       {scene && (
         <SceneArt

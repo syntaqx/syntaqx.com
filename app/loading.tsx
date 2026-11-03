@@ -14,7 +14,7 @@ export default function Loading() {
       aria-hidden
       className="fixed inset-x-0 top-0 z-200 h-0.5 overflow-hidden pointer-events-none"
     >
-      <div className="h-full w-1/3 bg-accent animate-[loading-bar_1.2s_ease-in-out_infinite]" />
+      <div className="h-full w-1/3 bg-primary animate-[loading-bar_1.2s_ease-in-out_infinite]" />
       <style>{`
         @keyframes loading-bar {
           0%   { transform: translateX(-100%); }

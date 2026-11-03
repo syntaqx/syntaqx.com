@@ -58,13 +58,13 @@ export function Select({
         id={triggerId}
         aria-label={ariaLabel}
         className={cn(
-          "inline-flex items-center justify-between gap-2 border border-border bg-background text-foreground transition-colors cursor-pointer outline-none hover:border-border-hover focus-visible:border-accent/50 data-[state=open]:border-accent/50",
+          "inline-flex items-center justify-between gap-2 border border-border bg-background text-foreground transition-colors cursor-pointer outline-none hover:border-border-hover focus-visible:border-primary/50 data-[state=open]:border-primary/50",
           sizes[size],
           className,
         )}
       >
         <RadixSelect.Value />
-        <RadixSelect.Icon className="text-dim">
+        <RadixSelect.Icon className="text-muted-foreground">
           <ChevronDown size={12} />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
@@ -73,13 +73,13 @@ export function Select({
           position="popper"
           sideOffset={4}
           collisionPadding={8}
-          className="min-w-(--radix-select-trigger-width) max-h-(--radix-select-content-available-height) border border-border bg-surface py-1 shadow-lg z-100"
+          className="min-w-(--radix-select-trigger-width) max-h-(--radix-select-content-available-height) border border-border bg-card py-1 shadow-lg z-100"
         >
           <RadixSelect.Viewport>
             {options.map((o) =>
               "options" in o ? (
                 <RadixSelect.Group key={o.label}>
-                  <RadixSelect.Label className="inst px-3 pt-2 pb-1 text-dim">
+                  <RadixSelect.Label className="inst px-3 pt-2 pb-1 text-muted-foreground">
                     {o.label}
                   </RadixSelect.Label>
                   {o.options.map((item) => (
@@ -100,7 +100,7 @@ export function Select({
 
   return (
     <div className="flex items-center gap-1.5">
-      <label htmlFor={triggerId} className="text-xs text-dim">
+      <label htmlFor={triggerId} className="text-xs text-muted-foreground">
         {label}
       </label>
       {select}
@@ -112,7 +112,7 @@ function Item({ option }: { option: SelectOption }) {
   return (
     <RadixSelect.Item
       value={toRadix(option.value)}
-      className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-dim transition-colors cursor-pointer outline-none select-none data-highlighted:bg-background data-highlighted:text-foreground data-[state=checked]:text-accent"
+      className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground transition-colors cursor-pointer outline-none select-none data-highlighted:bg-background data-highlighted:text-foreground data-[state=checked]:text-primary"
     >
       <RadixSelect.ItemText>{option.label}</RadixSelect.ItemText>
       <RadixSelect.ItemIndicator className="ml-auto">

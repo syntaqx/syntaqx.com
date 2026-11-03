@@ -13,7 +13,7 @@ export default function EmptyStatesPage() {
     <div>
       <div className="mb-10">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Empty States</h1>
-        <p className="max-w-2xl text-dim leading-relaxed">
+        <p className="max-w-2xl text-muted-foreground leading-relaxed">
           An empty list is three different moments: nothing here yet, nothing matches, and nothing
           left to do. My rule is that each one says why it&apos;s empty and offers the next step.
         </p>

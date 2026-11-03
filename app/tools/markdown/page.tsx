@@ -11,7 +11,7 @@ import {
 } from "react";
 import { Trash2, Upload, FileText, Info, ExternalLink, Loader2 } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
 import { Segmented } from "@/components/segmented";
@@ -313,7 +313,7 @@ export default function MarkdownToolPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Markdown Tools</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Convert HTML or pasted rich text to clean Markdown, render Markdown to HTML, or preview it
           live. Everything runs in your browser.
         </p>
@@ -345,15 +345,15 @@ export default function MarkdownToolPage() {
               }}
               onDragLeave={() => setDragging(false)}
               className={cn(
-                "border bg-surface transition-colors",
-                dragging ? "border-accent border-dashed" : "border-border",
+                "border bg-card transition-colors",
+                dragging ? "border-primary border-dashed" : "border-border",
               )}
             >
               <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                <label className="text-xs text-dim flex items-center gap-1.5">
+                <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                   {inputLabel}
                   {fileName && (
-                    <span className="inline-flex items-center gap-1 text-accent">
+                    <span className="inline-flex items-center gap-1 text-primary">
                       <FileText size={10} />
                       {fileName}
                     </span>
@@ -361,13 +361,13 @@ export default function MarkdownToolPage() {
                 </label>
                 <div className="flex items-center gap-1.5">
                   {input && (
-                    <span className="text-[10px] text-dim tabular-nums">
+                    <span className="text-[10px] text-muted-foreground tabular-nums">
                       {input.length.toLocaleString()} chars &middot; {byteSize(input)}
                     </span>
                   )}
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
                   >
                     <Upload size={12} />
                     File
@@ -383,7 +383,7 @@ export default function MarkdownToolPage() {
                   {input && (
                     <button
                       onClick={clear}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -419,7 +419,7 @@ export default function MarkdownToolPage() {
                 placeholder={placeholder}
                 rows={mode === "preview" ? 8 : 10}
                 spellCheck={false}
-                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
+                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
               />
 
               {/* Options (html-to-md only) */}
@@ -473,13 +473,15 @@ export default function MarkdownToolPage() {
             {mode === "preview" ? (
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-dim flex items-center gap-1.5">
+                  <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                     Rendered preview
-                    {running && <Loader2 size={10} className="animate-spin text-dim" />}
+                    {running && (
+                      <Loader2 size={10} className="animate-spin text-muted-foreground" />
+                    )}
                   </label>
                 </div>
                 <div
-                  className="border border-border bg-surface px-4 py-3 min-h-45 prose prose-invert prose-sm max-w-none"
+                  className="border border-border bg-card px-4 py-3 min-h-45 prose prose-invert prose-sm max-w-none"
                   // We trust this output because we generated it locally from
                   // the user's own Markdown via remark-rehype.
                   dangerouslySetInnerHTML={{ __html: previewHtml }}
@@ -488,13 +490,15 @@ export default function MarkdownToolPage() {
             ) : (
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-dim flex items-center gap-1.5">
+                  <label className="text-xs text-muted-foreground flex items-center gap-1.5">
                     {mode === "html-to-md" ? "Markdown output" : "HTML output"}
-                    {running && <Loader2 size={10} className="animate-spin text-dim" />}
+                    {running && (
+                      <Loader2 size={10} className="animate-spin text-muted-foreground" />
+                    )}
                   </label>
                   <div className="flex items-center gap-1.5">
                     {output && (
-                      <span className="text-[10px] text-dim tabular-nums">
+                      <span className="text-[10px] text-muted-foreground tabular-nums">
                         {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                       </span>
                     )}
@@ -506,7 +510,7 @@ export default function MarkdownToolPage() {
                   readOnly
                   rows={10}
                   placeholder="Output will appear here..."
-                  className="w-full border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-dim/50 focus:outline-none resize-y font-mono"
+                  className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
                 />
               </div>
             )}
@@ -515,42 +519,46 @@ export default function MarkdownToolPage() {
 
         {/* Right: info & stats */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border">
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border">
               Stats
             </h3>
-            <dl className="px-4 py-3 text-[11px] text-dim leading-relaxed grid grid-cols-2 gap-y-1.5">
+            <dl className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed grid grid-cols-2 gap-y-1.5">
               <dt>Characters</dt>
-              <dd className="text-right tabular-nums text-muted">{stats.chars.toLocaleString()}</dd>
+              <dd className="text-right tabular-nums text-subtle">
+                {stats.chars.toLocaleString()}
+              </dd>
               <dt>Words</dt>
-              <dd className="text-right tabular-nums text-muted">{stats.words.toLocaleString()}</dd>
+              <dd className="text-right tabular-nums text-subtle">
+                {stats.words.toLocaleString()}
+              </dd>
               <dt>Headings</dt>
-              <dd className="text-right tabular-nums text-muted">{stats.headings}</dd>
+              <dd className="text-right tabular-nums text-subtle">{stats.headings}</dd>
               <dt>Reading time</dt>
-              <dd className="text-right tabular-nums text-muted">{stats.reading}</dd>
+              <dd className="text-right tabular-nums text-subtle">{stats.reading}</dd>
             </dl>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <Info size={12} className="text-primary" />
               About
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                <span className="text-muted">HTML to Markdown</span> accepts raw HTML you type or
-                paste. It also intercepts the <span className="text-muted">text/html</span> entry
+                <span className="text-subtle">HTML to Markdown</span> accepts raw HTML you type or
+                paste. It also intercepts the <span className="text-subtle">text/html</span> entry
                 from your clipboard, so copying from a styled source (a web page, a Google Doc,
                 Notion) preserves headings, links, lists, and tables. Pasting plain text just keeps
                 it as text.
               </p>
               <p>
-                <span className="text-muted">Markdown to HTML</span> and{" "}
-                <span className="text-muted">Preview</span> use{" "}
-                <span className="text-muted">remark</span> with GFM extensions (tables, task lists,
+                <span className="text-subtle">Markdown to HTML</span> and{" "}
+                <span className="text-subtle">Preview</span> use{" "}
+                <span className="text-subtle">remark</span> with GFM extensions (tables, task lists,
                 strikethrough). Output is passed through{" "}
-                <span className="text-muted">rehype-sanitize</span> before rendering, so script
-                tags, event handlers, and <span className="text-muted">javascript:</span> URLs are
+                <span className="text-subtle">rehype-sanitize</span> before rendering, so script
+                tags, event handlers, and <span className="text-subtle">javascript:</span> URLs are
                 stripped.
               </p>
               <p>
@@ -561,9 +569,9 @@ export default function MarkdownToolPage() {
             </div>
           </div>
 
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-accent" />
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+              <ExternalLink size={12} className="text-primary" />
               References
             </h3>
             <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
@@ -572,7 +580,7 @@ export default function MarkdownToolPage() {
                   href="https://github.com/mixmark-io/turndown"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   Turndown - HTML to Markdown
                 </a>
@@ -582,7 +590,7 @@ export default function MarkdownToolPage() {
                   href="https://github.com/remarkjs/remark"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   remark - Markdown processor
                 </a>
@@ -592,7 +600,7 @@ export default function MarkdownToolPage() {
                   href="https://github.github.com/gfm/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted hover:text-accent transition-colors"
+                  className="text-subtle hover:text-primary transition-colors"
                 >
                   GitHub Flavored Markdown spec
                 </a>

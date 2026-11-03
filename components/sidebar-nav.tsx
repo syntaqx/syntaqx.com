@@ -43,14 +43,14 @@ const rowClass = (active: boolean) =>
     "flex items-baseline gap-2.5 px-2.5 py-1.5 text-[0.8rem] leading-snug transition-colors",
     active
       ? "bg-foreground/7 font-medium text-foreground"
-      : "text-dim hover:bg-foreground/4 hover:text-foreground",
+      : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground",
   );
 
 const bandClass =
-  "inst border-b border-border bg-surface px-4 py-2.5 text-[0.55rem] leading-[1.6] text-dim";
+  "inst border-b border-border bg-card px-4 py-2.5 text-[0.55rem] leading-[1.6] text-muted-foreground";
 
 const sectionRowClass =
-  "inst group flex w-full items-center gap-2 py-3 pr-4 pl-4 text-left text-[0.55rem] leading-[1.6] transition-colors hover:bg-surface hover:text-foreground";
+  "inst group flex w-full items-center gap-2 py-3 pr-4 pl-4 text-left text-[0.55rem] leading-[1.6] transition-colors hover:bg-card hover:text-foreground";
 
 /**
  * Keeps the current page's link in view: deep in a long list it starts below
@@ -213,12 +213,12 @@ export function SidebarNav({
           href={back.href}
           onClick={onNavigate}
           aria-label={`${title}, ${back.label.toLowerCase()}`}
-          className="group flex items-center gap-1.5 border-b border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface"
+          className="group flex items-center gap-1.5 border-b border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-card"
         >
           <ChevronLeft
             size={15}
             aria-hidden
-            className="-ml-1.5 text-dim transition-colors group-hover:text-accent"
+            className="-ml-1.5 text-muted-foreground transition-colors group-hover:text-primary"
           />
           <span className="truncate">{title}</span>
         </Link>
@@ -298,7 +298,7 @@ function SingleRow({
       className={cn(
         sectionRowClass,
         "border-b border-border",
-        active ? "bg-surface text-accent" : "text-dim",
+        active ? "bg-card text-primary" : "text-muted-foreground",
       )}
     >
       <span className="w-3.5 shrink-0" aria-hidden />
@@ -331,7 +331,7 @@ function Section({
           className={cn(
             sectionRowClass,
             "cursor-pointer border-b border-transparent data-[state=open]:border-border",
-            current ? "text-accent" : "text-dim data-[state=open]:text-foreground",
+            current ? "text-primary" : "text-muted-foreground data-[state=open]:text-foreground",
           )}
         >
           <ChevronRight
@@ -346,7 +346,7 @@ function Section({
           >
             {sidebarLabel(section.name)}
           </span>
-          <span className="text-dim tabular-nums">{section.items.length}</span>
+          <span className="text-muted-foreground tabular-nums">{section.items.length}</span>
         </Accordion.Trigger>
       </Accordion.Header>
       <Accordion.Content className="acc-content overflow-hidden">
@@ -366,7 +366,7 @@ function Section({
                     <span
                       className={cn(
                         "w-5 shrink-0 font-mono text-[0.65rem] tabular-nums",
-                        active ? "text-accent" : "text-dim",
+                        active ? "text-primary" : "text-muted-foreground",
                       )}
                     >
                       {String(item.number).padStart(2, "0")}
@@ -399,12 +399,15 @@ export function MobileSidebar({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-2 border border-border bg-surface px-3 py-2.5 text-sm text-foreground"
+        className="flex w-full items-center justify-between gap-2 border border-border bg-card px-3 py-2.5 text-sm text-foreground"
       >
         <span className="truncate">{current}</span>
         <ChevronDown
           size={14}
-          className={cn("shrink-0 text-dim transition-transform", open && "rotate-180")}
+          className={cn(
+            "shrink-0 text-muted-foreground transition-transform",
+            open && "rotate-180",
+          )}
         />
       </button>
       {open && (

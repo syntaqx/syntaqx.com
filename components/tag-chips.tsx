@@ -29,12 +29,12 @@ export function TagChips({
             className={cn(
               "inst inline-flex items-center gap-2 border px-2.5 py-1.5 transition-colors",
               isActive
-                ? "border-accent text-accent"
-                : "border-border text-muted hover:border-accent hover:text-accent",
+                ? "border-primary text-primary"
+                : "border-border text-subtle hover:border-primary hover:text-primary",
             )}
           >
             <span>{tag.label}</span>
-            {showCounts && <span className="text-dim">{tag.count}</span>}
+            {showCounts && <span className="text-muted-foreground">{tag.count}</span>}
           </Link>
         );
       })}

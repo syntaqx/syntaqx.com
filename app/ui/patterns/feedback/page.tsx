@@ -13,7 +13,7 @@ export default function FeedbackPage() {
     <div>
       <div className="mb-10">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Feedback &amp; Affordance</h1>
-        <p className="max-w-2xl text-dim leading-relaxed">
+        <p className="max-w-2xl text-muted-foreground leading-relaxed">
           Patterns for telling the user what just happened, what they can do next, and what deserves
           a moment of friction.
         </p>
@@ -21,6 +21,7 @@ export default function FeedbackPage() {
 
       <DemoSection
         title="Copy with confirmation"
+        install={["copy-button"]}
         sources={[{ name: "GitHub" }]}
         blurb={
           <>

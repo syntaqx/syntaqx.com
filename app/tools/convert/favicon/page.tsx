@@ -272,7 +272,7 @@ export default function FaviconPage() {
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Favicon Generator</h1>
-        <p className="max-w-2xl text-dim">
+        <p className="max-w-2xl text-muted-foreground">
           Drop an image and get an ICO with multiple sizes. Everything runs in your browser.
         </p>
       </div>
@@ -291,12 +291,12 @@ export default function FaviconPage() {
             onDrop={onDrop}
             onClick={() => fileInputRef.current?.click()}
             className={cn(
-              "border-2 border-dashed bg-surface flex flex-col items-center justify-center py-16 cursor-pointer transition-colors",
+              "border-2 border-dashed bg-card flex flex-col items-center justify-center py-16 cursor-pointer transition-colors",
               dragOver
-                ? "border-accent/60 bg-accent/5"
+                ? "border-primary/60 bg-primary/5"
                 : sourceUrl
-                  ? "border-accent/30"
-                  : "border-border hover:border-accent/30",
+                  ? "border-primary/30"
+                  : "border-border hover:border-primary/30",
             )}
           >
             <input
@@ -319,14 +319,14 @@ export default function FaviconPage() {
                   unoptimized
                   className="max-h-32 max-w-32 object-contain size-auto "
                 />
-                <span className="text-xs text-dim">{fileName}</span>
-                <span className="text-[10px] text-dim">Click or drop to replace</span>
+                <span className="text-xs text-muted-foreground">{fileName}</span>
+                <span className="text-[10px] text-muted-foreground">Click or drop to replace</span>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
-                <Upload size={24} className="text-dim" />
-                <span className="text-sm text-muted">Drop an image or click to upload</span>
-                <span className="text-[10px] text-dim">
+                <Upload size={24} className="text-muted-foreground" />
+                <span className="text-sm text-subtle">Drop an image or click to upload</span>
+                <span className="text-[10px] text-muted-foreground">
                   SVG, PNG, JPG, GIF, WebP, BMP, AVIF, TIFF
                 </span>
               </div>
@@ -338,7 +338,7 @@ export default function FaviconPage() {
             <button
               onClick={clear}
               disabled={!sourceUrl}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Trash2 size={12} />
               Clear
@@ -346,7 +346,7 @@ export default function FaviconPage() {
             <button
               onClick={generate}
               disabled={!sourceUrl || sizes.length === 0 || generating}
-              className="inline-flex items-center gap-1.5 border border-accent/40 bg-accent/10 px-3 py-1.5 text-xs text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs text-primary hover:bg-primary/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <ImageIcon size={12} />
               {generating ? "Generating..." : "Generate ICO"}
@@ -354,12 +354,12 @@ export default function FaviconPage() {
             <button
               onClick={downloadIco}
               disabled={!icoBlob}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Download size={12} />
               ICO
               {icoBlob && (
-                <span className="text-[10px] text-dim tabular-nums">
+                <span className="text-[10px] text-muted-foreground tabular-nums">
                   ({formatFileSize(icoBlob.size)})
                 </span>
               )}
@@ -367,7 +367,7 @@ export default function FaviconPage() {
             <button
               onClick={downloadZip}
               disabled={!icoBlob}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
               <Archive size={12} />
               ZIP
@@ -383,7 +383,7 @@ export default function FaviconPage() {
 
           {/* Previews */}
           {previews.length > 0 && (
-            <div className="border border-border bg-surface">
+            <div className="border border-border bg-card">
               <div className="px-3 py-2 border-b border-border">
                 <span className="text-xs font-medium text-foreground">Preview</span>
               </div>
@@ -409,7 +409,7 @@ export default function FaviconPage() {
                         }}
                       />
                     </div>
-                    <span className="text-[10px] text-dim tabular-nums">
+                    <span className="text-[10px] text-muted-foreground tabular-nums">
                       {p.size}x{p.size}
                     </span>
                   </div>
@@ -422,8 +422,8 @@ export default function FaviconPage() {
         {/* Right: sidebar */}
         <div className="lg:w-64 shrink-0 flex flex-col gap-6">
           {/* Size toggles */}
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border">
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border">
               Sizes (px)
             </h3>
             <div className="px-4 py-3 flex flex-wrap gap-1.5">
@@ -434,8 +434,8 @@ export default function FaviconPage() {
                   className={cn(
                     "border px-2.5 py-1 text-[11px] font-medium tabular-nums transition-colors cursor-pointer",
                     sizes.includes(size)
-                      ? "border-accent/40 bg-accent/10 text-accent"
-                      : "border-border text-dim hover:text-foreground hover:border-border",
+                      ? "border-primary/40 bg-primary/10 text-primary"
+                      : "border-border text-muted-foreground hover:text-foreground hover:border-border",
                   )}
                 >
                   {size}
@@ -445,11 +445,11 @@ export default function FaviconPage() {
           </div>
 
           {/* About */}
-          <div className="border border-border bg-surface">
-            <h3 className="text-xs font-medium text-muted px-4 py-3 border-b border-border">
+          <div className="border border-border bg-card">
+            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border">
               About
             </h3>
-            <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
+            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
                 ICO files bundle multiple icon sizes into a single file. Browsers pick the best
                 match for the context: 16px for tabs, 32px for bookmarks, larger for shortcuts and

@@ -13,7 +13,7 @@ export default function HoverCardsPage() {
     <div>
       <div className="mb-10">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Hover Cards</h1>
-        <p className="max-w-2xl text-dim leading-relaxed">
+        <p className="max-w-2xl text-muted-foreground leading-relaxed">
           Defer expensive context to intent. The page renders only what every reader needs; the rest
           waits behind a hover, a focus, or a long press.
         </p>
@@ -21,6 +21,7 @@ export default function HoverCardsPage() {
 
       <DemoSection
         title="Time, in your timezone"
+        install={["timestamp"]}
         sources={[{ name: "Stripe", href: "https://stripe.com" }]}
         blurb={
           <>
@@ -35,6 +36,7 @@ export default function HoverCardsPage() {
 
       <DemoSection
         title="User previews, loaded on intent"
+        install={["hover-card"]}
         sources={[
           { name: "GitHub", href: "https://github.com" },
           { name: "Linear", href: "https://linear.app" },
@@ -48,16 +50,16 @@ export default function HoverCardsPage() {
           </>
         }
       >
-        <div className="border border-border bg-surface">
+        <div className="border border-border bg-card">
           <div className="p-4">
-            <div className="mb-2 text-[10px] font-medium text-dim">As mentions</div>
+            <div className="mb-2 text-[10px] font-medium text-muted-foreground">As mentions</div>
             <UserDemo bare />
           </div>
           <div className="border-t border-border p-4">
-            <div className="mb-2 text-[10px] font-medium text-dim">As avatars</div>
+            <div className="mb-2 text-[10px] font-medium text-muted-foreground">As avatars</div>
             <AvatarDemo bare />
           </div>
-          <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
+          <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">
             Data: GitHub public REST API. Unauthenticated requests are rate limited to 60/hour per
             IP.
           </div>

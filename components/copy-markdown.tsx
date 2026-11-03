@@ -38,7 +38,7 @@ export function MarkdownMenu({ href }: { href: string }) {
   };
 
   return (
-    <div className="inst flex h-6.5 shrink-0 items-stretch border border-border bg-surface text-dim">
+    <div className="inst flex h-6.5 shrink-0 items-stretch border border-border bg-card text-muted-foreground">
       <Tip label={labels[state]}>
         <button
           type="button"
@@ -46,7 +46,7 @@ export function MarkdownMenu({ href }: { href: string }) {
           aria-label="Copy as Markdown"
           className={cn(
             "flex cursor-pointer items-center px-2 transition-colors hover:text-foreground active:bg-background",
-            state === "copied" && "text-accent",
+            state === "copied" && "text-primary",
           )}
         >
           {state === "copied" ? (
@@ -70,20 +70,22 @@ export function MarkdownMenu({ href }: { href: string }) {
         </MenuTrigger>
         <MenuContent className="w-60 text-sm">
           <MenuItem onSelect={copy} className="gap-2.5 py-2">
-            <Copy size={14} className="mt-0.5 shrink-0 text-dim" />
+            <Copy size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
             <span>
               <span className="block text-foreground">Copy as Markdown</span>
-              <span className="block text-xs text-dim">Use with any LLM</span>
+              <span className="block text-xs text-muted-foreground">Use with any LLM</span>
             </span>
           </MenuItem>
           <MenuItem asChild className="gap-2.5 py-2">
             <a href={href} type="text/markdown" target="_blank" rel="noopener">
-              <FileText size={14} className="mt-0.5 shrink-0 text-dim" />
+              <FileText size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
               <span className="flex-1">
                 <span className="block text-foreground">View as Markdown</span>
-                <span className="block text-xs text-dim">Open the page in a new tab</span>
+                <span className="block text-xs text-muted-foreground">
+                  Open the page in a new tab
+                </span>
               </span>
-              <ArrowUpRight size={14} className="mt-0.5 shrink-0 text-dim" />
+              <ArrowUpRight size={14} className="mt-0.5 shrink-0 text-muted-foreground" />
             </a>
           </MenuItem>
         </MenuContent>

@@ -36,7 +36,7 @@ export default function PostsPage() {
         <p>Thoughts on building products, leading teams, and everything in between.</p>
         <a
           href="/feed.xml"
-          className="mt-6 inline-flex items-center gap-1.5 font-mono text-xs text-dim transition-colors hover:text-accent"
+          className="mt-6 inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-primary"
           aria-label="Subscribe via RSS"
         >
           <SimpleIcon name="rss" size={13} />

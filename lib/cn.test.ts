@@ -4,24 +4,26 @@ import { cn } from "./cn";
 describe("cn", () => {
   it("lets the caller's class win over a base class for the same property", () => {
     expect(cn("px-3 py-1", "py-2")).toBe("px-3 py-2");
-    expect(cn("border border-border", "border-accent/50")).toBe("border border-accent/50");
+    expect(cn("border border-border", "border-primary/50")).toBe("border border-primary/50");
   });
 
   it("knows the site's theme colors and fonts", () => {
-    expect(cn("bg-surface text-dim", "bg-background text-foreground")).toBe(
+    expect(cn("bg-card text-muted-foreground", "bg-background text-foreground")).toBe(
       "bg-background text-foreground",
     );
     expect(cn("font-sans", "font-voice")).toBe("font-voice");
   });
 
   it("keeps text colors and text sizes apart", () => {
-    expect(cn("text-dim text-xs", "text-sm")).toBe("text-dim text-sm");
-    expect(cn("text-dim text-xs", "text-accent")).toBe("text-xs text-accent");
+    expect(cn("text-muted-foreground text-xs", "text-sm")).toBe("text-muted-foreground text-sm");
+    expect(cn("text-muted-foreground text-xs", "text-primary")).toBe("text-xs text-primary");
   });
 
   it("drops falsy values", () => {
     expect(cn("flex", false, undefined, null, "", "gap-2")).toBe("flex gap-2");
-    expect(cn("flex", { "text-accent": true, "text-dim": false })).toBe("flex text-accent");
+    expect(cn("flex", { "text-primary": true, "text-muted-foreground": false })).toBe(
+      "flex text-primary",
+    );
   });
 
   it("lets a text size replace an earlier leading, but not a later one", () => {
@@ -30,6 +32,6 @@ describe("cn", () => {
   });
 
   it("keeps custom utilities", () => {
-    expect(cn("inst text-dim", "flex")).toBe("inst text-dim flex");
+    expect(cn("inst text-muted-foreground", "flex")).toBe("inst text-muted-foreground flex");
   });
 });
