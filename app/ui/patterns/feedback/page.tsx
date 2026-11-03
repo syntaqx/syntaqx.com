@@ -12,12 +12,10 @@ export default function FeedbackPage() {
   return (
     <div>
       <div className="mb-10">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Feedback &amp; Affordance
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Feedback &amp; Affordance</h1>
         <p className="max-w-2xl text-dim leading-relaxed">
-          Patterns for telling the user what just happened, what they can do
-          next, and what deserves a moment of friction.
+          Patterns for telling the user what just happened, what they can do next, and what deserves
+          a moment of friction.
         </p>
       </div>
 
@@ -26,9 +24,9 @@ export default function FeedbackPage() {
         sources={[{ name: "GitHub" }]}
         blurb={
           <>
-            The button briefly becomes its own success state. No toast, no
-            modal. The affordance and the feedback are the same element, which
-            keeps the user&apos;s eyes where their hands already are.
+            The button briefly becomes its own success state. No toast, no modal. The affordance and
+            the feedback are the same element, which keeps the user&apos;s eyes where their hands
+            already are.
           </>
         }
       >
@@ -40,9 +38,9 @@ export default function FeedbackPage() {
         sources={[{ name: "Linear" }, { name: "Superhuman" }]}
         blurb={
           <>
-            Trust the input. Apply the change immediately, reconcile on
-            response, roll back visibly on failure. The user keeps their flow;
-            the network catches up. Don&apos;t disable the button mid-flight.
+            Trust the input. Apply the change immediately, reconcile on response, roll back visibly
+            on failure. The user keeps their flow; the network catches up. Don&apos;t disable the
+            button mid-flight.
           </>
         }
       >
@@ -54,10 +52,9 @@ export default function FeedbackPage() {
         sources={[{ name: "GitHub" }, { name: "Stripe" }]}
         blurb={
           <>
-            Calibrate the friction to the blast radius. A dismiss should be one
-            click; a drop-database should require typing the name. Don&apos;t
-            make a delete feel like an unsubscribe, and don&apos;t make an
-            unsubscribe feel like a delete.
+            Calibrate the friction to the blast radius. A dismiss should be one click; a
+            drop-database should require typing the name. Don&apos;t make a delete feel like an
+            unsubscribe, and don&apos;t make an unsubscribe feel like a delete.
           </>
         }
       >
@@ -69,10 +66,9 @@ export default function FeedbackPage() {
         sources={[{ name: "Facebook" }]}
         blurb={
           <>
-            Layout-stable placeholders sized to the final content. Spinners
-            suggest unknown duration and collapse the layout; skeletons suggest
-            known-but-loading and hold the shape so nothing reflows when data
-            lands.
+            Layout-stable placeholders sized to the final content. Spinners suggest unknown duration
+            and collapse the layout; skeletons suggest known-but-loading and hold the shape so
+            nothing reflows when data lands.
           </>
         }
       >

@@ -16,8 +16,7 @@ export const PAGE_PATH = "/tools/secrets";
 export const MAX_PLAINTEXT_BYTES = 4 * 1024;
 
 export type SecretLink =
-  | { kind: "browser"; id: string; key?: string }
-  | { kind: "api"; id: string };
+  { kind: "browser"; id: string; key?: string } | { kind: "api"; id: string };
 
 const ID = /^[A-Za-z0-9_-]{32}$/;
 const KEY = /^[A-Za-z0-9_-]{43}$/;
@@ -45,7 +44,11 @@ const importKey = (key: string) =>
 export async function encrypt(key: string, plaintext: string): Promise<string> {
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const ciphertext = new Uint8Array(
-    await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await importKey(key), new TextEncoder().encode(plaintext)),
+    await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      await importKey(key),
+      new TextEncoder().encode(plaintext),
+    ),
   );
   const out = new Uint8Array(iv.length + ciphertext.length);
   out.set(iv);

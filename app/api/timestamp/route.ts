@@ -29,13 +29,9 @@ registry.registerPath({
   tags: ["Utilities"],
   request: {
     query: z.object({
-      t: z
-        .string()
-        .optional()
-        .openapi({
-          description:
-            "Unix timestamp (seconds or ms) or ISO 8601 string to convert",
-        }),
+      t: z.string().optional().openapi({
+        description: "Unix timestamp (seconds or ms) or ISO 8601 string to convert",
+      }),
     }),
   },
   responses: {
@@ -121,10 +117,7 @@ export function GET(request: NextRequest) {
   // Try ISO 8601 / RFC 3339
   const d = new Date(t);
   if (isNaN(d.getTime())) {
-    return invalidField(
-      "t",
-      "Invalid timestamp. Provide a Unix timestamp or RFC 3339 string.",
-    );
+    return invalidField("t", "Invalid timestamp. Provide a Unix timestamp or RFC 3339 string.");
   }
   return cacheableJson(request, formatTimestamp(d), CACHE.immutable);
 }

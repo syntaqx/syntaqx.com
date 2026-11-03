@@ -66,7 +66,10 @@ export function Modal({
             <header className="flex items-start justify-between gap-4 border-b border-border/60 px-5 py-4">
               <div className="flex-1 min-w-0">
                 <Dialog.Title
-                  className={cn("text-base font-semibold", isDanger ? "text-pink" : "text-foreground")}
+                  className={cn(
+                    "text-base font-semibold",
+                    isDanger ? "text-pink" : "text-foreground",
+                  )}
                 >
                   {title}
                 </Dialog.Title>

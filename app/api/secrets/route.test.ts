@@ -12,8 +12,12 @@ const create = (body: unknown) =>
     }),
   );
 
-const check = (id: string) => HEAD(new Request(`http://localhost/api/secrets/${id}`, { method: "HEAD" }), { params: Promise.resolve({ id }) });
-const read = (id: string) => GET(new Request(`http://localhost/api/secrets/${id}`), { params: Promise.resolve({ id }) });
+const check = (id: string) =>
+  HEAD(new Request(`http://localhost/api/secrets/${id}`, { method: "HEAD" }), {
+    params: Promise.resolve({ id }),
+  });
+const read = (id: string) =>
+  GET(new Request(`http://localhost/api/secrets/${id}`), { params: Promise.resolve({ id }) });
 
 let store: SecretStore;
 beforeEach(() => {

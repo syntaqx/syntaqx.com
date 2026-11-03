@@ -5,22 +5,43 @@
 import { sheet, widthOf } from "../kit.mjs";
 
 // Illustrative values [1]; days count from the one-time visit, D0.
-const E0 = 7, W1 = 3; // offer to signature, cooling-off
+const E0 = 7,
+  W1 = 3; // offer to signature, cooling-off
 const ACTIVE = E0 + W1; // D10
-const V1 = 80, Q1 = 90, E1 = 15;
+const V1 = 80,
+  Q1 = 90,
+  E1 = 15;
 const T1 = V1 + 3 * Q1 + E1; // 365
 const END = ACTIVE + T1; // D375
 const ADDON = 150;
 const A1 = END - ADDON; // 225
 const VISITS = [1, 2, 3, 4].map((i) => ACTIVE + V1 + (i - 1) * Q1); // D90 .. D360
-const O1 = 189, P0 = 249, C1 = O1, I1 = P0 - C1, S1 = 129, A0 = 360;
+const O1 = 189,
+  P0 = 249,
+  C1 = O1,
+  I1 = P0 - C1,
+  S1 = 129,
+  A0 = 360;
 const A2 = (A0 * A1) / 365;
 const Y1 = O1 + I1 + 4 * S1 + A2;
 const usd = (n) => n.toFixed(2);
 
 // Column widths the kit's table would pick, to center two tables side by side.
 const tableWidth = (rows) =>
-  [0, 1, 2].reduce((w, j) => w + Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc")), widthOf(["CODE", "VARIABLE", "VALUE"][j], "th")) + 14)), 0);
+  [0, 1, 2].reduce(
+    (w, j) =>
+      w +
+      Math.max(
+        [30, 80, 60][j],
+        Math.ceil(
+          Math.max(
+            ...rows.map((r) => widthOf(r[j], "tc")),
+            widthOf(["CODE", "VARIABLE", "VALUE"][j], "th"),
+          ) + 14,
+        ),
+      ),
+    0,
+  );
 
 export default function draw() {
   const W = 760;
@@ -28,20 +49,38 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative values, not benchmarks or any vendor's defaults. Days count from the one-time visit, D0."],
-    [2, "The one-time visit counts as the plan's initial service, so its price is credited against the initial charge."],
-    [3, "An amendment: terms version 2, effective D150, prorated by day and generating its own occurrences."],
-    [4, "Signed is not active: no recurring charge until the window closes; the deadline is computed at signing."],
-    [0, "Values in days and USD. Codes on the drawing, values and formulas in the tables."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Illustrative values, not benchmarks or any vendor's defaults. Days count from the one-time visit, D0.",
+      ],
+      [
+        2,
+        "The one-time visit counts as the plan's initial service, so its price is credited against the initial charge.",
+      ],
+      [
+        3,
+        "An amendment: terms version 2, effective D150, prorated by day and generating its own occurrences.",
+      ],
+      [
+        4,
+        "Signed is not active: no recurring charge until the window closes; the deadline is computed at signing.",
+      ],
+      [0, "Values in days and USD. Codes on the drawing, values and formulas in the tables."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: the first term, 1 day = 1.5 px ----
   s.comment("Plan view: first term");
   const k = 1.5;
   const x0 = CX - (END * k) / 2 + 20; // room for the lane labels on the left
   const X = (d) => x0 + d * k;
-  const h = 22, vw = 6;
+  const h = 22,
+    vw = 6;
   const oneY = ny + 36;
   const chainY = oneY + h + 36;
   const planY = chainY + 22;
@@ -77,15 +116,22 @@ export default function draw() {
 
   s.detailRef(X(ACTIVE / 2), planY + h / 2, 16, "detail A", x0 - 30, chainY);
   const planTitle = tY + 46;
-  s.viewTitle(CX, planTitle, "Plan view · one customer's first term", "Scale 1 day = 1.5 px · timeline · days from D0");
+  s.viewTitle(
+    CX,
+    planTitle,
+    "Plan view · one customer's first term",
+    "Scale 1 day = 1.5 px · timeline · days from D0",
+  );
   s.nb(CX + 150, planTitle - 4, 1);
 
   // ---- Detail A: offer to active, 1 day = 30 px ----
   s.comment("Detail A: offer to active");
-  const kd = 30, span = 16;
+  const kd = 30,
+    span = 16;
   const dx0 = CX - (span * kd) / 2;
   const D = (d) => dx0 + d * kd;
-  const dTop = planTitle + 13 + 66, dh = 26;
+  const dTop = planTitle + 13 + 66,
+    dh = 26;
   s.rect(D(0), dTop, kd / 2, dh, "obj fill-1");
   s.line(D(0.5), dTop + dh / 2, D(E0), dTop + dh / 2, "phantom");
   s.add(`<circle class="dot" cx="${D(E0)}" cy="${dTop + dh / 2}" r="2.2"/>`);
@@ -98,7 +144,10 @@ export default function draw() {
   s.text(D(E0 - 0.6), dTop + dh / 2 - 8, "signed", "sl ink", "end");
   s.text(D(E0 + W1 / 2), ly, "cooling-off", "sl ink", "middle");
   s.nb(D(E0 + W1 / 2) + widthOf("cooling-off", "sl") / 2 + 12, ly - 3, 4);
-  s.chainH([D(0), D(E0), D(ACTIVE)], dTop + dh + 20, ["E0", "W1"], { from: [dTop + dh, dTop + dh, dTop + dh], below: true });
+  s.chainH([D(0), D(E0), D(ACTIVE)], dTop + dh + 20, ["E0", "W1"], {
+    from: [dTop + dh, dTop + dh, dTop + dh],
+    below: true,
+  });
   s.callout(D(ACTIVE), dTop + dh, D(ACTIVE) + 40, dTop + dh + 22, "I1 posts", { dir: 1 });
   const detailTitle = dTop + dh + 64;
   s.viewTitle(CX, detailTitle, "Detail A · offer to active", "Scale 1 day = 30 px · D0 to D16");
@@ -125,7 +174,8 @@ export default function draw() {
     ["Y1", "first-term revenue", `O1+I1+4×S1+A2 = ${usd(Y1)}`],
   ];
   const gap = 32;
-  const w1 = tableWidth(days), w2 = tableWidth(money);
+  const w1 = tableWidth(days),
+    w2 = tableWidth(money);
   const tx = CX - (w1 + gap + w2) / 2;
   const tTop = detailTitle + 13 + 56;
   const t1 = s.table(tx, tTop, "Variables · days", days);

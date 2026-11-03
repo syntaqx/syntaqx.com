@@ -54,9 +54,7 @@ export function queryDiscoveryHeaders(pathname: string): Record<string, string> 
  * Classify a request: a native QUERY, a POST overridden to QUERY, an invalid
  * override (400), or an ordinary request (null).
  */
-export function queryKind(
-  request: NextRequest,
-): "native" | "override" | "invalid" | null {
+export function queryKind(request: NextRequest): "native" | "override" | "invalid" | null {
   const override = request.headers.get(METHOD_OVERRIDE_HEADER);
   if (override !== null) {
     // The only override allowed is POST -> QUERY. Anything else could turn a

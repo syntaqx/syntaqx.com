@@ -13,12 +13,21 @@ const SYSTEMS = [
 ];
 
 export default function draw() {
-  const W = 760, w = 112, h = 30, y = 44;
+  const W = 760,
+    w = 112,
+    h = 30,
+    y = 44;
   const s = sheet({ prefix: "auth", width: W });
   const gap = (W - 40 - SYSTEMS.length * w) / (SYSTEMS.length - 1);
 
   s.comment("Systems");
-  const nodes = s.row(20, y, W - 40, SYSTEMS.map(([l]) => l), { h, gap });
+  const nodes = s.row(
+    20,
+    y,
+    W - 40,
+    SYSTEMS.map(([l]) => l),
+    { h, gap },
+  );
   let bottom = y + h;
   SYSTEMS.forEach(([, sub], i) =>
     sub.forEach((l, j) => {
@@ -40,7 +49,9 @@ export default function draw() {
   const sw = 108;
   const standIn = s.node(net.cx - sw / 2, bottom + 30, sw, 28, "stand-in", { kind: "ghost" });
   s.connect(net, standIn, { from: "b", to: "t", alt: true });
-  ["answers if the issuer", "is down or too slow"].forEach((l, j) => s.text(standIn.x + sw + 12, standIn.cy - 2.5 + j * 11, l, "sl"));
+  ["answers if the issuer", "is down or too slow"].forEach((l, j) =>
+    s.text(standIn.x + sw + 12, standIn.cy - 2.5 + j * 11, l, "sl"),
+  );
 
   s.height = Math.ceil(standIn.y + standIn.h + 20);
   return s.toString();

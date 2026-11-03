@@ -5,7 +5,8 @@ import { sheet, widthOf } from "../kit.mjs";
 
 // Plate 300 x 200; with a 66 step a lower plate shows only local y > ~76,
 // so lower layers keep their modules in the front band y 88..186.
-const W = 300, D = 200;
+const W = 300,
+  D = 200;
 
 // A key glyph in plate coordinates: bow at (x, y), shaft to the right, two teeth.
 const key = (p, x, y, cls = "obj fill-1") => [
@@ -22,13 +23,17 @@ const layers = [
     draw: (p) => [
       // PIN blocks: fixed 8-byte blocks.
       p.rect(16, 92, 80, 92, "obj fill-2"),
-      ...[104, 124, 144, 164].flatMap((y) => [0, 1, 2, 3].map((c) => p.rect(24 + c * 17, y, 13, 12, "obj fill-1"))),
+      ...[104, 124, 144, 164].flatMap((y) =>
+        [0, 1, 2, 3].map((c) => p.rect(24 + c * 17, y, 13, 12, "obj fill-1")),
+      ),
       // Device keys: one key per terminal.
       p.rect(110, 92, 80, 92, "obj fill-2"),
       ...[110, 138, 166].flatMap((y) => key(p, 126, y, "slot")),
       // Card numbers: rows of four digit groups.
       p.rect(204, 92, 80, 92, "obj fill-2"),
-      ...[106, 124, 142, 160].flatMap((y) => [0, 1, 2, 3].map((c) => p.rect(212 + c * 16, y, 12, 10, "obj fill-1"))),
+      ...[106, 124, 142, 160].flatMap((y) =>
+        [0, 1, 2, 3].map((c) => p.rect(212 + c * 16, y, 12, 10, "obj fill-1")),
+      ),
     ],
   },
   {
@@ -45,7 +50,9 @@ const layers = [
       ...[126, 150, 174].map((x) => p.circle(x, 164, 5, "slot")),
       // Data keys: versioned keys, the current one in front.
       p.rect(204, 92, 80, 92, "obj fill-2"),
-      ...[0, 1, 2].map((i) => p.rect(218 + i * 6, 104 + i * 14, 50, 36, i === 2 ? "obj fill-1" : "slot")),
+      ...[0, 1, 2].map((i) =>
+        p.rect(218 + i * 6, 104 + i * 14, 50, 36, i === 2 ? "obj fill-1" : "slot"),
+      ),
     ],
   },
   {
@@ -53,7 +60,11 @@ const layers = [
     sub: "ZMK · terminal KEK · vault KEK (C2)",
     draw: (p) => [
       // ZMK, terminal KEK and vault KEK, each a wrapping key.
-      ...[16, 110, 204].flatMap((x) => [p.rect(x, 92, 80, 92, "obj fill-2"), p.rect(x + 10, 112, 60, 52, "slot"), ...key(p, x + 22, 138)]),
+      ...[16, 110, 204].flatMap((x) => [
+        p.rect(x, 92, 80, 92, "obj fill-2"),
+        p.rect(x + 10, 112, 60, 52, "slot"),
+        ...key(p, x + 22, 138),
+      ]),
     ],
   },
   {
@@ -75,14 +86,27 @@ export default function draw() {
   const s = sheet({ prefix: "pm-ks", width: 760 });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Each layer is encrypted under the one above. A rotation touches only the layer below: a new KEK re-wraps data keys, a new data key re-encrypts data."],
-    [2, "NIST SP 800-57 Part 1 Rev. 5, Table 1: general suggestions. PCI DSS 3.7.4 asks for a defined cryptoperiod per key type, and it may be shorter."],
-    [0, "Not to scale. Layers separated along the stack axis; plate contents are schematic."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Each layer is encrypted under the one above. A rotation touches only the layer below: a new KEK re-wraps data keys, a new data key re-encrypts data.",
+      ],
+      [
+        2,
+        "NIST SP 800-57 Part 1 Rev. 5, Table 1: general suggestions. PCI DSS 3.7.4 asks for a defined cryptoperiod per key type, and it may be shorter.",
+      ],
+      [0, "Not to scale. Layers separated along the stack axis; plate contents are schematic."],
+    ],
+    { width: 690 },
+  );
 
-  const gap = 66, top = (layers.length - 1) * gap;
-  const tx = 380, ty = ny + 30 + top;
+  const gap = 66,
+    top = (layers.length - 1) * gap;
+  const tx = 380,
+    ty = ny + 30 + top;
   s.comment("Exploded view");
   const P = s.exploded({ tx, ty, w: W, d: D, gap, labelX: 270, layers });
 
@@ -98,7 +122,12 @@ export default function draw() {
 
   const left = P(0, D, 0)[0];
   const vy = yBot + 34;
-  s.viewTitle((left + P(W, 0, 0)[0]) / 2, vy, "Exploded view · payment key hierarchy", "Axonometric · not to scale · master key at the top");
+  s.viewTitle(
+    (left + P(W, 0, 0)[0]) / 2,
+    vy,
+    "Exploded view · payment key hierarchy",
+    "Axonometric · not to scale · master key at the top",
+  );
 
   s.comment("Cryptoperiods");
   const rows = [
@@ -109,7 +138,8 @@ export default function draw() {
   const widths = [50, 280, 130];
   const tw = widths.reduce((a, b) => a + b, 0);
   const title = "Cryptoperiods · suggested maxima";
-  const tx0 = 380 - tw / 2, ty0 = vy + 13 + 56;
+  const tx0 = 380 - tw / 2,
+    ty0 = vy + 13 + 56;
   const tb = s.table(tx0, ty0, title, rows, { widths });
   s.nb(tx0 + widthOf(title, "vt") + 4, ty0 - 11, 2);
   s.height = Math.ceil(tb.y + 30);

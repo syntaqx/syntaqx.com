@@ -30,7 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description: book.summary,
     alternates: markdownAlternates(`/books/${book.slug}`),
-    openGraph: { title, description: book.summary, url: `/books/${book.slug}`, siteName: "syntaqx", type: "website" },
+    openGraph: {
+      title,
+      description: book.summary,
+      url: `/books/${book.slug}`,
+      siteName: "syntaqx",
+      type: "website",
+    },
   };
 }
 
@@ -45,7 +51,10 @@ export default async function BookCover({ params }: Props) {
   const cover = `/books/${book.slug}`;
   // The book dates from its chapters' earliest first commit to their latest change.
   const dates = (of: (slug: string) => string | undefined) =>
-    chapters.map((c) => of(c.slug)).filter((d) => d !== undefined).sort((a, b) => Date.parse(a) - Date.parse(b));
+    chapters
+      .map((c) => of(c.slug))
+      .filter((d) => d !== undefined)
+      .sort((a, b) => Date.parse(a) - Date.parse(b));
   const published = dates((s) => docFirstPublished(s, "books"));
   const modified = dates((s) => docLastModified(s, "books"));
 
@@ -94,13 +103,21 @@ export default async function BookCover({ params }: Props) {
               </Button>
             </div>
           </div>
-          <SceneArt scene={book.cover} label={`${book.name} cover art`} className="aspect-square self-start max-lg:hidden" />
+          <SceneArt
+            scene={book.cover}
+            label={`${book.name} cover art`}
+            className="aspect-square self-start max-lg:hidden"
+          />
         </div>
       </DocsHeader>
 
       {bookParts(chapters).map((part) => (
         <section key={part.title || "chapters"}>
-          {part.title && <h2 className="inst border-b border-border pt-8 pb-3 text-[0.6rem] text-dim">{part.title}</h2>}
+          {part.title && (
+            <h2 className="inst border-b border-border pt-8 pb-3 text-[0.6rem] text-dim">
+              {part.title}
+            </h2>
+          )}
           <ol className="divide-y divide-border border-b border-border">
             {part.docs.map((doc) => {
               const i = chapters.indexOf(doc);
@@ -115,7 +132,9 @@ export default async function BookCover({ params }: Props) {
                       <span className="block font-semibold text-foreground transition-colors group-hover:text-accent">
                         {doc.title}
                       </span>
-                      <span className="mt-1 block text-sm leading-relaxed text-dim">{doc.description}</span>
+                      <span className="mt-1 block text-sm leading-relaxed text-dim">
+                        {doc.description}
+                      </span>
                     </span>
                     <span className="inst col-start-2 mt-2 text-dim sm:col-start-3 sm:mt-0 sm:pt-1">
                       {doc.readingMinutes} min

@@ -13,11 +13,7 @@ import { cn } from "@/lib/cn";
 
 function toBase64(input: string, charset: string): string {
   if (charset === "utf-8") {
-    return btoa(
-      new TextEncoder()
-        .encode(input)
-        .reduce((s, b) => s + String.fromCharCode(b), ""),
-    );
+    return btoa(new TextEncoder().encode(input).reduce((s, b) => s + String.fromCharCode(b), ""));
   }
   return btoa(input); // ascii / latin1
 }
@@ -25,9 +21,7 @@ function toBase64(input: string, charset: string): string {
 function fromBase64(input: string, charset: string): string {
   const raw = atob(input);
   if (charset === "utf-8") {
-    return new TextDecoder("utf-8").decode(
-      Uint8Array.from(raw, (c) => c.charCodeAt(0)),
-    );
+    return new TextDecoder("utf-8").decode(Uint8Array.from(raw, (c) => c.charCodeAt(0)));
   }
   return raw;
 }
@@ -49,11 +43,7 @@ function processValue(
         continue;
       }
       try {
-        results.push(
-          dir === "encode"
-            ? toBase64(line, charset)
-            : fromBase64(line, charset),
-        );
+        results.push(dir === "encode" ? toBase64(line, charset) : fromBase64(line, charset));
       } catch {
         return {
           output: "",
@@ -69,10 +59,7 @@ function processValue(
 
   try {
     return {
-      output:
-        dir === "encode"
-          ? toBase64(value, charset)
-          : fromBase64(value, charset),
+      output: dir === "encode" ? toBase64(value, charset) : fromBase64(value, charset),
       error: null,
     };
   } catch {
@@ -107,15 +94,12 @@ export default function Base64Page() {
   const [fileName, setFileName] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const run = useCallback(
-    (value: string, dir: "encode" | "decode", cs: string, pl: boolean) => {
-      setInput(value);
-      const { output: out, error: err } = processValue(value, dir, cs, pl);
-      setOutput(out);
-      setError(err);
-    },
-    [],
-  );
+  const run = useCallback((value: string, dir: "encode" | "decode", cs: string, pl: boolean) => {
+    setInput(value);
+    const { output: out, error: err } = processValue(value, dir, cs, pl);
+    setOutput(out);
+    setError(err);
+  }, []);
 
   const switchMode = (next: "encode" | "decode") => {
     if (next === mode) return;
@@ -176,12 +160,10 @@ export default function Base64Page() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Base64 Decode / Encode
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Base64 Decode / Encode</h1>
         <p className="max-w-2xl text-dim">
-          Decode or encode Base64 strings. Everything runs in your browser,
-          nothing is sent to a server.
+          Decode or encode Base64 strings. Everything runs in your browser, nothing is sent to a
+          server.
         </p>
       </div>
 
@@ -193,7 +175,10 @@ export default function Base64Page() {
             value={mode}
             onChange={switchMode}
             ariaLabel="Mode"
-            options={[{ value: "decode", label: "Decode" }, { value: "encode", label: "Encode" }]}
+            options={[
+              { value: "decode", label: "Decode" },
+              { value: "encode", label: "Encode" },
+            ]}
             className="mb-5"
           />
 
@@ -221,8 +206,7 @@ export default function Base64Page() {
                 <div className="flex items-center gap-1.5">
                   {input && (
                     <span className="text-[10px] text-dim tabular-nums">
-                      {input.length.toLocaleString()} chars &middot;{" "}
-                      {byteSize(input)}
+                      {input.length.toLocaleString()} chars &middot; {byteSize(input)}
                     </span>
                   )}
                   <button
@@ -300,8 +284,7 @@ export default function Base64Page() {
                 <div className="flex items-center gap-1.5">
                   {output && (
                     <span className="text-[10px] text-dim tabular-nums">
-                      {output.length.toLocaleString()} chars &middot;{" "}
-                      {byteSize(output)}
+                      {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                     </span>
                   )}
                   {output && <CopyButton text={output} label />}
@@ -327,36 +310,30 @@ export default function Base64Page() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                Base64 is an encoding scheme that converts binary data into
-                ASCII text using a 64-character alphabet:{" "}
-                <span className="text-muted">A-Z</span>,{" "}
-                <span className="text-muted">a-z</span>,{" "}
-                <span className="text-muted">0-9</span>,{" "}
-                <span className="text-muted">+</span>, and{" "}
-                <span className="text-muted">/</span>, with{" "}
-                <span className="text-muted">=</span> for padding.
+                Base64 is an encoding scheme that converts binary data into ASCII text using a
+                64-character alphabet: <span className="text-muted">A-Z</span>,{" "}
+                <span className="text-muted">a-z</span>, <span className="text-muted">0-9</span>,{" "}
+                <span className="text-muted">+</span>, and <span className="text-muted">/</span>,
+                with <span className="text-muted">=</span> for padding.
               </p>
               <p>
-                Every 3 bytes of input produce 4 characters of output,
-                increasing size by roughly 33%.
+                Every 3 bytes of input produce 4 characters of output, increasing size by roughly
+                33%.
               </p>
               <p>
-                <span className="text-muted">Common uses:</span> email
-                attachments (MIME), data URIs, JSON Web Tokens (JWTs), embedding
-                images in CSS/HTML, and transmitting binary data through
-                text-only protocols.
+                <span className="text-muted">Common uses:</span> email attachments (MIME), data
+                URIs, JSON Web Tokens (JWTs), embedding images in CSS/HTML, and transmitting binary
+                data through text-only protocols.
               </p>
               <p>
-                A URL-safe variant replaces{" "}
-                <span className="text-muted">+</span> and{" "}
-                <span className="text-muted">/</span> with{" "}
-                <span className="text-muted">-</span> and{" "}
-                <span className="text-muted">_</span> to avoid conflicts in URLs
-                and filenames (RFC 4648 &sect;5).
+                A URL-safe variant replaces <span className="text-muted">+</span> and{" "}
+                <span className="text-muted">/</span> with <span className="text-muted">-</span> and{" "}
+                <span className="text-muted">_</span> to avoid conflicts in URLs and filenames (RFC
+                4648 &sect;5).
               </p>
               <p>
-                Base64 is <span className="text-muted">not encryption</span>. It
-                provides no security. Anyone can decode it.
+                Base64 is <span className="text-muted">not encryption</span>. It provides no
+                security. Anyone can decode it.
               </p>
             </div>
           </div>

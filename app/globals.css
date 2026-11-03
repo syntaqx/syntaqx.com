@@ -214,10 +214,8 @@ body {
 /* Four square handles on the corners of a box, like a selected layer. */
 @utility handles {
   background-image:
-    linear-gradient(var(--accent), var(--accent)),
-    linear-gradient(var(--accent), var(--accent)),
-    linear-gradient(var(--accent), var(--accent)),
-    linear-gradient(var(--accent), var(--accent));
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)), linear-gradient(var(--accent), var(--accent));
   background-size: 5px 5px;
   background-position:
     top left,
@@ -282,22 +280,41 @@ body {
 
 /* Scrollbar */
 /* Nav rails (the docs sidebar) scroll quietly: no bar until hovered. */
-.rail-scroll { scrollbar-width: thin; scrollbar-color: transparent transparent; }
-.rail-scroll:hover { scrollbar-color: var(--border-hover) transparent; }
+.rail-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.rail-scroll:hover {
+  scrollbar-color: var(--border-hover) transparent;
+}
 
 /* Sidebar sections (Radix Accordion) open and close by height. */
 @keyframes acc-down {
-  from { height: 0; }
-  to { height: var(--radix-accordion-content-height); }
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
 @keyframes acc-up {
-  from { height: var(--radix-accordion-content-height); }
-  to { height: 0; }
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
-.acc-content[data-state="open"] { animation: acc-down 180ms ease-out; }
-.acc-content[data-state="closed"] { animation: acc-up 150ms ease-out; }
+.acc-content[data-state="open"] {
+  animation: acc-down 180ms ease-out;
+}
+.acc-content[data-state="closed"] {
+  animation: acc-up 150ms ease-out;
+}
 @media (prefers-reduced-motion: reduce) {
-  .acc-content { animation: none !important; }
+  .acc-content {
+    animation: none !important;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -361,11 +378,17 @@ body {
   color: var(--dim);
   text-decoration: none;
   opacity: 0;
-  transition: opacity 150ms, color 150ms;
+  transition:
+    opacity 150ms,
+    color 150ms;
 }
 .prose h2:hover .heading-anchor,
-.prose .heading-anchor:focus-visible { opacity: 1; }
-.prose .heading-anchor:hover { color: var(--accent); }
+.prose .heading-anchor:focus-visible {
+  opacity: 1;
+}
+.prose .heading-anchor:hover {
+  color: var(--accent);
+}
 .prose h3,
 .prose h4 {
   font-family: var(--font-sans);
@@ -443,11 +466,21 @@ body {
   background: color-mix(in srgb, var(--callout) 7%, var(--surface));
   font-style: normal;
 }
-.prose aside.callout-tip { --callout: var(--accent); }
-.prose aside.callout-important { --callout: var(--jwt-purple); }
-.prose aside.callout-warning { --callout: var(--pink); }
-.prose aside.callout-caution { --callout: var(--mauve); }
-.prose aside.callout > p { margin: 0.5em 0 0; }
+.prose aside.callout-tip {
+  --callout: var(--accent);
+}
+.prose aside.callout-important {
+  --callout: var(--jwt-purple);
+}
+.prose aside.callout-warning {
+  --callout: var(--pink);
+}
+.prose aside.callout-caution {
+  --callout: var(--mauve);
+}
+.prose aside.callout > p {
+  margin: 0.5em 0 0;
+}
 .prose aside.callout > p.callout-title {
   display: flex;
   align-items: center;
@@ -467,7 +500,9 @@ body {
   stroke-linejoin: round;
 }
 /* Code tabs: consecutive ```lang tab="Name" blocks (rehypeCodeTabs). */
-.prose .code-tabs { margin: 1.75em 0; }
+.prose .code-tabs {
+  margin: 1.75em 0;
+}
 .prose .code-tabs [role="tablist"] {
   display: flex;
   flex-wrap: wrap;
@@ -482,14 +517,20 @@ body {
   color: var(--dim);
   border-bottom: 2px solid transparent;
   cursor: pointer;
-  transition: color 150ms, border-color 150ms;
+  transition:
+    color 150ms,
+    border-color 150ms;
 }
-.prose .code-tabs [role="tab"]:hover { color: var(--foreground); }
+.prose .code-tabs [role="tab"]:hover {
+  color: var(--foreground);
+}
 .prose .code-tabs [role="tab"][aria-selected="true"] {
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
-.prose .code-tabs pre { margin: 0; }
+.prose .code-tabs pre {
+  margin: 0;
+}
 /* Feature posts: blockquotes become pull quotes in the voice face. */
 .prose-feature blockquote {
   padding: 0.4em 0 0.4em 0.9em;
@@ -584,8 +625,13 @@ body {
   width: 100%;
   height: auto;
 }
-.prose figure.diagram > svg { min-width: 560px; cursor: zoom-in; }
-.prose figure.diagram { position: relative; }
+.prose figure.diagram > svg {
+  min-width: 560px;
+  cursor: zoom-in;
+}
+.prose figure.diagram {
+  position: relative;
+}
 /* Opens the diagram in a modal (components/diagram-viewer.tsx); so does a
    click or tap on the diagram itself. */
 [data-diagram-expand] {
@@ -603,13 +649,21 @@ body {
   color: var(--dim);
   cursor: pointer;
   opacity: 0;
-  transition: opacity 150ms, color 150ms;
+  transition:
+    opacity 150ms,
+    color 150ms;
 }
 .prose figure.diagram:hover [data-diagram-expand],
-[data-diagram-expand]:focus-visible { opacity: 1; }
-[data-diagram-expand]:hover { color: var(--foreground); }
+[data-diagram-expand]:focus-visible {
+  opacity: 1;
+}
+[data-diagram-expand]:hover {
+  color: var(--foreground);
+}
 @media (hover: none) {
-  [data-diagram-expand] { opacity: 1; }
+  [data-diagram-expand] {
+    opacity: 1;
+  }
 }
 .prose figure.diagram figcaption {
   margin-top: 0.9rem;
@@ -617,31 +671,105 @@ body {
   line-height: 1.6;
   color: var(--muted);
 }
-.prose figure.diagram figcaption strong { color: var(--foreground); font-weight: 600; }
-.diagram .frame { fill: var(--fig-paper); stroke: var(--fig-ink); stroke-width: 1.4; }
-.diagram .cell { fill: var(--fig-shade); stroke: var(--fig-ink); stroke-width: 1; }
-.diagram .cell.band { fill: var(--fig-shade-2); }
-.diagram .cell.hl { fill: var(--fig-accent-fill); stroke: var(--fig-accent); }
-.diagram .cell.ghost { fill: var(--fig-paper); stroke: var(--fig-line); stroke-dasharray: 4 3; }
-.diagram .cell.end { stroke-width: 2; }
-.diagram .zone { fill: var(--fig-paper); stroke: var(--fig-line); stroke-width: 1; stroke-dasharray: 4 3; }
-.diagram .t { font-family: var(--font-mono); font-size: 10px; fill: var(--fig-ink); }
-.diagram .t.hl { fill: var(--fig-accent); }
-.diagram .t.dim { fill: var(--fig-line); }
-.diagram .t.b { font-weight: 600; }
-.diagram .cap { font-family: var(--font-inst); font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; fill: var(--fig-line); }
-.diagram .cap.ink { fill: var(--fig-ink); }
-.diagram .cap.hl { fill: var(--fig-accent); }
-.diagram .n { font-family: var(--font-sans); font-size: 11px; fill: var(--fig-line); }
-.diagram .n.ink { fill: var(--fig-ink); }
-.diagram .n.hl { fill: var(--fig-accent); }
-.diagram .ln { fill: none; stroke: var(--fig-line); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
-.diagram .ln.ink { stroke: var(--fig-ink); }
-.diagram .ln.hl { stroke: var(--fig-accent); stroke-width: 1.4; }
-.diagram .ln.dash { stroke-dasharray: 4 3; }
-.diagram .ah { fill: var(--fig-line); }
-.diagram .ah.ink { fill: var(--fig-ink); }
-.diagram .ah.hl { fill: var(--fig-accent); }
+.prose figure.diagram figcaption strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.diagram .frame {
+  fill: var(--fig-paper);
+  stroke: var(--fig-ink);
+  stroke-width: 1.4;
+}
+.diagram .cell {
+  fill: var(--fig-shade);
+  stroke: var(--fig-ink);
+  stroke-width: 1;
+}
+.diagram .cell.band {
+  fill: var(--fig-shade-2);
+}
+.diagram .cell.hl {
+  fill: var(--fig-accent-fill);
+  stroke: var(--fig-accent);
+}
+.diagram .cell.ghost {
+  fill: var(--fig-paper);
+  stroke: var(--fig-line);
+  stroke-dasharray: 4 3;
+}
+.diagram .cell.end {
+  stroke-width: 2;
+}
+.diagram .zone {
+  fill: var(--fig-paper);
+  stroke: var(--fig-line);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+.diagram .t {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--fig-ink);
+}
+.diagram .t.hl {
+  fill: var(--fig-accent);
+}
+.diagram .t.dim {
+  fill: var(--fig-line);
+}
+.diagram .t.b {
+  font-weight: 600;
+}
+.diagram .cap {
+  font-family: var(--font-inst);
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--fig-line);
+}
+.diagram .cap.ink {
+  fill: var(--fig-ink);
+}
+.diagram .cap.hl {
+  fill: var(--fig-accent);
+}
+.diagram .n {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  fill: var(--fig-line);
+}
+.diagram .n.ink {
+  fill: var(--fig-ink);
+}
+.diagram .n.hl {
+  fill: var(--fig-accent);
+}
+.diagram .ln {
+  fill: none;
+  stroke: var(--fig-line);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.diagram .ln.ink {
+  stroke: var(--fig-ink);
+}
+.diagram .ln.hl {
+  stroke: var(--fig-accent);
+  stroke-width: 1.4;
+}
+.diagram .ln.dash {
+  stroke-dasharray: 4 3;
+}
+.diagram .ah {
+  fill: var(--fig-line);
+}
+.diagram .ah.ink {
+  fill: var(--fig-ink);
+}
+.diagram .ah.hl {
+  fill: var(--fig-accent);
+}
 
 /* Dimensional drawings: <svg class="dwg">, generated by scripts/dwg (see
    .claude/skills/dimensional-drawing). Monochrome technical drawing in which
@@ -651,31 +779,112 @@ body {
    site's sans in small plain caps; mono is left to the shared .t cells.
    Hatched shapes take fill="url(#prefix-hatch)" on the element, so .hatch
    never sets fill (a CSS fill would beat the attribute). */
-.diagram .dwg .sheet { fill: none; stroke: var(--fig-ink); stroke-width: 1; }
-.diagram .dwg .obj { fill: none; stroke: var(--fig-ink); stroke-width: 1.2; stroke-linejoin: round; }
-.diagram .dwg .obj.fill-1 { fill: var(--fig-shade-2); stroke-width: 1; }
-.diagram .dwg .obj.fill-2 { fill: var(--fig-shade); stroke-width: 1; }
-.diagram .dwg .obj.plate { fill: var(--fig-paper); }
-.diagram .dwg .obj.hl { fill: var(--fig-accent-fill); stroke: var(--fig-accent); }
-.diagram .dwg .dim:not(text) { fill: none; stroke: var(--fig-ink); stroke-width: 0.5; }
-.diagram .dwg .dim.hl:not(text) { stroke: var(--fig-accent); stroke-width: 0.7; }
-.diagram .dwg .ext { fill: none; stroke: var(--fig-ink); stroke-width: 0.4; }
-.diagram .dwg .slot { fill: none; stroke: var(--fig-ink); stroke-width: 0.8; stroke-dasharray: 4 3; }
-.diagram .dwg .ctr { fill: none; stroke: var(--fig-line); stroke-width: 0.6; stroke-dasharray: 14 3 2 3; }
-.diagram .dwg .phantom { fill: none; stroke: var(--fig-line); stroke-width: 0.6; stroke-dasharray: 18 4; }
-.diagram .dwg .detail { fill: none; stroke: var(--fig-ink); stroke-width: 0.6; stroke-dasharray: 4 3; }
-.diagram .dwg .leader { fill: none; stroke: var(--fig-ink); stroke-width: 0.6; }
-.diagram .dwg .dot { fill: var(--fig-ink); }
-.diagram .dwg .hatch { stroke: var(--fig-ink); stroke-width: 0.8; }
-.diagram .dwg .hatch-ln { stroke: var(--fig-line); stroke-width: 0.5; }
-.diagram .dwg .note-box { fill: var(--fig-paper); stroke: var(--fig-line); stroke-width: 0.6; }
-.diagram .dwg .nb { fill: var(--fig-paper); stroke: var(--fig-ink); stroke-width: 0.6; }
-.diagram .dwg .tbl { fill: none; stroke: var(--fig-line); stroke-width: 0.5; }
+.diagram .dwg .sheet {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 1;
+}
+.diagram .dwg .obj {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+.diagram .dwg .obj.fill-1 {
+  fill: var(--fig-shade-2);
+  stroke-width: 1;
+}
+.diagram .dwg .obj.fill-2 {
+  fill: var(--fig-shade);
+  stroke-width: 1;
+}
+.diagram .dwg .obj.plate {
+  fill: var(--fig-paper);
+}
+.diagram .dwg .obj.hl {
+  fill: var(--fig-accent-fill);
+  stroke: var(--fig-accent);
+}
+.diagram .dwg .dim:not(text) {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 0.5;
+}
+.diagram .dwg .dim.hl:not(text) {
+  stroke: var(--fig-accent);
+  stroke-width: 0.7;
+}
+.diagram .dwg .ext {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 0.4;
+}
+.diagram .dwg .slot {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 0.8;
+  stroke-dasharray: 4 3;
+}
+.diagram .dwg .ctr {
+  fill: none;
+  stroke: var(--fig-line);
+  stroke-width: 0.6;
+  stroke-dasharray: 14 3 2 3;
+}
+.diagram .dwg .phantom {
+  fill: none;
+  stroke: var(--fig-line);
+  stroke-width: 0.6;
+  stroke-dasharray: 18 4;
+}
+.diagram .dwg .detail {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 0.6;
+  stroke-dasharray: 4 3;
+}
+.diagram .dwg .leader {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 0.6;
+}
+.diagram .dwg .dot {
+  fill: var(--fig-ink);
+}
+.diagram .dwg .hatch {
+  stroke: var(--fig-ink);
+  stroke-width: 0.8;
+}
+.diagram .dwg .hatch-ln {
+  stroke: var(--fig-line);
+  stroke-width: 0.5;
+}
+.diagram .dwg .note-box {
+  fill: var(--fig-paper);
+  stroke: var(--fig-line);
+  stroke-width: 0.6;
+}
+.diagram .dwg .nb {
+  fill: var(--fig-paper);
+  stroke: var(--fig-ink);
+  stroke-width: 0.6;
+}
+.diagram .dwg .tbl {
+  fill: none;
+  stroke: var(--fig-line);
+  stroke-width: 0.5;
+}
 /* Shared cells and rules (hand-drawn sheets' tables and modules) sit lighter
    inside a drawing than in the boxy diagrams. */
-.diagram .dwg .cell { stroke-width: 0.6; }
-.diagram .dwg .ln { stroke-width: 0.6; }
-.diagram .dwg .iso * { vector-effect: non-scaling-stroke; }
+.diagram .dwg .cell {
+  stroke-width: 0.6;
+}
+.diagram .dwg .ln {
+  stroke-width: 0.6;
+}
+.diagram .dwg .iso * {
+  vector-effect: non-scaling-stroke;
+}
 .diagram .dwg .vt,
 .diagram .dwg .vs,
 .diagram .dwg .sl,
@@ -683,36 +892,99 @@ body {
 .diagram .dwg .nt,
 .diagram .dwg .nth,
 .diagram .dwg .th,
-.diagram .dwg .cap { font-family: var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; fill: var(--fig-line); }
-.diagram .dwg .vt { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; fill: var(--fig-ink); }
-.diagram .dwg .vs { font-size: 8.5px; }
-.diagram .dwg .sl { font-size: 8.5px; }
+.diagram .dwg .cap {
+  font-family: var(--font-sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: var(--fig-line);
+}
+.diagram .dwg .vt {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  fill: var(--fig-ink);
+}
+.diagram .dwg .vs {
+  font-size: 8.5px;
+}
+.diagram .dwg .sl {
+  font-size: 8.5px;
+}
 .diagram .dwg .sl.ink,
-.diagram .dwg .cap.ink { fill: var(--fig-ink); }
-.diagram .dwg .lt { font-size: 10px; letter-spacing: 0.08em; fill: var(--fig-ink); }
-.diagram .dwg .nt { font-size: 9px; fill: var(--fig-ink); }
-.diagram .dwg .nth { font-size: 10px; font-weight: 700; fill: var(--fig-ink); }
-.diagram .dwg .th { font-size: 7.5px; letter-spacing: 0.08em; }
-.diagram .dwg .cap { font-size: 8px; }
+.diagram .dwg .cap.ink {
+  fill: var(--fig-ink);
+}
+.diagram .dwg .lt {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  fill: var(--fig-ink);
+}
+.diagram .dwg .nt {
+  font-size: 9px;
+  fill: var(--fig-ink);
+}
+.diagram .dwg .nth {
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--fig-ink);
+}
+.diagram .dwg .th {
+  font-size: 7.5px;
+  letter-spacing: 0.08em;
+}
+.diagram .dwg .cap {
+  font-size: 8px;
+}
 .diagram .dwg .dt,
 .diagram .dwg .tc,
-.diagram .dwg .nbt { font-family: var(--font-sans); font-variant-numeric: tabular-nums; fill: var(--fig-ink); }
-.diagram .dwg .dt { font-size: 10px; letter-spacing: 0.03em; }
-.diagram .dwg .dt.hl { fill: var(--fig-accent); }
-.diagram .dwg .tc { font-size: 9px; letter-spacing: 0.02em; }
-.diagram .dwg .nbt { font-size: 7.5px; }
+.diagram .dwg .nbt {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  fill: var(--fig-ink);
+}
+.diagram .dwg .dt {
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+.diagram .dwg .dt.hl {
+  fill: var(--fig-accent);
+}
+.diagram .dwg .tc {
+  font-size: 9px;
+  letter-spacing: 0.02em;
+}
+.diagram .dwg .nbt {
+  font-size: 7.5px;
+}
 .diagram .dwg .dt,
-.diagram .dwg .ko { paint-order: stroke; stroke: var(--fig-paper); stroke-width: 4px; stroke-linejoin: round; }
+.diagram .dwg .ko {
+  paint-order: stroke;
+  stroke: var(--fig-paper);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
 /* Standard diagrams (flows, states, trees) drawn with the same kit:
    connectors sit between the object outline and the leaders; dashed for an
    exit or exception path; the accent for the one path that matters. */
-.diagram .dwg .flow { fill: none; stroke: var(--fig-ink); stroke-width: 0.9; stroke-linejoin: round; }
-.diagram .dwg .flow.alt { stroke-dasharray: 4 3; }
-.diagram .dwg .flow.hl { stroke: var(--fig-accent); stroke-width: 1.2; }
+.diagram .dwg .flow {
+  fill: none;
+  stroke: var(--fig-ink);
+  stroke-width: 0.9;
+  stroke-linejoin: round;
+}
+.diagram .dwg .flow.alt {
+  stroke-dasharray: 4 3;
+}
+.diagram .dwg .flow.hl {
+  stroke: var(--fig-accent);
+  stroke-width: 1.2;
+}
 .diagram .dwg .sl.hl,
 .diagram .dwg .lt.hl,
 .diagram .dwg .th.hl,
-.diagram .dwg .tc.hl { fill: var(--fig-accent); }
+.diagram .dwg .tc.hl {
+  fill: var(--fig-accent);
+}
 
 /* GFM tables */
 .prose table {

@@ -46,10 +46,12 @@ export function MobileBookSidebar(props: BookSidebarProps) {
   const current =
     props.parts
       .flatMap((p) => p.docs)
-      .find((d) => pathname === `/books/${d.slug}` || pathname.startsWith(`/books/${d.slug}/`))?.navTitle ??
-    `${props.book.name} overview`;
+      .find((d) => pathname === `/books/${d.slug}` || pathname.startsWith(`/books/${d.slug}/`))
+      ?.navTitle ?? `${props.book.name} overview`;
 
   return (
-    <MobileSidebar current={current}>{(close) => <BookTree {...props} onNavigate={close} />}</MobileSidebar>
+    <MobileSidebar current={current}>
+      {(close) => <BookTree {...props} onNavigate={close} />}
+    </MobileSidebar>
   );
 }

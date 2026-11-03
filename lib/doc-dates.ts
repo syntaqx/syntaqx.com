@@ -98,10 +98,22 @@ export function docDates(): { modified: Map<string, string>; added: Map<string, 
     const shallowFile = git(["rev-parse", "--git-path", "shallow"]).trim();
     const boundaries = new Set(
       existsSync(shallowFile)
-        ? readFileSync(shallowFile, "utf8").split("\n").map((s) => s.trim()).filter(Boolean)
+        ? readFileSync(shallowFile, "utf8")
+            .split("\n")
+            .map((s) => s.trim())
+            .filter(Boolean)
         : [],
     );
-    const log = git(["log", `--format=${SEP}%H${SEP}%cI`, "--name-status", "-M", "--", "content/docs", "content/books", RESUME]);
+    const log = git([
+      "log",
+      `--format=${SEP}%H${SEP}%cI`,
+      "--name-status",
+      "-M",
+      "--",
+      "content/docs",
+      "content/books",
+      RESUME,
+    ]);
     cache = parseHistory(log, boundaries);
   } catch {
     // No git (or no repository) where this runs: show no dates.
@@ -116,7 +128,10 @@ export function docLastModified(slug: string, root: "docs" | "books" = "docs"): 
 }
 
 /** When `content/<root>/<slug>.md` was first added, or undefined if that isn't known. */
-export function docFirstPublished(slug: string, root: "docs" | "books" = "docs"): string | undefined {
+export function docFirstPublished(
+  slug: string,
+  root: "docs" | "books" = "docs",
+): string | undefined {
   return docDates().added.get(`content/${root}/${slug}.md`);
 }
 

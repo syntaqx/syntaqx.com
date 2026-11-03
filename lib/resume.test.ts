@@ -13,10 +13,7 @@ import { resumeHostRedirects } from "@/next.config";
 // the repo (so not in this test either): phone- and ZIP-shaped text always
 // fails, and where the private file exists, so does its location or phone
 // (its headlines aren't private).
-const PRIVATE: (RegExp | string)[] = [
-  /\(?\d{3}\)?[\s.-]?\d{3}[\s.-]\d{4}/,
-  /\b\d{5}(-\d{4})?\b/,
-];
+const PRIVATE: (RegExp | string)[] = [/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]\d{4}/, /\b\d{5}(-\d{4})?\b/];
 if (existsSync(".private/resume.json")) {
   const { location, phone }: Record<string, string | undefined> = JSON.parse(
     readFileSync(".private/resume.json", "utf8"),
@@ -61,23 +58,17 @@ describe("resume", () => {
       "TECHNICAL SKILLS",
       "EXPERIENCE",
       "EDUCATION",
-      ...[...resume.experience, ...resume.earlier].flatMap((j) => [
-        j.title,
-        j.company,
-      ]),
+      ...[...resume.experience, ...resume.earlier].flatMap((j) => [j.title, j.company]),
       resume.education.selfTaught.title,
     ];
     for (const page of pages.slice(1)) {
       for (const line of page.trim().split("\n").slice(0, 2))
-        for (const heading of headings)
-          expect(line.trim().startsWith(heading)).toBe(false);
+        for (const heading of headings) expect(line.trim().startsWith(heading)).toBe(false);
     }
   });
 
   it("fits on two pages", async () => {
-    const pdf = Buffer.from(await (await resumePdf()).arrayBuffer()).toString(
-      "latin1",
-    );
+    const pdf = Buffer.from(await (await resumePdf()).arrayBuffer()).toString("latin1");
     // Each page is a "/Type /Page" object; "/Type /Pages" is the page tree.
     expect(pdf.match(/\/Type \/Page(?!s)/g)).toHaveLength(2);
   });
@@ -89,21 +80,14 @@ describe("resume", () => {
     const { text } = await extractText(pdf, { mergePages: true });
     const flat = text.replace(/\s+/g, " ");
     expect(flat.trimStart().startsWith(resume.name)).toBe(true);
-    for (const heading of [
-      "SUMMARY",
-      "TECHNICAL SKILLS",
-      "EXPERIENCE",
-      "EDUCATION",
-    ])
+    for (const heading of ["SUMMARY", "TECHNICAL SKILLS", "EXPERIENCE", "EDUCATION"])
       expect(flat).toContain(` ${heading} `);
     const facts = [
       resume.title.replace(" · ", " | "),
       PUBLIC_CONTACT.email,
       ...resume.summary,
       ...resume.skills.flatMap((k) => [k.label, k.items]),
-      ...[...resume.experience, ...resume.earlier].map(
-        (job) => `${job.start} - ${job.end}`,
-      ),
+      ...[...resume.experience, ...resume.earlier].map((job) => `${job.start} - ${job.end}`),
       ...resume.experience.flatMap((job) => job.highlights ?? []),
       resume.education.selfTaught.details,
     ];
@@ -113,9 +97,7 @@ describe("resume", () => {
     // so neither glues to its neighbor.
     const lines = text.split("\n").map((l) => l.replace(/\s+/g, " ").trim());
     for (const job of [...resume.experience, ...resume.earlier])
-      expect(lines).toContain(
-        `${job.title} | ${job.company} ${job.start} - ${job.end}`,
-      );
+      expect(lines).toContain(`${job.title} | ${job.company} ${job.start} - ${job.end}`);
     // No header or footer: running text repeated on every page bleeds into
     // the content around page breaks.
     expect(flat.match(new RegExp(resume.name, "gi"))).toHaveLength(1);
@@ -134,16 +116,12 @@ describe("resume", () => {
     const pdf = new Uint8Array(await renderResumePdf(contact, title));
     const { text } = await extractText(pdf, { mergePages: true });
     const header = text.split("\n").slice(0, 6).join(" ");
-    expect(header).toContain(
-      "Principal Software Engineer | Software Architect",
-    );
+    expect(header).toContain("Principal Software Engineer | Software Architect");
     expect(header).toContain(contact.location);
     expect(header).toContain(contact.phone);
     expect(header).toContain(contact.email);
     const plain = renderResumeText(contact).split("\n")[2];
-    expect(plain).toBe(
-      `${contact.location} | ${contact.email} | ${contact.phone}`,
-    );
+    expect(plain).toBe(`${contact.location} | ${contact.email} | ${contact.phone}`);
   });
 
   it("has a plain-text version", async () => {

@@ -18,8 +18,7 @@ function discoverStaticRoutes(dir: string, base = ""): string[] {
       // Route groups like (pages) and private folders like _foo are invisible
       // to routing: recurse into them but don't add them to the URL path.
       const isTransparent =
-        (entry.name.startsWith("(") && entry.name.endsWith(")")) ||
-        entry.name.startsWith("_");
+        (entry.name.startsWith("(") && entry.name.endsWith(")")) || entry.name.startsWith("_");
       routes.push(
         ...discoverStaticRoutes(
           path.join(dir, entry.name),

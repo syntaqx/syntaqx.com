@@ -11,10 +11,18 @@ const TRACKS = [
 ];
 
 export default function draw() {
-  const W = 760, h = 28, gap = 20, rowH = 64, top = 40;
-  const ew = 118, cw = 128; // the offer and the gate
-  const forkX = 20 + ew + 20, x0 = forkX + 20;
-  const cx0 = W - 20 - cw, joinX = cx0 - 20, xEnd = joinX - 20;
+  const W = 760,
+    h = 28,
+    gap = 20,
+    rowH = 64,
+    top = 40;
+  const ew = 118,
+    cw = 128; // the offer and the gate
+  const forkX = 20 + ew + 20,
+    x0 = forkX + 20;
+  const cx0 = W - 20 - cw,
+    joinX = cx0 - 20,
+    xEnd = joinX - 20;
   const w = (xEnd - x0 - 2 * gap) / 3;
   const s = sheet({ prefix: "fo-sto", width: W });
   const ys = TRACKS.map((_, i) => top + i * rowH);
@@ -33,12 +41,25 @@ export default function draw() {
   });
 
   s.comment("The offer forks into the tracks; they join at the gate");
-  s.fanOut(offer, tracks.map((n) => n[0]), { via: forkX });
-  s.fanIn(tracks.map((n) => n.at(-1)), gate, { via: joinX, hl: true });
+  s.fanOut(
+    offer,
+    tracks.map((n) => n[0]),
+    { via: forkX },
+  );
+  s.fanIn(
+    tracks.map((n) => n.at(-1)),
+    gate,
+    { via: joinX, hl: true },
+  );
 
   s.comment("Footer");
   const fy = ys[2] + h + 30;
-  s.text(20, fy, "bd: business days after work for pay begins; screening rules vary by state and city", "tc");
+  s.text(
+    20,
+    fy,
+    "bd: business days after work for pay begins; screening rules vary by state and city",
+    "tc",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

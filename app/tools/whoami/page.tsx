@@ -5,15 +5,7 @@ import { RefreshCw, Info, ExternalLink } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/cn";
 
-function Row({
-  label,
-  value,
-  mono,
-}: {
-  label: string;
-  value: string | null;
-  mono?: boolean;
-}) {
+function Row({ label, value, mono }: { label: string; value: string | null; mono?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-4 min-h-9 py-1.5 border-b border-border last:border-b-0">
       <span className="text-xs text-dim shrink-0">{label}</span>
@@ -130,8 +122,7 @@ export default function WhoamiPage() {
     });
 
     const nav = navigator as unknown as Record<string, unknown>;
-    const conn = nav.connection as
-      { effectiveType?: string; downlink?: number } | undefined;
+    const conn = nav.connection as { effectiveType?: string; downlink?: number } | undefined;
 
     const id = requestAnimationFrame(() => {
       setClientInfo({
@@ -151,12 +142,8 @@ export default function WhoamiPage() {
         connection: conn
           ? `${conn.effectiveType || "unknown"}${conn.downlink ? ` / ${conn.downlink} Mbps` : ""}`
           : "Unknown",
-        cores: navigator.hardwareConcurrency
-          ? `${navigator.hardwareConcurrency}`
-          : "Unknown",
-        memory: (nav.deviceMemory as number)
-          ? `${nav.deviceMemory} GB`
-          : "Unknown",
+        cores: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency}` : "Unknown",
+        memory: (nav.deviceMemory as number) ? `${nav.deviceMemory} GB` : "Unknown",
         touchPoints: `${navigator.maxTouchPoints}`,
       });
     });
@@ -167,17 +154,15 @@ export default function WhoamiPage() {
     };
   }, []);
 
-  const location = [ipData?.city, ipData?.region, ipData?.country]
-    .filter(Boolean)
-    .join(", ");
+  const location = [ipData?.city, ipData?.region, ipData?.country].filter(Boolean).join(", ");
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">whoami</h1>
         <p className="max-w-2xl text-dim">
-          See how you appear on the internet. IP, location, browser, device, and
-          more. Nothing is stored.
+          See how you appear on the internet. IP, location, browser, device, and more. Nothing is
+          stored.
         </p>
       </div>
 
@@ -193,10 +178,7 @@ export default function WhoamiPage() {
                 disabled={loading}
                 className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer disabled:opacity-30"
               >
-                <RefreshCw
-                  size={12}
-                  className={loading ? "animate-spin" : ""}
-                />
+                <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
                 Refresh
               </button>
             </div>
@@ -205,9 +187,7 @@ export default function WhoamiPage() {
                 <div className="flex flex-col items-center gap-1">
                   <span className="text-[10px] text-dim">IPv4</span>
                   {error ? (
-                    <span className="text-sm text-pink">
-                      Could not determine IP
-                    </span>
+                    <span className="text-sm text-pink">Could not determine IP</span>
                   ) : ipv4 ? (
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold text-accent font-mono tracking-wide">
@@ -234,18 +214,21 @@ export default function WhoamiPage() {
                     </div>
                   ) : (
                     <span
-                      className={cn("text-xs", loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim/50")}
+                      className={cn(
+                        "text-xs",
+                        loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim/50",
+                      )}
                     >
-                      {loading
-                        ? "0000:0000:0000:0000:0000:0000"
-                        : "Unavailable"}
+                      {loading ? "0000:0000:0000:0000:0000:0000" : "Unavailable"}
                     </span>
                   )}
                 </div>
                 <span
                   className={cn(
                     "text-xs",
-                    !location && loading ? "text-transparent bg-border/30 animate-pulse" : "text-dim",
+                    !location && loading
+                      ? "text-transparent bg-border/30 animate-pulse"
+                      : "text-dim",
                   )}
                 >
                   {location || (loading ? "Loading location" : "\u00A0")}
@@ -261,11 +244,7 @@ export default function WhoamiPage() {
             </div>
             <div className="px-4">
               <Row label="IPv4" value={ipv4} mono />
-              <Row
-                label="IPv6"
-                value={ipv6 ?? (loading ? null : "Unavailable")}
-                mono
-              />
+              <Row label="IPv6" value={ipv6 ?? (loading ? null : "Unavailable")} mono />
               <Row label="ISP / Org" value={ipData?.org ?? null} />
               <Row label="Location" value={location || null} />
               <Row label="Timezone" value={ipData?.timezone ?? null} />
@@ -284,32 +263,17 @@ export default function WhoamiPage() {
               <Row label="Language" value={clientInfo?.languages ?? null} />
               <Row label="Screen" value={clientInfo?.screenRes ?? null} mono />
               <Row label="Window" value={clientInfo?.windowSize ?? null} mono />
-              <Row
-                label="Pixel Ratio"
-                value={clientInfo?.pixelRatio ?? null}
-                mono
-              />
+              <Row label="Pixel Ratio" value={clientInfo?.pixelRatio ?? null} mono />
               <Row label="Color Depth" value={clientInfo?.colorDepth ?? null} />
               <Row label="Timezone" value={clientInfo?.timezone ?? null} />
-              <Row
-                label="UTC Offset"
-                value={clientInfo?.timezoneOffset ?? null}
-                mono
-              />
+              <Row label="UTC Offset" value={clientInfo?.timezoneOffset ?? null} mono />
               <Row label="Cookies" value={clientInfo?.cookiesEnabled ?? null} />
-              <Row
-                label="Do Not Track"
-                value={clientInfo?.doNotTrack ?? null}
-              />
+              <Row label="Do Not Track" value={clientInfo?.doNotTrack ?? null} />
               <Row label="Status" value={clientInfo?.online ?? null} />
               <Row label="Connection" value={clientInfo?.connection ?? null} />
               <Row label="CPU Cores" value={clientInfo?.cores ?? null} mono />
               <Row label="Memory" value={clientInfo?.memory ?? null} />
-              <Row
-                label="Touch Points"
-                value={clientInfo?.touchPoints ?? null}
-                mono
-              />
+              <Row label="Touch Points" value={clientInfo?.touchPoints ?? null} mono />
             </div>
           </div>
         </div>
@@ -323,23 +287,21 @@ export default function WhoamiPage() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                Your <span className="text-muted">public IP address</span> is
-                assigned by your ISP and is how other devices on the internet
-                identify your connection.
+                Your <span className="text-muted">public IP address</span> is assigned by your ISP
+                and is how other devices on the internet identify your connection.
               </p>
               <p>
-                It can reveal your approximate location, ISP, and whether
-                you&apos;re using a VPN or proxy. It does not reveal your exact
-                address.
+                It can reveal your approximate location, ISP, and whether you&apos;re using a VPN or
+                proxy. It does not reveal your exact address.
               </p>
               <p>
-                <span className="text-muted">IPv4</span> addresses are 32-bit
-                (e.g. 192.168.1.1). <span className="text-muted">IPv6</span>{" "}
-                addresses are 128-bit and look like 2001:db8::1.
+                <span className="text-muted">IPv4</span> addresses are 32-bit (e.g. 192.168.1.1).{" "}
+                <span className="text-muted">IPv6</span> addresses are 128-bit and look like
+                2001:db8::1.
               </p>
               <p>
-                Browser details are read from JavaScript APIs and HTTP headers.
-                No fingerprinting libraries are used.
+                Browser details are read from JavaScript APIs and HTTP headers. No fingerprinting
+                libraries are used.
               </p>
             </div>
           </div>

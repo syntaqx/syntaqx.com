@@ -6,10 +6,6 @@ export const metadata = pageMetadata(
   "Generate, validate, and inspect UUIDs (v1, v4, v7) and ULIDs entirely in your browser: copy-ready identifiers with no network round-trip.",
 );
 
-export default function UuidLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function UuidLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

@@ -5,13 +5,33 @@
 import { sheet } from "../kit.mjs";
 
 const STAGES = [
-  { head: "start here", label: "platform", sub: ["you own: code, config", "move on when limits,", "the bill or compliance bind"], hl: true },
-  { head: "next", label: "managed containers", sub: ["you own: image, service,", "network, IAM", "move on when a platform", "team exists to own more"] },
-  { head: "with a platform team", label: "Kubernetes", sub: ["you own: upgrades, add-ons,", "observability, policy,", "the cluster's on-call"] },
+  {
+    head: "start here",
+    label: "platform",
+    sub: ["you own: code, config", "move on when limits,", "the bill or compliance bind"],
+    hl: true,
+  },
+  {
+    head: "next",
+    label: "managed containers",
+    sub: [
+      "you own: image, service,",
+      "network, IAM",
+      "move on when a platform",
+      "team exists to own more",
+    ],
+  },
+  {
+    head: "with a platform team",
+    label: "Kubernetes",
+    sub: ["you own: upgrades, add-ons,", "observability, policy,", "the cluster's on-call"],
+  },
 ];
 
 export default function draw() {
-  const W = 760, w = 210, gap = 45;
+  const W = 760,
+    w = 210,
+    gap = 45;
   const total = STAGES.length * w + (STAGES.length - 1) * gap;
   const x0 = (W - total) / 2;
   const s = sheet({ prefix: "wtr", width: W });

@@ -12,9 +12,18 @@ const ROWS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, h = 26, rowH = 40, top = 52, pad = 10;
+  const W = 760,
+    x = 20,
+    h = 26,
+    rowH = 40,
+    top = 52,
+    pad = 10;
   const s = sheet({ prefix: "fo-cssa", width: W });
-  const pw = 150, gx = 250, gw = 180, aw = 180, ax = W - x - pad - aw;
+  const pw = 150,
+    gx = 250,
+    gw = 180,
+    aw = 180,
+    ax = W - x - pad - aw;
   const Y = (i) => top + i * rowH;
 
   s.comment("Column heads");
@@ -25,7 +34,9 @@ export default function draw() {
 
   s.comment("One account and its properties");
   s.group(ax - pad, top - pad, aw + 2 * pad, 3 * rowH + h + 2 * pad, null);
-  const targets = ROWS.map(([, , t], i) => s.node(ax, Y(i), aw, h, t, i === 0 ? { kind: "store", fill: 1 } : {}));
+  const targets = ROWS.map(([, , t], i) =>
+    s.node(ax, Y(i), aw, h, t, i === 0 ? { kind: "store", fill: 1 } : {}),
+  );
 
   s.comment("People and grants");
   ROWS.forEach(([who, grant], i) => {

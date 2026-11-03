@@ -158,7 +158,11 @@ export interface RateLimitResult {
 }
 
 /** Build a result and its headers from a limiter's state. `reset` is epoch seconds. */
-export function rateLimitResult(remaining: number, reset: number, limited: boolean): RateLimitResult {
+export function rateLimitResult(
+  remaining: number,
+  reset: number,
+  limited: boolean,
+): RateLimitResult {
   const now = Math.floor(Date.now() / 1000);
   const secondsLeft = Math.max(0, reset - now);
 
@@ -241,12 +245,8 @@ export function resolveApiVersion(
   now: Date = new Date(),
   versions: ApiVersion[] = API_VERSIONS,
 ): ApiVersionResult {
-  const supported = versions.filter(
-    (v) => !v.sunsetAt || now < new Date(v.sunsetAt),
-  );
-  const match = requested
-    ? supported.find((v) => v.version === requested.trim())
-    : supported[0];
+  const supported = versions.filter((v) => !v.sunsetAt || now < new Date(v.sunsetAt));
+  const match = requested ? supported.find((v) => v.version === requested.trim()) : supported[0];
 
   if (!match) {
     const list = supported.map((v) => v.version);

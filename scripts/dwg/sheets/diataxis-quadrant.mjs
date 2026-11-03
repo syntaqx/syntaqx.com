@@ -8,7 +8,9 @@ export default function draw() {
   const s = sheet({ prefix: "dx", width: W });
 
   // Grid: a column of row titles on the left, two columns of cells.
-  const w = 262, h = 76, gap = 16;
+  const w = 262,
+    h = 76,
+    gap = 16;
   const x0 = W - 20 - (2 * w + gap);
   const X = (i) => x0 + i * (w + gap);
   const top = 50;

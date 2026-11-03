@@ -83,8 +83,7 @@ export default async function Image() {
               maxWidth: 520,
             }}
           >
-            Architect at heart, open sorcerer. Writing on engineering, systems,
-            and craft.
+            Architect at heart, open sorcerer. Writing on engineering, systems, and craft.
           </div>
         </div>
       </div>

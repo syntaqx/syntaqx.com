@@ -8,17 +8,35 @@ const T = [300, 150, 50, 400, 50, 200];
 const L1 = T.reduce((a, b) => a + b, 0); // 1,150
 
 export default function draw() {
-  const W = 760, CX = W / 2;
+  const W = 760,
+    CX = W / 2;
   const s = sheet({ prefix: "gm-ai", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative budget, not a measurement: real values come from your vendors, models and network."],
-    [2, "T1 is the silence the client waits for before deciding the player has finished speaking."],
-    [3, "A blocked sentence never reaches TTS: a scripted fallback line plays and the turn is logged."],
-    [4, "Each sentence is checked before it is spoken; S1 plays while S2 is still being generated."],
-    [0, "Values in ms. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 696 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Illustrative budget, not a measurement: real values come from your vendors, models and network.",
+      ],
+      [
+        2,
+        "T1 is the silence the client waits for before deciding the player has finished speaking.",
+      ],
+      [
+        3,
+        "A blocked sentence never reaches TTS: a scripted fallback line plays and the turn is logged.",
+      ],
+      [
+        4,
+        "Each sentence is checked before it is spoken; S1 plays while S2 is still being generated.",
+      ],
+      [0, "Values in ms. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 696 },
+  );
 
   // ---- Plan view: one turn, 1 ms = 0.5 px ----
   s.comment("Plan view: one conversation turn");
@@ -27,7 +45,9 @@ export default function draw() {
     const k = 0.5;
     const x0 = CX - (L1 * k) / 2;
     const xs = T.reduce((acc, t) => [...acc, acc[acc.length - 1] + t * k], [x0]);
-    const top = ny + 76, h = 36, bot = top + h;
+    const top = ny + 76,
+      h = 36,
+      bot = top + h;
     const fills = ["fill-2", "fill-2", "fill-1", "fill-2", "fill-1", "fill-2"];
     T.forEach((_, i) => s.rect(xs[i], top, xs[i + 1] - xs[i], h, `obj ${fills[i]}`));
     s.label(xs[0], top, xs[1] - xs[0], h, "end of speech");
@@ -40,11 +60,26 @@ export default function draw() {
     s.nb(CX + 18, ly - 7.5, 1);
     s.callout((xs[2] + xs[3]) / 2, top + h / 2, xs[2] - 16, top - 14, "input filter", { dir: -1 });
     s.callout((xs[4] + xs[5]) / 2, top + 8, xs[4] - 22, top - 14, "output filter", { dir: -1 });
-    s.detailRef((xs[4] + xs[5]) / 2, top + h / 2, 15, "detail A", (xs[4] + xs[5]) / 2 + 20, top - 24);
+    s.detailRef(
+      (xs[4] + xs[5]) / 2,
+      top + h / 2,
+      15,
+      "detail A",
+      (xs[4] + xs[5]) / 2 + 20,
+      top - 24,
+    );
 
-    s.chainH(xs, bot + 20, ["T1", "T2", "T3", "T4", "T5", "T6"], { from: xs.map(() => bot), below: true });
+    s.chainH(xs, bot + 20, ["T1", "T2", "T3", "T4", "T5", "T6"], {
+      from: xs.map(() => bot),
+      below: true,
+    });
     s.nb((xs[0] + xs[1]) / 2 + 20, bot + 28.5, 2);
-    s.viewTitle(CX, bot + 70, "Plan view · one conversation turn", "Scale 1 ms = 0.5 px · timeline");
+    s.viewTitle(
+      CX,
+      bot + 70,
+      "Plan view · one conversation turn",
+      "Scale 1 ms = 0.5 px · timeline",
+    );
     planBottom = bot + 83;
   }
 
@@ -53,13 +88,20 @@ export default function draw() {
   const rowTop = planBottom + 50;
   let detailBottom;
   {
-    const lx = 52, x0 = 110, cw = 74, ch = 22, gate = 26;
-    const yL = rowTop + 16, yF = yL + ch + 22, yT = yF + 20 + 22;
+    const lx = 52,
+      x0 = 110,
+      cw = 74,
+      ch = 22,
+      gate = 26;
+    const yL = rowTop + 16,
+      yF = yL + ch + 22,
+      yT = yF + 20 + 22;
     s.text(lx, yL + ch / 2 + 3, "LLM", "sl ink");
     s.text(lx, yF + 10 + 3, "filter", "sl ink");
     s.text(lx, yT + ch / 2 + 3, "TTS", "sl ink");
     for (let i = 0; i < 3; i++) {
-      const x = x0 + i * cw, cx = x + cw / 2;
+      const x = x0 + i * cw,
+        cx = x + cw / 2;
       if (i === 2) s.rect(x, yL, cw, ch, "hatch", { fill: s.hatch });
       else s.rect(x, yL, cw, ch, "obj fill-2");
       s.text(cx, yL + ch / 2 + 3, `S${i + 1}`, i === 2 ? "sl ink ko" : "sl ink", "middle");

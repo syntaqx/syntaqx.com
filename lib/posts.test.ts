@@ -39,7 +39,11 @@ describe("book covers", () => {
   const pageScenes = new Set(
     readdirSync("app", { recursive: true, encoding: "utf8" })
       .filter((f) => f.endsWith(".tsx"))
-      .flatMap((f) => [...readFileSync(join("app", f), "utf8").matchAll(/scene(?:=|: )"(\w+)"/g)].map((m) => m[1])),
+      .flatMap((f) =>
+        [...readFileSync(join("app", f), "utf8").matchAll(/scene(?:=|: )"(\w+)"/g)].map(
+          (m) => m[1],
+        ),
+      ),
   );
 
   it("gives every book its own cover scene", () => {
@@ -81,9 +85,15 @@ describe("scene rasterizer", () => {
 
 describe("markdownToHtml diagrams", () => {
   it("inlines a /diagrams SVG as a labelled figure with its caption", async () => {
-    const html = await markdownToHtml('![Payment states, from pending to settled](/diagrams/payment-states.svg "Payment states. Teal is the happy path.")');
-    expect(html).toMatch(/^<figure class="diagram"><svg role="img" aria-label="Payment states, from pending to settled" /);
-    expect(html).toContain("<figcaption><strong>Payment states.</strong> Teal is the happy path.</figcaption>");
+    const html = await markdownToHtml(
+      '![Payment states, from pending to settled](/diagrams/payment-states.svg "Payment states. Teal is the happy path.")',
+    );
+    expect(html).toMatch(
+      /^<figure class="diagram"><svg role="img" aria-label="Payment states, from pending to settled" /,
+    );
+    expect(html).toContain(
+      "<figcaption><strong>Payment states.</strong> Teal is the happy path.</figcaption>",
+    );
     expect(html).not.toContain("<img");
     // The first render loads the syntax highlighter, which can take seconds.
   }, 30_000);
@@ -96,19 +106,23 @@ describe("markdownToHtml diagrams", () => {
     expect(html).toContain("<del>gone</del>");
     expect(html).toContain('<input type="checkbox" checked disabled>');
     expect(html).toContain('<a href="https://example.com">https://example.com</a>');
-    expect(html).toContain('data-footnotes');
+    expect(html).toContain("data-footnotes");
   });
 
   it("turns a GitHub alert blockquote into a titled callout", async () => {
     const html = await markdownToHtml("> [!NOTE] Lucky me\n> Bought in **2014**.");
-    expect(html).toMatch(/^<aside class="callout callout-note"><p class="callout-title"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"\/>.*<\/svg>Lucky me<\/p>/);
+    expect(html).toMatch(
+      /^<aside class="callout callout-note"><p class="callout-title"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"\/>.*<\/svg>Lucky me<\/p>/,
+    );
     expect(html).toContain("<p>Bought in <strong>2014</strong>.</p>");
     expect(html).not.toContain("[!NOTE]");
     expect(html).not.toContain("<blockquote");
   });
 
   it("defaults the callout title to its type and leaves plain quotes alone", async () => {
-    expect(await markdownToHtml("> [!warning]\n> Careful.")).toContain('<p class="callout-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.73 18');
+    expect(await markdownToHtml("> [!warning]\n> Careful.")).toContain(
+      '<p class="callout-title"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21.73 18',
+    );
     expect(await markdownToHtml("> [!warning]\n> Careful.")).toContain("</svg>Warning</p>");
     expect(await markdownToHtml("> Just a quote.")).toContain("<blockquote>");
   });
@@ -122,13 +136,19 @@ describe("markdownToHtml diagrams", () => {
       '<button type="button" role="tab" aria-selected="true" tabindex="0" data-tab="Java">Java</button>' +
         '<button type="button" role="tab" aria-selected="false" tabindex="-1" data-tab="Python">Python</button>',
     );
-    expect(html).toContain('<div role="tabpanel" aria-label="Java" data-tab="Java"><pre class="shiki');
-    expect(html).toContain('<div role="tabpanel" aria-label="Python" data-tab="Python" hidden><pre class="shiki');
+    expect(html).toContain(
+      '<div role="tabpanel" aria-label="Java" data-tab="Java"><pre class="shiki',
+    );
+    expect(html).toContain(
+      '<div role="tabpanel" aria-label="Python" data-tab="Python" hidden><pre class="shiki',
+    );
     expect(html).toContain("<p>After.</p>");
   });
 
   it("shows the Go tab by default wherever it is", async () => {
-    const html = await markdownToHtml('```rust tab="Rust"\nrust();\n```\n\n```go tab="Go"\ngo()\n```');
+    const html = await markdownToHtml(
+      '```rust tab="Rust"\nrust();\n```\n\n```go tab="Go"\ngo()\n```',
+    );
     expect(html).toContain('aria-selected="false" tabindex="-1" data-tab="Rust">Rust</button>');
     expect(html).toContain('aria-selected="true" tabindex="0" data-tab="Go">Go</button>');
     expect(html).toContain('<div role="tabpanel" aria-label="Rust" data-tab="Rust" hidden>');

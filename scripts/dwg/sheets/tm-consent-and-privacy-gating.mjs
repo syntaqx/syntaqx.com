@@ -16,20 +16,35 @@ export default function draw() {
   const lx = 150; // lane labels end here
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative wait. Where consent is required, nothing non-exempt is stored or read before the choice (ICO)."],
-    [2, "Refused in the banner; a Sec-GPC: 1 header also opts the device out of sale and sharing in California."],
-    [3, "CNIL: audience measurement trackers exempt from consent live at most 13 months."],
-    [4, "ICO: as a general guideline, about six months before asking someone who declined again."],
-    [0, "Hatched = keep-out, nothing runs. The drawing carries codes; values are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Illustrative wait. Where consent is required, nothing non-exempt is stored or read before the choice (ICO).",
+      ],
+      [
+        2,
+        "Refused in the banner; a Sec-GPC: 1 header also opts the device out of sale and sharing in California.",
+      ],
+      [3, "CNIL: audience measurement trackers exempt from consent live at most 13 months."],
+      [
+        4,
+        "ICO: as a general guideline, about six months before asking someone who declined again.",
+      ],
+      [0, "Hatched = keep-out, nothing runs. The drawing carries codes; values are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view 1: first page view, 1 s = 60 px ----
   s.comment("Plan view: first page view");
   const k = 60;
   const x0 = lx + 24 + (W - 2 * 32 - lx - 24 - VIEW * k) / 2;
   const X = (t) => x0 + t * k;
-  const h = 28, step = 42;
+  const h = 28,
+    step = 42;
   const top = ny + 62;
   const lanes = ["banner", "necessary", "analytics", "advertising"];
   const ly = (i) => top + i * step;
@@ -85,7 +100,12 @@ export default function draw() {
   s.dimH(Mx(0), Mx(M2), d2, "M2", { from: [t3 + h, t3 + h], below: true });
   s.nb((Mx(0) + Mx(M2)) / 2 + 22, d2 + 8.5, 4);
 
-  s.viewTitle((Mx(0) + Mx(M1)) / 2, d2 + 50, "Plan view · lifetimes", "Scale 1 month = 36 px · timeline");
+  s.viewTitle(
+    (Mx(0) + Mx(M1)) / 2,
+    d2 + 50,
+    "Plan view · lifetimes",
+    "Scale 1 month = 36 px · timeline",
+  );
   const v2Bottom = d2 + 63;
 
   // ---- Variable table ----
@@ -95,8 +115,18 @@ export default function draw() {
     ["M1", "max lifetime of an exempt analytics tracker, months", M1.toFixed(2)],
     ["M2", "wait before asking a refuser again, months", M2.toFixed(2)],
   ];
-  const tw = [0, 1, 2].reduce((sum, j) => sum + Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)), 0);
-  const tb = s.table(CX - tw / 2, v2Bottom + 50, "Variables · W1 illustrative, M1 and M2 sourced", rows);
+  const tw = [0, 1, 2].reduce(
+    (sum, j) =>
+      sum +
+      Math.max([30, 80, 60][j], Math.ceil(Math.max(...rows.map((r) => widthOf(r[j], "tc"))) + 14)),
+    0,
+  );
+  const tb = s.table(
+    CX - tw / 2,
+    v2Bottom + 50,
+    "Variables · W1 illustrative, M1 and M2 sourced",
+    rows,
+  );
   s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

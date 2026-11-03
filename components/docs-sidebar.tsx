@@ -16,10 +16,12 @@ function DocsTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: 
   const groups: SidebarGroup[] = [
     {
       name: null,
-      sections: categories.filter((c) => c.docs.length > 1).map((c) => ({
-        name: c.name,
-        items: c.docs.map((d) => ({ href: `/docs/${d.slug}`, title: d.navTitle })),
-      })),
+      sections: categories
+        .filter((c) => c.docs.length > 1)
+        .map((c) => ({
+          name: c.name,
+          items: c.docs.map((d) => ({ href: `/docs/${d.slug}`, title: d.navTitle })),
+        })),
     },
     {
       name: "Reference",
@@ -44,7 +46,8 @@ export function DocsSidebar({ categories }: DocsSidebarProps) {
 export function MobileDocsSidebar({ categories }: DocsSidebarProps) {
   const pathname = usePathname();
   const current =
-    categories.flatMap((c) => c.docs).find((d) => pathname === `/docs/${d.slug}`)?.navTitle ?? "Documentation";
+    categories.flatMap((c) => c.docs).find((d) => pathname === `/docs/${d.slug}`)?.navTitle ??
+    "Documentation";
 
   return (
     <MobileSidebar current={current}>

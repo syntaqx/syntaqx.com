@@ -25,7 +25,13 @@ const BANDS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, w = W - 2 * x, pad = 12, nh = 28, bandH = nh + 2 * pad, between = 52;
+  const W = 760,
+    x = 20,
+    w = W - 2 * x,
+    pad = 12,
+    nh = 28,
+    bandH = nh + 2 * pad,
+    between = 52;
   const s = sheet({ prefix: "fo-sl", width: W });
 
   const tops = BANDS.map((_, i) => 34 + i * (bandH + between));
@@ -37,11 +43,29 @@ export default function draw() {
 
   s.comment("Integration");
   const ax = W / 2;
-  s.wire([[ax, tops[1]], [ax, tops[0] + bandH]], { label: "APIs, webhooks, marketplaces", side: "right" });
-  s.wire([[ax, tops[2]], [ax, tops[1] + bandH]], { label: "embedded or connected", side: "right" });
+  s.wire(
+    [
+      [ax, tops[1]],
+      [ax, tops[0] + bandH],
+    ],
+    { label: "APIs, webhooks, marketplaces", side: "right" },
+  );
+  s.wire(
+    [
+      [ax, tops[2]],
+      [ax, tops[1] + bandH],
+    ],
+    { label: "embedded or connected", side: "right" },
+  );
 
   const fy = tops[2] + bandH + 24;
-  s.text(W - x, fy, "the record of truth sits in the top band; everything else reads from or writes to it", "sl", "end");
+  s.text(
+    W - x,
+    fy,
+    "the record of truth sits in the top band; everything else reads from or writes to it",
+    "sl",
+    "end",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

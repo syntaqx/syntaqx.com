@@ -13,7 +13,10 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, w = 110, gap = 40, h = 28;
+  const W = 760,
+    w = 110,
+    gap = 40,
+    h = 28;
   const total = STAGES.length * w + (STAGES.length - 1) * gap;
   const x0 = (W - total) / 2;
   const s = sheet({ prefix: "pt-slc", width: W });
@@ -21,11 +24,16 @@ export default function draw() {
   s.comment("Clinical records, the seam, the commercial record");
 
   const { nodes, bottoms, bottom } = s.pipeline(x0, 40, STAGES, { w, h, gap, hlArrows: [1, 2] });
-  const accept = nodes[2], re = nodes[4];
+  const accept = nodes[2],
+    re = nodes[4];
 
   s.comment("Reassessment computes a new level; people accept it or not");
   const ly = bottom + 24;
-  s.wire([[re.cx, bottoms[4] + 6], [re.cx, ly], [accept.cx, ly], accept.port("b")], { label: "new computed level", side: "below", seg: 1 });
+  s.wire([[re.cx, bottoms[4] + 6], [re.cx, ly], [accept.cx, ly], accept.port("b")], {
+    label: "new computed level",
+    side: "below",
+    seg: 1,
+  });
 
   s.height = Math.ceil(ly + 34);
   return s.toString();

@@ -3,29 +3,46 @@
 // table. Embedded in content/books/gaming/netcode.md.
 import { sheet } from "../kit.mjs";
 
-const P0 = 141, N1 = 40, P2 = 71;
+const P0 = 141,
+  N1 = 40,
+  P2 = 71;
 const P1 = P0 - N1; // 101
 const F1 = P1 - P2; // 30
-const TICK = 1000 / 128, F60 = 1000 / 60, F144 = 1000 / 144;
+const TICK = 1000 / 128,
+  F60 = 1000 / 60,
+  F144 = 1000 / 144;
 
 export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "gm-npa", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Published figures, July 2020: peekers have about 141 ms longer to react than holders, with a 60 FPS client."],
-    [2, "A dedicated network, the 35 ms target and 128-tick servers took out about 40 ms (28%)."],
-    [3, "At 144 FPS about 71 ms (49%); F1 is the difference. Client frames count three times: B2 − B3 = 29.17."],
-    [4, "Holder's window = peeker's reaction − holder's round trip − buffering on both sides."],
-    [0, "Values in ms. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Published figures, July 2020: peekers have about 141 ms longer to react than holders, with a 60 FPS client.",
+      ],
+      [2, "A dedicated network, the 35 ms target and 128-tick servers took out about 40 ms (28%)."],
+      [
+        3,
+        "At 144 FPS about 71 ms (49%); F1 is the difference. Client frames count three times: B2 − B3 = 29.17.",
+      ],
+      [4, "Holder's window = peeker's reaction − holder's round trip − buffering on both sides."],
+      [0, "Values in ms. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: three bars, 1 ms = 3.5 px ----
   s.comment("Plan view: peeker's advantage");
-  const k = 3.5, x0 = (W - P0 * k) / 2 - 20;
+  const k = 3.5,
+    x0 = (W - P0 * k) / 2 - 20;
   const X = (ms) => x0 + ms * k;
-  const h = 24, step = 62;
+  const h = 24,
+    step = 62;
   const rows = [
     { y: ny + 52, label: "baseline" },
     { y: ny + 52 + step, label: "servers" },
@@ -63,14 +80,22 @@ export default function draw() {
     s.detailRef(X(P2 + F1 / 2), y + h / 2, 22, "detail A", X(P2 + F1 / 2) + 40, y + h + 26);
     bot = y + h;
   }
-  s.viewTitle(X(P0 / 2), bot + 62, "Plan view · peeker's advantage", "Scale 1 ms = 3.5 px · timeline · three published figures");
+  s.viewTitle(
+    X(P0 / 2),
+    bot + 62,
+    "Plan view · peeker's advantage",
+    "Scale 1 ms = 3.5 px · timeline · three published figures",
+  );
   const planBottom = bot + 75;
 
   // ---- Detail A: buffering in frames, 1 ms = 5 px ----
   s.comment("Detail A: buffering");
   const rowTop = planBottom + 48;
   {
-    const kd = 5, dx0 = 104, dh = 20, dstep = 50;
+    const kd = 5,
+      dx0 = 104,
+      dh = 20,
+      dstep = 50;
     const lanes = [
       { label: "server", n: 2, f: TICK, code: "B1" },
       { label: "60 fps", n: 3, f: F60, code: "B2" },
@@ -83,7 +108,12 @@ export default function draw() {
       s.dimH(dx0, dx0 + L.n * L.f * kd, y - 12, L.code, { from: [y, y] });
     });
     const dBot = rowTop + 30 + 2 * dstep + dh;
-    s.viewTitle(dx0 + (3 * F60 * kd) / 2, dBot + 44, "Detail A · buffering", "Scale 1 ms = 5 px · frames per published model");
+    s.viewTitle(
+      dx0 + (3 * F60 * kd) / 2,
+      dBot + 44,
+      "Detail A · buffering",
+      "Scale 1 ms = 5 px · frames per published model",
+    );
   }
 
   // ---- Variable table ----

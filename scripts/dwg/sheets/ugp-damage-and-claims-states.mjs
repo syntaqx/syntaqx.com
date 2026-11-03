@@ -9,10 +9,16 @@ export default function draw() {
   const s = sheet({ prefix: "ugp-dc", width: W });
 
   // Three columns; disputed above review, the early ends below.
-  const w = 120, h = 30, x0 = 150, gap = (W - 20 - x0 - 3 * w) / 2;
+  const w = 120,
+    h = 30,
+    x0 = 150,
+    gap = (W - 20 - x0 - 3 * w) / 2;
   const X = (i) => x0 + i * (w + gap);
-  const r0 = 24, r1 = 124, r2 = 224;
-  const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
+  const r0 = 24,
+    r1 = 124,
+    r2 = 224;
+  const st = (i, y, label, o = {}) =>
+    s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
 
   s.comment("States");
   const disputed = st(1, r0, "disputed");
@@ -23,7 +29,11 @@ export default function draw() {
   const denied = st(1, r2, "denied", { end: true, fill: 1 });
 
   s.comment("Filing");
-  s.wire([[20, awaiting.cy], awaiting.port("l")], { start: "dot", label: "host files\nin the window", side: "above" });
+  s.wire([[20, awaiting.cy], awaiting.port("l")], {
+    start: "dot",
+    label: "host files\nin the window",
+    side: "above",
+  });
 
   s.comment("The counterparty's three answers");
   s.connect(awaiting, disputed, { from: "t", to: "l", label: "guest\ncontests", side: "left" });
@@ -31,9 +41,20 @@ export default function draw() {
   s.connect(awaiting, accepted, { from: "b", to: "t", label: "guest pays", side: "right" });
 
   s.comment("Review and its outcomes");
-  s.connect(disputed, review, { from: "b", to: "t", label: "both sides'\nevidence", side: "right" });
+  s.connect(disputed, review, {
+    from: "b",
+    to: "t",
+    label: "both sides'\nevidence",
+    side: "right",
+  });
   s.connect(review, settled, { hl: true, label: "approved, whole\nor by item", side: "above" });
-  s.connect(review, denied, { from: "b", to: "t", alt: true, label: "with reasons", side: "right" });
+  s.connect(review, denied, {
+    from: "b",
+    to: "t",
+    alt: true,
+    label: "with reasons",
+    side: "right",
+  });
 
   s.comment("Notes");
   s.note(accepted, "from the deposit, the card\non file or directly", { anchor: "center" });
@@ -46,7 +67,12 @@ export default function draw() {
     { kind: "end", label: "terminal state" },
   ]);
   const fy = lg.y + 20;
-  s.text(20, fy, "a high risk score routes to inspection or reimbursement only, never to denial by itself", "sl");
+  s.text(
+    20,
+    fy,
+    "a high risk score routes to inspection or reimbursement only, never to denial by itself",
+    "sl",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

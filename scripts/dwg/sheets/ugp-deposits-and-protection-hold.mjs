@@ -17,23 +17,51 @@ export default function draw() {
   const s = sheet({ prefix: "ugp-dp", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "The business clock: placed before pickup, released on schedule after return unless a claim is filed."],
-    [2, "The card clock: one authorization lapses first, so a deposit is a sequence of authorizations."],
-    [3, "A claim extends the hold; a declined re-authorization becomes a task and a notice, not a silent gap."],
-    [0, "Days from the trip's start. The trip length is an example. Codes on the drawing; values in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "The business clock: placed before pickup, released on schedule after return unless a claim is filed.",
+      ],
+      [
+        2,
+        "The card clock: one authorization lapses first, so a deposit is a sequence of authorizations.",
+      ],
+      [
+        3,
+        "A claim extends the hold; a declined re-authorization becomes a task and a notice, not a silent gap.",
+      ],
+      [
+        0,
+        "Days from the trip's start. The trip length is an example. Codes on the drawing; values in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 day = 30 px to the break ----
   s.comment("Plan view: three clocks on one booking");
-  const k = 30, x0 = 170;
+  const k = 30,
+    x0 = 170;
   const X = (d) => x0 + (d + L1) * k;
-  const end = T1, rel = T1 + R1;
-  const brk0 = X(rel) + 12, brk1 = brk0 + 14;
+  const end = T1,
+    rel = T1 + R1;
+  const brk0 = X(rel) + 12,
+    brk1 = brk0 + 14;
   const xEnd = brk1 + 50; // end + E1, past the break
-  const axY = ny + 46, h = 24, laneX = x0 - 14;
+  const axY = ny + 46,
+    h = 24,
+    laneX = x0 - 14;
 
-  const ticks = [[X(-L1), "−2"], [X(0), "start"], [X(end), "end"], [X(rel), "end + 7"], [xEnd, "end + 30"]];
+  const ticks = [
+    [X(-L1), "−2"],
+    [X(0), "start"],
+    [X(end), "end"],
+    [X(rel), "end + 7"],
+    [xEnd, "end + 30"],
+  ];
   const tl = s.timeline({ x1: X(-L1), x2: xEnd, y: axY, breaks: [[brk0, brk1]], ticks, laneX, h });
 
   s.comment("The hold the business needs");
@@ -43,7 +71,10 @@ export default function draw() {
   tl.bar(y1, X(0), X(end), "obj fill-1", "trip");
   tl.bar(y1, X(end), X(rel), "obj fill-2", "release window");
   const c1 = y1 + h + 18;
-  s.chainH([X(-L1), X(0), X(end), X(rel)], c1, ["L1", "T1", "R1"], { from: [y1 + h, y1 + h, y1 + h, y1 + h], below: true });
+  s.chainH([X(-L1), X(0), X(end), X(rel)], c1, ["L1", "T1", "R1"], {
+    from: [y1 + h, y1 + h, y1 + h, y1 + h],
+    below: true,
+  });
   s.dimH(X(-L1), X(rel), c1 + 24, "H1", { from: [c1, c1], below: true, hl: true });
   s.nb(X(rel) + 14, y1 + h / 2, 1);
 
@@ -63,7 +94,12 @@ export default function draw() {
   s.nb(xEnd + 14, y3 + h / 2, 3);
 
   const vy = y3 + h + 66;
-  s.viewTitle((laneX - widthOf("authorization", "sl") + xEnd + 20) / 2, vy, "Plan view · one deposit on one booking", `Scale 1 day = ${k} px to the break · not to scale after it`);
+  s.viewTitle(
+    (laneX - widthOf("authorization", "sl") + xEnd + 20) / 2,
+    vy,
+    "Plan view · one deposit on one booking",
+    `Scale 1 day = ${k} px to the break · not to scale after it`,
+  );
 
   s.comment("Variable table");
   const rows = [

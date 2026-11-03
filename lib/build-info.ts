@@ -9,7 +9,8 @@ export interface BuildInfo {
   label: string | null;
 }
 
-const git = (args: string) => execSync(`git ${args}`, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+const git = (args: string) =>
+  execSync(`git ${args}`, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
 
 /**
  * The commit this build came from. Vercel sets it on every deploy; locally it's

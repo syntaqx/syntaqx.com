@@ -5,7 +5,12 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, bw = 128, bh = 52, tw = 168, th = 44, tgap = 16;
+  const W = 760,
+    bw = 128,
+    bh = 52,
+    tw = 168,
+    th = 44,
+    tgap = 16;
   const s = sheet({ prefix: "iap", width: W });
   const tx = W - 20 - tw;
   const ty = 30;
@@ -29,7 +34,11 @@ export default function draw() {
 
   s.comment("The pipeline path");
   const ci = s.node(356, cloud.y + cloud.h + 30, bw, 36, "CI job", { kind: "actor" });
-  s.wire([ci.port("r"), [cloud.cx, ci.cy], [cloud.cx, cloud.y + cloud.h]], { label: "OIDC token, per job", side: "below", seg: 0 });
+  s.wire([ci.port("r"), [cloud.cx, ci.cy], [cloud.cx, cloud.y + cloud.h]], {
+    label: "OIDC token, per job",
+    side: "below",
+    seg: 0,
+  });
 
   s.comment("Audit");
   const sy = ci.y + ci.h + 26;

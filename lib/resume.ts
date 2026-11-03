@@ -79,13 +79,11 @@ export const resume = {
     },
     {
       label: "Languages & Frameworks",
-      items:
-        "Go, TypeScript, JavaScript, PHP, Python, Bash, React, Vue.js, Node.js, Laravel",
+      items: "Go, TypeScript, JavaScript, PHP, Python, Bash, React, Vue.js, Node.js, Laravel",
     },
     {
       label: "Data",
-      items:
-        "Postgres, CockroachDB, Timescale, ClickHouse, MySQL, MongoDB, SQLite, Redis, Hadoop",
+      items: "Postgres, CockroachDB, Timescale, ClickHouse, MySQL, MongoDB, SQLite, Redis, Hadoop",
     },
     {
       label: "Messaging & APIs",
@@ -93,8 +91,7 @@ export const resume = {
     },
     {
       label: "Platform & Infra",
-      items:
-        "Docker, Docker Swarm, Kubernetes, ECS, microVMs, Traefik, Nomad, Consul, Vault",
+      items: "Docker, Docker Swarm, Kubernetes, ECS, microVMs, Traefik, Nomad, Consul, Vault",
     },
     {
       label: "Cloud",
@@ -103,13 +100,11 @@ export const resume = {
     },
     {
       label: "Observability",
-      items:
-        "Prometheus, Elasticsearch (ELK), OpenTelemetry, Jaeger, Datadog, Sentry, PagerDuty",
+      items: "Prometheus, Elasticsearch (ELK), OpenTelemetry, Jaeger, Datadog, Sentry, PagerDuty",
     },
     {
       label: "IaC & Delivery",
-      items:
-        "Terraform, Pulumi, Packer, Chef, CI/CD, GitHub Actions, CircleCI, Codefresh",
+      items: "Terraform, Pulumi, Packer, Chef, CI/CD, GitHub Actions, CircleCI, Codefresh",
     },
   ],
   experience: [

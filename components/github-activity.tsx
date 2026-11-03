@@ -1,8 +1,5 @@
 import { TodayHighlight } from "@/components/today-highlight";
-import {
-  ActivityGridTooltips,
-  type ActivityDayInfo,
-} from "@/components/activity-cell";
+import { ActivityGridTooltips, type ActivityDayInfo } from "@/components/activity-cell";
 import { OWNER_TZ, vacations } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 
@@ -17,17 +14,12 @@ export interface ContributionData {
   total: number;
 }
 
-export async function fetchGitHubContributions(
-  username: string,
-): Promise<ContributionData> {
+export async function fetchGitHubContributions(username: string): Promise<ContributionData> {
   try {
-    const res = await fetch(
-      `https://github.com/users/${username}/contributions`,
-      {
-        headers: { Accept: "text/html" },
-        next: { revalidate: 3600 },
-      },
-    );
+    const res = await fetch(`https://github.com/users/${username}/contributions`, {
+      headers: { Accept: "text/html" },
+      next: { revalidate: 3600 },
+    });
 
     if (!res.ok) return { days: [], total: 0 };
 
@@ -35,15 +27,11 @@ export async function fetchGitHubContributions(
     const days: ContributionDay[] = [];
 
     const tooltipCounts = new Map<string, number>();
-    const tooltipRegex =
-      /<tool-tip\b[^>]*\bfor="([^"]+)"[^>]*>([\s\S]*?)<\/tool-tip>/g;
+    const tooltipRegex = /<tool-tip\b[^>]*\bfor="([^"]+)"[^>]*>([\s\S]*?)<\/tool-tip>/g;
     let match;
     while ((match = tooltipRegex.exec(html)) !== null) {
       const countMatch = match[2].match(/([\d,]+) contribution/i);
-      tooltipCounts.set(
-        match[1],
-        countMatch ? parseInt(countMatch[1].replace(/,/g, "")) : 0,
-      );
+      tooltipCounts.set(match[1], countMatch ? parseInt(countMatch[1].replace(/,/g, "")) : 0);
     }
 
     const cellRegex = /<td\b([^>]*)>/g;
@@ -64,9 +52,7 @@ export async function fetchGitHubContributions(
 
     // Extract total contributions
     let total = 0;
-    const totalMatch = html.match(
-      /([\d,]+)\s+contributions?\s+in\s+the\s+last\s+year/i,
-    );
+    const totalMatch = html.match(/([\d,]+)\s+contributions?\s+in\s+the\s+last\s+year/i);
     if (totalMatch) {
       total = parseInt(totalMatch[1].replace(/,/g, ""));
     }
@@ -77,13 +63,7 @@ export async function fetchGitHubContributions(
   }
 }
 
-const LEVEL_COLORS = [
-  "bg-border/50",
-  "bg-accent/20",
-  "bg-accent/40",
-  "bg-accent/60",
-  "bg-accent",
-];
+const LEVEL_COLORS = ["bg-border/50", "bg-accent/20", "bg-accent/40", "bg-accent/60", "bg-accent"];
 
 const VACATION_RING = "ring-1 ring-amber-500/60 ring-inset";
 // A dot, not a ring: it reads on any fill level and leaves the ring free
@@ -113,11 +93,7 @@ function nthWeekdayOfMonth(
 }
 
 /** Last weekday of a month, e.g. last Monday of May. */
-function lastWeekdayOfMonth(
-  year: number,
-  month: number,
-  weekday: number,
-): string {
+function lastWeekdayOfMonth(year: number, month: number, weekday: number): string {
   const last = new Date(year, month + 1, 0);
   const offset = (last.getDay() - weekday + 7) % 7;
   const day = last.getDate() - offset;
@@ -165,20 +141,7 @@ function holidayFor(date: string): string | null {
   return HOLIDAY_MAP[date] ?? null;
 }
 
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function GitHubActivity({
   username = "syntaqx",
@@ -254,19 +217,14 @@ export function GitHubActivity({
           <span className="font-voice block text-5xl leading-[0.85] font-semibold text-foreground transition-colors group-hover:text-accent">
             {total.toLocaleString()}
           </span>
-          <span className="inst mt-3 block text-dim">
-            contributions, last 12 months ↗
-          </span>
+          <span className="inst mt-3 block text-dim">contributions, last 12 months ↗</span>
         </a>
       </div>
 
       <div className="min-w-0">
         <div className="flex min-w-0 items-start">
           {/* Grid — scrollable when content overflows */}
-          <div
-            className="relative min-w-0 flex-1 overflow-x-auto"
-            style={{ direction: "rtl" }}
-          >
+          <div className="relative min-w-0 flex-1 overflow-x-auto" style={{ direction: "rtl" }}>
             <div
               className="flex py-0.5"
               style={{
@@ -298,7 +256,10 @@ export function GitHubActivity({
                 {monthGroups.map((group, gi) => (
                   <div
                     key={gi}
-                    className={cn("flex flex-col shrink-0", gi > 0 && "border-l border-border/50 pl-0.75")}
+                    className={cn(
+                      "flex flex-col shrink-0",
+                      gi > 0 && "border-l border-border/50 pl-0.75",
+                    )}
                   >
                     {/* Month label. A month only one week wide (usually the
                         partial month at the start) can't fit three letters,
@@ -314,22 +275,14 @@ export function GitHubActivity({
                       {group.weeks.map((week) =>
                         week.map((day) => {
                           const vacation = vacationFor(day.date);
-                          const holiday = !vacation
-                            ? holidayFor(day.date)
-                            : null;
+                          const holiday = !vacation ? holidayFor(day.date) : null;
                           const base = LEVEL_COLORS[day.level];
                           const className = vacation
                             ? `${base} ${VACATION_RING}`
                             : holiday
                               ? `${base} ${HOLIDAY_DOT}`
                               : base;
-                          return (
-                            <div
-                              key={day.date}
-                              data-date={day.date}
-                              className={className}
-                            />
-                          );
+                          return <div key={day.date} data-date={day.date} className={className} />;
                         }),
                       )}
                     </div>
@@ -347,15 +300,11 @@ export function GitHubActivity({
             <span className="inst text-[0.5rem] text-dim">Today</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div
-              className={cn("w-2.5 h-2.5 rounded-xs bg-border/50", VACATION_RING)}
-            />
+            <div className={cn("w-2.5 h-2.5 rounded-xs bg-border/50", VACATION_RING)} />
             <span className="inst text-[0.5rem] text-dim">Vacation</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div
-              className={cn("w-2.5 h-2.5 rounded-xs bg-border/50", HOLIDAY_DOT)}
-            />
+            <div className={cn("w-2.5 h-2.5 rounded-xs bg-border/50", HOLIDAY_DOT)} />
             <span className="inst text-[0.5rem] text-dim">US Holiday</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -386,11 +335,7 @@ export function GitHubActivity({
  * (~200ms even on hit). Without Suspense, that latency blocked TTFB
  * → FCP → LCP for every visitor.
  */
-export async function GitHubActivityAsync({
-  username = "syntaqx",
-}: {
-  username?: string;
-}) {
+export async function GitHubActivityAsync({ username = "syntaqx" }: { username?: string }) {
   const data = await fetchGitHubContributions(username);
   return <GitHubActivity username={username} data={data} />;
 }

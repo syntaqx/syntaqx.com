@@ -4,7 +4,9 @@
 import { sheet, widthOf } from "../kit.mjs";
 
 // Seconds. D1 is PostgreSQL's default; Q1 and C1 are illustrative [2].
-const Q1 = 300, C1 = 60, D1 = 30;
+const Q1 = 300,
+  C1 = 60,
+  D1 = 30;
 const X1 = C1 + D1; // 90
 const R1 = Q1 - X1; // 210
 const L1 = D1; // 30
@@ -16,12 +18,23 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Vacuum on the primary removed row versions the query's snapshot can still see."],
-    [2, "D1 is the database's default standby max delay setting; Q1 and C1 are illustrative."],
-    [3, "A larger D1 lags the whole replica longer; standby feedback trades it for primary bloat."],
-    [0, "Values in seconds; lag height is schematic. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [1, "Vacuum on the primary removed row versions the query's snapshot can still see."],
+      [2, "D1 is the database's default standby max delay setting; Q1 and C1 are illustrative."],
+      [
+        3,
+        "A larger D1 lags the whole replica longer; standby feedback trades it for primary bloat.",
+      ],
+      [
+        0,
+        "Values in seconds; lag height is schematic. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 s = 2 px ----
   s.comment("Plan view: hot standby during a long query");
@@ -33,8 +46,10 @@ export default function draw() {
   const qTop = qDim + 22;
   const rTop = qTop + h + 34;
   const rBot = rTop + h;
-  const c1Y = rBot + 22, x1Y = c1Y + 30;
-  const lagH = 44, lagBase = x1Y + 30 + lagH;
+  const c1Y = rBot + 22,
+    x1Y = c1Y + 30;
+  const lagH = 44,
+    lagBase = x1Y + 30 + lagH;
 
   s.dimH(X(0), X(Q1), qDim, "Q1", { from: [qTop, qTop] });
 
@@ -52,7 +67,8 @@ export default function draw() {
   s.rect(X(X1), rTop, R1 * k, h, "obj fill-2");
   s.label(X(0), rTop, C1 * k, h, "applying");
   s.label(X(X1), rTop, R1 * k, h, "catches up");
-  const cx = X(C1) + 14, cy = rTop - 16;
+  const cx = X(C1) + 14,
+    cy = rTop - 16;
   s.callout(X(C1), rTop, cx, cy, "conflict arrives");
   s.nb(cx + 20 + widthOf("conflict arrives", "sl"), cy, 1);
 
@@ -64,12 +80,20 @@ export default function draw() {
   // Lane: replica lag for every other reader.
   s.text(X(0) - 10, lagBase - lagH / 2 + 3, "lag", "sl ink", "end");
   s.line(X(0), lagBase, X(Q1), lagBase, "ext");
-  s.path(`M${X(C1)},${lagBase}L${X(X1)},${lagBase - lagH}L${X(X1 + CATCH)},${lagBase}Z`, "obj fill-2");
+  s.path(
+    `M${X(C1)},${lagBase}L${X(X1)},${lagBase - lagH}L${X(X1 + CATCH)},${lagBase}Z`,
+    "obj fill-2",
+  );
   const lx = X(X1 + CATCH) + 22;
   s.dimV(lagBase - lagH, lagBase, lx, "L1", { from: [X(X1), null], side: "r" });
   s.nb(lx + 34, lagBase - lagH / 2, 3);
 
-  s.viewTitle(CX, lagBase + 46, "Plan view · hot standby during a long query", "Scale 1 s = 2 px · timeline · seconds");
+  s.viewTitle(
+    CX,
+    lagBase + 46,
+    "Plan view · hot standby during a long query",
+    "Scale 1 s = 2 px · timeline · seconds",
+  );
   const viewBottom = lagBase + 46 + 13;
 
   // ---- Variable table ----

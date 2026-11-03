@@ -84,7 +84,9 @@ const TTLS = [
 
 async function apiMessage(res: Response): Promise<string> {
   try {
-    return ((await res.json()) as { message?: string }).message ?? `Request failed (${res.status}).`;
+    return (
+      ((await res.json()) as { message?: string }).message ?? `Request failed (${res.status}).`
+    );
   } catch {
     return `Request failed (${res.status}).`;
   }
@@ -126,7 +128,17 @@ const actionClass =
 const quietClass =
   "inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-dim hover:text-accent hover:border-accent/30 transition-colors cursor-pointer";
 
-function Panel({ title, icon, children, footer }: { title: ReactNode; icon: ReactNode; children: ReactNode; footer?: ReactNode }) {
+function Panel({
+  title,
+  icon,
+  children,
+  footer,
+}: {
+  title: ReactNode;
+  icon: ReactNode;
+  children: ReactNode;
+  footer?: ReactNode;
+}) {
   return (
     <div className="border border-border bg-surface">
       <div className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-xs text-dim">
@@ -159,7 +171,15 @@ function CopyField({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Note({ tone = "dim", icon, children }: { tone?: "dim" | "pink" | "accent"; icon: ReactNode; children: ReactNode }) {
+function Note({
+  tone = "dim",
+  icon,
+  children,
+}: {
+  tone?: "dim" | "pink" | "accent";
+  icon: ReactNode;
+  children: ReactNode;
+}) {
   const tones = { dim: "text-dim", pink: "text-pink", accent: "text-accent" };
   return (
     <p className={cn("flex items-start gap-1.5 text-xs leading-relaxed", tones[tone])}>
@@ -235,7 +255,8 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="flex items-center gap-1.5 text-xs text-dim">
                 <Clock size={12} />
-                Works once, or expires in {timeLeft(created.expiresAt, now)} ({clock(created.expiresAt)})
+                Works once, or expires in {timeLeft(created.expiresAt, now)} (
+                {clock(created.expiresAt)})
               </span>
               <button onClick={() => setCreated(null)} className={quietClass}>
                 <Plus size={12} />
@@ -245,13 +266,17 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
           }
         >
           <div className="flex flex-col gap-4">
-            <CopyField label={created.key ? "Link (send this one way)" : "One-time link"} value={created.link} />
+            <CopyField
+              label={created.key ? "Link (send this one way)" : "One-time link"}
+              value={created.link}
+            />
             {created.key && <CopyField label="Key (send this another way)" value={created.key} />}
             {created.forScripts ? (
               <div className="flex flex-col gap-2">
                 <Note icon={<Terminal size={12} />}>
-                  This link returns the secret as JSON, so it works anywhere <code>curl</code> does, like a GitHub
-                  Actions <code>workflow_dispatch</code> input. The server encrypted it, so the server could read it.
+                  This link returns the secret as JSON, so it works anywhere <code>curl</code> does,
+                  like a GitHub Actions <code>workflow_dispatch</code> input. The server encrypted
+                  it, so the server could read it.
                 </Note>
                 <pre className="overflow-x-auto border border-border bg-background px-3 py-2 font-mono text-[11px] text-muted">
                   {`curl -s ${created.link} | jq -r .secret`}
@@ -259,9 +284,9 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
               </div>
             ) : (
               <Note tone="accent" icon={<Lock size={12} />}>
-                Encrypted in this browser before it was sent. The server holds {created.sentBytes.toLocaleString()}{" "}
-                characters of ciphertext and never saw the key, which only exists in the{" "}
-                {created.key ? "key above" : "link after the #"}.
+                Encrypted in this browser before it was sent. The server holds{" "}
+                {created.sentBytes.toLocaleString()} characters of ciphertext and never saw the key,
+                which only exists in the {created.key ? "key above" : "link after the #"}.
               </Note>
             )}
           </div>
@@ -334,7 +359,11 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
       {error && <p className="text-xs text-pink">{error}</p>}
 
       <div className="flex flex-wrap items-center gap-3">
-        <button onClick={() => void create()} disabled={!secret || tooBig || busy} className={actionClass}>
+        <button
+          onClick={() => void create()}
+          disabled={!secret || tooBig || busy}
+          className={actionClass}
+        >
           <Link2 size={14} />
           {busy ? "Encrypting..." : "Create one-time link"}
         </button>
@@ -358,12 +387,20 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
             autoComplete="off"
             className="min-w-0 flex-1 border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-accent/50 focus:outline-none"
           />
-          <button onClick={() => pastedLink && onOpen(pastedLink)} disabled={!pastedLink} className={actionClass}>
+          <button
+            onClick={() => pastedLink && onOpen(pastedLink)}
+            disabled={!pastedLink}
+            className={actionClass}
+          >
             Open
           </button>
         </div>
-        {pasted && !pastedLink && <p className="mt-1.5 text-xs text-pink">That isn&apos;t a secret link or id.</p>}
-        <p className="mt-1.5 text-[11px] text-dim">Opening checks the link. Nothing is revealed until you say so.</p>
+        {pasted && !pastedLink && (
+          <p className="mt-1.5 text-xs text-pink">That isn&apos;t a secret link or id.</p>
+        )}
+        <p className="mt-1.5 text-[11px] text-dim">
+          Opening checks the link. Nothing is revealed until you say so.
+        </p>
       </div>
     </div>
   );
@@ -396,10 +433,17 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
         if (res.status === 404) {
           forgetLink();
           setState({ status: "gone" });
-        } else if (res.ok) setState({ status: "ready", expiresAt: res.headers.get("Secret-Expires-At") });
-        else setState({ status: "error", message: "Couldn't check this link. Try again in a moment." });
+        } else if (res.ok)
+          setState({ status: "ready", expiresAt: res.headers.get("Secret-Expires-At") });
+        else
+          setState({
+            status: "error",
+            message: "Couldn't check this link. Try again in a moment.",
+          });
       })
-      .catch(() => !cancelled && setState({ status: "error", message: "Couldn't reach the server." }));
+      .catch(
+        () => !cancelled && setState({ status: "error", message: "Couldn't reach the server." }),
+      );
     return () => {
       cancelled = true;
     };
@@ -428,7 +472,10 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
         });
       }
     } catch {
-      setState({ status: "error", message: "Couldn't reach the server. The secret wasn't read; try again." });
+      setState({
+        status: "error",
+        message: "Couldn't reach the server. The secret wasn't read; try again.",
+      });
     }
   };
 
@@ -456,8 +503,8 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
     return (
       <Panel icon={<Flame size={12} />} title="This secret is gone" footer={another}>
         <p className="text-sm text-muted">
-          It was already viewed, or it expired before anyone opened it. Secrets here work once, so if you didn&apos;t
-          open it yourself, let the sender know: someone else may have.
+          It was already viewed, or it expired before anyone opened it. Secrets here work once, so
+          if you didn&apos;t open it yourself, let the sender know: someone else may have.
         </p>
       </Panel>
     );
@@ -523,7 +570,8 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
     >
       <div className="flex flex-col gap-4">
         <p className="text-sm text-muted">
-          You can view it once. Revealing it deletes it from the server, so have somewhere ready to put it.
+          You can view it once. Revealing it deletes it from the server, so have somewhere ready to
+          put it.
         </p>
         {needsKey && (
           <div>
@@ -539,11 +587,17 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
               autoComplete="off"
               className="w-full border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-dim/50 focus:border-accent/50 focus:outline-none"
             />
-            {key && !keyOk && <p className="mt-1.5 text-xs text-pink">A key is 43 letters, digits, - and _.</p>}
+            {key && !keyOk && (
+              <p className="mt-1.5 text-xs text-pink">A key is 43 letters, digits, - and _.</p>
+            )}
           </div>
         )}
         <div>
-          <button onClick={() => void reveal()} disabled={!keyOk || state.status === "revealing"} className={actionClass}>
+          <button
+            onClick={() => void reveal()}
+            disabled={!keyOk || state.status === "revealing"}
+            className={actionClass}
+          >
             <Eye size={14} />
             {state.status === "revealing" ? "Revealing..." : "Reveal secret"}
           </button>
@@ -575,8 +629,9 @@ export default function SecretsPage() {
       <div className="mb-8">
         <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">One-Time Secrets</h1>
         <p className="max-w-2xl text-dim">
-          Share a password or token through a link that works once. It&apos;s encrypted in your browser and the key
-          stays in the link, so the server only ever holds ciphertext, and deletes it the moment it&apos;s read.
+          Share a password or token through a link that works once. It&apos;s encrypted in your
+          browser and the key stays in the link, so the server only ever holds ciphertext, and
+          deletes it the moment it&apos;s read.
         </p>
       </div>
 
@@ -601,17 +656,22 @@ export default function SecretsPage() {
                 <span className="text-muted">AES-256-GCM</span>.
               </li>
               <li>
-                Only the ciphertext is sent. The key goes after the <span className="text-muted">#</span> in the link,
-                and browsers never send that part to a server.
+                Only the ciphertext is sent. The key goes after the{" "}
+                <span className="text-muted">#</span> in the link, and browsers never send that part
+                to a server.
               </li>
               <li>
-                The server keeps the ciphertext in Redis until it&apos;s read once or expires, whichever comes first.
+                The server keeps the ciphertext in Redis until it&apos;s read once or expires,
+                whichever comes first.
               </li>
-              <li>Opening the link only checks it. Revealing fetches the ciphertext, deletes it, and decrypts it here.</li>
+              <li>
+                Opening the link only checks it. Revealing fetches the ciphertext, deletes it, and
+                decrypts it here.
+              </li>
             </ol>
             <p className="border-t border-border px-4 py-3 text-[11px] leading-relaxed text-dim">
-              <span className="text-muted">Still a demo:</span> there&apos;s no SLA, so don&apos;t trust it with
-              production credentials. For that, self-host something like{" "}
+              <span className="text-muted">Still a demo:</span> there&apos;s no SLA, so don&apos;t
+              trust it with production credentials. For that, self-host something like{" "}
               <a
                 href="https://yopass.se/"
                 target="_blank"
@@ -636,8 +696,8 @@ export default function SecretsPage() {
   -d '{"secret":"hunter2","ttl":600}'`}
               </pre>
               <p>
-                Returns a <span className="text-muted">url</span> that hands the secret back once. That&apos;s what
-                &quot;For scripts&quot; makes too.
+                Returns a <span className="text-muted">url</span> that hands the secret back once.
+                That&apos;s what &quot;For scripts&quot; makes too.
               </p>
             </div>
           </div>

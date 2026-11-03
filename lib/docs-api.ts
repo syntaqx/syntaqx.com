@@ -75,7 +75,9 @@ const list = (value: unknown): string[] =>
  * Unknown parameters are rejected, not ignored: a typo like `secton=payments`
  * silently returning everything is worse than an error.
  */
-export function parseDocsQuery(raw: Record<string, unknown>): { query: DocsQuery } | { errors: Errors } {
+export function parseDocsQuery(
+  raw: Record<string, unknown>,
+): { query: DocsQuery } | { errors: Errors } {
   const errors: Errors = {};
   const known = new Set(["section", "tag", "q", "sort", "limit", "cursor"]);
   for (const key of Object.keys(raw)) {
@@ -120,14 +122,18 @@ function decodeCursor(cursor: string, query: DocsQuery): string | null {
       after?: unknown;
       f?: unknown;
     };
-    return typeof parsed.after === "string" && parsed.f === fingerprint(query) ? parsed.after : null;
+    return typeof parsed.after === "string" && parsed.f === fingerprint(query)
+      ? parsed.after
+      : null;
   } catch {
     return null;
   }
 }
 
 /** Run a query: filter, sort (slug as the tiebreaker), then page after the cursor. */
-export function runDocsQuery(query: DocsQuery): { items: DocSummary[]; next: string | null } | { errors: Errors } {
+export function runDocsQuery(
+  query: DocsQuery,
+): { items: DocSummary[]; next: string | null } | { errors: Errors } {
   const q = query.q.toLowerCase();
   const field = query.sort.replace(/^-/, "") as (typeof SORTABLE)[number];
   const direction = query.sort.startsWith("-") ? -1 : 1;
@@ -146,7 +152,9 @@ export function runDocsQuery(query: DocsQuery): { items: DocSummary[]; next: str
     const after = decodeCursor(query.cursor, query);
     const index = after === null ? -1 : matching.findIndex((d) => d.slug === after);
     if (index === -1) {
-      return { errors: { cursor: ["cursor is invalid, or was issued for different filters or sort."] } };
+      return {
+        errors: { cursor: ["cursor is invalid, or was issued for different filters or sort."] },
+      };
     }
     start = index + 1;
   }
@@ -176,7 +184,10 @@ export function docsBaseUrl(request: Request): string {
 }
 
 /** Shared by GET (query string) and QUERY (JSON body). */
-export async function respondToDocsQuery(request: Request, raw: Record<string, unknown>): Promise<Response> {
+export async function respondToDocsQuery(
+  request: Request,
+  raw: Record<string, unknown>,
+): Promise<Response> {
   const parsed = parseDocsQuery(raw);
   if ("errors" in parsed) {
     return errorResponse(422, "The given data was invalid.", { errors: parsed.errors });

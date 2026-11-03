@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import {
-  Big_Shoulders,
-  Hanken_Grotesk,
-  JetBrains_Mono,
-  Michroma,
-} from "next/font/google";
+import { Big_Shoulders, Hanken_Grotesk, JetBrains_Mono, Michroma } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import { SimpleIcon } from "@/components/simple-icon";
@@ -128,13 +123,7 @@ export default function RootLayout({
               href="/"
               className="group flex items-center gap-2.5 border-r border-border px-4 sm:pl-0 sm:pr-5"
             >
-              <Image
-                src="/brand.svg"
-                alt=""
-                width={22}
-                height={22}
-                className="size-5.5"
-              />
+              <Image src="/brand.svg" alt="" width={22} height={22} className="size-5.5" />
               <span className="translate-y-[-0.17em] font-inst text-[0.9rem] lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
                 syntaqx
               </span>
@@ -147,20 +136,12 @@ export default function RootLayout({
             </div>
           </div>
         </header>
-        <main className="flex-1 mx-auto w-full max-w-7xl px-6 py-12">
-          {children}
-        </main>
+        <main className="flex-1 mx-auto w-full max-w-7xl px-6 py-12">{children}</main>
         <footer data-pagefind-ignore className="mt-auto border-t border-border">
           <div className="mx-auto grid max-w-7xl gap-10 px-6 py-10 md:grid-cols-[1fr_auto] md:gap-16">
             <div className="grid content-start gap-4">
               <Link href="/" className="group flex w-fit items-center gap-2.5">
-                <Image
-                  src="/brand.svg"
-                  alt=""
-                  width={22}
-                  height={22}
-                  className="size-5.5"
-                />
+                <Image src="/brand.svg" alt="" width={22} height={22} className="size-5.5" />
                 <span className="translate-y-[-0.17em] font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-accent">
                   syntaqx
                 </span>
@@ -189,8 +170,7 @@ export default function RootLayout({
                   <p className="eyebrow mb-3">{group.label}</p>
                   <ul className="inst text-dim">
                     {group.links.map((link) => {
-                      const className =
-                        "block py-2 transition-colors hover:text-accent sm:py-1.5";
+                      const className = "block py-2 transition-colors hover:text-accent sm:py-1.5";
                       return (
                         <li key={link.href}>
                           {link.file ? (

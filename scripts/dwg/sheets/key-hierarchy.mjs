@@ -21,16 +21,28 @@ const COLS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, titleW = 160, gap = 24, bh = 50, pad = 14;
+  const W = 760,
+    x = 20,
+    titleW = 160,
+    gap = 24,
+    bh = 50,
+    pad = 14;
   const s = sheet({ prefix: "kh", width: W });
   const cw = (W - 2 * x - titleW - gap * (COLS.length - 1)) / COLS.length;
   const X = (i) => x + titleW + i * (cw + gap);
 
   const [L0, L1, L2] = s.lanes({
-    x, y: 20, w: W - 2 * x, titleW,
+    x,
+    y: 20,
+    w: W - 2 * x,
+    titleW,
     lanes: [
       { label: "Inside the HSM", sub: "clear only here", h: 36 + 2 * pad + 6 },
-      { label: "Key-encrypting keys", sub: "stored encrypted\nunder the master key", h: bh + 2 * pad + 8 },
+      {
+        label: "Key-encrypting keys",
+        sub: "stored encrypted\nunder the master key",
+        h: bh + 2 * pad + 8,
+      },
       { label: "Working keys", sub: "stored encrypted\nunder their KEK", h: bh + 2 * pad + 8 },
     ],
   });
@@ -39,7 +51,10 @@ export default function draw() {
   const key = (bx, by, [name, ...sub], hl) => s.node(bx, by, cw, bh, name, { hl, sub });
 
   s.comment("Master key");
-  const master = s.node(X(0), L0.y + pad + 3, W - x - X(0), 36, "master key", { fill: 1, sub: "never leaves; every key below is stored encrypted under it" });
+  const master = s.node(X(0), L0.y + pad + 3, W - x - X(0), 36, "master key", {
+    fill: 1,
+    sub: "never leaves; every key below is stored encrypted under it",
+  });
 
   COLS.forEach((c, i) => {
     s.comment(c.kek[0]);
@@ -50,7 +65,12 @@ export default function draw() {
   });
 
   const fy = L2.y + L2.h + 24;
-  s.text(x, fy, "outside the HSM, every key is stored and exchanged as a key block (X9.143), bound to one purpose", "sl");
+  s.text(
+    x,
+    fy,
+    "outside the HSM, every key is stored and exchanged as a key block (X9.143), bound to one purpose",
+    "sl",
+  );
   s.height = Math.ceil(fy + 16);
   return s.toString();
 }

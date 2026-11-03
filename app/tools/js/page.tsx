@@ -1,15 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, type DragEvent } from "react";
-import {
-  Trash2,
-  Upload,
-  FileText,
-  Info,
-  ExternalLink,
-  Play,
-  Loader2,
-} from "lucide-react";
+import { Trash2, Upload, FileText, Info, ExternalLink, Play, Loader2 } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { Select } from "@/components/select";
@@ -105,9 +97,7 @@ export default function JsToolPage() {
   const [minifyKeepClassnames, setMinifyKeepClassnames] = useState(false);
 
   // Obfuscate options
-  const [obfPreset, setObfPreset] = useState<"low" | "medium" | "high">(
-    "medium",
-  );
+  const [obfPreset, setObfPreset] = useState<"low" | "medium" | "high">("medium");
   const [obfStringArray, setObfStringArray] = useState(true);
   const [obfControlFlow, setObfControlFlow] = useState(false);
   const [obfDeadCode, setObfDeadCode] = useState(false);
@@ -219,8 +209,8 @@ export default function JsToolPage() {
           JavaScript Beautify / Minify / Obfuscate
         </h1>
         <p className="max-w-2xl text-dim">
-          Format, compress, or obfuscate JavaScript and JSON. Everything runs in
-          your browser, nothing is sent to a server.
+          Format, compress, or obfuscate JavaScript and JSON. Everything runs in your browser,
+          nothing is sent to a server.
         </p>
       </div>
 
@@ -266,8 +256,7 @@ export default function JsToolPage() {
                 <div className="flex items-center gap-1.5">
                   {input && (
                     <span className="text-[10px] text-dim tabular-nums">
-                      {input.length.toLocaleString()} chars &middot;{" "}
-                      {byteSize(input)}
+                      {input.length.toLocaleString()} chars &middot; {byteSize(input)}
                     </span>
                   )}
                   <button
@@ -381,9 +370,7 @@ export default function JsToolPage() {
                     <Select
                       label="Preset"
                       value={obfPreset}
-                      onChange={(v) =>
-                        setObfPreset(v as "low" | "medium" | "high")
-                      }
+                      onChange={(v) => setObfPreset(v as "low" | "medium" | "high")}
                       options={[
                         { value: "low", label: "Low" },
                         { value: "medium", label: "Medium" },
@@ -420,11 +407,7 @@ export default function JsToolPage() {
                 disabled={running || !input.trim()}
                 className="inline-flex items-center gap-2 border border-accent/30 bg-accent/10 px-3 py-1.5 text-xs font-medium text-accent hover:bg-accent/20 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {running ? (
-                  <Loader2 size={12} className="animate-spin" />
-                ) : (
-                  <Play size={12} />
-                )}
+                {running ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
                 {running
                   ? "Running..."
                   : mode === "beautify"
@@ -448,8 +431,7 @@ export default function JsToolPage() {
                 <div className="flex items-center gap-1.5">
                   {output && (
                     <span className="text-[10px] text-dim tabular-nums">
-                      {output.length.toLocaleString()} chars &middot;{" "}
-                      {byteSize(output)}
+                      {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                       {beforeBytes > 0 && (
                         <>
                           {" "}
@@ -493,29 +475,27 @@ export default function JsToolPage() {
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
                 <span className="text-muted">Beautify</span> uses{" "}
-                <span className="text-muted">Prettier</span> to reformat source
-                with consistent indentation, quoting, and line breaks. Choose
-                the <span className="text-muted">JSON</span> parser for strict
-                JSON input.
+                <span className="text-muted">Prettier</span> to reformat source with consistent
+                indentation, quoting, and line breaks. Choose the{" "}
+                <span className="text-muted">JSON</span> parser for strict JSON input.
               </p>
               <p>
                 <span className="text-muted">Minify</span> uses{" "}
-                <span className="text-muted">Terser</span> to compress and
-                mangle JavaScript. Output is functionally equivalent but
-                significantly smaller. Mangling can break code that introspects
-                <span className="text-muted"> Function.name</span> or relies on
-                exact identifier names.
+                <span className="text-muted">Terser</span> to compress and mangle JavaScript. Output
+                is functionally equivalent but significantly smaller. Mangling can break code that
+                introspects
+                <span className="text-muted"> Function.name</span> or relies on exact identifier
+                names.
               </p>
               <p>
                 <span className="text-muted">Obfuscate</span> uses{" "}
-                <span className="text-muted">javascript-obfuscator</span> to
-                make code harder to read. This is not encryption and can be
-                reversed with effort. Higher presets add significant runtime
-                overhead.
+                <span className="text-muted">javascript-obfuscator</span> to make code harder to
+                read. This is not encryption and can be reversed with effort. Higher presets add
+                significant runtime overhead.
               </p>
               <p>
-                All three libraries run entirely in your browser. Source code
-                never leaves your machine.
+                All three libraries run entirely in your browser. Source code never leaves your
+                machine.
               </p>
             </div>
           </div>

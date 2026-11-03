@@ -12,10 +12,7 @@ import { PostList } from "@/components/post-list";
 import { SceneArt } from "@/components/scene-art";
 import { SimpleIcon } from "@/components/simple-icon";
 import { StatsStrip, StatsStripSkeleton } from "@/components/stats-strip";
-import {
-  GitHubActivityAsync,
-  GitHubActivitySkeleton,
-} from "@/components/github-activity";
+import { GitHubActivityAsync, GitHubActivitySkeleton } from "@/components/github-activity";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -47,9 +44,7 @@ export default function Home() {
           className="beams pointer-events-none absolute -inset-x-6 -top-12 bottom-0 -z-10 mask-[linear-gradient(to_bottom,transparent,black_20%,black_50%,transparent)]"
         />
         <div>
-          <p className="inst mb-5 tracking-[0.3em] text-dim">
-            software engineering leader
-          </p>
+          <p className="inst mb-5 tracking-[0.3em] text-dim">software engineering leader</p>
           <h1 className="mb-8 text-[clamp(3rem,6vw,4.75rem)] leading-[0.9]">
             Chase <span className="text-accent">Pierce</span>
           </h1>
@@ -57,9 +52,7 @@ export default function Home() {
             {bio.map((item) => (
               <div key={item.label}>
                 <dt className="inst mb-1.5 text-accent">{item.label}</dt>
-                <dd className="text-[0.95rem] leading-relaxed text-dim">
-                  {item.text}
-                </dd>
+                <dd className="text-[0.95rem] leading-relaxed text-dim">{item.text}</dd>
               </div>
             ))}
           </dl>
@@ -68,11 +61,7 @@ export default function Home() {
               More about me
               <ArrowRight size={13} />
             </Button>
-            <Button
-              href="https://calendly.com/syntaqx"
-              variant="secondary"
-              external
-            >
+            <Button href="https://calendly.com/syntaqx" variant="secondary" external>
               Book time
               <ArrowUpRight size={13} />
             </Button>
@@ -127,9 +116,7 @@ export default function Home() {
                 <h3 className="mb-2 text-lg leading-none text-foreground transition-colors group-hover:text-accent">
                   {tool.title}
                 </h3>
-                <p className="text-xs leading-relaxed text-dim">
-                  {tool.description}
-                </p>
+                <p className="text-xs leading-relaxed text-dim">{tool.description}</p>
               </Card>
             </Link>
           ))}

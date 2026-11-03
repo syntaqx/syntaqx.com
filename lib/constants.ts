@@ -62,9 +62,7 @@ export const nav: (NavLink | NavGroup)[] = [
 ];
 
 // Every nav page, groups flattened, in header order.
-export const navLinks = nav.flatMap((item) =>
-  "links" in item ? item.links : [item],
-);
+export const navLinks = nav.flatMap((item) => ("links" in item ? item.links : [item]));
 
 // Footer link groups. Non-page routes (feeds, machine-readable files) are
 // flagged `file` so they render as plain anchors, not client-side Links.

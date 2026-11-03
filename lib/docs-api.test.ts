@@ -17,7 +17,9 @@ describe("GET /docs", () => {
     expect(docs).toHaveLength(25);
     expect(docs[0].slug).toBe("playbook");
     expect(docs.map((d) => d.position)).toEqual(docs.map((_, i) => i + 1));
-    expect(res.headers.get("Link")).toMatch(/^<http:\/\/localhost\/api\/docs\?cursor=[\w-]+>; rel="next"$/);
+    expect(res.headers.get("Link")).toMatch(
+      /^<http:\/\/localhost\/api\/docs\?cursor=[\w-]+>; rel="next"$/,
+    );
     expect(res.headers.get("ETag")).toBeTruthy();
   });
 
@@ -60,7 +62,9 @@ describe("GET /docs", () => {
 
   it("rejects a cursor reused with different filters", async () => {
     const first = await list("?section=money&limit=2");
-    const cursor = new URL(first.headers.get("Link")!.match(/^<([^>]+)>/)![1]).searchParams.get("cursor");
+    const cursor = new URL(first.headers.get("Link")!.match(/^<([^>]+)>/)![1]).searchParams.get(
+      "cursor",
+    );
     const res = await list(`?section=security&limit=2&cursor=${cursor}`);
     expect(res.status).toBe(422);
     expect((await res.json()).errors.cursor).toBeTruthy();
@@ -85,10 +89,16 @@ describe("GET /docs/{slug}", () => {
     });
     expect(ok.status).toBe(200);
     const doc = await ok.json();
-    expect(doc).toMatchObject({ slug: "requests/idempotency", section: "requests", title: "Idempotency" });
+    expect(doc).toMatchObject({
+      slug: "requests/idempotency",
+      section: "requests",
+      title: "Idempotency",
+    });
     expect(doc.content).toContain("Idempotency-Key");
 
-    const missing = await getDoc(new Request(`${base}/nope`), { params: Promise.resolve({ slug: ["nope"] }) });
+    const missing = await getDoc(new Request(`${base}/nope`), {
+      params: Promise.resolve({ slug: ["nope"] }),
+    });
     expect(missing.status).toBe(404);
   });
 });

@@ -34,17 +34,28 @@ const BOOKING = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, gap = 16, h = 36, cols = 7;
+  const W = 760,
+    x = 20,
+    gap = 16,
+    h = 36,
+    cols = 7;
   const s = sheet({ prefix: "ugp-pbl", width: W });
   const w = (W - 40 - (cols - 1) * gap) / cols;
-  const laneH = 136, top = 48; // box top inside a lane, under its title
+  const laneH = 136,
+    top = 48; // box top inside a lane, under its title
 
   s.comment("Lanes, titles over the content");
-  const [P, L, B] = s.lanes({ x, y: 20, w: W - 40, titleW: 0, lanes: [
-    { label: "a post", sub: "a content item in a community", h: laneH },
-    { label: "a live stream", sub: "an encoder to every viewer", h: laneH },
-    { label: "a booking", sub: "two parties, money held between them", h: laneH },
-  ] });
+  const [P, L, B] = s.lanes({
+    x,
+    y: 20,
+    w: W - 40,
+    titleW: 0,
+    lanes: [
+      { label: "a post", sub: "a content item in a community", h: laneH },
+      { label: "a live stream", sub: "an encoder to every viewer", h: laneH },
+      { label: "a booking", sub: "two parties, money held between them", h: laneH },
+    ],
+  });
 
   s.comment("One pipeline per lane");
   s.pipeline(x, P.y0 + top, POST, { w, h, gap });

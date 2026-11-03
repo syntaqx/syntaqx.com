@@ -8,9 +8,14 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "pt-ac", width: W });
 
-  const n = 4, w = 156, gap = (W - 40 - n * w) / (n - 1), h = 46;
+  const n = 4,
+    w = 156,
+    gap = (W - 40 - n * w) / (n - 1),
+    h = 46;
   const X = (i) => 20 + i * (w + gap);
-  const yE = 24, eh = 50, yC = yE + eh + 40;
+  const yE = 24,
+    eh = 50,
+    yC = yE + eh + 40;
 
   s.comment("Events that open a certification");
   const events = [
@@ -32,8 +37,16 @@ export default function draw() {
 
   s.comment("Missed annual");
   const yM = yC + h + 40;
-  const missed = s.node(X(2), yM, w, 50, "missed annual", { end: true, fill: 1, sub: ["rent changes,", "often to market"] });
-  s.wire([[certs[2].cx, certs[2].y2], missed.port("t")], { alt: true, label: "no response", side: "right" });
+  const missed = s.node(X(2), yM, w, 50, "missed annual", {
+    end: true,
+    fill: 1,
+    sub: ["rent changes,", "often to market"],
+  });
+  s.wire([[certs[2].cx, certs[2].y2], missed.port("t")], {
+    alt: true,
+    label: "no response",
+    side: "right",
+  });
 
   s.comment("Immutable records");
   const sy = yM + 10;

@@ -82,10 +82,7 @@ export function generateOpenApiSpec(origin = "http://localhost:3000") {
   };
   for (const ops of Object.values(doc.paths ?? {})) {
     for (const op of Object.values(ops) as { parameters?: unknown[] }[]) {
-      op.parameters = [
-        ...(op.parameters ?? []),
-        { $ref: "#/components/parameters/ApiVersion" },
-      ];
+      op.parameters = [...(op.parameters ?? []), { $ref: "#/components/parameters/ApiVersion" }];
     }
   }
   return doc;

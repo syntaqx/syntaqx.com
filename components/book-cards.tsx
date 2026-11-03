@@ -26,7 +26,12 @@ export function BookCards({ books }: { books: BookCard[] }) {
               href={book.href}
               className="group flex h-full flex-col border border-border transition-colors hover:border-accent"
             >
-              <SceneArt scene={book.cover} grain={4} label={`${book.name} cover art`} className={cn(COVER, "border-border")} />
+              <SceneArt
+                scene={book.cover}
+                grain={4}
+                label={`${book.name} cover art`}
+                className={cn(COVER, "border-border")}
+              />
               <CardText book={book} />
             </Link>
           ) : (
@@ -64,7 +69,12 @@ function CardText({ book }: { book: BookCard }) {
       >
         {book.name}
       </span>
-      <span className={cn("mt-2 min-h-[3lh] text-sm leading-relaxed line-clamp-3", live ? "text-dim" : "text-dim/70")}>
+      <span
+        className={cn(
+          "mt-2 min-h-[3lh] text-sm leading-relaxed line-clamp-3",
+          live ? "text-dim" : "text-dim/70",
+        )}
+      >
         {book.summary}
       </span>
     </span>
@@ -77,7 +87,8 @@ function CardText({ book }: { book: BookCard }) {
  */
 function PlaceholderCover() {
   // world (x, y, z) to the 160 by 100 view, the same projection as the scenes
-  const P = (x: number, y: number, z: number) => `${80 + (x - y) * 10.4},${41 + ((x + y) / 2 - z) * 12}`;
+  const P = (x: number, y: number, z: number) =>
+    `${80 + (x - y) * 10.4},${41 + ((x + y) / 2 - z) * 12}`;
   const poly = (pts: [number, number, number][]) => pts.map((p) => P(...p)).join(" ");
   const top = 2.4;
   const id = useId();
@@ -85,7 +96,10 @@ function PlaceholderCover() {
     <svg
       viewBox="0 0 160 100"
       aria-hidden
-      className={cn(COVER, "border-dashed border-border text-accent mask-[radial-gradient(closest-side,black_70%,transparent)]")}
+      className={cn(
+        COVER,
+        "border-dashed border-border text-accent mask-[radial-gradient(closest-side,black_70%,transparent)]",
+      )}
     >
       <defs>
         <pattern id={`${id}d`} width="3.2" height="3.2" patternUnits="userSpaceOnUse">
@@ -100,13 +114,65 @@ function PlaceholderCover() {
         </mask>
       </defs>
       <rect width="160" height="100" fill={`url(#${id}d)`} mask={`url(#${id}m)`} />
-      <g fill="none" strokeWidth="1" strokeDasharray="2 3" className="*:[vector-effect:non-scaling-stroke]">
-        <polygon points={poly([[-2, -2, 0], [6, -2, 0], [6, 6, 0], [-2, 6, 0]])} stroke="var(--dim)" opacity="0.5" />
-        <polyline points={poly([[0, 0, 0], [0, 0, top]])} stroke="currentColor" opacity="0.4" />
-        <polyline points={poly([[0, 4, 0], [0, 0, 0], [4, 0, 0]])} stroke="currentColor" opacity="0.4" />
-        <polygon points={poly([[0, 0, top], [4, 0, top], [4, 4, top], [0, 4, top]])} stroke="currentColor" />
-        <polyline points={poly([[0, 4, top], [0, 4, 0], [4, 4, 0], [4, 0, 0], [4, 0, top]])} stroke="currentColor" />
-        <polyline points={poly([[4, 4, 0], [4, 4, top]])} stroke="currentColor" />
+      <g
+        fill="none"
+        strokeWidth="1"
+        strokeDasharray="2 3"
+        className="*:[vector-effect:non-scaling-stroke]"
+      >
+        <polygon
+          points={poly([
+            [-2, -2, 0],
+            [6, -2, 0],
+            [6, 6, 0],
+            [-2, 6, 0],
+          ])}
+          stroke="var(--dim)"
+          opacity="0.5"
+        />
+        <polyline
+          points={poly([
+            [0, 0, 0],
+            [0, 0, top],
+          ])}
+          stroke="currentColor"
+          opacity="0.4"
+        />
+        <polyline
+          points={poly([
+            [0, 4, 0],
+            [0, 0, 0],
+            [4, 0, 0],
+          ])}
+          stroke="currentColor"
+          opacity="0.4"
+        />
+        <polygon
+          points={poly([
+            [0, 0, top],
+            [4, 0, top],
+            [4, 4, top],
+            [0, 4, top],
+          ])}
+          stroke="currentColor"
+        />
+        <polyline
+          points={poly([
+            [0, 4, top],
+            [0, 4, 0],
+            [4, 4, 0],
+            [4, 0, 0],
+            [4, 0, top],
+          ])}
+          stroke="currentColor"
+        />
+        <polyline
+          points={poly([
+            [4, 4, 0],
+            [4, 4, top],
+          ])}
+          stroke="currentColor"
+        />
       </g>
     </svg>
   );

@@ -28,7 +28,9 @@ export function TagChips({
             aria-current={isActive ? "page" : undefined}
             className={cn(
               "inst inline-flex items-center gap-2 border px-2.5 py-1.5 transition-colors",
-              isActive ? "border-accent text-accent" : "border-border text-muted hover:border-accent hover:text-accent",
+              isActive
+                ? "border-accent text-accent"
+                : "border-border text-muted hover:border-accent hover:text-accent",
             )}
           >
             <span>{tag.label}</span>

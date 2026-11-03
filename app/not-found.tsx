@@ -15,13 +15,10 @@ export default function NotFound() {
         These aren&apos;t the droids you&apos;re looking for.
       </h1>
       <p className="mb-3 max-w-md text-muted">
-        The page you requested has mass, but it exists in a superposition of
-        &ldquo;here&rdquo; and &ldquo;not here,&rdquo; and upon observation it
-        collapsed to &ldquo;not here.&rdquo;
+        The page you requested has mass, but it exists in a superposition of &ldquo;here&rdquo; and
+        &ldquo;not here,&rdquo; and upon observation it collapsed to &ldquo;not here.&rdquo;
       </p>
-      <p className="text-xs text-dim mb-10">
-        HTTP 404 &middot; ERR_EXISTENTIAL_CRISIS
-      </p>
+      <p className="text-xs text-dim mb-10">HTTP 404 &middot; ERR_EXISTENTIAL_CRISIS</p>
       <div className="flex flex-wrap items-center gap-3">
         <Button href="/">
           Go home

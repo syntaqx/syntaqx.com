@@ -48,13 +48,9 @@ registry.registerPath({
           schema: z
             .object({
               secret: z.string().min(1).openapi({ description: "Up to 8 KB of UTF-8" }),
-              ttl: z
-                .number()
-                .int()
-                .min(MIN_TTL_SECONDS)
-                .max(MAX_TTL_SECONDS)
-                .optional()
-                .openapi({ description: "Seconds until an unread secret expires (60 to 86400, default 3600)" }),
+              ttl: z.number().int().min(MIN_TTL_SECONDS).max(MAX_TTL_SECONDS).optional().openapi({
+                description: "Seconds until an unread secret expires (60 to 86400, default 3600)",
+              }),
             })
             .openapi({ example: { secret: "hunter2", ttl: 600 } }),
         },
@@ -62,7 +58,10 @@ registry.registerPath({
     },
   },
   responses: {
-    201: { description: "Secret stored", content: { "application/json": { schema: CreatedSecret } } },
+    201: {
+      description: "Secret stored",
+      content: { "application/json": { schema: CreatedSecret } },
+    },
     400: errorDoc("Malformed JSON"),
     413: errorDoc("Secret over 8 KB"),
     422: errorDoc("Missing secret, or ttl out of range"),
@@ -100,8 +99,16 @@ export async function POST(request: Request) {
   if (new TextEncoder().encode(secret).length > MAX_SECRET_BYTES) {
     return errorResponse(413, "secret must not exceed 8 KB.");
   }
-  if (typeof ttl !== "number" || !Number.isInteger(ttl) || ttl < MIN_TTL_SECONDS || ttl > MAX_TTL_SECONDS) {
-    return invalidField("ttl", `ttl must be an integer from ${MIN_TTL_SECONDS} to ${MAX_TTL_SECONDS} seconds.`);
+  if (
+    typeof ttl !== "number" ||
+    !Number.isInteger(ttl) ||
+    ttl < MIN_TTL_SECONDS ||
+    ttl > MAX_TTL_SECONDS
+  ) {
+    return invalidField(
+      "ttl",
+      `ttl must be an integer from ${MIN_TTL_SECONDS} to ${MAX_TTL_SECONDS} seconds.`,
+    );
   }
 
   const id = newSecretId();
@@ -109,13 +116,21 @@ export async function POST(request: Request) {
     await secretStore().put(await lookupKey(id), await encryptSecret(id, secret), ttl);
   } catch (error) {
     console.error("secrets: storage unavailable", error);
-    return errorResponse(503, "Secret storage is unavailable. Nothing was stored; try again shortly.", {
-      headers: { "Retry-After": "1", "Cache-Control": CACHE.none },
-    });
+    return errorResponse(
+      503,
+      "Secret storage is unavailable. Nothing was stored; try again shortly.",
+      {
+        headers: { "Retry-After": "1", "Cache-Control": CACHE.none },
+      },
+    );
   }
 
   return json(
-    { id, url: `${linkBase(request)}/secrets/${id}`, expires_at: new Date(Date.now() + ttl * 1000).toISOString() },
+    {
+      id,
+      url: `${linkBase(request)}/secrets/${id}`,
+      expires_at: new Date(Date.now() + ttl * 1000).toISOString(),
+    },
     { status: 201, headers: { "Cache-Control": CACHE.none } },
   );
 }

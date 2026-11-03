@@ -7,19 +7,29 @@ import { sheet } from "../kit.mjs";
 const STAGES = [
   { head: "per lease", label: "start, stop", sub: ["signing starts,", "move-out stops"] },
   { head: "per file", label: "import", sub: ["kept as received;", "re-import: no-op"] },
-  { head: "where it breaks", headHl: true, label: "match", hl: true, sub: ["line to member", "to lease"] },
+  {
+    head: "where it breaks",
+    headHl: true,
+    label: "match",
+    hl: true,
+    sub: ["line to member", "to lease"],
+  },
   { label: "post", sub: ["applied to the", "period's rent"] },
   { label: "close", sub: ["total ties to", "the deposit"] },
 ];
 
 export default function draw() {
-  const W = 760, w = 120, gap = 30, h = 28;
+  const W = 760,
+    w = 120,
+    gap = 30,
+    h = 28;
   const total = STAGES.length * w + (STAGES.length - 1) * gap;
   const x0 = (W - total) / 2;
   const s = sheet({ prefix: "pt-mal", width: W });
 
   const { nodes, bottoms } = s.pipeline(x0, 40, STAGES, { w, h, gap });
-  const match = nodes[2], post = nodes[3];
+  const match = nodes[2],
+    post = nodes[3];
 
   s.comment("Exceptions go to people");
   const qy = Math.max(bottoms[2], bottoms[3]) + 40;

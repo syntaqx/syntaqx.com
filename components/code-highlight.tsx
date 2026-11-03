@@ -10,11 +10,7 @@ interface CodeHighlightProps {
   className?: string;
 }
 
-export function CodeHighlight({
-  code,
-  lang,
-  className,
-}: CodeHighlightProps) {
+export function CodeHighlight({ code, lang, className }: CodeHighlightProps) {
   const [html, setHtml] = useState<string>("");
 
   useEffect(() => {
@@ -46,9 +42,7 @@ export function CodeHighlight({
 
   if (!html) {
     return (
-      <pre
-        className={cn("text-sm font-mono whitespace-pre-wrap text-foreground", className)}
-      >
+      <pre className={cn("text-sm font-mono whitespace-pre-wrap text-foreground", className)}>
         {code}
       </pre>
     );

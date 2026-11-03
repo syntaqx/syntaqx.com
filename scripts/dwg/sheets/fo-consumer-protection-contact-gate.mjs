@@ -13,9 +13,16 @@ const CHECKS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, h = 26, step = 44;
+  const W = 760,
+    x = 20,
+    h = 26,
+    step = 44;
   const s = sheet({ prefix: "fo-cpg", width: W });
-  const gx = 230, gw = 200, ox = 480, ow = 190, ch = W - x - 30; // audit channel
+  const gx = 230,
+    gw = 200,
+    ox = 480,
+    ow = 190,
+    ch = W - x - 30; // audit channel
   const top = 44;
 
   s.comment("Column heads");
@@ -54,12 +61,17 @@ export default function draw() {
   const fy = sy + 28 + 22;
   s.text(audit.cx, fy, "every decision, blocks included,", "sl", "middle");
   s.text(audit.cx, fy + 12, "with the rule that made it", "sl", "middle");
-  s.legend(x, fy - 3, [
-    { kind: "hl", label: "passes" },
-    { kind: "alt", label: "fails" },
-    { kind: "end", label: "stops it" },
-    { kind: "ghost", label: "tries later" },
-  ], { width: ox - x - 20 });
+  s.legend(
+    x,
+    fy - 3,
+    [
+      { kind: "hl", label: "passes" },
+      { kind: "alt", label: "fails" },
+      { kind: "end", label: "stops it" },
+      { kind: "ghost", label: "tries later" },
+    ],
+    { width: ox - x - 20 },
+  );
   s.height = Math.ceil(fy + 12 + 18);
   return s.toString();
 }

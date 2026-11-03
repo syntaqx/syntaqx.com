@@ -175,16 +175,31 @@ export function DiagramViewer() {
               <Dialog.Title className="inst min-w-0 flex-1 truncate text-dim">Diagram</Dialog.Title>
               <Dialog.Description className="sr-only">{open?.label}</Dialog.Description>
               <div className="flex items-center gap-1.5">
-                <button type="button" onClick={() => zoomTo(width / STEP)} aria-label="Zoom out" className={control}>
+                <button
+                  type="button"
+                  onClick={() => zoomTo(width / STEP)}
+                  aria-label="Zoom out"
+                  className={control}
+                >
                   <Minus size={14} />
                 </button>
                 <span className="inst w-12 text-center text-dim tabular-nums" aria-live="polite">
                   {fit ? Math.round((width / fit) * 100) : 100}%
                 </span>
-                <button type="button" onClick={() => zoomTo(width * STEP)} aria-label="Zoom in" className={control}>
+                <button
+                  type="button"
+                  onClick={() => zoomTo(width * STEP)}
+                  aria-label="Zoom in"
+                  className={control}
+                >
                   <Plus size={14} />
                 </button>
-                <button type="button" onClick={() => zoomTo(fit)} aria-label="Fit to screen" className={control}>
+                <button
+                  type="button"
+                  onClick={() => zoomTo(fit)}
+                  aria-label="Fit to screen"
+                  className={control}
+                >
                   <Maximize size={14} />
                 </button>
                 <Dialog.Close aria-label="Close" className={cn(control, "ml-2")}>

@@ -5,10 +5,15 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, w = 108, h = 28, cols = 4;
+  const W = 760,
+    w = 108,
+    h = 28,
+    cols = 4;
   const gap = (W - 40 - cols * w) / (cols - 1);
   const X = (i) => 20 + i * (w + gap);
-  const r1 = 44, r2 = 124, r3 = 204;
+  const r1 = 44,
+    r2 = 124,
+    r3 = 204;
   const s = sheet({ prefix: "fo-stl", width: W });
   const n = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, o);
 
@@ -30,9 +35,21 @@ export default function draw() {
   s.connect(held, released, { from: "b", to: "t", hl: true, label: "release date", side: "right" });
 
   s.comment("Cancellations");
-  s.connect(pending, voided, { from: "b", to: "t", alt: true, label: "cancelled\nin window", side: "left" });
+  s.connect(pending, voided, {
+    from: "b",
+    to: "t",
+    alt: true,
+    label: "cancelled\nin window",
+    side: "left",
+  });
   s.text(voided.cx, r3 + h + 15, "nothing was owed", "sl", "middle");
-  s.connect(earned, clawback, { from: "b", to: "t", alt: true, label: "terminated in\nclawback period", side: "left" });
+  s.connect(earned, clawback, {
+    from: "b",
+    to: "t",
+    alt: true,
+    label: "terminated in\nclawback period",
+    side: "left",
+  });
   s.connect(clawback, released, { alt: true, label: "nets against\nholdback first" });
 
   s.comment("Legend");

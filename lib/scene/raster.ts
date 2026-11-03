@@ -1,12 +1,4 @@
-import {
-  cylSide,
-  circle,
-  project,
-  type Projector,
-  type Scene,
-  type V2,
-  type V3,
-} from "./iso";
+import { cylSide, circle, project, type Projector, type Scene, type V2, type V3 } from "./iso";
 
 /*
  * Cell-space rasterization shared by the live canvas and the OG renderer.
@@ -56,12 +48,7 @@ const hash = (x: number, y: number) => {
 };
 
 /** Even-odd scanline fill at cell centers. `fn` receives the cell index. */
-export function scan(
-  pts: V2[],
-  cols: number,
-  rows: number,
-  fn: (i: number) => void,
-) {
+export function scan(pts: V2[], cols: number, rows: number, fn: (i: number) => void) {
   let minY = Infinity;
   let maxY = -Infinity;
   for (const [, y] of pts) {
@@ -112,11 +99,7 @@ export function rasterize(
     for (let i = 0; i < cols; i++) {
       const d = Math.hypot((i + 0.5 - cx) / rx, (j + 0.5 - cy) / ry);
       lum[j * cols + i] =
-        d < 0.55
-          ? 0.25 - (d / 0.55) * 0.18
-          : d < 0.95
-            ? 0.07 * (1 - (d - 0.55) / 0.4)
-            : 0;
+        d < 0.55 ? 0.25 - (d / 0.55) * 0.18 : d < 0.95 ? 0.07 * (1 - (d - 0.55) / 0.4) : 0;
     }
 
   // Coverage is sampled S×S per cell. Only cells wholly inside a face take
@@ -155,7 +138,18 @@ export function rasterize(
       const b = p.box;
       // soft: a colored outline over a plain fill, for any of the three colors
       const lit = !p.soft && (p.accent || p.warn || p.good || p.orange);
-      const mark = p.soft && (p.warn || p.good || p.orange) ? 0 : p.warn ? 2 : p.good ? 3 : p.orange ? 4 : p.accent ? 1 : 0;
+      const mark =
+        p.soft && (p.warn || p.good || p.orange)
+          ? 0
+          : p.warn
+            ? 2
+            : p.good
+              ? 3
+              : p.orange
+                ? 4
+                : p.accent
+                  ? 1
+                  : 0;
       const k = lit ? 1 : 0.85;
       fill(b.left, (0.42 - light * 0.2) * k + (lit ? 0.2 : 0), mark);
       fill(b.right, (0.24 + light * 0.2) * k + (lit ? 0.15 : 0), mark);
@@ -183,14 +177,19 @@ export function levels(field: Field, twinkle = 0): Uint8Array {
     for (let x = 0; x < cols; x++) {
       const i = y * cols + x;
       let v = lum[i];
-      if (v > 0.005 && v < 0.1 && hash(x + twinkle * 3, y) > 0.985 - v * 0.2)
-        v = 0.2;
-      const lv = Math.min(
-        LEVELS,
-        Math.floor(v * LEVELS + BAYER[y & 7][x & 7] - 0.5),
-      );
+      if (v > 0.005 && v < 0.1 && hash(x + twinkle * 3, y) > 0.985 - v * 0.2) v = 0.2;
+      const lv = Math.min(LEVELS, Math.floor(v * LEVELS + BAYER[y & 7][x & 7] - 0.5));
       if (lv <= 0) continue;
-      out[i] = acc[i] === 2 ? WARN : acc[i] === 3 ? GOOD : acc[i] === 4 ? ORANGE : acc[i] && lv >= LEVELS ? HOT : lv;
+      out[i] =
+        acc[i] === 2
+          ? WARN
+          : acc[i] === 3
+            ? GOOD
+            : acc[i] === 4
+              ? ORANGE
+              : acc[i] && lv >= LEVELS
+                ? HOT
+                : lv;
     }
   return out;
 }

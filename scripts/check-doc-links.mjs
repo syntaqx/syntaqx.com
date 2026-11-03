@@ -41,7 +41,8 @@ async function check(url) {
     if (status >= 400) status = await request(url, "GET");
     return { status, detail: String(status) };
   } catch (error) {
-    const errorCode = error?.cause?.code ?? (error?.name === "TimeoutError" ? "TIMEOUT" : error?.name);
+    const errorCode =
+      error?.cause?.code ?? (error?.name === "TimeoutError" ? "TIMEOUT" : error?.name);
     return { errorCode, detail: errorCode ?? "error" };
   }
 }
@@ -67,7 +68,12 @@ async function main() {
       while (next < urls.length) {
         const url = urls[next++];
         const outcome = await check(url);
-        results.push({ url, status: classify(outcome), detail: outcome.detail, citedBy: citedBy.get(url) });
+        results.push({
+          url,
+          status: classify(outcome),
+          detail: outcome.detail,
+          citedBy: citedBy.get(url),
+        });
       }
     }),
   );

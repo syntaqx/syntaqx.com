@@ -15,7 +15,10 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, w = 88, gap = 16, h = 28;
+  const W = 760,
+    w = 88,
+    gap = 16,
+    h = 28;
   const total = STAGES.length * w + (STAGES.length - 1) * gap;
   const x0 = W - 20 - total;
   const s = sheet({ prefix: "pt-crr", width: W });
@@ -37,8 +40,18 @@ export default function draw() {
   s.wire([[trueUp.cx, estimates.y2], trueUp.port("t")], { label: "billed", side: "right" });
 
   s.comment("The statement the tenant checks");
-  const st = s.node(trueUp.x2 - 160, bottoms[6] + 34, 160, 40, "statement", { kind: "store", hl: true, sub: "versioned; audit window" });
-  s.wire([[trueUp.cx, bottoms[6] + 6], [trueUp.cx, st.y]], { hl: true });
+  const st = s.node(trueUp.x2 - 160, bottoms[6] + 34, 160, 40, "statement", {
+    kind: "store",
+    hl: true,
+    sub: "versioned; audit window",
+  });
+  s.wire(
+    [
+      [trueUp.cx, bottoms[6] + 6],
+      [trueUp.cx, st.y],
+    ],
+    { hl: true },
+  );
 
   s.height = Math.ceil(st.y2 + 20);
   return s.toString();

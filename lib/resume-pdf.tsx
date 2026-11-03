@@ -143,13 +143,7 @@ function SectionHead({ label }: { label: string }) {
   );
 }
 
-function Section({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode[];
-}) {
+function Section({ label, children }: { label: string; children: ReactNode[] }) {
   const [first, ...rest] = children;
   return (
     <View style={s.section}>
@@ -193,9 +187,7 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
           </Text>
           <Text style={s.dates}>{dates}</Text>
         </View>
-        {job.progression && (
-          <Text style={s.progression}>{job.progression.join("  >  ")}</Text>
-        )}
+        {job.progression && <Text style={s.progression}>{job.progression.join("  >  ")}</Text>}
         {first && (
           <View style={s.bullets}>
             <Bullet text={first} />
@@ -209,13 +201,7 @@ function Job({ job, head }: { job: ResumeJob; head?: ReactNode }) {
   );
 }
 
-function ResumeDocument({
-  contact,
-  title,
-}: {
-  contact: ResumeContact;
-  title: string;
-}) {
+function ResumeDocument({ contact, title }: { contact: ResumeContact; title: string }) {
   // Two lines: where you are and how to reach you, then where to look.
   const reach: { label: string; href?: string }[][] = [
     [
@@ -271,10 +257,7 @@ function ResumeDocument({
 
         <Section label="Technical Skills">
           {[
-            <View
-              key="skills"
-              style={{ borderTopWidth: 0.5, borderTopColor: RULE }}
-            >
+            <View key="skills" style={{ borderTopWidth: 0.5, borderTopColor: RULE }}>
               {resume.skills.map((k) => (
                 <View key={k.label} style={s.skill} wrap={false}>
                   <Text style={s.skillLabel}>{k.label}</Text>
@@ -315,9 +298,6 @@ function ResumeDocument({
   );
 }
 
-export function renderResumePdf(
-  contact: ResumeContact,
-  title = resume.title,
-): Promise<Buffer> {
+export function renderResumePdf(contact: ResumeContact, title = resume.title): Promise<Buffer> {
   return renderToBuffer(<ResumeDocument contact={contact} title={title} />);
 }

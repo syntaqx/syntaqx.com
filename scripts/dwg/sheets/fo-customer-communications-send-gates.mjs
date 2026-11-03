@@ -13,10 +13,15 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, n = STAGES.length, w = 104, h = 28, gap = (W - 40 - n * w) / (n - 1);
+  const W = 760,
+    n = STAGES.length,
+    w = 104,
+    h = 28,
+    gap = (W - 40 - n * w) / (n - 1);
   const s = sheet({ prefix: "fo-ccs", width: W });
   const X = (i) => 20 + i * (w + gap);
-  const y = 42, ey = y + h + 34;
+  const y = 42,
+    ey = y + h + 34;
 
   s.comment("Checked at send time, in this order");
   s.text(20, y - 14, "checked at send time, in this order", "lt");

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { FORWARDED_IF_NONE_MATCH, errorResponse, requestIdHeaders, resolveApiVersion } from "@/lib/api";
+import {
+  FORWARDED_IF_NONE_MATCH,
+  errorResponse,
+  requestIdHeaders,
+  resolveApiVersion,
+} from "@/lib/api";
 import { RATE_LIMIT_KEY_HEADER, checkRateLimit, ipKey } from "@/lib/ratelimit";
 import { uuidv7 } from "@/lib/uuid";
-import {
-  METHOD_OVERRIDE_HEADER,
-  handleQuery,
-  queryDiscoveryHeaders,
-  queryKind,
-} from "@/lib/query";
+import { METHOD_OVERRIDE_HEADER, handleQuery, queryDiscoveryHeaders, queryKind } from "@/lib/query";
 
 function corsHeaders(): Record<string, string> {
   return {
@@ -50,7 +50,9 @@ function forwardedHeaders(request: NextRequest): Headers {
  */
 async function applyApiHeaders(
   request: NextRequest,
-): Promise<{ blocked: true; response: Response } | { blocked: false; headers: Record<string, string> }> {
+): Promise<
+  { blocked: true; response: Response } | { blocked: false; headers: Record<string, string> }
+> {
   const rl = await checkRateLimit(ipKey(request));
   const requestId = uuidv7();
 

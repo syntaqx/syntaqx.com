@@ -18,21 +18,40 @@ export default function draw() {
   const ah = `url(#${s.id("ah")})`;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative timing: a whole quota in the last 6 minutes of one window, another in the first 6 of the next."],
-    [2, "C is illustrative; the refill rate spreads the chapter's 5,000 per hour evenly across the hour."],
-    [3, "A full bucket passes a burst of C at once; after that, requests pass only as fast as tokens refill."],
-    [4, "Each request spends one token; an empty bucket answers 429."],
-    [0, "Quota and window from the chapter. Values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Illustrative timing: a whole quota in the last 6 minutes of one window, another in the first 6 of the next.",
+      ],
+      [
+        2,
+        "C is illustrative; the refill rate spreads the chapter's 5,000 per hour evenly across the hour.",
+      ],
+      [
+        3,
+        "A full bucket passes a burst of C at once; after that, requests pass only as fast as tokens refill.",
+      ],
+      [4, "Each request spends one token; an empty bucket answers 429."],
+      [0, "Quota and window from the chapter. Values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: fixed window, boundary burst, 1 min = 5 px ----
   s.comment("Plan view: fixed window, boundary burst");
   let planBottom;
   {
-    const k = 5, win = (w / 60) * k;
-    const x0 = CX - win, xb = CX, x2 = CX + win;
-    const top = ny + 52, h = 36, bot = top + h;
+    const k = 5,
+      win = (w / 60) * k;
+    const x0 = CX - win,
+      xb = CX,
+      x2 = CX + win;
+    const top = ny + 52,
+      h = 36,
+      bot = top + h;
     const bw = BURST * k;
     s.rect(x0, top, win - bw, h, "obj fill-2");
     s.rect(xb - bw, top, 2 * bw, h, "obj fill-1");
@@ -44,7 +63,12 @@ export default function draw() {
     s.dimH(xb - bw, xb + bw, bot + 22, "S1", { from: [bot, bot], below: true, hl: true });
     s.nb(xb + 22, bot + 30.5, 1);
     s.callout(xb - bw / 2, bot - 8, xb - bw - 40, bot + 24, "B1 inside S1", { dir: -1 });
-    s.viewTitle(CX, bot + 72, "Plan view · fixed window, boundary burst", "Scale 1 min = 5 px · timeline · two windows of the chapter's limit");
+    s.viewTitle(
+      CX,
+      bot + 72,
+      "Plan view · fixed window, boundary burst",
+      "Scale 1 min = 5 px · timeline · two windows of the chapter's limit",
+    );
     planBottom = bot + 85;
   }
 
@@ -53,7 +77,11 @@ export default function draw() {
   const rowTop = planBottom + 64;
   let rowBottom;
   {
-    const bx = 110, bw = 100, bh = 120, top = rowTop, bot = top + bh;
+    const bx = 110,
+      bw = 100,
+      bh = 120,
+      top = rowTop,
+      bot = top + bh;
     s.rect(bx, top, bw, bh, "obj fill-2");
     s.rect(bx, top + bh / 2, bw, bh / 2, "obj fill-1");
     s.label(bx, top + bh / 2, bw, bh / 2, "tokens");
@@ -72,9 +100,12 @@ export default function draw() {
   // ---- Plan view: tokens over time, 1 s = 2.5 px ----
   s.comment("Plan view: tokens over time");
   {
-    const kx = 2.5, ky = 1.2;
-    const x0 = 410, y0 = rowTop + C * ky; // origin: t = 0, 0 tokens
-    const X = (t) => x0 + t * kx, Y = (n) => y0 - n * ky;
+    const kx = 2.5,
+      ky = 1.2;
+    const x0 = 410,
+      y0 = rowTop + C * ky; // origin: t = 0, 0 tokens
+    const X = (t) => x0 + t * kx,
+      Y = (n) => y0 - n * ky;
     const tEnd = 120;
     s.path(`M${X(0)},${Y(C) - 10}V${y0}H${X(tEnd) + 10}`, "leader");
     s.text(X(0) - 6, Y(C) + 3.5, "C", "dt", "end");
@@ -86,7 +117,12 @@ export default function draw() {
     const mt = T0 + T1 * 0.55;
     s.callout(X(mt), Y(r * (mt - T0)), X(mt) + 30, Y(r * (mt - T0)) + 28, "refill");
     s.dimH(X(T0), X(T0 + T1), y0 + 20, "T1", { from: [y0, y0], below: true });
-    s.viewTitle(X(tEnd / 2), rowBottom + 40, "Plan view · tokens over time", "Scale 1 s = 2.5 px · a burst, then the refill");
+    s.viewTitle(
+      X(tEnd / 2),
+      rowBottom + 40,
+      "Plan view · tokens over time",
+      "Scale 1 s = 2.5 px · a burst, then the refill",
+    );
   }
 
   // ---- Variable table ----

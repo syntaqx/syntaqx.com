@@ -20,21 +20,41 @@ export default function draw() {
   const CX = W / 2;
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "One key per logical operation: generated before the first attempt, stored with the order, reused on every retry."],
-    [2, "The key record and the side effect commit in one transaction, so both exist or neither does."],
-    [3, "Past R1 a retry is a new decision: clients stop retrying and reconcile by fetching the object."],
-    [0, "Not to scale: attempts are seconds apart, R1 is hours. Same key K throughout; the table gives each attempt."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "One key per logical operation: generated before the first attempt, stored with the order, reused on every retry.",
+      ],
+      [
+        2,
+        "The key record and the side effect commit in one transaction, so both exist or neither does.",
+      ],
+      [
+        3,
+        "Past R1 a retry is a new decision: clients stop retrying and reconcile by fetching the object.",
+      ],
+      [
+        0,
+        "Not to scale: attempts are seconds apart, R1 is hours. Same key K throughout; the table gives each attempt.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: one key, from claim to prune ----
   s.comment("Plan view: one key, four lanes");
-  const x0 = 180, len = 530;
+  const x0 = 180,
+    len = 530;
   const X = (t) => x0 + t * len;
   const lane = x0 - 50;
   const cy = ny + 72; // client lane (attempt dots)
-  const ky = cy + 30, kh = 30; // key lane
-  const ey = ky + kh + 16, eh = 24; // effect lane
+  const ky = cy + 30,
+    kh = 30; // key lane
+  const ey = ky + kh + 16,
+    eh = 24; // effect lane
   const ry = ey + eh + 26; // response lane baseline
 
   // R1: retention, from the first claim to the prune.
@@ -74,7 +94,12 @@ export default function draw() {
   }
   s.nb(X(T.a1) + 28, cy - 8.5, 1);
 
-  s.viewTitle(CX, ry + 40, "Plan view · one key, from claim to prune", "Not to scale · timeline · seconds, then hours");
+  s.viewTitle(
+    CX,
+    ry + 40,
+    "Plan view · one key, from claim to prune",
+    "Not to scale · timeline · seconds, then hours",
+  );
   const viewBottom = ry + 53;
 
   // ---- Attempt table ----

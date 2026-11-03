@@ -10,7 +10,10 @@ const sheets = path.join(here, "sheets");
 const out = path.join(here, "..", "..", "public", "diagrams");
 const only = process.argv.slice(2);
 
-for (const file of fs.readdirSync(sheets).filter((f) => f.endsWith(".mjs")).sort()) {
+for (const file of fs
+  .readdirSync(sheets)
+  .filter((f) => f.endsWith(".mjs"))
+  .sort()) {
   const name = file.replace(/\.mjs$/, "");
   if (only.length && !only.includes(name)) continue;
   const { default: draw } = await import(pathToFileURL(path.join(sheets, file)).href);

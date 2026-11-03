@@ -13,9 +13,15 @@ const MODELS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, w = 170, h = 26, rowH = 38;
+  const W = 760,
+    x = 20,
+    w = 170,
+    h = 26,
+    rowH = 38;
   const s = sheet({ prefix: "fo-rsg", width: W });
-  const colWhen = 236, colWrong = 500, top = 44;
+  const colWhen = 236,
+    colWrong = 500,
+    top = 44;
 
   s.comment("Column heads");
   s.text(x, 26, "model", "th");
@@ -33,7 +39,13 @@ export default function draw() {
   });
 
   const fy = top + MODELS.length * rowH + 18;
-  s.text(W - x, fy, "a sound default: real visits inside a window, due placeholders beyond it", "sl hl", "end");
+  s.text(
+    W - x,
+    fy,
+    "a sound default: real visits inside a window, due placeholders beyond it",
+    "sl hl",
+    "end",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

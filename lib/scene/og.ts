@@ -10,7 +10,15 @@ import { walk, type Ink, type Pen } from "./walk";
  * then emitted as a handful of <path> elements (one per color and opacity).
  */
 
-export const OG_COLORS = { bg: "#0a0c0c", fg: "#e6ece9", dim: "#84908e", acc: "#00d1ca", warn: "#ff5d52", good: "#74c288", orange: "#d97757" };
+export const OG_COLORS = {
+  bg: "#0a0c0c",
+  fg: "#e6ece9",
+  dim: "#84908e",
+  acc: "#00d1ca",
+  warn: "#ff5d52",
+  good: "#74c288",
+  orange: "#d97757",
+};
 
 type RGB = [number, number, number];
 const rgb = (h: string): RGB => {
@@ -18,8 +26,8 @@ const rgb = (h: string): RGB => {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 };
 const hex = (c: RGB) => `#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
-const mix = (a: RGB, b: RGB, t: number): RGB => a.map((v, i) => Math.round(v + (b[i] - v) * t)) as RGB;
-
+const mix = (a: RGB, b: RGB, t: number): RGB =>
+  a.map((v, i) => Math.round(v + (b[i] - v) * t)) as RGB;
 
 function render(scene: Scene, width: number, height: number, pitch: number, wide: boolean): string {
   const C = OG_COLORS;
@@ -44,7 +52,14 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
   // Line work as vectors, like the canvas: stroked, anti-aliased, on its own
   // layer. Occlusion erases only what's drawn so far, so each solid face
   // wraps everything before it in a mask that cuts the face out.
-  const inkColor: Record<Ink, string> = { fg: C.fg, dim: C.dim, acc: C.acc, warn: C.warn, good: C.good, orange: C.orange };
+  const inkColor: Record<Ink, string> = {
+    fg: C.fg,
+    dim: C.dim,
+    acc: C.acc,
+    warn: C.warn,
+    good: C.good,
+    orange: C.orange,
+  };
   const n = (v: number) => +v.toFixed(1);
   const d = (pts: [number, number][], close: boolean) =>
     pts.map(([x, y], i) => `${i ? "L" : "M"}${n(x)} ${n(y)}`).join("") + (close ? "Z" : "");
@@ -74,11 +89,16 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
   walk(scene, project(scene.ext, width, height, wide), pen, REST);
 
   const parts: string[] = [`<rect width="${width}" height="${height}" fill="${C.bg}"/>`];
-  for (let k = 1; k <= LEVELS; k++) if (tilePaths[k].length) parts.push(`<path fill="${ramp[k - 1]}" d="${tilePaths[k].join("")}"/>`);
+  for (let k = 1; k <= LEVELS; k++)
+    if (tilePaths[k].length)
+      parts.push(`<path fill="${ramp[k - 1]}" d="${tilePaths[k].join("")}"/>`);
   if (tilePaths[HOT].length) parts.push(`<path fill="${hot}" d="${tilePaths[HOT].join("")}"/>`);
-  if (tilePaths[WARN].length) parts.push(`<path fill="${C.warn}" fill-opacity="0.85" d="${tilePaths[WARN].join("")}"/>`);
-  if (tilePaths[GOOD].length) parts.push(`<path fill="${C.good}" fill-opacity="0.85" d="${tilePaths[GOOD].join("")}"/>`);
-  if (tilePaths[ORANGE].length) parts.push(`<path fill="${C.orange}" fill-opacity="0.85" d="${tilePaths[ORANGE].join("")}"/>`);
+  if (tilePaths[WARN].length)
+    parts.push(`<path fill="${C.warn}" fill-opacity="0.85" d="${tilePaths[WARN].join("")}"/>`);
+  if (tilePaths[GOOD].length)
+    parts.push(`<path fill="${C.good}" fill-opacity="0.85" d="${tilePaths[GOOD].join("")}"/>`);
+  if (tilePaths[ORANGE].length)
+    parts.push(`<path fill="${C.orange}" fill-opacity="0.85" d="${tilePaths[ORANGE].join("")}"/>`);
   parts.push(lines);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs>${masks.join("")}</defs>${parts.join("")}</svg>`;
 }
@@ -86,13 +106,24 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
 const dataUri = (svg: string) => `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 
 /** A scene as an SVG data URI, for use as an <img> inside ImageResponse. */
-export function sceneImage(name: SceneName, width: number, height: number, opts: { pitch?: number; wide?: boolean } = {}) {
+export function sceneImage(
+  name: SceneName,
+  width: number,
+  height: number,
+  opts: { pitch?: number; wide?: boolean } = {},
+) {
   return dataUri(render(sceneAt(name, REST), width, height, opts.pitch ?? 6, opts.wide ?? false));
 }
 
 /** Just the sparse dithered field, no drawing: texture for text-only cards. */
 export function fieldImage(width: number, height: number, pitch = 6) {
-  const empty: Scene = { parts: [], ext: [[0, 0, 0], [12, 12, 0]] as Scene["ext"], axes: [] };
+  const empty: Scene = {
+    parts: [],
+    ext: [
+      [0, 0, 0],
+      [12, 12, 0],
+    ] as Scene["ext"],
+    axes: [],
+  };
   return dataUri(render(empty, width, height, pitch, true));
 }
-

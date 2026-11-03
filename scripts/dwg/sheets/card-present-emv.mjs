@@ -13,14 +13,21 @@ const PARTIES = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, titleW = 150;
+  const W = 760,
+    x = 20,
+    titleW = 150;
   const s = sheet({ prefix: "cpe", width: W });
   const cw = (W - 2 * x - titleW) / PARTIES.length;
   const CX = (i) => x + titleW + (i + 0.5) * cw;
-  const CARD = CX(0), TERM = CX(1), ISS = CX(4);
+  const CARD = CX(0),
+    TERM = CX(1),
+    ISS = CX(4);
 
   const [P, A, B, C] = s.lanes({
-    x, y: 20, w: W - 2 * x, titleW,
+    x,
+    y: 20,
+    w: W - 2 * x,
+    titleW,
     lanes: [
       { label: "Parties", sub: "a chip transaction", h: 92 },
       { label: "1 · The card signs", sub: "this transaction,\nand only this one", h: 74 },
@@ -42,16 +49,55 @@ export default function draw() {
   const note = (y, lines) => lines.forEach((l, j) => s.text(TERM + 14, y + j * 11, l, "sl"));
 
   s.comment("1. The card signs");
-  s.wire([[CARD, A.y + 40], [TERM, A.y + 40]], { start: "dot", label: "ARQC" });
-  note(A.y + 37, ["signed over the amount, the date, a counter", "and the terminal's random number"]);
+  s.wire(
+    [
+      [CARD, A.y + 40],
+      [TERM, A.y + 40],
+    ],
+    { start: "dot", label: "ARQC" },
+  );
+  note(A.y + 37, [
+    "signed over the amount, the date, a counter",
+    "and the terminal's random number",
+  ]);
 
   s.comment("2. Online");
-  s.wire([[TERM, B.y + 36], [ISS, B.y + 36]], { start: "dot", hl: true, label: "authorization with the ARQC (DE 55); the issuer recomputes it" });
-  s.wire([[ISS, B.y + 66], [TERM, B.y + 66]], { start: "dot", hl: true, side: "below", label: "approved + ARPC: proof it came from the real issuer" });
+  s.wire(
+    [
+      [TERM, B.y + 36],
+      [ISS, B.y + 36],
+    ],
+    {
+      start: "dot",
+      hl: true,
+      label: "authorization with the ARQC (DE 55); the issuer recomputes it",
+    },
+  );
+  s.wire(
+    [
+      [ISS, B.y + 66],
+      [TERM, B.y + 66],
+    ],
+    {
+      start: "dot",
+      hl: true,
+      side: "below",
+      label: "approved + ARPC: proof it came from the real issuer",
+    },
+  );
 
   s.comment("Offline");
-  s.wire([[CARD, C.y + 40], [TERM, C.y + 40]], { start: "dot", alt: true, label: "TC or AAC" });
-  note(C.y + 37, ["TC approves or AAC declines at the terminal;", "the issuer only sees it in clearing"]);
+  s.wire(
+    [
+      [CARD, C.y + 40],
+      [TERM, C.y + 40],
+    ],
+    { start: "dot", alt: true, label: "TC or AAC" },
+  );
+  note(C.y + 37, [
+    "TC approves or AAC declines at the terminal;",
+    "the issuer only sees it in clearing",
+  ]);
 
   s.height = Math.ceil(C.y + C.h + 20);
   return s.toString();

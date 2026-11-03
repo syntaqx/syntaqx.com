@@ -16,18 +16,27 @@ const DocSummary = z
     section: z.string().openapi({ example: "money" }),
     category: z.string().openapi({ example: "Money" }),
     tags: z.array(z.string()),
-    position: z.number().int().openapi({ description: "Position in the playbook's reading order, from 1" }),
+    position: z
+      .number()
+      .int()
+      .openapi({ description: "Position in the playbook's reading order, from 1" }),
   })
   .openapi("DocSummary");
 
 const DocsQueryBody = z
   .object({
-    section: z.array(z.string()).optional().openapi({ description: "Any of these sections", example: ["money"] }),
+    section: z
+      .array(z.string())
+      .optional()
+      .openapi({ description: "Any of these sections", example: ["money"] }),
     tag: z.array(z.string()).optional().openapi({ description: "Docs with any of these tags" }),
     q: z.string().optional().openapi({ description: "Free text over title and description" }),
     sort: z.enum(["position", "-position", "title", "-title"]).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    cursor: z.string().optional().openapi({ description: "Opaque cursor from a previous response's Link header" }),
+    cursor: z
+      .string()
+      .optional()
+      .openapi({ description: "Opaque cursor from a previous response's Link header" }),
   })
   .openapi("DocsQuery");
 
@@ -38,7 +47,7 @@ const errorDoc = (description: string) => ({
 
 const listResult = {
   description:
-    "Matching docs, as a bare array. When there are more, the `Link` header has a `rel=\"next\"` URL; follow it as-is.",
+    'Matching docs, as a bare array. When there are more, the `Link` header has a `rel="next"` URL; follow it as-is.',
   content: { "application/json": { schema: z.array(DocSummary) } },
 };
 
@@ -62,7 +71,9 @@ registry.registerPath({
   },
   responses: {
     200: listResult,
-    304: { description: "Not modified (If-None-Match matched); doesn't count against the rate limit" },
+    304: {
+      description: "Not modified (If-None-Match matched); doesn't count against the rate limit",
+    },
     422: errorDoc("Unknown parameter, invalid sort or limit, or a cursor from different filters"),
     429: errorDoc("Rate limited"),
   },

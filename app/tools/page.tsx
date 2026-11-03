@@ -28,9 +28,7 @@ function ToolGrid({ items }: { items: Tool[] }) {
                 className="text-dim group-hover:text-accent transition-colors"
               />
             </div>
-            <p className="text-xs text-dim leading-relaxed">
-              {item.description}
-            </p>
+            <p className="text-xs text-dim leading-relaxed">{item.description}</p>
             <div className="mt-3 flex flex-wrap gap-1">
               {item.tags.map((tag) => (
                 <span
@@ -67,9 +65,9 @@ export default function ToolsPage() {
         sceneLabel="An opened box of small tools with its lid floating above"
       >
         <p>
-          Small tools I use often enough to keep. They run in your browser, so
-          nothing you paste is sent anywhere. One-time secrets is the exception,
-          by design: it encrypts in your browser and sends only the ciphertext.
+          Small tools I use often enough to keep. They run in your browser, so nothing you paste is
+          sent anywhere. One-time secrets is the exception, by design: it encrypts in your browser
+          and sends only the ciphertext.
         </p>
       </PageHeader>
 
@@ -81,9 +79,7 @@ export default function ToolsPage() {
 
         <section>
           <Link href="/tools/convert" className="group">
-            <h2 className="eyebrow mb-4 group-hover:text-accent transition-colors">
-              Converters
-            </h2>
+            <h2 className="eyebrow mb-4 group-hover:text-accent transition-colors">Converters</h2>
           </Link>
           <ToolGrid items={converters} />
         </section>

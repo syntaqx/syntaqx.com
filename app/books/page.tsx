@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { getBookChapters } from "@/lib/docs";
-import { BOOKS, BOOK_TYPES, CONSIDERING_BOOKS, UPCOMING_BOOKS, formatMinutes, type BookType } from "@/lib/books";
+import {
+  BOOKS,
+  BOOK_TYPES,
+  CONSIDERING_BOOKS,
+  UPCOMING_BOOKS,
+  formatMinutes,
+  type BookType,
+} from "@/lib/books";
 import { BookCards, type BookCard } from "@/components/book-cards";
 import { DocsHeader } from "@/components/docs-header";
 import { JsonLd } from "@/components/json-ld";
@@ -33,12 +40,25 @@ export default function BooksPage() {
 
   return (
     <article>
-      <JsonLd data={itemList("Books", "/books", BOOKS.map((b) => ({ name: b.name, path: `/books/${b.slug}` })))} />
+      <JsonLd
+        data={itemList(
+          "Books",
+          "/books",
+          BOOKS.map((b) => ({ name: b.name, path: `/books/${b.slug}` })),
+        )}
+      />
       <DocsHeader eyebrow="Books" title="Books">
         <p className="max-w-3xl text-dim">
-          The <Link href="/docs" className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent">playbook</Link>{" "}
-          applies anywhere. Each book takes one subject and follows it all the way down: how an industry&apos;s rules,
-          its money and its regulators shape the engineering, building on the playbook&apos;s chapters.
+          The{" "}
+          <Link
+            href="/docs"
+            className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"
+          >
+            playbook
+          </Link>{" "}
+          applies anywhere. Each book takes one subject and follows it all the way down: how an
+          industry&apos;s rules, its money and its regulators shape the engineering, building on the
+          playbook&apos;s chapters.
         </p>
       </DocsHeader>
 
@@ -57,7 +77,12 @@ export default function BooksPage() {
                 summary: book.summary,
               };
             }),
-            ...UPCOMING_BOOKS.filter((b) => b.type === type).map((b) => ({ cover: b.cover, eyebrow: "Soon", name: b.name, summary: b.summary })),
+            ...UPCOMING_BOOKS.filter((b) => b.type === type).map((b) => ({
+              cover: b.cover,
+              eyebrow: "Soon",
+              name: b.name,
+              summary: b.summary,
+            })),
           ];
           return (
             <section key={type} id={type} className="scroll-mt-24">
@@ -71,9 +96,16 @@ export default function BooksPage() {
           <section id="considering" className="scroll-mt-24">
             <SectionHead title="Considering" count={CONSIDERING_BOOKS.length} />
             <p className="-mt-2 mb-6 max-w-3xl text-sm text-dim">
-              Industries I might write next, each with its own ledger and rules. One moves up to Soon once I commit to it.
+              Industries I might write next, each with its own ledger and rules. One moves up to
+              Soon once I commit to it.
             </p>
-            <BookCards books={CONSIDERING_BOOKS.map((b) => ({ eyebrow: "Considering", name: b.name, summary: b.summary }))} />
+            <BookCards
+              books={CONSIDERING_BOOKS.map((b) => ({
+                eyebrow: "Considering",
+                name: b.name,
+                summary: b.summary,
+              }))}
+            />
           </section>
         )}
       </div>

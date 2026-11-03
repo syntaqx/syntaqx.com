@@ -21,17 +21,32 @@ export default function draw() {
   const s = sheet({ prefix: "il", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "One card network's published US schedule, effective October 24, 2026; card-not-present rates."],
-    [2, "Level 3: line items sent with a commercial card payment. D1 is what complete data saves."],
-    [0, "Values in USD. The drawing carries codes; rates, values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "One card network's published US schedule, effective October 24, 2026; card-not-present rates.",
+      ],
+      [
+        2,
+        "Level 3: line items sent with a commercial card payment. D1 is what complete data saves.",
+      ],
+      [0, "Values in USD. The drawing carries codes; rates, values and formulas are in the table."],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: 1 USD = 140 px ----
   s.comment("Plan view: interchange by card type");
-  const k = 140, x0 = 270, bh = 16, pitch = 36;
+  const k = 140,
+    x0 = 270,
+    bh = 16,
+    pitch = 36;
   const X = (v) => x0 + v * k;
-  const axY = ny + 44, r0 = axY + 22;
+  const axY = ny + 44,
+    r0 = axY + 22;
   const RY = (i) => r0 + i * pitch;
 
   s.line(X(0), axY, X(3.25), axY, "leader");
@@ -54,7 +69,12 @@ export default function draw() {
   s.nb(X(BARS[3][2]) + 16, dy, 2);
 
   const vy = RY(BARS.length - 1) + bh + 44;
-  s.viewTitle(W / 2, vy, "Plan view · interchange by card type", "Scale 1 USD = 140 px · one 100 USD card-not-present payment");
+  s.viewTitle(
+    W / 2,
+    vy,
+    "Plan view · interchange by card type",
+    "Scale 1 USD = 140 px · one 100 USD card-not-present payment",
+  );
 
   // ---- Variable table ----
   s.comment("Variable table");

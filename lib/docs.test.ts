@@ -66,9 +66,12 @@ function contentRules(all: DocData[]) {
   });
 
   it.each(each)("%s only links to sections that exist", (_, doc) => {
-    for (const [, base, slug, anchor] of doc.content.matchAll(/\]\(\/(docs|books)\/([a-z0-9/-]+)#([a-z0-9-]+)\)/g)) {
+    for (const [, base, slug, anchor] of doc.content.matchAll(
+      /\]\(\/(docs|books)\/([a-z0-9/-]+)#([a-z0-9-]+)\)/g,
+    )) {
       const target = (base === "docs" ? docs : chapters).find((d) => d.slug === slug);
-      if (target) expect(headingIds(target.content), `/${base}/${slug}#${anchor}`).toContain(anchor);
+      if (target)
+        expect(headingIds(target.content), `/${base}/${slug}#${anchor}`).toContain(anchor);
     }
   });
 
@@ -79,7 +82,9 @@ function contentRules(all: DocData[]) {
   it.each(each)("%s draws diagrams as SVGs with alt text and a caption", (_, doc) => {
     // Box-drawing characters mean an ASCII diagram; those are SVGs in public/diagrams.
     expect(doc.content).not.toMatch(/[─-╿▶►▼◄]/);
-    for (const [, alt, src, caption] of doc.content.matchAll(/!\[([^\]]*)\]\((\/diagrams\/[^\s)]+)(?: "([^"]*)")?\)/g)) {
+    for (const [, alt, src, caption] of doc.content.matchAll(
+      /!\[([^\]]*)\]\((\/diagrams\/[^\s)]+)(?: "([^"]*)")?\)/g,
+    )) {
       expect(fs.existsSync(path.join("public", src)), src).toBe(true);
       expect(alt.length, `${src} alt text`).toBeGreaterThan(40);
       expect(caption, `${src} caption`).toBeTruthy();
@@ -139,7 +144,11 @@ describe("playbook docs", () => {
         continue;
       }
       const [target, section] = destination.replace("/docs/", "").split("#");
-      if (section) expect(docs.some((d) => d.section === section), destination).toBe(true);
+      if (section)
+        expect(
+          docs.some((d) => d.section === section),
+          destination,
+        ).toBe(true);
       else expect(slugs, destination).toContain(target);
     }
   });
@@ -149,7 +158,11 @@ describe("playbook docs", () => {
       expect.arrayContaining([
         { source: "/docs/industries", destination: "/books", permanent: true },
         { source: "/docs/industries/:book", destination: "/books/:book", permanent: true },
-        { source: "/docs/industries/:book/:chapter", destination: "/books/:book/:chapter", permanent: true },
+        {
+          source: "/docs/industries/:book/:chapter",
+          destination: "/books/:book/:chapter",
+          permanent: true,
+        },
       ]),
     );
   });
@@ -170,7 +183,9 @@ describe("books", () => {
       const own = chapters.filter((c) => c.section === book.slug);
       for (const chapter of own) expect(chapter.part, chapter.slug).toBeTruthy();
       const titles = bookParts(own).map((p) => p.title);
-      expect(new Set(titles).size, `${book.slug} parts out of order: ${titles.join(", ")}`).toBe(titles.length);
+      expect(new Set(titles).size, `${book.slug} parts out of order: ${titles.join(", ")}`).toBe(
+        titles.length,
+      );
     }
   });
 });
@@ -180,9 +195,10 @@ describe("sidebar", () => {
 
   it("fits every section name on one line, shortened where it runs long", () => {
     for (const name of names) {
-      expect(sidebarLabel(name).length, `"${name}" needs a short label in lib/sidebar-labels.ts`).toBeLessThanOrEqual(
-        SIDEBAR_LABEL_MAX,
-      );
+      expect(
+        sidebarLabel(name).length,
+        `"${name}" needs a short label in lib/sidebar-labels.ts`,
+      ).toBeLessThanOrEqual(SIDEBAR_LABEL_MAX);
     }
   });
 
@@ -196,18 +212,25 @@ describe("links from outside the site", () => {
   // and the site's redirects can't fix them if they break.
   const files = [
     "README.md",
-    ...fs.readdirSync(path.join(process.cwd(), "docs", "adr")).map((f) => path.join("docs", "adr", f)),
+    ...fs
+      .readdirSync(path.join(process.cwd(), "docs", "adr"))
+      .map((f) => path.join("docs", "adr", f)),
   ];
   it.each(files)("%s only links to docs and books that exist", (file) => {
     const text = fs.readFileSync(path.join(process.cwd(), file), "utf8");
-    for (const [, slug] of text.matchAll(/syntaqx\.com\/docs\/([a-z0-9/-]+)/g)) expect(slugs, slug).toContain(slug);
-    for (const [, slug] of text.matchAll(/syntaqx\.com\/books\/([a-z0-9/-]+)/g)) expect(bookSlugs, slug).toContain(slug);
+    for (const [, slug] of text.matchAll(/syntaqx\.com\/docs\/([a-z0-9/-]+)/g))
+      expect(slugs, slug).toContain(slug);
+    for (const [, slug] of text.matchAll(/syntaqx\.com\/books\/([a-z0-9/-]+)/g))
+      expect(bookSlugs, slug).toContain(slug);
   });
 });
 
 describe("architecture decision records", () => {
   const dir = path.join(process.cwd(), "docs", "adr");
-  const files = fs.readdirSync(dir).filter((f) => /^\d{4}-.+\.md$/.test(f)).sort();
+  const files = fs
+    .readdirSync(dir)
+    .filter((f) => /^\d{4}-.+\.md$/.test(f))
+    .sort();
   const index = fs.readFileSync(path.join(dir, "README.md"), "utf8");
 
   it("are numbered without gaps", () => {

@@ -22,16 +22,17 @@ const COLS: Record<number, string> = {
 function Strip({ stats }: { stats: Stat[] }) {
   return (
     <section
-      className={cn("-mx-6 mb-20 grid grid-cols-2 gap-px border-y border-border bg-border", COLS[stats.length] ?? "md:grid-cols-4")}
+      className={cn(
+        "-mx-6 mb-20 grid grid-cols-2 gap-px border-y border-border bg-border",
+        COLS[stats.length] ?? "md:grid-cols-4",
+      )}
     >
       {stats.map((s) => {
         const body = (
           <>
             <span className="font-voice text-4xl leading-[0.85] font-semibold">
               {s.value}
-              {s.unit && (
-                <span className="text-[0.5em] text-accent">{s.unit}</span>
-              )}
+              {s.unit && <span className="text-[0.5em] text-accent">{s.unit}</span>}
             </span>
             <span className="inst text-dim transition-colors group-hover:text-accent">
               {s.label}

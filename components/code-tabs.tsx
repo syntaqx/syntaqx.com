@@ -55,14 +55,20 @@ export function CodeTabsScript() {
     function handleKey(e: KeyboardEvent) {
       const tab = tabOf(e);
       if (!tab) return;
-      const tabs = Array.from(tab.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? []);
+      const tabs = Array.from(
+        tab.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [],
+      );
       const i = tabs.indexOf(tab);
       const next =
-        e.key === "ArrowRight" ? tabs[(i + 1) % tabs.length]
-        : e.key === "ArrowLeft" ? tabs[(i - 1 + tabs.length) % tabs.length]
-        : e.key === "Home" ? tabs[0]
-        : e.key === "End" ? tabs[tabs.length - 1]
-        : undefined;
+        e.key === "ArrowRight"
+          ? tabs[(i + 1) % tabs.length]
+          : e.key === "ArrowLeft"
+            ? tabs[(i - 1 + tabs.length) % tabs.length]
+            : e.key === "Home"
+              ? tabs[0]
+              : e.key === "End"
+                ? tabs[tabs.length - 1]
+                : undefined;
       if (!next) return;
       e.preventDefault();
       next.focus();

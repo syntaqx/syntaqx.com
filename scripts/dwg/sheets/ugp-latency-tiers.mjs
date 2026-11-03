@@ -15,17 +15,32 @@ const TIERS = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20;
+  const W = 760,
+    x = 20;
   const s = sheet({ prefix: "ugp-lat", width: W });
 
   s.comment("Bars on a seconds axis, ticks only");
-  const { bottom } = s.bars(x, 40, TIERS.map(([label, value, text, hl]) => ({ label, value, text, hl })), {
-    ax: 200, k: 13, ticks: [0, 5, 10, 15, 20, 25, 30], tick: (v) => (v ? `${v} s` : "0"), head: "delivery tier",
-  });
+  const { bottom } = s.bars(
+    x,
+    40,
+    TIERS.map(([label, value, text, hl]) => ({ label, value, text, hl })),
+    {
+      ax: 200,
+      k: 13,
+      ticks: [0, 5, 10, 15, 20, 25, 30],
+      tick: (v) => (v ? `${v} s` : "0"),
+      head: "delivery tier",
+    },
+  );
 
   s.comment("Footnote");
   const fy = bottom + 24;
-  s.text(x, fy, "glass to glass, most viewers; upper bounds from vendor and platform documentation", "sl");
+  s.text(
+    x,
+    fy,
+    "glass to glass, most viewers; upper bounds from vendor and platform documentation",
+    "sl",
+  );
   s.height = Math.ceil(fy + 18);
   return s.toString();
 }

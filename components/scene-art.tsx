@@ -71,7 +71,17 @@ function canvasPen(
 ): Pen {
   const lw = Math.max(1, dpr * 0.9);
   const ink = (k: Ink) =>
-    k === "acc" ? pal.acc : k === "warn" ? pal.warn : k === "good" ? pal.good : k === "orange" ? pal.orange : k === "dim" ? pal.dim : pal.fg;
+    k === "acc"
+      ? pal.acc
+      : k === "warn"
+        ? pal.warn
+        : k === "good"
+          ? pal.good
+          : k === "orange"
+            ? pal.orange
+            : k === "dim"
+              ? pal.dim
+              : pal.fg;
   const trace = (pts: V2[], close: boolean) => {
     ctx.beginPath();
     pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
@@ -126,8 +136,7 @@ function canvasPen(
       // solid to 86%, then fading), or it vanishes on narrow screens.
       const k = 0.9;
       const dy = Math.abs(y1 - H / 2);
-      const hw =
-        k * (W / 2) * Math.sqrt(Math.max(0, 1 - (dy / ((k * H) / 2)) ** 2));
+      const hw = k * (W / 2) * Math.sqrt(Math.max(0, 1 - (dy / ((k * H) / 2)) ** 2));
       const tx = Math.max(
         W / 2 - hw,
         Math.min(W / 2 + hw - tw, right ? x1 + 14 * dpr : x1 - 14 * dpr - tw),
@@ -143,13 +152,21 @@ function canvasPen(
       if (W / dpr < 640) return;
       ctx.font = `${8 * dpr}px ${pal.inst}`;
       ctx.letterSpacing = `${1.2 * dpr}px`;
-      const rows = lines.map((l) => ({ ...l, t: l.text.toUpperCase(), v: (l.value ?? "").toUpperCase() }));
+      const rows = lines.map((l) => ({
+        ...l,
+        t: l.text.toUpperCase(),
+        v: (l.value ?? "").toUpperCase(),
+      }));
       const pad = 7 * dpr;
       const lh = 12.5 * dpr;
       const gap = 16 * dpr;
       const tw = Math.max(...rows.map((r) => ctx.measureText(r.t).width));
       // a fixed width for the values, so the card doesn't resize as they grow
-      const vw = Math.max(...[...(fit ?? []), ...rows.map((r) => r.v)].map((v) => ctx.measureText(v.toUpperCase()).width));
+      const vw = Math.max(
+        ...[...(fit ?? []), ...rows.map((r) => r.v)].map(
+          (v) => ctx.measureText(v.toUpperCase()).width,
+        ),
+      );
       const cw = tw + gap + vw + pad * 2;
       const ch = rows.length * lh + pad * 1.5;
       // A right corner of the frame; the edge mask leaves this rectangle whole.
@@ -171,17 +188,21 @@ function canvasPen(
           ctx.lineTo(x + cw - pad, base - 9.5 * dpr);
           ctx.stroke();
         }
-        ctx.fillStyle = css(r.warn ? pal.warn : r.good ? pal.good : r.accent ? pal.acc : r.rule ? pal.fg : pal.dim, 0.95);
+        ctx.fillStyle = css(
+          r.warn ? pal.warn : r.good ? pal.good : r.accent ? pal.acc : r.rule ? pal.fg : pal.dim,
+          0.95,
+        );
         ctx.fillText(r.t, x + pad, base);
-        ctx.fillStyle = css(r.warn ? pal.warn : r.good ? pal.good : r.accent ? pal.acc : pal.fg, 0.95);
+        ctx.fillStyle = css(
+          r.warn ? pal.warn : r.good ? pal.good : r.accent ? pal.acc : pal.fg,
+          0.95,
+        );
         ctx.fillText(r.v, x + cw - pad - ctx.measureText(r.v).width, base);
       });
       ctx.letterSpacing = "0px";
     },
     packet(pts, at) {
-      const lens = pts
-        .slice(1)
-        .map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]));
+      const lens = pts.slice(1).map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]));
       const total = lens.reduce((a, b) => a + b, 0);
       if (!total) return;
       let d = at * total;
@@ -326,12 +347,25 @@ export function SceneArt({
         noteKey = key;
         for (const pre of ["", "-webkit-"]) {
           if (ns.length) {
-            canvas.style.setProperty(`${pre}mask-image`, ["radial-gradient(closest-side, black 86%, transparent)", ...ns.map(() => "linear-gradient(black, black)")].join(", "));
-            canvas.style.setProperty(`${pre}mask-size`, ["100% 100%", ...ns.map((n) => `${n.w}px ${n.h}px`)].join(", "));
-            canvas.style.setProperty(`${pre}mask-position`, ["center", ...ns.map((n) => `${n.x - 1}px ${n.y - 1}px`)].join(", "));
+            canvas.style.setProperty(
+              `${pre}mask-image`,
+              [
+                "radial-gradient(closest-side, black 86%, transparent)",
+                ...ns.map(() => "linear-gradient(black, black)"),
+              ].join(", "),
+            );
+            canvas.style.setProperty(
+              `${pre}mask-size`,
+              ["100% 100%", ...ns.map((n) => `${n.w}px ${n.h}px`)].join(", "),
+            );
+            canvas.style.setProperty(
+              `${pre}mask-position`,
+              ["center", ...ns.map((n) => `${n.x - 1}px ${n.y - 1}px`)].join(", "),
+            );
             canvas.style.setProperty(`${pre}mask-repeat`, "no-repeat");
           } else {
-            for (const prop of ["mask-image", "mask-size", "mask-position", "mask-repeat"]) canvas.style.removeProperty(pre + prop);
+            for (const prop of ["mask-image", "mask-size", "mask-position", "mask-repeat"])
+              canvas.style.removeProperty(pre + prop);
           }
         }
       }
@@ -394,7 +428,8 @@ export function SceneArt({
 
     return () => {
       for (const pre of ["", "-webkit-"])
-        for (const prop of ["mask-image", "mask-size", "mask-position", "mask-repeat"]) canvas.style.removeProperty(pre + prop);
+        for (const prop of ["mask-image", "mask-size", "mask-position", "mask-repeat"])
+          canvas.style.removeProperty(pre + prop);
       actors.delete(actor);
       ro.disconnect();
       io.disconnect();
@@ -410,7 +445,10 @@ export function SceneArt({
       ref={ref}
       role="img"
       aria-label={label}
-      className={cn("block w-full mask-[radial-gradient(closest-side,black_86%,transparent)]", className)}
+      className={cn(
+        "block w-full mask-[radial-gradient(closest-side,black_86%,transparent)]",
+        className,
+      )}
     />
   );
 }

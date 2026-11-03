@@ -7,11 +7,15 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "wf", width: W });
 
-  const w = 108, h = 30, gap = 58;
+  const w = 108,
+    h = 30,
+    gap = 58;
   const x0 = Math.round((W - (4 * w + 3 * gap)) / 2);
   const X = (i) => x0 + i * (w + gap);
-  const r1 = 64, r2 = 144;
-  const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
+  const r1 = 64,
+    r2 = 144;
+  const st = (i, y, label, o = {}) =>
+    s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
 
   s.comment("States");
   const submitted = st(0, r1, "submitted");
@@ -32,7 +36,13 @@ export default function draw() {
 
   s.comment("Exits and compensation");
   s.connect(review, rejected, { from: "b", to: "t", alt: true, label: "rejected", side: "left" });
-  s.connect(fulfilling, compensating, { from: "b", to: "t", alt: true, label: "step failed", side: "right" });
+  s.connect(fulfilling, compensating, {
+    from: "b",
+    to: "t",
+    alt: true,
+    label: "step failed",
+    side: "right",
+  });
   s.connect(compensating, reversed, { alt: true, label: "undone" });
 
   s.comment("Legend");

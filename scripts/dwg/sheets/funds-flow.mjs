@@ -5,12 +5,20 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, h = 28;
+  const W = 760,
+    h = 28;
   const s = sheet({ prefix: "ff", width: W });
 
   // Columns left to right; rows: card road, sponsor bank between, ACH road.
-  const c1 = 70, c2 = 206, c3 = 350, c4 = 530, nw = 106;
-  const yCard = 28, ySpon = 82, yAch = 136, yOut = 200;
+  const c1 = 70,
+    c2 = 206,
+    c3 = 350,
+    c4 = 530,
+    nw = 106;
+  const yCard = 28,
+    ySpon = 82,
+    yAch = 136,
+    yOut = 200;
 
   s.comment("Roads in");
   s.text(20, yCard + h / 2 + 3.5, "card", "lt");
@@ -26,7 +34,11 @@ export default function draw() {
   s.connect(operator, sponsor, { at: [0.5, 0.7] });
 
   s.comment("Held for merchants");
-  const fbo = s.node(c4, ySpon - 4, W - 20 - c4, h + 8, "FBO account", { kind: "store", hl: true, sub: "held for merchants" });
+  const fbo = s.node(c4, ySpon - 4, W - 20 - c4, h + 8, "FBO account", {
+    kind: "store",
+    hl: true,
+    sub: "held for merchants",
+  });
   s.connect(sponsor, fbo, { hl: true });
 
   s.comment("Out: payouts and fees");
@@ -40,7 +52,14 @@ export default function draw() {
   s.text(operating.cx, yOut + h + 16, "earned fees", "sl", "middle");
 
   s.comment("The ledger");
-  const t = s.tAccount(c1, yOut + 2, 330, "Ledger · who owns what", ["card settlement", "ACH debits"], ["payouts to merchants", "earned fees to operating"]);
+  const t = s.tAccount(
+    c1,
+    yOut + 2,
+    330,
+    "Ledger · who owns what",
+    ["card settlement", "ACH debits"],
+    ["payouts to merchants", "earned fees to operating"],
+  );
 
   s.height = Math.ceil(Math.max(t.y, yOut + h + 16) + 24);
   return s.toString();

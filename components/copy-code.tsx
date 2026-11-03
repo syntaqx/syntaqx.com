@@ -32,9 +32,7 @@ export function CopyCodeScript() {
     });
 
     function handleClick(e: MouseEvent) {
-      const btn = (e.target as HTMLElement).closest(
-        "[data-copy-code]",
-      ) as HTMLButtonElement | null;
+      const btn = (e.target as HTMLElement).closest("[data-copy-code]") as HTMLButtonElement | null;
       if (!btn) return;
       const pre = btn.closest("pre");
       if (!pre) return;

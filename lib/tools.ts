@@ -8,22 +8,19 @@ export interface Tool {
 export const tools: Tool[] = [
   {
     title: "whoami",
-    description:
-      "See how you appear on the internet. IP, location, browser, device, and more.",
+    description: "See how you appear on the internet. IP, location, browser, device, and more.",
     href: "/tools/whoami",
     tags: ["network", "privacy"],
   },
   {
     title: "JWT Debugger",
-    description:
-      "Decode, encode, and verify JSON Web Tokens entirely in your browser.",
+    description: "Decode, encode, and verify JSON Web Tokens entirely in your browser.",
     href: "/tools/jwt",
     tags: ["jwt", "auth", "security"],
   },
   {
     title: "UUID / ULID Generator",
-    description:
-      "Generate, validate, and inspect UUIDs (v1, v4, v7) and ULIDs.",
+    description: "Generate, validate, and inspect UUIDs (v1, v4, v7) and ULIDs.",
     href: "/tools/uuid",
     tags: ["uuid", "ulid", "identifier"],
   },
@@ -43,8 +40,7 @@ export const tools: Tool[] = [
   },
   {
     title: "Markdown Tools",
-    description:
-      "HTML to Markdown (with rich-text paste), Markdown to HTML, and live preview.",
+    description: "HTML to Markdown (with rich-text paste), Markdown to HTML, and live preview.",
     href: "/tools/markdown",
     tags: ["markdown", "html", "preview"],
   },
@@ -59,22 +55,19 @@ export const converters: Tool[] = [
   },
   {
     title: "Text Format Converter",
-    description:
-      "Convert between JSON, YAML, TOML, XML, TOON, CSV, ENV, and query strings.",
+    description: "Convert between JSON, YAML, TOML, XML, TOON, CSV, ENV, and query strings.",
     href: "/tools/convert/text",
     tags: ["json", "yaml", "toml", "xml"],
   },
   {
     title: "Favicon Generator",
-    description:
-      "Convert SVG, PNG, JPG, GIF, WebP, and other images to ICO files.",
+    description: "Convert SVG, PNG, JPG, GIF, WebP, and other images to ICO files.",
     href: "/tools/convert/favicon",
     tags: ["svg", "png", "ico"],
   },
   {
     title: "Image / Base64 Converter",
-    description:
-      "Convert images to Base64 data URIs, or decode Base64 back into an image.",
+    description: "Convert images to Base64 data URIs, or decode Base64 back into an image.",
     href: "/tools/convert/image-base64",
     tags: ["image", "base64", "data-uri"],
   },

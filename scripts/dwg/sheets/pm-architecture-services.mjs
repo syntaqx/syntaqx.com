@@ -23,7 +23,11 @@ const ASYNC = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, h = 30, gap = 18, y = 50;
+  const W = 760,
+    x = 20,
+    h = 30,
+    gap = 18,
+    y = 50;
   const s = sheet({ prefix: "pmas", width: W });
   const n = SYNC.length;
   const w = Math.floor((W - 2 * x - 3 - (n - 1) * gap) / n); // 3 of slack for the actor's shadow
@@ -43,14 +47,28 @@ export default function draw() {
 
   s.comment("Event log, written in the same commit as the state");
   const auth = top[3];
-  const logW = 240, logY = subBottom + 40;
-  const log = s.node(auth.cx - logW / 2, logY, logW, 40, "outbox to event log", { kind: "store", sub: "relayed at least once" });
-  s.wire([[auth.cx, subBottom + 6], [auth.cx, log.y]], { label: "same commit", side: "right" });
+  const logW = 240,
+    logY = subBottom + 40;
+  const log = s.node(auth.cx - logW / 2, logY, logW, 40, "outbox to event log", {
+    kind: "store",
+    sub: "relayed at least once",
+  });
+  s.wire(
+    [
+      [auth.cx, subBottom + 6],
+      [auth.cx, log.y],
+    ],
+    { label: "same commit", side: "right" },
+  );
 
   s.comment("Asynchronous consumers");
   s.text(x, log.y + 14, "asynchronous: queued, retried,", "lt");
   s.text(x, log.y + 30, "idempotent at every hop", "lt");
-  const m = ASYNC.length, ag = 20, aw = (W - 2 * x - (m - 1) * ag) / m, ah = 52, ay = log.y + log.h + 52;
+  const m = ASYNC.length,
+    ag = 20,
+    aw = (W - 2 * x - (m - 1) * ag) / m,
+    ah = 52,
+    ay = log.y + log.h + 52;
   const low = ASYNC.map(([label, sub], i) => s.node(x + i * (aw + ag), ay, aw, ah, label, { sub }));
   s.fanOut(log, low, { from: "b", to: "t", via: log.y + log.h + 26 });
 

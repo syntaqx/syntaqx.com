@@ -1,11 +1,7 @@
 import { getDocsByCategory } from "@/lib/docs";
 import { DocsSidebar, MobileDocsSidebar } from "@/components/docs-sidebar";
 
-export default function DocsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DocsLayout({ children }: { children: React.ReactNode }) {
   // Only what the sidebar shows crosses to the client, not each doc's text.
   const categories = getDocsByCategory().map((category) => ({
     name: category.name,

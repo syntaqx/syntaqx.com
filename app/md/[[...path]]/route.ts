@@ -3,10 +3,7 @@ import { renderMarkdownPage } from "@/lib/markdown";
 // Target of the `Accept: text/markdown` rewrites in next.config.ts. The
 // path segments are the original page path, so /posts/foo arrives here as
 // /md/posts/foo.
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ path?: string[] }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ path?: string[] }> }) {
   const { path = [] } = await params;
   const { status, body } = renderMarkdownPage(`/${path.join("/")}`);
   return new Response(body, {

@@ -9,11 +9,16 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "pt-pac", width: W });
 
-  const w = 150, h = 44, cols = 4;
+  const w = 150,
+    h = 44,
+    cols = 4;
   const gap = (W - 40 - cols * w) / (cols - 1);
   const X = (i) => 20 + i * (w + gap);
-  const r0 = 20, r1 = r0 + h + 60, r2 = r1 + h + 44;
-  const st = (i, y, label, sub, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", sub, ...o });
+  const r0 = 20,
+    r1 = r0 + h + 60,
+    r2 = r1 + h + 44;
+  const st = (i, y, label, sub, o = {}) =>
+    s.node(X(i), y, w, h, label, { kind: "state", sub, ...o });
 
   s.comment("States");
   const reg = st(0, r0, "registered", "keys from the program");
@@ -33,10 +38,15 @@ export default function draw() {
   s.connect(active, revoked, { from: "b", to: "t" });
 
   s.comment("Legend");
-  const lg = s.legend(20, r2 + 14, [
-    { kind: "hl", label: "the path to access" },
-    { kind: "end", label: "terminal state" },
-  ], { width: X(3) - 40 });
+  const lg = s.legend(
+    20,
+    r2 + 14,
+    [
+      { kind: "hl", label: "the path to access" },
+      { kind: "end", label: "terminal state" },
+    ],
+    { width: X(3) - 40 },
+  );
   s.height = Math.ceil(Math.max(lg.y, revoked.y2) + 20);
   return s.toString();
 }

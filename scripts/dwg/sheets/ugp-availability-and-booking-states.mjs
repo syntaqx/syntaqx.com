@@ -11,11 +11,16 @@ export default function draw() {
 
   // Four columns; the request row above, the exit row below. The left
   // margin takes the instant book entry and its label.
-  const w = 104, h = 30, gap = 70;
+  const w = 104,
+    h = 30,
+    gap = 70;
   const x0 = W - 20 - (4 * w + 3 * gap);
   const X = (i) => x0 + i * (w + gap);
-  const r0 = 76, r1 = 166, r2 = 256;
-  const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
+  const r0 = 76,
+    r1 = 166,
+    r2 = 256;
+  const st = (i, y, label, o = {}) =>
+    s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
 
   s.comment("States");
   const expired = st(0, r0, "expired", { end: true, fill: 1 });
@@ -28,8 +33,16 @@ export default function draw() {
   const cancelled = st(1, r2, "cancelled", { end: true, fill: 1 });
 
   s.comment("Ways in");
-  s.wire([[requested.cx, 20], requested.port("t")], { start: "dot", label: "guest request\nor host offer", side: "right" });
-  s.wire([[20, pending.cy], pending.port("l")], { start: "dot", label: "instant\nbook", side: "above" });
+  s.wire([[requested.cx, 20], requested.port("t")], {
+    start: "dot",
+    label: "guest request\nor host offer",
+    side: "right",
+  });
+  s.wire([[20, pending.cy], pending.port("l")], {
+    start: "dot",
+    label: "instant\nbook",
+    side: "above",
+  });
 
   s.comment("Into confirmed");
   s.connect(requested, confirmed, { from: "b", to: "t", label: "accepted", side: "left" });
@@ -40,10 +53,28 @@ export default function draw() {
   s.connect(inProgress, completed, { hl: true, label: "return\nhandoff", side: "above" });
 
   s.comment("Exits");
-  s.connect(requested, expired, { from: "l", to: "r", alt: true, label: "no answer", side: "above" });
+  s.connect(requested, expired, {
+    from: "l",
+    to: "r",
+    alt: true,
+    label: "no answer",
+    side: "above",
+  });
   s.connect(requested, declined, { alt: true, label: "host\ndeclines", side: "above" });
-  s.connect(pending, expired, { from: "t", to: "b", alt: true, label: "hold runs out", side: "left" });
-  s.connect(confirmed, cancelled, { from: "b", to: "t", alt: true, label: "guest, host\nor platform", side: "right" });
+  s.connect(pending, expired, {
+    from: "t",
+    to: "b",
+    alt: true,
+    label: "hold runs out",
+    side: "left",
+  });
+  s.connect(confirmed, cancelled, {
+    from: "b",
+    to: "t",
+    alt: true,
+    label: "guest, host\nor platform",
+    side: "right",
+  });
 
   s.comment("Notes");
   s.note(completed, "claim and review\nwindows run from here", { anchor: "right" });

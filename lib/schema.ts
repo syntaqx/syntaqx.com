@@ -244,19 +244,11 @@ export function breadcrumbList(crumbs: Crumb[]) {
   };
 }
 
-export function itemList(
-  name: string,
-  path: string,
-  items: { name: string; path: string }[],
-) {
+export function itemList(name: string, path: string, items: { name: string; path: string }[]) {
   return { "@context": CONTEXT, ...itemListNode(name, path, items) };
 }
 
-function itemListNode(
-  name: string,
-  path: string,
-  items: { name: string; path: string }[],
-) {
+function itemListNode(name: string, path: string, items: { name: string; path: string }[]) {
   return {
     "@type": "ItemList",
     name,

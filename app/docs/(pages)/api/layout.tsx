@@ -8,11 +8,7 @@ const description =
 
 export const metadata = pageMetadata("/docs/api", title, description);
 
-export default function ApiDocsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ApiDocsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <JsonLd

@@ -33,7 +33,13 @@ for (const path of files(root)) {
       const [id, kind, claim, closes, checked] = body.split("|").map((s) => s.trim());
       const closesWith = closes?.replace(/^closes with:\s*/, "");
       const checkedOn = checked?.replace(/^checked:\s*/, "");
-      if (!id || !kinds.has(kind) || !claim || !closesWith || !/^\d{4}-\d{2}-\d{2}$/.test(checkedOn ?? "")) {
+      if (
+        !id ||
+        !kinds.has(kind) ||
+        !claim ||
+        !closesWith ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(checkedOn ?? "")
+      ) {
         errors.push(`${where}: malformed source-gap marker`);
         continue;
       }
@@ -44,7 +50,8 @@ for (const path of files(root)) {
 
 const seen = new Map();
 for (const gap of gaps) {
-  if (seen.has(gap.id)) errors.push(`${gap.where}: duplicate id ${gap.id} (also ${seen.get(gap.id)})`);
+  if (seen.has(gap.id))
+    errors.push(`${gap.where}: duplicate id ${gap.id} (also ${seen.get(gap.id)})`);
   seen.set(gap.id, gap.where);
 }
 
@@ -52,7 +59,11 @@ const ageDays = (date) => Math.floor((Date.now() - Date.parse(date)) / 86_400_00
 const shown = staleDays === null ? gaps : gaps.filter((g) => ageDays(g.checked) >= staleDays);
 
 if (json) console.log(JSON.stringify(shown, null, 2));
-else for (const g of shown) console.log(`${g.id} [${g.kind}] checked ${g.checked}\n  ${g.where}\n  ${g.claim}\n  closes with: ${g.closesWith}\n`);
+else
+  for (const g of shown)
+    console.log(
+      `${g.id} [${g.kind}] checked ${g.checked}\n  ${g.where}\n  ${g.claim}\n  closes with: ${g.closesWith}\n`,
+    );
 
 for (const e of errors) console.error(e);
 if (!json) console.error(`${shown.length} of ${gaps.length} gaps shown`);

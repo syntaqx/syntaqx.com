@@ -13,8 +13,7 @@ export const metadata = pageMetadata(
   "The resume of Chase Pierce (syntaqx), software architect and engineering leader: two decades of platforms, teams and delivery. Also available as a PDF.",
 );
 
-const link =
-  "text-foreground underline decoration-accent underline-offset-4 hover:text-accent";
+const link = "text-foreground underline decoration-accent underline-offset-4 hover:text-accent";
 
 export default function ResumePage() {
   return (
@@ -93,23 +92,17 @@ export default function ResumePage() {
           <h2 className="eyebrow mb-6">experience</h2>
           <ol className="border-t border-border">
             {resume.experience.map((job) => (
-              <li
-                key={`${job.company} ${job.title}`}
-                className="border-b border-border py-6"
-              >
+              <li key={`${job.company} ${job.title}`} className="border-b border-border py-6">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                   <h3 className="text-lg font-semibold text-foreground">
-                    {job.title} <span className="text-muted">at</span>{" "}
-                    {job.company}
+                    {job.title} <span className="text-muted">at</span> {job.company}
                   </h3>
                   <p className="inst text-dim">
                     {job.start} - {job.end}
                   </p>
                 </div>
                 {job.progression && (
-                  <p className="mt-1 text-sm text-dim">
-                    {job.progression.join(" → ")}
-                  </p>
+                  <p className="mt-1 text-sm text-dim">{job.progression.join(" → ")}</p>
                 )}
                 {job.highlights && (
                   <ul className="mt-4 list-disc space-y-2 pl-5 leading-relaxed text-muted marker:text-accent">
@@ -121,9 +114,7 @@ export default function ResumePage() {
               </li>
             ))}
             <li className="border-b border-border py-6">
-              <h3 className="mb-3 text-lg font-semibold text-foreground">
-                Earlier roles
-              </h3>
+              <h3 className="mb-3 text-lg font-semibold text-foreground">Earlier roles</h3>
               <ul className="space-y-1.5">
                 {resume.earlier.map((job) => (
                   <li
@@ -131,8 +122,7 @@ export default function ResumePage() {
                     className="flex flex-wrap items-baseline justify-between gap-x-6 text-muted"
                   >
                     <span>
-                      {job.title} <span className="text-dim">at</span>{" "}
-                      {job.company}
+                      {job.title} <span className="text-dim">at</span> {job.company}
                     </span>
                     <span className="inst text-dim">
                       {job.start} - {job.end}
@@ -157,9 +147,7 @@ export default function ResumePage() {
               <h3 className="text-lg font-semibold text-foreground">
                 {resume.education.selfTaught.title}
               </h3>
-              <p className="mt-1 text-muted">
-                {resume.education.selfTaught.details}
-              </p>
+              <p className="mt-1 text-muted">{resume.education.selfTaught.details}</p>
             </li>
           </ul>
         </section>

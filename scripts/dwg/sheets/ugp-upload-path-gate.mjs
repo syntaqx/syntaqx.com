@@ -18,10 +18,14 @@ export default function draw() {
   const s = sheet({ prefix: "ugp-upg", width: W });
 
   s.comment("States: four across, exits below");
-  const w = 120, h = 30, gap = (W - 40 - 4 * w) / 3;
+  const w = 120,
+    h = 30,
+    gap = (W - 40 - 4 * w) / 3;
   const X = (i) => 20 + i * (w + gap);
-  const r1 = 24, r2 = 100;
-  const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
+  const r1 = 24,
+    r2 = 100;
+  const st = (i, y, label, o = {}) =>
+    s.node(X(i), y, w, h, label, { kind: "state", code: true, ...o });
   const uploading = st(0, r1, "uploading");
   const scanning = st(1, r1, "scanning", { hl: true });
   const processing = st(2, r1, "processing");
@@ -32,9 +36,29 @@ export default function draw() {
   s.connect(uploading, scanning, { label: "bytes\ncomplete", side: "above" });
   s.connect(scanning, processing, { label: "blocking\nscans pass", side: "above" });
   s.connect(processing, ready, { label: "variants\nmade", side: "above" });
-  s.connect(uploading, rejected, { from: "b", to: "t", alt: true, label: "session expires", side: "right" });
-  s.connect(scanning, rejected, { from: "b", to: "r", at: [0.3, 0.5], alt: true, label: "validation fails", side: "below" });
-  s.connect(scanning, quarantined, { from: "b", to: "l", at: [0.7, 0.5], alt: true, label: "list match or hold", side: "below" });
+  s.connect(uploading, rejected, {
+    from: "b",
+    to: "t",
+    alt: true,
+    label: "session expires",
+    side: "right",
+  });
+  s.connect(scanning, rejected, {
+    from: "b",
+    to: "r",
+    at: [0.3, 0.5],
+    alt: true,
+    label: "validation fails",
+    side: "below",
+  });
+  s.connect(scanning, quarantined, {
+    from: "b",
+    to: "l",
+    at: [0.7, 0.5],
+    alt: true,
+    label: "list match or hold",
+    side: "below",
+  });
   s.note(quarantined, "a case opens, evidence held", { anchor: "center" });
 
   s.comment("The checks at the gate");

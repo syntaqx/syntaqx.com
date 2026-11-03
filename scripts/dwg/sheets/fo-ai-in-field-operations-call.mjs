@@ -8,9 +8,14 @@ import { sheet } from "../kit.mjs";
 const TOOLS = ["find customer", "offer slots", "request booking", "hand off"];
 
 export default function draw() {
-  const W = 760, h = 26, rowH = 52, top = 44;
+  const W = 760,
+    h = 26,
+    rowH = 52,
+    top = 44;
   const s = sheet({ prefix: "fo-aic", width: W });
-  const colConv = 20, colTools = 310, colCode = 500;
+  const colConv = 20,
+    colTools = 310,
+    colCode = 500;
 
   s.comment("Column heads");
   s.text(colConv, 26, "the conversation", "th");
@@ -37,7 +42,11 @@ export default function draw() {
   s.comment("Your code decides");
   const policy = s.node(colCode, yMain, 120, h, "policy check", { fill: 1 });
   s.text(policy.cx, policy.y - 8, "job type, caps, identity", "sl", "middle");
-  const booked = s.node(W - 20 - 90, yMain, 90, h, "booked", { kind: "state", end: true, hl: true });
+  const booked = s.node(W - 20 - 90, yMain, 90, h, "booked", {
+    kind: "state",
+    end: true,
+    hl: true,
+  });
   const queue = s.node(colCode, handoff.y, 120, h, "office queue", { kind: "ghost" });
   s.connect(book, policy, { hl: true });
   s.connect(policy, booked, { hl: true });

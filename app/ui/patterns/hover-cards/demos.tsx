@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Card } from "@/components/card";
 import { cn } from "@/lib/cn";
 
@@ -32,13 +25,7 @@ interface HoverCardProps {
   align?: "start" | "end";
 }
 
-function HoverCard({
-  trigger,
-  children,
-  onOpen,
-  className = "",
-  align = "start",
-}: HoverCardProps) {
+function HoverCard({ trigger, children, onOpen, className = "", align = "start" }: HoverCardProps) {
   const [open, setOpen] = useState(false);
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -142,12 +129,7 @@ function tzAbbr(date: Date, tz: string) {
   return parts.find((p) => p.type === "timeZoneName")?.value ?? tz;
 }
 
-function TimeHover({
-  iso,
-  sourceTz,
-  sourceLabel,
-  variant = "datetime",
-}: TimeProps) {
+function TimeHover({ iso, sourceTz, sourceLabel, variant = "datetime" }: TimeProps) {
   const date = new Date(iso);
   const [viewerTz, setViewerTz] = useState<string | null>(null);
 
@@ -179,9 +161,7 @@ function TimeHover({
         </time>
       }
     >
-      <div className="text-[10px] font-medium text-dim mb-2">
-        Time conversion
-      </div>
+      <div className="text-[10px] font-medium text-dim mb-2">Time conversion</div>
       <div className="space-y-1.5">
         <TzRow
           label={sourceLabel}
@@ -229,17 +209,16 @@ function TzRow({
     <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-baseline gap-x-3">
       <span className="min-w-0 truncate text-[11px] text-dim">
         {label}
-        {label !== tz && (
-          <span className="ml-1 text-[10px] text-dim/70">({tz})</span>
-        )}
+        {label !== tz && <span className="ml-1 text-[10px] text-dim/70">({tz})</span>}
       </span>
-      <span
-        className={cn("whitespace-nowrap text-xs", accent ? "text-accent" : "text-foreground")}
-      >
+      <span className={cn("whitespace-nowrap text-xs", accent ? "text-accent" : "text-foreground")}>
         {date}
       </span>
       <span
-        className={cn("whitespace-nowrap text-xs tabular-nums", accent ? "text-accent" : "text-foreground")}
+        className={cn(
+          "whitespace-nowrap text-xs tabular-nums",
+          accent ? "text-accent" : "text-foreground",
+        )}
       >
         {time} <span className="text-dim">{abbr}</span>
       </span>
@@ -389,9 +368,7 @@ function UserBody({ data }: { data: GhUser }) {
         </div>
       </div>
       {data.bio && (
-        <p className="mt-2 text-[11px] text-muted leading-relaxed line-clamp-3">
-          {data.bio}
-        </p>
+        <p className="mt-2 text-[11px] text-muted leading-relaxed line-clamp-3">{data.bio}</p>
       )}
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-dim">
         {data.location && <span>{data.location}</span>}
@@ -411,11 +388,7 @@ function UserDemo({ bare = false }: { bare?: boolean } = {}) {
       {handles.map((h, i) => (
         <span key={h}>
           <UserHover login={h} />
-          {i < handles.length - 2
-            ? ", "
-            : i === handles.length - 2
-              ? ", and "
-              : ""}
+          {i < handles.length - 2 ? ", " : i === handles.length - 2 ? ", and " : ""}
         </span>
       ))}{" "}
       for the inspiration.
@@ -429,14 +402,7 @@ function UserDemo({ bare = false }: { bare?: boolean } = {}) {
 // ---------------------------------------------------------------------------
 
 function AvatarDemo({ bare = false }: { bare?: boolean } = {}) {
-  const handles = [
-    "syntaqx",
-    "octocat",
-    "torvalds",
-    "gaearon",
-    "tj",
-    "sindresorhus",
-  ];
+  const handles = ["syntaqx", "octocat", "torvalds", "gaearon", "tj", "sindresorhus"];
   const body = (
     <div className="flex flex-wrap items-center gap-3">
       {handles.map((h) => (

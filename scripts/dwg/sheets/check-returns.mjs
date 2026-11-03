@@ -13,22 +13,44 @@ const STATES = [
 ];
 
 export default function draw() {
-  const W = 760, w = 112, gap = 40;
+  const W = 760,
+    w = 112,
+    gap = 40;
   const s = sheet({ prefix: "chk", width: W });
   const x0 = (W - (STATES.length * w + (STATES.length - 1) * gap)) / 2;
 
   s.comment("States, in order");
-  const { nodes, bottom } = s.pipeline(x0, 40, STATES.map((st) => ({ ...st, kind: "state", code: true })), { w, h: 30, gap });
+  const { nodes, bottom } = s.pipeline(
+    x0,
+    40,
+    STATES.map((st) => ({ ...st, kind: "state", code: true })),
+    { w, h: 30, gap },
+  );
   const [, , available, good] = nodes;
 
   s.comment("Returns");
   const rw = 108;
-  const returned = s.node((available.cx + good.cx) / 2 - rw / 2, bottom + 44, rw, 30, "returned", { kind: "state", code: true, end: true, fill: 1 });
+  const returned = s.node((available.cx + good.cx) / 2 - rw / 2, bottom + 44, rw, 30, "returned", {
+    kind: "state",
+    code: true,
+    end: true,
+    fill: 1,
+  });
   // Start under the sub text, as pipeline wires do.
   s.wire([[available.cx, bottom + 6], [available.cx, returned.cy], returned.port("l")], {
-    alt: true, seg: 0, side: "left", label: "return by the paying bank's deadline\n(A NSF, C stop, D closed)",
+    alt: true,
+    seg: 0,
+    side: "left",
+    label: "return by the paying bank's deadline\n(A NSF, C stop, D closed)",
   });
-  s.connect(good, returned, { from: "b", to: "r", alt: true, seg: 0, side: "right", label: "warranty or forgery claim:\naltered, forged, deposited twice" });
+  s.connect(good, returned, {
+    from: "b",
+    to: "r",
+    alt: true,
+    seg: 0,
+    side: "right",
+    label: "warranty or forgery claim:\naltered, forged, deposited twice",
+  });
 
   s.comment("Legend");
   const lg = s.legend(x0, returned.y + returned.h + 34, [

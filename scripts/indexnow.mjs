@@ -32,10 +32,14 @@ const fail = (message) => {
 const dryRun = flag("--dry-run");
 const key = process.env.INDEXNOW_KEY;
 if (!dryRun && !key) fail("INDEXNOW_KEY is not set");
-if (key && !existsSync(`public/${key}.txt`)) fail(`public/${key}.txt is missing; the key must be served at the site root`);
+if (key && !existsSync(`public/${key}.txt`))
+  fail(`public/${key}.txt is missing; the key must be served at the site root`);
 
 const previousPath = option("--manifest");
-const previous = previousPath && existsSync(previousPath) ? JSON.parse(readFileSync(previousPath, "utf8")) : undefined;
+const previous =
+  previousPath && existsSync(previousPath)
+    ? JSON.parse(readFileSync(previousPath, "utf8"))
+    : undefined;
 
 // A deploy reports success as production switches over: wait until it serves this commit.
 const commit = option("--commit");
@@ -58,9 +62,14 @@ const locs = [...(await res.text()).matchAll(/<loc>(.*?)<\/loc>/g)].map(([, loc]
  */
 function rendered(html) {
   const pick = (re) => html.match(re)?.[1] ?? "";
-  const jsonLd = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  const jsonLd = [
+    ...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g),
+  ].map((m) => m[1]);
   const text = html
-    .replace(/<a [^>]*href="https:\/\/github\.com\/syntaqx\/syntaqx\.com\/commit\/[^"]*"[\s\S]*?<\/a>/g, "")
+    .replace(
+      /<a [^>]*href="https:\/\/github\.com\/syntaqx\/syntaqx\.com\/commit\/[^"]*"[\s\S]*?<\/a>/g,
+      "",
+    )
     .replace(/<(script|style|template)\b[\s\S]*?<\/\1>/g, "")
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
@@ -83,7 +92,9 @@ if (option("--out") || previous) {
       for (let loc = queue.shift(); loc; loc = queue.shift()) {
         const page = await fetch(loc).catch(() => undefined);
         if (page?.ok) {
-          manifest[loc] = createHash("sha256").update(rendered(await page.text())).digest("hex");
+          manifest[loc] = createHash("sha256")
+            .update(rendered(await page.text()))
+            .digest("hex");
         } else {
           // Unknown this run: keep the old hash, so the page is compared again next time.
           console.warn(`indexnow: ${loc} returned ${page?.status ?? "no response"}`);
@@ -96,8 +107,14 @@ if (option("--out") || previous) {
 }
 
 const compare = previous && !flag("--all");
-const urls = compare ? locs.filter((loc) => manifest[loc] && manifest[loc] !== previous[loc]) : locs;
-const basis = compare ? "rendered content changed since the previous manifest" : previous ? "--all" : "no previous manifest";
+const urls = compare
+  ? locs.filter((loc) => manifest[loc] && manifest[loc] !== previous[loc])
+  : locs;
+const basis = compare
+  ? "rendered content changed since the previous manifest"
+  : previous
+    ? "--all"
+    : "no previous manifest";
 console.log(`indexnow: ${urls.length} of ${locs.length} URLs (${basis})`);
 if (dryRun) {
   for (const url of urls) console.log(url);
@@ -116,6 +133,7 @@ for (let i = 0; i < urls.length; i += BATCH) {
     body: JSON.stringify({ host: HOST, key, keyLocation: `https://${HOST}/${key}.txt`, urlList }),
   });
   // 200 and 202 both mean received; 202 while the key is still being verified.
-  if (submit.status !== 200 && submit.status !== 202) fail(`${submit.status} ${await submit.text()}`);
+  if (submit.status !== 200 && submit.status !== 202)
+    fail(`${submit.status} ${await submit.text()}`);
   console.log(`indexnow: submitted ${urlList.length} (${submit.status})`);
 }

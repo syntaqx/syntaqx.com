@@ -5,10 +5,16 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, x = 20, w = 128, h = 28, gap = (W - 2 * x - 5 * w) / 4;
+  const W = 760,
+    x = 20,
+    w = 128,
+    h = 28,
+    gap = (W - 2 * x - 5 * w) / 4;
   const X = (i) => x + i * (w + gap);
   const s = sheet({ prefix: "fo-psa", width: W });
-  const r1 = 66, r2 = r1 + 96, step = 40;
+  const r1 = 66,
+    r2 = r1 + 96,
+    step = 40;
   const st = (i, y, label, o = {}) => s.node(X(i), y, w, h, label, { kind: "state", ...o });
 
   s.comment("States");
@@ -28,7 +34,14 @@ export default function draw() {
   s.connect(pending, approved);
   s.connect(approved, presented, { from: "r", to: "b" });
   s.connect(pending, draft, { from: "l", to: "b", alt: true, label: "rejected", side: "below" });
-  s.connect(presented, priced, { from: "t", to: "t", via: r1 - 26, alt: true, label: "any edit re-prices", side: "above" });
+  s.connect(presented, priced, {
+    from: "t",
+    to: "t",
+    via: r1 - 26,
+    alt: true,
+    label: "any edit re-prices",
+    side: "above",
+  });
 
   s.comment("Outcomes");
   const mx = (presented.x + w + accepted.x) / 2;

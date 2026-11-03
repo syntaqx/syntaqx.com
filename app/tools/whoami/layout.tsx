@@ -6,10 +6,6 @@ export const metadata = pageMetadata(
   "See how you appear on the internet: your IP, approximate location, browser, device, and the headers your requests quietly reveal about you.",
 );
 
-export default function WhoamiLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function WhoamiLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

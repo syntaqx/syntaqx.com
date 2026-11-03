@@ -160,7 +160,9 @@ export function selectStore(env: Record<string, string | undefined> = process.en
   if (forced === "memory") return memoryStore;
   if (forced === "noop") return noopStore;
   if (forced === "redis" && !credentials) {
-    throw new Error("RATE_LIMIT_STORE=redis needs UPSTASH_REDIS_REST_URL/TOKEN or KV_REST_API_URL/TOKEN.");
+    throw new Error(
+      "RATE_LIMIT_STORE=redis needs UPSTASH_REDIS_REST_URL/TOKEN or KV_REST_API_URL/TOKEN.",
+    );
   }
   return credentials ? redisStore(new Redis(credentials)) : noopStore;
 }

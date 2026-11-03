@@ -61,17 +61,25 @@ export default async function DocPage({ params }: Props) {
       isPartOf={pageRef("Documentation", "/docs")}
       crumbs={[
         { name: "Docs", path: "/docs" },
-        ...(category && doc.section ? [{ name: category.name, path: `/docs#${category.section}` }] : []),
+        ...(category && doc.section
+          ? [{ name: category.name, path: `/docs#${category.section}` }]
+          : []),
         { name: doc.title, path: `/docs/${doc.slug}` },
       ]}
       eyebrow={
         category && category.docs.length > 1 ? (
           <>
-            <Link href={`/docs#${category.section}`} className="text-accent transition-colors hover:text-foreground">
+            <Link
+              href={`/docs#${category.section}`}
+              className="text-accent transition-colors hover:text-foreground"
+            >
               {category.name}
             </Link>
             <span aria-hidden> · </span>
-            <ChapterCount index={category.docs.findIndex((d) => d.slug === doc.slug)} total={category.docs.length} />
+            <ChapterCount
+              index={category.docs.findIndex((d) => d.slug === doc.slug)}
+              total={category.docs.length}
+            />
           </>
         ) : null
       }

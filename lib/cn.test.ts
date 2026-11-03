@@ -8,7 +8,9 @@ describe("cn", () => {
   });
 
   it("knows the site's theme colors and fonts", () => {
-    expect(cn("bg-surface text-dim", "bg-background text-foreground")).toBe("bg-background text-foreground");
+    expect(cn("bg-surface text-dim", "bg-background text-foreground")).toBe(
+      "bg-background text-foreground",
+    );
     expect(cn("font-sans", "font-voice")).toBe("font-voice");
   });
 

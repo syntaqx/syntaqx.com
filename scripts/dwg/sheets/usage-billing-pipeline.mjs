@@ -14,7 +14,9 @@ const STAGES = [
 ];
 
 export default function draw() {
-  const W = 760, w = 100, gap = 16;
+  const W = 760,
+    w = 100,
+    gap = 16;
   const x0 = (W - (STAGES.length * w + (STAGES.length - 1) * gap)) / 2;
   const s = sheet({ prefix: "ubp", width: W });
 
@@ -25,12 +27,20 @@ export default function draw() {
 
   s.comment("Disputes and corrections recompute from the raw events");
   const ly = bottom + 30;
-  s.wire([[invoice.cx, bottom + 6], [invoice.cx, ly], [raw.cx, ly], [raw.cx, bottom + 6]], {
-    alt: true,
-    seg: 1,
-    side: "below",
-    label: "dispute or late event: recompute from raw events, adjust the open period",
-  });
+  s.wire(
+    [
+      [invoice.cx, bottom + 6],
+      [invoice.cx, ly],
+      [raw.cx, ly],
+      [raw.cx, bottom + 6],
+    ],
+    {
+      alt: true,
+      seg: 1,
+      side: "below",
+      label: "dispute or late event: recompute from raw events, adjust the open period",
+    },
+  );
 
   s.height = Math.ceil(ly + 32);
   return s.toString();

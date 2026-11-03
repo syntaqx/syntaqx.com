@@ -8,7 +8,10 @@ import { markdownAlternates, pageMetadata } from "@/lib/metadata";
 const description =
   "An architectural playbook of standards for APIs, HTTP, payments, architecture, operations and delivery, plus the reference for the syntaqx API.";
 
-export const metadata = { ...pageMetadata("/docs", "Documentation", description), alternates: markdownAlternates("/docs") };
+export const metadata = {
+  ...pageMetadata("/docs", "Documentation", description),
+  alternates: markdownAlternates("/docs"),
+};
 
 export default function DocsPage() {
   const categories = getDocsByCategory();
@@ -33,9 +36,8 @@ export default function DocsPage() {
       <DocsIndex
         intro={
           <p>
-            The architectural playbook I bring to every team: the standards I&apos;ve
-            landed on, written down so they don&apos;t get re-argued in every codebase.
-            New here? Start with{" "}
+            The architectural playbook I bring to every team: the standards I&apos;ve landed on,
+            written down so they don&apos;t get re-argued in every codebase. New here? Start with{" "}
             <Link
               href="/docs/playbook"
               className="text-foreground underline decoration-accent underline-offset-4 hover:text-accent"

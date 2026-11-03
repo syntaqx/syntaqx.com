@@ -24,14 +24,8 @@ async function renderToCanvas(
     let svgText = await resp.text();
 
     // Strip existing width/height from the root <svg> so our overrides win
-    svgText = svgText.replace(
-      /(<svg[^>]*?)(\s+width\s*=\s*["'][^"']*["'])/gi,
-      "$1",
-    );
-    svgText = svgText.replace(
-      /(<svg[^>]*?)(\s+height\s*=\s*["'][^"']*["'])/gi,
-      "$1",
-    );
+    svgText = svgText.replace(/(<svg[^>]*?)(\s+width\s*=\s*["'][^"']*["'])/gi, "$1");
+    svgText = svgText.replace(/(<svg[^>]*?)(\s+height\s*=\s*["'][^"']*["'])/gi, "$1");
 
     // Inject explicit width/height
     svgText = svgText.replace(/(<svg)/i, `$1 width="${size}" height="${size}"`);
@@ -91,8 +85,7 @@ function buildIco(images: { size: number; png: Uint8Array }[]): Blob {
   const dirSize = dirEntrySize * images.length;
   let dataOffset = headerSize + dirSize;
 
-  const totalSize =
-    headerSize + dirSize + images.reduce((s, img) => s + img.png.byteLength, 0);
+  const totalSize = headerSize + dirSize + images.reduce((s, img) => s + img.png.byteLength, 0);
   const buffer = new ArrayBuffer(totalSize);
   const view = new DataView(buffer);
 
@@ -137,8 +130,7 @@ const ACCEPTED_TYPES = [
   "image/tiff",
 ];
 
-const ACCEPTED_EXTENSIONS =
-  ".svg,.png,.jpg,.jpeg,.gif,.webp,.bmp,.avif,.tiff,.tif";
+const ACCEPTED_EXTENSIONS = ".svg,.png,.jpg,.jpeg,.gif,.webp,.bmp,.avif,.tiff,.tif";
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -152,12 +144,8 @@ export default function FaviconPage() {
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [sizes, setSizes] = useState<number[]>([...DEFAULT_SIZES]);
-  const [previews, setPreviews] = useState<{ size: number; dataUrl: string }[]>(
-    [],
-  );
-  const [pngData, setPngData] = useState<{ size: number; png: Uint8Array }[]>(
-    [],
-  );
+  const [previews, setPreviews] = useState<{ size: number; dataUrl: string }[]>([]);
+  const [pngData, setPngData] = useState<{ size: number; png: Uint8Array }[]>([]);
   const [icoBlob, setIcoBlob] = useState<Blob | null>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -196,9 +184,7 @@ export default function FaviconPage() {
 
   const toggleSize = (size: number) => {
     setSizes((prev) =>
-      prev.includes(size)
-        ? prev.filter((s) => s !== size)
-        : [...prev, size].sort((a, b) => a - b),
+      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size].sort((a, b) => a - b),
     );
     // Clear previous output when sizes change
     setPreviews([]);
@@ -285,12 +271,9 @@ export default function FaviconPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Favicon Generator
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Favicon Generator</h1>
         <p className="max-w-2xl text-dim">
-          Drop an image and get an ICO with multiple sizes. Everything runs in
-          your browser.
+          Drop an image and get an ICO with multiple sizes. Everything runs in your browser.
         </p>
       </div>
 
@@ -309,7 +292,11 @@ export default function FaviconPage() {
             onClick={() => fileInputRef.current?.click()}
             className={cn(
               "border-2 border-dashed bg-surface flex flex-col items-center justify-center py-16 cursor-pointer transition-colors",
-              dragOver ? "border-accent/60 bg-accent/5" : sourceUrl ? "border-accent/30" : "border-border hover:border-accent/30",
+              dragOver
+                ? "border-accent/60 bg-accent/5"
+                : sourceUrl
+                  ? "border-accent/30"
+                  : "border-border hover:border-accent/30",
             )}
           >
             <input
@@ -333,16 +320,12 @@ export default function FaviconPage() {
                   className="max-h-32 max-w-32 object-contain h-auto w-auto"
                 />
                 <span className="text-xs text-dim">{fileName}</span>
-                <span className="text-[10px] text-dim">
-                  Click or drop to replace
-                </span>
+                <span className="text-[10px] text-dim">Click or drop to replace</span>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
                 <Upload size={24} className="text-dim" />
-                <span className="text-sm text-muted">
-                  Drop an image or click to upload
-                </span>
+                <span className="text-sm text-muted">Drop an image or click to upload</span>
                 <span className="text-[10px] text-dim">
                   SVG, PNG, JPG, GIF, WebP, BMP, AVIF, TIFF
                 </span>
@@ -402,16 +385,11 @@ export default function FaviconPage() {
           {previews.length > 0 && (
             <div className="border border-border bg-surface">
               <div className="px-3 py-2 border-b border-border">
-                <span className="text-xs font-medium text-foreground">
-                  Preview
-                </span>
+                <span className="text-xs font-medium text-foreground">Preview</span>
               </div>
               <div className="p-4 flex flex-wrap gap-6">
                 {previews.map((p) => (
-                  <div
-                    key={p.size}
-                    className="flex flex-col items-center gap-2"
-                  >
+                  <div key={p.size} className="flex flex-col items-center gap-2">
                     <div
                       className="border border-border bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px] flex items-center justify-center"
                       style={{
@@ -455,7 +433,9 @@ export default function FaviconPage() {
                   onClick={() => toggleSize(size)}
                   className={cn(
                     "border px-2.5 py-1 text-[11px] font-medium tabular-nums transition-colors cursor-pointer",
-                    sizes.includes(size) ? "border-accent/40 bg-accent/10 text-accent" : "border-border text-dim hover:text-foreground hover:border-border",
+                    sizes.includes(size)
+                      ? "border-accent/40 bg-accent/10 text-accent"
+                      : "border-border text-dim hover:text-foreground hover:border-border",
                   )}
                 >
                   {size}
@@ -471,21 +451,21 @@ export default function FaviconPage() {
             </h3>
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
-                ICO files bundle multiple icon sizes into a single file.
-                Browsers pick the best match for the context: 16px for tabs,
-                32px for bookmarks, larger for shortcuts and app icons.
+                ICO files bundle multiple icon sizes into a single file. Browsers pick the best
+                match for the context: 16px for tabs, 32px for bookmarks, larger for shortcuts and
+                app icons.
               </p>
               <p>
-                Common sizes: 16, 32, and 48 for browser favicons. 64 and above
-                for desktop shortcuts and high-DPI displays.
+                Common sizes: 16, 32, and 48 for browser favicons. 64 and above for desktop
+                shortcuts and high-DPI displays.
               </p>
               <p>
-                For best results, start with an SVG or a large PNG (512px+).
-                Smaller sources may look blurry when scaled up.
+                For best results, start with an SVG or a large PNG (512px+). Smaller sources may
+                look blurry when scaled up.
               </p>
               <p>
-                The generated ICO uses embedded PNG data, which is supported by
-                all modern browsers and Windows Vista+.
+                The generated ICO uses embedded PNG data, which is supported by all modern browsers
+                and Windows Vista+.
               </p>
             </div>
           </div>

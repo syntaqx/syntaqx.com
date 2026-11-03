@@ -119,7 +119,9 @@ describe("OpenAPI and routes stay in sync", () => {
     const res = await openapiJson(new Request("http://localhost/openapi.json"));
     const documented = Object.keys(((await res.json()) as { paths: object }).paths).sort();
     // The spec describes itself by URL, not as an operation.
-    const served = routes(apiDir).filter((r) => r !== "/openapi").sort();
+    const served = routes(apiDir)
+      .filter((r) => r !== "/openapi")
+      .sort();
     expect(documented).toEqual(served);
   });
 });

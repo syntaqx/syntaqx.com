@@ -28,7 +28,11 @@ export function Segmented<T extends string>({
   className,
 }: SegmentedProps<T>) {
   return (
-    <div role="group" aria-label={ariaLabel} className={cn("inline-flex border border-border bg-surface p-0.5", className)}>
+    <div
+      role="group"
+      aria-label={ariaLabel}
+      className={cn("inline-flex border border-border bg-surface p-0.5", className)}
+    >
       {options.map((o) => (
         <button
           key={o.value}

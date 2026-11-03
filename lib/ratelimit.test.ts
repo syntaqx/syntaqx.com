@@ -17,8 +17,15 @@ describe("selectStore()", () => {
   });
 
   it("uses Redis with Upstash's or Vercel's variable names", () => {
-    expect(selectStore({ UPSTASH_REDIS_REST_URL: "https://redis.example", UPSTASH_REDIS_REST_TOKEN: "t" }).name).toBe("redis");
-    expect(selectStore({ KV_REST_API_URL: "https://redis.example", KV_REST_API_TOKEN: "t" }).name).toBe("redis");
+    expect(
+      selectStore({
+        UPSTASH_REDIS_REST_URL: "https://redis.example",
+        UPSTASH_REDIS_REST_TOKEN: "t",
+      }).name,
+    ).toBe("redis");
+    expect(
+      selectStore({ KV_REST_API_URL: "https://redis.example", KV_REST_API_TOKEN: "t" }).name,
+    ).toBe("redis");
   });
 
   it("honors RATE_LIMIT_STORE", () => {
@@ -112,7 +119,14 @@ describe("redis store against a real Redis", () => {
   it("shares one count across instances, which is what makes the limit global", async (ctx) => {
     if (!redisUp) ctx.skip();
     // Two stores stand in for two serverless instances.
-    const a = redisStore(new Redis(redisCredentials({ UPSTASH_REDIS_REST_URL: LOCAL.url, UPSTASH_REDIS_REST_TOKEN: LOCAL.token })!));
+    const a = redisStore(
+      new Redis(
+        redisCredentials({
+          UPSTASH_REDIS_REST_URL: LOCAL.url,
+          UPSTASH_REDIS_REST_TOKEN: LOCAL.token,
+        })!,
+      ),
+    );
     const b = redisStore(new Redis(LOCAL));
     const key = `test-${crypto.randomUUID()}`;
 
@@ -123,7 +137,9 @@ describe("redis store against a real Redis", () => {
     expect([first.remaining, second.remaining, third.remaining]).toEqual([4999, 4998, 4997]);
     // Same window: the reset is derived from the key's TTL and the current
     // second, so calls that straddle a second boundary can differ by one.
-    const drift = Math.abs(Number(first.headers["X-RateLimit-Reset"]) - Number(third.headers["X-RateLimit-Reset"]));
+    const drift = Math.abs(
+      Number(first.headers["X-RateLimit-Reset"]) - Number(third.headers["X-RateLimit-Reset"]),
+    );
     expect(drift).toBeLessThanOrEqual(1);
     // Prove Redis did the counting, not the in-memory fallback.
     expect(await new Redis(LOCAL).get(`syntaqx:ratelimit:${key}`)).toBe(3);

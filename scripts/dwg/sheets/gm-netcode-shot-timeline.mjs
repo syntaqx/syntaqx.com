@@ -18,20 +18,42 @@ export default function draw() {
   const s = sheet({ prefix: "gm-nst", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "L1 is half the 35 ms ping target, assuming a symmetric path. I1, two ticks of interpolation delay, is illustrative."],
-    [2, "Server buffering per the published model: about two server frames (half queue wait, half network buffer, one to apply and send)."],
-    [3, "Shots older than the rewind cap R2 are judged at the cap or refused. Rewind is limited; no value is published."],
-    [0, "Values in ms, t = 0 at fire. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 690 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "L1 is half the 35 ms ping target, assuming a symmetric path. I1, two ticks of interpolation delay, is illustrative.",
+      ],
+      [
+        2,
+        "Server buffering per the published model: about two server frames (half queue wait, half network buffer, one to apply and send).",
+      ],
+      [
+        3,
+        "Shots older than the rewind cap R2 are judged at the cap or refused. Rewind is limited; no value is published.",
+      ],
+      [
+        0,
+        "Values in ms, t = 0 at fire. The drawing carries codes; values and formulas are in the table.",
+      ],
+    ],
+    { width: 690 },
+  );
 
   // ---- Plan view: one shot, 1 ms = 6 px ----
   s.comment("Plan view: one shot");
-  const k = 6, laneX = 110, laneW = 610, t0 = -46;
+  const k = 6,
+    laneX = 110,
+    laneW = 610,
+    t0 = -46;
   const X = (t) => laneX + (t - t0) * k;
   const h = 30;
-  const sTop = ny + 92, sBot = sTop + h;
-  const cTop = sBot + 92, cBot = cTop + h;
+  const sTop = ny + 92,
+    sBot = sTop + h;
+  const cTop = sBot + 92,
+    cBot = cTop + h;
 
   // Rewind dims above the server lane.
   s.dimH(X(CAP), X(PROC), sTop - 50, "R2 [TBD]", { from: [sTop, sTop] });
@@ -46,9 +68,24 @@ export default function draw() {
   s.line(X(CAP), sTop - 6, X(CAP), sBot + 6, "ctr");
   for (let t = PROC; t > t0; t -= T1) s.line(X(t), sBot - 6, X(t), sBot, "obj");
   for (let t = PROC + T1; t < t0 + laneW / k; t += T1) s.line(X(t), sBot - 6, X(t), sBot, "obj");
-  s.text((X(SNAP) + X(PROC - S1)) / 2, sTop + h / 2 - 1, "simulating, hitbox history", "sl ink", "middle");
-  s.text(X(PROC + 4) + (laneX + laneW - X(PROC + 4)) / 2, sTop + h / 2 - 1, "hit test", "sl ink", "middle");
-  s.add(`<circle class="dot" cx="${X(SNAP)}" cy="${sTop + h / 2}" r="2.2"/>`, `<circle class="dot" cx="${X(PROC)}" cy="${sTop + h / 2}" r="2.2"/>`);
+  s.text(
+    (X(SNAP) + X(PROC - S1)) / 2,
+    sTop + h / 2 - 1,
+    "simulating, hitbox history",
+    "sl ink",
+    "middle",
+  );
+  s.text(
+    X(PROC + 4) + (laneX + laneW - X(PROC + 4)) / 2,
+    sTop + h / 2 - 1,
+    "hit test",
+    "sl ink",
+    "middle",
+  );
+  s.add(
+    `<circle class="dot" cx="${X(SNAP)}" cy="${sTop + h / 2}" r="2.2"/>`,
+    `<circle class="dot" cx="${X(PROC)}" cy="${sTop + h / 2}" r="2.2"/>`,
+  );
   s.callout((laneX + X(CAP)) / 2, sBot - 8, (laneX + X(CAP)) / 2 + 14, sBot + 26, "refused");
 
   // Network: packets in flight.
@@ -68,19 +105,30 @@ export default function draw() {
   s.rect(X(-I1), cTop, I1 * k, h, "obj fill-1");
   s.label(X(-I1), cTop, I1 * k, h, "interp");
   s.label(X(0), cTop, C1 * k, h, "awaiting confirmation");
-  s.add(`<circle class="dot" cx="${X(0)}" cy="${cTop + h / 2}" r="2.2"/>`, `<circle class="dot" cx="${X(C1)}" cy="${cTop + h / 2}" r="2.2"/>`);
+  s.add(
+    `<circle class="dot" cx="${X(0)}" cy="${cTop + h / 2}" r="2.2"/>`,
+    `<circle class="dot" cx="${X(C1)}" cy="${cTop + h / 2}" r="2.2"/>`,
+  );
   s.text(X(0) - 5, cTop - 6, "fire", "sl ink", "end");
 
   // Chain and confirmation below the client lane.
   const xs = [SNAP, -I1, 0, L1, PROC, C1].map(X);
-  s.chainH(xs, cBot + 22, ["L1", "I1", "L1", "S1", "L1"], { from: xs.map(() => cBot), below: true });
+  s.chainH(xs, cBot + 22, ["L1", "I1", "L1", "S1", "L1"], {
+    from: xs.map(() => cBot),
+    below: true,
+  });
   s.dimH(X(0), X(C1), cBot + 54, "C1", { from: [cBot, cBot], below: true });
   s.nb(X(-I1 / 2) + 14, cBot + 30, 1);
 
   // Detail A on the server buffer.
   s.detailRef(X(PROC - S1 / 2), sTop + h / 2, 22, "detail A", X(PROC) + 22, sTop - 10);
 
-  s.viewTitle(laneX + laneW / 2, cBot + 100, "Plan view · one shot, 128-tick server", "Scale 1 ms = 6 px · timeline · t = 0 at fire");
+  s.viewTitle(
+    laneX + laneW / 2,
+    cBot + 100,
+    "Plan view · one shot, 128-tick server",
+    "Scale 1 ms = 6 px · timeline · t = 0 at fire",
+  );
   const planBottom = cBot + 113;
 
   // ---- Detail A: server buffering, 1 ms = 18 px ----
@@ -88,8 +136,15 @@ export default function draw() {
   const rowTop = planBottom + 48;
   let dBot;
   {
-    const kd = 18, dx0 = 60, top = rowTop + 40, dh = 34;
-    const parts = [[T1 / 2, "queue wait"], [T1 / 2, "net buffer"], [T1, "apply, send"]];
+    const kd = 18,
+      dx0 = 60,
+      top = rowTop + 40,
+      dh = 34;
+    const parts = [
+      [T1 / 2, "queue wait"],
+      [T1 / 2, "net buffer"],
+      [T1, "apply, send"],
+    ];
     let x = dx0;
     parts.forEach(([t, label]) => {
       s.rect(x, top, t * kd, dh, "obj fill-1");
@@ -98,8 +153,16 @@ export default function draw() {
     });
     s.dimH(dx0, x, top - 26, "S1", { from: [top, top] });
     s.nb((dx0 + x) / 2 + 20, top - 33.5, 2);
-    s.chainH([dx0, dx0 + T1 * kd, x], top + dh + 20, ["T1", "T1"], { from: [top + dh, top + dh, top + dh], below: true });
-    s.viewTitle((dx0 + x) / 2, top + dh + 66, "Detail A · server buffering", "Scale 1 ms = 18 px · two server frames");
+    s.chainH([dx0, dx0 + T1 * kd, x], top + dh + 20, ["T1", "T1"], {
+      from: [top + dh, top + dh, top + dh],
+      below: true,
+    });
+    s.viewTitle(
+      (dx0 + x) / 2,
+      top + dh + 66,
+      "Detail A · server buffering",
+      "Scale 1 ms = 18 px · two server frames",
+    );
     dBot = top + dh + 79;
   }
 

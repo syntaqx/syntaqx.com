@@ -20,8 +20,7 @@ registry.registerPath({
   path: "/ip",
   operationId: "getClientIp",
   summary: "Client IP address",
-  description:
-    "Returns the caller's IP address, the full X-Forwarded-For chain, and User-Agent.",
+  description: "Returns the caller's IP address, the full X-Forwarded-For chain, and User-Agent.",
   tags: ["Utilities"],
   responses: {
     200: {
@@ -47,9 +46,13 @@ export function GET(request: NextRequest) {
   const forwarded = request.headers.get("x-forwarded-for");
   const ip = forwarded?.split(",")[0]?.trim() || "unknown";
 
-  return cacheableJson(request, {
-    ip,
-    forwarded_for: forwarded,
-    user_agent: request.headers.get("user-agent"),
-  }, CACHE.revalidate);
+  return cacheableJson(
+    request,
+    {
+      ip,
+      forwarded_for: forwarded,
+      user_agent: request.headers.get("user-agent"),
+    },
+    CACHE.revalidate,
+  );
 }

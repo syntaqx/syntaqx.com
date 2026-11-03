@@ -1,20 +1,7 @@
 "use client";
 
-import {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-  type DragEvent,
-} from "react";
-import {
-  Trash2,
-  Upload,
-  ImageIcon,
-  Download,
-  Info,
-  ExternalLink,
-} from "lucide-react";
+import { useState, useCallback, useRef, useEffect, type DragEvent } from "react";
+import { Trash2, Upload, ImageIcon, Download, Info, ExternalLink } from "lucide-react";
 import { PasteButton } from "@/components/paste-button";
 import { Checkbox } from "@/components/checkbox";
 import { CopyButton } from "@/components/copy-button";
@@ -101,12 +88,7 @@ function decodeBase64ToBlob(input: string): {
 
 function sniffImageMime(bytes: Uint8Array): string | null {
   // PNG: 89 50 4E 47
-  if (
-    bytes[0] === 0x89 &&
-    bytes[1] === 0x50 &&
-    bytes[2] === 0x4e &&
-    bytes[3] === 0x47
-  ) {
+  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
     return "image/png";
   }
   // JPEG: FF D8 FF
@@ -114,12 +96,7 @@ function sniffImageMime(bytes: Uint8Array): string | null {
     return "image/jpeg";
   }
   // GIF: 47 49 46 38
-  if (
-    bytes[0] === 0x47 &&
-    bytes[1] === 0x49 &&
-    bytes[2] === 0x46 &&
-    bytes[3] === 0x38
-  ) {
+  if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) {
     return "image/gif";
   }
   // WebP: RIFF....WEBP
@@ -138,12 +115,7 @@ function sniffImageMime(bytes: Uint8Array): string | null {
   // BMP: 42 4D
   if (bytes[0] === 0x42 && bytes[1] === 0x4d) return "image/bmp";
   // ICO: 00 00 01 00
-  if (
-    bytes[0] === 0x00 &&
-    bytes[1] === 0x00 &&
-    bytes[2] === 0x01 &&
-    bytes[3] === 0x00
-  ) {
+  if (bytes[0] === 0x00 && bytes[1] === 0x00 && bytes[2] === 0x01 && bytes[3] === 0x00) {
     return "image/x-icon";
   }
   // SVG: leading "<svg" or "<?xml"
@@ -217,11 +189,7 @@ export default function ImageBase64Page() {
     if (file) loadEncodeFile(file);
   };
 
-  const encodeOutput = encDataUri
-    ? asDataUri
-      ? encDataUri
-      : stripDataUri(encDataUri).base64
-    : "";
+  const encodeOutput = encDataUri ? (asDataUri ? encDataUri : stripDataUri(encDataUri).base64) : "";
 
   // --- Decode handlers ------------------------------------------------------
 
@@ -299,12 +267,10 @@ export default function ImageBase64Page() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          Image / Base64 Converter
-        </h1>
+        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Image / Base64 Converter</h1>
         <p className="max-w-2xl text-dim">
-          Convert images to Base64 data URIs and decode Base64 back into images.
-          Everything runs in your browser, nothing is sent to a server.
+          Convert images to Base64 data URIs and decode Base64 back into images. Everything runs in
+          your browser, nothing is sent to a server.
         </p>
       </div>
 
@@ -316,7 +282,10 @@ export default function ImageBase64Page() {
             value={mode}
             onChange={switchMode}
             ariaLabel="Mode"
-            options={[{ value: "encode", label: "Image to Base64" }, { value: "decode", label: "Base64 to Image" }]}
+            options={[
+              { value: "encode", label: "Image to Base64" },
+              { value: "decode", label: "Base64 to Image" },
+            ]}
             className="mb-5"
           />
 
@@ -389,12 +358,9 @@ export default function ImageBase64Page() {
                     />
                   ) : (
                     <div className="text-center text-xs text-dim">
-                      <ImageIcon
-                        size={24}
-                        className="mx-auto mb-2 text-dim/60"
-                      />
-                      Drop an image here, or click{" "}
-                      <span className="text-muted">File</span> to choose one.
+                      <ImageIcon size={24} className="mx-auto mb-2 text-dim/60" />
+                      Drop an image here, or click <span className="text-muted">File</span> to
+                      choose one.
                     </div>
                   )}
                 </div>
@@ -507,10 +473,7 @@ export default function ImageBase64Page() {
                     />
                   ) : (
                     <div className="text-center text-xs text-dim">
-                      <ImageIcon
-                        size={24}
-                        className="mx-auto mb-2 text-dim/60"
-                      />
+                      <ImageIcon size={24} className="mx-auto mb-2 text-dim/60" />
                       Decoded image will appear here.
                     </div>
                   )}
@@ -530,29 +493,23 @@ export default function ImageBase64Page() {
             <div className="px-4 py-3 text-[11px] text-dim leading-relaxed space-y-2.5">
               <p>
                 A data URI embeds a file directly into a URL using the form{" "}
-                <span className="text-muted">
-                  data:&lt;mime&gt;;base64,&lt;data&gt;
-                </span>
-                . It can be used anywhere a URL is accepted &mdash; including
+                <span className="text-muted">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It can be
+                used anywhere a URL is accepted &mdash; including
                 <span className="text-muted"> img src</span>, CSS{" "}
                 <span className="text-muted">background-image</span>, and SVG.
               </p>
               <p>
                 Base64 encoding increases payload size by roughly{" "}
-                <span className="text-muted">33%</span>. It is most useful for
-                small, inlineable assets like icons; large images are usually
-                better served as separate files.
+                <span className="text-muted">33%</span>. It is most useful for small, inlineable
+                assets like icons; large images are usually better served as separate files.
               </p>
               <p>
-                This page accepts plain Base64, padded or unpadded, and both
-                standard and URL-safe alphabets. The format is auto-detected
-                from the data when no MIME type is provided.
+                This page accepts plain Base64, padded or unpadded, and both standard and URL-safe
+                alphabets. The format is auto-detected from the data when no MIME type is provided.
               </p>
               <p>
-                Files are processed locally with the{" "}
-                <span className="text-muted">FileReader</span> and{" "}
-                <span className="text-muted">Blob</span> APIs. Nothing is
-                uploaded.
+                Files are processed locally with the <span className="text-muted">FileReader</span>{" "}
+                and <span className="text-muted">Blob</span> APIs. Nothing is uploaded.
               </p>
             </div>
           </div>

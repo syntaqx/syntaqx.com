@@ -1,20 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  ChevronDown,
-  ChevronRight,
-  Copy,
-  Check,
-  Play,
-  Server,
-} from "lucide-react";
-import {
-  buildRequest,
-  jsonError,
-  paramKey,
-  SHOWN_RESPONSE_HEADERS,
-} from "@/lib/api-console";
+import { ChevronDown, ChevronRight, Copy, Check, Play, Server } from "lucide-react";
+import { buildRequest, jsonError, paramKey, SHOWN_RESPONSE_HEADERS } from "@/lib/api-console";
 import { Select } from "@/components/select";
 import { cn } from "@/lib/cn";
 
@@ -165,13 +153,7 @@ function CopyBtn({ text }: { text: string }) {
 // Components
 // ---------------------------------------------------------------------------
 
-function SchemaTable({
-  spec,
-  schema,
-}: {
-  spec: OpenApiSpec;
-  schema: SchemaObject;
-}) {
+function SchemaTable({ spec, schema }: { spec: OpenApiSpec; schema: SchemaObject }) {
   const resolved = resolveRef(spec, schema);
   if (!resolved.properties) return null;
   const required = resolved.required || [];
@@ -192,13 +174,9 @@ function SchemaTable({
           >
             <span className="font-mono text-foreground">
               {name}
-              {required.includes(name) && (
-                <span className="text-red-400 ml-0.5">*</span>
-              )}
+              {required.includes(name) && <span className="text-red-400 ml-0.5">*</span>}
             </span>
-            <span className="text-dim">
-              {p.const ? `"${p.const}"` : p.type || "object"}
-            </span>
+            <span className="text-dim">{p.const ? `"${p.const}"` : p.type || "object"}</span>
             <span className="text-muted">{p.description || ""}</span>
           </div>
         );
@@ -250,9 +228,7 @@ function Endpoint({
 }) {
   const anchor = op.operationId;
   // Opened directly when the URL hash points at this operation.
-  const [open, setOpen] = useState(
-    () => !!anchor && window.location.hash === `#${anchor}`,
-  );
+  const [open, setOpen] = useState(() => !!anchor && window.location.hash === `#${anchor}`);
   const [trying, setTrying] = useState(false);
   const [result, setResult] = useState<{
     status: number;
@@ -275,9 +251,7 @@ function Endpoint({
 
   const hasBody = ["post", "put", "patch", "query"].includes(method);
   const reqBodySchema = op.requestBody?.content?.["application/json"]?.schema;
-  const resolvedReqBody = reqBodySchema
-    ? resolveRef(spec, reqBodySchema)
-    : null;
+  const resolvedReqBody = reqBodySchema ? resolveRef(spec, reqBodySchema) : null;
   const defaultBody = resolvedReqBody
     ? JSON.stringify(schemaToExample(spec, resolvedReqBody), null, 2)
     : "{}";
@@ -364,14 +338,15 @@ function Endpoint({
           <ChevronRight size={14} className="text-dim shrink-0" />
         )}
         <span
-          className={cn("inst w-19 shrink-0 border py-1 text-center", METHOD_COLORS[method] || "text-dim")}
+          className={cn(
+            "inst w-19 shrink-0 border py-1 text-center",
+            METHOD_COLORS[method] || "text-dim",
+          )}
         >
           {method}
         </span>
         <span className="font-mono text-sm text-foreground">{path}</span>
-        <span className="ml-auto hidden text-sm text-dim sm:inline">
-          {op.summary}
-        </span>
+        <span className="ml-auto hidden text-sm text-dim sm:inline">{op.summary}</span>
       </button>
 
       {open && (
@@ -380,9 +355,7 @@ function Endpoint({
           <div className="min-w-0 xl:border-r xl:border-border">
             {(op.description || anchor) && (
               <div className="px-4 py-3 border-b border-border">
-                {op.description && (
-                  <p className="text-xs text-muted">{op.description}</p>
-                )}
+                {op.description && <p className="text-xs text-muted">{op.description}</p>}
                 {anchor && (
                   <a
                     href={`#${anchor}`}
@@ -405,9 +378,7 @@ function Endpoint({
               <div className="px-4 py-3 border-b border-border space-y-3">
                 <h4 className="inst text-dim">
                   Request Body
-                  {op.requestBody?.required && (
-                    <span className="text-red-400 ml-1">required</span>
-                  )}
+                  {op.requestBody?.required && <span className="text-red-400 ml-1">required</span>}
                 </h4>
                 {resolvedReqBody?.properties && (
                   <SchemaTable spec={spec} schema={resolvedReqBody} />
@@ -423,11 +394,7 @@ function Endpoint({
                 const schema = jsonContent?.schema;
                 const resolvedSchema = schema ? resolveRef(spec, schema) : null;
                 const example = resolvedSchema
-                  ? JSON.stringify(
-                      schemaToExample(spec, resolvedSchema),
-                      null,
-                      2,
-                    )
+                  ? JSON.stringify(schemaToExample(spec, resolvedSchema), null, 2)
                   : null;
 
                 return (
@@ -436,14 +403,16 @@ function Endpoint({
                       <span
                         className={cn(
                           "text-xs font-mono font-bold",
-                          code.startsWith("2") ? "text-emerald-400" : code.startsWith("4") ? "text-amber-400" : "text-red-400",
+                          code.startsWith("2")
+                            ? "text-emerald-400"
+                            : code.startsWith("4")
+                              ? "text-amber-400"
+                              : "text-red-400",
                         )}
                       >
                         {code}
                       </span>
-                      <span className="text-xs text-dim">
-                        {resObj.description}
-                      </span>
+                      <span className="text-xs text-dim">{resObj.description}</span>
                     </div>
                     {resolvedSchema?.properties && (
                       <SchemaTable spec={spec} schema={resolvedSchema} />
@@ -494,9 +463,7 @@ function Endpoint({
                             value={values[key]}
                             onChange={(v) => setValues({ ...values, [key]: v })}
                             options={[
-                              ...(p.required
-                                ? []
-                                : [{ value: "", label: "(default)" }]),
+                              ...(p.required ? [] : [{ value: "", label: "(default)" }]),
                               ...options.map((o) => ({ value: o, label: o })),
                             ]}
                           />
@@ -504,9 +471,7 @@ function Endpoint({
                           <input
                             id={id}
                             value={values[key]}
-                            onChange={(e) =>
-                              setValues({ ...values, [key]: e.target.value })
-                            }
+                            onChange={(e) => setValues({ ...values, [key]: e.target.value })}
                             onKeyDown={onKeyDown}
                             placeholder={p.required ? "required" : "optional"}
                             spellCheck={false}
@@ -571,17 +536,16 @@ function Endpoint({
               {error && <p className="text-xs text-red-400">{error}</p>}
 
               {(result || trying) && (
-                <div
-                  aria-live="polite"
-                  className={cn("relative", trying && "opacity-50")}
-                >
+                <div aria-live="polite" className={cn("relative", trying && "opacity-50")}>
                   {result && (
                     <>
                       <div className="mb-1.5 flex items-center gap-3">
                         <span
                           className={cn(
                             "text-xs font-mono font-bold",
-                            result.status >= 200 && result.status < 300 ? "text-emerald-400" : "text-red-400",
+                            result.status >= 200 && result.status < 300
+                              ? "text-emerald-400"
+                              : "text-red-400",
                           )}
                         >
                           {result.status || "Error"} {result.statusText}
@@ -608,9 +572,7 @@ function Endpoint({
                       </div>
                     </>
                   )}
-                  {trying && !result && (
-                    <div className="h-16 bg-border/20 animate-pulse" />
-                  )}
+                  {trying && !result && <div className="h-16 bg-border/20 animate-pulse" />}
                 </div>
               )}
             </div>
@@ -663,11 +625,9 @@ export default function ApiDocsPage() {
           if (serverIdx === null && data.servers?.length) {
             // Default to localhost in dev, production otherwise
             const isLocal =
-              typeof window !== "undefined" &&
-              window.location.hostname === "localhost";
+              typeof window !== "undefined" && window.location.hostname === "localhost";
             const idx = isLocal
-              ? (data.servers.findIndex((s) => s.url.includes("localhost")) ??
-                0)
+              ? (data.servers.findIndex((s) => s.url.includes("localhost")) ?? 0)
               : 0;
             setServerIdx(idx >= 0 ? idx : 0);
           }
@@ -702,10 +662,7 @@ export default function ApiDocsPage() {
   }
 
   // Group endpoints by tag
-  const grouped: Record<
-    string,
-    { method: string; path: string; op: PathOperation }[]
-  > = {};
+  const grouped: Record<string, { method: string; path: string; op: PathOperation }[]> = {};
   for (const [path, methods] of Object.entries(spec.paths || {})) {
     for (const [method, op] of Object.entries(methods)) {
       const tag = op.tags?.[0] || "Other";

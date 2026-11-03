@@ -34,16 +34,16 @@ function CopyDemo() {
   return (
     <div className="rounded-lg border border-border bg-surface">
       <div className="p-4 flex items-center justify-between gap-3">
-        <code className="font-mono text-xs text-foreground truncate">
-          {sample}
-        </code>
+        <code className="font-mono text-xs text-foreground truncate">{sample}</code>
         <button
           type="button"
           onClick={onCopy}
           aria-live="polite"
           className={cn(
             "shrink-0 inline-flex items-center gap-1.5 rounded border px-2 py-1 text-xs transition-colors cursor-pointer",
-            copied ? "border-accent/40 text-accent" : "border-border text-dim hover:text-foreground hover:border-border-hover",
+            copied
+              ? "border-accent/40 text-accent"
+              : "border-border text-dim hover:text-foreground hover:border-border-hover",
           )}
         >
           {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -51,8 +51,8 @@ function CopyDemo() {
         </button>
       </div>
       <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-        The button is the trigger and the confirmation. State reverts after 1.5s
-        so the user can copy again without thinking about it.
+        The button is the trigger and the confirmation. State reverts after 1.5s so the user can
+        copy again without thinking about it.
       </div>
     </div>
   );
@@ -135,7 +135,9 @@ function OptimisticToggle({
       onClick={toggle}
       className={cn(
         "inline-flex items-center gap-1.5 rounded border px-2.5 py-1.5 text-xs transition-colors cursor-pointer",
-        on ? "border-accent/40 bg-accent/10 text-accent" : "border-border text-dim hover:text-foreground hover:border-border-hover",
+        on
+          ? "border-accent/40 bg-accent/10 text-accent"
+          : "border-border text-dim hover:text-foreground hover:border-border-hover",
         error && "border-red-500/50 text-red-400",
       )}
     >
@@ -152,17 +154,12 @@ function OptimisticDemo() {
     <div className="rounded-lg border border-border bg-surface">
       <div className="p-4 flex flex-wrap items-center gap-3">
         <OptimisticToggle icon={Heart} label="Always succeeds" initial={42} />
-        <OptimisticToggle
-          icon={Star}
-          label="Always fails"
-          initial={128}
-          shouldFail
-        />
+        <OptimisticToggle icon={Star} label="Always fails" initial={128} shouldFail />
       </div>
       <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-        Clicks apply immediately. The first toggle resolves cleanly; the second
-        always fails after 600ms and the UI rolls back with a brief error state.
-        Click rapidly to feel the difference vs a request-then-update flow.
+        Clicks apply immediately. The first toggle resolves cleanly; the second always fails after
+        600ms and the UI rolls back with a brief error state. Click rapidly to feel the difference
+        vs a request-then-update flow.
       </div>
     </div>
   );
@@ -206,15 +203,7 @@ function GuardDemo() {
   );
 }
 
-function GuardRow({
-  level,
-  desc,
-  children,
-}: {
-  level: string;
-  desc: string;
-  children: ReactNode;
-}) {
+function GuardRow({ level, desc, children }: { level: string; desc: string; children: ReactNode }) {
   return (
     <div className="p-4 flex items-start justify-between gap-4">
       <div className="min-w-0">
@@ -314,8 +303,7 @@ function TypeToConfirm({ target }: { target: string }) {
   return (
     <div className="inline-flex flex-col items-end gap-1.5">
       <div className="text-[10px] text-dim">
-        Type <code className="font-mono text-foreground">{target}</code> to
-        confirm
+        Type <code className="font-mono text-foreground">{target}</code> to confirm
       </div>
       <div className="inline-flex items-center gap-1.5">
         <input
@@ -424,26 +412,18 @@ function SkeletonDemo() {
         <SkeletonColumn label="Spinner">
           <SpinnerRow loading={loading} />
         </SkeletonColumn>
-        <SkeletonColumn label="Nothing">
-          {loading ? null : <LoadedRow />}
-        </SkeletonColumn>
+        <SkeletonColumn label="Nothing">{loading ? null : <LoadedRow />}</SkeletonColumn>
       </div>
       <div className="border-t border-border px-4 py-2.5 text-[10px] text-dim">
-        Auto-cycles every 10s. Watch the middle and right columns: the spinner
-        collapses the row, the empty state collapses the whole box. The skeleton
-        on the left holds its shape so nothing reflows when content lands.
+        Auto-cycles every 10s. Watch the middle and right columns: the spinner collapses the row,
+        the empty state collapses the whole box. The skeleton on the left holds its shape so nothing
+        reflows when content lands.
       </div>
     </div>
   );
 }
 
-function SkeletonColumn({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+function SkeletonColumn({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="p-4">
       <div className="mb-3 text-[10px] font-medium text-dim">{label}</div>
@@ -482,9 +462,7 @@ function LoadedRow() {
         CP
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-xs font-medium text-foreground truncate">
-          Chase Pierce
-        </div>
+        <div className="text-xs font-medium text-foreground truncate">Chase Pierce</div>
         <div className="text-[11px] text-dim truncate">
           Hacker, open sorcerer, software engineer, cloudified.
         </div>

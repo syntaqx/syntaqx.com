@@ -14,13 +14,7 @@ interface CheckboxProps {
   className?: string;
 }
 
-export function Checkbox({
-  checked,
-  onChange,
-  label,
-  tooltip,
-  className,
-}: CheckboxProps) {
+export function Checkbox({ checked, onChange, label, tooltip, className }: CheckboxProps) {
   const id = useId();
 
   return (

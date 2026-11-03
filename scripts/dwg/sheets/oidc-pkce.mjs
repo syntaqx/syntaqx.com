@@ -4,12 +4,16 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, x = 20;
+  const W = 760,
+    x = 20;
   const s = sheet({ prefix: "oi", width: W });
   const cw = (W - 2 * x) / 3;
   const CX = (i) => x + (i + 0.5) * cw;
   const [BR, APP, IDP] = [CX(0), CX(1), CX(2)];
-  const aw = 150, ah = 28, top = 20, step = 34;
+  const aw = 150,
+    ah = 28,
+    top = 20,
+    step = 34;
   const Y = (i) => top + ah + 32 + i * step; // message rows
 
   // Lifelines first, so the boxes on them paint over.
@@ -19,7 +23,9 @@ export default function draw() {
   s.line(IDP, top + ah, IDP, Y(7), "ctr");
 
   s.comment("Parties");
-  ["browser", "your app", "identity provider"].forEach((l, i) => s.node(CX(i) - aw / 2, top, aw, ah, l, { kind: i === 1 ? "process" : "actor" }));
+  ["browser", "your app", "identity provider"].forEach((l, i) =>
+    s.node(CX(i) - aw / 2, top, aw, ah, l, { kind: i === 1 ? "process" : "actor" }),
+  );
 
   // A message between lifelines; one that crosses the app's lifeline puts
   // its label in the gap next to the sender. Labels with identifiers set
@@ -47,7 +53,10 @@ export default function draw() {
   msg(IDP, APP, Y(7), "ID token, access token", { hl: true });
 
   s.comment("6. Validate, then start a session");
-  const v = s.node(APP - 120, Y(8), 240, 28, "validate, then start a session", { hl: true, end: true });
+  const v = s.node(APP - 120, Y(8), 240, 28, "validate, then start a session", {
+    hl: true,
+    end: true,
+  });
   const ny = v.y + v.h + 18;
   s.text(APP, ny, "check iss, aud, exp, nonce and the signature", "tc", "middle");
   s.height = Math.ceil(ny + 18);

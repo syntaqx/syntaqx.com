@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  siGithub,
-  siGoogle,
-  siX,
-  siStackoverflow,
-  siRss,
-  siYoutube,
-} from "simple-icons";
+import { siGithub, siGoogle, siX, siStackoverflow, siRss, siYoutube } from "simple-icons";
 
 const icons: Record<string, { title: string; path: string }> = {
   github: siGithub,

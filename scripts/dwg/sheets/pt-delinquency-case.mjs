@@ -17,11 +17,14 @@ const STAGES = [
 const HOLDS = ["bankruptcy stay", "servicemember", "rental assistance", "dispute or order"];
 
 export default function draw() {
-  const W = 760, w = 88, gap = (W - 40 - STAGES.length * w) / (STAGES.length - 1);
+  const W = 760,
+    w = 88,
+    gap = (W - 40 - STAGES.length * w) / (STAGES.length - 1);
   const s = sheet({ prefix: "pt-dq", width: W });
 
   s.comment("Holds");
-  const gy = 40, gh = 52;
+  const gy = 40,
+    gh = 52;
   s.group(20, gy, W - 40, gh, "hold on the case", { sub: "pauses every path at once" });
   s.row(32, gy + 12, W - 64, HOLDS, { h: 28, gap: 16, kind: "ghost" });
 
@@ -31,13 +34,24 @@ export default function draw() {
   const X = (i) => nodes[i].cx;
 
   s.comment("Ways out");
-  const oy = bottom + 40, oh = 50;
+  const oy = bottom + 40,
+    oh = 50;
   const ow = 150;
   const paid = s.node(X(2) - ow - 12, oy, ow, oh, "paid in full", { sub: "reinstated", end: true });
-  const plan = s.node(X(2) + 12, oy, ow, oh, "payment plan", { kind: "store", sub: ["signed; pauses", "what it says"] });
-  s.wire([[X(2) - 6, bottoms[2] + 6], [X(2) - 6, oy - 14], [paid.cx, oy - 14], paid.port("t")], { alt: true });
-  s.wire([[X(2) + 6, bottoms[2] + 6], [X(2) + 6, oy - 14], [plan.cx, oy - 14], plan.port("t")], { alt: true });
-  const coll = s.node(W - 20 - 170, oy, 170, oh, "collection account", { kind: "store", sub: ["unpaid balance", "after move-out"] });
+  const plan = s.node(X(2) + 12, oy, ow, oh, "payment plan", {
+    kind: "store",
+    sub: ["signed; pauses", "what it says"],
+  });
+  s.wire([[X(2) - 6, bottoms[2] + 6], [X(2) - 6, oy - 14], [paid.cx, oy - 14], paid.port("t")], {
+    alt: true,
+  });
+  s.wire([[X(2) + 6, bottoms[2] + 6], [X(2) + 6, oy - 14], [plan.cx, oy - 14], plan.port("t")], {
+    alt: true,
+  });
+  const coll = s.node(W - 20 - 170, oy, 170, oh, "collection account", {
+    kind: "store",
+    sub: ["unpaid balance", "after move-out"],
+  });
   s.wire([[X(6), bottoms[6] + 6], coll.port("t", (X(6) - coll.x) / coll.w)]);
 
   s.height = Math.ceil(oy + oh + 20);

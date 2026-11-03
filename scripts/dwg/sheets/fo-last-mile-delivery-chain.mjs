@@ -6,7 +6,9 @@
 import { sheet } from "../kit.mjs";
 
 export default function draw() {
-  const W = 760, x = 20, h = 32;
+  const W = 760,
+    x = 20,
+    h = 32;
   const s = sheet({ prefix: "fo-lmd", width: W });
   const cy = 86;
 
@@ -20,14 +22,22 @@ export default function draw() {
   s.connect(wh, hub, { label: "middle mile" });
 
   s.comment("Last mile");
-  const dw = 148, dx = W - x - dw, dh = 30, step = 46;
-  const ends = ["recipient signs", "safe place, photo", "locker or counter"].map((l, i) => s.node(dx, cy - dh / 2 + (i - 1) * step, dw, dh, l));
+  const dw = 148,
+    dx = W - x - dw,
+    dh = 30,
+    step = 46;
+  const ends = ["recipient signs", "safe place, photo", "locker or counter"].map((l, i) =>
+    s.node(dx, cy - dh / 2 + (i - 1) * step, dw, dh, l),
+  );
   s.fanOut(hub, ends, { via: dx - 24, hl: true, label: "last mile", side: "above" });
 
   s.comment("Failed attempts");
   const fy = ends[2].y + dh + 22;
   s.wire([ends[2].port("b"), [ends[2].cx, fy], [hub.cx, fy], hub.port("b")], {
-    alt: true, seg: 1, side: "below", label: "failed: retry, hold at a\npickup point, or return",
+    alt: true,
+    seg: 1,
+    side: "below",
+    label: "failed: retry, hold at a\npickup point, or return",
   });
 
   s.comment("Spans");

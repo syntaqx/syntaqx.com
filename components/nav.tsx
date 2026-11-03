@@ -20,7 +20,10 @@ function Marker({ on, list = false }: { on: boolean; list?: boolean }) {
   return (
     <span
       aria-hidden
-      className={cn("absolute bg-accent", list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-0 -bottom-px h-0.5")}
+      className={cn(
+        "absolute bg-accent",
+        list ? "inset-y-1.5 left-0 w-0.5" : "inset-x-0 -bottom-px h-0.5",
+      )}
     />
   );
 }
@@ -38,9 +41,7 @@ export function Nav() {
     <nav aria-label="Main" className="inst hidden items-stretch pl-2 lg:flex">
       {nav.map((item) => {
         if ("links" in item) {
-          return (
-            <NavDisclosure key={item.label} group={item} pathname={pathname} />
-          );
+          return <NavDisclosure key={item.label} group={item} pathname={pathname} />;
         }
         const on = isActive(pathname, item.href);
         return (
@@ -62,13 +63,7 @@ export function Nav() {
 // A disclosure of plain links rather than an ARIA menu: Tab walks the links,
 // Escape closes and returns focus to the button, and it closes on outside
 // click, when focus leaves it, and on navigation.
-function NavDisclosure({
-  group,
-  pathname,
-}: {
-  group: NavGroup;
-  pathname: string;
-}) {
+function NavDisclosure({ group, pathname }: { group: NavGroup; pathname: string }) {
   const [open, setOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
   const ref = useRef<HTMLDivElement>(null);

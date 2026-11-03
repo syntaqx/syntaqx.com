@@ -3,7 +3,9 @@ import { markdownRewrites, sectionRedirects } from "./next.config";
 
 // The .md suffix rules answer whatever the Accept header says.
 const suffix = markdownRewrites.beforeFiles.filter((r) => !("has" in r));
-const all = [...markdownRewrites.beforeFiles, ...markdownRewrites.fallback].filter((r) => "has" in r);
+const all = [...markdownRewrites.beforeFiles, ...markdownRewrites.fallback].filter(
+  (r) => "has" in r,
+);
 
 describe("Markdown .md URLs", () => {
   it("serve docs and books at their path plus .md, never on the API host", () => {
@@ -22,9 +24,7 @@ describe("Markdown .md URLs", () => {
 describe("Markdown content negotiation rewrites", () => {
   it("only apply when Accept asks for text/markdown, and never on the API host", () => {
     for (const r of all) {
-      expect(r.has).toEqual([
-        { type: "header", key: "accept", value: ".*text/markdown.*" },
-      ]);
+      expect(r.has).toEqual([{ type: "header", key: "accept", value: ".*text/markdown.*" }]);
       expect(r.missing).toEqual([{ type: "host", value: "api.syntaqx.com" }]);
       expect(r.destination.startsWith("/md")).toBe(true);
     }

@@ -124,10 +124,7 @@ function parseUA(ua: string): ParsedUA {
 // ---------------------------------------------------------------------------
 
 export function GET(request: NextRequest) {
-  const raw =
-    request.nextUrl.searchParams.get("ua") ||
-    request.headers.get("user-agent") ||
-    "";
+  const raw = request.nextUrl.searchParams.get("ua") || request.headers.get("user-agent") || "";
 
   if (!raw) {
     return errorResponse(400, "No User-Agent provided.");

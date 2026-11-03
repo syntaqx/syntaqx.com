@@ -11,10 +11,7 @@ export function generateStaticParams() {
   return getAllDocs().map((doc) => ({ slug: doc.slug.split("/") }));
 }
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ slug: string[] }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
   const slug = (await params).slug.join("/");
   const doc = getDocBySlug(slug);
   if (!doc) return new Response("Not found", { status: 404 });

@@ -27,16 +27,28 @@ const D3 = P3 + frames[2].alpha * DT; // 36
 const list = (k) => frames.map(k).join(" · ");
 
 export default function draw() {
-  const W = 760, CX = W / 2;
+  const W = 760,
+    CX = W / 2;
   const s = sheet({ prefix: "gm-ts", width: W });
 
   s.comment("Notes");
-  const ny = s.notes(32, 40, [
-    [1, "Illustrative: dt = 10 (100 Hz) and frame lengths chosen so the arithmetic is easy to follow."],
-    [2, "Clamp the frame time before adding it (Fiedler uses 0.25 s), so one long stall can't demand endless steps."],
-    [3, "The drawn state is always one dt behind real time: 46 - 36 = 10."],
-    [0, "Values in ms. The drawing carries codes; values and formulas are in the table."],
-  ], { width: 696 });
+  const ny = s.notes(
+    32,
+    40,
+    [
+      [
+        1,
+        "Illustrative: dt = 10 (100 Hz) and frame lengths chosen so the arithmetic is easy to follow.",
+      ],
+      [
+        2,
+        "Clamp the frame time before adding it (Fiedler uses 0.25 s), so one long stall can't demand endless steps.",
+      ],
+      [3, "The drawn state is always one dt behind real time: 46 - 36 = 10."],
+      [0, "Values in ms. The drawing carries codes; values and formulas are in the table."],
+    ],
+    { width: 696 },
+  );
 
   // ---- Plan view: four frames, 1 ms = 8 px ----
   s.comment("Plan view: four frames, fixed dt");
@@ -47,7 +59,10 @@ export default function draw() {
     const X = (ms) => x0 + ms * k;
     const ends = R.reduce((acc, r) => [...acc, acc[acc.length - 1] + r], [0]);
     const h = 30;
-    const rY = ny + 82, sY = rY + h + 40, cY = sY + h + 22, cH = 18;
+    const rY = ny + 82,
+      sY = rY + h + 40,
+      cY = sY + h + 22,
+      cH = 18;
 
     // Row labels.
     s.text(x0 - 12, rY + h / 2 + 3, "render", "sl ink", "end");
@@ -85,7 +100,12 @@ export default function draw() {
     s.detailRef(X(t3 - frames[2].a / 2), cY + cH / 2, 30, "detail A", X(t3) + 40, cY + cH + 26);
 
     const bot = cY + cH + 30;
-    s.viewTitle(CX, bot + 44, "Plan view · four frames, fixed dt", "Scale 1 ms = 8 px · timeline · illustrative");
+    s.viewTitle(
+      CX,
+      bot + 44,
+      "Plan view · four frames, fixed dt",
+      "Scale 1 ms = 8 px · timeline · illustrative",
+    );
     planBottom = bot + 57;
   }
 
@@ -94,11 +114,15 @@ export default function draw() {
   const rowTop = planBottom + 50;
   let detailBottom;
   {
-    const k = 30, x0 = 62;
+    const k = 30,
+      x0 = 62;
     const X = (t) => x0 + (t - P3) * k;
     const y = rowTop + 40;
     s.line(X(P3), y, X(C3), y, "obj");
-    s.add(`<circle class="dot" cx="${X(P3)}" cy="${y}" r="3"/>`, `<circle class="dot" cx="${X(C3)}" cy="${y}" r="3"/>`);
+    s.add(
+      `<circle class="dot" cx="${X(P3)}" cy="${y}" r="3"/>`,
+      `<circle class="dot" cx="${X(C3)}" cy="${y}" r="3"/>`,
+    );
     s.add(`<circle class="obj hl" cx="${X(D3)}" cy="${y}" r="5"/>`);
     s.text(X(P3), y - 14, "previous", "sl ink", "middle");
     s.text(X(D3), y - 14, "drawn", "sl ink", "middle");
@@ -107,10 +131,16 @@ export default function draw() {
     s.text(X(P3), y + 18, "P3", "dt", "middle");
     s.text(X(D3), y + 18, "D3", "dt", "middle");
     s.text(X(C3), y + 18, "C3", "dt", "middle");
-    const d1 = y + 38, d2 = d1 + 26;
+    const d1 = y + 38,
+      d2 = d1 + 26;
     s.dimH(X(P3), X(D3), d1, "α3 × dt", { from: [y + 24, y + 24], hl: true });
     s.dimH(X(P3), X(C3), d2, "dt", { from: [d1 + 4, y + 24] });
-    s.viewTitle((X(P3) + X(C3)) / 2, d2 + 44, "Detail A · drawing frame 3", "Scale 1 ms = 30 px · time axis");
+    s.viewTitle(
+      (X(P3) + X(C3)) / 2,
+      d2 + 44,
+      "Detail A · drawing frame 3",
+      "Scale 1 ms = 30 px · time axis",
+    );
     detailBottom = d2 + 57;
   }
 

@@ -19,7 +19,11 @@ const WHERE = [
 ];
 
 export default function draw() {
-  const W = 760, x = 20, firstW = 210, rowH = 28, top = 40;
+  const W = 760,
+    x = 20,
+    firstW = 210,
+    rowH = 28,
+    top = 40;
   const s = sheet({ prefix: "ids", width: W });
   const cw = (W - 2 * x - firstW) / SHAPES.length;
   const CX = (j) => x + firstW + (j + 0.5) * cw;

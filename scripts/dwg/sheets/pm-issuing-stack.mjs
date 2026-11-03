@@ -21,13 +21,19 @@ const SUPPORT = [
 ];
 
 export default function draw() {
-  const W = 760, n = PARTIES.length, w = 128, h = 30, y = 44;
+  const W = 760,
+    n = PARTIES.length,
+    w = 128,
+    h = 30,
+    y = 44;
   const s = sheet({ prefix: "iss", width: W });
   const gap = (W - 40 - 3 - n * w) / (n - 1); // 3 of slack for the actor's shadow at the left
   const X = (i) => 20 + i * (w + gap);
 
   s.comment("The authorization path");
-  const nodes = PARTIES.map(([label, , kind], i) => s.node(X(i), y, w, h, label, { kind: kind ?? "process" }));
+  const nodes = PARTIES.map(([label, , kind], i) =>
+    s.node(X(i), y, w, h, label, { kind: kind ?? "process" }),
+  );
   let bottom = y + h;
   PARTIES.forEach(([, sub], i) =>
     sub.forEach((l, j) => {
@@ -42,10 +48,17 @@ export default function draw() {
     s.connect(nodes[i], nd, { at: [0.3, 0.3], hl });
     s.connect(nd, nodes[i], { from: "l", to: "r", at: [0.7, 0.7], hl });
   });
-  s.text((nodes[2].cx + nodes[4].cx) / 2, y - 12, "authorization: request out, answer back in seconds", "sl hl", "middle");
+  s.text(
+    (nodes[2].cx + nodes[4].cx) / 2,
+    y - 12,
+    "authorization: request out, answer back in seconds",
+    "sl hl",
+    "middle",
+  );
 
   s.comment("What stands behind the issuer");
-  const sy = bottom + 44, sh = 30;
+  const sy = bottom + 44,
+    sh = 30;
   let last = sy + sh;
   SUPPORT.forEach(([col, label, sub, wl]) => {
     const top = nodes[col];

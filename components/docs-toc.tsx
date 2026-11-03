@@ -48,7 +48,9 @@ export function DocsToc({ headings, className = "" }: { headings: Heading[]; cla
                 aria-current={on ? "location" : undefined}
                 className={cn(
                   "-ml-px block border-l py-1.5 pl-3.5 text-[0.8rem] leading-snug transition-colors",
-                  on ? "border-accent text-accent" : "border-transparent text-dim hover:text-foreground",
+                  on
+                    ? "border-accent text-accent"
+                    : "border-transparent text-dim hover:text-foreground",
                 )}
               >
                 {h.text}

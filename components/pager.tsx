@@ -16,7 +16,8 @@ export function Pager({ prev, next }: { prev?: Neighbor | null; next?: Neighbor 
   if (!prev && !next) return null;
   return (
     <>
-      <nav data-pagefind-ignore
+      <nav
+        data-pagefind-ignore
         aria-label="Previous and next (or use the arrow keys)"
         className="mt-16 grid gap-4 border-t border-border pt-8 sm:grid-cols-2"
       >

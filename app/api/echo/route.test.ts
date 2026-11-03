@@ -11,7 +11,11 @@ const post = (body: string, headers: Record<string, string> = {}) =>
   POST(
     new Request("http://localhost/api/echo", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Forwarded-For": "198.51.100.7", ...headers },
+      headers: {
+        "Content-Type": "application/json",
+        "X-Forwarded-For": "198.51.100.7",
+        ...headers,
+      },
       body,
     }),
   );
