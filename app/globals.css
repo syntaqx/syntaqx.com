@@ -581,7 +581,7 @@ body {
 }
 .prose figure.diagram > svg { min-width: 560px; cursor: zoom-in; }
 .prose figure.diagram { position: relative; }
-/* Opens the diagram full screen (components/diagram-viewer.tsx); so does a
+/* Opens the diagram in a modal (components/diagram-viewer.tsx); so does a
    click or tap on the diagram itself. */
 [data-diagram-expand] {
   position: absolute;
