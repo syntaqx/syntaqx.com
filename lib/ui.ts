@@ -70,6 +70,15 @@ export const patterns: UiPage[] = [
     lead: "Validation is mostly a question of timing. Tell people what passes before they start, confirm success the moment it happens, and hold errors until they've had a fair chance to finish.",
     category: "Forms",
     tags: ["forms", "a11y"],
+    components: [
+      "field",
+      "input",
+      "error-summary",
+      "requirement-list",
+      "password-input",
+      "number-input",
+      "button",
+    ],
   },
   {
     title: "Keyboard & Focus",

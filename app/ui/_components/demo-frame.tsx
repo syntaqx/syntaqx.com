@@ -16,7 +16,7 @@ export function DemoFrame({
     <div className="border border-border bg-card">
       <div className={className}>{children}</div>
       {note && (
-        <div className="border-t border-border px-4 py-2.5 text-[10px] text-muted-foreground">
+        <div className="border-t border-border px-6 py-3 text-xs/relaxed text-muted-foreground">
           {note}
         </div>
       )}
@@ -50,14 +50,14 @@ function Side({
 }) {
   const Icon = kind === "wrong" ? X : Check;
   return (
-    <div className={cn("p-4", className)}>
+    <div className={cn("p-6", className)}>
       <div
         className={cn(
-          "mb-3 inline-flex items-center gap-1 text-[10px] font-medium",
+          "mb-4 inline-flex items-center gap-1.5 text-xs font-medium",
           kind === "wrong" ? "text-destructive" : "text-primary",
         )}
       >
-        <Icon size={11} aria-hidden />
+        <Icon aria-hidden className="size-3.5" />
         {kind === "wrong" ? "Common" : "Better"}
       </div>
       {children}

@@ -13,6 +13,7 @@ const demos: Demo[] = [
   {
     id: "reward-early-punish-late",
     title: "Reward early, punish late",
+    install: ["field", "input"],
     sources: [{ name: "Mihael Konjević" }],
     blurb: (
       <>
@@ -26,6 +27,7 @@ const demos: Demo[] = [
   {
     id: "error-summary-on-submit",
     title: "Error summary on submit",
+    install: ["error-summary", "number-input", "button"],
     sources: [
       {
         name: "GOV.UK Design System",
@@ -44,6 +46,7 @@ const demos: Demo[] = [
   {
     id: "rules-before-errors",
     title: "Rules before errors",
+    install: ["requirement-list", "password-input"],
     sources: [{ name: "GitHub" }],
     blurb: (
       <>

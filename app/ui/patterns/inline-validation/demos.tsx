@@ -1,39 +1,23 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
-import { Check, Circle, RotateCcw } from "lucide-react";
-import { cn } from "@/lib/cn";
+import { useId, useState } from "react";
+import { CircleCheck, RotateCcw } from "lucide-react";
 import { Compare, DemoFrame } from "@/app/ui/_components/demo-frame";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { ErrorSummary } from "@/registry/syntaqx/ui/error-summary";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  FieldValid,
+} from "@/registry/syntaqx/ui/field";
+import { Input } from "@/registry/syntaqx/ui/input";
+import { NumberInput } from "@/registry/syntaqx/ui/number-input";
+import { PasswordInput } from "@/registry/syntaqx/ui/password-input";
+import { RequirementList } from "@/registry/syntaqx/ui/requirement-list";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const btn =
-  "inline-flex items-center gap-1.5 rounded border border-border px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:border-border-hover cursor-pointer";
-const primary =
-  "inline-flex items-center gap-1.5 rounded border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs text-primary transition-colors hover:bg-primary/20 cursor-pointer";
-
-const inputClass = (state: "idle" | "error" | "ok") =>
-  `w-full rounded border bg-transparent px-2.5 py-1.5 text-xs text-foreground outline-none transition-colors focus:border-primary/60 ${
-    state === "error"
-      ? "border-destructive/50"
-      : state === "ok"
-        ? "border-primary/40"
-        : "border-border"
-  }`;
-
-function Message({ id, error, ok }: { id: string; error?: string; ok?: string }) {
-  return (
-    <p id={id} className="mt-1.5 min-h-4 text-[11px]" aria-live="polite">
-      {error ? (
-        <span className="text-destructive">{error}</span>
-      ) : ok ? (
-        <span className="inline-flex items-center gap-1 text-primary">
-          <Check size={11} /> {ok}
-        </span>
-      ) : null}
-    </p>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Reward early, punish late
@@ -45,55 +29,42 @@ function Message({ id, error, ok }: { id: string; error?: string; ok?: string })
 // error clears as soon as it's fixed.
 
 function EagerField() {
-  const id = useId();
   const [value, setValue] = useState("");
   const error = value && !EMAIL.test(value) ? "Enter a valid email address" : undefined;
 
   return (
-    <div>
-      <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-muted-foreground">
-        Every keystroke
-      </label>
-      <input
-        id={id}
+    <Field invalid={Boolean(error)}>
+      <FieldLabel>Email</FieldLabel>
+      <Input
         type="email"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        aria-invalid={Boolean(error)}
-        aria-describedby={`${id}-msg`}
         placeholder="you@example.com"
-        className={inputClass(error ? "error" : "idle")}
       />
-      <Message id={`${id}-msg`} error={error} />
-    </div>
+      <FieldError>{error}</FieldError>
+    </Field>
   );
 }
 
 function RewardingField() {
-  const id = useId();
   const [value, setValue] = useState("");
   const [touched, setTouched] = useState(false);
   const valid = EMAIL.test(value);
   const error = touched && value && !valid ? "Enter a valid email address" : undefined;
 
   return (
-    <div>
-      <label htmlFor={id} className="mb-1.5 block text-[10px] font-medium text-muted-foreground">
-        Reward early, punish late
-      </label>
-      <input
-        id={id}
+    <Field invalid={Boolean(error)}>
+      <FieldLabel>Email</FieldLabel>
+      <Input
         type="email"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={() => setTouched(true)}
-        aria-invalid={Boolean(error)}
-        aria-describedby={`${id}-msg`}
         placeholder="you@example.com"
-        className={inputClass(error ? "error" : valid ? "ok" : "idle")}
       />
-      <Message id={`${id}-msg`} error={error} ok={valid ? "Looks good" : undefined} />
-    </div>
+      <FieldError>{error}</FieldError>
+      {valid && <FieldValid>Looks good</FieldValid>}
+    </Field>
   );
 }
 
@@ -102,8 +73,8 @@ function TimingDemo() {
     <DemoFrame
       note={
         <>
-          Type an address slowly into each. The left field flags &ldquo;y&rdquo; as an error; the
-          right one waits until you leave the field, then clears its error the moment you fix it.
+          Type an address slowly into each. The first flags &ldquo;y&rdquo; as an error mid-word;
+          the second waits until you leave the field, then clears its error the moment you fix it.
         </>
       }
     >
@@ -116,35 +87,27 @@ function TimingDemo() {
 // Error summary on submit
 // ---------------------------------------------------------------------------
 // On a failed submit, inline errors alone aren't enough: on a long form
-// they're off screen, and a screen reader hears nothing. A summary at the
-// top takes focus, says how many problems there are, and links each one to
-// its field.
+// they're off screen, and a screen reader hears nothing. The summary takes
+// focus, counts the problems and links each one to its field.
 
-type Fields = { name: string; email: string; seats: string };
-const EMPTY: Fields = { name: "", email: "", seats: "" };
+type Fields = { name: string; email: string; seats: number | null };
+const EMPTY: Fields = { name: "", email: "", seats: null };
 
 function validate(f: Fields): Partial<Record<keyof Fields, string>> {
   const errors: Partial<Record<keyof Fields, string>> = {};
   if (!f.name.trim()) errors.name = "Enter your name";
   if (!EMAIL.test(f.email)) errors.email = "Enter an email address like you@example.com";
-  const seats = Number(f.seats);
-  if (!f.seats || !Number.isInteger(seats) || seats < 1)
-    errors.seats = "Enter a whole number of seats, 1 or more";
+  if (f.seats === null || f.seats < 1) errors.seats = "Enter how many seats you need, 1 or more";
   return errors;
 }
-
-const LABELS: Record<keyof Fields, string> = {
-  name: "Name",
-  email: "Email",
-  seats: "Seats",
-};
 
 function SummaryDemo() {
   const id = useId();
   const [fields, setFields] = useState<Fields>(EMPTY);
   const [errors, setErrors] = useState<ReturnType<typeof validate> | null>(null);
+  const [submits, setSubmits] = useState(0);
   const [sent, setSent] = useState(false);
-  const summary = useRef<HTMLDivElement>(null);
+  const fieldId = (key: keyof Fields) => `${id}-${key}`;
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,37 +118,34 @@ function SummaryDemo() {
       return;
     }
     setErrors(next);
-    // after the summary renders
-    requestAnimationFrame(() => summary.current?.focus());
+    setSubmits((n) => n + 1);
   };
 
   // Once submitted, errors track the fields live so fixes clear them.
-  const set = (key: keyof Fields) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const next = { ...fields, [key]: e.target.value };
+  const update = (patch: Partial<Fields>) => {
+    const next = { ...fields, ...patch };
     setFields(next);
     if (errors) setErrors(validate(next));
   };
 
-  const errorKeys = errors ? (Object.keys(errors) as (keyof Fields)[]) : [];
+  const reset = () => {
+    setFields(EMPTY);
+    setErrors(null);
+    setSent(false);
+  };
 
   if (sent) {
     return (
-      <DemoFrame note="Valid on submit: no summary, no detour.">
-        <div className="flex items-center justify-between gap-3 p-4">
-          <span className="inline-flex items-center gap-1.5 text-xs text-primary">
-            <Check size={12} /> Submitted
-          </span>
-          <button
-            type="button"
-            className={btn}
-            onClick={() => {
-              setFields(EMPTY);
-              setSent(false);
-            }}
-          >
-            <RotateCcw size={12} /> Reset
-          </button>
-        </div>
+      <DemoFrame
+        className="flex items-center justify-between gap-3 p-6"
+        note="Valid on submit: no summary, no detour."
+      >
+        <span className="inline-flex items-center gap-2 text-sm text-primary">
+          <CircleCheck className="size-4" /> Trial started
+        </span>
+        <Button variant="outline" size="sm" onClick={reset}>
+          <RotateCcw /> Reset
+        </Button>
       </DemoFrame>
     );
   }
@@ -199,61 +159,46 @@ function SummaryDemo() {
         </>
       }
     >
-      <form noValidate onSubmit={onSubmit} className="space-y-4 p-4">
-        {errorKeys.length > 0 && (
-          <div
-            ref={summary}
-            tabIndex={-1}
-            className="rounded border border-destructive/50 bg-destructive/5 p-3 outline-none focus:ring-1 focus:ring-destructive/60"
-          >
-            <p className="mb-2 text-xs font-medium text-destructive">
-              {errorKeys.length === 1
-                ? "There's 1 problem"
-                : `There are ${errorKeys.length} problems`}
-            </p>
-            <ul className="space-y-1">
-              {errorKeys.map((key) => (
-                <li key={key}>
-                  <a
-                    href={`#${id}-${key}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById(`${id}-${key}`)?.focus();
-                    }}
-                    className="text-[11px] text-destructive underline underline-offset-2 hover:text-destructive/80"
-                  >
-                    {errors?.[key]}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <div className="grid gap-4 sm:grid-cols-3">
-          {(Object.keys(LABELS) as (keyof Fields)[]).map((key) => (
-            <div key={key}>
-              <label
-                htmlFor={`${id}-${key}`}
-                className="mb-1.5 block text-[10px] font-medium text-muted-foreground"
-              >
-                {LABELS[key]}
-              </label>
-              <input
-                id={`${id}-${key}`}
-                type={key === "email" ? "email" : key === "seats" ? "number" : "text"}
-                value={fields[key]}
-                onChange={set(key)}
-                aria-invalid={Boolean(errors?.[key])}
-                aria-describedby={`${id}-${key}-msg`}
-                className={inputClass(errors?.[key] ? "error" : "idle")}
-              />
-              <Message id={`${id}-${key}-msg`} error={errors?.[key]} />
-            </div>
-          ))}
+      <form noValidate onSubmit={onSubmit} className="space-y-6 p-6">
+        <ErrorSummary
+          focusKey={submits}
+          errors={(Object.keys(errors ?? {}) as (keyof Fields)[]).map((key) => ({
+            fieldId: fieldId(key),
+            message: errors?.[key],
+          }))}
+        />
+        <div className="grid gap-6 sm:grid-cols-[1fr_1fr_auto]">
+          <Field id={fieldId("name")} invalid={Boolean(errors?.name)} required>
+            <FieldLabel>Name</FieldLabel>
+            <Input
+              autoComplete="name"
+              value={fields.name}
+              onChange={(e) => update({ name: e.target.value })}
+            />
+            <FieldError>{errors?.name}</FieldError>
+          </Field>
+          <Field id={fieldId("email")} invalid={Boolean(errors?.email)} required>
+            <FieldLabel>Work email</FieldLabel>
+            <Input
+              type="email"
+              autoComplete="email"
+              value={fields.email}
+              onChange={(e) => update({ email: e.target.value })}
+            />
+            <FieldError>{errors?.email}</FieldError>
+          </Field>
+          <Field id={fieldId("seats")} invalid={Boolean(errors?.seats)} required>
+            <FieldLabel>Seats</FieldLabel>
+            <NumberInput
+              min={1}
+              max={500}
+              value={fields.seats}
+              onValueChange={(seats) => update({ seats })}
+            />
+            <FieldError>{errors?.seats}</FieldError>
+          </Field>
         </div>
-        <button type="submit" className={primary}>
-          Start trial
-        </button>
+        <Button type="submit">Start trial</Button>
       </form>
     </DemoFrame>
   );
@@ -265,65 +210,44 @@ function SummaryDemo() {
 // When a field has rules, show them before the first keystroke and tick them
 // off as they're met. The reader never has to fail to find out what passes.
 
+const USERNAME = "syntaqx";
 const RULES: { label: string; test: (v: string) => boolean }[] = [
   { label: "At least 12 characters", test: (v) => v.length >= 12 },
   { label: "A number", test: (v) => /\d/.test(v) },
   { label: "A lowercase letter", test: (v) => /[a-z]/.test(v) },
-  { label: "Not the same as your username", test: (v) => v.length > 0 && v !== "syntaqx" },
+  { label: "Not your username", test: (v) => v.length > 0 && !v.includes(USERNAME) },
 ];
 
 function RulesDemo() {
-  const id = useId();
   const [value, setValue] = useState("");
-  const met = RULES.filter((r) => r.test(value)).length;
 
   return (
     <DemoFrame
       note={
         <>
           The rules are visible before you type, and each ticks off as it&apos;s met. The screen
-          reader hears the list once, through aria-describedby, not after every keystroke.
+          reader hears the list once, as the field&apos;s description, not after every keystroke.
         </>
       }
     >
-      <div className="grid gap-5 p-4 sm:grid-cols-2">
-        <div>
-          <p className="mb-1.5 text-[10px] font-medium text-muted-foreground">Username</p>
-          <p className="mb-4 font-mono text-xs text-foreground">syntaqx</p>
-          <label
-            htmlFor={id}
-            className="mb-1.5 block text-[10px] font-medium text-muted-foreground"
-          >
-            New password
-          </label>
-          <input
-            id={id}
-            type="text"
-            autoComplete="off"
-            spellCheck={false}
+      <div className="max-w-sm space-y-6 p-6">
+        <Field>
+          <FieldLabel>Username</FieldLabel>
+          <Input value={USERNAME} readOnly autoComplete="username" />
+        </Field>
+        <Field>
+          <FieldLabel>New password</FieldLabel>
+          <PasswordInput
+            autoComplete="new-password"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            aria-describedby={`${id}-rules`}
-            className={inputClass(met === RULES.length ? "ok" : "idle")}
           />
-        </div>
-        <ul id={`${id}-rules`} className="space-y-1.5 self-end">
-          {RULES.map((r) => {
-            const ok = r.test(value);
-            return (
-              <li
-                key={r.label}
-                className={cn(
-                  "flex items-center gap-2 text-[11px] transition-colors",
-                  ok ? "text-primary" : "text-muted-foreground",
-                )}
-              >
-                {ok ? <Check size={11} /> : <Circle size={9} className="mx-px" />}
-                {r.label}
-              </li>
-            );
-          })}
-        </ul>
+          <FieldDescription>
+            <RequirementList
+              requirements={RULES.map((r) => ({ label: r.label, met: r.test(value) }))}
+            />
+          </FieldDescription>
+        </Field>
       </div>
     </DemoFrame>
   );
