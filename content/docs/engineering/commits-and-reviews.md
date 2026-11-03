@@ -2,7 +2,7 @@
 title = "Commits, PRs & Code Review"
 description = "Conventional Commits, small squash-merged pull requests with a real description, and code reviews that are fast, labeled, and focused on what matters."
 category = "Engineering Practice"
-order = 1002
+order = 1022
 tags = ["process", "git", "code-review", "commits"]
 aliases = ["commits-and-reviews"]
 +++

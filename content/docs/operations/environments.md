@@ -3,7 +3,7 @@ title = "Environments & Configuration"
 nav_title = "Environments & Config"
 description = "One build everywhere: what each environment is for, config validated at boot, secrets in a manager and never the repo, rotation built in, and who deploys where."
 category = "Operations"
-order = 1201
+order = 1231
 tags = ["operations", "environments", "devops", "configuration", "secrets"]
 aliases = ["operations/configuration", "configuration"]
 +++

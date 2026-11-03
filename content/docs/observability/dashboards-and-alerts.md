@@ -2,7 +2,7 @@
 title = "Dashboards & Alerts"
 description = "Service dashboards as code with deploy markers, alerts on symptoms and burn rates, routing, runbooks, alert fatigue, silences and testing alerts."
 category = "Observability"
-order = 1239
+order = 1209
 tags = ["observability", "dashboards", "alerting", "grafana", "prometheus", "on-call"]
 +++
 

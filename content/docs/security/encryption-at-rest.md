@@ -2,7 +2,7 @@
 title = "Encryption at Rest"
 description = "Disk, database and field encryption and what each stops: envelope encryption, KMS or HSM, rotation jobs, crypto-shredding, blind indexes and key-use logs."
 category = "Security"
-order = 713
+order = 709
 tags = ["security", "encryption", "kms", "keys", "privacy"]
 +++
 

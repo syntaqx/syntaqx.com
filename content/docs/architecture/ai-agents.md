@@ -2,7 +2,7 @@
 title = "AI Agents in the Product"
 description = "Agents that act for customers and operators: narrow tools, typed results, decisions in code, identity checks, handoff, evals, auditing and the law."
 category = "Architecture"
-order = 411
+order = 423
 tags = ["architecture", "ai", "agents", "llm", "audit"]
 aliases = ["ai-agents"]
 +++

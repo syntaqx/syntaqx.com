@@ -2,7 +2,7 @@
 title = "Automated Risk Decisions"
 description = "Rules and models that decide about people: score bands with a human middle, decision records, late labels, holdouts, error costs, fail-open or closed, appeals."
 category = "Architecture"
-order = 416
+order = 421
 tags = ["architecture", "risk", "fraud", "machine-learning", "decisions", "rules"]
 +++
 

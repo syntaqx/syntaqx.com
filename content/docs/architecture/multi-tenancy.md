@@ -2,7 +2,7 @@
 title = "Multi-Tenancy"
 description = "Serving many customers from one system safely: choosing an isolation model, enforcing tenant scope in the database, and keeping noisy neighbors in check."
 category = "Architecture"
-order = 406
+order = 408
 tags = ["architecture", "multi-tenancy", "postgres", "security"]
 aliases = ["multi-tenancy"]
 +++

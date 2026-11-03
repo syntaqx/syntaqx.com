@@ -2,7 +2,7 @@
 title = "Background Jobs"
 description = "Moving work out of the request: small idempotent jobs, retries with backoff and dead letters, scheduling without overlap, visibility, and shutting down cleanly."
 category = "Architecture"
-order = 403
+order = 404
 tags = ["architecture", "jobs", "queues", "reliability"]
 +++
 

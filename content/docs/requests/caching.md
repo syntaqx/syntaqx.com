@@ -2,7 +2,7 @@
 title = "Caching & Conditional Requests"
 description = "Cache-Control, ETags and conditional requests: cheap revalidation with 304, safe concurrent updates with If-Match and 412, and Vary on Api-Version."
 category = "Requests & Responses"
-order = 306
+order = 307
 tags = ["api", "caching", "http", "concurrency"]
 aliases = ["caching"]
 +++

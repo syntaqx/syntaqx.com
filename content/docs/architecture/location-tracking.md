@@ -2,7 +2,7 @@
 title = "Location Tracking & Geofences"
 description = "Positions with accuracy, mobile sampling limits, geofence arrival with dwell and hysteresis, ETAs, safe tracking links, and consent and retention."
 category = "Architecture"
-order = 418
+order = 419
 tags = ["architecture", "location", "geofencing", "mobile", "privacy"]
 aliases = ["location-tracking"]
 +++

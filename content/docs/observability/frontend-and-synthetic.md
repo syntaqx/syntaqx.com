@@ -3,7 +3,7 @@ title = "Frontend & Synthetic Monitoring"
 nav_title = "Frontend & Synthetic"
 description = "Core Web Vitals from real users, traces that start in the browser, synthetic checks from several regions, and health checks that tell Kubernetes the truth."
 category = "Observability"
-order = 1238
+order = 1208
 tags = ["observability", "rum", "web-vitals", "synthetic-monitoring", "health-checks", "kubernetes"]
 +++
 

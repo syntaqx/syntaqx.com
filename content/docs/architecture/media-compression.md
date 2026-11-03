@@ -2,7 +2,7 @@
 title = "Media Compression"
 description = "Lossless and lossy coding, the pipeline image and video codecs share, generation loss, formats by content class, perceptual metrics, and what encoding costs."
 category = "Architecture"
-order = 424
+order = 416
 tags = ["architecture", "images", "video", "compression", "performance"]
 +++
 

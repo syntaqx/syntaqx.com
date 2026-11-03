@@ -2,7 +2,7 @@
 title = "Custom Fields"
 description = "Per-tenant custom fields: JSONB with a definitions table, validation, indexing, option lists, changing definitions, limits, and exposing them everywhere."
 category = "Architecture"
-order = 421
+order = 409
 tags = ["architecture", "custom-fields", "multi-tenancy", "postgres", "jsonb"]
 +++
 

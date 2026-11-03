@@ -2,7 +2,7 @@
 title = "Events & Async Messaging"
 description = "Publishing and consuming events reliably: the transactional outbox, idempotent consumers, partition keys for ordering, CloudEvents, and schema evolution."
 category = "Architecture"
-order = 402
+order = 403
 tags = ["architecture", "events", "messaging", "cloudevents"]
 aliases = ["events"]
 +++

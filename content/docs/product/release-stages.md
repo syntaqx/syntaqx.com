@@ -2,7 +2,7 @@
 title = "Release Stages"
 description = "Internal, alpha, beta and general availability as gates: who gets access at each stage, what each one promises, and what must be true before the next."
 category = "Product"
-order = 1024
+order = 1004
 tags = ["product", "releases", "beta", "launch"]
 +++
 

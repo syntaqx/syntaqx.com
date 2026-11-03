@@ -2,7 +2,7 @@
 title = "Pagination"
 description = "Cursor pagination by default, page numbers only for small stable lists, metadata in the Link header, and why offsets break on data that keeps changing."
 category = "Requests & Responses"
-order = 303
+order = 304
 tags = ["api", "pagination", "standards"]
 aliases = ["pagination"]
 +++

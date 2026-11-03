@@ -2,7 +2,7 @@
 title = "Errors & Profiling"
 description = "Error tracking with grouping, releases, symbols and PII scrubbing, and continuous profiling from pprof to eBPF and OpenTelemetry's profiles signal."
 category = "Observability"
-order = 1237
+order = 1207
 tags = ["observability", "errors", "crash-reporting", "profiling", "ebpf", "opentelemetry"]
 +++
 

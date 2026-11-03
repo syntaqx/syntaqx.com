@@ -3,7 +3,7 @@ title = "Kubernetes Operations"
 nav_title = "Kubernetes"
 description = "Running services on Kubernetes without the classic outages: requests and limits, probes, disruption budgets, graceful shutdown, secrets, GitOps and upgrades."
 category = "Operations"
-order = 1208
+order = 1232
 tags = ["kubernetes", "operations", "reliability", "security", "gitops"]
 +++
 

@@ -2,7 +2,7 @@
 title = "Offline-First Sync"
 description = "Apps that work without a network: a scoped local store, commands in a device outbox, attachments apart, two clocks, and conflict rules decided per command type."
 category = "Architecture"
-order = 413
+order = 418
 tags = ["architecture", "offline", "sync", "mobile", "conflicts"]
 +++
 

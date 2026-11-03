@@ -2,7 +2,7 @@
 title = "On-Call & Runbooks"
 description = "A sustainable on-call rotation: who carries the pager, paging and escalation, written handoffs, a runbook for every alert, and time budgeted to drive toil down."
 category = "Operations"
-order = 1204
+order = 1234
 tags = ["operations", "on-call", "incidents", "runbooks"]
 aliases = ["on-call"]
 +++

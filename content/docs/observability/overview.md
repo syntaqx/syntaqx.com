@@ -3,7 +3,7 @@ title = "Observability"
 nav_title = "Overview"
 description = "Request IDs on every response, the three signals and the IDs that join them, bounded metrics beside wide events, and a map of the Observability section."
 category = "Observability"
-order = 1231
+order = 1201
 tags = ["observability", "logging", "tracing", "metrics", "operations"]
 aliases = ["operations/observability"]
 +++

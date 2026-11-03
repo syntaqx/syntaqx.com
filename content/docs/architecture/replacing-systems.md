@@ -2,7 +2,7 @@
 title = "Replacing a System"
 description = "Moving off a legacy system or vendor: Strangler Fig, cutover options, crosswalks, suppressed side effects, reconciliation, rollback windows and exit plans."
 category = "Architecture"
-order = 415
+order = 424
 tags = ["architecture", "migration", "cutover", "legacy", "data-portability", "reconciliation"]
 +++
 

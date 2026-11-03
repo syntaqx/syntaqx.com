@@ -2,7 +2,7 @@
 title = "HTTP Compression"
 description = "Accept-Encoding and Vary, gzip, Brotli and zstd trade-offs, precompressed static assets, dictionaries, BREACH, and capping decompressed request bodies."
 category = "Requests & Responses"
-order = 310
+order = 311
 tags = ["api", "http", "compression", "performance", "security"]
 +++
 
