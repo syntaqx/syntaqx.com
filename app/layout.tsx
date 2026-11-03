@@ -46,7 +46,7 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-// Deployed commit, shown in the header's status readout. Vercel sets this
+// Deployed commit, shown in the footer. Vercel sets this
 // on every build; locally it's unset and the readout is hidden.
 const COMMIT = process.env.VERCEL_GIT_COMMIT_SHA;
 
@@ -137,18 +137,6 @@ export default function RootLayout({
             <div className="col-start-3 flex items-stretch">
               <SearchButton />
               <ThemeToggle />
-              {COMMIT && (
-                <a
-                  href={`https://github.com/syntaqx/syntaqx.com/commit/${COMMIT}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Deployed commit ${COMMIT.slice(0, 7)} on GitHub`}
-                  className="hidden items-center gap-2 border-l border-border pl-4 font-mono text-[0.65rem] text-dim transition-colors hover:text-foreground focus-visible:-outline-offset-2 lg:flex"
-                >
-                  <span aria-hidden className="tick" />
-                  {COMMIT.slice(0, 7)}
-                </a>
-              )}
               <MobileMenu />
             </div>
           </div>
@@ -217,9 +205,21 @@ export default function RootLayout({
             </nav>
           </div>
           <div className="border-t border-border">
-            <p className="inst mx-auto max-w-7xl px-6 py-5 text-dim">
-              &copy; {new Date().getFullYear()} Chase Pierce
-            </p>
+            <div className="inst mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-5 text-dim">
+              <p>&copy; {new Date().getFullYear()} Chase Pierce</p>
+              {COMMIT && (
+                <a
+                  href={`https://github.com/syntaqx/syntaqx.com/commit/${COMMIT}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Deployed commit ${COMMIT.slice(0, 7)} on GitHub`}
+                  className="flex items-center gap-2 font-mono text-[0.65rem] transition-colors hover:text-foreground"
+                >
+                  <span aria-hidden className="tick" />
+                  {COMMIT.slice(0, 7)}
+                </a>
+              )}
+            </div>
           </div>
         </footer>
         <Analytics />
