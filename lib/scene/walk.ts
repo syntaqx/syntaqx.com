@@ -1,4 +1,4 @@
-import { CYL_FRONT, circle, cylSide, type Projector, type Scene, type SceneState, type V2, type V3 } from "./iso";
+import { CYL_FRONT, circle, cylSide, type NoteLine, type Projector, type Scene, type SceneState, type V2, type V3 } from "./iso";
 
 /*
  * One traversal of a scene's line work, in painter's order. A Pen decides
@@ -14,6 +14,7 @@ export interface Pen {
   dot(x: number, y: number, ink: Ink, size?: number): void;
   handle(x: number, y: number): void;
   label?(from: V2, to: V2, text: string, accent: boolean): void;
+  note?(lines: NoteLine[], fit?: string[], top?: boolean): void;
   packet?(pts: V2[], at: number): void;
 }
 
@@ -108,6 +109,9 @@ export function walk(scene: Scene, P: Projector, pen: Pen, s: SceneState) {
           const to: V2 = [from[0] + p.dx * P.sc, from[1] + p.dy * P.sc];
           labels.push(() => pen.label!(from, to, p.text, !!p.accent));
         }
+        break;
+      case "note":
+        if (pen.note) labels.push(() => pen.note!(p.lines, p.fit, p.top));
         break;
     }
   }

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { format } from "date-fns";
-import { getPostBySlug, getAllPosts } from "@/lib/posts";
+import { getPostBySlug, getRoutablePosts } from "@/lib/posts";
 import { postDay } from "@/lib/post-day";
 import { ogFonts, OG_SIZE } from "@/lib/og";
 import { OG_COLORS as C, fieldImage, sceneImage } from "@/lib/scene/og";
@@ -9,11 +9,12 @@ export const alt = "syntaqx blog post";
 export const size = OG_SIZE;
 export const contentType = "image/png";
 
-// Published posts only: a draft's slug gets no card, not a card with its slug.
+// Every post with a page gets a card, drafts and scheduled posts included, so
+// a link shared before it goes live still previews. Unknown slugs get none.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
+  return getRoutablePosts().map((post) => ({ slug: post.slug }));
 }
 
 export default async function Image({

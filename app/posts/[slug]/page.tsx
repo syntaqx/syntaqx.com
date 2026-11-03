@@ -4,6 +4,7 @@ import {
   getAllTags,
   getPostSlugs,
   getPostBySlug,
+  getRoutablePosts,
   markdownToHtml,
   slugifyTag,
   type Heading,
@@ -36,7 +37,8 @@ export async function generateStaticParams() {
   // 308 served from the CDN. `getPostSlugs()` returns the full filenames;
   // the Set dedupes any post whose file isn't date-prefixed.
   const slugs = new Set<string>();
-  for (const post of getAllPosts()) slugs.add(post.slug);
+  // Drafts and scheduled posts get a page too; they're unlisted, not hidden.
+  for (const post of getRoutablePosts()) slugs.add(post.slug);
   for (const name of getPostSlugs()) slugs.add(name);
   return [...slugs].map((slug) => ({ slug }));
 }
@@ -55,6 +57,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: url,
     },
+    // Reachable by its link before it's published, but not indexed.
+    ...(post.draft && { robots: { index: false, follow: false } }),
     openGraph: {
       title: post.title,
       description: post.description,

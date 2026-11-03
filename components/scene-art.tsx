@@ -66,6 +66,8 @@ function canvasPen(
   dpr: number,
   W: number,
   H: number,
+  /** Where each note card landed, in device pixels, so the edge mask can leave it whole. */
+  onNote?: (rect: { x: number; y: number; w: number; h: number }) => void,
 ): Pen {
   const lw = Math.max(1, dpr * 0.9);
   const ink = (k: Ink) =>
@@ -134,6 +136,46 @@ function canvasPen(
       ctx.fillRect(tx - 4 * dpr, y1 - 8 * dpr, tw + 8 * dpr, 14 * dpr);
       ctx.fillStyle = css(accent ? pal.acc : pal.fg, 0.95);
       ctx.fillText(t, tx, y1 + 3.5 * dpr);
+      ctx.letterSpacing = "0px";
+    },
+    note(lines, fit, top) {
+      // Too narrow for a card beside the drawing: it would cover it.
+      if (W / dpr < 640) return;
+      ctx.font = `${8 * dpr}px ${pal.inst}`;
+      ctx.letterSpacing = `${1.2 * dpr}px`;
+      const rows = lines.map((l) => ({ ...l, t: l.text.toUpperCase(), v: (l.value ?? "").toUpperCase() }));
+      const pad = 7 * dpr;
+      const lh = 12.5 * dpr;
+      const gap = 16 * dpr;
+      const tw = Math.max(...rows.map((r) => ctx.measureText(r.t).width));
+      // a fixed width for the values, so the card doesn't resize as they grow
+      const vw = Math.max(...[...(fit ?? []), ...rows.map((r) => r.v)].map((v) => ctx.measureText(v.toUpperCase()).width));
+      const cw = tw + gap + vw + pad * 2;
+      const ch = rows.length * lh + pad * 1.5;
+      // A right corner of the frame; the edge mask leaves this rectangle whole.
+      const m = 12 * dpr;
+      const x = W - cw - m;
+      const y = top ? m : H - ch - m;
+      onNote?.({ x, y, w: cw, h: ch });
+      ctx.fillStyle = css(pal.bg, 0.92);
+      ctx.fillRect(x, y, cw, ch);
+      ctx.strokeStyle = css(pal.dim, 0.9);
+      ctx.lineWidth = lw;
+      ctx.strokeRect(x, y, cw, ch);
+      rows.forEach((r, i) => {
+        const base = y + pad + lh * i + 8 * dpr;
+        if (r.rule) {
+          ctx.strokeStyle = css(pal.dim, 0.6);
+          ctx.beginPath();
+          ctx.moveTo(x + pad, base - 9.5 * dpr);
+          ctx.lineTo(x + cw - pad, base - 9.5 * dpr);
+          ctx.stroke();
+        }
+        ctx.fillStyle = css(r.warn ? pal.warn : r.good ? pal.good : r.accent ? pal.acc : r.rule ? pal.fg : pal.dim, 0.95);
+        ctx.fillText(r.t, x + pad, base);
+        ctx.fillStyle = css(r.warn ? pal.warn : r.good ? pal.good : r.accent ? pal.acc : pal.fg, 0.95);
+        ctx.fillText(r.v, x + cw - pad - ctx.measureText(r.v).width, base);
+      });
       ctx.letterSpacing = "0px";
     },
     packet(pts, at) {
@@ -217,6 +259,7 @@ export function SceneArt({
       visible: true,
     };
 
+    let noteKey = "";
     const draw = () => {
       const W = canvas.width;
       const H = canvas.height;
@@ -260,13 +303,38 @@ export function SceneArt({
         layer.height = H;
       }
       lctx.clearRect(0, 0, W, H);
+      const notes: { x: number; y: number; w: number; h: number }[] = [];
       walk(
         data,
         project(data.ext, W, H, park),
-        canvasPen(lctx, pal, dpr, W, H),
+        canvasPen(lctx, pal, dpr, W, H, (r) => notes.push(r)),
         st,
       );
       ctx.drawImage(layer, 0, 0);
+
+      // Note cards sit outside the radial edge mask, so add each one's
+      // rectangle to the mask as another solid layer. Only touch styles on
+      // change.
+      const ns = notes.map((n) => ({
+        x: Math.round(n.x / dpr),
+        y: Math.round(n.y / dpr),
+        w: Math.round(n.w / dpr) + 2,
+        h: Math.round(n.h / dpr) + 2,
+      }));
+      const key = ns.map((n) => `${n.x},${n.y},${n.w},${n.h}`).join(";");
+      if (key !== noteKey) {
+        noteKey = key;
+        for (const pre of ["", "-webkit-"]) {
+          if (ns.length) {
+            canvas.style.setProperty(`${pre}mask-image`, ["radial-gradient(closest-side, black 86%, transparent)", ...ns.map(() => "linear-gradient(black, black)")].join(", "));
+            canvas.style.setProperty(`${pre}mask-size`, ["100% 100%", ...ns.map((n) => `${n.w}px ${n.h}px`)].join(", "));
+            canvas.style.setProperty(`${pre}mask-position`, ["center", ...ns.map((n) => `${n.x - 1}px ${n.y - 1}px`)].join(", "));
+            canvas.style.setProperty(`${pre}mask-repeat`, "no-repeat");
+          } else {
+            for (const prop of ["mask-image", "mask-size", "mask-position", "mask-repeat"]) canvas.style.removeProperty(pre + prop);
+          }
+        }
+      }
     };
 
     const resize = () => {
@@ -325,6 +393,8 @@ export function SceneArt({
     }
 
     return () => {
+      for (const pre of ["", "-webkit-"])
+        for (const prop of ["mask-image", "mask-size", "mask-position", "mask-repeat"]) canvas.style.removeProperty(pre + prop);
       actors.delete(actor);
       ro.disconnect();
       io.disconnect();

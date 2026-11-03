@@ -122,16 +122,24 @@ function parseTomlFrontmatter(fileContents: string): {
 // want: a post dated in the future goes live with the first build after it.
 const BUILD_TIME = Date.now();
 
-// Drafts and scheduled posts render under `next dev` only, never in a build.
-// Tests see them too, so a scheduled post is checked before it goes live.
+// Drafts and scheduled posts are unlisted, not hidden: a build renders them
+// at their URL (with a card, so a link can be previewed before it goes live)
+// but keeps them out of every listing, tag, feed and the sitemap. `next dev`
+// and tests list them too, so a scheduled post is checked before it goes live.
 const SHOW_DRAFTS = process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
 const visible = (post: PostData) => SHOW_DRAFTS || !post.draft;
 
+/** Every post file, drafts included, by filename without `.md`. For routes, never listings. */
 export function getPostSlugs(): string[] {
   return fs
     .readdirSync(postsDirectory)
-    .filter((f) => f.endsWith(".md") && visible(getPostByFileName(f)))
+    .filter((f) => f.endsWith(".md"))
     .map((f) => f.replace(/\.md$/, ""));
+}
+
+/** Every post, drafts included: what has a page and a card. Listings use `getAllPosts`. */
+export function getRoutablePosts(): PostData[] {
+  return getPostSlugs().map((name) => getPostByFileName(`${name}.md`));
 }
 
 function fileNameToSlug(fileName: string): string {
@@ -280,8 +288,8 @@ export function getPostBySlug(slug: string): PostData | undefined {
     // legacy `/posts/YYYY-MM-DD-<slug>` URLs still resolve. The post page
     // permanent-redirects aliases to the canonical slug.
     if (fileNameToSlug(bare) === slug || bare === slug) {
-      const post = getPostByFileName(fileName);
-      return visible(post) ? post : undefined;
+      // drafts resolve too: they're unlisted, not hidden
+      return getPostByFileName(fileName);
     }
   }
   return undefined;

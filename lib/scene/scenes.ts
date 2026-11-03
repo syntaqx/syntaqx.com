@@ -444,64 +444,249 @@ const stamp: SceneFn = (s) => {
 };
 
 /**
- * Shipping It Isn't Owning It: the warehouse. A little orange bot builds a
- * crate, the belt carries it off and it joins the field of crates already
- * running, each with its status light. Building takes a moment; owning
- * never ends, and every loop one of the old ones pages somebody. Crates are
- * evenly spaced on the belt and the field never grows, so the loop has no
- * seam.
+ * Building It Isn't Owning It: the sprawl. The platform is always there, in
+ * its VPC: its crate, its Postgres and a few real services on one clean teal
+ * bus, the ones that need it with a database of their own. Then, over a
+ * year, weekend apps turn up outside it, plain grey rather than teal, each
+ * with its own little database: some deployed on Vercel, some on Lovable,
+ * one that only runs on somebody's laptop. They're wired into the VPC
+ * wherever somebody needed them: into a service, straight into Postgres,
+ * into each other. Every so often one fails (or the laptop closes),
+ * and a beat later everything it touches goes down too; near the end one
+ * gets hit by a CVE, a sev, with the data walking out through the app. A flat card in the
+ * corner carries the bill: the budget, the actual (the platform's own,
+ * climbing with every app wired into it, plus Vercel and Lovable, climbing
+ * with every app on them, plus the engineer time they eat) and how far over
+ * it is. At the end of the loop the weekend apps sink into the floor and
+ * the platform is left standing on its own again. Partway through, one
+ * Vercel app gets adopted: it moves into the VPC and becomes platform.
  */
-const handoff: SceneFn = (s) => {
-  // offset so the resting frame (and the OG image) catches a page going off
-  const T = 4.2;
-  const ph = (((s.t + T * 0.7) / T) % 1 + 1) % 1;
+type SprawlNode = { kind: "core" | "db" | "svc" | "app" | "laptop"; x: number; y: number; h: number; k: number; links: number[]; db?: boolean };
+const VPC = { x: 1.2, y: 1.2, a: 6.3 };
+const VERCEL = { x: 7.9, y: 0.4, a: 1.9, b: 7 };
+const LOVABLE = { x: 0.4, y: 7.9, a: 7, b: 1.9 };
+const SPRAWL: SprawlNode[] = [
+  { kind: "core", x: 3.6, y: 3.6, h: 1.5, k: 0, links: [] },
+  { kind: "db", x: 6.2, y: 2.4, h: 1.2, k: 0, links: [0] },
+  { kind: "svc", x: 5.6, y: 4, h: 1, k: 0, links: [0], db: true },
+  { kind: "svc", x: 3.9, y: 5.9, h: 0.8, k: 0, links: [0] },
+  { kind: "svc", x: 1.6, y: 3.9, h: 0.9, k: 0, links: [0], db: true },
+  // on Vercel
+  { kind: "app", x: 8.1, y: 0.8, h: 0.7, k: 0.12, links: [1] },
+  { kind: "app", x: 8.1, y: 2.6, h: 0.6, k: 0.2, links: [2] },
+  { kind: "app", x: 8.1, y: 4.4, h: 0.8, k: 0.3, links: [2, 6] },
+  { kind: "app", x: 8.1, y: 6.2, h: 0.6, k: 0.4, links: [0, 7] },
+  // on Lovable
+  { kind: "app", x: 0.8, y: 8.3, h: 0.6, k: 0.16, links: [4] },
+  { kind: "app", x: 2.6, y: 8.3, h: 0.9, k: 0.26, links: [3, 9] },
+  { kind: "app", x: 4.4, y: 8.3, h: 0.5, k: 0.36, links: [1] },
+  { kind: "app", x: 6.2, y: 8.3, h: 0.7, k: 0.46, links: [3, 8, 11] },
+  // on somebody's laptop
+  { kind: "laptop", x: 8.2, y: 8.4, h: 0.8, k: 0.33, links: [10, 2] },
+];
+/** [weekend app, when]: it fails, then everything it's wired to follows. */
+// they all arrive in the first half; the second half holds with everything
+// up while the outages land. `db` outages start in the app's own little
+// database: it dies, then the app, then what the app is wired to. The
+// `breach` is a sev: a CVE in the app wired straight into Postgres, and
+// the data walks out.
+const OUTAGES: [number, number, ("db" | "breach" | undefined)?][] = [[5, 0.18], [9, 0.32, "db"], [13, 0.5], [12, 0.64, "db"], [11, 0.78, "breach"]];
 
-  // the field: what's already been shipped, four by three, each with a
-  // status light. One goes red for the back half of every loop.
-  const field = { x: 3, y: 5, gx: 1.95, gy: 2.2, s: 1.15 };
-  const paged = 7;
-  const alarm = ph > 0.55;
-  const cells = Array.from({ length: 12 }, (_, i) => ({ i, x: field.x + (i % 4) * field.gx, y: field.y + Math.floor(i / 4) * field.gy }));
-  const crates: Part[] = cells.flatMap(({ i, x, y }): Part[] => [
-    { kind: "box", box: box(x, y, 0, field.s, field.s, 0.95) },
-    { kind: "cyl", cx: x + field.s / 2, cy: y + field.s / 2, z: 0.95, r: 0.13, h: 0.1, ...(i === paged && alarm ? { warn: true } : { good: true }) },
-  ]);
-  const hot = cells[paged];
+/** The one weekend app engineering adopts: it moves into a free slot in the VPC and becomes platform. */
+const ADOPT = { i: 7, k: 0.56, x: 5.9, y: 6.1 };
 
-  // the belt runs from the bot straight into the field's second column. Two
-  // crates ride it, evenly spaced: each is assembled out of the belt at the
-  // bot's end and sinks into it at the field's, so none pops.
-  const belt = { x: field.x + field.gx + (field.s - 1.2) / 2, y: 1.7, a: 1.2, b: 3, h: 0.45 };
-  const c = 0.85;
-  const riding: Part[] = [0, 1].map((i): Part => {
-    const k = (i + ph) / 2;
-    const grow = Math.max(0, Math.min(1, k / 0.15, (1 - k) / 0.1));
-    return { kind: "box", box: box(belt.x + (belt.a - c) / 2, belt.y + k * belt.b - c / 2, belt.h, c, c, c * grow) };
+const sprawl: SceneFn = (s) => {
+  // offset so the resting frame (and the OG image) shows the whole sprawl,
+  // everything up and nothing failing
+  const T = 20;
+  const ph = (((s.t + T * 0.77) / T) % 1 + 1) % 1;
+  const life = ph < 0.9 ? 1 : 1 - ease((ph - 0.9) / 0.1);
+  const grow = (k: number) => ease(Math.max(0, Math.min(1, (ph - k) / 0.035))) * life;
+  // one year per loop
+  const month = Math.min(12, Math.floor((ph / 0.9) * 12) + 1);
+
+  // the adopted app slides from its host into the VPC, and turns teal
+  // halfway there
+  const move = ease(Math.max(0, Math.min(1, (ph - ADOPT.k) / 0.05)));
+  const live = SPRAWL.map((v, i) => ({ ...v, i, adopted: false }))
+    .filter((v) => ph >= v.k)
+    .map((v) => (v.i === ADOPT.i && ph >= ADOPT.k ? { ...v, x: v.x + (ADOPT.x - v.x) * move, y: v.y + (ADOPT.y - v.y) * move, adopted: move > 0.5 } : v));
+  const node = new Map(live.map((v) => [v.i, v]));
+  const adopted = node.get(ADOPT.i)?.adopted ?? false;
+  const edges = live.flatMap((v) => v.links.map((j) => [v.i, j] as const));
+  const touching = (i: number) => edges.flatMap(([a, b]) => (a === i ? [b] : b === i ? [a] : []));
+
+  // who's down right now: the app first (or its database, then the app),
+  // what it's wired to a beat later. An app that's down takes its own
+  // database with it.
+  const down = new Set<number>();
+  const deadDb = new Set<number>();
+  const hot: (readonly [number, number])[] = [];
+  let origin: number | undefined;
+  let dbFirst = false;
+  let breach = false;
+  for (const [i, k, from] of OUTAGES) {
+    if (ph < k || ph > k + 0.12 || !live.some((v) => v.i === i)) continue;
+    origin = i;
+    dbFirst = from === "db";
+    breach = from === "breach";
+    const lag = dbFirst ? 0.03 : 0;
+    deadDb.add(i);
+    if (ph > k + lag) down.add(i);
+    if (ph > k + lag + 0.04)
+      for (const j of touching(i)) {
+        down.add(j);
+        hot.push([i, j]);
+      }
+  }
+
+  const size = (v: SprawlNode) => (v.kind === "core" ? 1.6 : v.kind === "app" ? 0.9 : v.kind === "laptop" ? 1.3 : 1);
+  const mid = (i: number): V3 => {
+    const v = node.get(i) ?? SPRAWL[i];
+    return v.kind === "db" ? [v.x, v.y, 0] : [v.x + size(v) / 2, v.y + size(v) / 2, 0];
+  };
+  const route = (a: number, b: number): V3[] => {
+    const [p, q] = [mid(a), mid(b)];
+    return [p, [p[0], q[1], 0], q];
+  };
+  // the platform always stands at full height; only the weekend apps come and go
+  const official = (v: SprawlNode) => v.kind === "core" || v.kind === "db" || v.kind === "svc";
+  const height = (v: SprawlNode) => v.h * (official(v) ? 1 : grow(v.k));
+
+  // painter's order: everything on the floor sorted back to front; a
+  // database sits just in front of what owns it
+  const solids: { d: number; part: Part }[] = live.flatMap((v): { d: number; part: Part }[] => {
+    const h = height(v);
+    // a platform piece that goes down fills solid red; a weekend app's
+    // outline blinks red instead
+    const weekend = (v.kind === "app" || v.kind === "laptop") && !v.adopted;
+    // the app hit by the CVE fills solid red like the platform does: this one's a sev
+    const red = !down.has(v.i) ? undefined : weekend && !(breach && v.i === origin) ? (Math.floor(s.t * 5) % 2 ? {} : { warn: true, soft: true }) : { warn: true };
+    const n = size(v);
+    if (v.kind === "db") return [{ d: v.x + v.y, part: { kind: "cyl", cx: v.x, cy: v.y, z: 0, r: 0.6, h, ...(red ?? { accent: true, soft: true }) } }];
+    if (v.kind === "laptop") {
+      // a base and a screen standing up along its back edge; the lid closes
+      // when it goes down
+      const open = red ? 0.15 : 1;
+      const sz = h * open;
+      return [
+        { d: v.x + v.y + n, part: { kind: "box", box: box(v.x, v.y, 0, n, 0.9, 0.08 * grow(v.k)), ...(red ?? {}) } },
+        { d: v.x + v.y + n + 0.1, part: { kind: "plane", pts: [[v.x, v.y, 0.08], [v.x + n, v.y, 0.08], [v.x + n, v.y - 0.15 * open, 0.08 + sz], [v.x, v.y - 0.15 * open, 0.08 + sz]], v: red ? 0.5 : 0.2 } },
+        { d: v.x + v.y + n + 0.2, part: { kind: "cyl", cx: v.x + n - 0.3, cy: v.y + 0.55, z: 0.08, r: 0.15, h: 0.3 * grow(v.k), ...(red ?? {}) } },
+      ];
+    }
+    const body: Part = {
+      kind: "box",
+      box: box(v.x, v.y, 0, n, n, h),
+      ...(red ?? (v.kind === "core" ? { accent: true } : v.kind === "svc" || v.adopted ? { accent: true, soft: true } : {})),
+    };
+    const out: { d: number; part: Part }[] = [{ d: v.x + v.y + n, part: body }];
+    // a real service that needs one gets a proper database beside it; every
+    // weekend app brings its own little one
+    if (v.db)
+      out.push({ d: v.x + v.y + n + 0.9, part: { kind: "cyl", cx: v.x + n + 0.45, cy: v.y + n / 2, z: 0, r: 0.35, h: 0.75, accent: true, soft: true } });
+    // once adopted, its data moves into Postgres and its little database goes away
+    if (v.kind === "app" && !v.adopted)
+      out.push({ d: v.x + v.y + n + 0.6, part: { kind: "cyl", cx: v.x + n + 0.3, cy: v.y + n / 2, z: 0, r: 0.22, h: 0.45 * grow(v.k), ...(deadDb.has(v.i) ? { warn: true } : {}) } });
+    return out;
   });
+  solids.sort((a, b) => a.d - b.d);
 
-  // the builder: the orange bot from the review desk, hovering at the
-  // belt's head with its eyes on the field
-  const bot = { x: belt.x - 0.25, y: 0.2, w: 1.7, d: 1.3, h: 1.25 };
-  const bodyZ = 1.1 + bob(s, 0.12) + s.spread * 0.6;
-  const robot: Part[] = [
-    { kind: "plane", pts: quad(bot.x + 0.15, bot.y + 0.1, 0.01, bot.w - 0.3, bot.d - 0.2), v: 0.2, dashed: true },
-    { kind: "box", box: box(bot.x, bot.y, bodyZ, bot.w, bot.d, bot.h), orange: true },
-    ...[0.45, 1.1].map((dx): Part => ({ kind: "box", box: box(bot.x + dx, bot.y + bot.d, bodyZ + 0.55, 0.16, 0.05, 0.4) })),
-  ];
+  const o = origin === undefined ? undefined : SPRAWL[origin];
 
-  const top: V3 = [hot.x + field.s / 2, hot.y + field.s / 2, 2.6 + s.spread];
+  // the bills: each host charges per app and climbs month over month; the
+  // platform's own bill climbs with every weekend app wired into it
+  const on = (host: typeof VERCEL) =>
+    live.filter((v) => v.kind === "app" && !v.adopted && SPRAWL[v.i].x >= host.x && SPRAWL[v.i].y >= host.y && SPRAWL[v.i].x < host.x + host.a && SPRAWL[v.i].y < host.y + host.b).length;
+  const wired = edges.filter(([a]) => SPRAWL[a].kind === "app" || SPRAWL[a].kind === "laptop").length;
+  const usd = (n: number) => (n >= 1000 ? `$${(n / 1000).toFixed(1)}k` : `$${Math.round(n / 10) * 10}`);
+  const bill = {
+    vercel: on(VERCEL) * (40 + month * 24),
+    lovable: on(LOVABLE) * (25 + month * 18),
+  };
   const parts: Part[] = [
-    { kind: "plane", pts: quad(0, 0, 0, 12, 12), v: 0.09, grid: 12 },
-    ...robot,
-    { kind: "box", box: box(belt.x, belt.y, 0, belt.a, belt.b, belt.h), slots: true },
-    ...riding,
-    ...crates,
-    ...(alarm ? [{ kind: "line", a: [top[0], top[1], 1.05], b: top, warn: true, dashed: true } as Part] : []),
-    { kind: "label", at: [bot.x + bot.w, bot.y, bodyZ + bot.h], text: "built · by lunch", dx: 1.2, dy: -1.2, accent: true },
-    { kind: "label", at: [field.x, field.y + 2 * field.gy + field.s, 0.5], text: "owned · for years", dx: -1.2, dy: 0.8 },
-    { kind: "label", at: top, text: "paged · 3am", dx: 1, dy: -1, accent: alarm },
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // the VPC and the two hosts the weekend apps landed on
+    { kind: "plane", pts: quad(VPC.x, VPC.y, 0.01, VPC.a, VPC.a), v: 0.15 },
+    { kind: "plane", pts: quad(VERCEL.x, VERCEL.y, 0.01, VERCEL.a, VERCEL.b), v: 0, dashed: true },
+    { kind: "plane", pts: quad(LOVABLE.x, LOVABLE.y, 0.01, LOVABLE.a, LOVABLE.b), v: 0, dashed: true },
+    // the platform's own bus is teal; whatever the weekend apps wired up is
+    // plain grey, punched through the VPC
+    // as the weekend apps sink at the end of the year, their wiring goes with them
+    ...edges.filter(([a]) => ph < 0.9 || (SPRAWL[a].kind !== "app" && SPRAWL[a].kind !== "laptop")).map(([a, b]): Part => ({ kind: "cable", pts: route(a, b), speed: 0.3, accent: (SPRAWL[a].kind !== "app" && SPRAWL[a].kind !== "laptop") || (a === ADOPT.i && adopted) })),
+    ...hot.flatMap(([a, b]): Part[] => {
+      const r = route(a, b);
+      return [{ kind: "line", a: r[0], b: r[1], warn: true }, { kind: "line", a: r[1], b: r[2], warn: true }];
+    }),
+    ...solids.map((p) => p.part),
+    { kind: "label", at: [5.2, 3.6, 1.5], text: "the platform", dx: 1.4, dy: -1.8, accent: true },
+    { kind: "label", at: [VPC.x, VPC.y, 0], text: "vpc", dx: -1, dy: -1 },
+    { kind: "label", at: [VERCEL.x + VERCEL.a, VERCEL.y + VERCEL.b / 2, 0], text: "vercel", dx: 1, dy: 0.4 },
+    { kind: "label", at: [LOVABLE.x + LOVABLE.a / 2, LOVABLE.y + LOVABLE.b, 0], text: "lovable", dx: -1, dy: 0.8 },
   ];
-  return { parts, ext: [[0, 12, 0], [12, 0, 0], [12, 12, 0], [0, 0, 0], [bot.x, bot.y, bodyZ + bot.h + 2.4]], axes: ground() };
+  // the laptop only gets its label once there's a laptop, and says so right
+  // under it when it closes
+  if (live.some((v) => v.kind === "laptop") && life > 0.5) parts.push({ kind: "label", at: [9.5, 9.3, 0.1], text: "a laptop", dx: 1, dy: 0.8 });
+  if (o?.kind === "laptop") parts.push({ kind: "label", at: [9.5, 9.3, 0.1], text: "closed!", dx: 1, dy: 1.6, accent: true });
+  // the data walking out of a breach: a red line up and off the app
+  if (o && breach) parts.push({ kind: "line", a: [o.x + 0.45, o.y + 0.45, o.h], b: [o.x + 0.45, o.y + 0.45, o.h + 2.6 + s.spread], warn: true, dashed: true });
+  // what's happening reads at the top of the bill card, beside the month,
+  // clear of everything that's moving and blinking
+  const incident = o === undefined ? undefined : o.kind === "laptop" ? "lid closed" : breach ? "cve · sev 1" : dbFirst ? "db died" : "1 bug";
+  // degraded: an incident that hasn't spread yet, or one that's just cleared
+  const recovering = OUTAGES.some(([i, k]) => ph > k + 0.12 && ph < k + 0.15 && node.has(i));
+  // the year ends degraded: the last incident never fully clears before the apps sink
+  const degraded = (incident !== undefined && !hot.length) || (incident === undefined && (recovering || ph >= 0.9));
+  const adopting = ph >= ADOPT.k && ph < ADOPT.k + 0.12 && node.has(ADOPT.i);
+
+  // the bill, its own flat card in the corner: what was budgeted, then line
+  // by line what it actually costs now, and how far over that is
+  // the budget leaves room over what the platform cost on day one
+  const budget = 12000;
+  // planned: the platform and the growth it was sized for; unplanned: the
+  // extra capacity it takes on for every weekend app wired into it
+  // an adopted app's hosting moves onto the platform's planned bill
+  const platform = 9000 + month * 120 + (adopted ? 40 + month * 24 : 0);
+  const traffic = wired * 350;
+  // engineer time: a few hours a month to keep each weekend app alive, and
+  // every outage leaves follow-up work behind, so it only ever climbs
+  // a sev costs a lot more than a bug: the response, the forensics, the
+  // disclosure
+  const hit = OUTAGES.filter(([i, k]) => ph >= k && live.some((v) => v.i === i));
+  const hours = live.filter((v) => v.kind === "app" || v.kind === "laptop").length * 4 + hit.reduce((h, [, , from]) => h + (from === "breach" ? 120 : 30), 0);
+  // round each line the way the card shows it, so the lines add up to the total
+  const r = (n: number) => (n >= 1000 ? Math.round(n / 100) * 100 : Math.round(n / 10) * 10);
+  const actual = r(platform) + r(traffic) + r(bill.vercel) + r(bill.lovable) + r(hours * 100);
+  // the month and what's happening get their own card, top right
+  parts.push({
+    kind: "note",
+    top: true,
+    fit: ["cve · sev 1", "lid closed", "operational"],
+    lines: [
+      degraded
+        ? { text: `month ${month}`, value: "degraded" }
+        : incident
+          ? { text: `month ${month}`, value: incident, warn: true }
+          : adopting
+            ? { text: `month ${month}`, value: "1 adopted", accent: true }
+            : { text: `month ${month}`, value: "operational", good: true },
+    ],
+  });
+  parts.push({
+    kind: "note",
+    fit: ["+$99.9k/mo"],
+    lines: [
+      { text: "budget", value: `${usd(budget)}/mo` },
+      { text: "planned", value: usd(platform) },
+      { text: "unplanned load", value: `+${usd(traffic)}` },
+      { text: "vercel", value: `+${usd(bill.vercel)}` },
+      { text: "lovable", value: `+${usd(bill.lovable)}` },
+      { text: `time · ${hours}h`, value: `+${usd(hours * 100)}` },
+      { text: "actual", value: `${usd(actual)}/mo`, rule: true },
+      actual > budget ? { text: "over budget", value: `+${usd(actual - budget)}`, warn: true } : { text: "under budget", value: usd(budget - actual) },
+    ],
+  });
+  return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [3.6, 3.6, 3.4]], axes: ground(10) };
 };
 
 /**
@@ -1628,7 +1813,7 @@ const library: SceneFn = (s) => {
   return { parts, ext: [[0, 10, 0], [10, 0, 0], [10, 10, 0], [0, 0, 0], [x0, y0, top + t + 3.6 + s.spread], [x0 + len + t, y0, side]], axes: ground(10) };
 };
 
-export const scenes = { system, loop, weld, scaffold, stack, stamp, handoff, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
+export const scenes = { system, loop, weld, scaffold, stack, stamp, sprawl, modules, shelf, writing, toolbox, layers, desk, plug, career, sorter, missing, tender, route, arcade, tenancy, feed, pulse, basket, bank, cloud, board, library } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
 /** Book covers, one per book (written or Soon), never shared with a post or a page. */
@@ -1639,7 +1824,7 @@ export type BookSceneName = (typeof BOOK_SCENES)[number];
 export const BOOKS_INDEX_SCENE = "library" satisfies SceneName;
 
 /** Scenes a post may use as its hero. Page scenes (home, 404, ...) are not. */
-export const POST_SCENES = ["loop", "weld", "scaffold", "stack", "stamp", "handoff"] as const satisfies readonly SceneName[];
+export const POST_SCENES = ["loop", "weld", "scaffold", "stack", "stamp", "sprawl"] as const satisfies readonly SceneName[];
 export type PostSceneName = (typeof POST_SCENES)[number];
 
 export const isPostScene = (name: unknown): name is PostSceneName =>
