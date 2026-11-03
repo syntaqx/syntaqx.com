@@ -1,7 +1,7 @@
 +++
 title = "Visual & Cross-Platform Testing"
 nav_title = "Visual & Cross-Platform"
-description = "Deterministic visual regression tests, a browser and device matrix built from real usage with tiers of support, real devices vs emulators, and mobile checks."
+description = "A browser and device matrix from real usage with support tiers and version floors, desktop OS differences, device clouds, mobile checks and visual regression."
 category = "Quality"
 order = 1057
 tags = ["quality", "testing", "visual-regression", "browsers", "mobile"]
@@ -71,6 +71,14 @@ My rule for placing combinations: 5% or more of sessions (or of revenue) is full
 
 Publish the tiers where support and sales can see them, and decide what the product does below the floor: a working but plain page, or a clear "unsupported browser" message, never a blank screen.
 
+### Versions and Dropping a Browser
+
+"Latest two" sounds precise until you count. Chrome [moved to a new stable version every four weeks](https://developer.chrome.com/blog/faster-release-cycle) in 2021, so its latest two are about two months apart; Safari ships with Apple's operating systems, so its latest two can be a year or more apart and are stuck on whatever OS a device can still run. Firefox has a regular release and an Extended Support Release (ESR) that organizations pin to, which is why ESR gets its own row. Write each tier's floor in the terms that browser actually releases in.
+
+- **Pin the floor to features, not version numbers.** [Baseline](https://web.dev/baseline) tracks when a web feature works in all of the core browsers (Chrome, Edge, Firefox and Safari, desktop and mobile): "newly available" once it does, "widely available" when "30 months have passed since the newly interoperable date." My default floor is Baseline widely available: anything in it I use without a fallback, anything newer gets one or waits.
+- **Make the build agree with the matrix.** [Browserslist](https://github.com/browserslist/browserslist) is the list your bundler, CSS tooling and polyfills read. Its `defaults` query is `> 0.5%, last 2 versions, Firefox ESR, not dead`, a reasonable start; once you have your own analytics, replace it with your own tiers so the build doesn't ship polyfills for browsers you don't support or drop syntax a supported one needs.
+- **Drop a browser on purpose.** When a version falls below the functional threshold, announce the date in the support policy, watch its share and any revenue tied to it until then, and ship the below-the-floor experience (plain page or clear message) rather than letting it quietly break.
+
 ## Real Devices, Emulators and Device Clouds
 
 - **Emulation in the browser** (Playwright's [device descriptors](https://playwright.dev/docs/emulation): viewport, user agent, touch, pixel ratio) is a desktop engine pretending. It's right for layout and responsive checks on every pull request and wrong for anything about the real device: performance, memory, keyboard behavior, safe areas, OS dialogs.
@@ -79,11 +87,30 @@ Publish the tiers where support and sales can see them, and decide what the prod
 
 My default: emulation on every pull request, simulators and emulators for the mobile suite on merge, and a real-device run of the critical journeys on the full-tier devices before each release.
 
+### Running a Device Cloud
+
+- **Real or virtual is a line item.** Vendors sell real physical devices and virtual ones (emulators and simulators they host) at different prices. Put only the full-tier real-device runs on physical hardware, and everything else on virtual devices or your own CI.
+- **Parallel sessions are the budget.** Clouds typically sell concurrency: how many sessions run at once. A suite that takes an hour on one session takes ten minutes on six, so size the plan to the release run you need, not to the number of devices in the catalog. Playwright already [runs test files in parallel across workers and shards a suite across machines](https://playwright.dev/docs/test-parallel); the cloud plan has to keep up with that.
+- **Reaching staging.** Device clouds can't see your internal network by default. A tunnel such as [BrowserStack Local](https://www.browserstack.com/docs/automate/selenium/local-testing-introduction) lets "remote browsers and devices from the BrowserStack cloud" reach "websites hosted on your internal networks," so a preview environment doesn't have to be public to be tested.
+- **Treat the devices as shared.** Real devices are reused between customers. Use test accounts and synthetic data ([Test Data & Environments](/docs/quality/test-data)), never production credentials or real customer data.
+- **Expect more flake.** Real devices on someone else's network add timeouts and device-side failures that local runs don't have. Retry once, record which device failed, and quarantine a device that keeps failing rather than the test.
+
 ## Responsive Layouts and Touch
 
 - **Test at the breakpoints and between them.** Each layout breakpoint gets a run, plus the narrowest width you support (320px is a common floor, and the one [accessibility](/docs/frontend/accessibility) reflow checks use) and one awkward in-between width, where layouts usually break.
 - **Touch is not a click.** No hover on touch devices, so nothing important can hide behind one. Check tap target size, on-screen keyboards covering inputs, and gestures (swipe, pinch) on a touch-enabled context or a real device.
 - **Orientation and safe areas.** Rotate at least once per journey on a phone, and check notches and home indicators don't cover controls.
+
+## Desktop Operating Systems
+
+The same browser on Windows and macOS doesn't render the same page. The differences are small, which is why they ship.
+
+- **Fonts and text.** Text rasterizes differently on each OS, so wrapping and line breaks can move by a word, and visual baselines have to be captured per platform. Styles that only apply on one OS make it worse: WebKit's `-webkit-font-smoothing` "[only works on macOS](https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth)," so text tuned to look right on a Mac renders untouched on Windows.
+- **Scrollbars.** Windows draws classic scrollbars that take up space; macOS defaults to overlay scrollbars that don't. MDN describes the split: "Classic scrollbars are always placed in a gutter, consuming space when present," while "Overlay scrollbars are placed over the content." A layout that fits exactly on a Mac can overflow by a scrollbar's width on Windows. [`scrollbar-gutter: stable`](https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter) reserves the space so the layout doesn't shift when content starts to scroll.
+- **Contrast themes.** The [`forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors) media feature detects a forced color palette; "an example of a forced colors mode is Windows High Contrast mode." In it, the OS replaces your colors, and anything that carried meaning only through a background color or an image can disappear. Run the critical journeys once with a contrast theme on.
+- **Reduced motion.** [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) reflects the OS setting (Animation Effects on Windows, Reduce motion on macOS). Test with it on, and make sure nothing depends on an animation finishing.
+- **Display scaling and zoom.** Windows laptops often run with display scaling above 100%, which shrinks the effective viewport on the same physical screen; do one scaled run, plus the [200% zoom](/docs/frontend/accessibility#testing) reflow check.
+- **Keyboard.** Shortcuts use Ctrl on Windows and Cmd on macOS, and focus behavior on buttons and links differs between platforms. Test keyboard journeys on both if you support both.
 
 ## Mobile Specifics
 
@@ -121,6 +148,15 @@ Run the visual and functional suites in a pseudo-locale as well as the default o
 - [AWS Device Farm](https://docs.aws.amazon.com/devicefarm/latest/developerguide/welcome.html), real devices for automated and manual testing
 - [Firebase Test Lab](https://firebase.google.com/docs/test-lab), physical and virtual test devices in the cloud
 - [BrowserStack](https://www.browserstack.com/), real browsers and devices in the cloud
+- [BrowserStack Local](https://www.browserstack.com/docs/automate/selenium/local-testing-introduction), reaching internal and private environments from the cloud
+- [Playwright: Parallelism](https://playwright.dev/docs/test-parallel), workers and sharding a suite across machines
+- [Baseline](https://web.dev/baseline), newly and widely available features across the core browsers
+- [Browserslist](https://github.com/browserslist/browserslist), the shared browser list and its `defaults` query
+- [Chrome: A faster release cycle](https://developer.chrome.com/blog/faster-release-cycle), the move to a four-week stable cycle
+- [MDN: forced-colors](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors), detecting forced color palettes such as Windows High Contrast mode
+- [MDN: scrollbar-gutter](https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter), classic and overlay scrollbars and reserving the gutter
+- [MDN: font-smooth](https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth), `-webkit-font-smoothing` and macOS
+- [MDN: prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), the OS reduce-motion setting
 
 **Policy**
 
