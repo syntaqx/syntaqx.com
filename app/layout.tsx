@@ -18,6 +18,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { footerNav, socials, SITE_URL } from "@/lib/constants";
 import "./globals.css";
 import { cn } from "@/lib/cn";
+import { buildInfo } from "@/lib/build-info";
 
 const bigShoulders = Big_Shoulders({
   variable: "--font-big-shoulders",
@@ -45,10 +46,6 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
 });
-
-// Deployed commit, shown in the footer. Vercel sets this
-// on every build; locally it's unset and the readout is hidden.
-const COMMIT = process.env.VERCEL_GIT_COMMIT_SHA;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -86,6 +83,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // The commit this build came from, shown in the footer: the deployed commit
+  // on Vercel, the checked-out one (and whether it's dirty) in local dev.
+  const build = buildInfo();
   return (
     <html
       lang="en"
@@ -213,16 +213,18 @@ export default function RootLayout({
           <div className="border-t border-border">
             <div className="inst mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-5 text-dim">
               <p>&copy; {new Date().getFullYear()} Chase Pierce</p>
-              {COMMIT && (
+              {build && (
                 <a
-                  href={`https://github.com/syntaqx/syntaqx.com/commit/${COMMIT}`}
+                  href={`https://github.com/syntaqx/syntaqx.com/commit/${build.sha}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Deployed commit ${COMMIT.slice(0, 7)} on GitHub`}
+                  aria-label={`${build.label === "dev" ? "Development build from" : "Deployed"} commit ${build.sha.slice(0, 7)}${build.dirty ? " with uncommitted changes" : ""} on GitHub`}
                   className="flex items-center gap-2 font-mono text-[0.65rem] transition-colors hover:text-foreground"
                 >
                   <span aria-hidden className="tick" />
-                  {COMMIT.slice(0, 7)}
+                  {build.sha.slice(0, 7)}
+                  {build.dirty && "-dirty"}
+                  {build.label && <span className="text-accent uppercase">{build.label}</span>}
                 </a>
               )}
             </div>
