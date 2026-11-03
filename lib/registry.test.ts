@@ -189,6 +189,17 @@ describe("registry.json", () => {
     expect(walk("registry").filter((f) => !listed.has(f))).toEqual([]);
   });
 
+  it("has an example for every item, for its /ui/components page", () => {
+    const files = readdirSync("app/ui/components/_examples");
+    const index = readFileSync("app/ui/components/_examples/index.ts", "utf8");
+    const without = registry.items.filter(
+      (i) =>
+        !files.some((f) => f.startsWith(`${i.name}-`)) ||
+        !new RegExp(`^\\s*"?${i.name}"?: \\[`, "m").test(index),
+    );
+    expect(without.map((i) => i.name)).toEqual([]);
+  });
+
   it("has every item a /ui page names", () => {
     const named = patterns.flatMap((p) => p.components ?? []);
     expect(named.filter((n) => !names.has(n))).toEqual([]);

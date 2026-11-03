@@ -1,3 +1,5 @@
+import registry from "@/registry.json";
+
 /** The groups patterns are filed under, in the order the index lists them. */
 export const categories = [
   "Forms",
@@ -95,3 +97,24 @@ export const patterns: UiPage[] = [
 export const patternGroups = categories
   .map((category) => ({ category, items: patterns.filter((p) => p.category === category) }))
   .filter((g) => g.items.length > 0);
+
+/** The registry's components, in the order and groups the /ui sidebar lists them. */
+const COMPONENT_GROUPS = [
+  ["actions", "Actions"],
+  ["forms", "Forms"],
+  ["overlays", "Overlays"],
+  ["data", "Data display"],
+] as const;
+
+export const components = registry.items.map((i) => ({
+  name: i.name,
+  title: i.title,
+  description: i.description,
+  href: `/ui/components/${i.name}`,
+  category: i.categories[0],
+}));
+
+export const componentGroups = COMPONENT_GROUPS.map(([key, label]) => ({
+  category: label,
+  items: components.filter((c) => c.category === key),
+})).filter((g) => g.items.length > 0);

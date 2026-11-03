@@ -23,7 +23,7 @@ export interface RegistryItem {
 
 // The shadcn CLI rewrites these imports to the installing app's aliases;
 // the manual install shows what it would write.
-const toAppImports = (source: string) =>
+export const toAppImports = (source: string) =>
   source.replace(/@\/registry\/[^/]+\/(ui|hooks|lib)\//g, (_, kind) =>
     kind === "ui" ? "@/components/ui/" : `@/${kind}/`,
   );

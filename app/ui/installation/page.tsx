@@ -79,8 +79,8 @@ export default function InstallationPage() {
           ))}
         </ul>
         <p>
-          Corners follow <code className="font-mono text-sm text-foreground">--radius</code>. This
-          site sets it to 0, which is why everything here is square.
+          Corners follow <code className="font-mono text-sm text-foreground">--radius</code>, the
+          same as shadcn&apos;s own components.
         </p>
       </Section>
 

@@ -1,7 +1,7 @@
 import { DocsIndex } from "@/components/docs-index";
 import { JsonLd } from "@/components/json-ld";
 import { collectionPage } from "@/lib/schema";
-import { patternGroups, patterns, uiPages } from "@/lib/ui";
+import { components, patternGroups, patterns, uiPages } from "@/lib/ui";
 import { pageMetadata } from "@/lib/metadata";
 
 const description =
@@ -18,7 +18,10 @@ export default function UiPage() {
           description,
           path: "/ui",
           crumbs: [{ name: "UI", path: "/ui" }],
-          items: [...uiPages, ...patterns].map((p) => ({ name: p.title, path: p.href })),
+          items: [...uiPages, ...components, ...patterns].map((p) => ({
+            name: p.title,
+            path: p.href,
+          })),
         })}
       />
       <DocsIndex
@@ -34,6 +37,7 @@ export default function UiPage() {
         }
         categories={[
           { name: "Start here", section: "start", docs: uiPages },
+          { name: "Components", section: "components", docs: components },
           ...patternGroups.map((g) => ({
             name: g.category,
             section: g.category.toLowerCase(),

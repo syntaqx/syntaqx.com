@@ -2,9 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { MobileSidebar, SidebarNav } from "@/components/sidebar-nav";
-import { patternGroups, patterns, uiPages } from "@/lib/ui";
+import { componentGroups, components, patternGroups, patterns, uiPages } from "@/lib/ui";
 
-/** Every /ui page: the overview and installation, then patterns by category. */
+/** Every /ui page: the overview and installation, then components and patterns by category. */
 function UiTree({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <SidebarNav
@@ -13,14 +13,24 @@ function UiTree({ onNavigate }: { onNavigate?: () => void }) {
       pages={uiPages.map((p) => ({ href: p.href, label: p.title }))}
       groups={[
         {
-          name: null,
+          name: "Components",
+          sections: componentGroups.map((g) => ({
+            name: g.category,
+            id: `components/${g.category}`,
+            items: g.items.map((c) => ({ href: c.href, title: c.title })),
+          })),
+        },
+        {
+          name: "Patterns",
           sections: patternGroups.map((g) => ({
             name: g.category,
+            id: `patterns/${g.category}`,
             items: g.items.map((p) => ({ href: p.href, title: p.title })),
           })),
         },
       ]}
       openAll
+      singleRows={false}
       onNavigate={onNavigate}
     />
   );
@@ -33,7 +43,7 @@ export function UiSidebar() {
 export function MobileUiSidebar() {
   const pathname = usePathname();
   const current =
-    [...uiPages, ...patterns].find((p) => p.href === pathname)?.title ??
+    [...uiPages, ...components, ...patterns].find((p) => p.href === pathname)?.title ??
     (pathname === "/ui" ? "Overview" : "UI");
 
   return (
