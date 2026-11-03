@@ -2,7 +2,7 @@
 title = "Securing Software Updates"
 description = "An updater that survives a hostile network: TUF's threat model, keys split by role, signed monotonic manifests, verified chunks and deltas, and staged rollout."
 category = "Security"
-order = 712
+order = 713
 tags = ["security", "updates", "signing", "supply-chain", "tuf"]
 +++
 

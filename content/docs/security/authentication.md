@@ -55,7 +55,7 @@ An account is only as strong as its weakest way in, and that's usually "forgot p
 
 - **Recovery codes at enrollment.** Single-use codes shown once when MFA is set up, stored hashed like passwords.
 - **No knowledge questions,** for the same reasons as hints.
-- **Email links that are single-use, short-lived and bound to the request,** and that sign the user in to a limited state where the next step is setting a new credential, not browsing the account.
+- **Email links that are single-use, short-lived and bound to the request,** sent only to an address the user has [verified](/docs/fundamentals/phones-and-emails#verifying-ownership), and that sign the user in to a limited state where the next step is setting a new credential, not browsing the account.
 - **Notify every existing channel** when a password, email, phone or factor changes, with a way to say "this wasn't me."
 - **Slow down risky recovery.** When recovery removes the last strong factor, hold the change for a waiting period with notifications, so the real owner can stop it. Support staff who can reset accounts are a recovery path too, and social engineers know it: give them the same verification steps, and log every reset.
 

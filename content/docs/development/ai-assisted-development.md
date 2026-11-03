@@ -3,7 +3,7 @@ title = "AI-Assisted Development"
 description = "Working with AI coding agents: a person owns every change, review follows measured risk, standards live in the repo, CI enforces them, nothing ships unverified."
 category = "Development"
 aliases = ["engineering/ai-assisted-development"]
-order = 1026
+order = 1029
 tags = ["ai", "agents", "process", "security"]
 +++
 
@@ -23,7 +23,7 @@ Ownership never moves to the agent. Every change has a person who owns it exactl
 Trust in a contributor is a track record you can calibrate against, and an agent's track record only exists if you keep one.
 
 - **Tag authorship.** Every commit records who or what wrote it (a co-author trailer) and which model reviewed it.
-- **Slice the numbers you already collect** by author and by area of the codebase: change failure rate, reverts, escaped defects, review rounds before merge, and how often a person caught something both agents missed. The delivery numbers are the [DORA set](/docs/quality/metrics#delivery-stability-dora); put them on a dashboard that updates itself.
+- **Slice the numbers you already collect** by author and by area of the codebase: change failure rate, reverts, escaped defects, review rounds before merge, and how often a person caught something both agents missed. The delivery numbers are the [DORA set](/docs/quality/metrics#delivery-stability-dora); put them on a dashboard that updates itself, and read them the way [Measuring Engineering](/docs/leadership/measuring-engineering#measuring-ai-assisted-development-honestly) describes.
 - **Turn them into policy.** Per area, write down what may merge unattended and what needs a person. Widen it one category at a time while the numbers hold, and tighten it automatically when they turn.
 - **Re-baseline after every model upgrade.** A new model fixes old mistakes and makes new ones. The track record belongs to the model version, not the tool.
 
@@ -37,7 +37,7 @@ Trust in a contributor is a track record you can calibrate against, and an agent
 
 An agent only follows rules it can read. Write them down where it looks:
 
-- **An agent instructions file** ([`AGENTS.md`](https://agents.md/), or a tool-specific one like `CLAUDE.md`) with the project's commands, conventions and hard constraints: what not to reintroduce, what needs a human, how to verify.
+- **An agent instructions file** ([`AGENTS.md`](https://agents.md/), or a tool-specific one like `CLAUDE.md`) with the project's commands, conventions and hard constraints: what not to reintroduce, what needs a human, how to verify. See [Docs for Coding Agents](/docs/development/documentation#docs-for-coding-agents).
 - **The playbook and ADRs** in or linked from the repository. A written playbook pays off twice: the agent follows the defaults without being told, and the short list of ADRs tells it exactly where this codebase departs from them.
 - **Escalation rules.** Which paths (the `CODEOWNERS` file), which kinds of change and which [one-way doors](/docs/development/design-docs) need a person, and what counts as customer-visible. A rule that lives in someone's head as a vague sense of unease doesn't reach the agent.
 - **The architecture.** Module boundaries, where new code goes, and the rule that a new service, datastore or deployment target starts with a design doc. Left alone, an agent will build a feature as its own app with its own database, or give every handler its own function; see [Service Boundaries](/docs/architecture/service-boundaries).

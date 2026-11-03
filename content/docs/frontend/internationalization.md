@@ -68,6 +68,8 @@ Design for it: let containers grow, avoid fixed widths on anything holding text,
 
 ## Unicode Traps
 
+The three that bite interface work first; [Text & Unicode](/docs/fundamentals/text-and-unicode) covers the rest.
+
 - **Length isn't characters.** JavaScript's `string.length` counts UTF-16 code units, so "👍" has length 2 and a family emoji can be 11. Character limits, truncation and cursor movement should count graphemes (what a person sees as one character) with [`Intl.Segmenter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter), which follows [Unicode's segmentation rules](https://unicode.org/reports/tr29/).
 - **Equal-looking strings may differ.** "é" can be one code point or "e" plus a combining accent. Normalize with [`String.prototype.normalize`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize) (NFC is the usual choice, per [Unicode normalization forms](https://unicode.org/reports/tr15/)) before comparing, deduplicating or using text as a key.
 - **Names don't follow your rules.** One field, not first and last; no minimum length; no rejecting apostrophes, hyphens, spaces or non-Latin scripts. The W3C's [personal names guidance](https://www.w3.org/International/questions/qa-personal-names) shows how many assumptions a "first name" field bakes in.

@@ -11,7 +11,7 @@ With amounts represented exactly and every write [idempotent](/docs/requests/ide
 
 ## Explicit State Machines
 
-Every financial object has a `status` with a closed set of values and a documented set of allowed transitions. Anything not on the list is rejected.
+Every financial object has a `status` with a closed set of values and a documented set of [allowed transitions](/docs/building-blocks/workflows). Anything not on the list is rejected.
 
 ### Example: Payment
 

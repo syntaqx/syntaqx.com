@@ -3,7 +3,7 @@ title = "File Uploads"
 description = "Uploads straight to storage on a scoped credential, resumable protocols, checks on what arrived, hostile files, and a gate before a file is usable."
 category = "Building Blocks"
 aliases = ["architecture/file-uploads"]
-order = 457
+order = 461
 tags = ["architecture", "uploads", "storage", "security", "mobile"]
 +++
 

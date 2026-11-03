@@ -18,7 +18,7 @@ Nothing in a review should be the first time the person has heard it. Corrective
 
 ## Write From Evidence, Against the Ladder
 
-Reviews written from memory are reviews of the last six weeks and the strongest impression. I ask managers to keep a running doc per report through the period (what they shipped, decisions, incidents handled, peer feedback, moments they grew) so the evidence is already there at review time.
+Reviews written from memory are reviews of the last six weeks and the strongest impression. I ask managers to keep a running doc per report through the period (what they shipped, decisions, incidents handled, peer feedback, moments they grew) so the evidence is already there at review time. Activity counts like commits or lines of code [aren't evidence](/docs/leadership/measuring-engineering#what-never-to-measure-per-person).
 
 Each claim ties to the ladder and to a concrete example. "Strong technical leadership" tells the person nothing. "Led the migration design, wrote the RFC, and got three teams to agree on the cutover plan, which is what the senior level describes as influencing beyond the team" tells them what they did, why it mattered, and what level it's at. The ladder is the shared yardstick, and the example lets anyone check the claim.
 

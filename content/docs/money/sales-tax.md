@@ -60,7 +60,7 @@ CREATE INDEX invoice_line_taxes_invoice_line_id_idx ON invoice_line_taxes (invoi
 ```
 
 - **Snapshot, never recompute.** The invoice shows what was charged, and a report six months later reads these rows. Recomputing from today's rates produces a different number, which is the one thing a tax record can't do. It's the [append-only rule](/docs/money/payment-states#append-only-records) applied to tax.
-- **Corrections are new documents.** A finalized invoice isn't edited; a credit note reduces it, or it's voided and reissued, as in Stripe's invoicing model. Each credit note carries its own tax lines, reversing tax with the same jurisdictions and rates as the original, not today's.
+- **Corrections are new documents.** A [finalized invoice](/docs/building-blocks/generated-documents#what-was-sent-is-what-you-keep) isn't edited; a credit note reduces it, or it's voided and reissued, as in Stripe's invoicing model. Each credit note carries its own tax lines, reversing tax with the same jurisdictions and rates as the original, not today's.
 - **Offline quotes are labeled.** A device offline (a point-of-sale terminal, a field app, a game client) can show an estimate from cached rates, marked as an estimate; the number the customer is charged comes from the server at finalization.
 - **Decide when to call.** Calling on every draft edit is accurate and costly; checkout plus finalization is usually enough. The finalization call is mandatory.
 

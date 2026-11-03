@@ -63,7 +63,7 @@ Over the limit, the response is `429 Too Many Requests` with a `Retry-After` hea
 }
 ```
 
-A client waits for `Retry-After`, because the server knows when the window resets and a backoff formula is a guess, and it watches `RateLimit` before reaching zero, so a batch job can slow itself down instead of failing halfway. [Retries & Timeouts](/docs/architecture/retries-and-timeouts) has the full retry policy.
+A client waits for `Retry-After`, because the server knows when the window resets and a backoff formula is a guess, and it watches `RateLimit` before reaching zero, so a batch job can slow itself down instead of failing halfway. The same rules apply when you're the client of [someone else's API](/docs/building-blocks/integrations#their-rate-limits-are-your-budget). [Retries & Timeouts](/docs/architecture/retries-and-timeouts) has the full retry policy.
 
 ## How It's Enforced
 

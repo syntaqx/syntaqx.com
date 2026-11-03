@@ -3,7 +3,7 @@ title = "Containers & Immutable Infrastructure"
 nav_title = "Containers"
 description = "Why you rebuild and redeploy the whole artifact instead of maintaining servers, and how to build container images that are small, patched, signed and safe."
 category = "Delivery"
-order = 1104
+order = 1105
 tags = ["containers", "docker", "delivery", "security"]
 +++
 
@@ -70,7 +70,7 @@ Each cost pushes you toward a practice you want anyway, which is the strongest a
 
 ## Serverless Is the Same Idea
 
-Serverless platforms take immutability to its conclusion: there's no server for you to patch at all. Every deploy is a fresh build that the platform runs, scales to zero and patches underneath. Containers are the right tool when you need control over the runtime, long-running processes or portability between providers; serverless when you don't.
+Serverless platforms take immutability to its conclusion: there's no server for you to patch at all. Every deploy is a fresh build that the platform runs, scales to zero and patches underneath. Containers are the right tool when you need control over the runtime, long-running processes or portability between providers; serverless when you don't. [Where to Run It](/docs/delivery/where-to-run) compares the options.
 
 ## References
 

@@ -25,7 +25,7 @@ Keep work in the request when the user needs the result to continue, or when doi
 
 **Idempotent, always.** Every real queue delivers at least once: a worker can finish the work and crash before acknowledging it. So running a job twice has to be harmless: check whether the work is already done, let a unique constraint reject a duplicate insert, and pass an [idempotency key](/docs/requests/idempotency) derived from the job to any external API so a retried charge or email isn't repeated downstream.
 
-**One unit of work per job.** "Email all 40,000 users" as one job means a failure at user 23,000 retries the first 23,000. Fan out: one job enqueues 40,000 small ones, or processes in batches it can resume.
+**One unit of work per job.** "Email all 40,000 users" as one job means a failure at user 23,000 retries the first 23,000. Fan out: one job enqueues 40,000 small ones, or processes in batches it can resume. A process of several dependent steps that runs for hours or days is a [workflow](/docs/building-blocks/workflows), not one job.
 
 ## Enqueue Transactionally
 

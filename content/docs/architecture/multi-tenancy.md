@@ -23,7 +23,7 @@ Start with shared tables: cheapest to run, one migration updates everyone, and p
 
 - **Every tenant-owned table has a `tenant_id`,** even when it could be derived through a join. A tenant three joins away is a tenant nobody checks, and a policy on the table can't enforce it.
 - **It leads every index and unique constraint:** `UNIQUE (tenant_id, email)`, not `UNIQUE (email)`, so two tenants can each have an `alice@example.com` and every lookup stays inside one tenant's slice of the index.
-- **Cache keys, queue partitions, object storage paths and log fields** all include it. A cache key without the tenant is a cross-tenant leak with a TTL.
+- **Cache keys, queue partitions, object storage paths, [search indexes](/docs/building-blocks/search#tenants-and-permissions-in-results) and log fields** all include it. A cache key without the tenant is a cross-tenant leak with a TTL.
 - **IDs are still globally unique** ([UUID v7](/docs/fundamentals/identifier-conventions)), so data can move between shards or databases without renumbering, and an ID alone never resolves to the wrong tenant's row.
 
 ## Enforce It in the Database

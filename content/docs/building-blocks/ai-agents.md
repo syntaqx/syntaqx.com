@@ -2,12 +2,12 @@
 title = "AI Agents in the Product"
 description = "Agents that act for customers and operators: narrow tools, typed results, decisions in code, identity checks, handoff, evals, auditing and the law."
 category = "Building Blocks"
-order = 465
+order = 471
 tags = ["architecture", "ai", "agents", "llm", "audit"]
 aliases = ["architecture/ai-agents", "ai-agents"]
 +++
 
-An agent that only chats is a content feature. One that books the appointment, refunds the subscription, freezes the card or mutes the player is a new kind of actor in your system, and it needs everything a new actor needs: limited permissions, checks it can't talk its way around, a record of what it did and a way to hand the work to a person. The model is the easy part; the layer around it is ordinary engineering.
+An agent that only chats is a [content feature](/docs/building-blocks/llm-features). One that books the appointment, refunds the subscription, freezes the card or mutes the player is a new kind of actor in your system, and it needs everything a new actor needs: limited permissions, checks it can't talk its way around, a record of what it did and a way to hand the work to a person. The model is the easy part; the layer around it is ordinary engineering.
 
 The shape every serious implementation converges on: **the model holds the conversation and proposes actions through a small set of tools; your code decides whether each action happens; every step lands in an audit record.** This chapter covers that shape for customer-facing agents (support, booking, billing) and operator-facing ones (moderation queues, dispatch suggestions), in any industry. Defending the model against manipulation is in [AI & LLM Security](/docs/security/ai-security), which this chapter assumes rather than repeats.
 

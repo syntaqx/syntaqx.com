@@ -85,7 +85,7 @@ Collect it on the server wherever possible: the entry point passes an authentica
 
 Customers choose the wrong category often enough to matter. Riot's public account of automating its player support is still the clearest published numbers: around 12,000 requests a day, players selecting the correct issue "about 80% of the time", responses taking up to 25 hours and resolution up to 3 days on average before automation ([Riot Games: Blitzcrank Bot](https://www.riotgames.com/en/news/blitzcrank-bot)). Routing on the customer's choice alone puts a fifth of tickets in the wrong queue, where they wait twice.
 
-- **Classify first.** A classifier trained on solved tickets per language assigns a category and a confidence. Store both the customer's category and the classifier's, and measure how often agents correct each.
+- **Classify first.** A classifier trained on solved tickets per language assigns a category and a confidence. Store both the customer's category and the classifier's, and measure how often agents correct each. Consistent categories also make tickets usable as [discovery](/docs/product/discovery) input.
 - **Route by category, language, priority and skill,** to queues with owners. Urgent categories (account takeover, safety threats, a payment taken twice) skip the line and page someone outside business hours.
 - **Link to incidents.** When an incident is open, tickets matching its signature are linked to it, get the status page answer, and leave the queue together when it resolves. A spike in one category after a release is usually a bug report, not a staffing problem.
 - **Deduplicate per customer.** Three contacts about the same problem in an hour are one ticket with three messages.

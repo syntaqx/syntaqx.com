@@ -2,11 +2,11 @@
 title = "Mobile Releases"
 description = "Shipping mobile apps when you can't roll back: release trains, phased rollouts, flags, minimum versions, health gates, signing, beta tracks and OTA rules."
 category = "Delivery"
-order = 1106
+order = 1107
 tags = ["mobile", "ios", "android", "release", "delivery"]
 +++
 
-[Continuous deployment](/docs/delivery/ci-pipelines) assumes you can put a fix in front of every user within minutes. Mobile breaks that assumption. A release goes through store review, users install it when they feel like it, and once a build is on a phone you can't take it back. The version you shipped two years ago is still running somewhere and still calling your API.
+[Continuous deployment](/docs/delivery/ci-pipelines) assumes you can put a fix in front of every user within minutes. [Mobile apps](/docs/frontend/mobile-apps) break that assumption. A release goes through store review, users install it when they feel like it, and once a build is on a phone you can't take it back. The version you shipped two years ago is still running somewhere and still calling your API.
 
 So mobile is the clearest case for continuous *delivery*: you keep CI, automated tests and a releasable main branch, but the step to users is a deliberate, gated release. The practices here make that release boring, and win back as much of the rollback ability the platform takes away as possible.
 

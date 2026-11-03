@@ -2,7 +2,7 @@
 title = "Reservations & Holds"
 description = "Selling scarce slots and inventory: holds that expire on read, caps per holder, idempotent confirmation, and a database that refuses double-booking."
 category = "Building Blocks"
-order = 461
+order = 466
 tags = ["architecture", "reservations", "booking", "inventory", "concurrency", "postgres"]
 aliases = ["architecture/reservations-and-holds", "reservations-and-holds"]
 +++

@@ -63,7 +63,7 @@ GET /payments?sort=status,-amount
 ```
 
 - **The default is `-created_at`,** newest first, unless the resource documents otherwise. Most list views care about recent items, and a documented default means two clients that don't pass `sort` see the same order.
-- **Sortable fields are allowlisted** and indexed, like filters.
+- **Sortable fields are allowlisted** and indexed, like filters. Sorting by a name follows the locale's [collation](/docs/fundamentals/text-and-unicode#collation-and-sorting), not byte order.
 - **`id` is always the final tiebreaker,** so the order is stable when values repeat. With [UUID v7](/docs/fundamentals/identifier-conventions), sorting by `id` is also sorting by creation time.
 
 ## Search
@@ -74,7 +74,7 @@ Free-text search is its own parameter, `q`, not a filter:
 GET /customers?q=alice
 ```
 
-Search is fuzzy, ranked and often backed by a separate index. Keeping it in its own parameter means a filter always means an exact match, and what `q` matches is documented per endpoint.
+Search is fuzzy, ranked and often backed by [a separate index](/docs/building-blocks/search). Keeping it in its own parameter means a filter always means an exact match, and what `q` matches is documented per endpoint.
 
 ## With Pagination
 

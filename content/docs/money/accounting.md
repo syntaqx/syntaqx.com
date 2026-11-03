@@ -62,7 +62,7 @@ The common shapes, and the fact each one needs:
 
 - **A subscription to a hosted service** is usually a promise to stand ready over the term, recognized evenly over the period. Stripe treats "each invoice line item as its own performance obligation" and amortizes it evenly over the line's period; a line with no period is recognized in full at finalization ([Stripe: How Revenue Recognition works](https://docs.stripe.com/revenue-recognition/methodology)). So every line carries a period, or someone decided it shouldn't.
 - **Setup, onboarding and implementation fees** may be a separate obligation or part of the subscription, which changes whether they're recognized up front or over the term. Keep them as their own line with their own standalone price so either answer can be computed.
-- **Prepaid usage** (credits, a bundle of visits, a quota) is recognized as it's used, which needs a consumption event per use.
+- **Prepaid usage** (credits, a bundle of visits, a quota) is recognized as it's used, which needs a [consumption event](/docs/money/usage-based-billing#metering-events) per use.
 - **Plan changes** create prorations and negative lines that reverse recognition already scheduled; [Plan Changes and Proration](/docs/money/subscriptions#plan-changes-and-proration) produces them as lines with their own periods, which is what recognition needs.
 - **Virtual goods and in-app currency** are paid for before they're delivered. Roblox's annual report says bookings are "initially recorded in deferred revenue" and durable items are recognized over "the estimated average lifetime of a paying user, which was 27 months as of December 31, 2025" ([Roblox: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1315098/000131509826000024/rblx-20251231.htm)). The lifetime is an estimate that can move; the purchase, the item's durability and each spend are facts. [Monetization Models](/books/gaming/monetization#virtual-currency) covers the game side.
 
@@ -119,7 +119,7 @@ Most businesses buy this instead of building it: billing platforms and dedicated
 
 ## Syncing to the Accounting System
 
-The product is the operational ledger; the general ledger lives in an accounting system (QuickBooks, Xero, Sage, NetSuite and others). The sync between them is where most "the books don't match" tickets start. A spend management platform posting cards, bills and reimbursements into a customer's own chart of accounts is the harder version, in [Accounting Sync & the Close](/books/banking-and-lending/accounting-sync).
+The product is the operational ledger; the general ledger lives in an accounting system (QuickBooks, Xero, Sage, NetSuite and others). The [sync between them](/docs/building-blocks/integrations) is where most "the books don't match" tickets start. A spend management platform posting cards, bills and reimbursements into a customer's own chart of accounts is the harder version, in [Accounting Sync & the Close](/books/banking-and-lending/accounting-sync).
 
 ### Summary Journals or Detail
 

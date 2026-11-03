@@ -12,7 +12,7 @@ Continuous integration is a promise that anything on `main` works. Continuous de
 
 ## Fast
 
-- **Under 10 minutes** from push to green. Past that, people open the next change, stack work on an unverified base, and batch changes to avoid paying the wait twice, which is exactly what CI exists to prevent.
+- **Under 10 minutes** from push to green, tracked like any [delivery metric](/docs/leadership/measuring-engineering). Past that, people open the next change, stack work on an unverified base, and batch changes to avoid paying the wait twice, which is exactly what CI exists to prevent.
 - **Parallel jobs.** Lint, typecheck and test don't depend on each other, so the pipeline takes as long as the slowest, not the sum. Test runners split files across workers too, as long as tests share no state.
 - **Fail fast.** Cheap checks first, and a new push cancels the run for the old one.
 

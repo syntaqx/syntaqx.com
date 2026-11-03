@@ -109,7 +109,7 @@ Define each important metric once, in code: a semantic or metrics layer, or at m
 
 ### Versions, Stamps and Frozen Periods
 
-Once a metric decides money (a commission, a bonus, a royalty, a revenue share, an SLA credit), its definition is a contract, and someone will dispute it.
+Once a metric decides money (a commission, a bonus, a royalty, a revenue share, an SLA credit, a [usage-based invoice](/docs/money/usage-based-billing)), its definition is a contract, and someone will dispute it.
 
 - **Version every definition.** The SQL or YAML lives in version control with an author, a reviewer, an effective date and a reason. Settings that change a metric without touching code (a threshold, a weighting, an attribution window) are logged with who changed them, when, and the before and after values.
 - **Stamp outputs with the version.** Every row a payout, scorecard or invoice reads carries the definition version that built it, so a disputed number can be recomputed exactly as it was.

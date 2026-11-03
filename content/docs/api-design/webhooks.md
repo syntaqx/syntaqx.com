@@ -119,7 +119,7 @@ After the last attempt the event is marked failed, the account owner is notified
 3. **Dedupe by `Webhook-Id`.** A unique constraint on processed event IDs, written in the same transaction as the side effect, is the simplest correct version. See [Idempotency](/docs/requests/idempotency).
 4. **Don't trust order.** Fetch the current object when the transition matters.
 5. **Subscribe only to the event types you handle.** Every extra subscription is load and noise for nothing.
-6. **Don't rely on webhooks alone.** Endpoints get misconfigured and secrets expire. A periodic job that lists recent objects catches anything a missed webhook would have told you.
+6. **Don't rely on webhooks alone.** Endpoints get misconfigured and secrets expire. A [periodic job that lists recent objects](/docs/building-blocks/integrations#sync-strategies) catches anything a missed webhook would have told you.
 
 ## Replay
 

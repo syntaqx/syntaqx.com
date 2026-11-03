@@ -104,7 +104,7 @@ A leaked secret is an incident even if nothing has happened yet, because you hav
 
 ## Who Deploys Where
 
-Anyone with a pull request gets a preview, automatically. Production deploys come from the pipeline, on merge to `main` after CI is green, and from nowhere else. Production credentials live in the platform's secret store, scoped to production, and the pipeline is the only thing that uses them. Break-glass access exists, is logged, and is reviewed afterward.
+Anyone with a pull request gets a preview, automatically. Production deploys come from the pipeline, on merge to `main` after CI is green, and from nowhere else. Production credentials live in the platform's secret store, scoped to production, and the pipeline is the only thing that uses them. [Break-glass access](/docs/security/infrastructure-access#just-in-time-access-and-break-glass) exists, is logged, and is reviewed afterward.
 
 ## References
 

@@ -10,7 +10,7 @@ Once someone is [onboarded](/docs/leadership/onboarding), the 1:1 is where the w
 
 ## Their Meeting, Not Yours
 
-I keep a shared doc per person with a running agenda; either of us adds to it during the week, and their items come first. When they arrive with nothing, that's a signal too, and a good time for open questions: what's frustrating you, what would you change about how the team works, what are you not getting enough of. If a 1:1 is mostly "what did you ship this week", the team is missing a better place for status, and the conversations that need privacy aren't happening anywhere.
+I keep a shared doc per person with a running agenda; either of us adds to it during the week, and their items come first. When they arrive with nothing, that's a signal too, and a good time for open questions: what's frustrating you, what would you change about how the team works, what are you not getting enough of. If a 1:1 is mostly "what did you ship this week", the team is missing [a better place for status](/docs/leadership/communication#status-updates-that-lead-with-the-ask), and the conversations that need privacy aren't happening anywhere.
 
 ## Cadence
 
