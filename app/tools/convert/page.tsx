@@ -32,7 +32,7 @@ export default function ConvertIndexPage() {
                   className="text-dim group-hover:text-accent transition-colors"
                 />
               </div>
-              <p className="text-xs text-dim leading-relaxed">{item.description}</p>
+              <p className="text-xs/relaxed text-dim ">{item.description}</p>
               <div className="mt-3 flex flex-wrap gap-1">
                 {item.tags.map((tag) => (
                   <span

@@ -145,7 +145,7 @@ function Panel({
         <span className="text-accent">{icon}</span>
         {title}
       </div>
-      <div className="px-3 py-3">{children}</div>
+      <div className="p-3 ">{children}</div>
       {footer && <div className="border-t border-border px-3 py-2">{footer}</div>}
     </div>
   );
@@ -182,7 +182,7 @@ function Note({
 }) {
   const tones = { dim: "text-dim", pink: "text-pink", accent: "text-accent" };
   return (
-    <p className={cn("flex items-start gap-1.5 text-xs leading-relaxed", tones[tone])}>
+    <p className={cn("flex items-start gap-1.5 text-xs/relaxed ", tones[tone])}>
       <span className="mt-0.5 shrink-0">{icon}</span>
       <span>{children}</span>
     </p>

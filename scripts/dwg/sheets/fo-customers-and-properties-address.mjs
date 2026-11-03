@@ -26,14 +26,9 @@ export default function draw() {
 
   s.comment("Failure: review");
   const ry = bottom + 34;
-  const review = s.node(
-    validate.x,
-    ry,
-    geocode.x + w - validate.x,
-    28,
-    "no match or low precision: review",
-    { kind: "ghost" },
-  );
+  s.node(validate.x, ry, geocode.x + w - validate.x, 28, "no match or low precision: review", {
+    kind: "ghost",
+  });
   // Each drop starts under its own sub text, not the pipeline's lowest.
   for (const i of [2, 3]) {
     const nd = nodes[i];

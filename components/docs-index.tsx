@@ -69,12 +69,10 @@ function Featured({ category }: { category: DocsIndexCategory }) {
               className="group flex items-center justify-between gap-6 border border-border bg-surface p-5 transition-colors hover:border-accent/60"
             >
               <div>
-                <h3 className="text-xl leading-tight text-foreground transition-colors group-hover:text-accent">
+                <h3 className="text-xl/tight  text-foreground transition-colors group-hover:text-accent">
                   {doc.title}
                 </h3>
-                <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-dim">
-                  {doc.description}
-                </p>
+                <p className="mt-1.5 max-w-2xl text-sm/relaxed  text-dim">{doc.description}</p>
               </div>
               <ArrowRight
                 size={18}
@@ -93,7 +91,7 @@ function DocRow({ doc }: { doc: DocsIndexEntry }) {
   return (
     <li className="border-b border-border">
       <Link href={doc.href} className="group block py-4">
-        <span className="block text-lg leading-tight text-foreground transition-colors group-hover:text-accent">
+        <span className="block text-lg/tight  text-foreground transition-colors group-hover:text-accent">
           {doc.title}
         </span>
         <span className="mt-1 line-clamp-2 block text-[0.8rem] leading-relaxed text-dim">

@@ -21,7 +21,7 @@ function Frame({ children, note }: { children: ReactNode; note: ReactNode }) {
 
 function Kbd({ children }: { children: ReactNode }) {
   return (
-    <kbd className="inline-flex min-w-4 items-center justify-center rounded-sm border border-border px-1 font-mono text-[10px] leading-4 text-dim">
+    <kbd className="inline-flex min-w-4 items-center justify-center rounded-sm border border-border px-1 font-mono text-[10px]/4  text-dim">
       {children}
     </kbd>
   );
@@ -167,7 +167,7 @@ function NaiveDialog({ onClose }: { onClose: () => void }) {
             <X size={12} />
           </button>
         </div>
-        <p className="text-xs leading-relaxed text-dim">
+        <p className="text-xs/relaxed  text-dim">
           Focus came in because the close button autofocuses. Tab can still walk out behind this
           overlay, and closing it drops focus on the page.
         </p>
@@ -201,7 +201,7 @@ function FocusReturnDemo() {
         <FocusWatcher />
       </div>
       <Modal open={managed} onClose={() => setManaged(false)} title="Managed dialog">
-        <p className="mb-4 text-xs leading-relaxed text-dim">
+        <p className="mb-4 text-xs/relaxed  text-dim">
           Focus is trapped in here. Close it any way you like and it goes back to the button that
           opened it.
         </p>

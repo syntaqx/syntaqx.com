@@ -24,7 +24,7 @@ export function DemoSection({
       <div className="mb-4 flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h2 className="text-2xl text-foreground mb-1">{title}</h2>
-          <p className="text-xs text-dim leading-relaxed">{blurb}</p>
+          <p className="text-xs/relaxed text-dim ">{blurb}</p>
         </div>
         <div className="shrink-0 inline-flex items-center gap-1.5 border border-border px-2.5 py-1 text-[11px] font-medium text-dim">
           <span className="text-dim/70">Inspired by</span>

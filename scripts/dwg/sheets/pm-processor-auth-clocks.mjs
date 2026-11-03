@@ -93,7 +93,7 @@ export default function draw() {
     ["I1", "issuer answer limit before stand-in, POS", "10.00"],
     ["A1", "issuer monthly average ceiling, US", "5.00"],
     ["M1", "earliest acquirer or merchant timeout, POS", "≥ 15.00"],
-    ["G1", "room for stand-in and the trip back", "M1 − I1 = 5.00"],
+    ["G1", "room for stand-in and the trip back", `M1 − I1 = ${G1.toFixed(2)}`],
   ];
   const widths = [50, 290, 130];
   const tw = widths.reduce((a, b) => a + b, 0);

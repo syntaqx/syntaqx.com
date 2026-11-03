@@ -11,7 +11,7 @@ const lastUpdated = "September 2026";
 
 export default function TermsPage() {
   return (
-    <article className="mx-auto max-w-2xl py-8 text-sm text-muted leading-relaxed">
+    <article className="mx-auto max-w-2xl py-8 text-sm/relaxed text-muted ">
       <header className="mb-10">
         <p className="text-xs text-accent font-medium tracking-wider uppercase mb-3">Legal</p>
         <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">Terms of Service</h1>

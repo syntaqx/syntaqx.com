@@ -144,7 +144,7 @@ export default function draw() {
     ["Q1", "time in queue", "S1 - O1 = 80.00"],
     ["R1", "received, server clock (server receive time)", "91.00"],
     ["T1", "event time on the server clock", "R1 - Q1 = 11.00"],
-    ["E1", "error against the true time of 10.00", "T1 - 10.00 = 1.00"],
+    ["E1", "error against the true time of 10.00", `T1 - 10.00 = ${E1.toFixed(2)}`],
   ];
   const tw = [0, 1, 2].reduce(
     (sum, j) =>

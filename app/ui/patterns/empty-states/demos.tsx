@@ -42,7 +42,7 @@ function FirstRunDemo() {
         <div className="flex flex-col items-center px-6 py-10 text-center">
           <FolderPlus size={20} className="mb-3 text-dim" />
           <p className="mb-1 text-sm text-foreground">No projects yet</p>
-          <p className="mb-5 max-w-sm text-xs leading-relaxed text-dim">
+          <p className="mb-5 max-w-sm text-xs/relaxed  text-dim">
             A project groups the services you deploy together, so their logs and alerts live in one
             place.
           </p>

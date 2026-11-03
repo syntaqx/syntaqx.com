@@ -868,7 +868,7 @@ export default function JwtPage() {
                         })
                       ) : (
                         <tr>
-                          <td colSpan={3} className="px-3 py-3 text-dim/30 text-center">
+                          <td colSpan={3} className="p-3  text-dim/30 text-center">
                             No claims to display
                           </td>
                         </tr>

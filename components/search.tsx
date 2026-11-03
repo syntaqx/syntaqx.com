@@ -183,7 +183,7 @@ export function SearchButton() {
         className="flex w-12 cursor-pointer items-center justify-center gap-2.5 border-l border-border text-dim transition-colors hover:text-foreground focus-visible:-outline-offset-2 md:any-pointer-fine:w-auto md:any-pointer-fine:px-4"
       >
         <Search size={14} className="shrink-0" />
-        <kbd className="hidden min-w-4.5 justify-center border border-border px-1 font-mono text-[0.65rem] leading-4 md:any-pointer-fine:inline-flex">
+        <kbd className="hidden min-w-4.5 justify-center border border-border px-1 font-mono text-[10.4px]/4  md:any-pointer-fine:inline-flex">
           /
         </kbd>
       </Dialog.Trigger>
@@ -192,7 +192,7 @@ export function SearchButton() {
         <div className="pointer-events-none fixed inset-0 z-100 flex items-start justify-center sm:px-4 sm:pt-[12vh]">
           <Dialog.Content
             aria-describedby={undefined}
-            className="pointer-events-auto relative flex h-full w-full flex-col overflow-hidden bg-background shadow-2xl shadow-black/40 outline-none animate-in fade-in slide-in-from-top-2 duration-150 sm:h-auto sm:max-h-[76vh] sm:max-w-2xl sm:border sm:border-border"
+            className="pointer-events-auto relative flex size-full  flex-col overflow-hidden bg-background shadow-2xl shadow-black/40 outline-none animate-in fade-in slide-in-from-top-2 duration-150 sm:h-auto sm:max-h-[76vh] sm:max-w-2xl sm:border sm:border-border"
           >
             <Dialog.Title className="sr-only">Search</Dialog.Title>
             <SearchPalette onClose={() => setOpen(false)} />

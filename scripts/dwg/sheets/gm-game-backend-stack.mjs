@@ -11,8 +11,7 @@ const W = 300,
 
 // Six equal module slots across the plate for the game services layer.
 const six = (i) => 12 + i * 47.6;
-const RESULTS = 3,
-  PROVISION = 2;
+const RESULTS = 3;
 
 const layers = [
   {

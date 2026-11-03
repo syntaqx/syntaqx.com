@@ -24,10 +24,7 @@ const eslintConfig = defineConfig([
       "better-tailwindcss": { entryPoint: "app/globals.css" },
     },
     rules: {
-      "better-tailwindcss/enforce-canonical-classes": [
-        "error",
-        { collapse: false, rootFontSize: 16 },
-      ],
+      "better-tailwindcss/enforce-canonical-classes": ["error", { rootFontSize: 16 }],
     },
   },
   // Override default ignores of eslint-config-next.
@@ -41,6 +38,8 @@ const eslintConfig = defineConfig([
     "public/**",
     // Agent worktrees: separate checkouts with their own lint runs.
     ".claude/**",
+    // Gitignored build output (resume:pdf).
+    ".private/**",
   ]),
 ]);
 

@@ -45,7 +45,7 @@ export default function LegalPage() {
                   className="text-dim group-hover:text-accent transition-colors"
                 />
               </div>
-              <p className="text-xs text-dim leading-relaxed">{page.description}</p>
+              <p className="text-xs/relaxed text-dim ">{page.description}</p>
             </Card>
           </Link>
         ))}

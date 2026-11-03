@@ -24,7 +24,7 @@ export function Checkbox({ checked, onChange, label, tooltip, className }: Check
           id={id}
           checked={checked}
           onCheckedChange={(c) => onChange(c === true)}
-          className="flex items-center justify-center w-3.5 h-3.5 border border-dim/40 transition-colors cursor-pointer group-hover:border-accent/50 data-[state=checked]:bg-accent data-[state=checked]:border-accent"
+          className="flex items-center justify-center size-3.5  border border-dim/40 transition-colors cursor-pointer group-hover:border-accent/50 data-[state=checked]:bg-accent data-[state=checked]:border-accent"
         >
           <RadixCheckbox.Indicator className="flex items-center justify-center">
             <Check size={10} strokeWidth={3} className="text-background" />

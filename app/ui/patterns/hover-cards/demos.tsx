@@ -338,7 +338,7 @@ function UserHover({ login, trigger }: { login: string; trigger?: ReactNode }) {
 function UserSkeleton() {
   return (
     <div className="flex gap-3">
-      <div className="h-10 w-10 rounded-full bg-border/40 animate-pulse" />
+      <div className="size-10  rounded-full bg-border/40 animate-pulse" />
       <div className="flex-1 space-y-2">
         <div className="h-3 w-24 rounded bg-border/40 animate-pulse" />
         <div className="h-2 w-32 rounded bg-border/30 animate-pulse" />
@@ -358,7 +358,7 @@ function UserBody({ data }: { data: GhUser }) {
           alt={`${data.login}'s avatar`}
           width={40}
           height={40}
-          className="h-10 w-10 rounded-full border border-border"
+          className="size-10  rounded-full border border-border"
         />
         <div className="min-w-0 flex-1">
           <div className="text-xs font-medium text-foreground truncate">
@@ -383,7 +383,7 @@ function UserBody({ data }: { data: GhUser }) {
 function UserDemo({ bare = false }: { bare?: boolean } = {}) {
   const handles = ["syntaqx", "octocat", "torvalds", "gaearon"];
   const body = (
-    <div className="text-xs text-foreground leading-loose">
+    <div className="text-xs/loose text-foreground ">
       Thanks to{" "}
       {handles.map((h, i) => (
         <span key={h}>
@@ -413,7 +413,7 @@ function AvatarDemo({ bare = false }: { bare?: boolean } = {}) {
             <button
               type="button"
               aria-label={`Open profile for @${h}`}
-              className="block h-10 w-10 overflow-hidden rounded-full border border-border bg-surface transition-colors hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/40"
+              className="block size-10  overflow-hidden rounded-full border border-border bg-surface transition-colors hover:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/40"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -423,7 +423,7 @@ function AvatarDemo({ bare = false }: { bare?: boolean } = {}) {
                 height={40}
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-cover"
+                className="size-full  object-cover"
               />
             </button>
           }

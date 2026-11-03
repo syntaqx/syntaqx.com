@@ -175,7 +175,7 @@ export function MobileMenu() {
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
           <Dialog.Close
             aria-label="Close menu"
-            className="absolute -top-12 right-0 flex h-12 w-12 items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer"
+            className="absolute -top-12 right-0 flex size-12  items-center justify-center border-l border-border text-dim transition-colors hover:text-foreground cursor-pointer"
           >
             <X size={18} />
           </Dialog.Close>

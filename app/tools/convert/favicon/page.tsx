@@ -317,7 +317,7 @@ export default function FaviconPage() {
                   width={128}
                   height={128}
                   unoptimized
-                  className="max-h-32 max-w-32 object-contain h-auto w-auto"
+                  className="max-h-32 max-w-32 object-contain size-auto "
                 />
                 <span className="text-xs text-dim">{fileName}</span>
                 <span className="text-[10px] text-dim">Click or drop to replace</span>

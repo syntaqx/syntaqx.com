@@ -110,7 +110,7 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative isolate flex h-full min-w-0 flex-col px-7 py-7 sm:px-10"
+      className="group relative isolate flex h-full min-w-0 flex-col p-7  sm:px-10"
     >
       {/* The face leans; its accent bar is a child, so it leans with it. */}
       <span
