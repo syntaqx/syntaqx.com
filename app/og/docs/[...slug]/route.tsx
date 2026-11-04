@@ -1,14 +1,16 @@
-import { getAllDocs, getDocBySlug, getDocsByCategory } from "@/lib/docs";
+import { getDocBySlug, getDocsByCategory } from "@/lib/docs";
 import { ogCard } from "@/lib/og-card";
 
 // The social preview for each doc. A route handler rather than an
 // opengraph-image file: under the [...slug] catch-all, the image route would
 // put a segment after the catch-all, which Next doesn't allow.
 
-export const dynamicParams = false;
+// Rendered on first request and cached, not at build: prerendering every
+// card cost the build most of its time. Unknown slugs 404 below.
+export const dynamic = "force-static";
 
 export function generateStaticParams() {
-  return getAllDocs().map((doc) => ({ slug: doc.slug.split("/") }));
+  return [];
 }
 
 export async function GET(_request: Request, { params }: { params: Promise<{ slug: string[] }> }) {
