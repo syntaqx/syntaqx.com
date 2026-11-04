@@ -185,7 +185,7 @@ export function DiagramViewer() {
                     <Minus />
                   </Button>
                   <ButtonGroupText
-                    className="inst min-w-16 justify-center bg-background px-2 text-[0.6rem] text-muted-foreground tabular-nums dark:border-input dark:bg-input/30"
+                    className="inst min-w-16 justify-center bg-background px-2 indent-[0.14em] text-[0.6rem] leading-none text-muted-foreground tabular-nums dark:border-input dark:bg-input/30"
                     aria-live="polite"
                   >
                     {fit ? Math.round((width / fit) * 100) : 100}%
@@ -202,7 +202,9 @@ export function DiagramViewer() {
                     variant="outline"
                     size="icon-sm"
                     onClick={() => zoomTo(fit)}
+                    disabled={width === fit}
                     aria-label="Fit to screen"
+                    title="Fit to screen"
                   >
                     <Maximize />
                   </Button>
