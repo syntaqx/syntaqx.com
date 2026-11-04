@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { Button as UIButton } from "@/registry/syntaqx/ui/button";
 
 interface ButtonProps {
   href: string;
@@ -10,6 +12,16 @@ interface ButtonProps {
   download?: boolean;
 }
 
+// The site's call-to-action link: the registry Button in its slant shape,
+// with the site's type, padding, hover and arrow nudge layered on through
+// className, the same way any project would customize it.
+const base =
+  "inst h-auto gap-2.5 px-[1.15rem] py-2.5 text-[0.6rem] font-normal [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:ease-[steps(3)] hover:[&_svg]:translate-x-1";
+const variants = {
+  primary: "hover:bg-foreground hover:text-background",
+  secondary: "border border-border hover:border-foreground hover:bg-secondary",
+};
+
 export function Button({
   href,
   variant = "primary",
@@ -17,36 +29,26 @@ export function Button({
   external = false,
   download = false,
 }: ButtonProps) {
-  // The face is a slanted layer behind the label, so the text stays upright.
-  const base =
-    "inst group relative isolate inline-flex items-center gap-2.5 px-[1.15rem] py-2.5 transition-colors before:absolute before:inset-0 before:-z-10 before:slant before:border before:transition-colors [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:ease-[steps(3)] hover:[&_svg]:translate-x-1";
-  const variants = {
-    primary:
-      "text-primary-foreground before:border-primary before:bg-primary hover:text-background hover:before:border-foreground hover:before:bg-foreground",
-    secondary: "text-foreground before:border-border before:bg-card hover:before:border-foreground",
-  };
-
-  const className = `${base} ${variants[variant]}`;
-
-  if (download) {
-    return (
-      <a href={href} download className={className}>
-        {children}
-      </a>
-    );
-  }
-
-  if (external) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-        {children}
-      </a>
-    );
-  }
+  const link = download ? (
+    <a href={href} download>
+      {children}
+    </a>
+  ) : external ? (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  ) : (
+    <Link href={href}>{children}</Link>
+  );
 
   return (
-    <Link href={href} className={className}>
-      {children}
-    </Link>
+    <UIButton
+      asChild
+      shape="slant"
+      variant={variant === "primary" ? "default" : "secondary"}
+      className={cn(base, variants[variant])}
+    >
+      {link}
+    </UIButton>
   );
 }

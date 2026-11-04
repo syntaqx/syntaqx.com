@@ -7,7 +7,7 @@
       "name": "button",
       "type": "registry:ui",
       "title": "Button",
-      "description": "shadcn's Button with a loading state: a spinner over the label, and the button keeps its width.",
+      "description": "shadcn's Button with a loading state (a spinner over the label, and the button keeps its width) and shapes: slant leans it at --button-slant, and a new shape is one line.",
       "dependencies": ["radix-ui", "class-variance-authority", "lucide-react"],
       "files": [
         {
