@@ -7,8 +7,6 @@
 
 import type { ArcadeTheme, Cabinet, CabinetFactory } from "./cabinet";
 
-const MONO = '"JetBrains Mono", ui-monospace, monospace';
-const LABEL = '"Michroma", sans-serif';
 const WIN_SCORE = 7;
 const TRAIL = 14;
 /** The steepest return, in radians from horizontal, for a ball off a paddle's tip. */
@@ -301,7 +299,7 @@ export const createRally: CabinetFactory = (): Cabinet => {
 
       // Scores sit at the top, either side of the net.
       const size = Math.round(clamp(30 * s, 22, 52));
-      ctx.font = `500 ${size}px ${MONO}`;
+      ctx.font = `500 ${size}px ${theme.mono}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
       ctx.globalAlpha = 0.75;
@@ -312,7 +310,7 @@ export const createRally: CabinetFactory = (): Cabinet => {
       ctx.globalAlpha = 1;
 
       if (winner >= 0) {
-        ctx.font = `${Math.round(clamp(10 * s, 9, 14))}px ${LABEL}`;
+        ctx.font = `${Math.round(clamp(10 * s, 9, 14))}px ${theme.label}`;
         ctx.letterSpacing = `${(3 * s).toFixed(1)}px`;
         ctx.fillStyle = theme.muted;
         ctx.fillText(

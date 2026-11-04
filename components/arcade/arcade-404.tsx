@@ -12,9 +12,17 @@ const STEP = 1 / 60;
 const MAX_DT = 1 / 30;
 const GAP = 10; // between screens
 const PAD = 12; // around the wall
+const BAR = 22; // each screen's title bar, so no game's own corner labels collide with it
 
 const readTheme = (): ArcadeTheme => {
   const css = getComputedStyle(document.documentElement);
+  // next/font registers its families under generated names; the variables hold them.
+  const fonts = getComputedStyle(document.body);
+  const font = (name: string, fallback: string) =>
+    `${fonts.getPropertyValue(name).trim() || css.getPropertyValue(name).trim()}, ${fallback}`.replace(
+      /^, /,
+      "",
+    );
   const v = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
   const bg = v("--background", "#0a0c0c");
   const hex = bg.replace("#", "");
@@ -39,6 +47,8 @@ const readTheme = (): ArcadeTheme => {
     purple: "#c4a7ff",
     cyan: "#7edcdc",
     green: "#a9d5a0",
+    mono: font("--font-jetbrains", "ui-monospace, monospace"),
+    label: font("--font-michroma", "sans-serif"),
     dark: lum < 0.5,
   };
 };
@@ -78,7 +88,7 @@ export function Arcade404() {
         sc.y = PAD + Math.floor(i / cols) * (h + GAP);
         sc.w = Math.max(1, w);
         sc.h = Math.max(1, h);
-        sc.cabinet.resize(sc.w, sc.h);
+        sc.cabinet.resize(sc.w, Math.max(1, sc.h - BAR));
       });
     };
 
@@ -101,9 +111,9 @@ export function Arcade404() {
       for (const sc of screens) {
         // Each screen draws in its own coordinates, clipped to its frame.
         ctx.save();
-        ctx.translate(sc.x, sc.y);
+        ctx.translate(sc.x, sc.y + BAR);
         ctx.beginPath();
-        ctx.rect(0, 0, sc.w, sc.h);
+        ctx.rect(0, 0, sc.w, sc.h - BAR);
         ctx.clip();
         sc.cabinet.draw(ctx, theme, now);
         ctx.restore();
@@ -112,11 +122,17 @@ export function Arcade404() {
         ctx.strokeStyle = theme.strong;
         ctx.lineWidth = 1;
         ctx.strokeRect(sc.x + 0.5, sc.y + 0.5, sc.w - 1, sc.h - 1);
-        ctx.font = '9px var(--font-michroma), "Michroma", sans-serif';
+        ctx.beginPath();
+        ctx.moveTo(sc.x, sc.y + BAR + 0.5);
+        ctx.lineTo(sc.x + sc.w, sc.y + BAR + 0.5);
+        ctx.stroke();
+        ctx.font = `9px ${theme.label}`;
+        ctx.letterSpacing = "1.5px";
         ctx.textAlign = "left";
-        ctx.textBaseline = "top";
+        ctx.textBaseline = "middle";
         ctx.fillStyle = theme.muted;
-        ctx.fillText(sc.cabinet.title.toUpperCase(), sc.x + 10, sc.y + 9);
+        ctx.fillText(sc.cabinet.title.toUpperCase(), sc.x + 10, sc.y + BAR / 2 + 0.5);
+        ctx.letterSpacing = "0px";
       }
     };
 
@@ -209,14 +225,14 @@ export function Arcade404() {
         <div className="flex max-w-2xl *:pointer-events-auto flex-col items-center">
           <p className="eyebrow mb-4">404</p>
           <h1 id="not-found-title" className="mb-5 text-3xl leading-[0.95] sm:text-4xl">
-            These aren&apos;t the droids you&apos;re looking for.
+            Player 404 has left the game.
           </h1>
           <p className="mb-3 max-w-md text-subtle">
-            The page you requested has mass, but it exists in a superposition of &ldquo;here&rdquo;
-            and &ldquo;not here,&rdquo; and upon observation it collapsed to &ldquo;not here.&rdquo;
+            The page you&apos;re looking for isn&apos;t on this level. The cabinets are on free
+            play, so stay a while, or head back to the start.
           </p>
           <p className="mb-10 text-xs text-muted-foreground">
-            HTTP 404 &middot; ERR_EXISTENTIAL_CRISIS
+            HTTP 404 &middot; NO SAVE DATA FOUND
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button href="/">

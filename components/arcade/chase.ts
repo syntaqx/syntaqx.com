@@ -236,7 +236,7 @@ class ChaseGame implements Cabinet {
     ctx.globalCompositeOperation = "source-over";
 
     // Score over the maze's top left, lives over its top right.
-    ctx.font = '500 11px "JetBrains Mono", ui-monospace, monospace';
+    ctx.font = `500 11px ${theme.mono}`;
     ctx.textBaseline = "bottom";
     ctx.textAlign = "left";
     ctx.fillStyle = theme.muted;

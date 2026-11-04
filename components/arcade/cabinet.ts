@@ -25,6 +25,10 @@ export interface ArcadeTheme {
   purple: string;
   cyan: string;
   green: string;
+  /** The site's monospace font family, for scores and numbers. */
+  mono: string;
+  /** The site's instrument font family (Michroma), for small uppercase labels. */
+  label: string;
   /** True on the dark theme: glows may blend additively. */
   dark: boolean;
 }

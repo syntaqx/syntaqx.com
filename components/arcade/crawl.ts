@@ -216,8 +216,6 @@ const glow = (color: string) => {
   return c;
 };
 
-const MONO = '"JetBrains Mono", ui-monospace, monospace';
-
 export const crawl: CabinetFactory = () => {
   let snakes: Snake[] = [];
   let food: Food[] = [];
@@ -870,7 +868,7 @@ export const crawl: CabinetFactory = () => {
       .sort((a, b) => a.mass - b.mass);
     for (const s of onScreen) drawSnake(ctx, theme, s);
     ctx.restore();
-    ctx.font = `11px ${MONO}`;
+    ctx.font = `11px ${theme.mono}`;
     ctx.fillStyle = theme.muted;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";

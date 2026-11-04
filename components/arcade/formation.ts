@@ -258,7 +258,7 @@ class FormationGame implements Cabinet {
     }
 
     // Score and spare cannons, small and out of the way.
-    ctx.font = '500 11px "JetBrains Mono", ui-monospace, monospace';
+    ctx.font = `500 11px ${theme.mono}`;
     ctx.textBaseline = "top";
     ctx.textAlign = "left";
     ctx.fillStyle = theme.muted;

@@ -9,7 +9,6 @@
 
 import type { ArcadeTheme, Cabinet, CabinetFactory } from "./cabinet";
 
-const LABEL = '"Michroma", sans-serif';
 const TAU = Math.PI * 2;
 
 interface Rock {
@@ -605,7 +604,7 @@ export const createDrift: CabinetFactory = (): Cabinet => {
 
       // The wave number, small in a corner.
       const size = Math.round(clamp(9 * s, 9, 13));
-      ctx.font = `${size}px ${LABEL}`;
+      ctx.font = `${size}px ${theme.label}`;
       ctx.letterSpacing = `${(size * 0.3).toFixed(1)}px`;
       ctx.textAlign = "left";
       ctx.textBaseline = "alphabetic";

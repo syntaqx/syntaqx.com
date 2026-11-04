@@ -8,7 +8,6 @@
 
 import type { ArcadeTheme, Cabinet, CabinetFactory } from "./cabinet";
 
-const MONO = '"JetBrains Mono", ui-monospace, monospace';
 const LIVES = 3;
 /** The widest return, in radians from straight up, for a ball off the paddle's tip. */
 const MAX_ANGLE = (60 * Math.PI) / 180;
@@ -424,7 +423,7 @@ export const createBreak: CabinetFactory = (): Cabinet => {
 
       // Score and balls left, quietly in the bottom corners.
       const size = Math.round(clamp(12 * s, 11, 18));
-      ctx.font = `${size}px ${MONO}`;
+      ctx.font = `${size}px ${theme.mono}`;
       ctx.textBaseline = "alphabetic";
       ctx.textAlign = "left";
       ctx.fillStyle = theme.muted;
