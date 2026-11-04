@@ -3,7 +3,7 @@ title = "Replatforming & Migration"
 nav_title = "Replatforming"
 description = "Moving a store between platforms: what migrates, passwords, gift cards, subscriptions and card tokens, redirects and SEO, integrations, cutover and checks."
 category = "Commerce Industry"
-order = 2364
+order = 2365
 part = "Running the Platform"
 tags = ["commerce", "replatforming", "migration", "seo", "data-model", "cutover"]
 +++

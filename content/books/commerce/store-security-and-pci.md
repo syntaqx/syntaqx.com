@@ -2,7 +2,7 @@
 title = "Store Security & PCI"
 description = "Magecart e-skimming, PCI DSS 6.4.3 and 11.6.1, SAQ A after 2025, CSP and SRI, tag managers, app scopes, staff 2FA and who secures what on each platform."
 category = "Commerce Industry"
-order = 2360
+order = 2361
 part = "Running the Platform"
 tags = ["commerce", "security", "pci-dss", "e-skimming", "csp"]
 +++

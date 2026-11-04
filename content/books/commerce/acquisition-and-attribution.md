@@ -2,7 +2,7 @@
 title = "Acquisition & Attribution"
 description = "Paid search and Shopping, Performance Max, Meta Advantage+, affiliates and influencers, signals after ATT, conversion APIs, attribution, lift tests and MMM."
 category = "Commerce Industry"
-order = 2354
+order = 2355
 part = "Marketing and Customers"
 tags = ["commerce", "marketing", "advertising", "attribution", "affiliates", "measurement"]
 +++

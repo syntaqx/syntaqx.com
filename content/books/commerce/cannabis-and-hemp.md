@@ -2,7 +2,7 @@
 title = "Cannabis & Hemp"
 description = "Cannabis and hemp commerce as of October 2026: seed-to-sale tracking with Metrc and BioTrack, dispensary limits, banking, rescheduling, the hemp redefinition."
 category = "Commerce Industry"
-order = 2349
+order = 2350
 part = "Regulated Goods"
 tags = ["commerce", "cannabis", "hemp", "seed-to-sale", "compliance", "dispensaries"]
 +++
