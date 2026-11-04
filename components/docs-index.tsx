@@ -21,19 +21,26 @@ interface DocsIndexProps {
   categories: DocsIndexCategory[];
   /** The intro paragraph under the title. */
   intro: ReactNode;
+  eyebrow?: string;
+  title?: string;
 }
 
 /**
  * /docs, in the same reading layout as the chapters: the sidebar comes from
  * the docs layout, and search is the site's Ctrl K.
  */
-export function DocsIndex({ categories, intro }: DocsIndexProps) {
+export function DocsIndex({
+  categories,
+  intro,
+  eyebrow = "Docs",
+  title = "Documentation",
+}: DocsIndexProps) {
   // The first section is the featured "start here" strip; the rest are lists.
   const [featured, ...sections] = categories;
 
   return (
     <div>
-      <DocsHeader eyebrow="Docs" title="Documentation">
+      <DocsHeader eyebrow={eyebrow} title={title}>
         <div className="max-w-3xl text-muted-foreground">{intro}</div>
       </DocsHeader>
 

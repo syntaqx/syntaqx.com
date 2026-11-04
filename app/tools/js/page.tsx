@@ -451,7 +451,7 @@ export default function JsToolPage() {
                       )}
                     </span>
                   )}
-                  {output && <CopyButton text={output} label />}
+                  {output && <CopyButton value={output} variant="outline" size="sm" />}
                 </div>
               </div>
               <textarea

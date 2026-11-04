@@ -26,6 +26,8 @@ export interface SidebarItem {
 
 export interface SidebarSection {
   name: string;
+  /** Tells apart two sections with the same name in different groups. */
+  id?: string;
   items: SidebarItem[];
 }
 
@@ -35,15 +37,17 @@ export interface SidebarGroup {
   sections: SidebarSection[];
 }
 
+const sectionKey = (s: SidebarSection) => s.id ?? s.name;
+
 const isActive = (item: SidebarItem, pathname: string) =>
   pathname === item.href || (!!item.nested && pathname.startsWith(`${item.href}/`));
 
 const rowClass = (active: boolean) =>
   cn(
-    "flex items-baseline gap-2.5 px-2.5 py-1.5 text-[0.8rem] leading-snug transition-colors",
+    "flex items-baseline gap-2.5 rounded-md px-2.5 py-2 text-sm/snug transition-colors",
     active
-      ? "bg-foreground/7 font-medium text-foreground"
-      : "text-muted-foreground hover:bg-foreground/4 hover:text-foreground",
+      ? "bg-foreground/10 font-medium text-foreground"
+      : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground",
   );
 
 const bandClass =
@@ -177,9 +181,15 @@ export function SidebarNav({
   home,
   pages = [],
   groups,
+  openAll = false,
+  singleRows = true,
   onNavigate,
 }: {
   title: string;
+  /** Start with every section open, for a sidebar short enough to show whole. */
+  openAll?: boolean;
+  /** Show a one-page section as that page's row (the default), not as a section. */
+  singleRows?: boolean;
   /** A link back up a level, as a chevron before the title. */
   back?: { href: string; label: string };
   home: { href: string; label: string };
@@ -194,15 +204,18 @@ export function SidebarNav({
   useMiddleDragScroll(navRef);
   const revealOpened = useRevealOpenedSection(navRef);
   const sections = groups.flatMap((g) => g.sections);
-  const activeSection = sections.find((s) => s.items.some((i) => isActive(i, pathname)))?.name;
+  const activeSection = sections.find((s) => s.items.some((i) => isActive(i, pathname)));
+  const activeKey = activeSection && sectionKey(activeSection);
 
-  const [open, setOpen] = useState<string[]>(activeSection ? [activeSection] : []);
+  const [open, setOpen] = useState<string[]>(
+    openAll ? sections.map(sectionKey) : activeKey ? [activeKey] : [],
+  );
   // Open the current page's section on navigation, leaving the rest as the
   // reader left them.
   const [lastPath, setLastPath] = useState(pathname);
   if (pathname !== lastPath) {
     setLastPath(pathname);
-    if (activeSection && !open.includes(activeSection)) setOpen([...open, activeSection]);
+    if (activeKey && !open.includes(activeKey)) setOpen([...open, activeKey]);
   }
 
   return (
@@ -227,7 +240,7 @@ export function SidebarNav({
           <span className="truncate">{title}</span>
         </div>
       )}
-      <ul className="flex flex-col gap-px border-b border-border p-2">
+      <ul className="flex flex-col gap-0.5 border-b border-border p-2">
         {[home, ...pages].map((page) => (
           <li key={page.href}>
             <Link
@@ -255,19 +268,19 @@ export function SidebarNav({
           <div key={group.name ?? "_top"}>
             {group.name && <p className={bandClass}>{group.name}</p>}
             {group.sections.map((section) =>
-              section.items.length === 1 ? (
+              singleRows && section.items.length === 1 ? (
                 <SingleRow
-                  key={section.name}
+                  key={sectionKey(section)}
                   item={section.items[0]}
                   pathname={pathname}
                   onNavigate={onNavigate}
                 />
               ) : (
                 <Section
-                  key={section.name}
+                  key={sectionKey(section)}
                   section={section}
                   pathname={pathname}
-                  current={section.name === activeSection}
+                  current={sectionKey(section) === activeKey}
                   onNavigate={onNavigate}
                 />
               ),
@@ -321,8 +334,8 @@ function Section({
 }) {
   return (
     <Accordion.Item
-      value={section.name}
-      data-section={section.name}
+      value={sectionKey(section)}
+      data-section={sectionKey(section)}
       className="border-b border-border"
     >
       <Accordion.Header>
@@ -350,7 +363,7 @@ function Section({
         </Accordion.Trigger>
       </Accordion.Header>
       <Accordion.Content className="acc-content overflow-hidden">
-        <ul className="flex flex-col gap-px p-2">
+        <ul className="flex flex-col gap-0.5 px-2 pt-1.5 pb-2">
           {section.items.map((item) => {
             const active = isActive(item, pathname);
             return (
@@ -365,7 +378,7 @@ function Section({
                   {item.number !== undefined && (
                     <span
                       className={cn(
-                        "w-5 shrink-0 font-mono text-[0.65rem] tabular-nums",
+                        "w-5 shrink-0 font-mono text-[0.7rem] tabular-nums",
                         active ? "text-primary" : "text-muted-foreground",
                       )}
                     >

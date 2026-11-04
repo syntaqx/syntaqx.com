@@ -1,88 +1,183 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import * as React from "react";
+import { HoverCard as HoverCardPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
 
-// A small popover with intent-based open and close. The open delay (~120ms)
-// filters out cursors that pass through the trigger; the close delay (~100ms)
-// lets the user move the cursor into the panel without it slamming shut.
-//
-// `onOpen` fires the first time the card is about to become visible: the
-// hook callers use to start a "load on intent" fetch.
+// shadcn's HoverCard, unchanged in looks and API, plus:
+// - intent delays tuned for previews (120ms to open filters out a cursor
+//   passing through; 100ms to close lets it travel into the card), in place
+//   of Radix's 700/300;
+// - keyboard focus on the trigger opens the card too, which Radix's hover
+//   card leaves to the pointer;
+// - loading on intent: give the card a `load` function and nothing is
+//   fetched until the card first opens. HoverCardContent's children can be a
+//   function of the load's state, to show a skeleton, the data or an error.
+//   A `cacheKey` shares the result across cards for the session, so a second
+//   hover is instant; a failed load is dropped so the next open retries.
 
-export interface HoverCardProps {
-  trigger: ReactNode;
-  children: ReactNode;
-  onOpen?: () => void;
-  className?: string;
-  // Anchor the panel to the trigger's left or right edge. Use "end" when the
-  // trigger sits at the right side of its container so the panel doesn't
-  // overflow.
-  align?: "start" | "end";
+export type HoverCardLoadState<T = unknown> =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: T }
+  | { status: "error"; error: unknown };
+
+const cache = new Map<string, Promise<unknown>>();
+
+interface HoverCardContextValue {
+  schedule: (open: boolean) => void;
+  state: HoverCardLoadState;
 }
 
-export function HoverCard({
-  trigger,
-  children,
+const HoverCardContext = React.createContext<HoverCardContextValue | null>(null);
+
+/** The load state of the HoverCard around it. */
+function useHoverCard<T = unknown>() {
+  return (React.useContext(HoverCardContext)?.state ?? { status: "idle" }) as HoverCardLoadState<T>;
+}
+
+function HoverCard({
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange,
   onOpen,
-  className,
-  align = "start",
-}: HoverCardProps) {
-  const [open, setOpen] = useState(false);
-  const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const firedRef = useRef(false);
-  const id = useId();
+  load,
+  cacheKey,
+  openDelay = 120,
+  closeDelay = 100,
+  ...props
+}: React.ComponentProps<typeof HoverCardPrimitive.Root> & {
+  /** Fires once, the first time the card opens. */
+  onOpen?: () => void;
+  /** Loads the card's content the first time it opens. */
+  load?: () => Promise<unknown>;
+  /** Shares the load's result with every card using the same key. */
+  cacheKey?: string;
+}) {
+  const [inner, setInner] = React.useState(defaultOpen);
+  const [state, setState] = React.useState<HoverCardLoadState>({ status: "idle" });
+  const open = openProp ?? inner;
+  const fired = React.useRef(false);
+  const loading = React.useRef<"idle" | "pending" | "done">("idle");
+  const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const clearTimers = () => {
-    if (openTimer.current) clearTimeout(openTimer.current);
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    openTimer.current = null;
-    closeTimer.current = null;
-  };
+  const startLoad = React.useCallback(() => {
+    if (!load || loading.current !== "idle") return;
+    loading.current = "pending";
+    setState({ status: "loading" });
+    let pending = cacheKey ? cache.get(cacheKey) : undefined;
+    if (!pending) {
+      pending = load();
+      if (cacheKey) {
+        cache.set(cacheKey, pending);
+        pending.catch(() => cache.delete(cacheKey));
+      }
+    }
+    pending.then(
+      (data) => {
+        loading.current = "done";
+        setState({ status: "success", data });
+      },
+      (error) => {
+        loading.current = "idle";
+        setState({ status: "error", error });
+      },
+    );
+  }, [load, cacheKey]);
 
-  const scheduleOpen = useCallback(() => {
-    clearTimers();
-    openTimer.current = setTimeout(() => {
-      if (!firedRef.current) {
-        firedRef.current = true;
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      if (next && !fired.current) {
+        fired.current = true;
         onOpen?.();
       }
-      setOpen(true);
-    }, 120);
-  }, [onOpen]);
+      if (next) startLoad();
+      if (openProp === undefined) setInner(next);
+      onOpenChange?.(next);
+    },
+    [onOpen, startLoad, onOpenChange, openProp],
+  );
 
-  const scheduleClose = useCallback(() => {
-    clearTimers();
-    closeTimer.current = setTimeout(() => setOpen(false), 100);
-  }, []);
+  const schedule = React.useCallback(
+    (next: boolean) => {
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => setOpen(next), next ? openDelay : closeDelay);
+    },
+    [setOpen, openDelay, closeDelay],
+  );
 
-  useEffect(() => () => clearTimers(), []);
+  React.useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
 
   return (
-    <span
-      data-slot="hover-card"
-      className="relative inline-block"
-      onMouseEnter={scheduleOpen}
-      onMouseLeave={scheduleClose}
-      onFocus={scheduleOpen}
-      onBlur={scheduleClose}
-    >
-      <span aria-describedby={open ? id : undefined}>{trigger}</span>
-      {open && (
-        <span
-          id={id}
-          role="tooltip"
-          data-slot="hover-card-content"
-          className={cn(
-            "absolute top-full z-50 mt-2 block w-72 rounded-lg border border-border bg-popover p-3 text-popover-foreground shadow-lg",
-            align === "end" ? "right-0" : "left-0",
-            className,
-          )}
-        >
-          {children}
-        </span>
-      )}
-    </span>
+    <HoverCardContext.Provider value={{ schedule, state }}>
+      <HoverCardPrimitive.Root
+        data-slot="hover-card"
+        open={open}
+        onOpenChange={setOpen}
+        openDelay={openDelay}
+        closeDelay={closeDelay}
+        {...props}
+      />
+    </HoverCardContext.Provider>
   );
 }
+
+function HoverCardTrigger({
+  onFocus,
+  onBlur,
+  ...props
+}: React.ComponentProps<typeof HoverCardPrimitive.Trigger>) {
+  const ctx = React.useContext(HoverCardContext);
+  return (
+    <HoverCardPrimitive.Trigger
+      data-slot="hover-card-trigger"
+      onFocus={(e) => {
+        onFocus?.(e);
+        if (e.currentTarget.matches(":focus-visible")) ctx?.schedule(true);
+      }}
+      onBlur={(e) => {
+        onBlur?.(e);
+        ctx?.schedule(false);
+      }}
+      {...props}
+    />
+  );
+}
+
+function HoverCardContent<T = unknown>({
+  className,
+  align = "center",
+  sideOffset = 4,
+  children,
+  ...props
+}: Omit<React.ComponentProps<typeof HoverCardPrimitive.Content>, "children"> & {
+  /** Content, or a function of the card's load state. */
+  children?: React.ReactNode | ((state: HoverCardLoadState<T>) => React.ReactNode);
+}) {
+  const state = useHoverCard<T>();
+  return (
+    <HoverCardPrimitive.Portal data-slot="hover-card-portal">
+      <HoverCardPrimitive.Content
+        data-slot="hover-card-content"
+        data-status={state.status}
+        aria-busy={state.status === "loading" || undefined}
+        align={align}
+        sideOffset={sideOffset}
+        className={cn(
+          "z-50 w-64 origin-(--radix-hover-card-content-transform-origin) rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-hidden data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+          className,
+        )}
+        {...props}
+      >
+        {typeof children === "function" ? children(state) : children}
+      </HoverCardPrimitive.Content>
+    </HoverCardPrimitive.Portal>
+  );
+}
+
+export { HoverCard, HoverCardTrigger, HoverCardContent, useHoverCard };

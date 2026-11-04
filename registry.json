@@ -4,21 +4,230 @@
   "homepage": "https://www.syntaqx.com/ui",
   "items": [
     {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "shadcn's Button with a loading state: a spinner over the label, and the button keeps its width.",
+      "dependencies": ["radix-ui", "class-variance-authority", "lucide-react"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["actions"],
+      "meta": {
+        "shadcn": "button",
+        "changes": [
+          "A `loading` prop: the label stays in place but hidden, so the button keeps its width, with a spinner over it and `aria-busy` set.",
+          "A busy button doesn't fade the way a disabled one does."
+        ]
+      }
+    },
+    {
       "name": "copy-button",
       "type": "registry:ui",
       "title": "Copy Button",
-      "description": "A button that is both the copy trigger and its confirmation: the icon swaps to a check for 1.5s.",
+      "description": "The copy button from shadcn's docs as an installable component: built on Button, with a fallback where the Clipboard API is blocked, icon-only or labeled, and its own confirmation for 2s.",
       "dependencies": ["lucide-react"],
-      "files": [{ "path": "registry/syntaqx/ui/copy-button.tsx", "type": "registry:ui" }],
-      "categories": ["feedback"]
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/copy-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["actions"],
+      "registryDependencies": ["https://www.syntaqx.com/r/button.json"]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "shadcn's Label, which dims with a disabled Field.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/label.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"],
+      "meta": {
+        "shadcn": "label",
+        "changes": ["Takes the theme's foreground color, and dims with a disabled Field."]
+      }
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "shadcn's Field, wired: the label, description, error and success messages connect to the control on their own, and invalid, disabled and required reach it from the Field.",
+      "dependencies": ["class-variance-authority", "lucide-react"],
+      "registryDependencies": ["https://www.syntaqx.com/r/label.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/field.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"],
+      "meta": {
+        "shadcn": "field",
+        "changes": [
+          "A Field wires its control: the label points at it, and it's described by whichever description, error or success message is actually rendered.",
+          "`invalid`, `disabled` and `required` on the Field reach the control; `required` adds a marker to the label.",
+          "FieldError carries an icon and renders nothing when empty, so it never leaves a gap; FieldValid is new.",
+          "FieldDescription is a div, so it can hold a list."
+        ]
+      }
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "shadcn's Input with sm, default and lg sizes to match the Button. Inside a Field it wires itself up.",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"],
+      "meta": {
+        "shadcn": "input",
+        "changes": [
+          "Sizes: `sm` (32px), `default` (36px) and `lg` (40px), matching the Button. A numeric `size` still sets the native attribute.",
+          "Inside a Field it picks up its id, description and state."
+        ]
+      }
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "shadcn's Textarea that grows with its content up to a limit, then scrolls. Inside a Field it wires itself up.",
+      "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/textarea.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"],
+      "meta": {
+        "shadcn": "textarea",
+        "changes": ["Field wiring, and it stops growing at `max-h-64`, then scrolls."]
+      }
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "shadcn's InputGroup with the Input's sizes: icons, text and buttons inside one border.",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": [
+        "https://www.syntaqx.com/r/button.json",
+        "https://www.syntaqx.com/r/input.json",
+        "https://www.syntaqx.com/r/textarea.json"
+      ],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/input-group.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"],
+      "meta": {
+        "shadcn": "input-group",
+        "changes": [
+          "The Input's sizes on the group.",
+          "Clicking an addon focuses whichever control the group holds, a textarea included."
+        ]
+      }
+    },
+    {
+      "name": "password-input",
+      "type": "registry:ui",
+      "title": "Password Input",
+      "description": "A password field with a show/hide toggle that keeps the caret in place and a Caps Lock warning.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["https://www.syntaqx.com/r/input-group.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/password-input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"]
+    },
+    {
+      "name": "number-input",
+      "type": "registry:ui",
+      "title": "Number Input",
+      "description": "A whole-number field with the numeric keypad on phones, arrow-key and button steppers, and clamping on blur.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["https://www.syntaqx.com/r/input-group.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/number-input.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"]
+    },
+    {
+      "name": "requirement-list",
+      "type": "registry:ui",
+      "title": "Requirement List",
+      "description": "A field's rules, shown before the first keystroke and ticked off as each is met.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/requirement-list.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"]
+    },
+    {
+      "name": "error-summary",
+      "type": "registry:ui",
+      "title": "Error Summary",
+      "description": "The GOV.UK error summary: on a failed submit it takes focus, counts the problems and links each one to its field.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/error-summary.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"]
     },
     {
       "name": "hover-card",
       "type": "registry:ui",
       "title": "Hover Card",
-      "description": "A hover card that opens on intent (hover or focus, with open and close delays) and fires onOpen once, for loading its content on demand.",
-      "files": [{ "path": "registry/syntaqx/ui/hover-card.tsx", "type": "registry:ui" }],
-      "categories": ["overlays"]
+      "description": "shadcn's HoverCard that can load its content on intent: give it a load function and a cache key, and render the loading, loaded and error states.",
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/hover-card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["overlays"],
+      "dependencies": ["radix-ui"],
+      "meta": {
+        "shadcn": "hover-card",
+        "changes": [
+          "Opens after 120ms and closes after 100ms, tuned for previews, in place of Radix's 700/300.",
+          "Keyboard focus on the trigger opens it too.",
+          "`load` fetches the card's content the first time it opens, and `cacheKey` shares the result across cards for the session. A failed load retries on the next open.",
+          "HoverCardContent's children can be a function of the load state (`idle`, `loading`, `success`, `error`), and `useHoverCard()` reads it anywhere inside.",
+          "`onOpen` fires once, the first time the card opens."
+        ]
+      }
     },
     {
       "name": "timestamp",
@@ -26,8 +235,115 @@
       "title": "Timestamp",
       "description": "An instant in the viewer's timezone with the zone always visible; on intent, the same instant where it happened and in UTC.",
       "registryDependencies": ["https://www.syntaqx.com/r/hover-card.json"],
-      "files": [{ "path": "registry/syntaqx/ui/timestamp.tsx", "type": "registry:ui" }],
-      "categories": ["overlays", "data"]
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/timestamp.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["data"],
+      "dependencies": []
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "shadcn's Separator.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/separator.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["data"]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "shadcn's Skeleton: a placeholder sized to the content that's coming.",
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/skeleton.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["feedback"]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "shadcn's Spinner, for waits with no shape to hold.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/spinner.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["feedback"]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "shadcn's Empty: what goes where there's nothing yet, nothing matching, or nothing left.",
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/empty.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["feedback"],
+      "dependencies": ["class-variance-authority"]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "shadcn's Kbd, for showing the key next to the action it triggers.",
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/kbd.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["data"]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "Button Group",
+      "description": "shadcn's ButtonGroup: related actions in one row, which works as a toolbar.",
+      "registryDependencies": [
+        "https://www.syntaqx.com/r/button.json",
+        "https://www.syntaqx.com/r/separator.json"
+      ],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/button-group.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["actions"],
+      "dependencies": ["class-variance-authority", "radix-ui"]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "shadcn's Dialog: a modal that traps focus while open and hands it back when it closes.",
+      "dependencies": ["lucide-react", "radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/dialog.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["overlays"],
+      "registryDependencies": ["https://www.syntaqx.com/r/button.json"]
     }
   ]
 }

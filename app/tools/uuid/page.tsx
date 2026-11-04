@@ -306,7 +306,12 @@ export default function UuidPage() {
                   : "Output"}
               </span>
               <div className="flex items-center gap-1.5">
-                <CopyButton text={allText} label disabled={displayIds.length === 0} />
+                <CopyButton
+                  value={allText}
+                  disabled={displayIds.length === 0}
+                  variant="outline"
+                  size="sm"
+                />
                 {displayIds.length > 0 && (
                   <button
                     onClick={() => setGenerated([])}
@@ -324,8 +329,9 @@ export default function UuidPage() {
                     <div key={i} className="group flex items-center justify-between gap-2">
                       <code className="text-sm font-mono text-foreground select-all">{id}</code>
                       <CopyButton
-                        text={id}
+                        value={id}
                         className="opacity-0 group-hover:opacity-100 transition"
+                        size="icon-sm"
                       />
                     </div>
                   ))}

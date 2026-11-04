@@ -384,7 +384,9 @@ export default function ImageBase64Page() {
                         {encodeOutput.length.toLocaleString()} chars
                       </span>
                     )}
-                    {encodeOutput && <CopyButton text={encodeOutput} label />}
+                    {encodeOutput && (
+                      <CopyButton value={encodeOutput} variant="outline" size="sm" />
+                    )}
                   </div>
                 </div>
                 <textarea

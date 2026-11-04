@@ -1,78 +1,99 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Copy, Check } from "lucide-react";
+import * as React from "react";
+import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/registry/syntaqx/ui/button";
 
-// The button is the trigger and the confirmation: the icon swaps to a check
-// for 1.5s, then reverts so the user can copy again without thinking about
-// it. Without a visible label, the aria-label follows the state instead.
+// The copy button from shadcn's own docs (apps/v4/components/copy-button.tsx),
+// as an installable component: a Button that copies `value`, falls back to
+// execCommand where the Clipboard API is blocked, and turns into its own
+// confirmation for 2s. At an icon size it's icon-only with a screen reader
+// label; at a text size it reads "Copy", then "Copied".
 
-export interface CopyButtonProps {
-  text: string;
-  label?: boolean;
-  size?: "sm" | "md";
-  className?: string;
-  disabled?: boolean;
+function legacyCopy(value: string) {
+  const area = document.createElement("textarea");
+  area.value = value;
+  area.setAttribute("readonly", "");
+  area.style.position = "fixed";
+  area.style.opacity = "0";
+  area.style.pointerEvents = "none";
+  document.body.appendChild(area);
+  area.focus();
+  area.select();
+  area.setSelectionRange(0, value.length);
+  let copied = false;
+  try {
+    copied = document.execCommand("copy");
+  } catch {
+    copied = false;
+  }
+  document.body.removeChild(area);
+  return copied;
 }
 
-export function CopyButton({
-  text,
-  label = false,
-  size = "md",
+export async function copyToClipboard(value: string) {
+  if (typeof window === "undefined" || !value) return false;
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      return legacyCopy(value);
+    }
+  }
+  return legacyCopy(value);
+}
+
+function CopyButton({
+  value,
   className,
-  disabled = false,
-}: CopyButtonProps) {
-  const [copied, setCopied] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  variant = "ghost",
+  size = "icon",
+  onCopy,
+  ...props
+}: Omit<React.ComponentProps<typeof Button>, "value" | "children"> & {
+  value: string;
+  /** Called after a successful copy. */
+  onCopy?: () => void;
+}) {
+  const [copied, setCopied] = React.useState(false);
+  const iconOnly = typeof size === "string" && size.startsWith("icon");
 
-  useEffect(
-    () => () => {
-      if (timer.current) clearTimeout(timer.current);
-    },
-    [],
-  );
-
-  const copy = () => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => setCopied(false), 1500);
-    });
-  };
-
-  const sizes = {
-    sm: {
-      button: "gap-1 border px-1.5 py-1 text-[10px]",
-      icon: 10,
-    },
-    md: {
-      button: "gap-1.5 border px-2 py-1 text-xs",
-      icon: 12,
-    },
-  };
-
-  const s = sizes[size];
+  React.useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
 
   return (
-    <button
-      type="button"
+    <Button
       data-slot="copy-button"
-      onClick={copy}
-      disabled={disabled}
-      aria-label={label ? undefined : copied ? "Copied" : "Copy"}
-      aria-live="polite"
-      className={cn(
-        "inline-flex cursor-pointer items-center transition-colors disabled:pointer-events-none disabled:opacity-40",
-        s.button,
-        copied
-          ? "border-primary/40 text-primary"
-          : "border-border text-muted-foreground hover:border-primary/30 hover:text-primary",
-        className,
-      )}
+      data-copied={copied || undefined}
+      variant={variant}
+      size={size}
+      className={cn("data-copied:text-primary", className)}
+      onClick={async () => {
+        if (await copyToClipboard(value)) {
+          setCopied(true);
+          onCopy?.();
+        }
+      }}
+      {...props}
     >
-      {copied ? <Check size={s.icon} /> : <Copy size={s.icon} />}
-      {label && (copied ? "Copied" : "Copy")}
-    </button>
+      {copied ? <Check /> : <Copy />}
+      {iconOnly ? (
+        <span className="sr-only">{copied ? "Copied" : "Copy"}</span>
+      ) : copied ? (
+        "Copied"
+      ) : (
+        "Copy"
+      )}
+      <span aria-live="polite" className="sr-only">
+        {copied ? "Copied to clipboard" : ""}
+      </span>
+    </Button>
   );
 }
+
+export { CopyButton };

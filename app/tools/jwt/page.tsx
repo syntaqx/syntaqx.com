@@ -790,7 +790,12 @@ export default function JwtPage() {
                 <div className="border border-border bg-card">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                     <span className="text-xs font-medium text-pink">Header</span>
-                    <CopyButton text={headerJson} label disabled={!headerJson} />
+                    <CopyButton
+                      value={headerJson}
+                      disabled={!headerJson}
+                      variant="outline"
+                      size="sm"
+                    />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
                     {headerJson || (
@@ -802,7 +807,12 @@ export default function JwtPage() {
                 <div className="border border-border bg-card">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                     <span className="text-xs font-medium text-jwt-purple">Payload</span>
-                    <CopyButton text={payloadJson} label disabled={!payloadJson} />
+                    <CopyButton
+                      value={payloadJson}
+                      disabled={!payloadJson}
+                      variant="outline"
+                      size="sm"
+                    />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
                     {payloadJson || (
@@ -1041,7 +1051,7 @@ export default function JwtPage() {
                             <label className="text-[10px] text-muted-foreground">
                               Public Key (for verification)
                             </label>
-                            <CopyButton text={encodePublicKey} />
+                            <CopyButton value={encodePublicKey} size="icon-sm" />
                           </div>
                           <pre className="border border-border bg-background px-2 py-1.5 text-xs font-mono text-muted-foreground break-all whitespace-pre-wrap max-h-40 overflow-auto">
                             {encodePublicKey}
@@ -1066,7 +1076,12 @@ export default function JwtPage() {
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
                   <label className="text-xs text-muted-foreground">Encoded Token</label>
                   <div className="flex items-center gap-1.5">
-                    <CopyButton text={encodedOutput} label disabled={!encodedOutput} />
+                    <CopyButton
+                      value={encodedOutput}
+                      disabled={!encodedOutput}
+                      variant="outline"
+                      size="sm"
+                    />
                     {encodedOutput && (
                       <button
                         onClick={clearEncode}

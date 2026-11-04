@@ -7,6 +7,7 @@ import { docLastModified } from "@/lib/doc-dates";
 import { BOOKS } from "@/lib/books";
 import { glossaryParts, isGlossary } from "@/lib/glossary";
 import { SITE_URL } from "@/lib/constants";
+import { components } from "@/lib/ui";
 
 /** Recursively find all static page routes under app/. */
 function discoverStaticRoutes(dir: string, base = ""): string[] {
@@ -82,5 +83,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       }));
     });
 
-  return [...staticPages, ...docs, ...covers, ...chapters, ...glossaryPages, ...posts];
+  // /ui component pages, one per registry item (a dynamic route too).
+  const uiComponents = components.map((c) => ({ url: `${baseUrl}${c.href}` }));
+
+  return [
+    ...staticPages,
+    ...uiComponents,
+    ...docs,
+    ...covers,
+    ...chapters,
+    ...glossaryPages,
+    ...posts,
+  ];
 }
