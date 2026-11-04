@@ -44,7 +44,7 @@ export function MarkdownMenu({ href }: { href: string }) {
       <Tip label={labels[state]}>
         <Button
           variant="outline"
-          size="icon-xs"
+          size="icon-sm"
           onClick={copy}
           aria-label="Copy as Markdown"
           className={cn("text-muted-foreground", state === "copied" && "text-primary")}
@@ -59,7 +59,7 @@ export function MarkdownMenu({ href }: { href: string }) {
         <MenuTrigger asChild>
           <Button
             variant="outline"
-            size="icon-xs"
+            size="icon-sm"
             aria-label="More Markdown options"
             className="text-muted-foreground"
           >
