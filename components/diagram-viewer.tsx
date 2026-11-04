@@ -185,7 +185,7 @@ export function DiagramViewer() {
                     <Minus />
                   </Button>
                   <ButtonGroupText
-                    className="inst w-14 justify-center px-0 text-muted-foreground tabular-nums"
+                    className="inst min-w-16 justify-center px-2 text-[0.6rem] text-muted-foreground tabular-nums"
                     aria-live="polite"
                   >
                     {fit ? Math.round((width / fit) * 100) : 100}%
