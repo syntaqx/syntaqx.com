@@ -125,7 +125,8 @@
   --popover-foreground: var(--foreground);
   --secondary: var(--card);
   --secondary-foreground: var(--foreground);
-  --muted: var(--card);
+  /* Hover fills, pressed toggles, skeletons: a visible step off the page, as shadcn intends. */
+  --muted: var(--border);
   --accent-foreground: var(--foreground);
   /* Field and outline edges: a step brighter than dividers, so they read as controls. */
   --input: var(--border-hover);
