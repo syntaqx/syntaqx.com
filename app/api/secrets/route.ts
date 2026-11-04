@@ -38,8 +38,8 @@ registry.registerPath({
   operationId: "createSecret",
   summary: "Create a one-time secret",
   description:
-    "Stores a secret behind a one-time link: the first GET of the link returns it and deletes it, and an unread secret expires after `ttl` seconds. It's stored encrypted under a key derived from the link, so only the link can read it. For end-to-end encryption, encrypt before sending and keep the key out of the request, as https://www.syntaqx.com/tools/secrets does: the API stores whatever string you send. A demo for https://www.syntaqx.com/posts/github-actions-secret-inputs, with no SLA: don't send production credentials.",
-  tags: ["Testing"],
+    "Stores a secret behind a one-time link: the first GET of the link returns it and deletes it, and an unread secret expires after `ttl` seconds. It's stored encrypted under a key derived from the link, so only the link can read it. For end-to-end encryption, encrypt before sending and keep the key out of the request, as https://www.syntaqx.com/tools/secrets does: the API stores whatever string you send. It backs that tool and https://www.syntaqx.com/posts/github-actions-secret-inputs. There's no SLA, so don't send production credentials.",
+  tags: ["Utilities"],
   request: {
     body: {
       required: true,
