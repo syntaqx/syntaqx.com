@@ -1,6 +1,6 @@
 +++
 title = "Inventories, Entitlements & Economies"
-nav_title = "Entitlements & Economies"
+nav_title = "Game Economies"
 description = "What an account owns and how it got it: entitlements, item definitions and instances, currency wallets as ledgers, sinks, crafting, trading and clawbacks."
 category = "Gaming Industry"
 order = 1616
