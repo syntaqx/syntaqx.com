@@ -45,7 +45,11 @@ export function getRegistryItem(name: string): RegistryItem {
       return {
         path: f.path,
         target: kind === "ui" ? `components/ui/${file}` : `${kind}/${file}`,
-        source: toAppImports(readFileSync(join(process.cwd(), f.path), "utf8")),
+        // The folder is spelled out, not taken from registry.json, so the
+        // bundler traces only the registry instead of the whole project.
+        source: toAppImports(
+          readFileSync(join(process.cwd(), "registry/syntaqx", kind ?? "", file), "utf8"),
+        ),
       };
     }),
     command: `npx shadcn@latest add ${SITE_URL}/r/${item.name}.json`,
