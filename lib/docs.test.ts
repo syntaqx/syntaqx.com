@@ -53,9 +53,7 @@ function contentRules(all: DocData[]) {
   it.each(each)("%s has complete frontmatter", (_, doc) => {
     expect(doc.title).toBeTruthy();
     // Sidebars are narrow: a wider label is cut off. Set a shorter nav_title.
-    expect(navWidth(doc.navTitle), `nav label "${doc.navTitle}" (px)`).toBeLessThanOrEqual(
-      NAV_MAX,
-    );
+    expect(navWidth(doc.navTitle), `nav label "${doc.navTitle}" (px)`).toBeLessThanOrEqual(NAV_MAX);
     expect(doc.category).not.toBe("General");
     expect(doc.order).not.toBe(99);
     expect(doc.tags.length).toBeGreaterThan(0);
