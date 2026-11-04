@@ -27,7 +27,7 @@ registry.registerPath({
   summary: "Read a one-time secret",
   description:
     "Returns the secret and deletes it, so a second read is a 404. Expired secrets are a 404 too.",
-  tags: ["Testing"],
+  tags: ["Utilities"],
   request: {
     params: z.object({ id: z.string().openapi({ example: "pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M" }) }),
   },
@@ -49,7 +49,7 @@ registry.registerPath({
   summary: "Check a one-time secret without reading it",
   description:
     "200 with `Secret-Expires-At` while the secret is unread, 404 once it's read or expired. Doesn't consume it, so a page can show whether a link still works before anyone reveals it.",
-  tags: ["Testing"],
+  tags: ["Utilities"],
   request: {
     params: z.object({ id: z.string().openapi({ example: "pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M" }) }),
   },
