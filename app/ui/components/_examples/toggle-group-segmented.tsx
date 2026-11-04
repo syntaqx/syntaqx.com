@@ -9,6 +9,7 @@ export default function ToggleGroupSegmented() {
   return (
     <div className="flex flex-col items-start gap-3">
       <ToggleGroup
+        spacing={0}
         type="single"
         variant="outline"
         aria-label="Mode"

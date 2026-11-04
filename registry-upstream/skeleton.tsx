@@ -1,11 +1,11 @@
-// https://ui.shadcn.com/r/styles/new-york-v4/skeleton.json
+// https://ui.shadcn.com/r/styles/radix-vega/skeleton.json
 import { cn } from "cn"
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="skeleton"
-      className={cn("animate-pulse rounded-md bg-accent", className)}
+      className={cn("animate-pulse rounded-md bg-muted", className)}
       {...props}
     />
   )

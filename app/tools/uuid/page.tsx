@@ -258,6 +258,7 @@ export default function UuidPage() {
             {/* Type selector */}
             <div className="px-4 py-3 flex flex-wrap items-center gap-3">
               <ToggleGroup
+                spacing={0}
                 type="single"
                 variant="outline"
                 size="sm"

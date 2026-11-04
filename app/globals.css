@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+/* shadcn's state variants (data-open, data-checked, ...) the registry's
+   radix-vega components style with. */
+@import "shadcn/tailwind.css";
 
 /*
  * `dark:` follows the theme the page is actually in, the same way the
@@ -124,7 +127,8 @@
   --secondary-foreground: var(--foreground);
   --muted: var(--card);
   --accent-foreground: var(--foreground);
-  --input: var(--border);
+  /* Field and outline edges: a step brighter than dividers, so they read as controls. */
+  --input: var(--border-hover);
   --ring: var(--primary);
   /* shadcn's default; the site's own panels and slanted buttons stay square. */
   --radius: 0.625rem;

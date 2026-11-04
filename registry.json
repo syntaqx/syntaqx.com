@@ -19,7 +19,7 @@
       "meta": {
         "shadcn": "button",
         "changes": [
-          "Taken from shadcn's radix-vega style rather than new-york-v4: it presses down a pixel, its hovers are stronger, and a button whose menu is open stays highlighted. Mark an icon with `data-icon=\"inline-start\"` or `\"inline-end\"` to tighten the padding on that side.",
+          "Its press, hover and open states are shadcn's radix-vega style: it presses down a pixel, and a button whose menu is open stays highlighted. Mark an icon with `data-icon=\"inline-start\"` or `\"inline-end\"` to tighten the padding on that side.",
           "A `loading` prop: the label stays in place but hidden, so the button keeps its width, with a spinner over it and `aria-busy` set.",
           "A busy button doesn't fade the way a disabled one does.",
           "A `shape` prop. `default` is shadcn's button, markup and all. `slant` leans the button at `--button-slant` (8.5deg if unset) and stands the label back up. Add a shape as one entry in `shape`; any shape but the default wraps the content in `data-slot=\"button-label\"`."
@@ -81,6 +81,10 @@
           "FieldError carries an icon and renders nothing when empty, so it never leaves a gap; FieldValid is new.",
           "FieldDescription is a div, so it can hold a list."
         ]
+      },
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
       }
     },
     {
@@ -229,6 +233,10 @@
           "HoverCardContent's children can be a function of the load state (`idle`, `loading`, `success`, `error`), and `useHoverCard()` reads it anywhere inside.",
           "`onOpen` fires once, the first time the card opens."
         ]
+      },
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
       }
     },
     {
@@ -258,7 +266,11 @@
           "type": "registry:ui"
         }
       ],
-      "categories": ["data"]
+      "categories": ["data"],
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
+      }
     },
     {
       "name": "skeleton",
@@ -330,7 +342,11 @@
         }
       ],
       "categories": ["actions"],
-      "dependencies": ["class-variance-authority", "radix-ui"]
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
+      }
     },
     {
       "name": "dialog",
@@ -345,7 +361,11 @@
         }
       ],
       "categories": ["overlays"],
-      "registryDependencies": ["https://www.syntaqx.com/r/button.json"]
+      "registryDependencies": ["https://www.syntaqx.com/r/button.json"],
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
+      }
     },
     {
       "name": "paste-button",
@@ -393,6 +413,10 @@
       "meta": {
         "shadcn": "select",
         "changes": ["Inside a Field the trigger picks up its id, description and state."]
+      },
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
       }
     },
     {
@@ -412,6 +436,10 @@
       "meta": {
         "shadcn": "checkbox",
         "changes": ["Inside a Field it picks up its id, description and state."]
+      },
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
       }
     },
     {
@@ -427,7 +455,11 @@
           "type": "registry:ui"
         }
       ],
-      "categories": ["forms"]
+      "categories": ["forms"],
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
+      }
     },
     {
       "name": "file-drop",
@@ -461,6 +493,10 @@
         "changes": [
           "A Tooltip outside a TooltipProvider brings its own, so one tooltip needs no setup; inside a provider it uses that one."
         ]
+      },
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
       }
     },
     {

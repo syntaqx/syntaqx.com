@@ -224,6 +224,7 @@ export default function JsToolPage() {
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
           <ToggleGroup
+            spacing={0}
             type="single"
             variant="outline"
             aria-label="Mode"

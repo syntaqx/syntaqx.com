@@ -170,6 +170,7 @@ export default function Base64Page() {
         <div className="flex-1 min-w-0">
           {/* Mode: decode first */}
           <ToggleGroup
+            spacing={0}
             type="single"
             variant="outline"
             aria-label="Mode"
