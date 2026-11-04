@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Maximize, Minus, Plus, X } from "lucide-react";
-import { Button } from "@/registry/syntaqx/ui/button";
+import { Minus, Plus, X } from "lucide-react";
+import { Tip } from "@/components/tip";
+import { Button, buttonVariants } from "@/registry/syntaqx/ui/button";
 import { ButtonGroup, ButtonGroupText } from "@/registry/syntaqx/ui/button-group";
 
 /** lucide's maximize-2, for the button added to each figure. */
@@ -59,6 +60,11 @@ export function DiagramViewer() {
       button.type = "button";
       button.setAttribute("data-diagram-expand", "");
       button.setAttribute("aria-label", "Expand diagram");
+      button.className = buttonVariants({
+        variant: "outline",
+        size: "icon-sm",
+        className: "text-muted-foreground",
+      });
       button.innerHTML = EXPAND_ICON;
       figure.prepend(button);
     });
@@ -184,12 +190,20 @@ export function DiagramViewer() {
                   >
                     <Minus />
                   </Button>
-                  <ButtonGroupText
-                    className="inst min-w-16 justify-center bg-background px-2 indent-[0.14em] text-[0.6rem] leading-none text-muted-foreground tabular-nums dark:border-input dark:bg-input/30"
-                    aria-live="polite"
-                  >
-                    {fit ? Math.round((width / fit) * 100) : 100}%
-                  </ButtonGroupText>
+                  {/* The readout is also the reset: a click fits the drawing again. */}
+                  <Tip label="Fit to screen">
+                    <ButtonGroupText
+                      asChild
+                      className="inst min-w-16 justify-center bg-background px-2 indent-[0.14em] text-[0.6rem] leading-none text-muted-foreground tabular-nums transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:border-input dark:bg-input/30 dark:hover:bg-input/50"
+                    >
+                      <button type="button" onClick={() => zoomTo(fit)}>
+                        <span aria-live="polite">
+                          {fit ? Math.round((width / fit) * 100) : 100}%
+                        </span>
+                        <span className="sr-only">, fit to screen</span>
+                      </button>
+                    </ButtonGroupText>
+                  </Tip>
                   <Button
                     variant="outline"
                     size="icon-sm"
@@ -197,16 +211,6 @@ export function DiagramViewer() {
                     aria-label="Zoom in"
                   >
                     <Plus />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon-sm"
-                    onClick={() => zoomTo(fit)}
-                    disabled={width === fit}
-                    aria-label="Fit to screen"
-                    title="Fit to screen"
-                  >
-                    <Maximize />
                   </Button>
                 </ButtonGroup>
                 <Dialog.Close asChild>

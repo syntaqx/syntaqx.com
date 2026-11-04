@@ -6,6 +6,7 @@ import { DiagramViewer } from "@/components/diagram-viewer";
 import { Pencil } from "lucide-react";
 import { MarkdownMenu } from "@/components/copy-markdown";
 import { Tip } from "@/components/tip";
+import { Button } from "@/registry/syntaqx/ui/button";
 import { CodeTabsScript } from "@/components/code-tabs";
 import { Pager, type Neighbor } from "@/components/pager";
 import { JsonLd } from "@/components/json-ld";
@@ -89,15 +90,13 @@ export async function DocArticle({
                 </span>
               )}
             </div>
-            <div className="flex items-stretch gap-2">
+            <div className="flex items-center gap-2">
               <Tip label="Edit on GitHub">
-                <a
-                  href={`${REPO}/blob/main/${source}`}
-                  aria-label="Edit on GitHub"
-                  className="flex items-center border border-border bg-card px-2 text-muted-foreground transition-colors hover:text-foreground active:bg-background"
-                >
-                  <Pencil size={12} aria-hidden />
-                </a>
+                <Button asChild variant="outline" size="icon-sm" className="text-muted-foreground">
+                  <a href={`${REPO}/blob/main/${source}`} aria-label="Edit on GitHub">
+                    <Pencil aria-hidden />
+                  </a>
+                </Button>
               </Tip>
               <MarkdownMenu href={`${path}.md`} />
             </div>
