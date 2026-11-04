@@ -86,11 +86,9 @@ class ChaseGame implements Cabinet {
   private sparks: Spark[] = [];
 
   private frightTimer = 0;
-  private combo = 0;
   private modeTimer = 0;
   private scatter = true;
 
-  private score = 0;
   private lives = 3;
   private round = 1;
   private phase: "play" | "caught" | "clear" | "over" = "play";
@@ -160,15 +158,16 @@ class ChaseGame implements Cabinet {
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 
-    // Walls: a soft wide trace under a thin bright one, joined at every
-    // neighbor so corners come out rounded. The maze flashes on a clear.
+    // Walls: a soft wide trace under a thin one, joined at every neighbor so
+    // corners come out rounded. Both stay faint, since the maze is the
+    // backdrop every other game plays over. The maze flashes on a clear.
     const flash = this.phase === "clear" && Math.sin(t * 16) > 0;
     this.wallPath(ctx);
     ctx.strokeStyle = theme.line;
-    ctx.globalAlpha = 0.45;
+    ctx.globalAlpha = 0.25;
     ctx.lineWidth = s * 0.42;
     ctx.stroke();
-    ctx.globalAlpha = 0.9;
+    ctx.globalAlpha = flash ? 0.6 : 0.45;
     ctx.strokeStyle = flash ? theme.primary : theme.strong;
     ctx.lineWidth = clamp(s * 0.07, 1.25, 2);
     ctx.stroke();
@@ -235,21 +234,6 @@ class ChaseGame implements Cabinet {
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
 
-    // Score over the maze's top left, lives over its top right.
-    ctx.font = `500 11px ${theme.mono}`;
-    ctx.textBaseline = "bottom";
-    ctx.textAlign = "left";
-    ctx.fillStyle = theme.muted;
-    ctx.fillText(String(this.score).padStart(5, "0"), this.ox, this.oy - 6);
-    ctx.strokeStyle = theme.primary;
-    ctx.lineWidth = 1.25;
-    ctx.globalAlpha = 0.8;
-    const right = this.ox + this.cols * s;
-    for (let i = 0; i < this.lives - 1; i++) {
-      ctx.beginPath();
-      ctx.arc(right - 5 - i * 14, this.oy - 11, 4, 0, Math.PI * 2);
-      ctx.stroke();
-    }
     ctx.restore();
   }
 
@@ -259,7 +243,7 @@ class ChaseGame implements Cabinet {
   private idealGrid(): [number, number, number] {
     const m = clamp(Math.min(this.w, this.h) * 0.05, 16, 64);
     const aw = this.w - 2 * m;
-    const ah = this.h - 2 * m - 20;
+    const ah = this.h - 2 * m;
     const target = clamp(Math.min(aw, ah) / 17, 18, 34);
     // Mirroring needs the center column on an odd index: cols = 4k + 3.
     let c = clamp(Math.floor(aw / target), 11, 43);
@@ -272,15 +256,14 @@ class ChaseGame implements Cabinet {
   private fit() {
     const m = clamp(Math.min(this.w, this.h) * 0.05, 16, 64);
     const aw = this.w - 2 * m;
-    const ah = this.h - 2 * m - 20;
+    const ah = this.h - 2 * m;
     this.tile = Math.max(2, Math.min(aw / this.cols, ah / this.rows));
     this.ox = (this.w - this.tile * this.cols) / 2;
-    this.oy = (this.h - this.tile * this.rows) / 2 + 10;
+    this.oy = (this.h - this.tile * this.rows) / 2;
   }
 
   private newRound(reset: boolean) {
     if (reset) {
-      this.score = 0;
       this.lives = 3;
       this.round = 1;
     }
@@ -543,15 +526,13 @@ class ChaseGame implements Cabinet {
     const i = c.y * this.cols + c.x;
     if (this.dots[i]) {
       if (this.dots[i] === 2) {
-        this.score += 50;
         this.frightTimer = Math.max(3, FRIGHT - (this.round - 1) * 0.4);
-        this.combo = 0;
         for (const g of this.chasers) {
           if (g.mode !== "roam") continue;
           g.fright = true;
           this.reverse(g);
         }
-      } else this.score += 10;
+      }
       this.dots[i] = 0;
       this.dotsLeft--;
       if (this.dotsLeft <= 0) {
@@ -789,8 +770,6 @@ class ChaseGame implements Cabinet {
       if (g.fright) {
         g.fright = false;
         g.mode = "eaten";
-        this.score += 200 * 2 ** Math.min(this.combo, 3);
-        this.combo++;
         this.burst(this.px(gx), this.py(gy), CHASER_COLORS[g.kind], 14);
         continue;
       }

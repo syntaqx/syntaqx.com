@@ -824,25 +824,8 @@ export const crawl: CabinetFactory = () => {
     ctx.translate(-cam.x, -cam.y);
     const halfW = VW / 2 / cam.z,
       halfH = VH / 2 / cam.z;
-    // Floor: the site's dot grid inside the arena; outside it, a darker void.
-    const grid = 56,
-      dot = Math.max(1.5, 1.6 / cam.z);
-    ctx.fillStyle = theme.line;
-    for (let x = Math.floor((cam.x - halfW) / grid) * grid; x < cam.x + halfW; x += grid)
-      for (let y = Math.floor((cam.y - halfH) / grid) * grid; y < cam.y + halfH; y += grid)
-        if (x * x + y * y < ARENA * ARENA) ctx.fillRect(x - dot / 2, y - dot / 2, dot, dot);
-    ctx.beginPath();
-    ctx.arc(0, 0, ARENA, 0, TAU);
-    ctx.rect(cam.x + halfW, cam.y - halfH, -halfW * 2, halfH * 2);
-    ctx.fillStyle = theme.dark ? "rgba(0,0,0,.45)" : "rgba(0,0,0,.06)";
-    ctx.fill("evenodd");
-    ctx.beginPath();
-    ctx.arc(0, 0, ARENA, 0, TAU);
-    ctx.strokeStyle = theme.amber;
-    ctx.lineWidth = 3 / cam.z;
-    ctx.setLineDash([18 / cam.z, 12 / cam.z]);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    // No floor and no wall: the arena's edge is invisible, so the chains read as
+    // part of the shared scene rather than a window onto their own world.
     // Packets, additively in the dark, so clusters and kill drops bloom where they overlap.
     ctx.globalCompositeOperation = theme.dark ? "lighter" : "source-over";
     for (const f of food) {
@@ -870,6 +853,8 @@ export const crawl: CabinetFactory = () => {
     ctx.restore();
     ctx.font = `11px ${theme.mono}`;
     ctx.fillStyle = theme.muted;
+    // Names stay faint so they don't compete with the page's copy.
+    ctx.globalAlpha = 0.5;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     for (const s of onScreen) {
@@ -879,6 +864,7 @@ export const crawl: CabinetFactory = () => {
       if (sx < -60 || sx > VW + 60 || sy < -20 || sy > VH + 20) continue;
       ctx.fillText(s.name, sx, sy);
     }
+    ctx.globalAlpha = 1;
   };
 
   // Start ------------------------------------------------------------------------------

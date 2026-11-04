@@ -6,13 +6,14 @@ import { Button } from "@/components/button";
 import type { ArcadeTheme, Cabinet } from "./cabinet";
 import { cabinets } from "./index";
 
-const WARM = 2; // seconds each cabinet plays unseen, so the wall opens mid-game
+const WARM = 2; // seconds each cabinet plays unseen, so the page opens mid-game
 const STILL = 3; // seconds played before the one frame shown under reduced motion
 const STEP = 1 / 60;
 const MAX_DT = 1 / 30;
-const GAP = 10; // between screens
-const PAD = 12; // around the wall
-const BAR = 22; // each screen's title bar, so no game's own corner labels collide with it
+// Layers quieter than full strength, by title. The maze and the chains fill
+// the whole stage, so they sit back and let the smaller games and the copy
+// read over them; the rest draw at full strength.
+const LAYER_ALPHA: Record<string, number> = { Chase: 0.7, Crawl: 0.7 };
 
 const readTheme = (): ArcadeTheme => {
   const css = getComputedStyle(document.documentElement);
@@ -48,7 +49,6 @@ const readTheme = (): ArcadeTheme => {
     cyan: "#7edcdc",
     green: "#a9d5a0",
     mono: font("--font-jetbrains", "ui-monospace, monospace"),
-    label: font("--font-michroma", "sans-serif"),
     dark: lum < 0.5,
   };
 };
@@ -58,8 +58,9 @@ const warm = (cabinet: Cabinet, seconds: number) => {
 };
 
 /**
- * The 404: the page's copy over a wall of arcade screens, every cabinet
- * playing itself at once.
+ * The 404: the page's copy over one shared canvas where every cabinet plays
+ * itself at once, each sized to the whole stage and layered back to front in
+ * the order ./index.ts lists them.
  */
 export function Arcade404() {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -75,22 +76,31 @@ export function Arcade404() {
     let width = 1,
       height = 1,
       dpr = 1;
-    const screens = cabinets.map((make) => ({ cabinet: make(), x: 0, y: 0, w: 1, h: 1 }));
+    const layers = cabinets.map((make) => {
+      const cabinet = make();
+      return { cabinet, alpha: LAYER_ALPHA[cabinet.title] ?? 1 };
+    });
 
-    // Three screens across on wide stages, two on narrow ones, as many rows as it takes.
-    const layout = () => {
-      const cols = width >= 960 ? 3 : 2;
-      const rows = Math.ceil(screens.length / cols);
-      const w = (width - PAD * 2 - GAP * (cols - 1)) / cols;
-      const h = (height - PAD * 2 - GAP * (rows - 1)) / rows;
-      screens.forEach((sc, i) => {
-        sc.x = PAD + (i % cols) * (w + GAP);
-        sc.y = PAD + Math.floor(i / cols) * (h + GAP);
-        sc.w = Math.max(1, w);
-        sc.h = Math.max(1, h);
-        sc.cabinet.resize(sc.w, Math.max(1, sc.h - BAR));
+    // Cabinets set globalAlpha freely, so a single outer setting would be
+    // overwritten. Instead every value they set is scaled by the current
+    // layer's opacity, and reads give back what they set.
+    const native = Object.getOwnPropertyDescriptor(
+      CanvasRenderingContext2D.prototype,
+      "globalAlpha",
+    );
+    let layerAlpha = 1;
+    if (native?.get && native.set) {
+      const { get, set } = native;
+      Object.defineProperty(ctx, "globalAlpha", {
+        configurable: true,
+        get() {
+          return (get.call(this) as number) / layerAlpha;
+        },
+        set(v: number) {
+          set.call(this, v * layerAlpha);
+        },
       });
-    };
+    }
 
     const fit = () => {
       const rect = stage.getBoundingClientRect();
@@ -99,7 +109,7 @@ export function Arcade404() {
       height = Math.max(1, rect.height);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
-      layout();
+      for (const { cabinet } of layers) cabinet.resize(width, height);
     };
 
     const paint = (now: number) => {
@@ -108,41 +118,23 @@ export function Arcade404() {
       ctx.globalCompositeOperation = "source-over";
       ctx.fillStyle = theme.bg;
       ctx.fillRect(0, 0, width, height);
-      for (const sc of screens) {
-        // Each screen draws in its own coordinates, clipped to its frame.
+      for (const { cabinet, alpha } of layers) {
+        layerAlpha = alpha;
         ctx.save();
-        ctx.translate(sc.x, sc.y + BAR);
-        ctx.beginPath();
-        ctx.rect(0, 0, sc.w, sc.h - BAR);
-        ctx.clip();
-        sc.cabinet.draw(ctx, theme, now);
-        ctx.restore();
         ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = "source-over";
-        ctx.strokeStyle = theme.strong;
-        ctx.lineWidth = 1;
-        ctx.strokeRect(sc.x + 0.5, sc.y + 0.5, sc.w - 1, sc.h - 1);
-        ctx.beginPath();
-        ctx.moveTo(sc.x, sc.y + BAR + 0.5);
-        ctx.lineTo(sc.x + sc.w, sc.y + BAR + 0.5);
-        ctx.stroke();
-        ctx.font = `9px ${theme.label}`;
-        ctx.letterSpacing = "1.5px";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = theme.muted;
-        ctx.fillText(sc.cabinet.title.toUpperCase(), sc.x + 10, sc.y + BAR / 2 + 0.5);
-        ctx.letterSpacing = "0px";
+        cabinet.draw(ctx, theme, now);
+        ctx.restore();
       }
+      layerAlpha = 1;
     };
 
     const advance = (dt: number) => {
-      for (const sc of screens) sc.cabinet.step(dt);
+      for (const { cabinet } of layers) cabinet.step(dt);
     };
 
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     fit();
-    for (const sc of screens) warm(sc.cabinet, still ? STILL : WARM);
+    for (const { cabinet } of layers) warm(cabinet, still ? STILL : WARM);
 
     let raf = 0,
       last: number | null = null,
@@ -207,6 +199,7 @@ export function Arcade404() {
       scheme.removeEventListener("change", onTheme);
       document.removeEventListener("visibilitychange", schedule);
       window.removeEventListener("resize", onResize);
+      Reflect.deleteProperty(ctx, "globalAlpha");
     };
   }, []);
 
