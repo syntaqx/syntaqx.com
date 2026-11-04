@@ -1,12 +1,8 @@
 import Link from "next/link";
-import type { ReactNode, Ref } from "react";
+import type { ReactNode } from "react";
 
 interface ButtonProps {
-  /** Where it goes. Without one it's a button, for onClick. */
-  href?: string;
-  onClick?: () => void;
-  disabled?: boolean;
-  ref?: Ref<HTMLButtonElement>;
+  href: string;
   variant?: "primary" | "secondary";
   children: ReactNode;
   external?: boolean;
@@ -20,9 +16,6 @@ export function Button({
   children,
   external = false,
   download = false,
-  onClick,
-  disabled,
-  ref,
 }: ButtonProps) {
   // The face is a slanted layer behind the label, so the text stays upright.
   const base =
@@ -34,20 +27,6 @@ export function Button({
   };
 
   const className = `${base} ${variants[variant]}`;
-
-  if (!href) {
-    return (
-      <button
-        ref={ref}
-        type="button"
-        onClick={onClick}
-        disabled={disabled}
-        className={`${className} cursor-pointer disabled:pointer-events-none disabled:opacity-50`}
-      >
-        {children}
-      </button>
-    );
-  }
 
   if (download) {
     return (
