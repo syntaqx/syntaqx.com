@@ -3,15 +3,15 @@
 import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/button";
-import type { ArcadeTheme, Cabinet, CabinetFactory } from "./cabinet";
+import type { ArcadeTheme, Cabinet } from "./cabinet";
 import { cabinets } from "./index";
 
-const ROTATE = 40; // seconds a cabinet plays before the next one
-const FADE = 0.6; // seconds to fade out, and again to fade in
-const WARM = 2; // seconds an incoming cabinet plays unseen, so it opens mid-game
+const WARM = 2; // seconds each cabinet plays unseen, so the wall opens mid-game
 const STILL = 3; // seconds played before the one frame shown under reduced motion
 const STEP = 1 / 60;
 const MAX_DT = 1 / 30;
+const GAP = 10; // between screens
+const PAD = 12; // around the wall
 
 const readTheme = (): ArcadeTheme => {
   const css = getComputedStyle(document.documentElement);
@@ -43,44 +43,43 @@ const readTheme = (): ArcadeTheme => {
   };
 };
 
-const choose = (avoid?: CabinetFactory) => {
-  const pool = cabinets.length > 1 ? cabinets.filter((f) => f !== avoid) : cabinets;
-  return pool[Math.floor(Math.random() * pool.length)];
-};
-
 const warm = (cabinet: Cabinet, seconds: number) => {
   for (let t = 0; t < seconds; t += STEP) cabinet.step(STEP);
 };
 
 /**
- * The 404: the page's copy over an arcade that plays itself. One cabinet is
- * picked per visit, and every forty seconds it fades to another.
+ * The 404: the page's copy over a wall of arcade screens, every cabinet
+ * playing itself at once.
  */
 export function Arcade404() {
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const labelRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const stage = stageRef.current,
-      canvas = canvasRef.current,
-      label = labelRef.current;
+      canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
-    if (!stage || !canvas || !label || !ctx) return;
+    if (!stage || !canvas || !ctx) return;
 
     let theme = readTheme();
     let width = 1,
       height = 1,
       dpr = 1;
-    let factory = choose();
-    let cabinet = factory();
-    // Rotation: "play" counts toward the next swap; "out" fades to the
-    // background and swaps at the bottom; "in" fades the new cabinet up.
-    let phase: "play" | "out" | "in" = "play";
-    let elapsed = 0;
+    const screens = cabinets.map((make) => ({ cabinet: make(), x: 0, y: 0, w: 1, h: 1 }));
 
-    const show = () => {
-      label.textContent = `Now playing ${cabinet.title}`;
+    // Three screens across on wide stages, two on narrow ones, as many rows as it takes.
+    const layout = () => {
+      const cols = width >= 960 ? 3 : 2;
+      const rows = Math.ceil(screens.length / cols);
+      const w = (width - PAD * 2 - GAP * (cols - 1)) / cols;
+      const h = (height - PAD * 2 - GAP * (rows - 1)) / rows;
+      screens.forEach((sc, i) => {
+        sc.x = PAD + (i % cols) * (w + GAP);
+        sc.y = PAD + Math.floor(i / cols) * (h + GAP);
+        sc.w = Math.max(1, w);
+        sc.h = Math.max(1, h);
+        sc.cabinet.resize(sc.w, sc.h);
+      });
     };
 
     const fit = () => {
@@ -90,56 +89,44 @@ export function Arcade404() {
       height = Math.max(1, rect.height);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
-      cabinet.resize(width, height);
+      layout();
     };
 
     const paint = (now: number) => {
-      const fade =
-        phase === "out"
-          ? Math.min(1, elapsed / FADE)
-          : phase === "in"
-            ? Math.max(0, 1 - elapsed / FADE)
-            : 0;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = "source-over";
       ctx.fillStyle = theme.bg;
       ctx.fillRect(0, 0, width, height);
-      cabinet.draw(ctx, theme, now);
-      if (fade > 0) {
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.globalAlpha = fade;
-        ctx.globalCompositeOperation = "source-over";
-        ctx.fillStyle = theme.bg;
-        ctx.fillRect(0, 0, width, height);
+      for (const sc of screens) {
+        // Each screen draws in its own coordinates, clipped to its frame.
+        ctx.save();
+        ctx.translate(sc.x, sc.y);
+        ctx.beginPath();
+        ctx.rect(0, 0, sc.w, sc.h);
+        ctx.clip();
+        sc.cabinet.draw(ctx, theme, now);
+        ctx.restore();
         ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = "source-over";
+        ctx.strokeStyle = theme.strong;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(sc.x + 0.5, sc.y + 0.5, sc.w - 1, sc.h - 1);
+        ctx.font = '9px var(--font-michroma), "Michroma", sans-serif';
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillStyle = theme.muted;
+        ctx.fillText(sc.cabinet.title.toUpperCase(), sc.x + 10, sc.y + 9);
       }
     };
 
     const advance = (dt: number) => {
-      cabinet.step(dt);
-      elapsed += dt;
-      if (phase === "play" && elapsed >= ROTATE && cabinets.length > 1) {
-        phase = "out";
-        elapsed = 0;
-      } else if (phase === "out" && elapsed >= FADE) {
-        factory = choose(factory);
-        cabinet = factory();
-        cabinet.resize(width, height);
-        warm(cabinet, WARM);
-        show();
-        phase = "in";
-        elapsed = 0;
-      } else if (phase === "in" && elapsed >= FADE) {
-        phase = "play";
-        elapsed = 0;
-      }
+      for (const sc of screens) sc.cabinet.step(dt);
     };
 
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     fit();
-    warm(cabinet, still ? STILL : WARM);
-    show();
+    for (const sc of screens) warm(sc.cabinet, still ? STILL : WARM);
 
     let raf = 0,
       last: number | null = null,
@@ -242,11 +229,6 @@ export function Arcade404() {
           </div>
         </div>
       </section>
-      <p
-        ref={labelRef}
-        aria-hidden
-        className="inst pointer-events-none absolute bottom-4 left-4 text-muted-foreground"
-      />
     </div>
   );
 }
