@@ -48,7 +48,7 @@ function SoftConfirm() {
             setDone(true);
           }}
         >
-          <Trash2 /> Really delete
+          <Trash2 data-icon="inline-start" /> Really delete
         </Button>
       </div>
     );
@@ -64,7 +64,7 @@ function SoftConfirm() {
       }}
       className="hover:border-destructive/40 hover:text-destructive"
     >
-      <Trash2 /> Delete
+      <Trash2 data-icon="inline-start" /> Delete
     </Button>
   );
 }
@@ -111,7 +111,7 @@ function TypeToConfirm({ target }: { target: string }) {
           disabled={input !== target}
           onClick={() => setDone(true)}
         >
-          <Trash2 /> Delete
+          <Trash2 data-icon="inline-start" /> Delete
         </Button>
       </div>
     </Field>

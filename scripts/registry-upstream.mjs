@@ -6,11 +6,13 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const STYLE = "new-york-v4";
+// Forks taken from a newer shadcn style than the default above.
+const STYLES = { button: "radix-vega" };
 const registry = JSON.parse(readFileSync("registry.json", "utf8"));
 mkdirSync("registry-upstream", { recursive: true });
 
 for (const { name } of registry.items) {
-  const url = `https://ui.shadcn.com/r/styles/${STYLE}/${name}.json`;
+  const url = `https://ui.shadcn.com/r/styles/${STYLES[name] ?? STYLE}/${name}.json`;
   const res = await fetch(url);
   if (res.status === 404) continue;
   if (!res.ok) throw new Error(`${url}: ${res.status}`);

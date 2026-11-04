@@ -8,7 +8,7 @@ export default function ButtonSizes() {
       <Button size="sm">Small</Button>
       <Button>Default</Button>
       <Button size="lg">
-        Large <ArrowRight />
+        Large <ArrowRight data-icon="inline-end" />
       </Button>
       <Button size="icon" variant="outline" aria-label="Add">
         <Plus />
