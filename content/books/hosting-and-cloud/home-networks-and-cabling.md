@@ -1,6 +1,6 @@
 +++
 title = "Home Networks: Ethernet, Wi-Fi & Cabling"
-nav_title = "Home Networks & Cabling"
+nav_title = "Home Networks"
 description = "Ethernet, cabling, PoE, optics and Wi-Fi standards and limits, home versus data center, the path to a colo cage, and how to build an immaculate home internet."
 category = "Hosting & Cloud Industry"
 order = 2108

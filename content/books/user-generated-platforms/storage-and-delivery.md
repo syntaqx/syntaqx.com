@@ -1,6 +1,6 @@
 +++
 title = "Storage, Dedup & Delivery Economics"
-nav_title = "Storage, Dedup & Delivery"
+nav_title = "Storage & Delivery"
 description = "Exact and perceptual dedup, hot, warm and cold tiers, CDN and egress costs, hotlinking, takedown purges, orphans and link rot, storage caps and geo-withdrawal."
 category = "User-Generated Platforms Industry"
 order = 1815

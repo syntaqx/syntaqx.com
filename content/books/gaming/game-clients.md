@@ -1,5 +1,6 @@
 +++
 title = "Game Clients & Launchers"
+nav_title = "Clients & Launchers"
 description = "What a game's front end and launcher do on PC and console, how Steam, Riot, EA, Epic and others built theirs, what web UI tech costs, and how to build one."
 category = "Gaming Industry"
 order = 1605

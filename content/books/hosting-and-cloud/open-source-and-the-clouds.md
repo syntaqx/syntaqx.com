@@ -1,5 +1,6 @@
 +++
 title = "Open Source & the Clouds"
+nav_title = "Open Source & Clouds"
 description = "The license wars: SSPL, Elastic and OpenSearch, Redis and Valkey, HashiCorp and OpenTofu, NATS, each side's case, and foundations as the settlement."
 category = "Hosting & Cloud Industry"
 order = 2138

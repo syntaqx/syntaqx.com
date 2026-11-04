@@ -1,6 +1,6 @@
 +++
 title = "Functions, Isolates & Edge Compute"
-nav_title = "Functions & Edge Compute"
+nav_title = "Functions & Edge"
 description = "Function platforms from Lambda's 2014 preview to isolates, Wasm and CDN functions: how they run, cold starts, WASI, and limits and pricing compared."
 category = "Hosting & Cloud Industry"
 order = 2122

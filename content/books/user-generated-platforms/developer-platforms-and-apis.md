@@ -1,6 +1,6 @@
 +++
 title = "Developer Platforms, APIs & Data Access"
-nav_title = "Developer Platforms & APIs"
+nav_title = "Developer Platforms"
 description = "Bots and apps, privileged data, rate limits, on-platform app runtimes, API pricing changes, data licensing, researcher access and scraping suits."
 category = "User-Generated Platforms Industry"
 order = 1812

@@ -1,5 +1,6 @@
 +++
 title = "Choosing & Hosting a Store"
+nav_title = "Choosing a Platform"
 description = "Hosted SaaS, self-hosted open source, headless or your own: what running a store involves, PCI scope by SAQ, total cost, lock-in, exports and when to build."
 category = "Commerce Industry"
 order = 2304

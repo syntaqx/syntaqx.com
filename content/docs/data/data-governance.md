@@ -1,5 +1,6 @@
 +++
 title = "Data Governance & Access"
+nav_title = "Data Governance"
 description = "Knowing what data you hold and who can see it: owners, catalogs and lineage, PII tags, masking and row-level security, quality contracts, erasure and cost."
 category = "Data Platforms"
 order = 1279

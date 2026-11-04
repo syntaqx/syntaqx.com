@@ -1,5 +1,6 @@
 +++
 title = "The Health Tech Landscape"
+nav_title = "The Landscape"
 description = "Who sells health software: EHR and practice management markets, patient engagement, revenue cycle, networks, telehealth, and who bought whom."
 category = "Health Tech Industry"
 order = 1902

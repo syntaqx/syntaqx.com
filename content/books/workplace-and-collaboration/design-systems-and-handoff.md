@@ -1,5 +1,6 @@
 +++
 title = "Design Systems & Handoff"
+nav_title = "Design Systems"
 description = "Components, variables and W3C design tokens, library publishing and versions, Dev Mode, Code Connect and MCP, and accessibility annotations from design to code."
 category = "Workplace & Collaboration Industry"
 order = 2039

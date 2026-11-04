@@ -1,5 +1,6 @@
 +++
 title = "Regulators & Enforcement"
+nav_title = "Regulators"
 description = "The DSA, the UK Online Safety Act and Australia's eSafety regime as platforms meet them: tiers, designations, clocks, fines, withdrawals and a ledger."
 category = "User-Generated Platforms Industry"
 order = 1849

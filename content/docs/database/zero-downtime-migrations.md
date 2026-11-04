@@ -1,5 +1,6 @@
 +++
 title = "Zero-Downtime Migrations"
+nav_title = "Online Migrations"
 description = "Changing a live schema without downtime: the expand and contract pattern, safe backfills, lock-aware DDL, and the order to ship code and migrations in."
 category = "Database"
 order = 254

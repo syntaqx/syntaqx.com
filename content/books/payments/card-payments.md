@@ -1,5 +1,6 @@
 +++
 title = "How Card Payments Work"
+nav_title = "How Cards Work"
 description = "The parties behind a card payment, why authorization, capture, clearing, settlement and funding are separate events, and the ISO 8583 underneath it all."
 category = "Payments Industry"
 order = 1401

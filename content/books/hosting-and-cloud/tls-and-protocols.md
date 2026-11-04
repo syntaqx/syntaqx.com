@@ -1,5 +1,6 @@
 +++
 title = "TLS & Protocols at the Edge"
+nav_title = "TLS & Protocols"
 description = "TLS termination at the edge, SNI and custom hostnames, edge-to-origin modes, origin pulls, HTTP/2, HTTP/3 and QUIC, ECH, post-quantum key agreement and pricing."
 category = "Hosting & Cloud Industry"
 order = 2176

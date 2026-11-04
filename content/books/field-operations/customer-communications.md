@@ -1,5 +1,6 @@
 +++
 title = "Customer Communications"
+nav_title = "Communications"
 description = "The messages around every job: confirmations, reminders, on-my-way texts, service reports, review requests, shared numbers and the inbox that answers them."
 category = "Field Operations Industry"
 order = 1528

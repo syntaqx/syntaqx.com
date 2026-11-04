@@ -1,5 +1,6 @@
 +++
 title = "Restaurants & Food Service"
+nav_title = "Restaurants"
 description = "In-house restaurant systems: table and counter service, checks and seats, kitchen display and coursing, tips, service charges and tip pools under the law."
 category = "Commerce Industry"
 order = 2341

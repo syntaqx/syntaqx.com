@@ -1,5 +1,6 @@
 +++
 title = "Legal Documents, DMS & AI"
+nav_title = "Legal Docs & AI"
 description = "Matter-centric document management, email filing, confidentiality in the cloud under Opinion 477, generative AI under Opinion 512, fake citations and privilege."
 category = "Workplace & Collaboration Industry"
 order = 2059

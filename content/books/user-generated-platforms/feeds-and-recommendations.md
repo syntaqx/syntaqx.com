@@ -1,5 +1,6 @@
 +++
 title = "Feeds & Recommendations"
+nav_title = "Feeds & Ranking"
 description = "The social graph, feed types, fan-out, candidate generation and ranking, graph and sequence models, logged-out economics, re-engagement, and feed rules."
 category = "User-Generated Platforms Industry"
 order = 1806

@@ -1,5 +1,6 @@
 +++
 title = "Dependencies & Upgrades"
+nav_title = "Dependencies"
 description = "Lockfiles, SemVer, small continuous upgrades, an LTS runtime policy, vetting new dependencies, and supply-chain safeguards like provenance and pinned CI."
 category = "Development"
 order = 126

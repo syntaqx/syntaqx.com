@@ -43,8 +43,11 @@ const NAV_GLYPHS = [
 ];
 const navWidth = (label: string) =>
   [...label].reduce((sum, ch) => sum + (NAV_GLYPHS[ch.charCodeAt(0) - 32] ?? 13.5), 0);
-/** The label's 180px in the 248px rail, less 4px for kerning. */
-const NAV_MAX = 176;
+/**
+ * The label's 180px in the 248px rail, less the 12px a long rail's scrollbar
+ * takes on Windows, less 4px for kerning.
+ */
+const NAV_MAX = 164;
 
 /** The rules every page of Markdown content follows, in /docs and in /books. */
 function contentRules(all: DocData[]) {

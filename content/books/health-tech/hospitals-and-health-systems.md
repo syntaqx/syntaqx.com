@@ -1,6 +1,6 @@
 +++
 title = "Hospitals & Health Systems"
-nav_title = "Hospitals & Health Systems"
+nav_title = "Hospitals & Systems"
 description = "Inpatient versus ambulatory, ADT and bed management, the Epic-centered enterprise, Conditions of Participation, EMTALA, 340B, price transparency, selling in."
 category = "Health Tech Industry"
 order = 1947

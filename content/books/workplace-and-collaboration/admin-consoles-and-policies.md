@@ -1,5 +1,6 @@
 +++
 title = "Admin Consoles & Policies"
+nav_title = "Admin Consoles"
 description = "Admin role ladders and scoped admins, just-in-time elevation, policy inheritance, conditional access, device and app controls, admin APIs and change history."
 category = "Workplace & Collaboration Industry"
 order = 2011

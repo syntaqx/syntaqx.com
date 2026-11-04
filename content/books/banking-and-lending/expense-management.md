@@ -1,6 +1,6 @@
 +++
 title = "Receipts, Expense Policy & Audit"
-nav_title = "Receipts & Expense Policy"
+nav_title = "Receipts & Expenses"
 description = "After the swipe: receipt capture and matching, OCR and AI policy review, approvals, the IRS substantiation rules, and the expense fraud schemes audits look for."
 category = "Banking & Lending Industry"
 order = 2465
