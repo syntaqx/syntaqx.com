@@ -160,6 +160,12 @@ body {
   font-family: var(--font-sans);
 }
 
+/* A full-bleed section is as wide as the viewport, scrollbar included;
+   clip the sliver that would otherwise scroll sideways. */
+body:has([data-full-bleed]) {
+  overflow-x: clip;
+}
+
 @layer base {
   h1,
   h2,
