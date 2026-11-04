@@ -344,6 +344,136 @@
       ],
       "categories": ["overlays"],
       "registryDependencies": ["https://www.syntaqx.com/r/button.json"]
+    },
+    {
+      "name": "paste-button",
+      "type": "registry:ui",
+      "title": "Paste Button",
+      "description": "The Copy Button's other half: reads the clipboard into a field, icon-only or labeled, and confirms for 2s.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["https://www.syntaqx.com/r/button.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/paste-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["actions"]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "title": "Toggle",
+      "description": "shadcn's Toggle: a button that stays pressed until it's pressed again.",
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/toggle.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["actions"]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "shadcn's Select. Inside a Field it wires itself up, so the FieldLabel names it.",
+      "dependencies": ["lucide-react", "radix-ui"],
+      "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/select.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"],
+      "meta": {
+        "shadcn": "select",
+        "changes": ["Inside a Field the trigger picks up its id, description and state."]
+      }
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "shadcn's Checkbox. Inside a Field it wires itself up, so the FieldLabel beside it names and toggles it.",
+      "dependencies": ["lucide-react", "radix-ui"],
+      "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"],
+      "meta": {
+        "shadcn": "checkbox",
+        "changes": ["Inside a Field it picks up its id, description and state."]
+      }
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "title": "Toggle Group",
+      "description": "shadcn's ToggleGroup: a segmented control for one choice, or a row of toggles for several.",
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "registryDependencies": ["https://www.syntaqx.com/r/toggle.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/toggle-group.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"]
+    },
+    {
+      "name": "file-drop",
+      "type": "registry:ui",
+      "title": "File Drop",
+      "description": "A region that takes a dropped file or one chosen from the picker, through a button or a large dashed target, and marks itself while a file is dragged over.",
+      "registryDependencies": ["https://www.syntaqx.com/r/button.json"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/file-drop.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["forms"]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "shadcn's Tooltip that works without a provider around the app.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["overlays"],
+      "meta": {
+        "shadcn": "tooltip",
+        "changes": [
+          "A Tooltip outside a TooltipProvider brings its own, so one tooltip needs no setup; inside a provider it uses that one."
+        ]
+      }
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "shadcn's Alert: a message that stays on the page, announced when it appears.",
+      "dependencies": ["class-variance-authority"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/alert.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["feedback"]
     }
   ]
 }
