@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Maximize, Minus, Plus, X } from "lucide-react";
-import { cn } from "@/lib/cn";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { ButtonGroup, ButtonGroupText } from "@/registry/syntaqx/ui/button-group";
 
 /** lucide's maximize-2, for the button added to each figure. */
 const EXPAND_ICON =
@@ -154,9 +155,6 @@ export function DiagramViewer() {
     else if (e.key === "0") zoomTo(fit);
   };
 
-  const control =
-    "flex h-8 min-w-8 cursor-pointer items-center justify-center border border-border bg-card px-2 text-muted-foreground transition-colors hover:text-foreground active:bg-background";
-
   return (
     <Dialog.Root open={!!open} onOpenChange={(o) => !o && setOpen(null)}>
       <Dialog.Portal>
@@ -176,39 +174,43 @@ export function DiagramViewer() {
                 Diagram
               </Dialog.Title>
               <Dialog.Description className="sr-only">{open?.label}</Dialog.Description>
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => zoomTo(width / STEP)}
-                  aria-label="Zoom out"
-                  className={control}
-                >
-                  <Minus size={14} />
-                </button>
-                <span
-                  className="inst w-12 text-center text-muted-foreground tabular-nums"
-                  aria-live="polite"
-                >
-                  {fit ? Math.round((width / fit) * 100) : 100}%
-                </span>
-                <button
-                  type="button"
-                  onClick={() => zoomTo(width * STEP)}
-                  aria-label="Zoom in"
-                  className={control}
-                >
-                  <Plus size={14} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => zoomTo(fit)}
-                  aria-label="Fit to screen"
-                  className={control}
-                >
-                  <Maximize size={14} />
-                </button>
-                <Dialog.Close aria-label="Close" className={cn(control, "ml-2")}>
-                  <X size={14} />
+              <div className="flex items-center gap-3">
+                <ButtonGroup aria-label="Zoom">
+                  <Button
+                    variant="outline"
+                    size="icon-sm"
+                    onClick={() => zoomTo(width / STEP)}
+                    aria-label="Zoom out"
+                  >
+                    <Minus />
+                  </Button>
+                  <ButtonGroupText
+                    className="inst w-14 justify-center px-0 text-muted-foreground tabular-nums"
+                    aria-live="polite"
+                  >
+                    {fit ? Math.round((width / fit) * 100) : 100}%
+                  </ButtonGroupText>
+                  <Button
+                    variant="outline"
+                    size="icon-sm"
+                    onClick={() => zoomTo(width * STEP)}
+                    aria-label="Zoom in"
+                  >
+                    <Plus />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon-sm"
+                    onClick={() => zoomTo(fit)}
+                    aria-label="Fit to screen"
+                  >
+                    <Maximize />
+                  </Button>
+                </ButtonGroup>
+                <Dialog.Close asChild>
+                  <Button variant="outline" size="icon-sm" aria-label="Close">
+                    <X />
+                  </Button>
                 </Dialog.Close>
               </div>
             </div>

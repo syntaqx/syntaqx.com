@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { BOOKS, getBook } from "@/lib/books";
 import { cn } from "@/lib/cn";
+import { Button } from "@/registry/syntaqx/ui/button";
 
 type Scope = "all" | "docs" | "books" | "posts";
 const SCOPES: { value: Scope; label: string }[] = [
@@ -395,24 +396,29 @@ function SearchPalette({ onClose }: { onClose: () => void }) {
           className="search-input h-14 min-w-0 flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground sm:h-16 sm:text-lg [&::-webkit-search-cancel-button]:hidden"
         />
         {query && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={() => {
               setQuery("");
               inputRef.current?.focus();
             }}
             aria-label="Clear search"
-            className="cursor-pointer p-1 text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground"
           >
-            <X size={15} />
-          </button>
+            <X />
+          </Button>
         )}
-        <Dialog.Close
-          aria-label="Close search"
-          className="inst cursor-pointer border border-border px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <span className="hidden sm:inline">Esc</span>
-          <X size={14} className="sm:hidden" />
+        <Dialog.Close asChild>
+          <Button
+            variant="outline"
+            size="xs"
+            aria-label="Close search"
+            className="text-muted-foreground"
+          >
+            <span className="hidden sm:inline">Esc</span>
+            <X className="sm:hidden" />
+          </Button>
         </Dialog.Close>
       </div>
 

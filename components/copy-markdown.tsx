@@ -5,6 +5,8 @@ import { ArrowUpRight, Check, ChevronDown, Copy, FileText, X } from "lucide-reac
 import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/menu";
 import { Tip } from "@/components/tip";
 import { cn } from "@/lib/cn";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { ButtonGroup } from "@/registry/syntaqx/ui/button-group";
 
 const labels = {
   idle: "Copy as Markdown",
@@ -38,35 +40,31 @@ export function MarkdownMenu({ href }: { href: string }) {
   };
 
   return (
-    <div className="inst flex h-6.5 shrink-0 items-stretch border border-border bg-card text-muted-foreground">
+    <ButtonGroup className="shrink-0">
       <Tip label={labels[state]}>
-        <button
-          type="button"
+        <Button
+          variant="outline"
+          size="icon-xs"
           onClick={copy}
           aria-label="Copy as Markdown"
-          className={cn(
-            "flex cursor-pointer items-center px-2 transition-colors hover:text-foreground active:bg-background",
-            state === "copied" && "text-primary",
-          )}
+          className={cn("text-muted-foreground", state === "copied" && "text-primary")}
         >
-          {state === "copied" ? (
-            <Check size={12} aria-hidden />
-          ) : state === "failed" ? (
-            <X size={12} aria-hidden />
-          ) : (
-            <Copy size={12} aria-hidden />
-          )}
+          {state === "copied" ? <Check /> : state === "failed" ? <X /> : <Copy />}
           <span aria-live="polite" className="sr-only">
             {state === "idle" ? "" : labels[state]}
           </span>
-        </button>
+        </Button>
       </Tip>
       <Menu>
-        <MenuTrigger
-          aria-label="More Markdown options"
-          className="flex cursor-pointer items-center border-l border-border px-1.5 transition-colors hover:text-foreground active:bg-background data-[state=open]:bg-background data-[state=open]:text-foreground"
-        >
-          <ChevronDown size={13} />
+        <MenuTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon-xs"
+            aria-label="More Markdown options"
+            className="text-muted-foreground"
+          >
+            <ChevronDown />
+          </Button>
         </MenuTrigger>
         <MenuContent className="w-60 text-sm">
           <MenuItem onSelect={copy} className="gap-2.5 py-2">
@@ -90,6 +88,6 @@ export function MarkdownMenu({ href }: { href: string }) {
           </MenuItem>
         </MenuContent>
       </Menu>
-    </div>
+    </ButtonGroup>
   );
 }
