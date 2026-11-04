@@ -43,6 +43,16 @@ import EmptyDemo from "./empty-demo";
 import EmptyFirstRun from "./empty-first-run";
 import EmptyNoResults from "./empty-no-results";
 import EmptyAllDone from "./empty-all-done";
+import PasteButtonDemo from "./paste-button-demo";
+import ToggleDemo from "./toggle-demo";
+import SelectDemo from "./select-demo";
+import CheckboxDemo from "./checkbox-demo";
+import ToggleGroupSegmented from "./toggle-group-segmented";
+import ToggleGroupMultiple from "./toggle-group-multiple";
+import FileDropDemo from "./file-drop-demo";
+import FileDropPanel from "./file-drop-panel";
+import TooltipDemo from "./tooltip-demo";
+import AlertDemo from "./alert-demo";
 
 export interface Example {
   slug: string;
@@ -257,4 +267,55 @@ export const examples: Record<string, Example[]> = {
       Component: EmptyAllDone,
     },
   ],
+  "paste-button": [
+    {
+      slug: "paste-button-demo",
+      title: "Into a field",
+      description:
+        "Paste is a keyboard shortcut people forget exists on a phone. A button beside the field reads the clipboard in one tap; where the browser refuses, Ctrl/Cmd+V still works, so the button stays quiet instead of erroring.",
+      Component: PasteButtonDemo,
+    },
+  ],
+  toggle: [{ slug: "toggle-demo", title: "Variants and sizes", Component: ToggleDemo }],
+  select: [{ slug: "select-demo", title: "Grouped options in a Field", Component: SelectDemo }],
+  checkbox: [
+    { slug: "checkbox-demo", title: "With a label and description", Component: CheckboxDemo },
+  ],
+  "toggle-group": [
+    {
+      slug: "toggle-group-segmented",
+      title: "Segmented control",
+      description:
+        "One choice from a few, all visible. It's one Tab stop with arrow keys inside, and since Radix lets a second click clear a single group, the handler ignores the empty value so a mode always has one.",
+      sources: [APG("radio")],
+      Component: ToggleGroupSegmented,
+    },
+    {
+      slug: "toggle-group-multiple",
+      title: "Several at once",
+      description:
+        'With `type="multiple"` each item toggles on its own and the value is the list that\'s on. A little `spacing` separates them, so they read as a set of switches rather than one control.',
+      Component: ToggleGroupMultiple,
+    },
+  ],
+  "file-drop": [
+    { slug: "file-drop-demo", title: "Drop or click", Component: FileDropDemo },
+    {
+      slug: "file-drop-panel",
+      title: "A field that takes files",
+      description:
+        "The whole box takes a dropped file and the button opens the picker, so the field works for typing, pasting and files alike. Only drags carrying files light it up, so dragging text into the textarea behaves as usual.",
+      Component: FileDropPanel,
+    },
+  ],
+  tooltip: [
+    {
+      slug: "tooltip-demo",
+      title: "More about an option",
+      description:
+        "A tooltip is for a short aside the label can't hold. Its trigger is a real button, so it opens on focus as well as hover; anything the reader needs to succeed belongs in a description instead.",
+      Component: TooltipDemo,
+    },
+  ],
+  alert: [{ slug: "alert-demo", title: "Neutral and destructive", Component: AlertDemo }],
 };

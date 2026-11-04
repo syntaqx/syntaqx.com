@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import {
   Check,
+  CircleAlert,
   Clock,
   ExternalLink,
   Eye,
@@ -15,12 +16,25 @@ import {
   Lock,
   Plus,
   Terminal,
-  Trash2,
 } from "lucide-react";
-import { Checkbox } from "@/components/checkbox";
+import {
+  ClearButton,
+  OptionCheckbox,
+  OptionSelect,
+  PanelFooter,
+  PanelHeader,
+  Stat,
+  codeArea,
+} from "@/components/tool-controls";
+import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
+import { Button } from "@/registry/syntaqx/ui/button";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { PasteButton } from "@/components/paste-button";
-import { Select } from "@/components/select";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { Input } from "@/registry/syntaqx/ui/input";
+import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-group";
+import { Kbd, KbdGroup } from "@/registry/syntaqx/ui/kbd";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import { Skeleton } from "@/registry/syntaqx/ui/skeleton";
 import {
   MAX_PLAINTEXT_BYTES,
   PAGE_PATH,
@@ -122,12 +136,6 @@ function byteSize(bytes: number): string {
 
 // --- Pieces ---------------------------------------------------------------------
 
-const actionClass =
-  "inline-flex items-center justify-center gap-1.5 border border-primary/40 bg-primary/10 px-4 py-2 text-xs text-primary hover:bg-primary/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none";
-
-const quietClass =
-  "inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer";
-
 function Panel({
   title,
   icon,
@@ -141,11 +149,11 @@ function Panel({
 }) {
   return (
     <div className="border border-border bg-card">
-      <div className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-xs text-muted-foreground">
+      <div className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-sm font-medium">
         <span className="text-primary">{icon}</span>
         {title}
       </div>
-      <div className="p-3 ">{children}</div>
+      <div className="p-3">{children}</div>
       {footer && <div className="border-t border-border px-3 py-2">{footer}</div>}
     </div>
   );
@@ -154,20 +162,19 @@ function Panel({
 /** A read-only value with a copy button, selected whole on focus. */
 function CopyField({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">{label}</span>
+    <Field>
+      <div className="flex items-center justify-between gap-2">
+        <FieldLabel>{label}</FieldLabel>
         <CopyButton value={value} variant="outline" size="sm" />
       </div>
-      <input
+      <Input
         readOnly
         value={value}
         onFocus={(e) => e.currentTarget.select()}
         spellCheck={false}
-        aria-label={label}
-        className="w-full border border-border bg-background px-3 py-2 font-mono text-sm text-foreground focus:border-primary/50 focus:outline-none"
+        className="font-mono"
       />
-    </div>
+    </Field>
   );
 }
 
@@ -176,13 +183,13 @@ function Note({
   icon,
   children,
 }: {
-  tone?: "dim" | "pink" | "accent";
+  tone?: "dim" | "accent";
   icon: ReactNode;
   children: ReactNode;
 }) {
-  const tones = { dim: "text-muted-foreground", pink: "text-pink", accent: "text-primary" };
+  const tones = { dim: "text-muted-foreground", accent: "text-primary" };
   return (
-    <p className={cn("flex items-start gap-1.5 text-xs/relaxed ", tones[tone])}>
+    <p className={cn("flex items-start gap-1.5 text-sm/relaxed", tones[tone])}>
       <span className="mt-0.5 shrink-0">{icon}</span>
       <span>{children}</span>
     </p>
@@ -258,10 +265,10 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
                 Works once, or expires in {timeLeft(created.expiresAt, now)} (
                 {clock(created.expiresAt)})
               </span>
-              <button onClick={() => setCreated(null)} className={quietClass}>
-                <Plus size={12} />
+              <Button variant="outline" size="sm" onClick={() => setCreated(null)}>
+                <Plus />
                 New secret
-              </button>
+              </Button>
             </div>
           }
         >
@@ -278,7 +285,7 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
                   like a GitHub Actions <code>workflow_dispatch</code> input. The server encrypted
                   it, so the server could read it.
                 </Note>
-                <pre className="overflow-x-auto border border-border bg-background px-3 py-2 font-mono text-[11px] text-subtle">
+                <pre className="overflow-x-auto border border-border bg-background px-3 py-2 font-mono text-xs text-foreground">
                   {`curl -s ${created.link} | jq -r .secret`}
                 </pre>
               </div>
@@ -297,91 +304,81 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="border border-border bg-card focus-within:border-primary/40 transition-colors">
-        <div className="flex items-center justify-between border-b border-border px-3 py-2">
-          <label htmlFor="secret" className="text-xs text-muted-foreground">
-            Secret
-          </label>
-          <div className="flex items-center gap-1.5">
-            {secret && (
-              <span
-                className={cn(
-                  "text-[10px] tabular-nums",
-                  tooBig ? "text-pink" : "text-muted-foreground",
-                )}
-              >
-                {byteSize(bytes)} / {byteSize(MAX_PLAINTEXT_BYTES)}
-              </span>
-            )}
-            <PasteButton onPaste={setSecret} label />
-            {secret && (
-              <button
-                onClick={() => setSecret("")}
-                aria-label="Clear"
-                className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-              >
-                <Trash2 size={12} />
-              </button>
-            )}
-          </div>
-        </div>
-        <textarea
-          id="secret"
-          value={secret}
-          onChange={(e) => setSecret(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-              e.preventDefault();
-              void create();
-            }
-          }}
-          placeholder="A password, API token, private key, .env line..."
-          rows={7}
-          spellCheck={false}
-          autoComplete="off"
-          autoFocus
-          className="w-full resize-y bg-transparent px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
-        />
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
-          <Select label="Expires" value={ttl} onChange={setTtl} options={TTLS} />
-          {!forScripts && (
-            <Checkbox
-              checked={separateKey}
-              onChange={setSeparateKey}
-              label="Send the key separately"
-              tooltip="Split the link and its key, so you can send them over two channels (say, chat and SMS). Whoever opens the link has to paste the key."
-            />
-          )}
-          <Checkbox
-            checked={forScripts}
-            onChange={setForScripts}
-            label="For scripts"
-            tooltip="Make a plain API link that returns the secret to curl, for a GitHub Actions input or a script. The server does the encryption instead of your browser, so it sees the secret."
+      <Field id="secret" invalid={tooBig}>
+        <InputGroup>
+          <PanelHeader>
+            <FieldLabel>Secret</FieldLabel>
+            <div className="flex items-center gap-1.5">
+              {secret && (
+                <Stat className={cn(tooBig && "text-destructive")}>
+                  {byteSize(bytes)} / {byteSize(MAX_PLAINTEXT_BYTES)}
+                </Stat>
+              )}
+              <PasteButton variant="outline" size="sm" onPaste={setSecret} />
+              {secret && <ClearButton onClick={() => setSecret("")} />}
+            </div>
+          </PanelHeader>
+          <InputGroupTextarea
+            value={secret}
+            onChange={(e) => setSecret(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                void create();
+              }
+            }}
+            placeholder="A password, API token, private key, .env line..."
+            rows={7}
+            spellCheck={false}
+            autoComplete="off"
+            autoFocus
+            className={codeArea}
           />
-        </div>
-      </div>
+          <PanelFooter>
+            <OptionSelect label="Expires" value={ttl} onValueChange={setTtl} options={TTLS} />
+            {!forScripts && (
+              <OptionCheckbox
+                checked={separateKey}
+                onCheckedChange={setSeparateKey}
+                label="Send the key separately"
+                hint="Split the link and its key, so you can send them over two channels (say, chat and SMS). Whoever opens the link has to paste the key."
+              />
+            )}
+            <OptionCheckbox
+              checked={forScripts}
+              onCheckedChange={setForScripts}
+              label="For scripts"
+              hint="Make a plain API link that returns the secret to curl, for a GitHub Actions input or a script. The server does the encryption instead of your browser, so it sees the secret."
+            />
+          </PanelFooter>
+        </InputGroup>
+      </Field>
 
-      {error && <p className="text-xs text-pink">{error}</p>}
+      {error && (
+        <Alert variant="destructive">
+          <CircleAlert />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <button
-          onClick={() => void create()}
-          disabled={!secret || tooBig || busy}
-          className={actionClass}
-        >
-          <Link2 size={14} />
+        <Button onClick={() => void create()} disabled={!secret || tooBig || busy}>
+          <Link2 />
           {busy ? "Encrypting..." : "Create one-time link"}
-        </button>
-        <span className="hidden text-[11px] text-muted-foreground sm:inline">Ctrl / ⌘ + Enter</span>
+        </Button>
+        <KbdGroup className="hidden text-muted-foreground sm:inline-flex">
+          <Kbd>Ctrl</Kbd>/<Kbd>⌘</Kbd>+<Kbd>Enter</Kbd>
+        </KbdGroup>
       </div>
 
-      <div className="mt-4 border-t border-border pt-6">
-        <label htmlFor="open-link" className="mb-1.5 block text-xs text-muted-foreground">
-          Got a link? Open it here
-        </label>
+      <Field
+        id="open-link"
+        invalid={!!pasted && !pastedLink}
+        className="mt-4 border-t border-border pt-6"
+      >
+        <FieldLabel>Got a link? Open it here</FieldLabel>
         <div className="flex gap-2">
-          <input
-            id="open-link"
+          <Input
             value={pasted}
             onChange={(e) => setPasted(e.target.value)}
             onKeyDown={(e) => {
@@ -390,23 +387,17 @@ function CreateSecret({ onOpen }: { onOpen: (link: SecretLink) => void }) {
             placeholder="https://www.syntaqx.com/tools/secrets#..."
             spellCheck={false}
             autoComplete="off"
-            className="min-w-0 flex-1 border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none"
+            className="flex-1 font-mono"
           />
-          <button
-            onClick={() => pastedLink && onOpen(pastedLink)}
-            disabled={!pastedLink}
-            className={actionClass}
-          >
+          <Button onClick={() => pastedLink && onOpen(pastedLink)} disabled={!pastedLink}>
             Open
-          </button>
+          </Button>
         </div>
-        {pasted && !pastedLink && (
-          <p className="mt-1.5 text-xs text-pink">That isn&apos;t a secret link or id.</p>
-        )}
-        <p className="mt-1.5 text-[11px] text-muted-foreground">
+        <FieldError>{pasted && !pastedLink ? "That isn't a secret link or id." : null}</FieldError>
+        <FieldDescription>
           Opening checks the link. Nothing is revealed until you say so.
-        </p>
-      </div>
+        </FieldDescription>
+      </Field>
     </div>
   );
 }
@@ -490,16 +481,16 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
   };
 
   const another = (
-    <button onClick={done} className={quietClass}>
-      <Plus size={12} />
+    <Button variant="outline" size="sm" onClick={done}>
+      <Plus />
       Create your own
-    </button>
+    </Button>
   );
 
   if (state.status === "checking") {
     return (
       <Panel icon={<KeyRound size={12} />} title="Checking the link">
-        <div className="h-16 animate-pulse bg-border/30" />
+        <Skeleton className="h-16" />
       </Panel>
     );
   }
@@ -507,7 +498,7 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
   if (state.status === "gone") {
     return (
       <Panel icon={<Flame size={12} />} title="This secret is gone" footer={another}>
-        <p className="text-sm text-subtle">
+        <p className="text-sm text-foreground">
           It was already viewed, or it expired before anyone opened it. Secrets here work once, so
           if you didn&apos;t open it yourself, let the sender know: someone else may have.
         </p>
@@ -518,7 +509,9 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
   if (state.status === "error") {
     return (
       <Panel icon={<Info size={12} />} title="Something went wrong" footer={another}>
-        <p className="text-sm text-pink">{state.message}</p>
+        <p role="alert" className="text-sm text-destructive">
+          {state.message}
+        </p>
       </Panel>
     );
   }
@@ -534,23 +527,23 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
               <Flame size={12} className="text-primary" />
               Deleted from the server. Copy it now: this page can&apos;t show it again.
             </span>
-            <button onClick={done} className={quietClass}>
-              <Check size={12} />
+            <Button variant="outline" size="sm" onClick={done}>
+              <Check />
               Done
-            </button>
+            </Button>
           </div>
         }
       >
         <div className="mb-1.5 flex items-center justify-end gap-1.5">
-          <button onClick={() => setShown(!shown)} className={quietClass}>
-            {shown ? <EyeOff size={12} /> : <Eye size={12} />}
+          <Button variant="outline" size="sm" onClick={() => setShown(!shown)}>
+            {shown ? <EyeOff /> : <Eye />}
             {shown ? "Hide" : "Show"}
-          </button>
+          </Button>
           <CopyButton value={state.secret} variant="outline" size="sm" />
         </div>
         <pre
           className={cn(
-            "max-h-96 overflow-auto whitespace-pre-wrap break-all border border-border bg-background px-3 py-2 font-mono text-sm text-foreground transition-[filter]",
+            "max-h-96 overflow-auto whitespace-pre-wrap break-all rounded-md border border-border bg-background px-3 py-2 font-mono text-sm text-foreground transition-[filter]",
             shown ? "" : "blur-sm select-none",
           )}
         >
@@ -574,38 +567,31 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
       }
     >
       <div className="flex flex-col gap-4">
-        <p className="text-sm text-subtle">
+        <p className="text-sm text-foreground">
           You can view it once. Revealing it deletes it from the server, so have somewhere ready to
           put it.
         </p>
         {needsKey && (
-          <div>
-            <label htmlFor="key" className="mb-1.5 block text-xs text-muted-foreground">
-              Key (sent to you separately)
-            </label>
-            <input
-              id="key"
+          <Field id="key" invalid={!!key && !keyOk}>
+            <FieldLabel>Key (sent to you separately)</FieldLabel>
+            <Input
               value={key}
               onChange={(e) => setKey(e.target.value)}
               placeholder="43 characters"
               spellCheck={false}
               autoComplete="off"
-              className="w-full border border-border bg-background px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none"
+              className="font-mono"
             />
-            {key && !keyOk && (
-              <p className="mt-1.5 text-xs text-pink">A key is 43 letters, digits, - and _.</p>
-            )}
-          </div>
+            <FieldError>
+              {key && !keyOk ? "A key is 43 letters, digits, - and _." : null}
+            </FieldError>
+          </Field>
         )}
         <div>
-          <button
-            onClick={() => void reveal()}
-            disabled={!keyOk || state.status === "revealing"}
-            className={actionClass}
-          >
-            <Eye size={14} />
+          <Button onClick={() => void reveal()} disabled={!keyOk || state.status === "revealing"}>
+            <Eye />
             {state.status === "revealing" ? "Revealing..." : "Reveal secret"}
-          </button>
+          </Button>
         </div>
       </div>
     </Panel>
@@ -651,18 +637,18 @@ export default function SecretsPage() {
 
         <div className="flex shrink-0 flex-col gap-6 lg:w-80">
           <div className="border border-border bg-card">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-subtle">
+            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-foreground">
               <Info size={12} className="text-primary" />
               How it works
             </h3>
             <ol className="list-decimal space-y-2.5 py-3 pr-4 pl-8 text-[11px] leading-relaxed text-muted-foreground">
               <li>
                 Your browser makes a random 256-bit key and encrypts the secret with{" "}
-                <span className="text-subtle">AES-256-GCM</span>.
+                <span className="text-foreground">AES-256-GCM</span>.
               </li>
               <li>
                 Only the ciphertext is sent. The key goes after the{" "}
-                <span className="text-subtle">#</span> in the link, and browsers never send that
+                <span className="text-foreground">#</span> in the link, and browsers never send that
                 part to a server.
               </li>
               <li>
@@ -675,13 +661,13 @@ export default function SecretsPage() {
               </li>
             </ol>
             <p className="border-t border-border px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
-              <span className="text-subtle">Still a demo:</span> there&apos;s no SLA, so don&apos;t
-              trust it with production credentials. For that, self-host something like{" "}
+              <span className="text-foreground">Still a demo:</span> there&apos;s no SLA, so
+              don&apos;t trust it with production credentials. For that, self-host something like{" "}
               <a
                 href="https://yopass.se/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-subtle hover:text-primary transition-colors"
+                className="text-foreground hover:text-primary transition-colors"
               >
                 Yopass
               </a>
@@ -690,25 +676,25 @@ export default function SecretsPage() {
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-subtle">
+            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-foreground">
               <Terminal size={12} className="text-primary" />
               From a script
             </h3>
             <div className="space-y-2 px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
-              <pre className="overflow-x-auto border border-border bg-background px-2 py-1.5 font-mono text-[10px] text-subtle">
+              <pre className="overflow-x-auto border border-border bg-background px-2 py-1.5 font-mono text-[10px] text-foreground">
                 {`curl -s https://api.syntaqx.com/secrets \\
   -H 'Content-Type: application/json' \\
   -d '{"secret":"hunter2","ttl":600}'`}
               </pre>
               <p>
-                Returns a <span className="text-subtle">url</span> that hands the secret back once.
-                That&apos;s what &quot;For scripts&quot; makes too.
+                Returns a <span className="text-foreground">url</span> that hands the secret back
+                once. That&apos;s what &quot;For scripts&quot; makes too.
               </p>
             </div>
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-subtle">
+            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-foreground">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -716,13 +702,16 @@ export default function SecretsPage() {
               <li>
                 <Link
                   href="/posts/github-actions-secret-inputs"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   GitHub Actions &amp; Secret Inputs
                 </Link>
               </li>
               <li>
-                <Link href="/docs/api" className="text-subtle hover:text-primary transition-colors">
+                <Link
+                  href="/docs/api"
+                  className="text-foreground hover:text-primary transition-colors"
+                >
                   API reference: /secrets
                 </Link>
               </li>
@@ -731,7 +720,7 @@ export default function SecretsPage() {
                   href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   MDN: AES-GCM in the Web Crypto API
                 </a>

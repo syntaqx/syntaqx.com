@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import NextImage from "next/image";
-import { Upload, Download, Trash2, ImageIcon, Archive } from "lucide-react";
+import { Upload, Download, Trash2, ImageIcon, Archive, CircleAlert } from "lucide-react";
 import { zipSync } from "fflate";
+import { Stat } from "@/components/tool-controls";
 import { cn } from "@/lib/cn";
+import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { FileDrop, FileDropArea } from "@/registry/syntaqx/ui/file-drop";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // --- ICO Encoder (client-side) ----------------------------------------------
 
@@ -149,9 +154,6 @@ export default function FaviconPage() {
   const [icoBlob, setIcoBlob] = useState<Blob | null>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const dropRef = useRef<HTMLDivElement>(null);
-  const [dragOver, setDragOver] = useState(false);
 
   const handleFile = useCallback((file: File) => {
     if (!ACCEPTED_TYPES.includes(file.type)) {
@@ -172,20 +174,8 @@ export default function FaviconPage() {
     reader.readAsDataURL(file);
   }, []);
 
-  const onDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setDragOver(false);
-      const file = e.dataTransfer.files[0];
-      if (file) handleFile(file);
-    },
-    [handleFile],
-  );
-
-  const toggleSize = (size: number) => {
-    setSizes((prev) =>
-      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size].sort((a, b) => a - b),
-    );
+  const changeSizes = (next: number[]) => {
+    setSizes([...next].sort((a, b) => a - b));
     // Clear previous output when sizes change
     setPreviews([]);
     setPngData([]);
@@ -265,7 +255,6 @@ export default function FaviconPage() {
     setIcoBlob(null);
     setError(null);
     setSizes([...DEFAULT_SIZES]);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -281,117 +270,81 @@ export default function FaviconPage() {
         {/* Left: main area */}
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           {/* Drop zone */}
-          <div
-            ref={dropRef}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={onDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={cn(
-              "border-2 border-dashed bg-card flex flex-col items-center justify-center py-16 cursor-pointer transition-colors",
-              dragOver
-                ? "border-primary/60 bg-primary/5"
-                : sourceUrl
-                  ? "border-primary/30"
-                  : "border-border hover:border-primary/30",
-            )}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept={ACCEPTED_EXTENSIONS}
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleFile(file);
-              }}
-              className="hidden"
-            />
-            {sourceUrl ? (
-              <div className="flex flex-col items-center gap-3">
-                <NextImage
-                  src={sourceUrl}
-                  alt="Source"
-                  width={128}
-                  height={128}
-                  unoptimized
-                  className="max-h-32 max-w-32 object-contain size-auto "
-                />
-                <span className="text-xs text-muted-foreground">{fileName}</span>
-                <span className="text-[10px] text-muted-foreground">Click or drop to replace</span>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center gap-2">
-                <Upload size={24} className="text-muted-foreground" />
-                <span className="text-sm text-subtle">Drop an image or click to upload</span>
-                <span className="text-[10px] text-muted-foreground">
-                  SVG, PNG, JPG, GIF, WebP, BMP, AVIF, TIFF
-                </span>
-              </div>
-            )}
-          </div>
+          <FileDrop accept={ACCEPTED_EXTENSIONS} onFiles={([file]) => handleFile(file)}>
+            <FileDropArea className={cn("bg-card py-16", sourceUrl && "border-primary/30")}>
+              {sourceUrl ? (
+                <>
+                  <NextImage
+                    src={sourceUrl}
+                    alt="Source"
+                    width={128}
+                    height={128}
+                    unoptimized
+                    className="size-auto max-h-32 max-w-32 object-contain"
+                  />
+                  <span className="text-sm">{fileName}</span>
+                  <span className="text-xs">Click or drop to replace</span>
+                </>
+              ) : (
+                <>
+                  <Upload />
+                  <span className="text-foreground">Drop an image or click to upload</span>
+                  <span className="text-xs">SVG, PNG, JPG, GIF, WebP, BMP, AVIF, TIFF</span>
+                </>
+              )}
+            </FileDropArea>
+          </FileDrop>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-2">
-            <button
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
               onClick={clear}
               disabled={!sourceUrl}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="hover:text-destructive"
             >
-              <Trash2 size={12} />
+              <Trash2 />
               Clear
-            </button>
-            <button
+            </Button>
+            <Button
+              size="sm"
               onClick={generate}
               disabled={!sourceUrl || sizes.length === 0 || generating}
-              className="inline-flex items-center gap-1.5 border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs text-primary hover:bg-primary/20 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
             >
-              <ImageIcon size={12} />
+              <ImageIcon />
               {generating ? "Generating..." : "Generate ICO"}
-            </button>
-            <button
-              onClick={downloadIco}
-              disabled={!icoBlob}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
-            >
-              <Download size={12} />
+            </Button>
+            <Button variant="outline" size="sm" onClick={downloadIco} disabled={!icoBlob}>
+              <Download />
               ICO
-              {icoBlob && (
-                <span className="text-[10px] text-muted-foreground tabular-nums">
-                  ({formatFileSize(icoBlob.size)})
-                </span>
-              )}
-            </button>
-            <button
-              onClick={downloadZip}
-              disabled={!icoBlob}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
-            >
-              <Archive size={12} />
+              {icoBlob && <Stat>({formatFileSize(icoBlob.size)})</Stat>}
+            </Button>
+            <Button variant="outline" size="sm" onClick={downloadZip} disabled={!icoBlob}>
+              <Archive />
               ZIP
-            </button>
+            </Button>
           </div>
 
           {/* Error */}
           {error && (
-            <div className="border border-pink/40 bg-pink/5 px-3 py-2 text-xs text-pink font-mono">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <CircleAlert />
+              <AlertDescription className="font-mono">{error}</AlertDescription>
+            </Alert>
           )}
 
           {/* Previews */}
           {previews.length > 0 && (
-            <div className="border border-border bg-card">
-              <div className="px-3 py-2 border-b border-border">
-                <span className="text-xs font-medium text-foreground">Preview</span>
+            <div className="rounded-md border bg-card">
+              <div className="border-b px-3 py-2">
+                <span className="text-sm font-medium">Preview</span>
               </div>
-              <div className="p-4 flex flex-wrap gap-6">
+              <div className="flex flex-wrap gap-6 p-4">
                 {previews.map((p) => (
                   <div key={p.size} className="flex flex-col items-center gap-2">
                     <div
-                      className="border border-border bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px] flex items-center justify-center"
+                      className="flex items-center justify-center border bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px]"
                       style={{
                         width: Math.max(p.size, 32) + 16,
                         height: Math.max(p.size, 32) + 16,
@@ -403,15 +356,14 @@ export default function FaviconPage() {
                         width={p.size}
                         height={p.size}
                         unoptimized
-                        className="image-rendering-pixelated"
                         style={{
                           imageRendering: p.size <= 32 ? "pixelated" : "auto",
                         }}
                       />
                     </div>
-                    <span className="text-[10px] text-muted-foreground tabular-nums">
+                    <Stat>
                       {p.size}x{p.size}
-                    </span>
+                    </Stat>
                   </div>
                 ))}
               </div>
@@ -423,30 +375,35 @@ export default function FaviconPage() {
         <div className="lg:w-64 shrink-0 flex flex-col gap-6">
           {/* Size toggles */}
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border">
+            <h3
+              id="favicon-sizes"
+              className="text-xs font-medium text-foreground px-4 py-3 border-b border-border"
+            >
               Sizes (px)
             </h3>
-            <div className="px-4 py-3 flex flex-wrap gap-1.5">
-              {DEFAULT_SIZES.map((size) => (
-                <button
-                  key={size}
-                  onClick={() => toggleSize(size)}
-                  className={cn(
-                    "border px-2.5 py-1 text-[11px] font-medium tabular-nums transition-colors cursor-pointer",
-                    sizes.includes(size)
-                      ? "border-primary/40 bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground hover:text-foreground hover:border-border",
-                  )}
-                >
-                  {size}
-                </button>
-              ))}
+            <div className="px-4 py-3">
+              <ToggleGroup
+                type="multiple"
+                variant="outline"
+                size="sm"
+                spacing={1.5}
+                aria-labelledby="favicon-sizes"
+                value={sizes.map(String)}
+                onValueChange={(next) => changeSizes(next.map(Number))}
+                className="flex-wrap"
+              >
+                {DEFAULT_SIZES.map((size) => (
+                  <ToggleGroupItem key={size} value={String(size)} className="tabular-nums">
+                    {size}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
             </div>
           </div>
 
           {/* About */}
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border">
               About
             </h3>
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">

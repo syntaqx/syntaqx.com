@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Checkbox } from "@/components/checkbox";
+import { Checkbox } from "@/registry/syntaqx/ui/checkbox";
+import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
 import { PostList, type PostSummary } from "@/components/post-list";
 import type { TagInfo } from "@/lib/posts";
 
@@ -25,11 +26,15 @@ export function PostsBrowser({ posts, tags, newestSlug }: PostsBrowserProps) {
     <ul className="grid gap-2.5">
       {tags.map((tag) => (
         <li key={tag.slug} className="flex items-center justify-between gap-3">
-          <Checkbox
-            label={tag.label}
-            checked={picked.includes(tag.slug)}
-            onChange={(on) => toggle(tag.slug, on)}
-          />
+          <Field orientation="horizontal" className="w-auto gap-2">
+            <Checkbox
+              checked={picked.includes(tag.slug)}
+              onCheckedChange={(on) => toggle(tag.slug, on === true)}
+            />
+            <FieldLabel className="font-normal text-muted-foreground hover:text-primary">
+              {tag.label}
+            </FieldLabel>
+          </Field>
           <span className="inst text-muted-foreground tabular-nums">{tag.count}</span>
         </li>
       ))}

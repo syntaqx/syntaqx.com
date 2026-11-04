@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import {
-  Trash2,
   Info,
   ExternalLink,
   ShieldCheck,
@@ -13,11 +12,26 @@ import {
   FlaskConical,
   KeyRound,
 } from "lucide-react";
-import { PasteButton } from "@/components/paste-button";
-import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { Select } from "@/components/select";
-import { Segmented } from "@/components/segmented";
+import { ClearButton, PanelHeader, codeArea } from "@/components/tool-controls";
 import { cn } from "@/lib/cn";
+import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
+import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { Input } from "@/registry/syntaqx/ui/input";
+import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-group";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/syntaqx/ui/select";
+import { Textarea } from "@/registry/syntaqx/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // A static sample JWT (HS256, secret: "secret") with readable claims.
 const SAMPLE_TOKEN =
@@ -36,6 +50,15 @@ const DEFAULT_PAYLOAD = JSON.stringify(
   null,
   2,
 );
+
+const ALG_GROUPS = [
+  { label: "HMAC", algs: ["HS256", "HS384", "HS512"] },
+  { label: "RSA", algs: ["RS256", "RS384", "RS512"] },
+  { label: "ECDSA", algs: ["ES256", "ES384", "ES512"] },
+  { label: "RSA-PSS", algs: ["PS256", "PS384", "PS512"] },
+  { label: "EdDSA", algs: ["EdDSA"] },
+  { label: "Unsecured", algs: ["none"] },
+];
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -593,20 +616,20 @@ export default function JwtPage() {
   const verifyStatusLabel = useMemo(() => {
     switch (verifyResult.status) {
       case "valid":
-        return { text: "Signature valid", className: "text-green" };
+        return { text: "Signature valid", className: "text-primary" };
       case "invalid":
-        return { text: "Signature invalid", className: "text-pink" };
+        return { text: "Signature invalid", className: "text-destructive" };
       case "verifying":
         return { text: "Verifying...", className: "text-muted-foreground" };
       case "error":
         return {
           text: (verifyResult as { message: string }).message,
-          className: "text-pink",
+          className: "text-destructive",
         };
       case "unsupported":
         return {
           text: (verifyResult as { message: string }).message,
-          className: "text-yellow",
+          className: "text-muted-foreground",
         };
       default:
         return null;
@@ -625,21 +648,19 @@ export default function JwtPage() {
 
       {/* Mode toggle + Algorithm selector */}
       <div className="mb-5 flex items-center gap-3 flex-wrap">
-        <Segmented
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          aria-label="Mode"
           value={mode}
-          onChange={switchMode}
-          ariaLabel="Mode"
-          options={[
-            { value: "decode", label: "Decoder" },
-            { value: "encode", label: "Encoder" },
-          ]}
-        />
+          onValueChange={(v) => v && switchMode(v as "decode" | "encode")}
+        >
+          <ToggleGroupItem value="decode">Decoder</ToggleGroupItem>
+          <ToggleGroupItem value="encode">Encoder</ToggleGroupItem>
+        </ToggleGroup>
 
         {mode === "encode" && (
           <Select
-            ariaLabel="Algorithm"
-            size="md"
-            className="font-mono"
             value={(() => {
               try {
                 return (JSON.parse(encodeHeader).alg as string) || "HS256";
@@ -647,7 +668,7 @@ export default function JwtPage() {
                 return "HS256";
               }
             })()}
-            onChange={(alg) => {
+            onValueChange={(alg) => {
               try {
                 const h = JSON.parse(encodeHeader);
                 h.alg = alg;
@@ -664,49 +685,23 @@ export default function JwtPage() {
                 setEncodePublicKey("");
               }
             }}
-            options={[
-              {
-                label: "HMAC",
-                options: [
-                  { value: "HS256", label: "HS256" },
-                  { value: "HS384", label: "HS384" },
-                  { value: "HS512", label: "HS512" },
-                ],
-              },
-              {
-                label: "RSA",
-                options: [
-                  { value: "RS256", label: "RS256" },
-                  { value: "RS384", label: "RS384" },
-                  { value: "RS512", label: "RS512" },
-                ],
-              },
-              {
-                label: "ECDSA",
-                options: [
-                  { value: "ES256", label: "ES256" },
-                  { value: "ES384", label: "ES384" },
-                  { value: "ES512", label: "ES512" },
-                ],
-              },
-              {
-                label: "RSA-PSS",
-                options: [
-                  { value: "PS256", label: "PS256" },
-                  { value: "PS384", label: "PS384" },
-                  { value: "PS512", label: "PS512" },
-                ],
-              },
-              {
-                label: "EdDSA",
-                options: [{ value: "EdDSA", label: "EdDSA" }],
-              },
-              {
-                label: "Unsecured",
-                options: [{ value: "none", label: "none" }],
-              },
-            ]}
-          />
+          >
+            <SelectTrigger aria-label="Algorithm" className="font-mono">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {ALG_GROUPS.map((group) => (
+                <SelectGroup key={group.label}>
+                  <SelectLabel>{group.label}</SelectLabel>
+                  {group.algs.map((alg) => (
+                    <SelectItem key={alg} value={alg} className="font-mono">
+                      {alg}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
         )}
       </div>
 
@@ -716,80 +711,76 @@ export default function JwtPage() {
           {mode === "decode" ? (
             <>
               {/* Token input with color-coded overlay */}
-              <div className="border border-border bg-card">
-                <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                  <label className="text-xs text-muted-foreground">Encoded Token</label>
-                  <div className="flex items-center gap-1.5">
-                    {!input && (
-                      <button
-                        onClick={() => {
-                          setInput(SAMPLE_TOKEN);
-                          setSecret(SAMPLE_SECRET);
-                        }}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
-                      >
-                        <FlaskConical size={12} />
-                        Sample
-                      </button>
-                    )}
-                    <PasteButton onPaste={(text) => setInput(text)} label />
-                    {input && (
-                      <button
-                        onClick={clearDecode}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    )}
+              <Field>
+                <InputGroup>
+                  <PanelHeader>
+                    <FieldLabel>Encoded Token</FieldLabel>
+                    <div className="flex items-center gap-1.5">
+                      {!input && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setInput(SAMPLE_TOKEN);
+                            setSecret(SAMPLE_SECRET);
+                          }}
+                        >
+                          <FlaskConical />
+                          Sample
+                        </Button>
+                      )}
+                      <PasteButton variant="outline" size="sm" onPaste={(text) => setInput(text)} />
+                      {input && <ClearButton onClick={clearDecode} />}
+                    </div>
+                  </PanelHeader>
+                  <div className="relative min-h-36 w-full">
+                    {/* Color-coded backdrop */}
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 p-3  text-base font-mono break-all whitespace-pre-wrap pointer-events-none overflow-hidden md:text-sm"
+                    >
+                      {decoded.jwt ? (
+                        <>
+                          <span className="text-pink">{decoded.jwt.parts[0]}</span>
+                          <span className="text-muted-foreground">.</span>
+                          <span className="text-jwt-purple">{decoded.jwt.parts[1]}</span>
+                          <span className="text-muted-foreground">.</span>
+                          <span className="text-jwt-cyan">{decoded.jwt.parts[2]}</span>
+                        </>
+                      ) : (
+                        <span className="text-transparent">{input}</span>
+                      )}
+                    </div>
+                    {/* Transparent textarea on top, so the colors show through */}
+                    <InputGroupTextarea
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      placeholder="Paste a JWT token (eyJhbG...)..."
+                      rows={6}
+                      spellCheck={false}
+                      className={cn(
+                        codeArea,
+                        "relative break-all",
+                        decoded.jwt ? "text-transparent caret-foreground" : "text-foreground",
+                      )}
+                    />
                   </div>
-                </div>
-                <div className="relative min-h-36">
-                  {/* Color-coded backdrop */}
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 px-3 py-2 text-sm font-mono break-all whitespace-pre-wrap pointer-events-none overflow-hidden"
-                  >
-                    {decoded.jwt ? (
-                      <>
-                        <span className="text-pink">{decoded.jwt.parts[0]}</span>
-                        <span className="text-muted-foreground">.</span>
-                        <span className="text-jwt-purple">{decoded.jwt.parts[1]}</span>
-                        <span className="text-muted-foreground">.</span>
-                        <span className="text-jwt-cyan">{decoded.jwt.parts[2]}</span>
-                      </>
-                    ) : (
-                      <span className="text-transparent">{input}</span>
-                    )}
-                  </div>
-                  {/* Transparent textarea on top */}
-                  <textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Paste a JWT token (eyJhbG...)..."
-                    rows={6}
-                    spellCheck={false}
-                    className={cn(
-                      "relative w-full bg-transparent px-3 py-2 text-sm font-mono break-all focus:outline-none resize-y",
-                      decoded.jwt ? "text-transparent caret-foreground" : "text-foreground",
-                      "placeholder:text-muted-foreground/50",
-                    )}
-                  />
-                </div>
-              </div>
+                </InputGroup>
+              </Field>
 
               {/* Error */}
               {decoded.error && (
-                <div className="flex items-center gap-2 text-xs text-pink">
-                  <AlertTriangle size={12} />
-                  {decoded.error}
-                </div>
+                <Alert variant="destructive">
+                  <AlertTriangle />
+                  <AlertDescription>{decoded.error}</AlertDescription>
+                </Alert>
               )}
 
               {/* Decoded sections */}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="border border-border bg-card">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-pink">Header</span>
+                    <span className="text-sm font-medium text-pink">Header</span>
                     <CopyButton
                       value={headerJson}
                       disabled={!headerJson}
@@ -806,7 +797,7 @@ export default function JwtPage() {
 
                 <div className="border border-border bg-card">
                   <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-jwt-purple">Payload</span>
+                    <span className="text-sm font-medium text-jwt-purple">Payload</span>
                     <CopyButton
                       value={payloadJson}
                       disabled={!payloadJson}
@@ -825,15 +816,15 @@ export default function JwtPage() {
               {/* Claims table */}
               <div className="border border-border bg-card">
                 <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-                  <span className="text-xs font-medium text-muted-foreground">Claims</span>
+                  <span className="text-sm font-medium">Claims</span>
                   {expiry && (
                     <span
                       className={cn(
                         "inline-flex items-center gap-1 text-xs",
                         expiry.status === "expired"
-                          ? "text-pink"
+                          ? "text-destructive"
                           : expiry.status === "valid"
-                            ? "text-green"
+                            ? "text-primary"
                             : "text-muted-foreground",
                       )}
                     >
@@ -865,7 +856,7 @@ export default function JwtPage() {
                               <td className="px-3 py-1.5 font-mono text-foreground break-all">
                                 {ts ? (
                                   <span>
-                                    <span className="text-subtle">{ts}</span>
+                                    <span className="text-foreground">{ts}</span>
                                     <span className="text-muted-foreground ml-1.5">
                                       ({String(value)})
                                     </span>
@@ -897,24 +888,24 @@ export default function JwtPage() {
               {/* Signature verification */}
               <div className="border border-border bg-card">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                  <span className="text-xs font-medium text-jwt-cyan flex items-center gap-1.5">
+                  <span className="text-sm font-medium text-jwt-cyan flex items-center gap-1.5">
                     {verifyResult.status === "valid" ? (
-                      <ShieldCheck size={12} className="text-green" />
+                      <ShieldCheck size={14} className="text-primary" />
                     ) : verifyResult.status === "invalid" ? (
-                      <ShieldX size={12} className="text-pink" />
+                      <ShieldX size={14} className="text-destructive" />
                     ) : (
-                      <ShieldQuestion size={12} />
+                      <ShieldQuestion size={14} />
                     )}
                     Signature Verification
                   </span>
                   <div className="flex items-center gap-2">
                     {decoded.jwt && typeof decoded.jwt.header.alg === "string" && (
-                      <span className="text-[10px] text-muted-foreground font-mono">
+                      <span className="text-xs text-muted-foreground font-mono">
                         {decoded.jwt.header.alg}
                       </span>
                     )}
                     {verifyStatusLabel && (
-                      <span className={cn("text-xs", verifyStatusLabel.className)}>
+                      <span className={cn("text-sm", verifyStatusLabel.className)}>
                         {verifyStatusLabel.text}
                       </span>
                     )}
@@ -922,29 +913,30 @@ export default function JwtPage() {
                 </div>
                 <div className="px-4 py-3">
                   {decodeAlgFamily === "hmac" || decodeAlgFamily === "unknown" ? (
-                    <input
-                      type="text"
+                    <Input
+                      aria-label="Secret key"
                       value={secret}
                       onChange={(e) => setSecret(e.target.value)}
                       placeholder={`Secret key for ${decoded.jwt && typeof decoded.jwt.header.alg === "string" ? decoded.jwt.header.alg : "HMAC"} verification...`}
                       spellCheck={false}
                       disabled={!decoded.jwt}
-                      className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 disabled:opacity-40"
+                      className="font-mono"
                     />
                   ) : decodeAlgFamily === "none" ? (
-                    <p className="text-xs text-muted-foreground">
-                      Algorithm is <span className="font-mono text-yellow">none</span> - no
+                    <p className="text-sm text-muted-foreground">
+                      Algorithm is <span className="font-mono text-foreground">none</span> - no
                       verification needed.
                     </p>
                   ) : (
-                    <textarea
+                    <Textarea
+                      aria-label="Public key"
                       value={publicKey}
                       onChange={(e) => setPublicKey(e.target.value)}
                       placeholder={`Paste ${decoded.jwt?.header.alg} public key in PEM format...\n-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----`}
                       rows={6}
                       spellCheck={false}
                       disabled={!decoded.jwt}
-                      className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 disabled:opacity-40 resize-y"
+                      className={codeArea}
                     />
                   )}
                 </div>
@@ -954,38 +946,42 @@ export default function JwtPage() {
             <>
               {/* Encode mode */}
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="border border-border bg-card">
-                  <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-pink">Header</span>
-                  </div>
-                  <textarea
-                    value={encodeHeader}
-                    onChange={(e) => setEncodeHeader(e.target.value)}
-                    rows={5}
-                    spellCheck={false}
-                    className="w-full bg-transparent px-3 py-2 text-xs font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y"
-                  />
-                </div>
+                <Field>
+                  <InputGroup>
+                    <PanelHeader>
+                      <FieldLabel className="text-pink">Header</FieldLabel>
+                    </PanelHeader>
+                    <InputGroupTextarea
+                      value={encodeHeader}
+                      onChange={(e) => setEncodeHeader(e.target.value)}
+                      rows={5}
+                      spellCheck={false}
+                      className={codeArea}
+                    />
+                  </InputGroup>
+                </Field>
 
-                <div className="border border-border bg-card">
-                  <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                    <span className="text-xs font-medium text-jwt-purple">Payload</span>
-                  </div>
-                  <textarea
-                    value={encodePayload}
-                    onChange={(e) => setEncodePayload(e.target.value)}
-                    rows={5}
-                    spellCheck={false}
-                    className="w-full bg-transparent px-3 py-2 text-xs font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y"
-                  />
-                </div>
+                <Field>
+                  <InputGroup>
+                    <PanelHeader>
+                      <FieldLabel className="text-jwt-purple">Payload</FieldLabel>
+                    </PanelHeader>
+                    <InputGroupTextarea
+                      value={encodePayload}
+                      onChange={(e) => setEncodePayload(e.target.value)}
+                      rows={5}
+                      spellCheck={false}
+                      className={codeArea}
+                    />
+                  </InputGroup>
+                </Field>
               </div>
 
               {/* Secret/Key for signing */}
               <div className="border border-border bg-card">
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                  <span className="text-xs font-medium text-jwt-cyan flex items-center gap-1.5">
-                    <ShieldCheck size={12} />
+                  <span className="text-sm font-medium text-jwt-cyan flex items-center gap-1.5">
+                    <ShieldCheck size={14} />
                     {encodeAlgFamily === "hmac" || encodeAlgFamily === "unknown"
                       ? "Signing Secret"
                       : "Signing Key"}
@@ -994,7 +990,9 @@ export default function JwtPage() {
                     {encodeAlgFamily !== "hmac" &&
                       encodeAlgFamily !== "none" &&
                       encodeAlgFamily !== "unknown" && (
-                        <button
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={async () => {
                             try {
                               const header = JSON.parse(encodeHeader);
@@ -1007,53 +1005,50 @@ export default function JwtPage() {
                               );
                             }
                           }}
-                          className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
                         >
-                          <KeyRound size={12} />
+                          <KeyRound />
                           Generate Key Pair
-                        </button>
+                        </Button>
                       )}
                   </div>
                 </div>
                 <div className="px-4 py-3 space-y-3">
                   {encodeAlgFamily === "none" ? (
-                    <p className="text-xs text-muted-foreground">
-                      Algorithm is <span className="font-mono text-yellow">none</span> - no signing
-                      key needed.
+                    <p className="text-sm text-muted-foreground">
+                      Algorithm is <span className="font-mono text-foreground">none</span> - no
+                      signing key needed.
                     </p>
                   ) : encodeAlgFamily === "hmac" || encodeAlgFamily === "unknown" ? (
-                    <input
-                      type="text"
+                    <Input
+                      aria-label="Signing secret"
                       value={encodeSecret}
                       onChange={(e) => setEncodeSecret(e.target.value)}
                       placeholder="Enter a secret key to sign the JWT..."
                       spellCheck={false}
-                      className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50"
+                      className="font-mono"
                     />
                   ) : (
                     <>
-                      <div>
-                        <label className="text-[10px] text-muted-foreground mb-1 block">
-                          Private Key
-                        </label>
-                        <textarea
+                      <Field>
+                        <FieldLabel>Private Key</FieldLabel>
+                        <Textarea
                           value={encodePrivateKey}
                           onChange={(e) => setEncodePrivateKey(e.target.value)}
                           placeholder={`Paste private key (PEM) or click Generate Key Pair...\n-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----`}
                           rows={6}
                           spellCheck={false}
-                          className="w-full border border-border bg-background px-2 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 resize-y"
+                          className={codeArea}
                         />
-                      </div>
+                      </Field>
                       {encodePublicKey && (
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <label className="text-[10px] text-muted-foreground">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-sm font-medium">
                               Public Key (for verification)
-                            </label>
+                            </span>
                             <CopyButton value={encodePublicKey} size="icon-sm" />
                           </div>
-                          <pre className="border border-border bg-background px-2 py-1.5 text-xs font-mono text-muted-foreground break-all whitespace-pre-wrap max-h-40 overflow-auto">
+                          <pre className="rounded-md border px-3 py-2 text-xs font-mono text-muted-foreground break-all whitespace-pre-wrap max-h-40 overflow-auto">
                             {encodePublicKey}
                           </pre>
                         </div>
@@ -1065,16 +1060,16 @@ export default function JwtPage() {
 
               {/* Encode error */}
               {encodeError && (
-                <div className="flex items-center gap-2 text-xs text-pink">
-                  <AlertTriangle size={12} />
-                  {encodeError}
-                </div>
+                <Alert variant="destructive">
+                  <AlertTriangle />
+                  <AlertDescription>{encodeError}</AlertDescription>
+                </Alert>
               )}
 
               {/* Encoded output */}
               <div className="border border-border bg-card">
                 <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                  <label className="text-xs text-muted-foreground">Encoded Token</label>
+                  <span className="text-sm font-medium">Encoded Token</span>
                   <div className="flex items-center gap-1.5">
                     <CopyButton
                       value={encodedOutput}
@@ -1082,14 +1077,7 @@ export default function JwtPage() {
                       variant="outline"
                       size="sm"
                     />
-                    {encodedOutput && (
-                      <button
-                        onClick={clearEncode}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    )}
+                    {encodedOutput && <ClearButton onClick={clearEncode} />}
                   </div>
                 </div>
                 <pre className="px-3 py-2 text-xs font-mono break-all whitespace-pre-wrap overflow-auto min-h-18 max-h-60">
@@ -1107,7 +1095,7 @@ export default function JwtPage() {
                       );
                     })()
                   ) : (
-                    <span className="text-muted-foreground/30">
+                    <span className="text-muted-foreground">
                       Enter a secret to generate a signed JWT...
                     </span>
                   )}
@@ -1120,7 +1108,7 @@ export default function JwtPage() {
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About JWTs
             </h3>
@@ -1141,10 +1129,10 @@ export default function JwtPage() {
               <p>
                 The <span className="text-jwt-purple">payload</span> contains claims - statements
                 about the user and metadata. Standard claims include{" "}
-                <span className="text-subtle">iss</span> (issuer),{" "}
-                <span className="text-subtle">sub</span> (subject),{" "}
-                <span className="text-subtle">exp</span> (expiration), and{" "}
-                <span className="text-subtle">iat</span> (issued at).
+                <span className="text-foreground">iss</span> (issuer),{" "}
+                <span className="text-foreground">sub</span> (subject),{" "}
+                <span className="text-foreground">exp</span> (expiration), and{" "}
+                <span className="text-foreground">iat</span> (issued at).
               </p>
               <p>
                 The <span className="text-jwt-cyan">signature</span> is created by signing the
@@ -1152,15 +1140,15 @@ export default function JwtPage() {
                 authenticity.
               </p>
               <p>
-                JWTs are <span className="text-subtle">not encrypted by default</span>. Anyone can
-                decode the payload. Never store sensitive data in a JWT unless using JWE (JSON Web
-                Encryption).
+                JWTs are <span className="text-foreground">not encrypted by default</span>. Anyone
+                can decode the payload. Never store sensitive data in a JWT unless using JWE (JSON
+                Web Encryption).
               </p>
             </div>
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -1170,7 +1158,7 @@ export default function JwtPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc7519"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 7519 - JSON Web Token (JWT)
                 </a>
@@ -1180,7 +1168,7 @@ export default function JwtPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc7515"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 7515 - JSON Web Signature (JWS)
                 </a>
@@ -1190,7 +1178,7 @@ export default function JwtPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc7518"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 7518 - JSON Web Algorithms (JWA)
                 </a>
@@ -1200,7 +1188,7 @@ export default function JwtPage() {
                   href="https://jwt.io/introduction"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   jwt.io - Introduction to JWTs
                 </a>
@@ -1210,7 +1198,7 @@ export default function JwtPage() {
                   href="https://auth0.com/docs/secure/tokens/json-web-tokens"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   Auth0 - JSON Web Tokens
                 </a>

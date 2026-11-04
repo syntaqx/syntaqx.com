@@ -1,21 +1,27 @@
 "use client";
 
+import { useState, useCallback, useMemo, useEffect, type ClipboardEvent } from "react";
+import { Upload, Info, ExternalLink, CircleAlert } from "lucide-react";
 import {
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  useEffect,
-  type ClipboardEvent,
-  type DragEvent,
-} from "react";
-import { Trash2, Upload, FileText, Info, ExternalLink, Loader2 } from "lucide-react";
-import { PasteButton } from "@/components/paste-button";
+  ClearButton,
+  FileName,
+  OptionCheckbox,
+  OptionSelect,
+  PanelFooter,
+  PanelHeader,
+  Stat,
+  codeArea,
+  dropTarget,
+} from "@/components/tool-controls";
+import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { Checkbox } from "@/components/checkbox";
-import { Select } from "@/components/select";
-import { Segmented } from "@/components/segmented";
-import { cn } from "@/lib/cn";
+import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { FileDrop, FileDropTrigger } from "@/registry/syntaqx/ui/file-drop";
+import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-group";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import { Spinner } from "@/registry/syntaqx/ui/spinner";
+import { Textarea } from "@/registry/syntaqx/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // --- Types ------------------------------------------------------------------
 
@@ -118,8 +124,6 @@ export default function MarkdownToolPage() {
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [dragging, setDragging] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   // Turndown options
   const [headingStyle, setHeadingStyle] = useState<"atx" | "setext">("atx");
@@ -154,13 +158,6 @@ export default function MarkdownToolPage() {
       setError(null);
     };
     reader.readAsText(file);
-  };
-
-  const onDrop = (e: DragEvent) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) loadFile(file);
   };
 
   const clear = () => {
@@ -322,197 +319,166 @@ export default function MarkdownToolPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
-          {/* Segmented control */}
-          <Segmented
+          {/* Mode */}
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            aria-label="Mode"
             value={mode}
-            onChange={switchMode}
-            ariaLabel="Mode"
-            options={[
-              { value: "html-to-md", label: "HTML to Markdown" },
-              { value: "md-to-html", label: "Markdown to HTML" },
-              { value: "preview", label: "Preview" },
-            ]}
-            className="mb-5"
-          />
+            onValueChange={(v) => v && switchMode(v as Mode)}
+            className="mb-5 flex-wrap"
+          >
+            <ToggleGroupItem value="html-to-md">HTML to Markdown</ToggleGroupItem>
+            <ToggleGroupItem value="md-to-html">Markdown to HTML</ToggleGroupItem>
+            <ToggleGroupItem value="preview">Preview</ToggleGroupItem>
+          </ToggleGroup>
 
           <div className="flex flex-col gap-4">
-            {/* Input card */}
-            <div
-              onDrop={onDrop}
-              onDragOver={(e) => {
-                e.preventDefault();
-                setDragging(true);
+            {/* Input */}
+            <FileDrop
+              accept=".md,.markdown,.txt,.html,.htm,text/markdown,text/html,text/plain"
+              onFiles={([file]) => {
+                loadFile(file);
+                if (mode === "html-to-md") {
+                  const reader = new FileReader();
+                  reader.onload = () => convertHtmlToMd(reader.result as string);
+                  reader.readAsText(file);
+                }
               }}
-              onDragLeave={() => setDragging(false)}
-              className={cn(
-                "border bg-card transition-colors",
-                dragging ? "border-primary border-dashed" : "border-border",
-              )}
             >
-              <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                <label className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  {inputLabel}
-                  {fileName && (
-                    <span className="inline-flex items-center gap-1 text-primary">
-                      <FileText size={10} />
-                      {fileName}
-                    </span>
-                  )}
-                </label>
-                <div className="flex items-center gap-1.5">
-                  {input && (
-                    <span className="text-[10px] text-muted-foreground tabular-nums">
-                      {input.length.toLocaleString()} chars &middot; {byteSize(input)}
-                    </span>
-                  )}
-                  <button
-                    onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
-                  >
-                    <Upload size={12} />
-                    File
-                  </button>
-                  <PasteButton
-                    onPaste={(text) => {
-                      setFileName(null);
-                      setInput(text);
-                      if (mode === "html-to-md") convertHtmlToMd(text);
-                    }}
-                    label
-                  />
-                  {input && (
-                    <button
-                      onClick={clear}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  )}
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept=".md,.markdown,.txt,.html,.htm,text/markdown,text/html,text/plain"
-                    className="hidden"
+              <Field>
+                <InputGroup className={dropTarget}>
+                  <PanelHeader>
+                    <FieldLabel className="gap-1.5">
+                      {inputLabel}
+                      {fileName && <FileName name={fileName} />}
+                    </FieldLabel>
+                    <div className="flex items-center gap-1.5">
+                      {input && (
+                        <Stat>
+                          {input.length.toLocaleString()} chars &middot; {byteSize(input)}
+                        </Stat>
+                      )}
+                      <FileDropTrigger>
+                        <Upload />
+                        File
+                      </FileDropTrigger>
+                      <PasteButton
+                        variant="outline"
+                        size="sm"
+                        onPaste={(text) => {
+                          setFileName(null);
+                          setInput(text);
+                          if (mode === "html-to-md") convertHtmlToMd(text);
+                        }}
+                      />
+                      {input && <ClearButton onClick={clear} />}
+                    </div>
+                  </PanelHeader>
+                  <InputGroupTextarea
+                    value={input}
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        loadFile(file);
-                        if (mode === "html-to-md") {
-                          const reader = new FileReader();
-                          reader.onload = () => convertHtmlToMd(reader.result as string);
-                          reader.readAsText(file);
-                        }
-                      }
-                      e.target.value = "";
+                      setFileName(null);
+                      setInput(e.target.value);
+                      if (mode === "html-to-md") convertHtmlToMd(e.target.value);
                     }}
+                    onPaste={handleRichPaste}
+                    placeholder={placeholder}
+                    rows={mode === "preview" ? 8 : 10}
+                    spellCheck={false}
+                    className={codeArea}
                   />
-                </div>
-              </div>
-              <textarea
-                value={input}
-                onChange={(e) => {
-                  setFileName(null);
-                  setInput(e.target.value);
-                  if (mode === "html-to-md") convertHtmlToMd(e.target.value);
-                }}
-                onPaste={handleRichPaste}
-                placeholder={placeholder}
-                rows={mode === "preview" ? 8 : 10}
-                spellCheck={false}
-                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
-              />
 
-              {/* Options (html-to-md only) */}
-              {mode === "html-to-md" && (
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
-                  <Select
-                    label="Headings"
-                    value={headingStyle}
-                    onChange={(v) => setHeadingStyle(v as "atx" | "setext")}
-                    options={[
-                      { value: "atx", label: "# Heading" },
-                      { value: "setext", label: "Setext (===)" },
-                    ]}
-                  />
-                  <Select
-                    label="Bullets"
-                    value={bulletMarker}
-                    onChange={(v) => setBulletMarker(v as "-" | "*" | "+")}
-                    options={[
-                      { value: "-", label: "-" },
-                      { value: "*", label: "*" },
-                      { value: "+", label: "+" },
-                    ]}
-                  />
-                  <Select
-                    label="Code blocks"
-                    value={codeBlockStyle}
-                    onChange={(v) => setCodeBlockStyle(v as "fenced" | "indented")}
-                    options={[
-                      { value: "fenced", label: "Fenced ```" },
-                      { value: "indented", label: "Indented" },
-                    ]}
-                  />
-                  <Checkbox
-                    checked={useGfm}
-                    onChange={() => setUseGfm((v) => !v)}
-                    label="GFM extensions"
-                    tooltip="Tables, strikethrough, and task lists."
-                  />
-                </div>
-              )}
-            </div>
+                  {/* Options (html-to-md only) */}
+                  {mode === "html-to-md" && (
+                    <PanelFooter>
+                      <OptionSelect
+                        label="Headings"
+                        value={headingStyle}
+                        onValueChange={setHeadingStyle}
+                        options={[
+                          { value: "atx", label: "# Heading" },
+                          { value: "setext", label: "Setext (===)" },
+                        ]}
+                      />
+                      <OptionSelect
+                        label="Bullets"
+                        value={bulletMarker}
+                        onValueChange={setBulletMarker}
+                        options={[
+                          { value: "-", label: "-" },
+                          { value: "*", label: "*" },
+                          { value: "+", label: "+" },
+                        ]}
+                      />
+                      <OptionSelect
+                        label="Code blocks"
+                        value={codeBlockStyle}
+                        onValueChange={setCodeBlockStyle}
+                        options={[
+                          { value: "fenced", label: "Fenced ```" },
+                          { value: "indented", label: "Indented" },
+                        ]}
+                      />
+                      <OptionCheckbox
+                        checked={useGfm}
+                        onCheckedChange={setUseGfm}
+                        label="GFM extensions"
+                        hint="Tables, strikethrough, and task lists."
+                      />
+                    </PanelFooter>
+                  )}
+                </InputGroup>
+              </Field>
+            </FileDrop>
 
             {error && (
-              <pre className="text-xs text-pink whitespace-pre-wrap font-mono border border-pink/30 bg-pink/5 px-3 py-2">
-                {error}
-              </pre>
+              <Alert variant="destructive">
+                <CircleAlert />
+                <AlertDescription className="font-mono text-xs whitespace-pre-wrap">
+                  {error}
+                </AlertDescription>
+              </Alert>
             )}
 
             {/* Output */}
             {mode === "preview" ? (
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    Rendered preview
-                    {running && (
-                      <Loader2 size={10} className="animate-spin text-muted-foreground" />
-                    )}
-                  </label>
-                </div>
+              <div className="flex flex-col gap-2">
+                <span className="flex items-center gap-1.5 text-sm font-medium">
+                  Rendered preview
+                  {running && <Spinner className="size-3.5 text-muted-foreground" />}
+                </span>
                 <div
-                  className="border border-border bg-card px-4 py-3 min-h-45 prose prose-invert prose-sm max-w-none"
+                  className="prose prose-sm prose-invert max-w-none min-h-45 rounded-md border px-4 py-3"
                   // We trust this output because we generated it locally from
                   // the user's own Markdown via remark-rehype.
                   dangerouslySetInnerHTML={{ __html: previewHtml }}
                 />
               </div>
             ) : (
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-muted-foreground flex items-center gap-1.5">
+              <Field>
+                <div className="flex items-center justify-between gap-2">
+                  <FieldLabel className="gap-1.5">
                     {mode === "html-to-md" ? "Markdown output" : "HTML output"}
-                    {running && (
-                      <Loader2 size={10} className="animate-spin text-muted-foreground" />
-                    )}
-                  </label>
+                    {running && <Spinner className="size-3.5 text-muted-foreground" />}
+                  </FieldLabel>
                   <div className="flex items-center gap-1.5">
                     {output && (
-                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                      <Stat>
                         {output.length.toLocaleString()} chars &middot; {byteSize(output)}
-                      </span>
+                      </Stat>
                     )}
                     {output && <CopyButton value={output} variant="outline" size="sm" />}
                   </div>
                 </div>
-                <textarea
+                <Textarea
                   value={output}
                   readOnly
                   rows={10}
                   placeholder="Output will appear here..."
-                  className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
+                  className={codeArea}
                 />
-              </div>
+              </Field>
             )}
           </div>
         </div>
@@ -520,46 +486,46 @@ export default function MarkdownToolPage() {
         {/* Right: info & stats */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border">
               Stats
             </h3>
             <dl className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed grid grid-cols-2 gap-y-1.5">
               <dt>Characters</dt>
-              <dd className="text-right tabular-nums text-subtle">
+              <dd className="text-right tabular-nums text-foreground">
                 {stats.chars.toLocaleString()}
               </dd>
               <dt>Words</dt>
-              <dd className="text-right tabular-nums text-subtle">
+              <dd className="text-right tabular-nums text-foreground">
                 {stats.words.toLocaleString()}
               </dd>
               <dt>Headings</dt>
-              <dd className="text-right tabular-nums text-subtle">{stats.headings}</dd>
+              <dd className="text-right tabular-nums text-foreground">{stats.headings}</dd>
               <dt>Reading time</dt>
-              <dd className="text-right tabular-nums text-subtle">{stats.reading}</dd>
+              <dd className="text-right tabular-nums text-foreground">{stats.reading}</dd>
             </dl>
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About
             </h3>
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                <span className="text-subtle">HTML to Markdown</span> accepts raw HTML you type or
-                paste. It also intercepts the <span className="text-subtle">text/html</span> entry
-                from your clipboard, so copying from a styled source (a web page, a Google Doc,
-                Notion) preserves headings, links, lists, and tables. Pasting plain text just keeps
-                it as text.
+                <span className="text-foreground">HTML to Markdown</span> accepts raw HTML you type
+                or paste. It also intercepts the <span className="text-foreground">text/html</span>{" "}
+                entry from your clipboard, so copying from a styled source (a web page, a Google
+                Doc, Notion) preserves headings, links, lists, and tables. Pasting plain text just
+                keeps it as text.
               </p>
               <p>
-                <span className="text-subtle">Markdown to HTML</span> and{" "}
-                <span className="text-subtle">Preview</span> use{" "}
-                <span className="text-subtle">remark</span> with GFM extensions (tables, task lists,
-                strikethrough). Output is passed through{" "}
-                <span className="text-subtle">rehype-sanitize</span> before rendering, so script
-                tags, event handlers, and <span className="text-subtle">javascript:</span> URLs are
-                stripped.
+                <span className="text-foreground">Markdown to HTML</span> and{" "}
+                <span className="text-foreground">Preview</span> use{" "}
+                <span className="text-foreground">remark</span> with GFM extensions (tables, task
+                lists, strikethrough). Output is passed through{" "}
+                <span className="text-foreground">rehype-sanitize</span> before rendering, so script
+                tags, event handlers, and <span className="text-foreground">javascript:</span> URLs
+                are stripped.
               </p>
               <p>
                 If you paste the converted Markdown or HTML into a downstream system that renders it
@@ -570,7 +536,7 @@ export default function MarkdownToolPage() {
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -580,7 +546,7 @@ export default function MarkdownToolPage() {
                   href="https://github.com/mixmark-io/turndown"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   Turndown - HTML to Markdown
                 </a>
@@ -590,7 +556,7 @@ export default function MarkdownToolPage() {
                   href="https://github.com/remarkjs/remark"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   remark - Markdown processor
                 </a>
@@ -600,7 +566,7 @@ export default function MarkdownToolPage() {
                   href="https://github.github.com/gfm/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   GitHub Flavored Markdown spec
                 </a>

@@ -2,13 +2,17 @@
 
 import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { Info, ExternalLink, RefreshCw, Trash2, Plus, Minus } from "lucide-react";
-import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { PasteButton } from "@/components/paste-button";
-import { Checkbox } from "@/components/checkbox";
-import { uuidv7 } from "@/lib/uuid";
-import { Segmented } from "@/components/segmented";
+import { Info, ExternalLink, RefreshCw } from "lucide-react";
+import { ClearButton, OptionCheckbox, Stat } from "@/components/tool-controls";
 import { cn } from "@/lib/cn";
+import { uuidv7 } from "@/lib/uuid";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
+import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { Input } from "@/registry/syntaqx/ui/input";
+import { NumberInput } from "@/registry/syntaqx/ui/number-input";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // --- UUID / ULID generators ------------------------------------------------
 
@@ -182,16 +186,20 @@ function parseId(input: string): UuidInfo {
 
 // --- Component --------------------------------------------------------------
 
+const MAX_COUNT = 500;
+
 export default function UuidPage() {
   const [idType, setIdType] = useState<IdType>("uuidv7");
-  const [count, setCount] = useState(1);
+  // null while the field is empty mid-edit; Generate treats that as 1.
+  const [count, setCount] = useState<number | null>(1);
   const [generated, setGenerated] = useState<string[]>([]);
   const [inspectInput, setInspectInput] = useState("");
   const [uppercase, setUppercase] = useState(false);
   const [noDashes, setNoDashes] = useState(false);
 
   const handleGenerate = useCallback(() => {
-    const ids = Array.from({ length: count }, () => generate(idType));
+    const n = Math.min(MAX_COUNT, Math.max(1, count ?? 1));
+    const ids = Array.from({ length: n }, () => generate(idType));
     setGenerated(ids);
   }, [idType, count]);
 
@@ -227,71 +235,61 @@ export default function UuidPage() {
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           {/* Generator controls */}
           <div className="border border-border bg-card">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <span className="text-xs font-medium text-muted-foreground">Generate</span>
+            <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-border">
+              <span className="text-sm font-medium">Generate</span>
               <div className="flex items-center gap-2">
-                {/* Count controls */}
-                <div className="inline-flex items-center border border-border bg-background">
-                  <button
-                    onClick={() => setCount((c) => Math.max(1, c - 1))}
-                    disabled={count <= 1}
-                    className="px-1.5 py-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
-                  >
-                    <Minus size={12} />
-                  </button>
-                  <input
-                    type="number"
-                    min={1}
-                    max={500}
-                    value={count}
-                    onChange={(e) => {
-                      const v = parseInt(e.target.value, 10);
-                      if (!isNaN(v) && v >= 1 && v <= 500) setCount(v);
-                    }}
-                    className="w-12 text-center bg-transparent text-xs font-mono text-foreground border-x border-border py-1 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                  <span className="text-[10px] text-muted-foreground/50 px-1">/ 500</span>
-                  <button
-                    onClick={() => setCount((c) => Math.min(500, c + 1))}
-                    disabled={count >= 500}
-                    className="px-1.5 py-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-default"
-                  >
-                    <Plus size={12} />
-                  </button>
-                </div>
-                {/* Generate button */}
-                <button
-                  onClick={handleGenerate}
-                  className="inline-flex items-center gap-1.5 bg-primary text-background px-3 py-1.5 text-xs font-medium hover:opacity-90 transition-opacity cursor-pointer"
-                >
-                  <RefreshCw size={12} />
+                <NumberInput
+                  size="sm"
+                  aria-label="How many"
+                  min={1}
+                  max={MAX_COUNT}
+                  value={count}
+                  onValueChange={setCount}
+                  className="w-32 font-mono"
+                />
+                <Stat>max {MAX_COUNT}</Stat>
+                <Button size="sm" onClick={handleGenerate}>
+                  <RefreshCw />
                   Generate
-                </button>
+                </Button>
               </div>
             </div>
 
             {/* Type selector */}
             <div className="px-4 py-3 flex flex-wrap items-center gap-3">
-              <Segmented
+              <ToggleGroup
+                type="single"
+                variant="outline"
+                size="sm"
+                aria-label="ID type"
                 value={idType}
-                onChange={(type) => {
-                  setIdType(type);
+                onValueChange={(type) => {
+                  if (!type) return;
+                  setIdType(type as IdType);
                   setGenerated([]);
                 }}
-                ariaLabel="ID type"
-                size="sm"
-                options={(Object.keys(ID_LABELS) as IdType[]).map((type) => ({
-                  value: type,
-                  label: ID_LABELS[type],
-                }))}
-                className="bg-background/50"
-              />
+                className="flex-wrap"
+              >
+                {(Object.keys(ID_LABELS) as IdType[]).map((type) => (
+                  <ToggleGroupItem key={type} value={type}>
+                    {ID_LABELS[type]}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
 
               {/* Format options */}
               <div className="flex items-center gap-3">
-                <Checkbox checked={uppercase} onChange={setUppercase} label="Uppercase" />
+                <OptionCheckbox
+                  checked={uppercase}
+                  onCheckedChange={setUppercase}
+                  label="Uppercase"
+                />
                 {idType !== "ulid" && (
-                  <Checkbox checked={noDashes} onChange={setNoDashes} label="No dashes" />
+                  <OptionCheckbox
+                    checked={noDashes}
+                    onCheckedChange={setNoDashes}
+                    label="No dashes"
+                  />
                 )}
               </div>
             </div>
@@ -300,7 +298,7 @@ export default function UuidPage() {
           {/* Output */}
           <div className="border border-border bg-card">
             <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              <span className="text-xs text-muted-foreground">
+              <span className="text-sm font-medium">
                 {displayIds.length > 0
                   ? `${displayIds.length} ${displayIds.length === 1 ? "ID" : "IDs"} generated`
                   : "Output"}
@@ -312,14 +310,7 @@ export default function UuidPage() {
                   variant="outline"
                   size="sm"
                 />
-                {displayIds.length > 0 && (
-                  <button
-                    onClick={() => setGenerated([])}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                  >
-                    <Trash2 size={12} />
-                  </button>
-                )}
+                {displayIds.length > 0 && <ClearButton onClick={() => setGenerated([])} />}
               </div>
             </div>
             <div className="px-3 py-2 min-h-24 max-h-80 overflow-y-auto">
@@ -330,14 +321,14 @@ export default function UuidPage() {
                       <code className="text-sm font-mono text-foreground select-all">{id}</code>
                       <CopyButton
                         value={id}
-                        className="opacity-0 group-hover:opacity-100 transition"
+                        className="opacity-0 transition group-hover:opacity-100 focus-visible:opacity-100"
                         size="icon-sm"
                       />
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground/30 py-4 text-center">
+                <p className="text-sm text-muted-foreground py-4 text-center">
                   Click Generate to create {ID_LABELS[idType]} identifiers
                 </p>
               )}
@@ -346,81 +337,84 @@ export default function UuidPage() {
 
           {/* Inspector */}
           <div className="border border-border bg-card">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <span className="text-xs font-medium text-muted-foreground">Inspect / Validate</span>
-              <div className="flex items-center gap-1.5">
-                <PasteButton onPaste={(text) => setInspectInput(text)} label />
-                {inspectInput && (
-                  <button
-                    onClick={() => setInspectInput("")}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                  >
-                    <Trash2 size={12} />
-                  </button>
-                )}
+            <Field className="gap-0">
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
+                <FieldLabel>Inspect / Validate</FieldLabel>
+                <div className="flex items-center gap-1.5">
+                  <PasteButton
+                    variant="outline"
+                    size="sm"
+                    onPaste={(text) => setInspectInput(text)}
+                  />
+                  {inspectInput && <ClearButton onClick={() => setInspectInput("")} />}
+                </div>
               </div>
-            </div>
-            <div className="px-4 py-3 space-y-3">
-              <input
-                type="text"
-                value={inspectInput}
-                onChange={(e) => setInspectInput(e.target.value)}
-                placeholder="Paste a UUID or ULID to inspect..."
-                spellCheck={false}
-                className="w-full border border-border bg-background px-2 py-1.5 text-sm font-mono text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50"
-              />
+              <div className="px-4 py-3 space-y-3">
+                <Input
+                  value={inspectInput}
+                  onChange={(e) => setInspectInput(e.target.value)}
+                  placeholder="Paste a UUID or ULID to inspect..."
+                  spellCheck={false}
+                  className="font-mono"
+                />
 
-              {inspectResult && (
-                <div className="border border-border bg-background px-3 py-2 space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={cn(
-                        "text-xs font-medium",
-                        inspectResult.valid ? "text-green" : "text-pink",
-                      )}
-                    >
-                      {inspectResult.valid ? "✓ Valid" : "✗ Invalid"}
-                    </span>
-                    {inspectResult.valid && (
-                      <span className="text-xs text-muted-foreground font-mono">
-                        {inspectResult.type === "uuid" ? `UUID v${inspectResult.version}` : "ULID"}
+                {inspectResult && (
+                  <div className="rounded-md border px-3 py-2 space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={cn(
+                          "text-sm font-medium",
+                          inspectResult.valid ? "text-primary" : "text-destructive",
+                        )}
+                      >
+                        {inspectResult.valid ? "✓ Valid" : "✗ Invalid"}
                       </span>
-                    )}
-                  </div>
-                  {inspectResult.valid && (
-                    <div className="text-xs text-muted-foreground space-y-0.5">
-                      {inspectResult.variant && (
-                        <p>
-                          <span className="text-subtle">Variant:</span> {inspectResult.variant}
-                        </p>
-                      )}
-                      {inspectResult.timestamp && (
-                        <p>
-                          <span className="text-subtle">Timestamp:</span>{" "}
-                          {inspectResult.timestamp.toLocaleString(undefined, {
-                            dateStyle: "medium",
-                            timeStyle: "long",
-                          })}
-                          <span className="ml-1.5 text-muted-foreground">
-                            ({inspectResult.timestamp.getTime()})
-                          </span>
-                        </p>
-                      )}
-                      {inspectResult.type === "uuid" && inspectResult.version === 4 && (
-                        <p className="text-muted-foreground">Random UUID - no embedded timestamp</p>
+                      {inspectResult.valid && (
+                        <span className="text-sm text-muted-foreground font-mono">
+                          {inspectResult.type === "uuid"
+                            ? `UUID v${inspectResult.version}`
+                            : "ULID"}
+                        </span>
                       )}
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
+                    {inspectResult.valid && (
+                      <div className="text-sm text-muted-foreground space-y-0.5">
+                        {inspectResult.variant && (
+                          <p>
+                            <span className="text-foreground">Variant:</span>{" "}
+                            {inspectResult.variant}
+                          </p>
+                        )}
+                        {inspectResult.timestamp && (
+                          <p>
+                            <span className="text-foreground">Timestamp:</span>{" "}
+                            {inspectResult.timestamp.toLocaleString(undefined, {
+                              dateStyle: "medium",
+                              timeStyle: "long",
+                            })}
+                            <span className="ml-1.5 text-muted-foreground">
+                              ({inspectResult.timestamp.getTime()})
+                            </span>
+                          </p>
+                        )}
+                        {inspectResult.type === "uuid" && inspectResult.version === 4 && (
+                          <p className="text-muted-foreground">
+                            Random UUID - no embedded timestamp
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Field>
           </div>
         </div>
 
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About UUIDs & ULIDs
             </h3>
@@ -444,7 +438,7 @@ export default function UuidPage() {
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -454,7 +448,7 @@ export default function UuidPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc9562"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 9562 - UUIDs (replaces RFC 4122)
                 </a>
@@ -464,7 +458,7 @@ export default function UuidPage() {
                   href="https://github.com/ulid/spec"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   ULID Specification
                 </a>
@@ -474,7 +468,7 @@ export default function UuidPage() {
                   href="https://en.wikipedia.org/wiki/Universally_unique_identifier"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   Wikipedia - UUID
                 </a>

@@ -1,12 +1,25 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect, type DragEvent } from "react";
-import { Trash2, Upload, ImageIcon, Download, Info, ExternalLink } from "lucide-react";
-import { PasteButton } from "@/components/paste-button";
-import { Checkbox } from "@/components/checkbox";
-import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { Segmented } from "@/components/segmented";
+import { useState, useCallback, useEffect } from "react";
+import { Upload, ImageIcon, Download, Info, ExternalLink } from "lucide-react";
+import {
+  ClearButton,
+  FileName,
+  OptionCheckbox,
+  PanelHeader,
+  Stat,
+  codeArea,
+  dropTarget,
+} from "@/components/tool-controls";
 import { cn } from "@/lib/cn";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
+import { Field, FieldError, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { FileDrop, FileDropArea, FileDropTrigger } from "@/registry/syntaqx/ui/file-drop";
+import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-group";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import { Textarea } from "@/registry/syntaqx/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -134,9 +147,7 @@ export default function ImageBase64Page() {
   const [encMime, setEncMime] = useState("");
   const [encBytes, setEncBytes] = useState(0);
   const [encFileName, setEncFileName] = useState<string | null>(null);
-  const [encDragging, setEncDragging] = useState(false);
   const [asDataUri, setAsDataUri] = useState(true);
-  const encFileRef = useRef<HTMLInputElement>(null);
 
   // Decode (base64 -> image)
   const [decInput, setDecInput] = useState("");
@@ -144,7 +155,6 @@ export default function ImageBase64Page() {
   const [decMime, setDecMime] = useState("");
   const [decBytes, setDecBytes] = useState(0);
   const [decError, setDecError] = useState<string | null>(null);
-  const [decDragging, setDecDragging] = useState(false);
 
   // Revoke object URL when it changes or component unmounts
   useEffect(() => {
@@ -180,13 +190,6 @@ export default function ImageBase64Page() {
     setEncMime("");
     setEncBytes(0);
     setEncFileName(null);
-  };
-
-  const onEncodeDrop = (e: DragEvent) => {
-    e.preventDefault();
-    setEncDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) loadEncodeFile(file);
   };
 
   const encodeOutput = encDataUri ? (asDataUri ? encDataUri : stripDataUri(encDataUri).base64) : "";
@@ -237,11 +240,7 @@ export default function ImageBase64Page() {
     setDecError(null);
   };
 
-  const onDecodeDrop = async (e: DragEvent) => {
-    e.preventDefault();
-    setDecDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (!file) return;
+  const decodeFile = async (file: File) => {
     // If a text file is dropped, read as text; otherwise treat as image
     if (file.type.startsWith("text/") || /\.(txt|b64)$/i.test(file.name)) {
       const text = await file.text();
@@ -277,205 +276,153 @@ export default function ImageBase64Page() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
-          {/* Segmented control */}
-          <Segmented
+          {/* Mode */}
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            aria-label="Mode"
             value={mode}
-            onChange={switchMode}
-            ariaLabel="Mode"
-            options={[
-              { value: "encode", label: "Image to Base64" },
-              { value: "decode", label: "Base64 to Image" },
-            ]}
+            onValueChange={(v) => v && switchMode(v as "encode" | "decode")}
             className="mb-5"
-          />
+          >
+            <ToggleGroupItem value="encode">Image to Base64</ToggleGroupItem>
+            <ToggleGroupItem value="decode">Base64 to Image</ToggleGroupItem>
+          </ToggleGroup>
 
           {mode === "encode" ? (
             <div className="flex flex-col gap-4">
               {/* Drop zone / preview */}
-              <div
-                onDrop={onEncodeDrop}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setEncDragging(true);
-                }}
-                onDragLeave={() => setEncDragging(false)}
-                className={cn(
-                  "border bg-card transition-colors",
-                  encDragging ? "border-primary border-dashed" : "border-border",
-                )}
-              >
-                <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                  <label className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    Image
-                    {encFileName && (
-                      <span className="inline-flex items-center gap-1 text-primary">
-                        <ImageIcon size={10} />
-                        {encFileName}
-                      </span>
-                    )}
-                  </label>
-                  <div className="flex items-center gap-1.5">
-                    {encBytes > 0 && (
-                      <span className="text-[10px] text-muted-foreground tabular-nums">
-                        {encMime || "unknown"} &middot; {byteSize(encBytes)}
-                      </span>
-                    )}
-                    <button
-                      onClick={() => encFileRef.current?.click()}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
-                    >
-                      <Upload size={12} />
-                      File
-                    </button>
-                    {encDataUri && (
-                      <button
-                        onClick={clearEncode}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    )}
-                    <input
-                      ref={encFileRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) loadEncodeFile(file);
-                        e.target.value = "";
-                      }}
+              <FileDrop accept="image/*" onFiles={([file]) => loadEncodeFile(file)}>
+                <div
+                  className={cn(
+                    "rounded-md border border-input shadow-xs transition-colors dark:bg-input/30",
+                    dropTarget,
+                  )}
+                >
+                  <div className="flex items-center justify-between gap-2 border-b px-3 py-2">
+                    <span className="flex min-w-0 items-center gap-1.5 text-sm font-medium">
+                      Image
+                      {encFileName && <FileName name={encFileName} icon={<ImageIcon />} />}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {encBytes > 0 && (
+                        <Stat>
+                          {encMime || "unknown"} &middot; {byteSize(encBytes)}
+                        </Stat>
+                      )}
+                      <FileDropTrigger>
+                        <Upload />
+                        File
+                      </FileDropTrigger>
+                      {encDataUri && <ClearButton onClick={clearEncode} />}
+                    </div>
+                  </div>
+                  {encDataUri ? (
+                    <div className="flex min-h-45 items-center justify-center px-3 py-4">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={encDataUri}
+                        alt={encFileName ?? "preview"}
+                        className="max-h-64 max-w-full border bg-background object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <FileDropArea className="min-h-45 rounded-none border-0">
+                      <ImageIcon />
+                      Drop an image here, or click to choose one.
+                    </FileDropArea>
+                  )}
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t px-3 py-2">
+                    <OptionCheckbox
+                      checked={asDataUri}
+                      onCheckedChange={setAsDataUri}
+                      label="Include data URI prefix"
+                      hint="Prepend data:<mime>;base64, so the output can be used directly in src/href attributes."
                     />
                   </div>
                 </div>
-                <div className="px-3 py-4 flex items-center justify-center min-h-45">
-                  {encDataUri ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={encDataUri}
-                      alt={encFileName ?? "preview"}
-                      className="max-h-64 max-w-full border border-border bg-background object-contain"
-                    />
-                  ) : (
-                    <div className="text-center text-xs text-muted-foreground">
-                      <ImageIcon size={24} className="mx-auto mb-2 text-muted-foreground/60" />
-                      Drop an image here, or click <span className="text-subtle">File</span> to
-                      choose one.
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
-                  <Checkbox
-                    checked={asDataUri}
-                    onChange={() => setAsDataUri((v) => !v)}
-                    label="Include data URI prefix"
-                    tooltip="Prepend data:<mime>;base64, so the output can be used directly in src/href attributes."
-                  />
-                </div>
-              </div>
+              </FileDrop>
 
               {/* Output */}
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-muted-foreground">Base64 output</label>
+              <Field>
+                <div className="flex items-center justify-between gap-2">
+                  <FieldLabel>Base64 output</FieldLabel>
                   <div className="flex items-center gap-1.5">
-                    {encodeOutput && (
-                      <span className="text-[10px] text-muted-foreground tabular-nums">
-                        {encodeOutput.length.toLocaleString()} chars
-                      </span>
-                    )}
+                    {encodeOutput && <Stat>{encodeOutput.length.toLocaleString()} chars</Stat>}
                     {encodeOutput && (
                       <CopyButton value={encodeOutput} variant="outline" size="sm" />
                     )}
                   </div>
                 </div>
-                <textarea
+                <Textarea
                   value={encodeOutput}
                   readOnly
                   rows={8}
                   placeholder="Encoded Base64 will appear here..."
-                  className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono break-all"
+                  className={cn(codeArea, "break-all")}
                 />
-              </div>
+              </Field>
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              {/* Input card */}
-              <div
-                onDrop={onDecodeDrop}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setDecDragging(true);
-                }}
-                onDragLeave={() => setDecDragging(false)}
-                className={cn(
-                  "border bg-card transition-colors",
-                  decDragging ? "border-primary border-dashed" : "border-border",
-                )}
-              >
-                <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                  <label className="text-xs text-muted-foreground">Base64 or data URI</label>
-                  <div className="flex items-center gap-1.5">
-                    {decInput && (
-                      <span className="text-[10px] text-muted-foreground tabular-nums">
-                        {decInput.length.toLocaleString()} chars
-                      </span>
-                    )}
-                    <PasteButton onPaste={(text) => runDecode(text)} label />
-                    {decInput && (
-                      <button
-                        onClick={clearDecode}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                      >
-                        <Trash2 size={12} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <textarea
-                  value={decInput}
-                  onChange={(e) => runDecode(e.target.value)}
-                  placeholder="Paste a Base64 string or a data:image/...;base64,... URI..."
-                  rows={8}
-                  spellCheck={false}
-                  className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono break-all"
-                />
-              </div>
-
-              {decError && <p className="text-xs text-pink">{decError}</p>}
+              {/* Input */}
+              <FileDrop onFiles={([file]) => void decodeFile(file)}>
+                <Field invalid={!!decError}>
+                  <InputGroup className={dropTarget}>
+                    <PanelHeader>
+                      <FieldLabel>Base64 or data URI</FieldLabel>
+                      <div className="flex items-center gap-1.5">
+                        {decInput && <Stat>{decInput.length.toLocaleString()} chars</Stat>}
+                        <PasteButton
+                          variant="outline"
+                          size="sm"
+                          onPaste={(text) => runDecode(text)}
+                        />
+                        {decInput && <ClearButton onClick={clearDecode} />}
+                      </div>
+                    </PanelHeader>
+                    <InputGroupTextarea
+                      value={decInput}
+                      onChange={(e) => runDecode(e.target.value)}
+                      placeholder="Paste a Base64 string or a data:image/...;base64,... URI..."
+                      rows={8}
+                      spellCheck={false}
+                      className={cn(codeArea, "break-all")}
+                    />
+                  </InputGroup>
+                  <FieldError>{decError}</FieldError>
+                </Field>
+              </FileDrop>
 
               {/* Preview */}
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-muted-foreground">Image preview</label>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-medium">Image preview</span>
                   <div className="flex items-center gap-1.5">
                     {decBytes > 0 && (
-                      <span className="text-[10px] text-muted-foreground tabular-nums">
+                      <Stat>
                         {decMime} &middot; {byteSize(decBytes)}
-                      </span>
+                      </Stat>
                     )}
                     {decUrl && (
-                      <button
-                        onClick={downloadDecoded}
-                        className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
-                      >
-                        <Download size={12} />
+                      <Button variant="outline" size="sm" onClick={downloadDecoded}>
+                        <Download />
                         Download
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>
-                <div className="border border-border bg-card px-3 py-4 flex items-center justify-center min-h-45">
+                <div className="flex min-h-45 items-center justify-center rounded-md border px-3 py-4">
                   {decUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={decUrl}
                       alt="decoded"
-                      className="max-h-64 max-w-full border border-border bg-background object-contain"
+                      className="max-h-64 max-w-full border bg-background object-contain"
                     />
                   ) : (
-                    <div className="text-center text-xs text-muted-foreground">
-                      <ImageIcon size={24} className="mx-auto mb-2 text-muted-foreground/60" />
+                    <div className="flex flex-col items-center gap-2 text-center text-sm text-muted-foreground">
+                      <ImageIcon className="size-6" />
                       Decoded image will appear here.
                     </div>
                   )}
@@ -488,36 +435,38 @@ export default function ImageBase64Page() {
         {/* Right: info & references */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About data URIs
             </h3>
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
                 A data URI embeds a file directly into a URL using the form{" "}
-                <span className="text-subtle">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It can
-                be used anywhere a URL is accepted &mdash; including
-                <span className="text-subtle"> img src</span>, CSS{" "}
-                <span className="text-subtle">background-image</span>, and SVG.
+                <span className="text-foreground">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It
+                can be used anywhere a URL is accepted &mdash; including
+                <span className="text-foreground"> img src</span>, CSS{" "}
+                <span className="text-foreground">background-image</span>, and SVG.
               </p>
               <p>
                 Base64 encoding increases payload size by roughly{" "}
-                <span className="text-subtle">33%</span>. It is most useful for small, inlineable
-                assets like icons; large images are usually better served as separate files.
+                <span className="text-foreground">33%</span>. It is most useful for small,
+                inlineable assets like icons; large images are usually better served as separate
+                files.
               </p>
               <p>
                 This page accepts plain Base64, padded or unpadded, and both standard and URL-safe
                 alphabets. The format is auto-detected from the data when no MIME type is provided.
               </p>
               <p>
-                Files are processed locally with the <span className="text-subtle">FileReader</span>{" "}
-                and <span className="text-subtle">Blob</span> APIs. Nothing is uploaded.
+                Files are processed locally with the{" "}
+                <span className="text-foreground">FileReader</span> and{" "}
+                <span className="text-foreground">Blob</span> APIs. Nothing is uploaded.
               </p>
             </div>
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -527,7 +476,7 @@ export default function ImageBase64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc2397"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 2397 - The &quot;data&quot; URL scheme
                 </a>
@@ -537,7 +486,7 @@ export default function ImageBase64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc4648"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 4648 - Base Encodings
                 </a>
@@ -547,7 +496,7 @@ export default function ImageBase64Page() {
                   href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   MDN - Data URLs
                 </a>
