@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronDown, ChevronRight, Copy, Check, Play, Server } from "lucide-react";
+import { ChevronDown, ChevronRight, Play, Server } from "lucide-react";
 import { buildRequest, jsonError, paramKey, SHOWN_RESPONSE_HEADERS } from "@/lib/api-console";
 import { Select } from "@/components/select";
 import { cn } from "@/lib/cn";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // ---------------------------------------------------------------------------
 // Types for OpenAPI 3.1
@@ -130,23 +133,6 @@ function schemaToExample(spec: OpenApiSpec, schema: SchemaObject): unknown {
     default:
       return {};
   }
-}
-
-function CopyBtn({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      onClick={() => {
-        navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
-      }}
-      className="text-muted-foreground hover:text-primary transition-colors"
-      aria-label="Copy"
-    >
-      {copied ? <Check size={12} /> : <Copy size={12} />}
-    </button>
-  );
 }
 
 // ---------------------------------------------------------------------------
@@ -424,7 +410,11 @@ function Endpoint({
                     {example && (
                       <div className="relative">
                         <div className="absolute top-2 right-2">
-                          <CopyBtn text={example} />
+                          <CopyButton
+                            value={example}
+                            size="icon-xs"
+                            className="text-muted-foreground"
+                          />
                         </div>
                         <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-subtle">
                           {example}
@@ -495,12 +485,14 @@ function Endpoint({
                       Body
                     </label>
                     {reqBody !== defaultBody && (
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="xs"
                         onClick={() => setReqBody(defaultBody)}
-                        className="inst text-muted-foreground hover:text-primary transition-colors"
+                        className="text-muted-foreground"
                       >
-                        reset
-                      </button>
+                        Reset
+                      </Button>
                     )}
                   </div>
                   <textarea
@@ -518,7 +510,11 @@ function Endpoint({
               <div className="relative">
                 <div className="inst mb-1.5 text-muted-foreground">Request</div>
                 <div className="absolute top-0 right-0">
-                  <CopyBtn text={request.curl} />
+                  <CopyButton
+                    value={request.curl}
+                    size="icon-xs"
+                    className="text-muted-foreground"
+                  />
                 </div>
                 <pre className="text-[11px] font-mono bg-background border border-border p-3 overflow-x-auto text-subtle">
                   {request.curl}
@@ -526,14 +522,10 @@ function Endpoint({
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <button
-                  onClick={tryIt}
-                  disabled={trying}
-                  className="inst inline-flex items-center gap-2 border border-primary bg-primary px-3.5 py-2 text-background transition-colors hover:bg-primary/85 disabled:opacity-50"
-                >
-                  <Play size={11} />
-                  {trying ? "Sending..." : "Send request"}
-                </button>
+                <Button size="sm" onClick={tryIt} loading={trying}>
+                  <Play data-icon="inline-start" />
+                  Send request
+                </Button>
                 <span className="inst text-border-hover">ctrl/⌘ + enter</span>
               </div>
 
@@ -568,7 +560,11 @@ function Endpoint({
                       )}
                       <div className="relative">
                         <div className="absolute top-2 right-2">
-                          <CopyBtn text={result.body} />
+                          <CopyButton
+                            value={result.body}
+                            size="icon-xs"
+                            className="text-muted-foreground"
+                          />
                         </div>
                         <pre className="max-h-96 overflow-auto text-[11px] font-mono bg-background border border-border p-3 text-subtle">
                           {result.body}
@@ -694,32 +690,30 @@ export default function ApiDocsPage() {
             <Server size={12} className="text-primary" />
             base url
           </span>
-          {servers.map((s, i) => {
-            const active = i === (serverIdx ?? 0);
-            return servers.length === 1 ? (
-              <code
-                key={s.url}
-                className="flex items-center px-4 py-3 font-mono text-sm break-all text-foreground"
-              >
-                {s.url}
-              </code>
-            ) : (
-              <button
-                key={s.url}
-                onClick={() => setServerIdx(i)}
-                title={s.description}
-                aria-pressed={active}
-                className={cn(
-                  "relative border-r border-border px-4 py-3 font-mono text-sm break-all transition-colors cursor-pointer after:absolute after:inset-x-4 after:-bottom-px after:h-0.5",
-                  active
-                    ? "text-foreground after:bg-primary"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {s.url}
-              </button>
-            );
-          })}
+          {servers.length === 1 ? (
+            <code className="flex items-center px-4 py-3 font-mono text-sm break-all text-foreground">
+              {servers[0].url}
+            </code>
+          ) : (
+            <ToggleGroup
+              type="single"
+              value={String(serverIdx ?? 0)}
+              onValueChange={(v) => v && setServerIdx(Number(v))}
+              aria-label="Base URL"
+              className="flex-wrap items-stretch rounded-none"
+            >
+              {servers.map((s, i) => (
+                <ToggleGroupItem
+                  key={s.url}
+                  value={String(i)}
+                  title={s.description}
+                  className="h-auto rounded-none border-r border-border px-4 py-3 font-mono text-sm break-all text-muted-foreground first:rounded-none last:rounded-none"
+                >
+                  {s.url}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          )}
         </div>
       )}
 

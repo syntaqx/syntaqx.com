@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button } from "@/registry/syntaqx/ui/button";
 import { Checkbox } from "@/registry/syntaqx/ui/checkbox";
 import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
 import { PostList, type PostSummary } from "@/components/post-list";
@@ -47,13 +48,14 @@ export function PostsBrowser({ posts, tags, newestSlug }: PostsBrowserProps) {
         topics
       </Link>
       {picked.length > 0 && (
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="xs"
           onClick={() => setPicked([])}
-          className="inst text-muted-foreground transition-colors hover:text-primary"
+          className="text-muted-foreground"
         >
-          clear
-        </button>
+          Clear
+        </Button>
       )}
     </div>
   );
