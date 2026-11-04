@@ -1,10 +1,17 @@
-// https://ui.shadcn.com/r/styles/new-york-v4/spinner.json
+// https://ui.shadcn.com/r/styles/radix-vega/spinner.json
 import { cn } from "cn"
-import { Loader2Icon } from "lucide-react"
+
+import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
 function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
   return (
-    <Loader2Icon
+    <IconPlaceholder
+      lucide="Loader2Icon"
+      tabler="IconLoader"
+      hugeicons="Loading03Icon"
+      phosphor="SpinnerIcon"
+      remixicon="RiLoaderLine"
+      data-slot="spinner"
       role="status"
       aria-label="Loading"
       className={cn("size-4 animate-spin", className)}

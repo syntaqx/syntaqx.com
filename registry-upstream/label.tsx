@@ -1,4 +1,4 @@
-// https://ui.shadcn.com/r/styles/new-york-v4/label.json
+// https://ui.shadcn.com/r/styles/radix-vega/label.json
 "use client"
 
 import * as React from "react"

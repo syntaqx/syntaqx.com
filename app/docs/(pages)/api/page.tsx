@@ -696,6 +696,7 @@ export default function ApiDocsPage() {
             </code>
           ) : (
             <ToggleGroup
+              spacing={0}
               type="single"
               value={String(serverIdx ?? 0)}
               onValueChange={(v) => v && setServerIdx(Number(v))}

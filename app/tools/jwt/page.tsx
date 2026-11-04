@@ -649,6 +649,7 @@ export default function JwtPage() {
       {/* Mode toggle + Algorithm selector */}
       <div className="mb-5 flex items-center gap-3 flex-wrap">
         <ToggleGroup
+          spacing={0}
           type="single"
           variant="outline"
           aria-label="Mode"

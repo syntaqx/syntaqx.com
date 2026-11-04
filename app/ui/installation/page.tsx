@@ -47,6 +47,13 @@ export default function InstallationPage() {
           with Tailwind CSS v4. If yours isn&apos;t yet, start there:
         </p>
         <CodeBlock code="npx shadcn@latest init" lang="bash" />
+        <p>
+          They follow shadcn&apos;s <strong className="text-foreground">Vega</strong> style
+          (radix-vega), and style open, closed and checked states with the variants in{" "}
+          <code className="font-mono text-sm text-foreground">shadcn/tailwind.css</code>. A Vega
+          project already imports it; in any other, the components that need it add the import to
+          your CSS when they install.
+        </p>
       </Section>
 
       <Section title="Add a component">
