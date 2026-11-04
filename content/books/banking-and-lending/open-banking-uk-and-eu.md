@@ -1,5 +1,6 @@
 +++
 title = "Open Banking in the UK & EU"
+nav_title = "Open Banking: UK & EU"
 description = "UK and EU open banking on the data side: PSD2 account information, the CMA Order and UK standard, 90- and 180-day reauthentication, PSD3, the PSR and FIDA."
 category = "Banking & Lending Industry"
 order = 2431

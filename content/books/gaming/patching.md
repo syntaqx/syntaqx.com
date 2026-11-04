@@ -1,5 +1,6 @@
 +++
 title = "Patching & Content Delivery"
+nav_title = "Patching & Delivery"
 description = "Getting a new build onto millions of machines: binary deltas vs content-defined chunks, how Steam, Xbox, Blizzard and Riot ship, CDNs, signing, rollouts."
 category = "Gaming Industry"
 order = 1606

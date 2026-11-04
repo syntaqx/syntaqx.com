@@ -1,5 +1,6 @@
 +++
 title = "Communication & Meetings"
+nav_title = "Communication"
 description = "Written by default, async first, meetings that earn their place, decision logs, status updates that lead with the ask, chat norms and working across time zones."
 category = "Leadership"
 order = 1308

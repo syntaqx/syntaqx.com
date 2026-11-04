@@ -1,6 +1,6 @@
 +++
 title = "Reimbursements, Mileage & Per Diem"
-nav_title = "Reimbursements & Per Diem"
+nav_title = "Reimbursements"
 description = "Paying employees back: accountable plans, effective-dated IRS mileage and per diem rates, advances and excess, and reimbursement by ACH or payroll."
 category = "Banking & Lending Industry"
 order = 2466

@@ -1,5 +1,6 @@
 +++
 title = "Data Science & ML Platforms"
+nav_title = "Data Science & ML"
 description = "Running data science without breaking production: notebooks, reproducibility, feature stores and skew, experiment tracking, model registries, serving and drift."
 category = "Data Platforms"
 order = 1278

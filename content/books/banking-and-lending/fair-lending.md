@@ -1,5 +1,6 @@
 +++
 title = "Fair Lending, HMDA & 1071"
+nav_title = "Fair Lending & HMDA"
 description = "Fair lending after the 2026 Reg B rule: ECOA and the Fair Housing Act, redlining enforcement, the HMDA LAR, the revised 1071 rule and testing as records."
 category = "Banking & Lending Industry"
 order = 2446

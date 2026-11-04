@@ -1,5 +1,6 @@
 +++
 title = "One-Time Services & Upsells"
+nav_title = "One-Time Services"
 description = "One-time work beside recurring plans: when it needs its own agreement, member pricing on a shared route, converting customers to plans, and upselling."
 category = "Field Operations Industry"
 order = 1524

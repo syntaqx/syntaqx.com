@@ -1,5 +1,6 @@
 +++
 title = "Storage: Block, File & Object"
+nav_title = "Block, File & Object"
 description = "Block volumes, file shares and object storage: how each works, classes and minimums, what 11 nines means, data-loss rulings, and the S3-compatible challengers."
 category = "Hosting & Cloud Industry"
 order = 2123

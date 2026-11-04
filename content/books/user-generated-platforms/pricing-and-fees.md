@@ -1,5 +1,6 @@
 +++
 title = "Pricing, Fees & All-In Prices"
+nav_title = "Pricing & Fees"
 description = "Host pricing and dynamic recommendations, marketplace fee models, usage charges, split payments, the FTC fees rule and drip pricing, and facilitator tax."
 category = "User-Generated Platforms Industry"
 order = 1832

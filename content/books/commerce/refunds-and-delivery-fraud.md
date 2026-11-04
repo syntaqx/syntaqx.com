@@ -1,6 +1,6 @@
 +++
 title = "Refunds, Missing Items & Fraud"
-nav_title = "Refunds, Missing Items & Fraud"
+nav_title = "Refunds & Fraud"
 description = "Missing and wrong items, who pays for an error, merchant error charges and disputes, refund abuse, courier fraud, account takeover and promotion abuse."
 category = "Commerce Industry"
 order = 2348

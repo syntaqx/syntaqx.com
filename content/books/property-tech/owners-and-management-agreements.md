@@ -1,5 +1,6 @@
 +++
 title = "Owners & Management Agreements"
+nav_title = "Owners & Agreements"
 description = "Third-party management as data: the management agreement, fee bases and fee runs, reimbursements, owner distributions and reserves, owner reporting and 1099s."
 category = "Property Tech Industry"
 order = 1704

@@ -28,14 +28,35 @@ function headingIds(content: string) {
   });
 }
 
+/**
+ * Advance widths (px) of printable ASCII, space to ~, in the sidebar's page
+ * labels: Hanken Grotesk 500 at 14px, measured in the browser. A label's
+ * width is their sum; kerning is left out, which NAV_MAX's margin covers.
+ */
+const NAV_GLYPHS = [
+  3.64, 3.42, 4.86, 9.76, 7.84, 10.4, 9.67, 2.52, 3.36, 3.36, 5.57, 7.84, 3.36, 4.58, 3.36, 5.87,
+  7.84, 7.84, 7.84, 7.84, 7.84, 7.84, 7.84, 7.84, 7.84, 7.84, 3.36, 3.36, 7.84, 7.84, 7.84, 7.22,
+  12.24, 9.09, 8.46, 9.88, 9.51, 8.16, 7.88, 10.25, 9.56, 3.53, 7.74, 9.02, 6.97, 11.83, 9.52,
+  10.47, 7.8, 10.89, 8.44, 7.95, 8.2, 9.18, 9.25, 13.5, 9.11, 8.54, 8.26, 3.81, 6.36, 3.81, 8.08,
+  6.08, 4.19, 7.59, 8.16, 7.27, 8.16, 7.56, 4.75, 7.24, 7.74, 3.25, 3.25, 7.57, 3.77, 11.66, 7.74,
+  8.05, 8.16, 8.16, 5.78, 6.59, 4.94, 7.74, 7.36, 10.5, 7.38, 7.36, 6.61, 3.56, 3.67, 3.56, 7.84,
+];
+const navWidth = (label: string) =>
+  [...label].reduce((sum, ch) => sum + (NAV_GLYPHS[ch.charCodeAt(0) - 32] ?? 13.5), 0);
+/**
+ * The label's 180px in the 248px rail, less the 12px a long rail's scrollbar
+ * takes on Windows, less 4px for kerning.
+ */
+const NAV_MAX = 164;
+
 /** The rules every page of Markdown content follows, in /docs and in /books. */
 function contentRules(all: DocData[]) {
   const each = all.map((d) => [d.slug, d] as const);
 
   it.each(each)("%s has complete frontmatter", (_, doc) => {
     expect(doc.title).toBeTruthy();
-    // Sidebars are narrow: anything longer wraps. Set a shorter nav_title.
-    expect(doc.navTitle.length, `nav label "${doc.navTitle}"`).toBeLessThanOrEqual(30);
+    // Sidebars are narrow: a wider label is cut off. Set a shorter nav_title.
+    expect(navWidth(doc.navTitle), `nav label "${doc.navTitle}" (px)`).toBeLessThanOrEqual(NAV_MAX);
     expect(doc.category).not.toBe("General");
     expect(doc.order).not.toBe(99);
     expect(doc.tags.length).toBeGreaterThan(0);

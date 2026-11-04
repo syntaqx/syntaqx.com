@@ -1,6 +1,6 @@
 +++
 title = "Program Ledgers & the Synapse Lesson"
-nav_title = "Program Ledgers & Synapse"
+nav_title = "Program Ledgers"
 description = "FBO accounts and per-owner subledgers, daily reconciliation against the bank's core, Synapse as an engineering post-mortem, and the FDIC custodial proposal."
 category = "Banking & Lending Industry"
 order = 2426

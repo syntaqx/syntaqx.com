@@ -1,5 +1,6 @@
 +++
 title = "Data Residency & Sovereignty"
+nav_title = "Data Residency"
 description = "What residency covers and leaves out, the EU Data Boundary and Multi-Geo, moving regions, Schrems II, the Data Privacy Framework and the CLOUD Act."
 category = "Workplace & Collaboration Industry"
 order = 2012

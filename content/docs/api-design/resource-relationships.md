@@ -1,5 +1,6 @@
 +++
 title = "Relationships & Expansion"
+nav_title = "Relationships"
 description = "Links between resources as their own sub-resources (PUT to link, DELETE to unlink), and related objects as IDs unless the client asks to expand them."
 category = "API Design"
 order = 303

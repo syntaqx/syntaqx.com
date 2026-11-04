@@ -1,5 +1,6 @@
 +++
 title = "Caching & Conditional Requests"
+nav_title = "HTTP Caching"
 description = "Cache-Control, ETags and conditional requests: cheap revalidation with 304, safe concurrent updates with If-Match and 412, and Vary on Api-Version."
 category = "Requests & Responses"
 order = 357

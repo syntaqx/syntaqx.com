@@ -1,5 +1,6 @@
 +++
 title = "AI in Property Management"
+nav_title = "AI in Property"
 description = "AI agents for leasing, residents, maintenance, accounting and collections: builders, automation levels, audit trails, owner cost allocation and the law."
 category = "Property Tech Industry"
 order = 1737

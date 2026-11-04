@@ -1,5 +1,6 @@
 +++
 title = "Maintenance & Work Orders"
+nav_title = "Work Orders"
 description = "Rental maintenance: intake and after-hours triage, make-ready turns, preventive work, assets, inspections, entry notice, habitability and chargebacks."
 category = "Property Tech Industry"
 order = 1721

@@ -1,5 +1,6 @@
 +++
 title = "Service Agreements & Plans"
+nav_title = "Service Agreements"
 description = "What a field customer buys: memberships, maintenance plans and contracts, tiers and add-ons, visit generation, pauses, renewal, cancellation, warranties, SLAs."
 category = "Field Operations Industry"
 order = 1504

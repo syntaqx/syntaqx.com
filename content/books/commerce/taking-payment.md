@@ -1,5 +1,6 @@
 +++
 title = "Taking Payment in Commerce"
+nav_title = "Taking Payment"
 description = "Authorize at order and capture at shipment, split shipments and partial capture, expiring authorizations, order edits, wallets, BNPL and fraud guarantees."
 category = "Commerce Industry"
 order = 2312

@@ -1,5 +1,6 @@
 +++
 title = "Becoming a Payment Provider"
+nav_title = "Becoming a Provider"
 description = "What it takes to be a Stripe or a payfac rather than integrate one: sponsor banks, card networks, PCI as a service provider, licensing and the money."
 category = "Payments Industry"
 order = 1443

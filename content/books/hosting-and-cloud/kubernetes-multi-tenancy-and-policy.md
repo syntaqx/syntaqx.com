@@ -1,6 +1,6 @@
 +++
 title = "Multi-Tenancy, Policy & Security"
-nav_title = "Tenancy, Policy & Security"
+nav_title = "Tenancy & Policy"
 description = "Kubernetes tenancy models, RBAC and quotas, PSP to Pod Security Admission, CEL admission, Kyverno and Gatekeeper, signed images, Falco, sandboxes."
 category = "Hosting & Cloud Industry"
 order = 2131

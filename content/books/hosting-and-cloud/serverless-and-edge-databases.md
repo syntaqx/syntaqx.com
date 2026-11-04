@@ -1,5 +1,6 @@
 +++
 title = "Serverless & Edge Databases"
+nav_title = "Serverless Databases"
 description = "Neon, Supabase, PlanetScale, D1, Turso, Workers KV, Durable Objects, Hyperdrive and Upstash: consistency, branching, scale to zero and pricing per row."
 category = "Hosting & Cloud Industry"
 order = 2135

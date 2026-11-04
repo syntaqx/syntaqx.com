@@ -1,6 +1,6 @@
 +++
 title = "Regulated Communications & Archiving"
-nav_title = "Regulated Communications"
+nav_title = "Regulated Comms"
 description = "SEC 17a-4, FINRA 4511 and 3110, the off-channel fines, CFTC and MiFID II recording, and how archivers capture and supervise chat and meetings."
 category = "Workplace & Collaboration Industry"
 order = 2052

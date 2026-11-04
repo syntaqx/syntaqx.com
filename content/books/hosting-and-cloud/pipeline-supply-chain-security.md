@@ -1,5 +1,6 @@
 +++
 title = "Pipeline Supply-Chain Security"
+nav_title = "Supply-Chain Security"
 description = "The CI breaches from SolarWinds to Shai-Hulud and the controls they produced: OIDC federation, pinning, SLSA, Sigstore, trusted publishing and SBOMs."
 category = "Hosting & Cloud Industry"
 order = 2147

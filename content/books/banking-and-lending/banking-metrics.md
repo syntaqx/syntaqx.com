@@ -1,5 +1,6 @@
 +++
 title = "Banking & Lending Metrics"
+nav_title = "Banking Metrics"
 description = "One definition per banking and lending metric over the book's tables: deposits, NIM, efficiency, delinquency, roll rates, losses, fraud, servicing and spend."
 category = "Banking & Lending Industry"
 order = 2475

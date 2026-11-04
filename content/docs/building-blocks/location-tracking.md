@@ -1,5 +1,6 @@
 +++
 title = "Location Tracking & Geofences"
+nav_title = "Location & Geofences"
 description = "Positions with accuracy, mobile sampling limits, geofence arrival with dwell and hysteresis, ETAs, safe tracking links, and consent and retention."
 category = "Building Blocks"
 order = 465

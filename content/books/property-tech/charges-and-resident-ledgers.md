@@ -1,5 +1,6 @@
 +++
 title = "Charges & Resident Ledgers"
+nav_title = "Resident Ledgers"
 description = "The charge catalog, recurring postings, proration, late fees and their caps, payment application order, concessions, and how the resident ledger meets the GL."
 category = "Property Tech Industry"
 order = 1714

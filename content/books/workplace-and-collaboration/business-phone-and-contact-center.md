@@ -1,6 +1,6 @@
 +++
 title = "Business Phone & Contact Center"
-nav_title = "Business Phone & Contact"
+nav_title = "Business Phone"
 description = "UCaaS and CCaaS: Teams Phone, Zoom Phone, RingCentral and Google Voice; PSTN connectivity, porting, dynamic 911 location, recording, contact centers."
 category = "Workplace & Collaboration Industry"
 order = 2021

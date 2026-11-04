@@ -1,6 +1,6 @@
 +++
 title = "Law Enforcement at Infrastructure Providers"
-nav_title = "Law Enforcement at Providers"
+nav_title = "Law Enforcement"
 description = "What police and courts ask infrastructure providers for, the published volumes, and resolving an IP and timestamp to the customer who held it."
 category = "Hosting & Cloud Industry"
 order = 2202

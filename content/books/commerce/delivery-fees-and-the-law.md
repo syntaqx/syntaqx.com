@@ -1,5 +1,6 @@
 +++
 title = "Fees, Commissions & the Law"
+nav_title = "Fees & the Law"
 description = "Consumer delivery fees and all-in pricing, merchant commission tiers, city commission caps, listing consent, the NYC data-sharing case, and tips."
 category = "Commerce Industry"
 order = 2346

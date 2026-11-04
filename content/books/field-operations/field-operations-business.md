@@ -1,5 +1,6 @@
 +++
 title = "The Field Operations Business"
+nav_title = "The Field Ops Business"
 description = "How field businesses earn, from routes to repair, installs, contracts and delivery: route density, seasons, branches, franchises and the core data model."
 category = "Field Operations Industry"
 order = 1501

@@ -1,5 +1,6 @@
 +++
 title = "Free-Tier Fraud & Stolen Keys"
+nav_title = "Free-Tier Fraud"
 description = "Abuse aimed at the provider's own resources: free-tier farming, cryptomining, leaked cloud keys and their quarantine, LLMjacking and secret scanning."
 category = "Hosting & Cloud Industry"
 order = 2199

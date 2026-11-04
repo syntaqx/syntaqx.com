@@ -1,6 +1,6 @@
 +++
 title = "Subscriptions, Renewals & Cancellation Law"
-nav_title = "Renewals & Cancellation Law"
+nav_title = "Renewals & Cancellation"
 description = "Hosting and domain terms, intro prices that renew at list, auto-renew, ROSCA, the vacated FTC rule and 2026 ANPRM, state and EU renewal laws, cancellation."
 category = "Hosting & Cloud Industry"
 order = 2193

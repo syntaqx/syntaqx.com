@@ -1,6 +1,6 @@
 +++
 title = "Communities, Roles & Permissions"
-nav_title = "Communities & Permissions"
+nav_title = "Communities & Roles"
 description = "Forum, server and instance models, channels and categories, role hierarchies and the permission algorithm, invites, and ownership transfer."
 category = "User-Generated Platforms Industry"
 order = 1804

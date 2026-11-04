@@ -1,6 +1,6 @@
 +++
 title = "Certifications & Procurement Assurance"
-nav_title = "Certifications & Assurance"
+nav_title = "Certifications"
 description = "SOC 2, the ISO family, FedRAMP and government clouds, CJIS, HIPAA BAAs, IRAP and C5, and the trust centers and questionnaires a workplace vendor answers."
 category = "Workplace & Collaboration Industry"
 order = 2051

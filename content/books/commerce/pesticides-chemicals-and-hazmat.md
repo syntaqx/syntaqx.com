@@ -1,5 +1,6 @@
 +++
 title = "Pesticides, Chemicals & Hazmat"
+nav_title = "Chemicals & Hazmat"
 description = "Selling and shipping pesticides and hazmat: FIFRA seller duties, 25(b) products, state registration, marketplaces, DOT rules, lithium batteries, SDS, Prop 65."
 category = "Commerce Industry"
 order = 2351

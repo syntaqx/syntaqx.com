@@ -1,5 +1,6 @@
 +++
 title = "Manual & Exploratory Testing"
+nav_title = "Exploratory Testing"
 description = "What people catch that scripts can't, chartered exploratory sessions, heuristics, bug bashes, acceptance testing, and when manual work earns a place."
 category = "Quality"
 order = 1054

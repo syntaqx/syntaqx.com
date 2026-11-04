@@ -1,5 +1,6 @@
 +++
 title = "DNS Abuse at the Registrar"
+nav_title = "DNS Abuse"
 description = "ICANN's 2024 DNS abuse amendments for registrars and registries, the path from report to clientHold, enforcement numbers, and the policy work still coming."
 category = "Hosting & Cloud Industry"
 order = 2166

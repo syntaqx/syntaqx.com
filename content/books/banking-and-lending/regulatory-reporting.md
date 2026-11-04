@@ -1,5 +1,6 @@
 +++
 title = "Regulatory Reporting & Data"
+nav_title = "Regulatory Reporting"
 description = "Call reports, NCUA 5300, HMDA and 1071 filing, CTR and SAR e-filing, edits as tests, data lineage and reconciling every filed number to the GL."
 category = "Banking & Lending Industry"
 order = 2472

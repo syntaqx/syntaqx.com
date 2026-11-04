@@ -1,6 +1,6 @@
 +++
 title = "Resident Financial Products & Ancillary Revenue"
-nav_title = "Resident Financial Products"
+nav_title = "Resident Products"
 description = "Rent reporting and credit repair law, rewards, resident marketplaces, bulk internet deals, and disclosing who earns what when residents buy in the portal."
 category = "Property Tech Industry"
 order = 1716

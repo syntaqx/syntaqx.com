@@ -1,5 +1,6 @@
 +++
 title = "From Homelab to Colocation"
+nav_title = "Homelab to Colo"
 description = "Deploying from home, the upload problem, static IPs and AUPs, dual WAN and BGP, power and uptime math, published colo prices and a hybrid home, colo and cloud."
 category = "Hosting & Cloud Industry"
 order = 2113

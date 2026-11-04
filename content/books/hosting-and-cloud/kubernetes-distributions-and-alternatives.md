@@ -1,5 +1,6 @@
 +++
 title = "Distributions & Alternatives"
+nav_title = "Distributions"
 description = "Certified Kubernetes, OpenShift, Rancher, k3s, Talos, Tanzu after Broadcom; Nomad, ECS, Cloud Run, Fly Machines, Swarm, Kamal; and when not to run Kubernetes."
 category = "Hosting & Cloud Industry"
 order = 2133

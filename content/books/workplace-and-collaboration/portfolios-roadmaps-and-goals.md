@@ -1,5 +1,6 @@
 +++
 title = "Portfolios, Roadmaps & Goals"
+nav_title = "Roadmaps & Goals"
 description = "Jira Plans, Atlassian Goals and Focus, Asana and monday portfolios, Linear initiatives, Azure delivery plans, OKRs, dependencies, capacity and status updates."
 category = "Workplace & Collaboration Industry"
 order = 2033

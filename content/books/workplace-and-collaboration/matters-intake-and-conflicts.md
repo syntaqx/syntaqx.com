@@ -1,5 +1,6 @@
 +++
 title = "Matters, Intake & Conflicts"
+nav_title = "Matters & Intake"
 description = "Intake and prospective clients, conflict rules 1.7, 1.9 and 1.10, conflict search over parties, ethical walls, engagement letters and closing a matter."
 category = "Workplace & Collaboration Industry"
 order = 2056

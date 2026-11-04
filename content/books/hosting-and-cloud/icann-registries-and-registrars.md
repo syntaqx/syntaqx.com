@@ -1,5 +1,6 @@
 +++
 title = "ICANN, Registries & Registrars"
+nav_title = "Registries & Registrars"
 description = "Who does what in a domain sale: ICANN, registries, registrars and resellers, the contracts that bind them, the per-name fee stack, and how ICANN enforces."
 category = "Hosting & Cloud Industry"
 order = 2161

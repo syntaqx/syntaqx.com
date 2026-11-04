@@ -1,5 +1,6 @@
 +++
 title = "Multichannel Listing & Feeds"
+nav_title = "Multichannel Listing"
 description = "Catalog syndication: Amazon Listings Items and JSON schemas, Walmart item spec, Google Merchant Center, Rithum, Feedonomics, Pattern, sync and errors."
 category = "Commerce Industry"
 order = 2330

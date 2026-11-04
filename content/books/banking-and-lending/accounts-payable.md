@@ -1,5 +1,6 @@
 +++
 title = "AP, Bill Pay & Procurement"
+nav_title = "AP & Bill Pay"
 description = "Accounts payable as a product: intake and POs, invoice capture, approvals, 2- and 3-way match with tolerances, vendor onboarding and choosing how to pay."
 category = "Banking & Lending Industry"
 order = 2467

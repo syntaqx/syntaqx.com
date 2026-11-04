@@ -1,6 +1,6 @@
 +++
 title = "Patient Statements, Estimates & Collections"
-nav_title = "Patient Financial Experience"
+nav_title = "Patient Financials"
 description = "The patient's bill: responsibility after insurance, good faith estimates, price transparency, statements, payment plans, medical debt, collections."
 category = "Health Tech Industry"
 order = 1926

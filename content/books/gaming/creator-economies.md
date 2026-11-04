@@ -1,5 +1,6 @@
 +++
 title = "UGC & Creator Economies"
+nav_title = "Creator Economies"
 description = "Games built by players: UGC platforms, creator payouts, affiliate codes and Drops, sandboxed scripts, review, IP takedowns, creator tax and age rules."
 category = "Gaming Industry"
 order = 1624

@@ -1,5 +1,6 @@
 +++
 title = "Transactions & Concurrency"
+nav_title = "Transactions"
 description = "What isolation levels really guarantee, stopping lost updates with optimistic or pessimistic locking, retrying serialization failures, and avoiding deadlocks."
 category = "Database"
 order = 252

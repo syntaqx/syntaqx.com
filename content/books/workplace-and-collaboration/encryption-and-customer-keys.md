@@ -1,6 +1,6 @@
 +++
 title = "Encryption & Customer-Managed Keys"
-nav_title = "Encryption & Customer Keys"
+nav_title = "Encryption & Keys"
 description = "Slack EKM, Atlassian CMK, Microsoft Customer Key and Double Key Encryption, Google client-side encryption, Zoom E2EE and Box KeySafe, and what each gives up."
 category = "Workplace & Collaboration Industry"
 order = 2050

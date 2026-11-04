@@ -1,6 +1,6 @@
 +++
 title = "Credentialing, Enrollment & Provider Data"
-nav_title = "Credentialing & Enrollment"
+nav_title = "Credentialing"
 description = "Getting a practitioner paid: NPI and NPPES, Medicare enrollment in PECOS, CAQH ProView, payer credentialing, directory accuracy rules and directory APIs."
 category = "Health Tech Industry"
 order = 1951

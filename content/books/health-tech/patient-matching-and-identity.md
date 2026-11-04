@@ -1,6 +1,6 @@
 +++
 title = "Patient Matching & Identity"
-nav_title = "Patient Matching & Identity"
+nav_title = "Patient Matching"
 description = "Finding the right patient without a national ID: MPIs, matching algorithms, the appropriations rider, duplicates and overlays, merges, and IAL2 proofing."
 category = "Health Tech Industry"
 order = 1912

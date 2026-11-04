@@ -1,6 +1,6 @@
 +++
 title = "Spam, Bots & Inauthentic Behavior"
-nav_title = "Spam, Bots & Inauthenticity"
+nav_title = "Spam & Bots"
 description = "Account farms, vote rings, CAPTCHAs and proof of work, SMS pumping, coordinated inauthentic behavior, bot labels and crowd context notes with bridging ranking."
 category = "User-Generated Platforms Industry"
 order = 1842

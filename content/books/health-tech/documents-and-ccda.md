@@ -1,6 +1,6 @@
 +++
 title = "C-CDA, Documents & Images"
-nav_title = "C-CDA, Documents & Images"
+nav_title = "C-CDA & Documents"
 description = "Clinical documents and images: C-CDA templates, Direct secure messaging, fax and scans, DICOM, PACS and DICOMweb, and dental imaging bridges."
 category = "Health Tech Industry"
 order = 1910

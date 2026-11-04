@@ -1,5 +1,6 @@
 +++
 title = "Interest, APY & Statements"
+nav_title = "Interest & Statements"
 description = "Day counts, balance methods, daily accrual against crediting, compounding, the Reg DD APY and APY earned formulas, statements, and 1099-INT and 1098."
 category = "Banking & Lending Industry"
 order = 2410

@@ -1,5 +1,6 @@
 +++
 title = "Continuous Delivery Platforms"
+nav_title = "CD Platforms"
 description = "CodeDeploy, Spinnaker, Argo, Harness and Octopus; progressive delivery and feature flags as products; and how approvals and protection gate a deploy."
 category = "Hosting & Cloud Industry"
 order = 2145

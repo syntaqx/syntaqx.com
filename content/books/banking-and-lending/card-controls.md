@@ -1,5 +1,6 @@
 +++
 title = "Virtual Cards & Spend Controls"
+nav_title = "Virtual Cards & Controls"
 description = "Spend controls as a product: cards per employee, vendor or purpose, spend programs and requests, hard and soft budgets, locks, and who may change a limit."
 category = "Banking & Lending Industry"
 order = 2464

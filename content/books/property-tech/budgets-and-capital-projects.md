@@ -1,6 +1,6 @@
 +++
 title = "Budgets, Forecasts & Capital Projects"
-nav_title = "Budgets & Capital Projects"
+nav_title = "Budgets & CapEx"
 description = "Annual budgets and reforecasts, pro formas, cost allocations, capital versus repair, job costing, renovations, lender draws, reserves and fixed assets."
 category = "Property Tech Industry"
 order = 1707

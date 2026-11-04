@@ -1,5 +1,6 @@
 +++
 title = "The Domain Data Model & EPP"
+nav_title = "Domain Data & EPP"
 description = "EPP's domain, host and contact objects, every status code, commands, result codes and extensions, and how a registrar runs and reconciles registry sessions."
 category = "Hosting & Cloud Industry"
 order = 2162

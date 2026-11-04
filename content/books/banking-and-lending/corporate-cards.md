@@ -1,5 +1,6 @@
 +++
 title = "Corporate Cards & Underwriting"
+nav_title = "Corporate Cards"
 description = "Underwriting a corporate charge card: limits from cash, payment cycles, security interests, liability models, commercial card types and receivable funding."
 category = "Banking & Lending Industry"
 order = 2463

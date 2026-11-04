@@ -1,5 +1,6 @@
 +++
 title = "The Collaboration Landscape"
+nav_title = "The Landscape"
 description = "The categories of workplace software, suites against best-of-breed, market sizes from the filings, a dated timeline of deals and shutdowns, and self-hosting."
 category = "Workplace & Collaboration Industry"
 order = 2002

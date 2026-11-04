@@ -1,6 +1,6 @@
 +++
 title = "Law Enforcement Requests & User Data"
-nav_title = "Law Enforcement Requests"
+nav_title = "Law Enforcement"
 description = "Subpoenas, court orders, warrants, emergency and preservation requests, user notice, the CLOUD Act and EU e-evidence, and requests versus privacy rights."
 category = "User-Generated Platforms Industry"
 order = 1851

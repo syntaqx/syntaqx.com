@@ -1,6 +1,6 @@
 +++
 title = "De-identification, Research & Data Use"
-nav_title = "De-identification & Data Use"
+nav_title = "De-identification"
 description = "Safe Harbor and Expert Determination in practice, limited data sets and DUAs, tokenized linkage, research and IRBs, sale of PHI, and FTC and state law."
 category = "Health Tech Industry"
 order = 1965

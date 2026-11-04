@@ -1,6 +1,6 @@
 +++
 title = "Trust Accounting & the General Ledger"
-nav_title = "Trust Accounting & the GL"
+nav_title = "Trust Accounting"
 description = "Money held for others: state trust and deposit account rules, three-way reconciliation, regulator audits, entity general ledgers, and unclaimed property."
 category = "Property Tech Industry"
 order = 1706

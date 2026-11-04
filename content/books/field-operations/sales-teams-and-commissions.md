@@ -1,5 +1,6 @@
 +++
 title = "Sales Teams & Commissions"
+nav_title = "Sales & Commissions"
 description = "Paying the people who sell: team structures, recruiting and onboarding gates, worker classification, commission plans as data, clawbacks, payroll and disputes."
 category = "Field Operations Industry"
 order = 1526

@@ -1,5 +1,6 @@
 +++
 title = "Regions, Zones, Cells & Quotas"
+nav_title = "Regions, Zones & Cells"
 description = "Regions, zones and sovereign partitions across providers, control and data planes, cells and shuffle sharding, real outages, quotas and capacity limits."
 category = "Hosting & Cloud Industry"
 order = 2124

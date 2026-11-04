@@ -1,6 +1,6 @@
 +++
 title = "Conduits, Caches & Blocking Orders"
-nav_title = "Conduits & Blocking Orders"
+nav_title = "Conduits & Blocking"
 description = "DMCA 512(a) and (b), DSA conduit and caching, Cox v. Sony, and site-blocking orders against CDNs and resolvers in Italy, France, Germany, the UK and the US."
 category = "Hosting & Cloud Industry"
 order = 2200

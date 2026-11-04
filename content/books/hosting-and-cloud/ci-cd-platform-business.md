@@ -1,5 +1,6 @@
 +++
 title = "The CI/CD Platform Business"
+nav_title = "The CI/CD Business"
 description = "Who sells build minutes and how: per-minute SKUs, credits, parallel jobs and cost factors, OS multipliers, open-source free tiers, funding and shutdowns."
 category = "Hosting & Cloud Industry"
 order = 2143

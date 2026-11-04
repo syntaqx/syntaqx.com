@@ -1,5 +1,6 @@
 +++
 title = "Pharmacy Benefits & PBMs"
+nav_title = "Pharmacy Benefits"
 description = "How drug benefits work: PBMs, formularies, rebates and spread pricing, NCPDP claims, real-time benefit checks, copay accumulators and cash pharmacies."
 category = "Health Tech Industry"
 order = 1953

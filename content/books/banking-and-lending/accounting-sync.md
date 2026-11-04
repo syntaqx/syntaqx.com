@@ -1,5 +1,6 @@
 +++
 title = "Accounting Sync & the Close"
+nav_title = "Accounting Sync"
 description = "Getting spend into the books: GL coding and dimensions, the QuickBooks, NetSuite, Xero and Sage Intacct object models, idempotent sync, accruals and close."
 category = "Banking & Lending Industry"
 order = 2469

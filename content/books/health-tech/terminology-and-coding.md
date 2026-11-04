@@ -1,6 +1,6 @@
 +++
 title = "Terminologies & Code Sets"
-nav_title = "Terminologies & Code Sets"
+nav_title = "Terminology & Codes"
 description = "The codes inside health records: ICD-10, CPT, HCPCS, CDT, SNOMED CT, LOINC, RxNorm, NDC, CVX and taxonomy codes, licenses, release cadence, value sets and maps."
 category = "Health Tech Industry"
 order = 1913

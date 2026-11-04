@@ -1,5 +1,6 @@
 +++
 title = "Queries, Views & Dashboards"
+nav_title = "Queries & Dashboards"
 description = "JQL and WIQL grammars, Linear and GitHub filters, saved filters and their sharing, list, board and timeline views, dashboards, and permission-trimmed queries."
 category = "Workplace & Collaboration Industry"
 order = 2031

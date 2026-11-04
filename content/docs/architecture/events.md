@@ -1,5 +1,6 @@
 +++
 title = "Events & Async Messaging"
+nav_title = "Events & Messaging"
 description = "Publishing and consuming events reliably: the transactional outbox, idempotent consumers, partition keys for ordering, CloudEvents, and schema evolution."
 category = "Architecture"
 order = 203

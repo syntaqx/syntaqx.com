@@ -1,5 +1,6 @@
 +++
 title = "From chroot to Containers"
+nav_title = "Containers"
 description = "Forty years of OS-level isolation, from chroot and jails to namespaces, cgroups, Docker and OCI, and what a provider sells when it runs containers."
 category = "Hosting & Cloud Industry"
 order = 2119

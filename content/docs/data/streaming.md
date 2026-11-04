@@ -1,5 +1,6 @@
 +++
 title = "Streaming & Event Processing"
+nav_title = "Stream Processing"
 description = "Logs, partitions and consumer groups in Kafka, Kinesis, Pulsar and Redpanda; event time, windows, watermarks, state and exactly-once in Flink and Spark."
 category = "Data Platforms"
 order = 1275

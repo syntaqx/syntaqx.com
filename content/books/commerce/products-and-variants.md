@@ -1,5 +1,6 @@
 +++
 title = "Products, Variants & Bundles"
+nav_title = "Products & Variants"
 description = "Products versus SKUs, options and variant limits by platform, bundles and kits, digital goods, GTINs and GS1 rules, pack sizes and the product lifecycle."
 category = "Commerce Industry"
 order = 2305

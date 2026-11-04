@@ -1,6 +1,6 @@
 +++
 title = "Multi-Location Groups & Call Centers"
-nav_title = "Multi-Location & Call Centers"
+nav_title = "Multi-Location"
 description = "DSOs and groups in software: location hierarchies over several PMSs, central scheduling and call centers, brand numbers, permissions, inboxes, reporting."
 category = "Health Tech Industry"
 order = 1941

@@ -1,5 +1,6 @@
 +++
 title = "Live Latency, Playback & VODs"
+nav_title = "Live Latency & VODs"
 description = "Live latency tiers and what each gives up, distribution at scale, real-time stages, timed metadata and ad breaks, live to VOD, retention caps and clips."
 category = "User-Generated Platforms Industry"
 order = 1818

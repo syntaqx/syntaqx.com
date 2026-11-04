@@ -1,5 +1,6 @@
 +++
 title = "Employee Monitoring & Privacy"
+nav_title = "Employee Monitoring"
 description = "What admins can see in workplace tools, US notice laws, ECPA and the NLRB, GDPR, German works councils, CNIL fines on monitoring, and bossware's limits."
 category = "Workplace & Collaboration Industry"
 order = 2053

@@ -1,5 +1,6 @@
 +++
 title = "Dedicated Servers & Bare Metal"
+nav_title = "Dedicated & Bare Metal"
 description = "Renting whole machines from Rackspace and SoftLayer to bare-metal clouds: PXE, IPMI and Redfish provisioning, reimaging and wiping, spares and inventory."
 category = "Hosting & Cloud Industry"
 order = 2115

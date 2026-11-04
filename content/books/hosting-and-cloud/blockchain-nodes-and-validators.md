@@ -1,6 +1,6 @@
 +++
 title = "Blockchain Nodes, RPC & Validators"
-nav_title = "Blockchain Nodes & Validators"
+nav_title = "Blockchain Nodes"
 description = "Hosting blockchains: node resource profiles, RPC providers metered in compute units, validator hosting and slashing, provider terms and node concentration."
 category = "Hosting & Cloud Industry"
 order = 2210

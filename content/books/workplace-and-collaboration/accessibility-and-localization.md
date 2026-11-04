@@ -5,7 +5,7 @@ category = "Workplace & Collaboration Industry"
 order = 2066
 part = "Running the Platform"
 tags = ["accessibility", "wcag", "procurement", "captions", "localization"]
-nav_title = "Accessibility & Localization"
+nav_title = "Accessibility & i18n"
 +++
 
 An employee can't choose their employer's chat tool. A consumer who finds an app unusable with a screen reader installs another one; an employee whose company standardized on a collaboration suite that doesn't work with their screen reader, magnifier, switch device or captions can't do their job. That's why accessibility in workplace software is enforced through procurement rather than app store reviews. Governments and large employers require a conformance report before they buy, write accessibility into the contract, and hold the vendor to it. The customer's admin also holds several accessibility decisions directly: whether captions and transcripts are enabled in meetings, which caption language options are licensed, whether third-party captioners can join, and which apps are allowed into the workspace.

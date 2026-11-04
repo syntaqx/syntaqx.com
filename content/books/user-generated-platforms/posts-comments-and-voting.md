@@ -1,5 +1,6 @@
 +++
 title = "Posts, Comments & Voting"
+nav_title = "Posts & Comments"
 description = "Post types, reposts and quotes, threaded comments, removal versus deletion, votes and karma, hot and confidence ranking, vote manipulation and viral galleries."
 category = "User-Generated Platforms Industry"
 order = 1805

@@ -1,5 +1,6 @@
 +++
 title = "Platforms Take Over the Deploy"
+nav_title = "Platform Deploys"
 description = "Git push and buildpacks, twelve-factor, releases and rollback, previews, immutable URLs and aliases, GitOps and edge deploys: the deploy as a platform object."
 category = "Hosting & Cloud Industry"
 order = 2140

@@ -1,5 +1,6 @@
 +++
 title = "Dispatch & the Day of Service"
+nav_title = "Dispatch & the Day"
 description = "Running the day: dispatch consoles, visit states, same-day exceptions, live ETA links, geofence arrivals, telematics, weather, customer updates, escalation."
 category = "Field Operations Industry"
 order = 1512

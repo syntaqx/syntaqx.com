@@ -1,5 +1,6 @@
 +++
 title = "Storage & Stateful Workloads"
+nav_title = "Stateful Workloads"
 description = "In-tree plugins to CSI, claims and classes, topology and attach limits, StatefulSets, database operators, Velero, and when state belongs outside."
 category = "Hosting & Cloud Industry"
 order = 2129

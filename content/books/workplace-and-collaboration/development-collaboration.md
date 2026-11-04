@@ -1,5 +1,6 @@
 +++
 title = "Development Collaboration"
+nav_title = "Dev Collaboration"
 description = "Code hosts as collaboration tools: pull requests and review rules, CODEOWNERS, merge queues, linking work items to commits and deploys, and inner source."
 category = "Workplace & Collaboration Industry"
 order = 2036

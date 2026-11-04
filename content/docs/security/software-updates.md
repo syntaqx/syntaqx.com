@@ -1,5 +1,6 @@
 +++
 title = "Securing Software Updates"
+nav_title = "Software Updates"
 description = "An updater that survives a hostile network: TUF's threat model, keys split by role, signed monotonic manifests, verified chunks and deltas, and staged rollout."
 category = "Security"
 order = 713

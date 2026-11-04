@@ -1,5 +1,6 @@
 +++
 title = "AI on User-Generated Platforms"
+nav_title = "AI on Platforms"
 description = "AI moderation and its error budgets, labels for AI-generated uploads, C2PA and IPTC provenance, EU AI Act disclosure, AI answers and training opt-outs."
 category = "User-Generated Platforms Industry"
 order = 1854

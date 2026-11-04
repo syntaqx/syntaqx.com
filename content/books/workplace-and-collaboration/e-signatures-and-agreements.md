@@ -1,5 +1,6 @@
 +++
 title = "E-Signatures & Agreements"
+nav_title = "E-Signatures"
 description = "E-signature as workplace software: envelopes and certificates, ESIGN exceptions, eIDAS levels and QTSPs, PDF signatures, CLM and remote notarization."
 category = "Workplace & Collaboration Industry"
 order = 2028

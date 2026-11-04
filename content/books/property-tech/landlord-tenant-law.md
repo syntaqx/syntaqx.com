@@ -1,5 +1,6 @@
 +++
 title = "Landlord-Tenant Law as Data"
+nav_title = "Landlord-Tenant Law"
 description = "State and city landlord-tenant rules as effective-dated data: resolving jurisdictions, sourcing and review, preemption, and a matrix of who owns each rule."
 category = "Property Tech Industry"
 order = 1733

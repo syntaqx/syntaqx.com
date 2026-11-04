@@ -1,5 +1,6 @@
 +++
 title = "The Commerce Landscape"
+nav_title = "The Landscape"
 description = "Commerce platforms, marketplaces, point of sale, OMS, WMS and ERP, app ecosystems, US e-commerce size from the Census, and who owns whom as of October 2026."
 category = "Commerce Industry"
 order = 2302

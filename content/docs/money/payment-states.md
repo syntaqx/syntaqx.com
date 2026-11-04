@@ -1,5 +1,6 @@
 +++
 title = "Payment States & Ledgers"
+nav_title = "Payment States"
 description = "Explicit state machines for financial objects, append-only records, and a double-entry ledger, so every balance can be explained and nothing is ever edited."
 category = "Money"
 order = 803

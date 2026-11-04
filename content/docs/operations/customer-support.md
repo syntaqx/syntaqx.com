@@ -1,5 +1,6 @@
 +++
 title = "Customer Support Operations"
+nav_title = "Customer Support"
 description = "Running support as a system: channels, tickets with states and context, classify and route, macros, bots that hand off, escalation, metrics and QA."
 category = "Operations"
 order = 1238
