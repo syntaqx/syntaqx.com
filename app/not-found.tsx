@@ -1,5 +1,5 @@
-import { Crawl404 } from "@/components/crawl/crawl-404";
+import { Arcade404 } from "@/components/arcade/arcade-404";
 
 export default function NotFound() {
-  return <Crawl404 />;
+  return <Arcade404 />;
 }
