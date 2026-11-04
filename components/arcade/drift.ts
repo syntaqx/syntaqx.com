@@ -602,20 +602,6 @@ export const createDrift: CabinetFactory = (): Cabinet => {
       }
       ctx.globalCompositeOperation = "source-over";
 
-      // The wave number, small in a corner.
-      const size = Math.round(clamp(9 * s, 9, 13));
-      ctx.font = `${size}px ${theme.label}`;
-      ctx.letterSpacing = `${(size * 0.3).toFixed(1)}px`;
-      ctx.textAlign = "left";
-      ctx.textBaseline = "alphabetic";
-      ctx.fillStyle = theme.muted;
-      ctx.fillText(
-        `WAVE ${String(wave).padStart(2, "0")}`,
-        clamp(w * 0.03, 14, 48),
-        h - clamp(h * 0.03, 14, 32),
-      );
-      ctx.letterSpacing = "0px";
-
       ctx.restore();
     },
   };

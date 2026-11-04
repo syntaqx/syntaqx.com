@@ -88,7 +88,6 @@ class FormationGame implements Cabinet {
   private sparks: Spark[] = [];
   private bunkers: Bunker[] = [];
 
-  private score = 0;
   private wave = 1;
   private phase: "play" | "clear" | "over" = "play";
   private phaseTimer = 0;
@@ -254,20 +253,7 @@ class FormationGame implements Cabinet {
     const visible = this.dead <= 0 || (this.dead < 0.6 && Math.sin(t * 30) > 0);
     if (visible && !(this.phase === "over" && this.lives <= 0)) {
       ctx.strokeStyle = theme.primary;
-      this.drawCannon(ctx, this.cannonX, this.cannonY, 1);
-    }
-
-    // Score and spare cannons, small and out of the way.
-    ctx.font = `500 11px ${theme.mono}`;
-    ctx.textBaseline = "top";
-    ctx.textAlign = "left";
-    ctx.fillStyle = theme.muted;
-    const pad = 16;
-    ctx.fillText(String(this.score).padStart(5, "0"), pad, pad);
-    ctx.strokeStyle = theme.muted;
-    ctx.lineWidth = 1.25;
-    for (let i = 0; i < this.lives - 1; i++) {
-      this.drawCannon(ctx, pad + 58 + i * 18, pad + 10, 0.5);
+      this.drawCannon(ctx, this.cannonX, this.cannonY);
     }
     ctx.restore();
   }
@@ -289,7 +275,6 @@ class FormationGame implements Cabinet {
   }
 
   private newGame() {
-    this.score = 0;
     this.lives = 3;
     this.wave = 1;
     this.dead = 0;
@@ -306,8 +291,9 @@ class FormationGame implements Cabinet {
     this.cols = this.w < 720 ? 8 : 11;
     this.alive = new Array(ROWS * this.cols).fill(true);
     this.gx = (this.w - (this.cols - 1) * this.cell) / 2;
-    // Later waves start a little lower, the way the genre ramps.
-    const top = clamp(this.h * 0.1, 44, 120);
+    // Later waves start a little lower, the way the genre ramps. The first
+    // starts a fifth of the way down, mostly under Break's wall of bricks.
+    const top = clamp(this.h * 0.2, 64, 220);
     this.gy = top + Math.min(this.wave - 1, 4) * this.rowH * 0.3;
     this.vx = this.gx;
     // March in from above the stage.
@@ -582,7 +568,6 @@ class FormationGame implements Cabinet {
           const ax = this.vx + c * this.cell;
           if (Math.abs(b.x - ax) < R * 1.15) {
             this.alive[i] = false;
-            this.score += (ROWS - r) * 10;
             this.burst(ax, ay, ROW_COLORS[r], 14);
             this.bullet = null;
             break outer;
@@ -772,9 +757,9 @@ class FormationGame implements Cabinet {
     ctx.lineWidth = this.lw;
   }
 
-  private drawCannon(ctx: CanvasRenderingContext2D, x: number, y: number, k: number) {
-    const hw = this.cannonHW * k;
-    const h = this.cannonH * k;
+  private drawCannon(ctx: CanvasRenderingContext2D, x: number, y: number) {
+    const hw = this.cannonHW;
+    const h = this.cannonH;
     ctx.beginPath();
     ctx.moveTo(x - hw, y);
     ctx.lineTo(x + hw, y);

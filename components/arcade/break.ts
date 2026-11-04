@@ -83,7 +83,6 @@ export const createBreak: CabinetFactory = (): Cabinet => {
   const trail: { x: number; y: number }[] = [];
   const paddle = { x: 400, vx: 0, target: 400, error: 0, aim: 0, read: false };
   let misses = 0;
-  let score = 0;
   /** Seconds until play resumes; the ball rests on the paddle meanwhile. */
   let pause = 1;
   let rebuild = false;
@@ -218,7 +217,6 @@ export const createBreak: CabinetFactory = (): Cabinet => {
       else ball.vy = ball.y < q.y + q.h / 2 ? -Math.abs(ball.vy) : Math.abs(ball.vy);
       b.alive = false;
       alive--;
-      score += 10 * (ROWS - b.row);
       ball.speed = Math.min(maxSpeed(), ball.speed * 1.015);
       const k = ball.speed / Math.hypot(ball.vx, ball.vy);
       ball.vx *= k;
@@ -248,7 +246,8 @@ export const createBreak: CabinetFactory = (): Cabinet => {
       bw = wall / COLS;
       bh = bw * 0.52;
       gridX = (w - wall) / 2;
-      gridY = clamp(h * 0.09, 40, 140);
+      // High on the stage, so Formation's grid can march in just under it.
+      gridY = clamp(h * 0.05, 20, 72);
       padW = clamp(w * 0.09, 64, 160);
       padH = clamp(8 * s, 6, 12);
       padY = h - clamp(h * 0.07, 36, 90);
@@ -298,7 +297,6 @@ export const createBreak: CabinetFactory = (): Cabinet => {
             bricks = layout();
             alive = bricks.length;
             misses = 0;
-            score = 0;
             rebuild = false;
           }
           serve();
@@ -419,27 +417,6 @@ export const createBreak: CabinetFactory = (): Cabinet => {
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, r, 0, Math.PI * 2);
         ctx.fill();
-      }
-
-      // Score and balls left, quietly in the bottom corners.
-      const size = Math.round(clamp(12 * s, 11, 18));
-      ctx.font = `${size}px ${theme.mono}`;
-      ctx.textBaseline = "alphabetic";
-      ctx.textAlign = "left";
-      ctx.fillStyle = theme.muted;
-      const base = h - clamp(h * 0.025, 12, 28);
-      ctx.fillText(String(score).padStart(4, "0"), clamp(w * 0.03, 14, 48), base);
-      ctx.strokeStyle = theme.muted;
-      ctx.lineWidth = lw;
-      for (let i = 0; i < LIVES; i++) {
-        const cx = w - clamp(w * 0.03, 14, 48) - i * size * 1.2 - size * 0.35;
-        ctx.beginPath();
-        ctx.arc(cx, base - size * 0.35, size * 0.3, 0, Math.PI * 2);
-        if (i < LIVES - misses) {
-          ctx.fillStyle = theme.muted;
-          ctx.fill();
-        }
-        ctx.stroke();
       }
 
       ctx.restore();

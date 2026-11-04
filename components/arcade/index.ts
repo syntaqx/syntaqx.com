@@ -6,12 +6,13 @@ import { createDrift } from "./drift";
 import { createFormation } from "./formation";
 import { createRally } from "./rally";
 
-// Every cabinet on the 404's wall, in reading order.
+// Every cabinet on the 404's shared canvas, back to front: the maze is the
+// backdrop and each later game draws over the ones before it.
 export const cabinets: CabinetFactory[] = [
+  createChase,
   crawl,
-  createRally,
   createBreak,
   createFormation,
-  createChase,
+  createRally,
   createDrift,
 ];

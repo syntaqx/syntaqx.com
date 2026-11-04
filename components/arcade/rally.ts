@@ -280,47 +280,6 @@ export const createRally: CabinetFactory = (): Cabinet => {
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
 
-      // The court: walls and a dotted net.
-      ctx.strokeStyle = theme.line;
-      ctx.lineWidth = lw;
-      ctx.beginPath();
-      ctx.moveTo(leftX, top);
-      ctx.lineTo(rightX + padW, top);
-      ctx.moveTo(leftX, bottom);
-      ctx.lineTo(rightX + padW, bottom);
-      ctx.stroke();
-      ctx.setLineDash([2 * s, 12 * s]);
-      ctx.lineWidth = lw * 1.6;
-      ctx.beginPath();
-      ctx.moveTo(w / 2, top + 10 * s);
-      ctx.lineTo(w / 2, bottom - 4 * s);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Scores sit at the top, either side of the net.
-      const size = Math.round(clamp(30 * s, 22, 52));
-      ctx.font = `500 ${size}px ${theme.mono}`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      ctx.globalAlpha = 0.75;
-      ctx.fillStyle = colors[0];
-      ctx.fillText(String(score[0]), w / 2 - clamp(w * 0.1, 44, 160), top + 18 * s);
-      ctx.fillStyle = colors[1];
-      ctx.fillText(String(score[1]), w / 2 + clamp(w * 0.1, 44, 160), top + 18 * s);
-      ctx.globalAlpha = 1;
-
-      if (winner >= 0) {
-        ctx.font = `${Math.round(clamp(10 * s, 9, 14))}px ${theme.label}`;
-        ctx.letterSpacing = `${(3 * s).toFixed(1)}px`;
-        ctx.fillStyle = theme.muted;
-        ctx.fillText(
-          "GAME",
-          w / 2 - clamp(w * 0.1, 44, 160) * (winner === 0 ? 1 : -1),
-          top + 18 * s + size * 1.3,
-        );
-        ctx.letterSpacing = "0px";
-      }
-
       // Paddles: soft fill, crisp outline, a faint additive halo in the dark.
       for (let i = 0; i < 2; i++) {
         const p = paddles[i];
