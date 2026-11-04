@@ -1,10 +1,9 @@
 /*
- * The 404's arcade: classic game genres playing themselves behind the page's
- * copy, the way cabinets run in attract mode. Nobody plays them. Each game
- * is a Cabinet; the runner in ./arcade-404.tsx owns one canvas and the loop,
- * sizes every cabinet to the whole stage and has them all step and draw into
- * it, layered, so the games read as one scene. A cabinet draws only its
- * moving action, no scenery or score, so the layers don't fight each other.
+ * The 404's arcade: a game playing itself behind the page's copy, the way
+ * cabinets run in attract mode. Nobody plays it. The game is a Cabinet; the
+ * runner in ./arcade-404.tsx owns the canvas and the loop, sizes the cabinet
+ * to the whole stage and has it step and draw. A cabinet draws only its
+ * moving action, no scenery or score, so it stays out of the copy's way.
  */
 
 /** The site's colors, read from its CSS tokens, so the arcade follows the theme. */
@@ -34,7 +33,7 @@ export interface ArcadeTheme {
 }
 
 export interface Cabinet {
-  /** The game's name, one word or two, original to this site. The runner keys layer opacity by it. */
+  /** The game's name, one word or two, original to this site. */
   title: string;
   /** The whole stage in CSS pixels; called before the first step and on every resize. */
   resize(width: number, height: number): void;
@@ -44,8 +43,8 @@ export interface Cabinet {
    */
   step(dt: number): void;
   /**
-   * Draws the current frame over the layers behind it. The runner has filled
-   * the background and restores the context's state after each cabinet.
+   * Draws the current frame. The runner has filled the background and restores
+   * the context's state afterwards.
    */
   draw(ctx: CanvasRenderingContext2D, theme: ArcadeTheme, now: number): void;
 }
