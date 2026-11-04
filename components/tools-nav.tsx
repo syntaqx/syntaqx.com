@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { moreToolsFor } from "@/lib/tools";
+import { Button } from "@/registry/syntaqx/ui/button";
 
 // Hub/index pages already list everything, so don't repeat the nav there.
 const HUB_PATHS = new Set(["/tools", "/tools/convert"]);
@@ -26,12 +27,9 @@ export function ToolsNav() {
       <ul className="flex flex-wrap gap-2">
         {others.map((tool) => (
           <li key={tool.href}>
-            <Link
-              href={tool.href}
-              className="inst inline-block border border-border px-2.5 py-1.5 text-subtle hover:border-primary hover:text-primary transition-colors"
-            >
-              {tool.title}
-            </Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href={tool.href}>{tool.title}</Link>
+            </Button>
           </li>
         ))}
       </ul>

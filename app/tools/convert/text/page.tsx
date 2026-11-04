@@ -2,9 +2,13 @@
 
 import { useState, useCallback, type KeyboardEvent } from "react";
 import { Info, ExternalLink, Trash2, Settings2 } from "lucide-react";
+import { OptionSelect, PanelHeader, Stat } from "@/components/tool-controls";
+import { Button } from "@/registry/syntaqx/ui/button";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { PasteButton } from "@/components/paste-button";
-import { Select } from "@/components/select";
+import { Field, FieldError, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-group";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 import * as yaml from "js-yaml";
 import * as toml from "smol-toml";
 import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon";
@@ -357,21 +361,22 @@ function EditorPane({
   onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
 }) {
   return (
-    <div className="max-h-150 overflow-auto min-h-72">
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={onKeyDown}
-        placeholder={placeholder}
-        rows={12}
-        spellCheck={false}
-        className="w-full min-h-72 bg-transparent px-3 py-2 text-sm text-foreground caret-foreground focus:outline-none resize-none font-mono whitespace-pre-wrap wrap-break-word placeholder:text-muted-foreground/50"
-      />
-    </div>
+    <InputGroupTextarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      onKeyDown={onKeyDown}
+      placeholder={placeholder}
+      rows={12}
+      spellCheck={false}
+      className="max-h-150 min-h-72 font-mono wrap-break-word whitespace-pre-wrap"
+    />
   );
 }
 
 // --- Page -------------------------------------------------------------------
+
+// Radix reserves "" for clearing a select, so "no primary" needs a value.
+const AUTO = "auto";
 
 export default function ConvertPage() {
   const defaultEnabled = FORMATS.filter((f) => f.default).map((f) => f.id);
@@ -380,10 +385,6 @@ export default function ConvertPage() {
   const [values, setValues] = useState<Record<string, string>>({});
   const [source, setSource] = useState<Format | null>(null);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
-
-  const toggleFormat = (id: Format) => {
-    setEnabled((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
-  };
 
   const activeFormats = (() => {
     const base = FORMATS.filter((f) => enabled.includes(f.id));
@@ -482,62 +483,60 @@ export default function ConvertPage() {
         {/* Left: editors */}
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <Select
+            <OptionSelect
               label="Primary"
-              value={primary ?? ""}
-              onChange={(v) => setPrimary((v as Format) || null)}
+              value={primary ?? AUTO}
+              onValueChange={(v) => setPrimary(v === AUTO ? null : (v as Format))}
               options={[
-                { value: "", label: "Auto" },
+                { value: AUTO, label: "Auto" },
                 ...FORMATS.filter((f) => enabled.includes(f.id)).map((f) => ({
                   value: f.id,
                   label: f.label,
                 })),
               ]}
             />
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={clear}
               disabled={!hasContent}
-              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+              className="hover:text-destructive"
             >
-              <Trash2 size={12} />
+              <Trash2 />
               Clear all
-            </button>
+            </Button>
           </div>
+
           {activeFormats.map((f) => (
-            <div key={f.id}>
-              <div
-                className={cn(
-                  "border bg-card transition-colors",
-                  errors[f.id]
-                    ? "border-pink/40"
-                    : source === f.id
-                      ? "border-primary/40"
-                      : "border-border",
-                )}
-              >
-                <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                  <span className="text-xs font-medium text-foreground">
+            <Field key={f.id} invalid={!!errors[f.id]}>
+              <InputGroup className={cn(source === f.id && "border-primary/40")}>
+                <PanelHeader>
+                  <FieldLabel>
                     {f.label}
-                    {errors[f.id] && <span className="ml-2 text-pink font-normal">Invalid</span>}
-                  </span>
+                    {errors[f.id] && <span className="font-normal text-destructive">Invalid</span>}
+                  </FieldLabel>
                   <div className="flex items-center gap-1.5">
-                    <span
+                    <Stat
                       className={cn(
-                        "text-[10px] text-muted-foreground tabular-nums transition-opacity",
+                        "transition-opacity",
                         values[f.id] ? "opacity-100" : "opacity-0",
                       )}
                     >
                       {(values[f.id]?.length ?? 0).toLocaleString()} chars
-                    </span>
+                    </Stat>
                     <CopyButton
                       value={values[f.id] || ""}
                       disabled={!values[f.id]}
                       variant="outline"
                       size="sm"
                     />
-                    <PasteButton onPaste={(text) => handleChange(f.id, text)} label />
+                    <PasteButton
+                      variant="outline"
+                      size="sm"
+                      onPaste={(text) => handleChange(f.id, text)}
+                    />
                   </div>
-                </div>
+                </PanelHeader>
                 <EditorPane
                   value={values[f.id] || ""}
                   lang={f.lang}
@@ -546,13 +545,9 @@ export default function ConvertPage() {
                   onChange={(text) => handleChange(f.id, text)}
                   onKeyDown={(e) => onKeyDown(f.id, e)}
                 />
-                {errors[f.id] && (
-                  <div className="px-3 py-2 border-t border-pink/20 bg-pink/5 text-xs text-pink font-mono break-all">
-                    {errors[f.id]}
-                  </div>
-                )}
-              </div>
-            </div>
+              </InputGroup>
+              <FieldError className="font-mono break-all">{errors[f.id]}</FieldError>
+            </Field>
           ))}
         </div>
 
@@ -560,12 +555,14 @@ export default function ConvertPage() {
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           {/* Format toggles */}
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center justify-between">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Settings2 size={12} className="text-primary" />
                 Formats
               </span>
-              <button
+              <Button
+                variant="ghost"
+                size="xs"
                 onClick={() =>
                   setEnabled((prev) =>
                     prev.length === FORMATS.length
@@ -573,35 +570,43 @@ export default function ConvertPage() {
                       : FORMATS.map((f) => f.id),
                   )
                 }
-                className="text-[10px] text-muted-foreground hover:text-primary transition-colors cursor-pointer font-normal normal-case tracking-normal"
               >
                 {enabled.length === FORMATS.length ? "Reset" : "All"}
-              </button>
+              </Button>
             </h3>
             <div className="px-4 py-3 space-y-3">
               {CATEGORIES.map((cat) => {
                 const formats = FORMATS.filter((f) => f.category === cat.id);
+                const ids = formats.map((f) => f.id);
                 return (
                   <div key={cat.id}>
-                    <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                    <span
+                      id={`formats-${cat.id}`}
+                      className="text-xs text-muted-foreground uppercase tracking-wider"
+                    >
                       {cat.label}
                     </span>
-                    <div className="flex flex-wrap gap-1.5 mt-1.5">
+                    <ToggleGroup
+                      type="multiple"
+                      variant="outline"
+                      size="sm"
+                      spacing={1.5}
+                      aria-labelledby={`formats-${cat.id}`}
+                      value={enabled.filter((id) => ids.includes(id))}
+                      onValueChange={(next) =>
+                        setEnabled((prev) => [
+                          ...prev.filter((id) => !ids.includes(id)),
+                          ...(next as Format[]),
+                        ])
+                      }
+                      className="mt-1.5 flex-wrap"
+                    >
                       {formats.map((f) => (
-                        <button
-                          key={f.id}
-                          onClick={() => toggleFormat(f.id)}
-                          className={cn(
-                            "border px-2 py-0.5 text-[11px] font-medium transition-colors cursor-pointer",
-                            enabled.includes(f.id)
-                              ? "border-primary/40 bg-primary/10 text-primary"
-                              : "border-border text-muted-foreground hover:text-foreground hover:border-border",
-                          )}
-                        >
+                        <ToggleGroupItem key={f.id} value={f.id}>
                           {f.label}
-                        </button>
+                        </ToggleGroupItem>
                       ))}
-                    </div>
+                    </ToggleGroup>
                   </div>
                 );
               })}
@@ -609,50 +614,50 @@ export default function ConvertPage() {
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About
             </h3>
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                <span className="text-subtle">JSON</span> (JavaScript Object Notation) is the most
-                common data interchange format on the web. Strict syntax: double-quoted keys, no
-                comments, no trailing commas. JSONC (JSON with Comments) relaxes some of these rules
-                but isn&apos;t widely supported outside of editors and tooling configs.
+                <span className="text-foreground">JSON</span> (JavaScript Object Notation) is the
+                most common data interchange format on the web. Strict syntax: double-quoted keys,
+                no comments, no trailing commas. JSONC (JSON with Comments) relaxes some of these
+                rules but isn&apos;t widely supported outside of editors and tooling configs.
               </p>
               <p>
-                <span className="text-subtle">YAML</span> (YAML Ain&apos;t Markup Language) is a
+                <span className="text-foreground">YAML</span> (YAML Ain&apos;t Markup Language) is a
                 human-readable format popular in configuration files. Indentation-based, supports
                 comments and multi-line strings.
               </p>
               <p>
-                <span className="text-subtle">TOON</span> (Token-Oriented Object Notation) is a
+                <span className="text-foreground">TOON</span> (Token-Oriented Object Notation) is a
                 compact format designed for LLM prompts. Combines YAML-like indentation with
                 CSV-style tabular arrays for 20-40% fewer tokens than JSON.
               </p>
               <p>
-                <span className="text-subtle">TOML</span> (Tom&apos;s Obvious Minimal Language) is
-                designed for config files. Explicit typing, clean table syntax, and native datetime
-                support.
+                <span className="text-foreground">TOML</span> (Tom&apos;s Obvious Minimal Language)
+                is designed for config files. Explicit typing, clean table syntax, and native
+                datetime support.
               </p>
               <p>
-                <span className="text-subtle">XML</span> (Extensible Markup Language) is a verbose
-                but universal format used in configs, APIs, and document interchange. Supports
-                attributes, namespaces, and schemas.
+                <span className="text-foreground">XML</span> (Extensible Markup Language) is a
+                verbose but universal format used in configs, APIs, and document interchange.
+                Supports attributes, namespaces, and schemas.
               </p>
               <p>
-                <span className="text-subtle">ENV</span> (dotenv) is a flat key=value format used
-                for environment variables. Natively flat with string values, though some tools
+                <span className="text-foreground">ENV</span> (dotenv) is a flat key=value format
+                used for environment variables. Natively flat with string values, though some tools
                 support variable expansion and prefixed key conventions for grouping.
               </p>
               <p>
-                <span className="text-subtle">CSV</span> (Comma-Separated Values) is a tabular
+                <span className="text-foreground">CSV</span> (Comma-Separated Values) is a tabular
                 format. Works best with flat objects or arrays of uniform objects. Nesting can be
                 emulated with dot-notation column names, but isn&apos;t part of the spec.
               </p>
               <p>
-                <span className="text-subtle">Query String</span> is the key=value format from URLs
-                ({`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket
+                <span className="text-foreground">Query String</span> is the key=value format from
+                URLs ({`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket
                 nesting ({`user[name]=x`}) in many frameworks.
               </p>
               <p>
@@ -663,7 +668,7 @@ export default function ConvertPage() {
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -673,7 +678,7 @@ export default function ConvertPage() {
                   href="https://www.json.org/json-en.html"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   json.org - JSON specification
                 </a>
@@ -683,7 +688,7 @@ export default function ConvertPage() {
                   href="https://yaml.org/spec/1.2.2/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   YAML 1.2 specification
                 </a>
@@ -693,7 +698,7 @@ export default function ConvertPage() {
                   href="https://toonformat.dev"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   toonformat.dev - TOON specification
                 </a>
@@ -703,7 +708,7 @@ export default function ConvertPage() {
                   href="https://toml.io/en/v1.0.0"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   TOML v1.0.0 specification
                 </a>
@@ -713,7 +718,7 @@ export default function ConvertPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc8259"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 8259 - JSON (IETF)
                 </a>

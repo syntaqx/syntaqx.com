@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { RefreshCw, Info, ExternalLink } from "lucide-react";
-import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { cn } from "@/lib/cn";
+import { Button } from "@/registry/syntaqx/ui/button";
+import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
+import { Skeleton } from "@/registry/syntaqx/ui/skeleton";
 
 function Row({ label, value, mono }: { label: string; value: string | null; mono?: boolean }) {
   return (
@@ -21,8 +23,8 @@ function Row({ label, value, mono }: { label: string; value: string | null; mono
           </>
         ) : (
           <div className="flex items-center gap-1.5">
-            <div className="h-4 w-20 bg-border/40 animate-pulse" />
-            <div className="size-6.5  border border-border/40 bg-border/20 animate-pulse" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="size-6" />
           </div>
         )}
       </div>
@@ -172,22 +174,18 @@ export default function WhoamiPage() {
           {/* IP hero */}
           <div className="border border-border bg-card">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-              <span className="text-xs text-muted-foreground">Your Public IP</span>
-              <button
-                onClick={fetchIp}
-                disabled={loading}
-                className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer disabled:opacity-30"
-              >
-                <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
+              <span className="text-sm font-medium">Your Public IP</span>
+              <Button variant="outline" size="sm" onClick={fetchIp} disabled={loading}>
+                <RefreshCw className={cn(loading && "animate-spin")} />
                 Refresh
-              </button>
+              </Button>
             </div>
             <div className="px-4 py-6 text-center">
               <div className="flex flex-col items-center gap-3">
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-muted-foreground">IPv4</span>
+                  <span className="text-xs text-muted-foreground">IPv4</span>
                   {error ? (
-                    <span className="text-sm text-pink">Could not determine IP</span>
+                    <span className="text-sm text-destructive">Could not determine IP</span>
                   ) : ipv4 ? (
                     <div className="flex items-center gap-2">
                       <span className="text-2xl font-bold text-primary font-mono tracking-wide">
@@ -196,15 +194,11 @@ export default function WhoamiPage() {
                       <CopyButton value={ipv4} size="icon-sm" />
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold font-mono tracking-wide text-transparent bg-border/40 animate-pulse">
-                        000.000.000.000
-                      </span>
-                    </div>
+                    <Skeleton className="h-8 w-56" />
                   )}
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-muted-foreground">IPv6</span>
+                  <span className="text-xs text-muted-foreground">IPv6</span>
                   {ipv6 ? (
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-primary font-mono tracking-wide break-all">
@@ -212,29 +206,17 @@ export default function WhoamiPage() {
                       </span>
                       <CopyButton value={ipv6} size="icon-sm" />
                     </div>
+                  ) : loading ? (
+                    <Skeleton className="h-5 w-64 max-w-full" />
                   ) : (
-                    <span
-                      className={cn(
-                        "text-xs",
-                        loading
-                          ? "text-transparent bg-border/30 animate-pulse"
-                          : "text-muted-foreground/50",
-                      )}
-                    >
-                      {loading ? "0000:0000:0000:0000:0000:0000" : "Unavailable"}
-                    </span>
+                    <span className="text-xs text-muted-foreground">Unavailable</span>
                   )}
                 </div>
-                <span
-                  className={cn(
-                    "text-xs",
-                    !location && loading
-                      ? "text-transparent bg-border/30 animate-pulse"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  {location || (loading ? "Loading location" : "\u00A0")}
-                </span>
+                {!location && loading ? (
+                  <Skeleton className="h-4 w-32" />
+                ) : (
+                  <span className="text-xs text-muted-foreground">{location || "\u00A0"}</span>
+                )}
               </div>
             </div>
           </div>
@@ -283,23 +265,23 @@ export default function WhoamiPage() {
         {/* Right: info sidebar */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About IP Addresses
             </h3>
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                Your <span className="text-subtle">public IP address</span> is assigned by your ISP
-                and is how other devices on the internet identify your connection.
+                Your <span className="text-foreground">public IP address</span> is assigned by your
+                ISP and is how other devices on the internet identify your connection.
               </p>
               <p>
                 It can reveal your approximate location, ISP, and whether you&apos;re using a VPN or
                 proxy. It does not reveal your exact address.
               </p>
               <p>
-                <span className="text-subtle">IPv4</span> addresses are 32-bit (e.g. 192.168.1.1).{" "}
-                <span className="text-subtle">IPv6</span> addresses are 128-bit and look like
-                2001:db8::1.
+                <span className="text-foreground">IPv4</span> addresses are 32-bit (e.g.
+                192.168.1.1). <span className="text-foreground">IPv6</span> addresses are 128-bit
+                and look like 2001:db8::1.
               </p>
               <p>
                 Browser details are read from JavaScript APIs and HTTP headers. No fingerprinting
@@ -309,7 +291,7 @@ export default function WhoamiPage() {
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -319,7 +301,7 @@ export default function WhoamiPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc791"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 791 - Internet Protocol (IPv4)
                 </a>
@@ -329,7 +311,7 @@ export default function WhoamiPage() {
                   href="https://datatracker.ietf.org/doc/html/rfc8200"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 8200 - IPv6 Specification
                 </a>
@@ -339,7 +321,7 @@ export default function WhoamiPage() {
                   href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   MDN - Navigator API
                 </a>
@@ -349,7 +331,7 @@ export default function WhoamiPage() {
                   href="https://en.wikipedia.org/wiki/IP_address"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   Wikipedia - IP address
                 </a>

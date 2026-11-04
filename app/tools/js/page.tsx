@@ -1,13 +1,28 @@
 "use client";
 
-import { useState, useRef, useCallback, type DragEvent } from "react";
-import { Trash2, Upload, FileText, Info, ExternalLink, Play, Loader2 } from "lucide-react";
-import { PasteButton } from "@/components/paste-button";
-import { Checkbox } from "@/components/checkbox";
-import { Select } from "@/components/select";
+import { useState, useCallback } from "react";
+import { Upload, Info, ExternalLink, Play, CircleAlert } from "lucide-react";
+import {
+  ClearButton,
+  FileName,
+  OptionCheckbox,
+  OptionSelect,
+  PanelFooter,
+  PanelHeader,
+  Stat,
+  codeArea,
+  dropTarget,
+} from "@/components/tool-controls";
+import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
+import { Button } from "@/registry/syntaqx/ui/button";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { Segmented } from "@/components/segmented";
-import { cn } from "@/lib/cn";
+import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { FileDrop, FileDropTrigger } from "@/registry/syntaqx/ui/file-drop";
+import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-group";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import { Spinner } from "@/registry/syntaqx/ui/spinner";
+import { Textarea } from "@/registry/syntaqx/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // --- Types ------------------------------------------------------------------
 
@@ -82,8 +97,6 @@ export default function JsToolPage() {
   const [error, setError] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [dragging, setDragging] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   // Beautify options
   const [parser, setParser] = useState<"babel" | "json">("babel");
@@ -125,13 +138,6 @@ export default function JsToolPage() {
       setError(null);
     };
     reader.readAsText(file);
-  };
-
-  const onDrop = (e: DragEvent) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) loadFile(file);
   };
 
   const run = useCallback(async () => {
@@ -217,197 +223,163 @@ export default function JsToolPage() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
-          <Segmented
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            aria-label="Mode"
             value={mode}
-            onChange={switchMode}
-            ariaLabel="Mode"
-            options={[
-              { value: "beautify", label: "Beautify" },
-              { value: "minify", label: "Minify" },
-              { value: "obfuscate", label: "Obfuscate" },
-            ]}
+            onValueChange={(v) => v && switchMode(v as Mode)}
             className="mb-5"
-          />
+          >
+            <ToggleGroupItem value="beautify">Beautify</ToggleGroupItem>
+            <ToggleGroupItem value="minify">Minify</ToggleGroupItem>
+            <ToggleGroupItem value="obfuscate">Obfuscate</ToggleGroupItem>
+          </ToggleGroup>
 
           <div className="flex flex-col gap-4">
-            {/* Input card */}
-            <div
-              onDrop={onDrop}
-              onDragOver={(e) => {
-                e.preventDefault();
-                setDragging(true);
-              }}
-              onDragLeave={() => setDragging(false)}
-              className={cn(
-                "border bg-card transition-colors",
-                dragging ? "border-primary border-dashed" : "border-border",
-              )}
+            {/* Input */}
+            <FileDrop
+              accept=".js,.mjs,.cjs,.json,.jsx,.ts,.tsx,text/javascript,application/json"
+              onFiles={([file]) => loadFile(file)}
             >
-              <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                <label className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  Source
-                  {fileName && (
-                    <span className="inline-flex items-center gap-1 text-primary">
-                      <FileText size={10} />
-                      {fileName}
-                    </span>
-                  )}
-                </label>
-                <div className="flex items-center gap-1.5">
-                  {input && (
-                    <span className="text-[10px] text-muted-foreground tabular-nums">
-                      {input.length.toLocaleString()} chars &middot; {byteSize(input)}
-                    </span>
-                  )}
-                  <button
-                    onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
-                  >
-                    <Upload size={12} />
-                    File
-                  </button>
-                  <PasteButton
-                    onPaste={(text) => {
-                      setFileName(null);
-                      setInput(text);
-                      setOutput("");
-                      setError(null);
-                    }}
-                    label
-                  />
-                  {input && (
-                    <button
-                      onClick={clear}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  )}
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept=".js,.mjs,.cjs,.json,.jsx,.ts,.tsx,text/javascript,application/json"
-                    className="hidden"
+              <Field>
+                <InputGroup className={dropTarget}>
+                  <PanelHeader>
+                    <FieldLabel className="gap-1.5">
+                      Source
+                      {fileName && <FileName name={fileName} />}
+                    </FieldLabel>
+                    <div className="flex items-center gap-1.5">
+                      {input && (
+                        <Stat>
+                          {input.length.toLocaleString()} chars &middot; {byteSize(input)}
+                        </Stat>
+                      )}
+                      <FileDropTrigger>
+                        <Upload />
+                        File
+                      </FileDropTrigger>
+                      <PasteButton
+                        variant="outline"
+                        size="sm"
+                        onPaste={(text) => {
+                          setFileName(null);
+                          setInput(text);
+                          setOutput("");
+                          setError(null);
+                        }}
+                      />
+                      {input && <ClearButton onClick={clear} />}
+                    </div>
+                  </PanelHeader>
+                  <InputGroupTextarea
+                    value={input}
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) loadFile(file);
-                      e.target.value = "";
+                      setFileName(null);
+                      setInput(e.target.value);
                     }}
+                    placeholder="Paste, drop a file, or type code here..."
+                    rows={10}
+                    spellCheck={false}
+                    className={codeArea}
                   />
-                </div>
-              </div>
-              <textarea
-                value={input}
-                onChange={(e) => {
-                  setFileName(null);
-                  setInput(e.target.value);
-                }}
-                placeholder="Paste, drop a file, or type code here..."
-                rows={10}
-                spellCheck={false}
-                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
-              />
-
-              {/* Options */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
-                {mode === "beautify" && (
-                  <>
-                    <Select
-                      label="Parser"
-                      value={parser}
-                      onChange={(v) => setParser(v as "babel" | "json")}
-                      options={[
-                        { value: "babel", label: "JavaScript" },
-                        { value: "json", label: "JSON" },
-                      ]}
-                    />
-                    <Select
-                      label="Indent"
-                      value={String(tabWidth)}
-                      onChange={(v) => setTabWidth(Number(v))}
-                      options={[
-                        { value: "2", label: "2 spaces" },
-                        { value: "4", label: "4 spaces" },
-                        { value: "8", label: "8 spaces" },
-                      ]}
-                    />
-                    <Checkbox
-                      checked={singleQuote}
-                      onChange={() => setSingleQuote((v) => !v)}
-                      label="Single quotes"
-                    />
-                    <Checkbox
-                      checked={semi}
-                      onChange={() => setSemi((v) => !v)}
-                      label="Semicolons"
-                    />
-                  </>
-                )}
-                {mode === "minify" && (
-                  <>
-                    <Checkbox
-                      checked={compress}
-                      onChange={() => setCompress((v) => !v)}
-                      label="Compress"
-                      tooltip="Apply Terser's compression passes (dead code removal, constant folding, etc.)."
-                    />
-                    <Checkbox
-                      checked={mangle}
-                      onChange={() => setMangle((v) => !v)}
-                      label="Mangle names"
-                      tooltip="Rename local variables and functions to shorter identifiers."
-                    />
-                    <Checkbox
-                      checked={minifyKeepClassnames}
-                      onChange={() => setMinifyKeepClassnames((v) => !v)}
-                      label="Keep class/function names"
-                      tooltip="Useful when code relies on Function.name or class names at runtime."
-                    />
-                  </>
-                )}
-                {mode === "obfuscate" && (
-                  <>
-                    <Select
-                      label="Preset"
-                      value={obfPreset}
-                      onChange={(v) => setObfPreset(v as "low" | "medium" | "high")}
-                      options={[
-                        { value: "low", label: "Low" },
-                        { value: "medium", label: "Medium" },
-                        { value: "high", label: "High" },
-                      ]}
-                    />
-                    <Checkbox
-                      checked={obfStringArray}
-                      onChange={() => setObfStringArray((v) => !v)}
-                      label="String array"
-                      tooltip="Extract string literals into an array and reference them indirectly."
-                    />
-                    <Checkbox
-                      checked={obfControlFlow}
-                      onChange={() => setObfControlFlow((v) => !v)}
-                      label="Control flow flattening"
-                      tooltip="Rewrites control flow as a switch-based state machine. Significant runtime cost."
-                    />
-                    <Checkbox
-                      checked={obfDeadCode}
-                      onChange={() => setObfDeadCode((v) => !v)}
-                      label="Dead code injection"
-                      tooltip="Inject unreachable code to make analysis harder. Increases output size."
-                    />
-                  </>
-                )}
-              </div>
-            </div>
+                  <PanelFooter>
+                    {mode === "beautify" && (
+                      <>
+                        <OptionSelect
+                          label="Parser"
+                          value={parser}
+                          onValueChange={setParser}
+                          options={[
+                            { value: "babel", label: "JavaScript" },
+                            { value: "json", label: "JSON" },
+                          ]}
+                        />
+                        <OptionSelect
+                          label="Indent"
+                          value={String(tabWidth)}
+                          onValueChange={(v) => setTabWidth(Number(v))}
+                          options={[
+                            { value: "2", label: "2 spaces" },
+                            { value: "4", label: "4 spaces" },
+                            { value: "8", label: "8 spaces" },
+                          ]}
+                        />
+                        <OptionCheckbox
+                          checked={singleQuote}
+                          onCheckedChange={setSingleQuote}
+                          label="Single quotes"
+                        />
+                        <OptionCheckbox
+                          checked={semi}
+                          onCheckedChange={setSemi}
+                          label="Semicolons"
+                        />
+                      </>
+                    )}
+                    {mode === "minify" && (
+                      <>
+                        <OptionCheckbox
+                          checked={compress}
+                          onCheckedChange={setCompress}
+                          label="Compress"
+                          hint="Apply Terser's compression passes (dead code removal, constant folding, etc.)."
+                        />
+                        <OptionCheckbox
+                          checked={mangle}
+                          onCheckedChange={setMangle}
+                          label="Mangle names"
+                          hint="Rename local variables and functions to shorter identifiers."
+                        />
+                        <OptionCheckbox
+                          checked={minifyKeepClassnames}
+                          onCheckedChange={setMinifyKeepClassnames}
+                          label="Keep class/function names"
+                          hint="Useful when code relies on Function.name or class names at runtime."
+                        />
+                      </>
+                    )}
+                    {mode === "obfuscate" && (
+                      <>
+                        <OptionSelect
+                          label="Preset"
+                          value={obfPreset}
+                          onValueChange={setObfPreset}
+                          options={[
+                            { value: "low", label: "Low" },
+                            { value: "medium", label: "Medium" },
+                            { value: "high", label: "High" },
+                          ]}
+                        />
+                        <OptionCheckbox
+                          checked={obfStringArray}
+                          onCheckedChange={setObfStringArray}
+                          label="String array"
+                          hint="Extract string literals into an array and reference them indirectly."
+                        />
+                        <OptionCheckbox
+                          checked={obfControlFlow}
+                          onCheckedChange={setObfControlFlow}
+                          label="Control flow flattening"
+                          hint="Rewrites control flow as a switch-based state machine. Significant runtime cost."
+                        />
+                        <OptionCheckbox
+                          checked={obfDeadCode}
+                          onCheckedChange={setObfDeadCode}
+                          label="Dead code injection"
+                          hint="Inject unreachable code to make analysis harder. Increases output size."
+                        />
+                      </>
+                    )}
+                  </PanelFooter>
+                </InputGroup>
+              </Field>
+            </FileDrop>
 
             {/* Run */}
             <div>
-              <button
-                onClick={run}
-                disabled={running || !input.trim()}
-                className="inline-flex items-center gap-2 border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {running ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
+              <Button size="sm" onClick={run} disabled={running || !input.trim()}>
+                {running ? <Spinner /> : <Play />}
                 {running
                   ? "Running..."
                   : mode === "beautify"
@@ -415,22 +387,25 @@ export default function JsToolPage() {
                     : mode === "minify"
                       ? "Minify"
                       : "Obfuscate"}
-              </button>
+              </Button>
             </div>
 
             {error && (
-              <pre className="text-xs text-pink whitespace-pre-wrap font-mono border border-pink/30 bg-pink/5 px-3 py-2">
-                {error}
-              </pre>
+              <Alert variant="destructive">
+                <CircleAlert />
+                <AlertDescription className="font-mono text-xs whitespace-pre-wrap">
+                  {error}
+                </AlertDescription>
+              </Alert>
             )}
 
             {/* Output */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs text-muted-foreground">Output</label>
+            <Field>
+              <div className="flex items-center justify-between gap-2">
+                <FieldLabel>Output</FieldLabel>
                 <div className="flex items-center gap-1.5">
                   {output && (
-                    <span className="text-[10px] text-muted-foreground tabular-nums">
+                    <Stat>
                       {output.length.toLocaleString()} chars &middot; {byteSize(output)}
                       {beforeBytes > 0 && (
                         <>
@@ -439,9 +414,9 @@ export default function JsToolPage() {
                           <span
                             className={
                               afterBytes < beforeBytes
-                                ? "text-green"
+                                ? "text-primary"
                                 : afterBytes > beforeBytes
-                                  ? "text-pink"
+                                  ? "text-destructive"
                                   : ""
                             }
                           >
@@ -449,48 +424,48 @@ export default function JsToolPage() {
                           </span>
                         </>
                       )}
-                    </span>
+                    </Stat>
                   )}
                   {output && <CopyButton value={output} variant="outline" size="sm" />}
                 </div>
               </div>
-              <textarea
+              <Textarea
                 value={output}
                 readOnly
                 rows={10}
                 placeholder="Output will appear here..."
-                className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
+                className={codeArea}
               />
-            </div>
+            </Field>
           </div>
         </div>
 
         {/* Right: info */}
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About this tool
             </h3>
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
-                <span className="text-subtle">Beautify</span> uses{" "}
-                <span className="text-subtle">Prettier</span> to reformat source with consistent
+                <span className="text-foreground">Beautify</span> uses{" "}
+                <span className="text-foreground">Prettier</span> to reformat source with consistent
                 indentation, quoting, and line breaks. Choose the{" "}
-                <span className="text-subtle">JSON</span> parser for strict JSON input.
+                <span className="text-foreground">JSON</span> parser for strict JSON input.
               </p>
               <p>
-                <span className="text-subtle">Minify</span> uses{" "}
-                <span className="text-subtle">Terser</span> to compress and mangle JavaScript.
+                <span className="text-foreground">Minify</span> uses{" "}
+                <span className="text-foreground">Terser</span> to compress and mangle JavaScript.
                 Output is functionally equivalent but significantly smaller. Mangling can break code
                 that introspects
-                <span className="text-subtle"> Function.name</span> or relies on exact identifier
-                names.
+                <span className="text-foreground"> Function.name</span> or relies on exact
+                identifier names.
               </p>
               <p>
-                <span className="text-subtle">Obfuscate</span> uses{" "}
-                <span className="text-subtle">javascript-obfuscator</span> to make code harder to
-                read. This is not encryption and can be reversed with effort. Higher presets add
+                <span className="text-foreground">Obfuscate</span> uses{" "}
+                <span className="text-foreground">javascript-obfuscator</span> to make code harder
+                to read. This is not encryption and can be reversed with effort. Higher presets add
                 significant runtime overhead.
               </p>
               <p>
@@ -501,7 +476,7 @@ export default function JsToolPage() {
           </div>
 
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -511,7 +486,7 @@ export default function JsToolPage() {
                   href="https://prettier.io/docs/options"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   Prettier - Options
                 </a>
@@ -521,7 +496,7 @@ export default function JsToolPage() {
                   href="https://terser.org/docs/options/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   Terser - Options
                 </a>
@@ -531,7 +506,7 @@ export default function JsToolPage() {
                   href="https://github.com/javascript-obfuscator/javascript-obfuscator"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   javascript-obfuscator
                 </a>

@@ -1,13 +1,25 @@
 "use client";
 
-import { useState, useCallback, useRef, type DragEvent } from "react";
-import { Trash2, Upload, FileText, Info, ExternalLink } from "lucide-react";
-import { PasteButton } from "@/components/paste-button";
-import { Checkbox } from "@/components/checkbox";
-import { Select } from "@/components/select";
+import { useState, useCallback } from "react";
+import { Upload, Info, ExternalLink } from "lucide-react";
+import {
+  ClearButton,
+  FileName,
+  OptionCheckbox,
+  OptionSelect,
+  PanelFooter,
+  PanelHeader,
+  Stat,
+  codeArea,
+  dropTarget,
+} from "@/components/tool-controls";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { Segmented } from "@/components/segmented";
-import { cn } from "@/lib/cn";
+import { Field, FieldError, FieldLabel } from "@/registry/syntaqx/ui/field";
+import { FileDrop, FileDropTrigger } from "@/registry/syntaqx/ui/file-drop";
+import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-group";
+import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
+import { Textarea } from "@/registry/syntaqx/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -90,9 +102,7 @@ export default function Base64Page() {
   const [charset, setCharset] = useState("utf-8");
   const [perLine, setPerLine] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dragging, setDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const run = useCallback((value: string, dir: "encode" | "decode", cs: string, pl: boolean) => {
     setInput(value);
@@ -138,18 +148,6 @@ export default function Base64Page() {
     reader.readAsText(file);
   };
 
-  const onDrop = (e: DragEvent) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file) loadFile(file);
-  };
-
-  const onDragOver = (e: DragEvent) => {
-    e.preventDefault();
-    setDragging(true);
-  };
-
   const inputLabel = mode === "encode" ? "Plain text" : "Base64 string";
   const outputLabel = mode === "encode" ? "Base64 output" : "Decoded text";
   const placeholder =
@@ -170,133 +168,98 @@ export default function Base64Page() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
         <div className="flex-1 min-w-0">
-          {/* Segmented control — decode first */}
-          <Segmented
+          {/* Mode: decode first */}
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            aria-label="Mode"
             value={mode}
-            onChange={switchMode}
-            ariaLabel="Mode"
-            options={[
-              { value: "decode", label: "Decode" },
-              { value: "encode", label: "Encode" },
-            ]}
+            onValueChange={(v) => v && switchMode(v as "encode" | "decode")}
             className="mb-5"
-          />
+          >
+            <ToggleGroupItem value="decode">Decode</ToggleGroupItem>
+            <ToggleGroupItem value="encode">Encode</ToggleGroupItem>
+          </ToggleGroup>
 
           <div className="flex flex-col gap-4">
-            {/* Input card */}
-            <div
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              onDragLeave={() => setDragging(false)}
-              className={cn(
-                "border bg-card transition-colors",
-                dragging ? "border-primary border-dashed" : "border-border",
-              )}
-            >
-              <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-                <label className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  {inputLabel}
-                  {fileName && (
-                    <span className="inline-flex items-center gap-1 text-primary">
-                      <FileText size={10} />
-                      {fileName}
-                    </span>
-                  )}
-                </label>
-                <div className="flex items-center gap-1.5">
-                  {input && (
-                    <span className="text-[10px] text-muted-foreground tabular-nums">
-                      {input.length.toLocaleString()} chars &middot; {byteSize(input)}
-                    </span>
-                  )}
-                  <button
-                    onClick={() => fileRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors cursor-pointer"
-                  >
-                    <Upload size={12} />
-                    File
-                  </button>
-                  <PasteButton
-                    onPaste={(text) => {
-                      setFileName(null);
-                      run(text, mode, charset, perLine);
-                    }}
-                    label
-                  />
-                  {input && (
-                    <button
-                      onClick={clear}
-                      className="inline-flex items-center gap-1.5 border border-border px-2 py-1 text-xs text-muted-foreground hover:text-pink hover:border-pink/30 transition-colors cursor-pointer"
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  )}
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    className="hidden"
+            {/* Input */}
+            <FileDrop onFiles={([file]) => loadFile(file)}>
+              <Field invalid={!!error}>
+                <InputGroup className={dropTarget}>
+                  <PanelHeader>
+                    <FieldLabel className="gap-1.5">
+                      {inputLabel}
+                      {fileName && <FileName name={fileName} />}
+                    </FieldLabel>
+                    <div className="flex items-center gap-1.5">
+                      {input && (
+                        <Stat>
+                          {input.length.toLocaleString()} chars &middot; {byteSize(input)}
+                        </Stat>
+                      )}
+                      <FileDropTrigger>
+                        <Upload />
+                        File
+                      </FileDropTrigger>
+                      <PasteButton
+                        variant="outline"
+                        size="sm"
+                        onPaste={(text) => {
+                          setFileName(null);
+                          run(text, mode, charset, perLine);
+                        }}
+                      />
+                      {input && <ClearButton onClick={clear} />}
+                    </div>
+                  </PanelHeader>
+                  <InputGroupTextarea
+                    value={input}
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) loadFile(file);
-                      e.target.value = "";
+                      setFileName(null);
+                      run(e.target.value, mode, charset, perLine);
                     }}
+                    placeholder={placeholder}
+                    rows={8}
+                    spellCheck={false}
+                    className={codeArea}
                   />
-                </div>
-              </div>
-              <textarea
-                value={input}
-                onChange={(e) => {
-                  setFileName(null);
-                  run(e.target.value, mode, charset, perLine);
-                }}
-                placeholder={placeholder}
-                rows={8}
-                spellCheck={false}
-                className="w-full bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none resize-y font-mono"
-              />
-              {/* Card footer: options */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border px-3 py-2">
-                <Select
-                  label="Charset"
-                  value={charset}
-                  onChange={changeCharset}
-                  options={[
-                    { value: "utf-8", label: "UTF-8" },
-                    { value: "ascii", label: "ASCII / Latin1" },
-                  ]}
-                />
-                <Checkbox
-                  checked={perLine}
-                  onChange={togglePerLine}
-                  label="Each line separately"
-                  tooltip="Treat each line as an independent value. Useful when you have multiple Base64 strings separated by newlines."
-                />
-              </div>
-            </div>
-
-            {/* Error */}
-            {error && <p className="text-xs text-pink">{error}</p>}
+                  <PanelFooter>
+                    <OptionSelect
+                      label="Charset"
+                      value={charset}
+                      onValueChange={changeCharset}
+                      options={[
+                        { value: "utf-8", label: "UTF-8" },
+                        { value: "ascii", label: "ASCII / Latin1" },
+                      ]}
+                    />
+                    <OptionCheckbox
+                      checked={perLine}
+                      onCheckedChange={togglePerLine}
+                      label="Each line separately"
+                      hint="Treat each line as an independent value. Useful when you have multiple Base64 strings separated by newlines."
+                    />
+                  </PanelFooter>
+                </InputGroup>
+                <FieldError>{error}</FieldError>
+              </Field>
+            </FileDrop>
 
             {/* Output */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs text-muted-foreground">{outputLabel}</label>
+            <Field>
+              <div className="flex items-center justify-between gap-2">
+                <FieldLabel>{outputLabel}</FieldLabel>
                 <div className="flex items-center gap-1.5">
                   {output && (
-                    <span className="text-[10px] text-muted-foreground tabular-nums">
+                    <Stat>
                       {output.length.toLocaleString()} chars &middot; {byteSize(output)}
-                    </span>
+                    </Stat>
                   )}
                   {output && <CopyButton value={output} variant="outline" size="sm" />}
                 </div>
               </div>
-              <textarea
-                value={output}
-                readOnly
-                rows={8}
-                className="w-full border border-border bg-card px-3 py-2 text-sm text-foreground focus:outline-none resize-y font-mono"
-              />
-            </div>
+              <Textarea value={output} readOnly rows={8} className={codeArea} />
+            </Field>
           </div>
         </div>
 
@@ -304,35 +267,38 @@ export default function Base64Page() {
         <div className="lg:w-80 shrink-0 flex flex-col gap-6">
           {/* Info */}
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <Info size={12} className="text-primary" />
               About Base64
             </h3>
             <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
               <p>
                 Base64 is an encoding scheme that converts binary data into ASCII text using a
-                64-character alphabet: <span className="text-subtle">A-Z</span>,{" "}
-                <span className="text-subtle">a-z</span>, <span className="text-subtle">0-9</span>,{" "}
-                <span className="text-subtle">+</span>, and <span className="text-subtle">/</span>,
-                with <span className="text-subtle">=</span> for padding.
+                64-character alphabet: <span className="text-foreground">A-Z</span>,{" "}
+                <span className="text-foreground">a-z</span>,{" "}
+                <span className="text-foreground">0-9</span>,{" "}
+                <span className="text-foreground">+</span>, and{" "}
+                <span className="text-foreground">/</span>, with{" "}
+                <span className="text-foreground">=</span> for padding.
               </p>
               <p>
                 Every 3 bytes of input produce 4 characters of output, increasing size by roughly
                 33%.
               </p>
               <p>
-                <span className="text-subtle">Common uses:</span> email attachments (MIME), data
+                <span className="text-foreground">Common uses:</span> email attachments (MIME), data
                 URIs, JSON Web Tokens (JWTs), embedding images in CSS/HTML, and transmitting binary
                 data through text-only protocols.
               </p>
               <p>
-                A URL-safe variant replaces <span className="text-subtle">+</span> and{" "}
-                <span className="text-subtle">/</span> with <span className="text-subtle">-</span>{" "}
-                and <span className="text-subtle">_</span> to avoid conflicts in URLs and filenames
+                A URL-safe variant replaces <span className="text-foreground">+</span> and{" "}
+                <span className="text-foreground">/</span> with{" "}
+                <span className="text-foreground">-</span> and{" "}
+                <span className="text-foreground">_</span> to avoid conflicts in URLs and filenames
                 (RFC 4648 &sect;5).
               </p>
               <p>
-                Base64 is <span className="text-subtle">not encryption</span>. It provides no
+                Base64 is <span className="text-foreground">not encryption</span>. It provides no
                 security. Anyone can decode it.
               </p>
             </div>
@@ -340,7 +306,7 @@ export default function Base64Page() {
 
           {/* References */}
           <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-subtle px-4 py-3 border-b border-border flex items-center gap-1.5">
+            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
@@ -350,7 +316,7 @@ export default function Base64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc4648"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 4648 - Base Encodings
                 </a>
@@ -360,7 +326,7 @@ export default function Base64Page() {
                   href="https://datatracker.ietf.org/doc/html/rfc2045#section-6.8"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   RFC 2045 &sect;6.8 - MIME Base64
                 </a>
@@ -370,7 +336,7 @@ export default function Base64Page() {
                   href="https://developer.mozilla.org/en-US/docs/Glossary/Base64"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   MDN - Base64 glossary
                 </a>
@@ -380,7 +346,7 @@ export default function Base64Page() {
                   href="https://en.wikipedia.org/wiki/Base64"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-subtle hover:text-primary transition-colors"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
                   Wikipedia - Base64
                 </a>
