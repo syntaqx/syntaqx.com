@@ -1,6 +1,6 @@
 +++
 title = "Repair, Install & Commercial Work"
-nav_title = "Repair, Install & Commercial"
+nav_title = "Repair & Installation"
 description = "Repair, install and commercial work: flat rate, parts, assets, connected equipment, warranty and insurance payers, projects, change orders, SLAs and subs."
 category = "Field Operations Industry"
 order = 1505

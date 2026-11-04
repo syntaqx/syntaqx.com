@@ -1,5 +1,6 @@
 +++
 title = "The Secondary Mortgage Market"
+nav_title = "The Secondary Market"
 description = "How US mortgages are funded: Fannie Mae, Freddie Mac and Ginnie Mae, cash and swap execution, UMBS, guarantee fees, pooling, servicing rights and advances."
 category = "Banking & Lending Industry"
 order = 2457

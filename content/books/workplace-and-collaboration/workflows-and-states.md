@@ -1,5 +1,6 @@
 +++
 title = "Workflows & Status Machines"
+nav_title = "Workflows & States"
 description = "Statuses, transitions, conditions, validators and post functions, resolutions, state categories, shared schemes vs team-owned workflows, and workflows as data."
 category = "Workplace & Collaboration Industry"
 order = 2030

@@ -1,5 +1,6 @@
 +++
 title = "WhatsApp & Messaging Apps"
+nav_title = "Messaging Apps"
 description = "Business messaging over channels an app owner runs: the WhatsApp Business Platform, Apple, Meta and other apps, international sender IDs, resale and fallback."
 category = "Hosting & Cloud Industry"
 order = 2183

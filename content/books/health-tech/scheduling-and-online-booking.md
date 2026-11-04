@@ -1,5 +1,6 @@
 +++
 title = "Scheduling & Online Booking"
+nav_title = "Scheduling & Booking"
 description = "How a practice schedule works: providers, operatories, appointment types and patterns, blocks, slot search, online booking, insurance at booking, ASAP lists."
 category = "Health Tech Industry"
 order = 1930

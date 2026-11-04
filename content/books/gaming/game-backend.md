@@ -1,5 +1,6 @@
 +++
 title = "Game Backend Architecture"
+nav_title = "Game Backends"
 description = "What a live game's backend runs, how studios have built and deployed it, the platforms you can buy, and why launches break and how to load test them."
 category = "Gaming Industry"
 order = 1613

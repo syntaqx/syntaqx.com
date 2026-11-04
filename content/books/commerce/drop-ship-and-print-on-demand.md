@@ -1,5 +1,6 @@
 +++
 title = "Drop Ship & Print on Demand"
+nav_title = "Drop Ship & On Demand"
 description = "Selling goods someone else ships: retailer drop-ship programs, distributors and apps, Printful and Printify, margins, seller of record and liability."
 category = "Commerce Industry"
 order = 2338

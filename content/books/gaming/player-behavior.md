@@ -1,5 +1,6 @@
 +++
 title = "Player Behavior & Moderation"
+nav_title = "Player Behavior"
 description = "How games answer disruptive play: in-match reports, text and voice moderation, gameplay detection, penalty ladders, reform, UGC safety and the pipeline."
 category = "Gaming Industry"
 order = 1620

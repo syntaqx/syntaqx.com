@@ -1,6 +1,6 @@
 +++
 title = "Investors, Funds & Asset Management"
-nav_title = "Investors & Asset Management"
+nav_title = "Investors & Assets"
 description = "The owner's side of the ledger: entity and fund structures, capital raising, capital calls, distribution waterfalls, data from third-party managers, valuations."
 category = "Property Tech Industry"
 order = 1705

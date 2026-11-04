@@ -1,5 +1,6 @@
 +++
 title = "Loot Boxes & Consumer Law"
+nav_title = "Loot Boxes & the Law"
 description = "Loot box rules by country, store odds disclosure, the EU's virtual currency principles, FTC orders on dark patterns, refunds, and auditable drop tables."
 category = "Gaming Industry"
 order = 1626

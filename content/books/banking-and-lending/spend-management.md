@@ -1,5 +1,6 @@
 +++
 title = "The Spend Management Business"
+nav_title = "Spend Management"
 description = "How corporate card and expense platforms make money: commercial interchange, rewards as a share of it, subscriptions, float, losses and who owns the receivable."
 category = "Banking & Lending Industry"
 order = 2462

@@ -1,5 +1,6 @@
 +++
 title = "Orders, Dispatch & Batching"
+nav_title = "Orders & Dispatch"
 description = "The delivery order lifecycle, prep time and ETA estimation, courier assignment and batching, shop-and-deliver, scheduled versus ASAP, and the handoff."
 category = "Commerce Industry"
 order = 2345

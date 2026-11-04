@@ -1,5 +1,6 @@
 +++
 title = "Listings, Websites & Marketing"
+nav_title = "Listings & Marketing"
 description = "ILS syndication, property websites and AI search, paid media, accessibility, fair housing in ads, and the all-in rent laws behind every advertised price."
 category = "Property Tech Industry"
 order = 1708

@@ -1,5 +1,6 @@
 +++
 title = "Intranets & Knowledge Bases"
+nav_title = "Intranets & Knowledge"
 description = "Intranets and knowledge bases: SharePoint home sites, Google Sites, Confluence, Guru, Staffbase, Simpplr; targeting, translation and verification."
 category = "Workplace & Collaboration Industry"
 order = 2026

@@ -1,5 +1,6 @@
 +++
 title = "Purchasing & Replenishment"
+nav_title = "Purchasing & Restock"
 description = "Suppliers, purchase orders, lead times, MOQs, forecasting, reorder points and safety stock, landed cost, receiving against ASNs and returns to vendor."
 category = "Commerce Industry"
 order = 2322

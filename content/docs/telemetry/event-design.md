@@ -1,5 +1,6 @@
 +++
 title = "Event Design & Instrumentation"
+nav_title = "Event Design"
 description = "What to track and why: questions before events, object_action names, properties and context, versioned schemas, tracking plans as code, and identity stitching."
 category = "Telemetry & Analytics"
 order = 1251

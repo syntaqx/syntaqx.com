@@ -1,5 +1,6 @@
 +++
 title = "Migrations, Purges & Shutdowns"
+nav_title = "Migrations & Shutdowns"
 description = "Policy-driven purges, storage caps, link rot and tombstones, country withdrawals, data exports and portability, and how to end a feature or a whole service."
 category = "User-Generated Platforms Industry"
 order = 1856

@@ -1,6 +1,6 @@
 +++
 title = "In-Office Membership Plans & Cash Pay"
-nav_title = "Membership Plans & Cash Pay"
+nav_title = "Membership & Cash Pay"
 description = "Dental membership plans, direct primary care, concierge medicine and vet wellness plans: discount plan and insurance law, HSAs, benefits tracking and billing."
 category = "Health Tech Industry"
 order = 1937

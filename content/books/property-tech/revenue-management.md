@@ -1,5 +1,6 @@
 +++
 title = "Revenue Management & Pricing"
+nav_title = "Revenue Management"
 description = "Asking rents, lease-term and renewal pricing, market data, rent caps in the engine, and the algorithmic pricing cases and laws as design constraints."
 category = "Property Tech Industry"
 order = 1710

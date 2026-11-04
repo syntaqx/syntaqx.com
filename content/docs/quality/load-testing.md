@@ -1,5 +1,6 @@
 +++
 title = "Load & Performance Testing"
+nav_title = "Load Testing"
 description = "Performance budgets tied to SLOs, the test types and when to run each, realistic traffic, capacity headroom, and the measurement trap that hides slow responses."
 category = "Quality"
 order = 1058

@@ -1,5 +1,6 @@
 +++
 title = "Two-Way Texting & Messaging"
+nav_title = "Two-Way Texting"
 description = "Practices texting patients: the practice number, registration, the TCPA health care exemption, STOP, HIPAA and texting, portals versus SMS, email, the inbox."
 category = "Health Tech Industry"
 order = 1933

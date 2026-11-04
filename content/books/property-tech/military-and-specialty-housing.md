@@ -1,5 +1,6 @@
 +++
 title = "Military & Specialty Housing"
+nav_title = "Military & Specialty"
 description = "Privatized military housing (BAH rent, allotments, tenant rights, SCRA), manufactured housing lots and homes, and single-family and build-to-rent operations."
 category = "Property Tech Industry"
 order = 1726

@@ -1,5 +1,6 @@
 +++
 title = "Consent & Privacy in Telemetry"
+nav_title = "Consent & Privacy"
 description = "Analytics within the rules: consent before device storage, gating SDKs, opt-out signals like GPC, minors, minimizing, pseudonymous IDs, retention and deletion."
 category = "Telemetry & Analytics"
 order = 1253

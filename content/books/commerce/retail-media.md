@@ -1,5 +1,6 @@
 +++
 title = "Retail Media & Marketplace Ads"
+nav_title = "Retail Media & Ads"
 description = "Sponsored Products, Amazon Ads and its DSP, Walmart Connect, Roundel, Instacart Ads, eBay and Etsy ads, measurement and clean rooms, and ad money from filings."
 category = "Commerce Industry"
 order = 2328

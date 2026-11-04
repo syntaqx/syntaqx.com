@@ -1,5 +1,6 @@
 +++
 title = "Accounts, Identity & Standing"
+nav_title = "Accounts & Identity"
 description = "Handles, DIDs and domain handles, verification badges, one login with host and guest roles, account standing, takeover defense, and deletion versus holds."
 category = "User-Generated Platforms Industry"
 order = 1803

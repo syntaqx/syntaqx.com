@@ -1,5 +1,6 @@
 +++
 title = "Warehouses, Lakes & Lakehouses"
+nav_title = "Warehouses & Lakes"
 description = "From Hadoop to cloud warehouses and open table formats: what Iceberg, Delta Lake and Hudi each provide, Parquet and ORC, and how I choose where data lives."
 category = "Data Platforms"
 order = 1272

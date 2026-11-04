@@ -1,5 +1,6 @@
 +++
 title = "Personal & Installment Loans"
+nav_title = "Installment Loans"
 description = "Unsecured personal and installment loans: amortization, origination fees and APR, prepayment, marketplace lenders, small-dollar and payday loans, state caps."
 category = "Banking & Lending Industry"
 order = 2434

@@ -1,5 +1,6 @@
 +++
 title = "Home Routing, Firewalls & DNS"
+nav_title = "Home Routing & DNS"
 description = "pfSense, OPNsense, OpenWrt and UniFi; VLANs for trusted, IoT, guest and lab; Pi-hole and AdGuard Home; IPv6, CGNAT and UPnP; WireGuard at the edge."
 category = "Hosting & Cloud Industry"
 order = 2109

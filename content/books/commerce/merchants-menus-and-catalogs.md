@@ -1,5 +1,6 @@
 +++
 title = "Merchants, Menus & Catalogs"
+nav_title = "Menus & Catalogs"
 description = "Onboarding restaurants and stores, menus and modifiers synced from the POS, item availability, grocery catalogs, substitutions, and in-app price markups."
 category = "Commerce Industry"
 order = 2344

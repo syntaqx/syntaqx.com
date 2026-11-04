@@ -1,5 +1,6 @@
 +++
 title = "Portfolios, Properties & Units"
+nav_title = "Properties & Units"
 description = "The physical model: portfolio trees and groupings, properties, buildings, units and floor plans, rentable spaces, unit status, addresses and parcels."
 category = "Property Tech Industry"
 order = 1703

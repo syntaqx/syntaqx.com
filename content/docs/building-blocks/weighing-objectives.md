@@ -1,5 +1,6 @@
 +++
 title = "Weighing Competing Objectives"
+nav_title = "Weighing Objectives"
 description = "Folding many goals into one solver score: levels or weighted sums, hard and soft constraints, money as the unit, integer scaling, replay and explanations."
 category = "Building Blocks"
 aliases = ["architecture/weighing-objectives"]

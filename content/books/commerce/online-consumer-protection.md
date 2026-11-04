@@ -1,5 +1,6 @@
 +++
 title = "Consumer Protection Online"
+nav_title = "Consumer Protection"
 description = "The FTC Mail Order Rule, fee disclosure and drip pricing, dark patterns, price comparisons, Made in USA, warranties and the EU's 14-day right of withdrawal."
 category = "Commerce Industry"
 order = 2315

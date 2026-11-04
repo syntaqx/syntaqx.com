@@ -1,5 +1,6 @@
 +++
 title = "Managed Queues & Streaming"
+nav_title = "Queues & Streaming"
 description = "SQS to Kafka as a service: managed brokers, buses, logs and realtime pub/sub, what delivery guarantees cover, and pricing by message, byte and broker-hour."
 category = "Hosting & Cloud Industry"
 order = 2136

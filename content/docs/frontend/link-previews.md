@@ -1,5 +1,6 @@
 +++
 title = "Link Previews & Social Cards"
+nav_title = "Link Previews"
 description = "How a page looks when shared, unfurled or installed: Open Graph, X Cards, each unfurler's rules, oEmbed, generated images, icons, the manifest and theme color."
 category = "Frontend"
 order = 408

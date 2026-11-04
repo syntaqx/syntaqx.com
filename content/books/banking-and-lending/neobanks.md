@@ -1,5 +1,6 @@
 +++
 title = "Neobanks & Consumer Fintech"
+nav_title = "Neobanks & Fintech"
 description = "US and UK neobanks from their filings: interchange, liquidity fees, lending and float, the Durbin line and its litigation, and program manager versus charter."
 category = "Banking & Lending Industry"
 order = 2424

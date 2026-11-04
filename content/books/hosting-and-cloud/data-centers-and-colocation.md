@@ -1,5 +1,6 @@
 +++
 title = "The Data Center & Colocation"
+nav_title = "Data Centers & Colo"
 description = "Power, cooling, Uptime tiers and TIA-942 ratings, cross-connects, remote hands, and how colocation is sold, from a cabinet to a powered shell."
 category = "Hosting & Cloud Industry"
 order = 2114

@@ -1,5 +1,6 @@
 +++
 title = "The Banking & Lending Business"
+nav_title = "The Banking Business"
 description = "How banks, credit unions, fintechs and lenders work: the parties, how the money is made, the life of a deposit and a loan, and the core data model."
 category = "Banking & Lending Industry"
 order = 2401

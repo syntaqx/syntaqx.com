@@ -1,5 +1,6 @@
 +++
 title = "Treasury & Bank Operations"
+nav_title = "Treasury & Bank Ops"
 description = "The bank accounts behind a payments ledger: FBO accounts, pass-through insurance, funding, bank files, the banking calendar and reconciliation."
 category = "Payments Industry"
 order = 1425

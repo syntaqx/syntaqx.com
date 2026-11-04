@@ -1,5 +1,6 @@
 +++
 title = "TRID & Mortgage Disclosures"
+nav_title = "TRID & Disclosures"
 description = "The Loan Estimate and Closing Disclosure as a scheduling problem: the application trigger, business-day clocks, tolerances, changed circumstances and cures."
 category = "Banking & Lending Industry"
 order = 2449

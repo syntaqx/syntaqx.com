@@ -1,5 +1,6 @@
 +++
 title = "Operations, Support & Downtime"
+nav_title = "Operations & Downtime"
 description = "Support access to PHI, downtime and incident notices to practices, uptime and dependencies, on-call, breach clocks, and correcting data in clinical records."
 category = "Health Tech Industry"
 order = 1962

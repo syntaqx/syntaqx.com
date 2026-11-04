@@ -1,5 +1,6 @@
 +++
 title = "AI Agents, Connectors & MCP"
+nav_title = "AI Agents & MCP"
 description = "Agents acting in workspaces, vendor MCP servers, MCP authorization, agent identity in Entra, consent and scopes, prompt injection via shared content, and audit."
 category = "Workplace & Collaboration Industry"
 order = 2045

@@ -1,5 +1,6 @@
 +++
 title = "Cross-Border Payments & FX"
+nav_title = "Cross-Border & FX"
 description = "Presentment, settlement and funding currencies, cross-border card fees, local acquiring, DCC rules, FX quotes, wires and correspondents, and FX on refunds."
 category = "Payments Industry"
 order = 1410

@@ -1,6 +1,6 @@
 +++
 title = "Optometry, PT & Other Specialties"
-nav_title = "Optometry, PT & Specialties"
+nav_title = "Specialty Practices"
 description = "What changes by specialty: eyewear and contact lens Rx release, optical, PT plans of care and the 8-minute rule, chiropractic, behavioral health, med spas."
 category = "Health Tech Industry"
 order = 1940

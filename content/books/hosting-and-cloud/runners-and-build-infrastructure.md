@@ -1,5 +1,6 @@
 +++
 title = "Runners & Build Infrastructure"
+nav_title = "Runners & Build Infra"
 description = "Hosted, hybrid and self-hosted runners, ephemeral VMs and microVMs, autoscaling, macOS fleets, caches, remote execution and the faster-runner vendors."
 category = "Hosting & Cloud Industry"
 order = 2144

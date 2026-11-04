@@ -1,5 +1,6 @@
 +++
 title = "The Hosting & Cloud Business"
+nav_title = "The Hosting Business"
 description = "How companies that rent out infrastructure work: the parties, every way they earn, how big they are, four lifecycles, and the core data model."
 category = "Hosting & Cloud Industry"
 order = 2101

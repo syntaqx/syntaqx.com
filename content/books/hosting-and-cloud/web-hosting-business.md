@@ -1,5 +1,6 @@
 +++
 title = "How Web Hosting Makes Money"
+nav_title = "Web Hosting Economics"
 description = "How shared hosting earns: intro prices on long prepaid terms, renewals at list, free-domain bundles, trial add-ons, retention and ratable revenue."
 category = "Hosting & Cloud Industry"
 order = 2155
