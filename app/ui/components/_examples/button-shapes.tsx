@@ -11,7 +11,7 @@ export default function ButtonShapes() {
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <Button shape="slant">
-          Slant <ArrowRight />
+          Slant <ArrowRight data-icon="inline-end" />
         </Button>
         <Button shape="slant" variant="outline">
           Outline

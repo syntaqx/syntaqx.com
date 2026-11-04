@@ -19,7 +19,7 @@ const base =
   "inst h-auto gap-2.5 px-[1.15rem] py-2.5 text-[0.6rem] font-normal [&_svg]:transition-transform [&_svg]:duration-200 [&_svg]:ease-[steps(3)] hover:[&_svg]:translate-x-1";
 const variants = {
   primary: "hover:bg-foreground hover:text-background",
-  secondary: "border border-border hover:border-foreground hover:bg-secondary",
+  secondary: "border-border hover:border-foreground",
 };
 
 export function Button({

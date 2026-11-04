@@ -19,6 +19,7 @@
       "meta": {
         "shadcn": "button",
         "changes": [
+          "Taken from shadcn's radix-vega style rather than new-york-v4: it presses down a pixel, its hovers are stronger, and a button whose menu is open stays highlighted. Mark an icon with `data-icon=\"inline-start\"` or `\"inline-end\"` to tighten the padding on that side.",
           "A `loading` prop: the label stays in place but hidden, so the button keeps its width, with a spinner over it and `aria-busy` set.",
           "A busy button doesn't fade the way a disabled one does.",
           "A `shape` prop. `default` is shadcn's button, markup and all. `slant` leans the button at `--button-slant` (8.5deg if unset) and stands the label back up. Add a shape as one entry in `shape`; any shape but the default wraps the content in `data-slot=\"button-label\"`."
