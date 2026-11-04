@@ -1,17 +1,16 @@
-import { getAllBookChapters, getBookChapters } from "@/lib/docs";
+import { getBookChapters } from "@/lib/docs";
 import { getBook } from "@/lib/books";
 import { ogCard } from "@/lib/og-card";
 
 // The social preview for each book chapter, the docs' card with the book and
 // chapter number as its kicker. A route handler, like /og/docs.
 
-export const dynamicParams = false;
+// Rendered on first request and cached, not at build: prerendering every
+// card cost the build most of its time. Unknown slugs 404 below.
+export const dynamic = "force-static";
 
 export function generateStaticParams() {
-  return getAllBookChapters().map((c) => ({
-    book: c.section,
-    chapter: c.slug.slice(c.section.length + 1),
-  }));
+  return [];
 }
 
 export async function GET(
