@@ -210,6 +210,8 @@ body:has([data-full-bleed]) {
 :root {
   --tilt: 0.15;
   --tilt-angle: atan(var(--tilt));
+  /* The registry Button's slant shape leans the same way. */
+  --button-slant: var(--tilt-angle);
 }
 
 /* Lean an element into a parallelogram; `unslant` stands its content back up. */

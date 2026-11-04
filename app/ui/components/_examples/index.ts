@@ -6,6 +6,8 @@ import type { ComponentType } from "react";
 import ButtonVariants from "./button-variants";
 import ButtonSizes from "./button-sizes";
 import ButtonLoading from "./button-loading";
+import ButtonShapes from "./button-shapes";
+import ButtonSlantAngle from "./button-slant-angle";
 import ButtonOptimistic from "./button-optimistic";
 import ButtonDestructiveGuards from "./button-destructive-guards";
 import ButtonGroupDemo from "./button-group-demo";
@@ -72,6 +74,20 @@ export const examples: Record<string, Example[]> = {
     { slug: "button-variants", title: "Variants", Component: ButtonVariants },
     { slug: "button-sizes", title: "Sizes", Component: ButtonSizes },
     { slug: "button-loading", title: "Loading", Component: ButtonLoading },
+    {
+      slug: "button-shapes",
+      title: "Shapes",
+      description:
+        'Every variant and size takes a shape; the default is shadcn\'s. `slant` leans the whole button, so its border, hover and focus ring lean with it, and stands the label back up. A shape is one entry in `shape` in `buttonVariants`, such as `pill: "rounded-full"`. Any shape but the default wraps the content in `data-slot="button-label"`, so a shape that transforms the button can undo it on the label with `*:data-[slot=button-label]:`.',
+      Component: ButtonShapes,
+    },
+    {
+      slug: "button-slant-angle",
+      title: "Slant angle",
+      description:
+        "Set `--button-slant` on a button, or once on `:root` to match a brand's own diagonal. This site sets it to its 8.5 degree tilt.",
+      Component: ButtonSlantAngle,
+    },
     {
       slug: "button-optimistic",
       title: "Optimistic UI",
