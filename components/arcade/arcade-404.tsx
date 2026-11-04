@@ -4,16 +4,12 @@ import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/button";
 import type { ArcadeTheme, Cabinet } from "./cabinet";
-import { cabinets } from "./index";
+import { createBreak } from "./break";
 
-const WARM = 2; // seconds each cabinet plays unseen, so the page opens mid-game
+const WARM = 2; // seconds the game plays unseen, so the page opens mid-game
 const STILL = 3; // seconds played before the one frame shown under reduced motion
 const STEP = 1 / 60;
 const MAX_DT = 1 / 30;
-// Layers quieter than full strength, by title. The maze and the chains fill
-// the whole stage, so they sit back and let the smaller games and the copy
-// read over them; the rest draw at full strength.
-const LAYER_ALPHA: Record<string, number> = { Chase: 0.7, Crawl: 0.7 };
 
 const readTheme = (): ArcadeTheme => {
   const css = getComputedStyle(document.documentElement);
@@ -58,9 +54,8 @@ const warm = (cabinet: Cabinet, seconds: number) => {
 };
 
 /**
- * The 404: the page's copy over one shared canvas where every cabinet plays
- * itself at once, each sized to the whole stage and layered back to front in
- * the order ./index.ts lists them.
+ * The 404: the page's copy over a brick breaker that plays itself across the
+ * whole stage, faded well back so it reads as a backdrop, not a game to play.
  */
 export function Arcade404() {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -76,31 +71,7 @@ export function Arcade404() {
     let width = 1,
       height = 1,
       dpr = 1;
-    const layers = cabinets.map((make) => {
-      const cabinet = make();
-      return { cabinet, alpha: LAYER_ALPHA[cabinet.title] ?? 1 };
-    });
-
-    // Cabinets set globalAlpha freely, so a single outer setting would be
-    // overwritten. Instead every value they set is scaled by the current
-    // layer's opacity, and reads give back what they set.
-    const native = Object.getOwnPropertyDescriptor(
-      CanvasRenderingContext2D.prototype,
-      "globalAlpha",
-    );
-    let layerAlpha = 1;
-    if (native?.get && native.set) {
-      const { get, set } = native;
-      Object.defineProperty(ctx, "globalAlpha", {
-        configurable: true,
-        get() {
-          return (get.call(this) as number) / layerAlpha;
-        },
-        set(v: number) {
-          set.call(this, v * layerAlpha);
-        },
-      });
-    }
+    const game = createBreak();
 
     const fit = () => {
       const rect = stage.getBoundingClientRect();
@@ -109,7 +80,7 @@ export function Arcade404() {
       height = Math.max(1, rect.height);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
-      for (const { cabinet } of layers) cabinet.resize(width, height);
+      game.resize(width, height);
     };
 
     const paint = (now: number) => {
@@ -118,23 +89,14 @@ export function Arcade404() {
       ctx.globalCompositeOperation = "source-over";
       ctx.fillStyle = theme.bg;
       ctx.fillRect(0, 0, width, height);
-      for (const { cabinet, alpha } of layers) {
-        layerAlpha = alpha;
-        ctx.save();
-        ctx.globalAlpha = 1;
-        cabinet.draw(ctx, theme, now);
-        ctx.restore();
-      }
-      layerAlpha = 1;
-    };
-
-    const advance = (dt: number) => {
-      for (const { cabinet } of layers) cabinet.step(dt);
+      ctx.save();
+      game.draw(ctx, theme, now);
+      ctx.restore();
     };
 
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     fit();
-    for (const { cabinet } of layers) warm(cabinet, still ? STILL : WARM);
+    warm(game, still ? STILL : WARM);
 
     let raf = 0,
       last: number | null = null,
@@ -145,7 +107,7 @@ export function Arcade404() {
       // step instead of a jump across the time spent hidden.
       const dt = last === null ? STEP : Math.min(MAX_DT, Math.max(0, (now - last) / 1000));
       last = now;
-      advance(dt);
+      game.step(dt);
       paint(now);
       schedule();
     };
@@ -199,7 +161,6 @@ export function Arcade404() {
       scheme.removeEventListener("change", onTheme);
       document.removeEventListener("visibilitychange", schedule);
       window.removeEventListener("resize", onResize);
-      Reflect.deleteProperty(ctx, "globalAlpha");
     };
   }, []);
 
@@ -210,7 +171,8 @@ export function Arcade404() {
       className="relative -my-12 h-[calc(100dvh-3rem)] min-h-140 w-screen overflow-hidden"
       style={{ marginInline: "calc(50% - 50vw)" }}
     >
-      <canvas ref={canvasRef} aria-hidden className="absolute inset-0 size-full" />
+      {/* Faded so it reads as a backdrop; it paints the page's own background, so it blends in. */}
+      <canvas ref={canvasRef} aria-hidden className="absolute inset-0 size-full opacity-30" />
       <section
         aria-labelledby="not-found-title"
         className="pointer-events-none absolute inset-0 grid place-items-center bg-[radial-gradient(ellipse_62%_58%_at_50%_50%,color-mix(in_oklab,var(--background)_88%,transparent)_0%,color-mix(in_oklab,var(--background)_62%,transparent)_55%,transparent_100%)] px-6 text-center"
@@ -221,8 +183,8 @@ export function Arcade404() {
             Player 404 has left the game.
           </h1>
           <p className="mb-3 max-w-md text-subtle">
-            The page you&apos;re looking for isn&apos;t on this level. The cabinets are on free
-            play, so stay a while, or head back to the start.
+            The page you&apos;re looking for isn&apos;t on this level. Head back to the start, or
+            try the blog.
           </p>
           <p className="mb-10 text-xs text-muted-foreground">
             HTTP 404 &middot; NO SAVE DATA FOUND
