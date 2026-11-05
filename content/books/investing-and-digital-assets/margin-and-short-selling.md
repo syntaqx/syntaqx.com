@@ -206,7 +206,7 @@ Crypto spot margin is a loan in the trading venue's own ledger, collateralized b
 
 At Binance under Cross Margin Classic at 3x, a customer with 10,000 USDT who borrows 20,000 USDT to buy BTC has 30,000 of collateral against 20,000 of liabilities, a margin level of 1.5. A 13.3% fall brings collateral to 26,000 and the level to 1.3, the margin call band; a 26.7% fall brings it to 22,000 and 1.1, liquidation. Compare the securities account above, which reached a call only after a 46% fall: the crypto thresholds are tighter because the assets move faster and the venue, open around the clock, will not wait three business days for a deposit.
 
-Leveraged derivatives (perpetual futures, funding rates, insurance funds, auto-deleveraging) are in Perpetuals & Crypto Derivatives, and institutional crypto credit and its 2022 failures in Prime Brokerage, OTC & Crypto Lending, both later in this book.
+Leveraged derivatives (perpetual futures, funding rates, insurance funds, auto-deleveraging) are in Perpetuals & Crypto Derivatives, and institutional crypto credit and its 2022 failures in [Prime Brokerage, OTC & Crypto Lending](/books/investing-and-digital-assets/crypto-prime-and-lending), both later in this book.
 
 ## How to Build It
 

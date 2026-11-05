@@ -33,7 +33,7 @@ On January 10, 2024 the Commission approved eleven spot bitcoin trusts on three 
 - **The correlation analysis.** "Spot bitcoin, however, does not trade on the CME and the CME does not engage in surveillance of spot bitcoin markets," but the SEC's own analysis over about two and a half years found CME futures "consistently highly correlated" with spot prices: at least 98.4% hourly, 94.2% at five-minute and 76.9% at one-minute intervals against Coinbase and Kraken. Manipulating the spot market enough to move the ETP would show up in the surveilled futures market.
 - **Coinbase agreements weren't the basis.** The exchanges' amended filings dropped surveillance agreements with Coinbase, and "the surveillance-sharing agreements with Coinbase are not a basis for approval."
 
-Chair Gensler's statement the same day said "we did not approve or endorse bitcoin" and that approval was the most sustainable path after the court's decision. Spot ether ETPs followed: the Commission approved the exchange rule changes on May 23, 2024, and ETHE began trading on NYSE Arca as a spot product on July 23, 2024. Market Surveillance & Manipulation covers the surveillance systems themselves.
+Chair Gensler's statement the same day said "we did not approve or endorse bitcoin" and that approval was the most sustainable path after the court's decision. Spot ether ETPs followed: the Commission approved the exchange rule changes on May 23, 2024, and ETHE began trading on NYSE Arca as a spot product on July 23, 2024. [Market Surveillance & Manipulation](/books/investing-and-digital-assets/market-surveillance#crypto-wash-trading-and-venue-surveillance) covers the surveillance systems themselves.
 
 ## Generic Listing Standards
 
