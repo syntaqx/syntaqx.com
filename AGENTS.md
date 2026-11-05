@@ -11,14 +11,14 @@ they're down). Upstash Redis backs rate limiting;
 `compose.yml` runs it locally. ADRs record departures from the playbook
 only; don't write one for a choice the playbook already makes.
 
-<!-- BEGIN:nextjs-agent-rules -->
-
 When a claim in content can't be sourced (no public source, only a secondary
 one, or a status still pending), say so in the text where a reader would
 otherwise assume an omission, and leave a marker at the sentence:
 `<!-- source-gap: id | missing|secondary|status | claim | closes with: what would source it | checked: YYYY-MM-DD -->`.
 `npm run gaps` lists them (`--stale 30`, `--json`). When a source turns up,
 cite it and delete the marker; when rechecked without luck, bump `checked`.
+
+<!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
 
