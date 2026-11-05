@@ -84,7 +84,7 @@ Most of the law in this volume regulates one of these lines: what the broker rec
 
 **Route.** The router picks a destination: a wholesaler that pays for the flow, an exchange, or an ATS. The decision and the venue are recorded because the broker must later show the routing in its public Rule 606 reports and defend it in its regular review of execution quality. The order becomes `routed`.
 
-**Execution.** The wholesaler fills all 10 shares at $189.99 against an NBBO of $189.98 by $190.00, one cent of price improvement per share (my example). The fill comes back as an execution with the venue, price, quantity, liquidity flag and time; the order becomes `filled`. The broker owes the customer a written confirmation at or before completion of the transaction under Rule 10b-10, stating the date and time, the security, the price and quantity, whether the broker acted as agent or principal, whether it receives payment for order flow on such orders, and whether it is a SIPC member ([Confirms, Statements & Tax Forms](/books/investing-and-digital-assets/statements-and-tax-forms) covers the confirm).
+**Execution.** The wholesaler fills all 10 shares at $189.99 against an NBBO of $189.98 by $190.00, one cent of price improvement per share (my example). The fill comes back as an execution with the venue, price, quantity, liquidity flag and time; the order becomes `filled`. The broker owes the customer a written confirmation at or before completion of the transaction under Rule 10b-10, stating the date and time, the security, the price and quantity, whether the broker acted as agent or principal, whether it receives payment for order flow on such orders, and, if it is not a SIPC member, that it isn't ([Confirms, Statements & Tax Forms](/books/investing-and-digital-assets/statements-and-tax-forms) covers the confirm).
 
 **Trade date posting.** On trade date the broker's ledger posts the trade with settlement pending: the customer's position rises by 10 shares and the customer's cash falls by $1,899.90, both marked as unsettled until settlement date, against the broker's settlement accounts. Buying power drops immediately ([Ledgers, Positions & Buying Power](/books/investing-and-digital-assets/ledgers-and-positions) covers what a customer may do with an unsettled position).
 
@@ -718,14 +718,13 @@ The mechanics (typed actors, append-only history, tamper evidence) are in [Audit
 - [17 CFR 240.17a-3](https://www.law.cornell.edu/cfr/text/17/240.17a-3), the securities record (stock record) of long and short positions and their locations, and customer ledger accounts
 - [12 USC 5903](https://www.law.cornell.edu/uscode/text/12/5903), GENIUS Act reserves, monthly disclosure and examination, CEO and CFO certification, rehypothecation limits, the yield prohibition and freeze capability
 - [12 USC 5906](https://www.law.cornell.edu/uscode/text/12/5906), the GENIUS Act's effective date provision
-- [OCC: Implementing the GENIUS Act for the issuance of stablecoins (91 FR 67000, October 23, 2026)](https://www.federalregister.gov/api/v1/documents/2026-21706.json), the final rule's citation, docket, CFR parts and January 18, 2027 effective date
+- [OCC: Implementing the GENIUS Act for the issuance of stablecoins (91 FR 67000, October 23, 2026)](https://www.federalregister.gov/api/v1/documents/2026-21706.json), the final rule's citation, docket, CFR parts and January 18, 2027 effective date; in its text, timely redemption within two business days (§ 15.12), notice to the OCC within 24 hours of redemption requests above 10% of outstanding issuance in a 24-hour period (§ 15.12(d)(1)) and the 5% same-day liquidity minimum (§ 15.11(c)(2))
 
 **Regulators and guidance**
 
 - [SEC: Press Release 2023-29](https://www.sec.gov/newsroom/press-releases/2023-29), adoption of T+1 on February 15, 2023, the May 28, 2024 compliance date, and same-day allocation, confirmation and affirmation
-- [SIPC: What SIPC Protects](https://www.sipc.org/for-investors/what-sipc-protects), the $500,000 limit including $250,000 for cash, and the exclusion of non-security digital assets and stablecoins
+- [SIPC: What SIPC Protects](https://www.sipc.org/for-investors/what-sipc-protects), the $500,000 limit including $250,000 for cash, and the exclusion of unregistered digital asset investment contracts and of stablecoins from SIPA's definition of a security
 - [NYDFS: Updated Guidance on Custodial Structures for Customer Protection in the Event of Insolvency (September 30, 2025)](https://www.dfs.ny.gov/industry-guidance/industry-letters/il20250930-updated-guidance-custodial-structures), segregation on-chain and in internal ledgers, omnibus wallets with per-customer records, no use of customer assets, sub-custody and reconciliation
-- [Mayer Brown: OCC finalizes GENIUS Act rulemaking](https://www.mayerbrown.com/en/insights/publications/2026/11/occ-finalizes-genius-act-rulemaking), the final rule's two-business-day redemption standard, the 10% redemption notice and the 5% on-demand deposit floor
 
 **Filings and reports**
 

@@ -20,8 +20,8 @@ What platforms publish about balances, buying power and holds, as of November 20
 
 | Platform | Balances it exposes | How buying power is computed | Holds and restrictions |
 | --- | --- | --- | --- |
-| **Alpaca** (Account API) | `cash`, `equity` (cash plus long and short market value), `last_equity` (previous trading day at 4:00 pm ET), `pending_transfer_in` and `pending_transfer_out`, `intraday_adjustments` for deposits and withdrawals, `initial_margin`, `maintenance_margin`, `sma` (reserved) | By `multiplier`: 1 is cash; 2 is `max(equity − initial_margin, 0) × 2`; 4 was `(last_equity − last_maintenance_margin) × 4` for day trading; separate `regt_buying_power`, `non_marginable_buying_power` and `options_buying_power` | Accounts under $2,000 equity are "restricted to 1x buying power"; `trading_blocked` and `transfers_blocked` flags |
-| **Fidelity** (cash accounts) | Settled cash; "cash, or the sale proceeds of fully paid securities" that have settled | Settled funds plus unsettled proceeds, with violations if the rules below are broken | Three good faith violations or three cash liquidation violations in 12 months, or one free riding violation, restrict the account for 90 calendar days to buying with settled cash only |
+| **Alpaca** (Account API) | `cash`, `equity` (cash plus long and short market value), `last_equity` (previous trading day at 16:00 ET), `pending_transfer_in` and `pending_transfer_out`, `intraday_adjustments` for deposits and withdrawals, `initial_margin`, `maintenance_margin`, `sma` (reserved) | By `multiplier`: 1 is cash; 2 is `max(equity − initial_margin, 0) × 2`; 4 was `(last_equity − last_maintenance_margin) × 4` for day trading; separate `regt_buying_power`, `non_marginable_buying_power` and `options_buying_power` | Accounts under $2,000 equity are "restricted to 1x buying power"; `trading_blocked` and `transfers_blocked` flags |
+| **Fidelity** (cash accounts) | Settled funds: "cash or the sales proceeds of fully paid for securities" | Settled funds plus unsettled proceeds, with violations if the rules below are broken | Three good faith violations or three cash liquidation violations in 12 months, or one free riding violation, restrict the account for 90 calendar days to buying with settled cash only |
 | **Kraken** (ACH via Plaid) | Cash and crypto balances | Deposits are tradable at once: "The withdrawal hold does not apply to trading" | ACH deposits "will be available to withdraw after seven days", and the hold applies "to any assets in cash or cryptocurrency, equal to the deposited amount" |
 | **Robinhood** (Instant Deposits) | Pending deposits, of which "a portion" is usable at once | The Instant Deposit limit, based on portfolio value and Gold status | The full transfer "may take up to 5 business days to be available"; if it's reversed after the funds were used, "your account may incur a deficit" that is "due immediately" |
 
@@ -63,7 +63,7 @@ Corrections don't edit dates. A trade busted after it was booked is reversed by 
 
 ## The Stock Record
 
-SEC Rule 17a-3(a)(5) requires a broker-dealer to keep "a securities record or ledger reflecting separately for each security as of the clearance dates all 'long' or 'short' positions", alongside blotters (an "itemized daily record of all purchases and sales"), a general ledger, and "ledger accounts (or other records) itemizing separately as to each cash, margin, or security-based swap account" ((a)(1) to (a)(3)). The stock record is the double-entry view of securities: for each security, the **long side** lists who owns it (customer accounts, the firm's own accounts) and the **short side** lists where it is or who owes it (the depository, the clearing house, fails to receive, securities on loan, a transfer agent, a customer short). Long equals short, per security, every day.
+SEC Rule 17a-3(a)(5) requires a broker-dealer to keep "a securities record or ledger" showing, separately for each security other than a security-based swap, "as of the clearance dates all 'long' or 'short' positions", alongside blotters (an "itemized daily record of all purchases and sales"), a general ledger, and "ledger accounts (or other records) itemizing separately as to each cash, margin, or security-based swap account" ((a)(1) to (a)(3)). The stock record is the double-entry view of securities: for each security, the **long side** lists who owns it (customer accounts, the firm's own accounts) and the **short side** lists where it is or who owes it (the depository, the clearing house, fails to receive, securities on loan, a transfer agent, a customer short). Long equals short, per security, every day.
 
 **Worked numbers: one security, one break.** The stock record for XYZ at the close of a settlement date:
 
@@ -88,7 +88,7 @@ That structure works only if the internal ledger is good enough to stand in for 
 - **Every customer's beneficial interest is a `customer` line,** and the sum of customer lines for an asset equals the sum of its customer-only locations at every point, checked continuously and reconciled to the chain ([Crypto In and Out](/books/investing-and-digital-assets/funding-and-transfers#crypto-in-and-out) has the account-level flow; the chain-side reconciliation belongs to [Hot, Warm & Cold Wallets](/books/investing-and-digital-assets/hot-and-cold-wallets) later in this book).
 - **Fees the firm pays on customers' behalf are entries,** not leakage: gas paid from an omnibus wallet is a `fees` line against the wallet's `omnibus` line, so the wallet still reconciles.
 
-The cost of getting it wrong is decided in bankruptcy court. In Celsius, Judge Glenn held on January 4, 2023 that the "unambiguous Terms of Use" meant cryptocurrency deposited into Earn accounts "became Celsius's property", so the assets in about 600,000 Earn accounts, worth about $4.2 billion on July 10, 2022, were property of the estate and their holders unsecured creditors; the record also showed Celsius had not segregated Earn assets from its Custody and Withhold programs. The terms decided title, and commingling made even the reserved programs hard to untangle. The bank version of the same lesson, a program ledger that couldn't say who owned the money in an omnibus account, is [Synapse: A Post-Mortem](/books/banking-and-lending/program-ledgers#synapse-a-post-mortem).
+The cost of getting it wrong is decided in bankruptcy court. In Celsius, Judge Glenn held on January 4, 2023 that the "unambiguous Terms of Use" meant cryptocurrency deposited into Earn accounts "became Celsius's property", so the assets in about 600,000 Earn accounts, worth about $4.2 billion on July 10, 2022, were property of the estate and their holders unsecured creditors; an objection the court summarized (Vermont's) argued that Celsius had not segregated Earn assets from its Custody and Withhold assets. The terms decided title, and commingling, if proved, makes even the reserved programs hard to untangle. The bank version of the same lesson, a program ledger that couldn't say who owned the money in an omnibus account, is [Synapse: A Post-Mortem](/books/banking-and-lending/program-ledgers#synapse-a-post-mortem).
 
 ## Buying Power
 
@@ -212,7 +212,7 @@ The rules that follow:
 `positions` is a materialized view of `journal_lines`: per account and instrument, the sum of owner-account lines by trade date and by settlement date, as of a moment. It is never written directly, and it can always be rebuilt. Three readings matter:
 
 - **Real time,** for buying power, order checks and the app: the latest lines plus intraday state (open orders, holds), maintained incrementally as lines post. Alpaca's `intraday_adjustments` for deposits and withdrawals is a public glimpse of the same idea.
-- **End of day,** the books: positions and balances at the firm's close, from which statements, margin calls, the stock record and the reserve computation are produced. Alpaca's `last_equity` is "as of the previous trading day at 4:00 pm ET", the US equity close.
+- **End of day,** the books: positions and balances at the firm's close, from which statements, margin calls, the stock record and the reserve computation are produced. Alpaca's `last_equity` is "Equity as of previous trading day at 16:00:00 ET", the US equity close.
 - **As of any past date,** for statements, corrections and disputes: recomputed from lines with trade or settlement dates on or before that date and recorded on or before a given time.
 
 Crypto has no close. A 24/7 book still needs a cut for statements, fees, interest accrual and the omnibus reconciliation, and my rule is to pick one (00:00 UTC is common in crypto, 4:00 pm ET where the crypto sits next to securities on one statement), record it per legal entity, and mark prices at it from a named source, never "the latest price when the job ran".
@@ -322,7 +322,7 @@ FROM journal_lines jl
 JOIN journal_entries je ON je.id = jl.journal_entry_id
 WHERE jl.ledger_account = 'customer'
   AND jl.account_id = :account_id
-  AND je.posted_at <= :known_at          -- what we knew then; now() for the current view
+  AND je.posted_at <= :known_at          -- what was known then; now() for the current view
 GROUP BY jl.instrument_id;
 ```
 
@@ -374,7 +374,7 @@ Broker-dealer books are examined by FINRA and the SEC and audited annually; cryp
 
 **Courts and enforcement**
 
-- [In re Celsius Network LLC, No. 22-10964 (Bankr. S.D.N.Y. January 4, 2023), Memorandum Opinion on ownership of Earn assets](https://www.nysb.uscourts.gov/sites/default/files/opinions/312902_1822_opinion.pdf), Earn assets as estate property under the Terms of Use, about 600,000 accounts and $4.2 billion, no segregation from Custody and Withhold assets
+- [In re Celsius Network LLC, No. 22-10964 (Bankr. S.D.N.Y. January 4, 2023), Memorandum Opinion on ownership of Earn assets](https://www.nysb.uscourts.gov/sites/default/files/opinions/312902_1822_opinion.pdf), Earn assets as estate property under the Terms of Use, about 600,000 accounts and $4.2 billion, and Vermont's objection that Earn assets weren't segregated from Custody and Withhold assets
 
 **Standards and protocols**
 
@@ -384,7 +384,7 @@ Broker-dealer books are examined by FINRA and the SEC and audited annually; cryp
 
 **Vendor documentation**
 
-- [Alpaca: Account API](https://docs.alpaca.markets/reference/getaccount-1), cash, equity, `last_equity` at 4:00 pm ET, pending transfers, intraday adjustments, the buying power formula by multiplier and the margin fields
+- [Alpaca: Account API](https://docs.alpaca.markets/reference/getaccount-1), cash, equity, `last_equity` at 16:00 ET, pending transfers, intraday adjustments, the buying power formula by multiplier and the margin fields
 - [Alpaca: Margin and short selling](https://docs.alpaca.markets/docs/margin-and-short-selling), 1x under $2,000, 50% initial margin, the house maintenance table and margin calls
 - [Fidelity: Avoiding cash account trading violations](https://www.fidelity.com/learning-center/trading-investing/trading/avoiding-cash-trading-violations), good faith, free riding and cash liquidation violations, thresholds and the 90-day restriction, settled funds, T+1
 - [Fidelity: Processing and hold times](https://www.fidelity.com/customer-service/processing-and-hold-times), variable holds and trading up to $25,000 on the day of deposit

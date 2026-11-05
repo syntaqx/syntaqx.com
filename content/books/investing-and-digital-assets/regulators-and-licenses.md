@@ -68,7 +68,7 @@ Two US platforms that offer both securities and crypto divide themselves along t
 | Investment advice | Robinhood Asset Management and Robinhood Ventures, SEC-registered advisers | |
 | Banking and cards | Robinhood Money (a money transmitter; banking provided by Coastal Bank) and Robinhood Credit (the Gold Card, issued under a program with Coastal Bank) | |
 | Europe | Robinhood Europe, regulated by the Bank of Lithuania as a financial brokerage firm and crypto-asset service provider with a MiCA license; Bitstamp Europe, a MiCA CASP; Bitstamp Financial Services, licensed under MiFID | Coinbase Luxembourg, holding a MiCA license; Coinbase Financial Services Europe, a MiFID derivatives broker supervised by Cyprus |
-| United Kingdom and elsewhere | Robinhood U.K., authorized by the FCA | Electronic money services authorized by the FCA and the Central Bank of Ireland; a Bermuda Class F license; Deribit's conditional VARA license in Dubai; registrations in Singapore, Australia, India, Canada and Argentina |
+| United Kingdom and elsewhere | Robinhood U.K., authorized by the FCA | Electronic money services authorized by the FCA and the Central Bank of Ireland; a Bermuda Class F license; Deribit's conditional VARA license in Dubai; a major payment institution license in Singapore; registrations in Australia, India, Canada and Argentina |
 
 What the split means in the systems:
 
@@ -82,7 +82,7 @@ What the split means in the systems:
 A trust charter lets a firm hold assets as a fiduciary rather than as a money transmitter, and for crypto custodians it is what qualifies them to hold assets for advisers, funds and ETPs ([Qualified Custody](/books/investing-and-digital-assets/qualified-custody) covers the custody rule). Two routes are in use:
 
 - **State trust companies.** NYDFS lets a limited purpose trust company chartered under the New York Banking Law conduct virtual currency business without a separate BitLicense, with the Superintendent's approval; unlike a BitLicensee it can exercise fiduciary powers and transmit money in New York without a separate money transmitter license. Coinbase Custody Trust Company is one.
-- **National trust banks.** On December 12, 2025, the OCC conditionally approved de novo national trust banks for Circle (First National Digital Currency Bank) and Ripple, and conversions of BitGo, Fidelity Digital Assets and Paxos from state trust companies; BitGo's 10-K reports the conversion to BitGo Bank & Trust, National Association. A national trust bank holds no insured deposits and answers to the OCC (Banking & Lending's [Trust Banks and Novel Charters](/books/banking-and-lending/charters-and-regulators#trust-banks-and-novel-charters) covers the charter's limits).
+- **National trust banks.** On December 12, 2025, the OCC conditionally approved de novo national trust banks for Circle (First National Digital Currency Bank) and Ripple, and conversions of BitGo, Fidelity Digital Assets and Paxos from state trust companies; BitGo's 10-K reports the OCC's December 12, 2025 approval to convert to a national trust bank operating as BitGo Bank & Trust, National Association. A national trust bank holds no insured deposits and answers to the OCC (Banking & Lending's [Trust Banks and Novel Charters](/books/banking-and-lending/charters-and-regulators#trust-banks-and-novel-charters) covers the charter's limits).
 
 A charter is also a stablecoin route: an OCC-chartered entity is one of the federal paths to becoming a permitted issuer under the GENIUS Act.
 
@@ -221,5 +221,5 @@ Design notes:
 
 - [Robinhood Markets: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000023/hood-20251231.htm), subsidiaries, registrations, the FCM and cleared swaps registration, money transmitters, advisers, EU and UK licenses, the dividend approval threshold and the NYDFS penalty
 - [Robinhood Securities: Rule 606 report, second quarter 2026](https://cdn.finra.org/606/2026/287900_606_NMS_2026_Q2_V1.pdf), the 80% revenue allocation to Robinhood Financial
-- [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), money transmitter licenses, the BitLicense, MSB registration, Coinbase Custody Trust Company, the broker-dealer, FCM and DCM, MiCA and MiFID entities, and other jurisdictions
-- [BitGo Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1740604/000174060426000020/btgo-form10xk.htm), the conversion to a national trust bank
+- [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), money transmitter licenses, the BitLicense, MSB registration, Coinbase Custody Trust Company, the broker-dealer, FCM and DCM, MiCA and MiFID entities, and other jurisdictions (Singapore as a license, the rest as registrations)
+- [BitGo Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1740604/000174060426000020/btgo-form10xk.htm), the OCC's approval to convert to a national trust bank
