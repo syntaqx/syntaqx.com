@@ -145,7 +145,7 @@ What a match adds to the system:
 
 ## Crypto in IRAs
 
-Nothing in section 408 bars crypto in an IRA. What the statute restricts is **collectibles**: if an IRA acquires "any work of art, rug or antique, metal or gem, stamp or coin, alcoholic beverage" or other tangible personal property the Secretary specifies, the acquisition is treated as a distribution (408(m)), with exceptions for certain bullion and coins held by the trustee. Crypto assets aren't on that list and the IRS hasn't added them. So the question is the custodian's policy: whether it will custody the asset, value it at year-end for the 5498, and report distributions in kind. Robinhood excludes crypto from its IRAs ([Account Types and Titling](/books/investing-and-digital-assets/opening-accounts#account-types-and-titling)); a firm that offers it needs a custodian willing to hold, value and report the asset, and crypto ETPs held in a brokerage IRA avoid the question entirely (Crypto ETPs later in this book covers them).
+Nothing in section 408 bars crypto in an IRA. What the statute restricts is **collectibles**: if an IRA acquires "any work of art, rug or antique, metal or gem, stamp or coin, alcoholic beverage" or other tangible personal property the Secretary specifies, the acquisition is treated as a distribution (408(m)), with exceptions for certain bullion and coins held by the trustee. Crypto assets aren't on that list and the IRS hasn't added them. So the question is the custodian's policy: whether it will custody the asset, value it at year-end for the 5498, and report distributions in kind. Robinhood excludes crypto from its IRAs ([Account Types and Titling](/books/investing-and-digital-assets/opening-accounts#account-types-and-titling)); a firm that offers it needs a custodian willing to hold, value and report the asset, and crypto ETPs held in a brokerage IRA avoid the question entirely ([Crypto ETPs](/books/investing-and-digital-assets/crypto-etps) later in this book covers them).
 
 For the engine, a crypto IRA needs a year-end fair market value at a stated cut for the 5498 ([Pricing Data and Oracles for Marks](/books/investing-and-digital-assets/chain-data-and-indexing#pricing-data-and-oracles-for-marks)), RMD balances computed from that same mark, and in-kind distributions valued at the time of distribution for the 1099-R.
 
@@ -155,7 +155,7 @@ A 401(k) is an employer's plan, not the participant's account at a broker. A **r
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `accounts` (`ira_traditional`, `ira_roth`), `account_parties` (custodian, beneficiary), `transfers` and `journal_entries`, with Confirms, Statements & Tax Forms' `tax_documents` (forms `5498` and `1099_r`). This chapter adds the contribution and distribution registers, rollovers, RMD calculations and matches.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `accounts` (`ira_traditional`, `ira_roth`), `account_parties` (custodian, beneficiary), `transfers` and `journal_entries`, with [Confirms, Statements & Tax Forms](/books/investing-and-digital-assets/statements-and-tax-forms)' `tax_documents` (forms `5498` and `1099_r`). This chapter adds the contribution and distribution registers, rollovers, RMD calculations and matches.
 
 ```sql
 CREATE TABLE ira_contributions (             -- every dollar in, with its tax year and kind

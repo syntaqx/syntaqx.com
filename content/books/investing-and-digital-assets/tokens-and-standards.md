@@ -10,7 +10,7 @@ tags = ["tokens", "erc-20", "erc-721", "spl", "stablecoins", "smart-contracts"]
 
 A chain's native asset (BTC, ETH, SOL) is part of the protocol: its balances are kept by the chain itself, and it pays the fees. Almost everything else a platform lists is a token, and a token is a program. USDC on Ethereum is a contract at one address whose storage holds a table of balances and whose code decides who may move them, and that code can blacklist an address, pause every transfer, or be replaced with different code by whoever holds the admin key. Standards like ERC-20 fix the interface (the function names and events every wallet and exchange calls) but not the behavior behind it, and the most widely held dollar token on Ethereum doesn't follow the standard's return values. A platform that lists a token is trusting its contract, its issuer and its admin keys, and has to integrate with the token as written, not as specified.
 
-This chapter covers native assets against tokens, ERC-20 in depth (the interface, decimals, approvals with a worked call, permits), the nonstandard tokens that break integrations (USDT, fee-on-transfer and rebasing tokens), NFTs under ERC-721 and ERC-1155, Solana's SPL tokens and Token Extensions, upgradeable proxies and admin keys, freeze and blacklist functions, and token metadata and spoofed tokens. It extends `instruments` and `asset_networks` from [the core data model](/books/investing-and-digital-assets/investing-business#the-core-data-model) in The Investing & Digital Assets Business, where one instrument (USDC) has one `asset_networks` row per chain. The issuer's side of freezes, and the law behind them, is Freezes, Blacklists & Seizures; deciding whether to list a token at all is Listing & Delisting Assets; in-game tokens and NFTs are Gaming's [Trading and Real-Money Markets](/books/gaming/economies-and-entitlements#trading-and-real-money-markets).
+This chapter covers native assets against tokens, ERC-20 in depth (the interface, decimals, approvals with a worked call, permits), the nonstandard tokens that break integrations (USDT, fee-on-transfer and rebasing tokens), NFTs under ERC-721 and ERC-1155, Solana's SPL tokens and Token Extensions, upgradeable proxies and admin keys, freeze and blacklist functions, and token metadata and spoofed tokens. It extends `instruments` and `asset_networks` from [the core data model](/books/investing-and-digital-assets/investing-business#the-core-data-model) in The Investing & Digital Assets Business, where one instrument (USDC) has one `asset_networks` row per chain. The issuer's side of freezes, and the law behind them, is [Freezes, Blacklists & Seizures](/books/investing-and-digital-assets/freezes-and-onchain-compliance); deciding whether to list a token at all is [Listing & Delisting Assets](/books/investing-and-digital-assets/listing-assets); in-game tokens and NFTs are Gaming's [Trading and Real-Money Markets](/books/gaming/economies-and-entitlements#trading-and-real-money-markets).
 
 ## How the Issuers Do It
 
@@ -117,7 +117,7 @@ Solana keeps a token's definition in a **mint account** (supply, decimals, mint 
 The Token Extensions program (Token-2022) adds behaviors chosen at mint creation. The ones that change custody and crediting:
 
 - **Transfer fees,** withheld in the recipient's account as above.
-- **Default account state:** "force all new token accounts to be frozen," so a new holder can't move tokens until the issuer unfreezes the account, which is how permissioned tokens gate holders (Transfer Agents & Permissioned Tokens).
+- **Default account state:** "force all new token accounts to be frozen," so a new holder can't move tokens until the issuer unfreezes the account, which is how permissioned tokens gate holders ([Transfer Agents & Permissioned Tokens](/books/investing-and-digital-assets/transfer-agents-and-permissioned-tokens)).
 - **Permanent delegate:** "unlimited delegate privileges over any account for that mint"; the delegate can transfer or burn any holder's tokens. The documentation names stablecoin issuers seizing assets from sanctioned entities as a use case, and notes that confidential balances can escape it.
 - **Transfer hook:** a program the token calls on every transfer, which can enforce arbitrary rules or fail a transfer for reasons the sender can't see in advance.
 - **Required memo, non-transferable, pausable, permissioned burn, interest-bearing and scaled UI amounts:** the last two change the displayed amount without minting, which is the rebasing problem in another form.
@@ -142,7 +142,7 @@ What this means for a custodian:
 - **A frozen balance is still a liability.** The ledger keeps the customer's claim and moves it to a restricted state; the reconciliation shows the chain balance as present but unusable.
 - **Pause is a chain-wide event for one asset.** Withdrawals of that token stop, deposits may still arrive and not be movable, and the platform's status page says so.
 
-The legal and operational side (OFAC-driven freezes, law enforcement requests, the GENIUS Act's technical capability requirements) is Freezes, Blacklists & Seizures.
+The legal and operational side (OFAC-driven freezes, law enforcement requests, the GENIUS Act's technical capability requirements) is [Freezes, Blacklists & Seizures](/books/investing-and-digital-assets/freezes-and-onchain-compliance).
 
 ## Token Metadata and Spoofed Tokens
 
@@ -209,7 +209,7 @@ Notes on the sketch:
 - **Controls are read, not assumed.** A job reads the EIP-1967 slots and role holders of every listed token daily and updates `token_contracts`; a difference writes a `token_admin_changes` row.
 - **An upgrade pauses the asset.** `upgraded` on a listed token sets `deposits_enabled` and `withdrawals_enabled` false on that `asset_networks` row until a person reviews the new implementation, and emits `asset_network.paused` through the [outbox](/docs/architecture/events#the-transactional-outbox).
 - **A blacklist hit on our address is a case.** `blacklisted` with a platform address as subject opens a `cases` row and moves affected customer balances to a restricted ledger account.
-- **Unlisted tokens never credit.** Transfers from contracts that have no `asset_networks` row are recorded and reviewed as misdirected deposits (Deposits & Withdrawals), never shown as balances.
+- **Unlisted tokens never credit.** Transfers from contracts that have no `asset_networks` row are recorded and reviewed as misdirected deposits ([Deposits & Withdrawals](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals)), never shown as balances.
 - **Payments' `assets`** table is this volume's `instruments` plus `asset_networks`: its `code` ('USDC.ethereum') is one `asset_networks` row, and its `decimals` is `decimals_on_chain`.
 
 ## Auditing

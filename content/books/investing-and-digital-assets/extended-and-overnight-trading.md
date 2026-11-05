@@ -138,7 +138,7 @@ Most of a broker's operating calendar assumes a night. Taking the night away mov
 
 ## How to Build It
 
-The core model has `venues` and `orders` ([The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model)). US Equity Market Structure already generates `venue_sessions`, one row per venue, session and trade date, and Orders & Order Types gives each order its `session_eligibility` ([How to Build It](/books/investing-and-digital-assets/equity-market-structure#how-to-build-it)). This chapter adds the rules those rows are generated from (each venue session's days, hours, order types and dependencies), the calendar that defines a trade date as a pair of instants, the trade date on every execution, and the nightly overnight list:
+The core model has `venues` and `orders` ([The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model)). US Equity Market Structure already generates `venue_sessions`, one row per venue, session and trade date, and [Orders & Order Types](/books/investing-and-digital-assets/orders-and-order-types) gives each order its `session_eligibility` ([How to Build It](/books/investing-and-digital-assets/equity-market-structure#how-to-build-it)). This chapter adds the rules those rows are generated from (each venue session's days, hours, order types and dependencies), the calendar that defines a trade date as a pair of instants, the trade date on every execution, and the nightly overnight list:
 
 ```sql
 CREATE TABLE trading_sessions (            -- one venue's session, effective-dated

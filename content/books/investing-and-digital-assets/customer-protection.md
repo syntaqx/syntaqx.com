@@ -138,7 +138,7 @@ None of this applies to spot crypto held by an exchange or a crypto affiliate. T
 - **The terms of service.** In Celsius, terms that transferred title made Earn customers unsecured creditors; Coinbase's terms and its reliance on UCC Article 8 aim at the opposite result ([Terms Decide Bankruptcy](/books/investing-and-digital-assets/crypto-exchange-architecture#terms-decide-bankruptcy)).
 - **Segregation the ledger can prove.** New York's custody guidance requires segregated, customer-only omnibus wallets and an internal ledger that shows each customer's beneficial interest at all times ([What Makes It Lawful](/books/investing-and-digital-assets/crypto-exchange-architecture#what-makes-it-lawful)).
 - **Proof of reserves,** which shows assets on chain but not the liabilities off it ([Proof of Reserves & Liabilities](/books/investing-and-digital-assets/proof-of-reserves)).
-- **Qualified custody** at a trust company or national trust bank for institutional and fund assets (Qualified Custody).
+- **Qualified custody** at a trust company or national trust bank for institutional and fund assets ([Qualified Custody](/books/investing-and-digital-assets/qualified-custody)).
 
 The engineering conclusion: a crypto platform can't buy SIPC, but it can build the 15c3-3 discipline anyway, as a daily computation of customer-owned quantity per asset against customer-only wallet balances, with deficits worked to zero by rule rather than by mood. That computation is the possession-or-control check with wallets as the control locations, and it's what a court, a regulator or a proof of reserves will ask for.
 

@@ -126,7 +126,7 @@ My rule: show each client their own realized harvested losses and the estimated 
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `tax_lots`, `lot_closings` and `orders`, with Cost Basis, Tax Lots & Wash Sales' `wash_sale_adjustments` and `lot_relief_elections`, and Robo-Advisors & Model Portfolios' `model_allocations` and `rebalance_runs`. This chapter adds the household the wash sale window spans, harvest runs and candidates, the substitute table, and direct index targets.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `tax_lots`, `lot_closings` and `orders`, with [Cost Basis, Tax Lots & Wash Sales](/books/investing-and-digital-assets/cost-basis-and-tax-lots)' `wash_sale_adjustments` and `lot_relief_elections`, and [Robo-Advisors & Model Portfolios](/books/investing-and-digital-assets/robo-advisors)' `model_allocations` and `rebalance_runs`. This chapter adds the household the wash sale window spans, harvest runs and candidates, the substitute table, and direct index targets.
 
 ```sql
 CREATE TABLE tax_households (                -- whose purchases can wash whose losses

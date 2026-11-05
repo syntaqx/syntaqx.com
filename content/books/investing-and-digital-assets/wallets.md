@@ -31,7 +31,7 @@ FinCEN's guidance describes hosted wallet providers as "account-based money tran
 
 The bank regulators state the mirror image for custody: taking possession of a customer's existing keys may not give a custodian control, "since, for example, a customer may have retained copies of the keys." Together they give a platform two clean designs and a lot of muddy ones:
 
-- **Custodial:** the platform alone can sign; the customer has a ledger balance, KYC, statements and the platform's protections and risks (Hot, Warm & Cold Wallets; Customer Protection, Net Capital & SIPC).
+- **Custodial:** the platform alone can sign; the customer has a ledger balance, KYC, statements and the platform's protections and risks ([Hot, Warm & Cold Wallets](/books/investing-and-digital-assets/hot-and-cold-wallets); [Customer Protection, Net Capital & SIPC](/books/investing-and-digital-assets/customer-protection)).
 - **Self-custody:** the customer alone can sign; the platform's software never holds a key or a share sufficient to move funds without the customer, and its records are of software use, not balances.
 - **Muddy:** "self-custody" where the platform holds a recovery share that can move funds alone, a custodial wallet whose customers also keep the seed, or an embedded wallet whose key the provider can reconstruct without the user. Each needs a legal analysis before launch, not after.
 
@@ -63,7 +63,7 @@ The EIP's own security section is a list of things a wallet has to get right:
 - **Re-delegating can corrupt storage** if two delegates share slots; namespaced storage (ERC-7201) is the recommendation.
 - **Initialization can be front-run,** since no init code runs at delegation; wallets should require setup calldata signed by the EOA.
 
-Worked: a phishing page asks a user to "upgrade your wallet" and requests a type-4 transaction whose single tuple is `[0, 0xBAD...BAD, 12, ...]`. The account's next nonce is 12 on Ethereum, Base and Arbitrum. Once signed, the attacker's contract is the account's code on all three chains, and a single call can sweep every token on each. A wallet that refuses any 7702 authorization not to its own delegate, and any with chain ID 0, prevents the whole class.
+Worked: a phishing page asks a user to "upgrade your wallet" and requests a type-4 transaction whose single tuple is `[0, 0xBAD...BAD, 12, ...]`. The account's next nonce is 12 on Ethereum, Base and Arbitrum. Once signed, the attacker's contract is the account's code on all three chains, and a single call can sweep every token on each. A wallet that refuses any 7702 authorization not to its own delegate, and any with chain ID 0, prevents the whole class. The same mechanism, signed by a compromised internal signing service, drained Binance's hot wallets ([Binance, October 29, 2026](/books/investing-and-digital-assets/exchange-security#binance-october-29-2026)).
 
 ## Passkey and Embedded Wallets
 
@@ -71,7 +71,7 @@ A passkey is a P-256 key held in a phone's secure hardware or a FIDO authenticat
 
 Embedded wallets go further: the app creates a wallet at sign-up, with no seed phrase shown. Privy splits the key into an enclave share and an auth share released "only with valid credentials," reconstructed inside a Nitro enclave in memory, used and discarded; Turnkey generates keys in enclaves and signs under policies. The trade:
 
-- **Recovery is account recovery.** Losing a seed phrase is replaced by the provider's login and recovery flow, so the wallet is only as safe as that flow (email, SMS and support resets are the attack surface; Account Security & Fraud).
+- **Recovery is account recovery.** Losing a seed phrase is replaced by the provider's login and recovery flow, so the wallet is only as safe as that flow (email, SMS and support resets are the attack surface; [Account Security & Fraud](/books/investing-and-digital-assets/account-security)).
 - **The provider's role decides the legal model.** If the provider or the app can reconstruct and sign without the user's credential, the user doesn't have total independent control.
 - **Policies can protect users,** since the enclave can refuse to sign a transfer above a limit or to a flagged address, which a seed-phrase wallet can't.
 
@@ -188,7 +188,7 @@ Notes on the sketch:
 - **Prompts are evidence.** When a customer reports a drain, `signature_prompts` shows what the wallet decoded, which flags it raised, which disclosure version it showed and what the user chose. Store the decoded request, not the private data around it.
 - **Sessions are scoped and visible.** A connection records the chains and methods the user approved; a request outside them is refused, and the user can see and end every live session.
 - **Approvals are a product feature.** A daily read of allowances for each wallet lets the app show and revoke them; unlimited and operator-wide approvals to unknown spenders are highlighted.
-- **Poisoning checks run against known counterparties.** A destination that matches a past or allowlisted address's first and last characters but not its middle raises `poisoned_lookalike` before the user can sign; withdrawal allowlists for custodial accounts are Deposits & Withdrawals.
+- **Poisoning checks run against known counterparties.** A destination that matches a past or allowlisted address's first and last characters but not its middle raises `poisoned_lookalike` before the user can sign; withdrawal allowlists for custodial accounts are [Deposits & Withdrawals](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals).
 - **7702 delegates are watched.** A delegated wallet whose `delegate_address` changes to anything but the platform's delegate emits `self_custody_wallet.delegate_changed` through the [outbox](/docs/architecture/events#the-transactional-outbox) and a warning in the app.
 
 ## Auditing

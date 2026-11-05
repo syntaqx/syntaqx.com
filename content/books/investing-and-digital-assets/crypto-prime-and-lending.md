@@ -110,7 +110,7 @@ The lending that came back is visible in public filings rather than in private t
 
 ## How to Build It
 
-Credit limits, pledges and loans extend `accounts` and `positions`; a margin call on a crypto loan is a row in Margin & Short Selling's `margin_calls` with the loan it belongs to:
+Credit limits, pledges and loans extend `accounts` and `positions`; a margin call on a crypto loan is a row in [Margin & Short Selling](/books/investing-and-digital-assets/margin-and-short-selling)'s `margin_calls` with the loan it belongs to:
 
 ```sql
 CREATE TABLE prime_credit_limits (         -- what a client may owe, by kind
