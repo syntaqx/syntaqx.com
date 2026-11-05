@@ -90,9 +90,9 @@ Coinbase's design, as Frank Yu described it at QCon San Francisco (published Apr
 
 Recovery is replay from the last snapshot. A snapshot is the full book and engine state at a sequence number; restoring it and replaying every input after that number rebuilds the engine exactly. Coinbase takes snapshots on a follower, off the leader's path; LMAX took nightly snapshots and restarted in under a minute.
 
-Worked numbers, my own: Coinbase's talk puts a single core's replay red line at about 300,000 messages a second, about 3.3 microseconds a message. If the last snapshot is 30 minutes old and the market averaged 50,000 inputs a second, replay has 90 million messages to apply: 300 seconds, five minutes of an unavailable market, before any human decision. At a snapshot every 5 minutes, it is 50 seconds. Snapshot frequency is a recovery time objective, set and tested like one ([Set Targets From Impact](/docs/operations/disaster-recovery#set-targets-from-impact)).
+Worked numbers, my own: Coinbase's talk gives "300k" as its replay red line without naming the unit; I read it as 300,000 inputs a second on the single engine core, about 3.3 microseconds a message. If the last snapshot is 30 minutes old and the market averaged 50,000 inputs a second, replay has 90 million messages to apply: 300 seconds, five minutes of an unavailable market, before any human decision. At a snapshot every 5 minutes, it is 50 seconds. Snapshot frequency is a recovery time objective, set and tested like one ([Set Targets From Impact](/docs/operations/disaster-recovery#set-targets-from-impact)).
 
-The case for designing the failure path as carefully as the fast path is public. On May 7, 2026, cooling units failed in one AWS data hall in us-east-1. Coinbase's exchange matching engine ran as a Raft cluster inside a single cluster placement group, co-located because cross-zone round trips add 3 to 4 milliseconds; three of its five nodes went down, the cluster lost quorum, and there was no automated cross-zone failover. Recovery took emergency code changes and manual reconstruction, trading was unavailable for several hours, and markets came back through cancel-only and auction modes. Kafka partitions stranded in the zone were moved by hand. Coinbase's remediations included automated cross-zone recovery and better quorum restoration.
+The case for designing the failure path as carefully as the fast path is public. On May 7, 2026, cooling units failed in one AWS data hall in us-east-1. Coinbase's exchange matching engine ran as a Raft cluster inside a single cluster placement group (co-located, as the QCon talk explains, because cross-zone responses take 3 to 4 milliseconds); three of its five nodes went down, the cluster lost quorum, and there was no automated cross-zone failover. Recovery took emergency code changes and manual reconstruction, trading was unavailable for several hours, and markets came back through cancel-only and auction modes. Kafka partitions stranded in the zone were moved by hand. Coinbase's remediations included automated cross-zone recovery and better quorum restoration.
 
 Three lessons I take from it:
 
@@ -119,7 +119,7 @@ The figures venues and specifications publish, and what they bound:
 | Step | Published figure | Source |
 | --- | --- | --- |
 | Hand-off between pipeline stages (Disruptor, three stages, mean) | 52 ns, against 32,757 ns through array blocking queues | LMAX Disruptor paper |
-| One input in a single-threaded engine at its red line | about 3.3 μs (300,000 messages a second, my arithmetic) | Coinbase talk |
+| One input in a single-threaded engine at its red line | about 3.3 μs (its "300k" red line read as messages a second, my arithmetic) | Coinbase talk |
 | Consolidated quote processing (median, September 2026) | 18.0 μs | CTA SIP metrics |
 | A deliberate delay on every order | 350 μs | IEX |
 | End-to-end response at P99 | under 1 ms | Coinbase talk |
