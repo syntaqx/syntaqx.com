@@ -139,7 +139,7 @@ A benchmark makes a return mean something: 4.50% is good in a year the benchmark
 - **Total return.** Benchmarks are total return (dividends reinvested), because the account's return includes income.
 - **Relative return.** Arithmetic (account minus benchmark) for client reports; geometric ((1 + account) ÷ (1 + benchmark) − 1) where periods are chained.
 - **Tracking error.** The standard deviation of periodic relative returns, the measure a direct indexing account is judged by ([Direct Indexing](/books/investing-and-digital-assets/tax-loss-harvesting-and-direct-indexing#direct-indexing)), computed from monthly or daily relative returns over a stated window.
-- **Licensing.** Index providers license their data for display and for benchmarks; that is a market data entitlement (Market Data later in this book covers entitlements).
+- **Licensing.** Index providers license their data for display and for benchmarks; that is a market data entitlement ([Entitlements, Delayed Data and Display Rules](/books/investing-and-digital-assets/market-data#entitlements-delayed-data-and-display-rules)).
 
 ## Fees in Performance
 
