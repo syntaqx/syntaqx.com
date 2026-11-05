@@ -166,6 +166,12 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // Inlined into the client bundle, where only NEXT_PUBLIC_* variables
+  // otherwise exist: instrumentation-client.ts enables Sentry on it, and
+  // without this it read undefined in every browser and never reported.
+  env: {
+    VERCEL_ENV: process.env.VERCEL_ENV ?? "",
+  },
   headers: async () => [
     {
       source: "/(.*)",
