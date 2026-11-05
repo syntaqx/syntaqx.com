@@ -174,6 +174,19 @@ export const BOOKS: Book[] = [
       "It reads in ten parts, plus a reference. The Business: the parties and how money flows, the landscape, how a practice runs, business models for health software and selling into health care. Records and Interoperability: EHR and PMS records, HL7 v2, FHIR, SMART apps, documents and images, exchange networks, patient matching and code sets. Rules of the Record: HIPAA in practice, information blocking and certification, state health privacy, consent and security. Revenue Cycle: eligibility, claims, clearinghouses, remittance, denials, prior authorization, patient financial experience, coding compliance and value-based care. Practice Management and Patient Engagement: integrating with practice management systems, scheduling and online booking, reminders and recall, phones, texting, intake, reviews, payments, membership plans, veterinary, dental and specialty practices, multi-location groups, and analytics and the AI front desk. Care Delivery: telehealth, e-prescribing, labs, referrals, hospitals, digital health and patient portals. Payers, Pharma and Clinical Trials, and Beyond the US. Running the Platform: architecture, AI, operations, metrics, migrations and data use. Reference: a glossary of every term, grouped by part.",
     ],
   },
+  {
+    slug: "investing-and-digital-assets",
+    type: "industry",
+    name: "Investing & Digital Assets",
+    shortName: "Investing",
+    cover: "market",
+    summary:
+      "How brokers, crypto exchanges, custodians and stablecoin issuers hold and trade assets, from order books and tax lots to wallets, reserves, DeFi and the law.",
+    intro: [
+      "A share of stock and a bitcoin look like different things, and the businesses that hold them run on the same promises: the customer owns what the ledger says they own, an order gets the best price the market offers, assets are kept apart from the firm's own, and anyone can be shown that what's owed is actually held. A broker keeps those promises through a clearing house, a depository and a century of rules written after each crisis; a crypto exchange keeps them with keys, wallets and a chain that settles in minutes and never closes; a stablecoin issuer keeps one more, a dollar on chain for every dollar in reserve, redeemable on demand. When a firm broke those promises, as Lehman, MF Global, Celsius and FTX did, the ledger and the assets stopped agreeing, and every rule in this book is a guard against that. This book surveys how the industry does each piece, benchmarked across Robinhood, Schwab, Fidelity, Interactive Brokers, Coinbase, Kraken, Gemini, Binance, Circle, Tether, Paxos, Anchorage, BitGo, Fireblocks, BlackRock, Uniswap, Aave and the others, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in thirteen parts, plus a reference. The Business: the parties and how money flows, the landscape, how brokers and exchanges make money, regulators and licenses, and the crises that wrote the rules. Accounts and Positions: opening accounts, ledgers and buying power, funding and transfers, cash sweeps and yield, corporate actions and chain events, fractional shares, tax lots and wash sales, and statements and tax forms. Trading and Markets: orders, equity market structure, routing and best execution, order books and matching engines, market data, options, margin and short selling, pre-trade risk and halts, 24-hour trading, futures, and prediction markets. Clearing and Settlement: clearing and T+1, customer protection and SIPC, books, records and the audit trail, market surveillance, and brokerage as a service. Wealth and Advice: Reg BI and fiduciary duty, robo-advisors, tax-loss harvesting and direct indexing, retirement accounts, performance, and advisor platforms. Chains and Wallets: blockchains for platform engineers, tokens, keys and signing, wallets, chain data, and layer 2s and bridges. Crypto Exchanges: how an exchange works, deposits and withdrawals, hot and cold wallets, listings, trading products, perpetuals, staking, proof of reserves, security and hacks, and the 2022 collapse. Institutional Crypto: qualified custody, custody platforms, crypto ETPs, prime brokerage and lending, and accounting. Stablecoins: the business, issuing one, the law, freezes, and depegs. Decentralized Finance: DEXs and AMMs, lending and liquidations, oracles and MEV, smart contract risk, and DeFi from a regulated platform. Tokenization: tokenized funds, tokenized stocks, and transfer agents. The Rules: securities or commodities, licensing, AML and the Travel Rule, on-chain analytics, crypto tax, and beyond the US. Running the Platform: architecture, peak days and outages, account security, AI, metrics, and conversions and shutdowns. Reference: a glossary of every term, grouped by part.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
@@ -210,12 +223,6 @@ export const CONSIDERING_BOOKS: FutureBook[] = [
     type: "industry",
     summary:
       "Auctions, impressions and attribution across DSPs and SSPs, and the consent and privacy law that limits each.",
-  },
-  {
-    name: "Investing & Digital Assets",
-    type: "industry",
-    summary:
-      "Accounts, positions and tax lots at a broker or custodian, best execution, and crypto exchanges, custody, stablecoin issuers and DeFi.",
   },
   {
     name: "Energy & Utilities",
