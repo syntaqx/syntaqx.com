@@ -79,7 +79,7 @@ export async function DocArticle({
           {doc.description && <p className="max-w-3xl text-muted-foreground">{doc.description}</p>}
           <div
             data-pagefind-ignore
-            className="mt-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3"
+            className="mt-3 flex flex-wrap items-center justify-between gap-x-5 gap-y-3"
           >
             <div className="inst flex flex-wrap items-center gap-x-5 gap-y-2 text-muted-foreground">
               <span>{doc.readingMinutes} min read</span>
