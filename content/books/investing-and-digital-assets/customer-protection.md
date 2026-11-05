@@ -214,6 +214,8 @@ CREATE TABLE net_capital_computations (
 The possession-or-control check, per security at the close, from the ledger:
 
 ```sql
+-- customer_segregation_snapshot is derived at the close from positions and each margin
+-- account's debit: the fully paid and excess margin quantity per account and instrument
 WITH owed AS (                    -- what must be in control: fully paid plus excess margin
   SELECT instrument_id, SUM(fully_paid_qty + excess_margin_qty) AS qty
   FROM customer_segregation_snapshot          -- per account and instrument at the close

@@ -229,7 +229,7 @@ Market makers run thousands of orders a second and need guarantees the retail pr
 
 ## How to Build It
 
-These are deltas against the core data model in [The Investing & Digital Assets Business](/books/investing-and-digital-assets/investing-business#the-core-data-model) (`fee_schedules` with its versioned `terms`, `fees` with the execution each was charged on, `orders` and `order_events`, `executions` with venue, price, quantity, liquidity flag and capacity, `settlements`, `disclosures`), and against [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#how-to-build-it) (`product_offerings`, `trading_pairs`). This chapter normalizes a schedule's tiers into `fee_tiers` with each account's daily assignment, and adds convert quotes, RFQ quotes, hedges, recurring plans and runs, and liquidity providers with their program terms.
+These are deltas against the core data model in [The Investing & Digital Assets Business](/books/investing-and-digital-assets/investing-business#the-core-data-model) (`fee_schedules` with its versioned `terms`, `fees` with the execution each was charged on, `orders` and `order_events`, `executions` with venue, price, quantity, liquidity flag and capacity, `settlements`, `disclosures`), and against [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#how-to-build-it) (`product_offerings`, `trading_pairs`). This chapter normalizes a schedule's tiers into `fee_tiers` with each account's daily assignment, and adds convert quotes, RFQ quotes, hedges, recurring runs (on the `recurring_plans` table from [Fractional Shares & Recurring Investing](/books/investing-and-digital-assets/fractional-and-recurring#how-to-build-it)), and liquidity providers with their program terms.
 
 ```sql
 CREATE TABLE fee_tiers (                        -- the tiers in one fee_schedules version's terms, as rows
@@ -311,17 +311,15 @@ CREATE TABLE hedges (                           -- principal flow offset on a ve
   created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE recurring_plans (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  account_id      UUID NOT NULL REFERENCES accounts (id),
-  buy_instrument_id UUID NOT NULL REFERENCES instruments (id),
-  amount_usd      BIGINT NOT NULL CHECK (amount_usd > 0),  -- cents
-  frequency       TEXT NOT NULL CHECK (frequency IN ('daily', 'weekly', 'biweekly', 'monthly')),
-  funding         TEXT NOT NULL CHECK (funding IN ('cash_balance', 'bank_debit', 'card')),
-  on_insufficient TEXT NOT NULL CHECK (on_insufficient IN ('skip', 'retry_once', 'pause')),
-  next_run_at     TIMESTAMPTZ NOT NULL,
-  status          TEXT NOT NULL CHECK (status IN ('active', 'paused', 'canceled'))
-);
+-- recurring_plans is defined in Fractional Shares & Recurring Investing (notional in
+-- minor units, frequency, funding, status); a crypto plan runs at a time of day, 24/7,
+-- can be card-funded, and says what happens when funds are short
+ALTER TABLE recurring_plans
+  ADD COLUMN next_run_at     TIMESTAMPTZ,
+  ADD COLUMN on_insufficient TEXT CHECK (on_insufficient IN ('skip', 'retry_once', 'pause')),
+  DROP CONSTRAINT recurring_plans_funding_check,
+  ADD CONSTRAINT recurring_plans_funding_check
+    CHECK (funding IN ('buying_power', 'bank', 'dividend', 'card'));
 
 CREATE TABLE recurring_runs (
   plan_id        UUID NOT NULL REFERENCES recurring_plans (id),
