@@ -111,7 +111,7 @@ A listing announcement moves price, so knowing one in advance is trading on insi
 
 **MiCA writes it into the regulation.** Article 89 prohibits insider dealing in crypto-assets, including using inside information to cancel or amend an existing order, and Article 92 requires "any person professionally arranging or executing transactions in crypto-assets" to have systems "to prevent and detect market abuse" and to report "without delay" any reasonable suspicion about an order or transaction to its competent authority.
 
-The controls follow: a need-to-know list for every pending listing with access logged, an information barrier between the listing team and anyone trading, a restricted list that blocks covered employees from trading listed-pending assets anywhere the firm can see, surveillance of on-chain and off-platform buying of a pending asset by addresses linked to employees, and announcement timing that leaves the smallest window between decision and publication. Surveillance in depth is Market Surveillance & Manipulation.
+The controls follow: a need-to-know list for every pending listing with access logged, an information barrier between the listing team and anyone trading, a restricted list that blocks covered employees from trading listed-pending assets anywhere the firm can see, surveillance of on-chain and off-platform buying of a pending asset by addresses linked to employees, and announcement timing that leaves the smallest window between decision and publication. Surveillance in depth is [Market Surveillance & Manipulation](/books/investing-and-digital-assets/market-surveillance#crypto-wash-trading-and-venue-surveillance).
 
 ## Delisting
 
