@@ -47,7 +47,7 @@ Worked numbers, my own: a customer holds 200 shares bought at $40 and places a s
 | `ioc` | Immediate or cancel | Fill what can fill at once and cancel the rest; never rest |
 | `fok` | Fill or kill | Fill the whole quantity at once or none |
 | `opg` | Opening auction only | Reject or queue outside the entry window; Alpaca rejects `opg` orders submitted after 9:28 a.m. until 7:00 p.m. ET |
-| `cls` | Closing auction only | Alpaca rejects `cls` orders between 3:50 and 7:00 p.m. ET, matching NYSE's 3:50 p.m. cutoff for market-on-close and limit-on-close entries |
+| `cls` | Closing auction only | Alpaca rejects `cls` orders between 3:50 and 7:00 p.m. ET, matching NYSE's 3:50 p.m. cutoff for market-on-close and limit-on-close entries (orders offsetting a significant imbalance are still accepted) |
 
 Expiry is a state transition driven by a clock, and the clock belongs to a venue calendar, not the server's time zone: the 3:50 p.m. cutoff is Eastern Time on an exchange trading day, and a half-day session moves it. The calendar is data with effective dates ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)), and [Extended Hours & 24-Hour Trading](/books/investing-and-digital-assets/extended-and-overnight-trading) covers the session calendars.
 
