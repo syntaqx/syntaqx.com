@@ -67,7 +67,7 @@ The other US-facing venues are smaller or private:
 
 Gemini's card revenue passing its exchange fees in the second quarter of 2026 is the clearest public sign of what US crypto exchanges are doing about volatile trading revenue: adding lines that don't depend on spot volume. Kraken's deals of 2025 and 2026 (NinjaTrader, the Backed xStocks business, Bitnomial) are reported in press but sit outside EDGAR because the company is private. <!-- source-gap: kraken-deals | secondary | Kraken's acquisitions of NinjaTrader, Backed and Bitnomial and their closing dates | closes with: Kraken's own announcements of each closing, or a registration statement | checked: 2026-11-05 -->
 
-Offshore, Binance is the venue whose regulatory record matters most to anyone who interacts with it: its November 2023 resolution with FinCEN, OFAC, the CFTC and the Justice Department is in [Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses#enforcement-defines-the-map), and the theft of about $6.36 billion from it on or about October 29, 2026, which the FBI attributed to North Korea, is in [Crises & the Rules They Wrote](/books/investing-and-digital-assets/crises-and-the-rules#2025-and-2026). OKX, Bybit, Crypto.com, Bitso, Hyperliquid and others complete the global list; [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture) surveys their structures.
+Offshore, Binance is the venue whose regulatory record matters most to anyone who interacts with it: its November 2023 resolution with FinCEN, OFAC, the CFTC and the Justice Department is in [Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses#enforcement-defines-the-map), and the October 29, 2026 theft from it, about $6.34 billion of assets impacted by Binance's own count and attributed to North Korea by the FBI as Binance reports it, is in [Crises & the Rules They Wrote](/books/investing-and-digital-assets/crises-and-the-rules#2025-and-2026). OKX, Bybit, Crypto.com, Bitso, Hyperliquid and others complete the global list; [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture) surveys their structures.
 
 ## Custodians
 
@@ -277,3 +277,4 @@ Design notes:
 **In practice**
 
 - [BleepingComputer: FBI links $6.3 billion Binance crypto heist to North Korean hackers (November 1, 2026)](https://www.bleepingcomputer.com/news/security/fbi-links-63-billion-binance-crypto-heist-to-north-korean-hackers/), the amount and attribution
+- [Binance: 29 October 2026 Binance security incident, initial findings and response update (November 3, 2026)](https://www.binance.com/en/blog/community/3229153443759566763), the amounts impacted and frozen and Binance's account of the FBI's attribution
