@@ -77,7 +77,7 @@ Section 13 gave the regulators one year to write rules; they missed it. Where ea
 | **Treasury (for the Stablecoin Certification Review Committee)** | Procedures for certifying state regimes | Interim final rule, effective September 30, 2026; a state's initial certification is due by January 18, 2028 |
 | **FinCEN and OFAC** | AML and sanctions compliance programs for issuers | Proposed April 8, 2026; comments closed June 9, 2026 |
 
-Most of this binds issuers, not the providers that move their tokens. What reaches a provider is the asset list (only permitted issuers' tokens after July 2028), the issuer's freeze capability (a token in your custody can be frozen), and the BSA program expectations that issuers will push down to the ramps and platforms they serve.
+Most of this binds issuers, not the providers that move their tokens. What reaches a provider is the asset list (only permitted issuers' tokens after July 2028), the issuer's freeze capability (a token in your custody can be frozen), and the BSA program expectations that issuers will push down to the ramps and platforms they serve. The issuer's side of the rules is in [Stablecoin Law](/books/investing-and-digital-assets/stablecoin-law#the-rules-for-issuers).
 
 ### State Regimes and New York
 
@@ -139,19 +139,19 @@ Who holds the keys decides the licensing, the security model and the ledger:
 - **The provider holds keys** in its own wallets: hot wallets for daily flows and cold storage for the rest. This is custody, with the licensing above, and key management with the discipline of [HSMs & Key Management](/books/payments/key-management): signing keys in hardware, multi-party approval for large transfers, and withdrawal allowlists.
 - **Non-custodial** for the payer: the payer signs from their own wallet and the provider only watches the chain. That's the normal case for pay-ins; it's what makes the payer's address unknown, and therefore something to screen.
 
-My default is to let a ramp or a qualified custodian hold the tokens and keep the provider's own role to quoting, screening, matching and the ledger. Holding keys is a business of its own.
+My default is to let a ramp or a qualified custodian hold the tokens and keep the provider's own role to quoting, screening, matching and the ledger. Holding keys is a business of its own. That business is [Keys, Signing & Key Management](/books/investing-and-digital-assets/keys-and-signing).
 
 ### Screening Wallets and Addresses
 
 Sanctions law doesn't change on a blockchain. OFAC is explicit: for virtual currency, "the obligations are the same" as for fiat. It publishes digital currency addresses on the SDN List but warns the listings "are not likely to be exhaustive," so matching an address against the list isn't enough. Blocked virtual currency must be held so that no party can access it, and reported to OFAC within 10 business days and annually after that. OFAC's guidance for the virtual currency industry recommends sanctions list and geographic screening, and points to blockchain analytics and geolocation tools.
 
-In practice: screen the **counterparty address** of every inbound and outbound transfer with a blockchain analytics provider, which scores the address by its exposure to sanctioned entities, mixers, stolen funds and darknet markets, and screen it again before each payout, because an address's history grows. Screen the **IP and location** of the session that requested the payment. Record the result, the provider, the list version and the score on the transfer, so the decision can be shown later. A hit on an inbound transfer is a blocked-property problem, not a refund: you can't simply send it back. The broader program is in [Gatekeeping: Sanctions, AML and Losses](/books/payments/becoming-a-payment-provider#gatekeeping-sanctions-aml-and-losses).
+In practice: screen the **counterparty address** of every inbound and outbound transfer with a blockchain analytics provider, which scores the address by its exposure to sanctioned entities, mixers, stolen funds and darknet markets, and screen it again before each payout, because an address's history grows. Screen the **IP and location** of the session that requested the payment. Record the result, the provider, the list version and the score on the transfer, so the decision can be shown later. A hit on an inbound transfer is a blocked-property problem, not a refund: you can't simply send it back. The broader program is in [Gatekeeping: Sanctions, AML and Losses](/books/payments/becoming-a-payment-provider#gatekeeping-sanctions-aml-and-losses). How exposure scores are built from clusters and labels is in [On-Chain Analytics & Investigations](/books/investing-and-digital-assets/blockchain-analytics#exposure-and-risk-scores), and screening the contracts and pools a customer's swap touches in [DeFi from a Regulated Platform](/books/investing-and-digital-assets/defi-from-a-regulated-platform#screening-contracts-and-counterparties).
 
 ### The Travel Rule
 
 The funds travel rule (31 CFR 1010.410(f)) requires a US financial institution sending a transmittal of $3,000 or more to include the sender's name, account number and address, the amount, the date, the recipient's institution and whatever recipient details it received, and an intermediary to pass them on. FinCEN's 2019 guidance applies it to convertible virtual currency: a transmittal involving it is an instruction to pay "a determinable amount of money," so it can fall within the rule. FATF's standards set the global baseline for virtual asset service providers, with countries allowed a de minimis threshold of USD or EUR 1,000 below which less is required, and the EU applies it with no threshold at all. FATF revised its Recommendation 16 for funds transfers in June 2025, with the changes generally expected to take effect by the end of 2030 as jurisdictions adopt them.
 
-The blockchain carries none of this data, so a provider sending tokens to another exchange or custodian exchanges it out of band, over one of the travel rule messaging networks, before or alongside the transfer. Sending to a self-hosted wallet has no counterparty institution to message, so the record holds what you collected from your own customer instead, including how they showed the wallet is theirs where your regulator asks for it. Model it as a record linked to the transfer, with its own status, because a missing or incomplete message on an inbound transfer is a reason to hold the funds.
+The blockchain carries none of this data, so a provider sending tokens to another exchange or custodian exchanges it out of band, over one of the travel rule messaging networks, before or alongside the transfer. Sending to a self-hosted wallet has no counterparty institution to message, so the record holds what you collected from your own customer instead, including how they showed the wallet is theirs where your regulator asks for it. Model it as a record linked to the transfer, with its own status, because a missing or incomplete message on an inbound transfer is a reason to hold the funds. A worked exchange case, one withdrawal to another VASP and one to a self-hosted wallet, is in [AML & the Travel Rule for Crypto](/books/investing-and-digital-assets/crypto-aml-and-travel-rule#worked-example-a-5-000-withdrawal-two-destinations).
 
 ### Confirmations, Reorgs and Monitoring the Chain
 
@@ -160,6 +160,8 @@ A provider learns about transfers by watching the chain: running nodes or using 
 - **Store the block hash with the block number.** If the chain reorganizes, the transfer's block hash changes or the transfer disappears; a transfer you'd marked `included` in an orphaned block goes back to `seen` or to `dropped`. Credit nothing until `final`.
 - **Use the chain's own definition of final,** not a single number for every chain. Circle's table above is a reasonable starting point; a rollup's quick confirmation is not Ethereum's finality.
 - **Two independent sources.** Your node can lag or fork; check finality against a second provider before releasing funds above a threshold.
+
+Finality rules chain by chain are in [Blockchains for Platform Engineers](/books/investing-and-digital-assets/blockchains-for-engineers#finality-per-chain), and an exchange's crediting policy per chain in [Deposits & Withdrawals](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals#confirmation-policies-per-chain).
 
 ### Gas, Fees and Who Pays Them
 
@@ -172,6 +174,8 @@ Nobody can reverse a transfer to the wrong address, and a token sent on a chain 
 - **Show the network as prominently as the address,** and generate a deposit address per network, so the payer can't paste a Solana address into an Ethereum send.
 - **Validate addresses before every payout:** the format for that chain (EVM addresses carry a mixed-case checksum, EIP-55), that it isn't a token contract, and that it's the address on file.
 - **Watch for the unexpected:** transfers of unsupported tokens to your addresses go to a review queue with a written policy, not to silence.
+
+An exchange's recovery policy for wrong-network deposits is in [Deposits & Withdrawals](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals#wrong-networks-and-recovery).
 
 ### Refunds Without Chargebacks
 
@@ -317,7 +321,7 @@ CREATE TABLE ramp_orders (                   -- conversions at the ramp or issue
 );
 ```
 
-The payment's state follows its transfers: a quote's inbound transfer reaching `final` (and a `clear` screening) is what moves the payment to `succeeded`, and only then does a ledger transaction post the tokens to the merchant's pending balance, keyed `('onchain_transfer', id)` so it posts once. A transfer that moves from `included` back to `seen` after a reorg posts nothing, because nothing posted before `final`. The ramp order's `settled` status, matched to the bank credit, posts the conversion's two legs and makes the merchant's dollars available for a normal [payout](/books/payments/payouts-and-settlement). Outbound sends carry an idempotency key, so a retried payout finds the signed transaction it already broadcast instead of paying twice ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
+The payment's state follows its transfers: a quote's inbound transfer reaching `final` (and a `clear` screening) is what moves the payment to `succeeded`, and only then does a ledger transaction post the tokens to the merchant's pending balance, keyed `('onchain_transfer', id)` so it posts once. A transfer that moves from `included` back to `seen` after a reorg posts nothing, because nothing posted before `final`. The ramp order's `settled` status, matched to the bank credit, posts the conversion's two legs and makes the merchant's dollars available for a normal [payout](/books/payments/payouts-and-settlement). Outbound sends carry an idempotency key, so a retried payout finds the signed transaction it already broadcast instead of paying twice ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)). The Investing & Digital Assets volume models the same tokens as `instruments` with an `asset_networks` row per chain ([The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model)), and a custodial platform's reporting of customers' sales is in [Form 1099-DA and Its Timeline](/books/investing-and-digital-assets/statements-and-tax-forms#form-1099-da-and-its-timeline).
 
 ## Auditing
 

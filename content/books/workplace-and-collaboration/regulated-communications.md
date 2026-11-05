@@ -36,7 +36,7 @@ Three rules carry most of the weight for securities firms:
 - **FINRA Rule 4511.** Members make and preserve the books and records FINRA rules require, for at least six years where no other period is specified, "in a format and media that complies with SEA Rule 17a-4."
 - **SEC Rule 204-2 (investment advisers).** Paragraph (a)(7) requires advisers to keep "originals of all written communications received and copies of all written communications sent" relating to recommendations, advice, fund transfers and orders, for not less than five years from the end of the fiscal year of the last entry, the first two in an appropriate office of the adviser.
 
-FINRA's guidance applied these to new channels early. Regulatory Notice 17-18 (April 25, 2017) says a firm that permits business communication by "text messaging app or chat service" must "first ensure that it can retain records of those communications," because "the content of the communication determines what must be retained." A firm that can't capture a channel has to keep business off it.
+FINRA's guidance applied these to new channels early. Regulatory Notice 17-18 (April 25, 2017) says a firm that permits business communication by "text messaging app or chat service" must "first ensure that it can retain records of those communications," because "the content of the communication determines what must be retained." A firm that can't capture a channel has to keep business off it. The retention periods and storage options for the rest of a broker's records are in [Books, Records & the Audit Trail](/books/investing-and-digital-assets/books-records-and-cat#how-long-and-how-rule-17a-4).
 
 ### How the records must be kept
 
@@ -130,7 +130,7 @@ Supervision tools turn the archive into a review queue. Their mechanics, from th
 - **Review workflow.** Alerts, conversation context around a match, tagging as compliant, non-compliant or questionable, escalation to another reviewer, notifying the user, removing a message from Teams, and escalation to an eDiscovery case, each recorded so the evidence names reviewer, item, date and action.
 - **Privacy by design.** Purview pseudonymizes user names by default, keeps Global Administrators out unless granted, and logs reviewer activity, because supervision reads employees' messages and is itself an employee monitoring program ([Employee Monitoring & Privacy](/books/workplace-and-collaboration/employee-monitoring-and-privacy#product-patterns-that-hold-up) covers the limits).
 
-Lexicons generate false positives at a scale that makes reviewers ignore them, which is the usual failure. My default is to tune per policy on measured hit rates (what fraction of flags reviewers mark non-compliant), retire terms that never produce a finding, and keep a random sample alongside lexicon hits so the firm can show its review would catch what the lexicon missed.
+Lexicons generate false positives at a scale that makes reviewers ignore them, which is the usual failure. My default is to tune per policy on measured hit rates (what fraction of flags reviewers mark non-compliant), retire terms that never produce a finding, and keep a random sample alongside lexicon hits so the firm can show its review would catch what the lexicon missed. The content standards those reviews enforce for broker communications, FINRA Rule 2210's, are in [Advice, Reg BI & Conduct](/books/investing-and-digital-assets/advice-and-conduct#finra-rule-2210-for-broker-communications).
 
 ## HIPAA in Chat and Meetings
 
