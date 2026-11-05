@@ -95,7 +95,7 @@ A YES contract at $0.62 means the market prices the event at about 62%. The two 
 | NO buyer at $0.38 | $1.00 if no | $0.38 | $0.38 | $0.62 |
 | Clearing house | | Holds $1.00 | | |
 
-Every contract is fully funded at the moment of the trade, so there is no variation margin and no margin call, unlike the futures in Futures & FCMs; settlement just pays the dollar to whichever side won.
+Every contract is fully funded at the moment of the trade, so there is no variation margin and no margin call, unlike the futures in [Futures & FCMs](/books/investing-and-digital-assets/futures-and-fcms#margin-and-daily-settlement); settlement just pays the dollar to whichever side won.
 
 ### Worked numbers: price, fee and payout
 

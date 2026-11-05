@@ -1,6 +1,6 @@
 +++
 title = "Extended Hours & 24-Hour Trading"
-nav_title = "Extended & 24-Hour Trading"
+nav_title = "24-Hour Trading"
 description = "Pre-market, after-hours and overnight stock trading: Blue Ocean and other ATSs, 23/5 exchange sessions from December 2026, and the plumbing behind them."
 category = "Investing & Digital Assets Industry"
 order = 2522
@@ -10,7 +10,7 @@ tags = ["investing", "market-structure", "extended-hours", "overnight-trading", 
 
 US stocks have traded outside 9:30 to 4:00 for a long time, but only part of the day. Exchanges run a pre-market session from 4:00 am and an after-hours session to 8:00 pm Eastern, and a handful of alternative trading systems have filled the night: Blue Ocean, Bruce, IBKR Eos and MOON, matching orders from brokers whose customers are awake in Asia or simply awake. Robinhood calls itself "the first U.S. broker to offer around-the-clock trading of individual stocks, 24 hours a day, 5 days a week"; Interactive Brokers offers more than 10,000 US stocks and ETFs "nearly 24 hours a day, five days a week." What the night has lacked is the infrastructure the day takes for granted: no consolidated quote from the SIPs, no exchange, no LULD bands, and one venue per broker. When that one venue failed on August 5, 2024, overnight trading on the brokers that used it simply stopped.
 
-That changes on December 6, 2026, the date the industry set for 23/5 trading on exchanges. Five exchanges (24X, Nasdaq, NYSE Arca, Cboe EDGX and MEMX) have SEC approval for overnight sessions, and around them the SIPs, NSCC, FINRA's trade reporting facilities, the Consolidated Audit Trail and the LULD plan have all moved their clocks. The hardest change for a broker is the smallest-looking one: the trade date now rolls at 8:00 pm Eastern, not midnight. This chapter covers the sessions as they are, the overnight ATSs and the Blue Ocean outage, the exchange approvals and every plan change behind them, a full week's timeline with the clearing cutoffs, crypto's 24/7 market as the comparison, and what it takes to run a broker that never closes. Order types and time in force are Orders & Order Types; the venues and the NBBO are US Equity Market Structure; LULD in regular hours is Pre-Trade Risk, Halts & Volatility.
+That changes on December 6, 2026, the date the industry set for 23/5 trading on exchanges. Five exchanges (24X, Nasdaq, NYSE Arca, Cboe EDGX and MEMX) have SEC approval for overnight sessions, and around them the SIPs, NSCC, FINRA's trade reporting facilities, the Consolidated Audit Trail and the LULD plan have all moved their clocks. The hardest change for a broker is the smallest-looking one: the trade date now rolls at 8:00 pm Eastern, not midnight. This chapter covers the sessions as they are, the overnight ATSs and the Blue Ocean outage, the exchange approvals and every plan change behind them, a full week's timeline with the clearing cutoffs, crypto's 24/7 market as the comparison, and what it takes to run a broker that never closes. Order types, time in force and session eligibility are [Orders & Order Types](/books/investing-and-digital-assets/orders-and-order-types#extended-hours-and-notional-orders); the venues, the NBBO and the SIPs are [US Equity Market Structure](/books/investing-and-digital-assets/equity-market-structure#sips-and-direct-feeds); LULD in regular hours and circuit breakers are [Pre-Trade Risk, Halts & Volatility](/books/investing-and-digital-assets/pre-trade-risk-and-halts#limit-up-limit-down).
 
 ## How the Platforms Do It
 
@@ -121,8 +121,8 @@ The 8:00 pm roll is the broker's new end of day, and it arrives while trading co
 Crypto venues already never close, so a broker that runs both has a 24/7 matching engine and ledger in house already ([How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#the-components)). Three things make crypto's 24/7 easier than equities' 23/5:
 
 - **Settlement is the trade.** A crypto exchange matches against prefunded balances in its own ledger; there's no NSCC, no T+1 and no trade date to roll. Equities overnight still settle through NSCC and DTC on business days, so the trade date and the settlement calendar have to agree.
-- **No consolidated quote.** Each crypto venue is its own market, and best execution across them is a routing problem (Order Routing, PFOF & Best Execution). Equities overnight needed the SIPs to run before exchanges could open, because Reg NMS and LULD are built on a consolidated quote.
-- **The fiat edge still closes.** A crypto exchange runs all weekend, but Fedwire and ACH don't, so dollar deposits and withdrawals queue until Monday. The CFTC's request for comment on extending standard futures to 24/7 trading (91 FR 38335, June 25, 2026, comments extended to August 26, 2026 at 91 FR 47158) asks the same question for futures: how margin calls and settlement work "when traditional payment systems do not operate." It also asks whether 24/7 contracts should carry "an additional initial-margin buffer in advance of weekend or extended-holiday closures." Futures & FCMs covers the futures side.
+- **No consolidated quote.** Each crypto venue is its own market, and best execution across them is a routing problem ([Order Routing, PFOF & Best Execution](/books/investing-and-digital-assets/routing-and-best-execution#crypto-best-execution)). Equities overnight needed the SIPs to run before exchanges could open, because Reg NMS and LULD are built on a consolidated quote.
+- **The fiat edge still closes.** A crypto exchange runs all weekend, but Fedwire and ACH don't, so dollar deposits and withdrawals queue until Monday. The CFTC's request for comment on extending standard futures to 24/7 trading (91 FR 38335, June 25, 2026, comments extended to August 26, 2026 at 91 FR 47158) asks the same question for futures: how margin calls and settlement work "when traditional payment systems do not operate." It also asks whether 24/7 contracts should carry "an additional initial-margin buffer in advance of weekend or extended-holiday closures." [Futures & FCMs](/books/investing-and-digital-assets/futures-and-fcms#crypto-futures-in-the-us) covers the futures side.
 
 ## Operating a Broker That Never Closes
 
@@ -132,13 +132,13 @@ Most of a broker's operating calendar assumes a night. Taking the night away mov
 - **Releases and maintenance need a window that isn't there.** The weekend is the only full stop for equities; anything that touches order entry deploys on the weekend or behind a flag that can switch a session off without a deploy ([Background Jobs](/docs/architecture/background-jobs)).
 - **Every session is a product setting.** Which instruments trade overnight, which order types each session accepts, whether margin and short sales are allowed overnight: each is data per session, checked before the order leaves, because the venues reject what they don't accept and a rejection at 2 am is a support ticket in the morning.
 - **Halts arrive on a schedule.** Corporate-action halts start at 8:00 pm the night before the action, and a halted stock stays halted overnight. Orders for it are accepted and held (Alpaca returns `accepted` and holds them) or rejected; either way the customer needs to see why.
-- **Market data is a separate entitlement.** Before the SIPs run overnight, the night's quotes come from each ATS; Alpaca sells a Blue Ocean feed separately, with indicative quotes in real time and trades delayed 15 minutes. After December 6 the SIPs carry the night, and the entitlement and display rules follow (Market Data).
+- **Market data is a separate entitlement.** Before the SIPs run overnight, the night's quotes come from each ATS; Alpaca sells a Blue Ocean feed separately, with indicative quotes in real time and trades delayed 15 minutes. After December 6 the SIPs carry the night, and the entitlement and display rules follow ([Market Data](/books/investing-and-digital-assets/market-data#entitlements-delayed-data-and-display-rules)).
 - **Support and surveillance staff the night.** Rule 3110 supervision, Rule 15c3-5 market access controls and best execution reviews all run on the same clock as trading.
 - **A venue outage needs a plan, not a retry.** With one ATS, an outage means the session is gone; with five exchanges and several ATSs, routing can fail over, and the system needs a rule for what to do with orders resting on a venue that disappears.
 
 ## How to Build It
 
-The core model has `venues` and `orders` ([The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model)). Sessions become data: each venue's sessions with their hours, order rules and pause, a calendar per market of trade dates and holidays, and the trade date stamped on every order event and execution from one rule:
+The core model has `venues` and `orders` ([The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model)). US Equity Market Structure already generates `venue_sessions`, one row per venue, session and trade date, and Orders & Order Types gives each order its `session_eligibility` ([How to Build It](/books/investing-and-digital-assets/equity-market-structure#how-to-build-it)). This chapter adds the rules those rows are generated from (each venue session's days, hours, order types and dependencies), the calendar that defines a trade date as a pair of instants, the trade date on every execution, and the nightly overnight list:
 
 ```sql
 CREATE TABLE trading_sessions (            -- one venue's session, effective-dated
@@ -174,8 +174,7 @@ CREATE TABLE session_calendars (           -- trade dates per market, with holid
   CHECK (starts_at < ends_at)
 );
 
-ALTER TABLE orders ADD COLUMN extended_hours BOOLEAN NOT NULL DEFAULT FALSE;
-ALTER TABLE orders ADD COLUMN session_id UUID REFERENCES trading_sessions (id);
+ALTER TABLE venue_sessions ADD COLUMN trading_session_id UUID REFERENCES trading_sessions (id);
 ALTER TABLE executions ADD COLUMN trade_date DATE;   -- from session_calendars, never from executed_at::date
 
 CREATE TABLE overnight_eligibility (       -- the nightly list, as synced from each venue
