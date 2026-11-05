@@ -12,7 +12,7 @@ A customer's brokerage screen shows three numbers that look like one: cash, buyi
 
 The rule that makes this tractable is the one every money system follows: **balances are not stored, they are derived from an append-only double-entry ledger** ([Double-Entry Ledger](/docs/money/payment-states#double-entry-ledger)). This industry adds three twists. Every line carries an instrument, so an entry balances per instrument, not in dollars. Every line carries two dates, trade date and settlement date, and a position is a different number depending on which you count. And the ledger has a regulatory twin, the **stock record**, which must show for every security both who owns it and where it is, and must balance.
 
-This chapter covers that ledger: double entry across cash and assets, trade-date and settlement-date positions, the stock record, omnibus and segregated holding, buying power and withdrawable cash with worked numbers, pending deposits, units for crypto, and how positions derive from lines intraday and at the close. Margin requirements in depth are in Margin & Short Selling, and possession or control and the reserve formula in Customer Protection, Net Capital & SIPC, both later in this book; the chain side of crypto balances is in How a Crypto Exchange Works.
+This chapter covers that ledger, on the core model of [The Investing & Digital Assets Business](/books/investing-and-digital-assets/investing-business#the-core-data-model): double entry across cash and assets, trade-date and settlement-date positions, the stock record, omnibus and segregated holding, buying power and withdrawable cash with worked numbers, pending deposits, units for crypto, and how positions derive from lines intraday and at the close. Margin requirements in depth are in Margin & Short Selling, and possession or control and the reserve formula in Customer Protection, Net Capital & SIPC, both later in this book; the chain side of crypto balances is in How a Crypto Exchange Works.
 
 ## How the Platforms Do It
 
@@ -31,28 +31,28 @@ Three things stand out. **Every platform has at least three balances**, and the 
 
 The core model's `journal_lines` carry an `instrument_id`, a `ledger_account` and an amount, and cash is an instrument like any other (USD). The invariant is per instrument: **within each journal entry, the lines for each instrument sum to zero.** A buy of shares touches two instruments, so it has at least four lines, two in dollars and two in shares, and each pair balances on its own. There is no dollar value on the share lines; the price is on the execution, and market value is computed when someone asks.
 
-I use one sign convention for every instrument, borrowed from the stock record: **owner accounts carry what each owner is owed (positive is long), and location accounts carry where the asset sits (negative is held there).** Customers and the firm's proprietary accounts are owners. A bank account, the firm's DTC position, a clearing house receivable, a custodian, an omnibus wallet on a chain are locations. When every owner and every location is in the ledger, each instrument's lines sum to zero across the whole book, and "do we hold what we owe" becomes a query: owners' total equals locations' total, per instrument, at a point in time.
+I use one sign convention for every instrument, borrowed from the stock record: **owner lines carry what each owner is owed (positive is long), and location lines carry where the asset sits (negative is held there).** In the core model's `ledger_account` values, `customer`, `firm` and `fees` are owners; `omnibus` lines are locations, naming the wallet (`wallet_id`) or, as this chapter adds, the bank account, DTC account, custodian or transfer agent (`location_id`) that holds the asset; `settlement` lines are in transit between the two, receivables and payables to a clearing house; `suspense` holds what can't yet be assigned. When every owner and every location is in the ledger, each instrument's lines sum to zero across the whole book, and "do we hold what we owe" becomes a query: owners' total equals locations' total, per instrument, at a point in time.
 
 **Worked numbers: one buy, four lines, two dates.** A customer with $5,000.00 of settled cash buys 10 shares of XYZ at $187.50 on Monday, November 2, 2026. US equities settle T+1 (compliance since May 28, 2024), so the trade settles Tuesday, November 3. Amounts are in minor units for USD and in whole shares for XYZ.
 
-| Entry | Ledger account | USD | XYZ | Trade date | Settles on |
+| Entry | Ledger account (location) | USD | XYZ | Trade date | Settles on |
 | --- | --- | ---: | ---: | --- | --- |
-| Before | customer:A | +500,000 | | | |
-| Before | location:bank | −500,000 | | | |
-| Trade | customer:A | −187,500 | | Nov 2 | Nov 3 |
-| Trade | settlement:cns_payable | +187,500 | | Nov 2 | Nov 3 |
-| Trade | customer:A | | +10 | Nov 2 | Nov 3 |
-| Trade | settlement:cns_receivable | | −10 | Nov 2 | Nov 3 |
-| Settle | settlement:cns_payable | −187,500 | | Nov 3 | Nov 3 |
-| Settle | location:bank | +187,500 | | Nov 3 | Nov 3 |
-| Settle | settlement:cns_receivable | | +10 | Nov 3 | Nov 3 |
-| Settle | location:dtc | | −10 | Nov 3 | Nov 3 |
+| Before | customer (A) | +500,000 | | | |
+| Before | omnibus (customer reserve bank) | −500,000 | | | |
+| Trade | customer (A) | −187,500 | | Nov 2 | Nov 3 |
+| Trade | settlement (payable to CNS) | +187,500 | | Nov 2 | Nov 3 |
+| Trade | customer (A) | | +10 | Nov 2 | Nov 3 |
+| Trade | settlement (receivable from CNS) | | −10 | Nov 2 | Nov 3 |
+| Settle | settlement (payable to CNS) | −187,500 | | Nov 3 | Nov 3 |
+| Settle | omnibus (customer reserve bank) | +187,500 | | Nov 3 | Nov 3 |
+| Settle | settlement (receivable from CNS) | | +10 | Nov 3 | Nov 3 |
+| Settle | omnibus (DTC) | | −10 | Nov 3 | Nov 3 |
 
 On Monday evening the customer's trade-date position is 10 shares and $3,125.00; the settled position is 0 shares and $5,000.00, with 10 shares and −$1,875.00 unsettled. The firm owes the clearing house $1,875.00 and is owed 10 shares; nothing has moved at the bank or DTC. On Tuesday the settlement entry clears both settlement accounts to zero, and the customer is long 10 shares held at DTC and $3,125.00 held at the bank. In this sketch the settlement is per trade; in reality NSCC's Continuous Net Settlement nets each member's trades into one position per security per day, so the settlement entry is per security and the per-trade lines reconcile to it (Clearing & Settlement later in this book).
 
 ## Trade Date and Settlement Date
 
-A trade creates two facts at once: an economic one (the customer bears the price risk from the moment of execution) and a legal one (title and cash move at settlement). So each `journal_lines` row carries a trade date and a settlement date, and every position has two readings:
+A trade creates two facts at once: an economic one (the customer bears the price risk from the moment of execution) and a legal one (title and cash move at settlement). So every line carries both dates (in the core model, the entry's `effective_date` is the trade date and the line's `settles_on` the settlement date), and every position has two readings:
 
 - **Trade-date position:** all lines with a trade date on or before the as-of date. This is what the customer sees as "shares owned", what market value and profit and loss use, what margin requirements are computed on, and what tax lots are opened from (Cost Basis, Tax Lots & Wash Sales later in this book).
 - **Settlement-date position:** all lines with a settlement date on or before the as-of date. This is what is at DTC, what the stock record reflects "as of the clearance dates", what can be delivered on a transfer, and what cash is settled for the rules below.
@@ -76,7 +76,7 @@ SEC Rule 17a-3(a)(5) requires a broker-dealer to keep "a securities record or le
 
 DTC's position statement that night shows 270 shares, not 280. The stock record still balances (it is the firm's own record), but the location line disagrees with the external source by 10 shares: a **recon break**, recorded in `recon_breaks` against the DTC reconciliation. Until it is explained (a delivery booked to the wrong account, a corporate action applied at DTC and not here, a fail recorded as a delivery) the firm has 10 shares fewer in its control than its customers own, which is the possession or control problem that Rule 15c3-3 exists for, in Customer Protection, Net Capital & SIPC later in this book. The break is worked by locating the 10 shares, never by adjusting the long side.
 
-In the ledger above, the stock record is a query, not a separate system: for each instrument, sum owner accounts and location accounts by settlement date. Firms that keep a separate stock record system reconcile it to the ledger daily; firms that derive it keep one source of truth and one reconciliation, to DTC, the clearing house and custodians ([Reconcile to the Source](/docs/data/data-pipelines#reconcile-to-the-source)).
+In the ledger above, the stock record is a query, not a separate system: for each instrument, sum owner lines and location lines by settlement date. Firms that keep a separate stock record system reconcile it to the ledger daily; firms that derive it keep one source of truth and one reconciliation, to DTC, the clearing house and custodians ([Reconcile to the Source](/docs/data/data-pipelines#reconcile-to-the-source)).
 
 ## Omnibus and Segregated
 
@@ -84,9 +84,9 @@ Customers' securities are almost never registered in customers' names. A broker 
 
 That structure works only if the internal ledger is good enough to stand in for title. NYDFS's January 23, 2023 guidance on custodial structures (superseded by an updated version on September 30, 2025, which I could not open) is the clearest statement for crypto: custodians should "separately account for and segregate customer virtual currency from the corporate assets", may use "one or more omnibus on-chain wallets and internal ledger accounts that contain only virtual currency of customers", must keep records so that "each individual customer's beneficial interest is always evident and up-to-date", and should treat gas fees they fund for customers as customer funds. In the ledger's terms:
 
-- **An omnibus wallet is a location account,** one per wallet and asset network, holding only customer assets; the firm's own coins sit in different wallets, or the ledger can't prove which coins are whose.
-- **Every customer's beneficial interest is an owner account,** and the sum of owner accounts for an asset equals the sum of its customer location accounts at every point, checked continuously and reconciled to the chain ([Crypto In and Out](/books/investing-and-digital-assets/funding-and-transfers#crypto-in-and-out) has the account-level flow; the chain-side reconciliation belongs to Hot, Warm & Cold Wallets later in this book).
-- **Fees the firm pays on customers' behalf are entries,** not leakage: gas paid from an omnibus wallet debits a firm fee account and credits the wallet's location, so the wallet still reconciles.
+- **An omnibus wallet is a location,** `omnibus` lines with its `wallet_id`, one per wallet and asset network, holding only customer assets; the firm's own coins sit in different wallets, or the ledger can't prove which coins are whose.
+- **Every customer's beneficial interest is a `customer` line,** and the sum of customer lines for an asset equals the sum of its customer-only locations at every point, checked continuously and reconciled to the chain ([Crypto In and Out](/books/investing-and-digital-assets/funding-and-transfers#crypto-in-and-out) has the account-level flow; the chain-side reconciliation belongs to Hot, Warm & Cold Wallets later in this book).
+- **Fees the firm pays on customers' behalf are entries,** not leakage: gas paid from an omnibus wallet is a `fees` line against the wallet's `omnibus` line, so the wallet still reconciles.
 
 The cost of getting it wrong is decided in bankruptcy court. In Celsius, Judge Glenn held on January 4, 2023 that the "unambiguous Terms of Use" meant cryptocurrency deposited into Earn accounts "became Celsius's property", so the assets in about 600,000 Earn accounts, worth about $4.2 billion on July 10, 2022, were property of the estate and their holders unsecured creditors; the record also showed Celsius had not segregated Earn assets from its Custody and Withhold programs. The terms decided title, and commingling made even the reserved programs hard to untangle. The bank version of the same lesson, a program ledger that couldn't say who owned the money in an omnibus account, is [Synapse: A Post-Mortem](/books/banking-and-lending/program-ledgers#synapse-a-post-mortem).
 
@@ -183,7 +183,7 @@ The functions are trivial on purpose. The hard part is that every input is a sum
 
 ## Pending Deposits
 
-A deposit initiated by ACH is a fact before it is money ([Returns: When Money Is Really Yours](/books/payments/ach#returns-when-money-is-really-yours)). The ledger records it at initiation in a pending account, not as the customer's cash: `customer:A` stays as it was, `pending:ach_in` and a matching receivable carry the amount, and `pending_transfer_in` (Alpaca's name) is a query over them. When the ACH settles, the pending entry is reversed and the cash entry posts, with the bank as location. When the firm extends instant credit on the pending deposit, that is its own entry: customer cash up by the instant amount, a firm receivable from the customer down by the same, linked to the transfer, cleared when the deposit settles or turned into a deficit when it returns. The withdrawal hold is not a ledger entry at all; it is a `balance_holds` row against settled cash, with an expiry.
+A deposit initiated by ACH is a fact before it is money ([Returns: When Money Is Really Yours](/books/payments/ach#returns-when-money-is-really-yours)). The core model records it at initiation as a `transfers` row with status `pending` and an `available_at`, not as the customer's cash: no journal entry posts, the customer's cash stays as it was, and `pending_transfer_in` (Alpaca's name) is a query over pending transfers. When the ACH settles, the cash entry posts (customer up, the receiving bank's `omnibus` location down) and the transfer completes. When the firm extends instant credit on the pending deposit, that is its own entry: customer cash up by the instant amount, a `firm` line (the firm's receivable from the customer) down by the same, linked to the transfer, cleared when the deposit settles or turned into a deficit when it returns. The withdrawal hold is not a ledger entry at all; it is a `balance_holds` row against settled cash, with an expiry.
 
 Separating the three (pending, credit, hold) is what lets the platform answer the customer's question ("where's my money?") and the firm's ("how much have we advanced against deposits that can still come back?") from the same rows. The second question is sized in [Instant Deposits Are Credit](/books/investing-and-digital-assets/funding-and-transfers#instant-deposits-are-credit).
 
@@ -219,33 +219,39 @@ Crypto has no close. A 24/7 book still needs a cut for statements, fees, interes
 
 ## How to Build It
 
-These are deltas against the core data model in The Investing & Digital Assets Business, at the start of this book: `journal_entries`, `journal_lines` (with `instrument_id`, `ledger_account` and amount), `positions`, `instruments`, `asset_networks`, `settlements`, `transfers`, `reconciliations` and `recon_breaks`. This chapter adds the chart of ledger accounts with owner and location sides, the two dates on every line (and base-unit amounts), holds on balances, end-of-day snapshots and the per-instrument balance check.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `journal_entries` (whose `effective_date` is the trade date, with `posted_at` as recorded time), `journal_lines` (with `instrument_id`, `ledger_account`, `account_id`, `wallet_id`, a signed `amount` in smallest units and `settles_on`), `positions`, `instruments`, `wallets`, `transfers`, `reconciliations` and `recon_breaks`. This chapter adds the off-chain locations and a location column on lines, rules for which ledger accounts may post where, holds on balances, end-of-day snapshots and buying power snapshots.
 
 ```sql
-CREATE TABLE ledger_accounts (                -- the chart: every owner and every location
-  code               TEXT PRIMARY KEY,         -- 'customer:<account_id>', 'location:dtc', 'settlement:cns_payable', 'pending:ach_in'
+CREATE TABLE custody_locations (              -- where off-chain assets sit; wallets cover the chain
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   legal_entity_id    UUID NOT NULL REFERENCES legal_entities (id),
-  side               TEXT NOT NULL CHECK (side IN ('owner', 'location', 'settlement', 'pending', 'firm')),
-  account_id         UUID REFERENCES accounts (id),        -- for customer owner accounts
-  location_kind      TEXT,                     -- 'bank', 'depository', 'clearing_house', 'custodian', 'omnibus_wallet', 'transfer_agent'
-  wallet_id          UUID REFERENCES wallets (id),         -- for omnibus wallet locations
-  customer_only      BOOLEAN NOT NULL DEFAULT false        -- locations that may hold only customer assets
+  kind               TEXT NOT NULL CHECK (kind IN ('bank', 'depository', 'clearing_house',
+                       'custodian', 'transfer_agent')),
+  external_ref       TEXT NOT NULL,            -- the DTC participant account, bank account, custodian account
+  customer_only      BOOLEAN NOT NULL,         -- a reserve bank account or a customer-only omnibus
+  UNIQUE (legal_entity_id, kind, external_ref)
 );
 
 ALTER TABLE journal_lines
-  ADD COLUMN trade_date    DATE NOT NULL,      -- economic date
-  ADD COLUMN settles_on    DATE NOT NULL,      -- legal date; equals trade_date for internal crypto trades
-  ADD COLUMN recorded_at   TIMESTAMPTZ NOT NULL DEFAULT now();
--- the core's amount is NUMERIC(78,0) in base units of the line's instrument:
--- cents, shares at the instrument's precision, satoshis, wei
+  ADD COLUMN location_id UUID REFERENCES custody_locations (id);  -- set on omnibus lines off chain
+-- settles_on stays null for lines settled when posted, such as internal crypto trades
+
+CREATE TABLE ledger_account_rules (           -- which ledger accounts may post where, per entity
+  legal_entity_id    UUID NOT NULL REFERENCES legal_entities (id),
+  ledger_account     TEXT NOT NULL,            -- the core's values: customer, firm, omnibus, settlement, fees, suspense
+  side               TEXT NOT NULL CHECK (side IN ('owner', 'location', 'transit')),
+  allowed_location_kinds TEXT[],               -- for omnibus: 'bank', 'depository', 'wallet', ...
+  firm_assets_allowed BOOLEAN NOT NULL,        -- false: no line may put the firm's own assets in a customer-only location
+  PRIMARY KEY (legal_entity_id, ledger_account)
+);
 
 CREATE TABLE balance_holds (                  -- restrictions on what may leave, not entries
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id         UUID NOT NULL REFERENCES accounts (id),
   instrument_id      UUID REFERENCES instruments (id),     -- NULL: value-based across assets, as Kraken's equal-value hold
-  amount_base        NUMERIC(78,0) NOT NULL CHECK (amount_base > 0),
-  reason             TEXT NOT NULL CHECK (reason IN ('ach_deposit', 'instant_credit', 'legal', 'exploitation',
-                       'open_order', 'fraud_review')),
+  amount             NUMERIC(78, 0) NOT NULL CHECK (amount > 0),  -- smallest units; USD cents when value-based
+  reason             TEXT NOT NULL CHECK (reason IN ('ach_deposit', 'instant_credit', 'legal',
+                       'senior_hold', 'open_order', 'fraud_review')),
   transfer_id        UUID REFERENCES transfers (id),
   placed_at          TIMESTAMPTZ NOT NULL,
   expires_at         TIMESTAMPTZ,              -- enforced on read
@@ -256,11 +262,11 @@ CREATE TABLE position_snapshots (             -- the books at each close, immuta
   account_id         UUID NOT NULL REFERENCES accounts (id),
   instrument_id      UUID NOT NULL REFERENCES instruments (id),
   as_of_close        TIMESTAMPTZ NOT NULL,     -- the entity's cut: 16:00 America/New_York, 00:00 UTC
-  trade_date_qty     NUMERIC(78,0) NOT NULL,
-  settled_qty        NUMERIC(78,0) NOT NULL,
-  mark_price         NUMERIC(38,12),
+  trade_date_qty     NUMERIC(78, 0) NOT NULL,
+  settled_qty        NUMERIC(78, 0) NOT NULL,
+  mark_price         NUMERIC(38, 18),
   mark_source        TEXT,                     -- the named price source at the cut
-  ledger_watermark   UUID NOT NULL,            -- the last journal entry included
+  through_entry_id   UUID NOT NULL REFERENCES journal_entries (id),  -- the last entry included
   PRIMARY KEY (account_id, instrument_id, as_of_close)
 );
 
@@ -268,13 +274,13 @@ CREATE TABLE buying_power_snapshots (         -- what was computed and shown, fo
   account_id         UUID NOT NULL REFERENCES accounts (id),
   computed_at        TIMESTAMPTZ NOT NULL,
   regime             TEXT NOT NULL CHECK (regime IN ('cash', 'reg_t', 'portfolio_margin')),
-  equity             BIGINT NOT NULL,
+  equity             BIGINT NOT NULL,          -- USD cents
   initial_margin     BIGINT NOT NULL,
   maintenance_margin BIGINT NOT NULL,
   buying_power       BIGINT NOT NULL,
   withdrawable       BIGINT NOT NULL,
   inputs             JSONB NOT NULL,           -- the balances, holds and rule versions used
-  ledger_watermark   UUID NOT NULL,
+  through_entry_id   UUID NOT NULL REFERENCES journal_entries (id),
   PRIMARY KEY (account_id, computed_at)
 );
 ```
@@ -292,12 +298,16 @@ HAVING SUM(amount) <> 0;            -- any row means the entry is rejected
 Owners against locations for one instrument on a settlement date, which is the stock record's balance and, for an omnibus wallet, the customer side of the chain reconciliation:
 
 ```sql
-SELECT la.side, la.location_kind, la.code, SUM(jl.amount) AS qty
+SELECT r.side, jl.ledger_account, COALESCE(jl.location_id, jl.wallet_id) AS location,
+       SUM(jl.amount) AS qty
 FROM journal_lines jl
-JOIN ledger_accounts la ON la.code = jl.ledger_account
+JOIN journal_entries je ON je.id = jl.journal_entry_id
+JOIN ledger_account_rules r ON r.legal_entity_id = je.legal_entity_id
+                           AND r.ledger_account = jl.ledger_account
 WHERE jl.instrument_id = :instrument
-  AND jl.settles_on <= :as_of
-GROUP BY ROLLUP (la.side, la.location_kind, la.code);
+  AND je.legal_entity_id = :entity
+  AND COALESCE(jl.settles_on, je.effective_date) <= :as_of
+GROUP BY ROLLUP (r.side, jl.ledger_account, COALESCE(jl.location_id, jl.wallet_id));
 -- the grand total is zero; owners' total equals minus locations' total;
 -- each location's line is compared with DTC, the custodian or the chain, and a difference is a recon_break
 ```
@@ -306,21 +316,23 @@ Trade-date and settled quantities for an account, which `positions` materializes
 
 ```sql
 SELECT jl.instrument_id,
-       SUM(jl.amount) FILTER (WHERE jl.trade_date <= :as_of) AS trade_date_qty,
-       SUM(jl.amount) FILTER (WHERE jl.settles_on <= :as_of) AS settled_qty
+       SUM(jl.amount) FILTER (WHERE je.effective_date <= :as_of)                          AS trade_date_qty,
+       SUM(jl.amount) FILTER (WHERE COALESCE(jl.settles_on, je.effective_date) <= :as_of) AS settled_qty
 FROM journal_lines jl
-WHERE jl.ledger_account = 'customer:' || :account_id
-  AND jl.recorded_at <= :known_at          -- what we knew then; now() for the current view
+JOIN journal_entries je ON je.id = jl.journal_entry_id
+WHERE jl.ledger_account = 'customer'
+  AND jl.account_id = :account_id
+  AND je.posted_at <= :known_at          -- what we knew then; now() for the current view
 GROUP BY jl.instrument_id;
 ```
 
 Design notes:
 
-- **One entry per business event,** balanced per instrument: a trade, a settlement, a deposit's pending, its settlement, its instant credit, a fee, a corporate action. Each carries an idempotency key from its source event so a replay posts nothing new ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
+- **One entry per business event,** balanced per instrument: a trade, a settlement, a deposit's settlement, its instant credit, a fee, a corporate action. Each carries an idempotency key from its source event so a replay posts nothing new ([Idempotency Beyond the API](/docs/requests/idempotency#idempotency-beyond-the-api)).
 - **Holds are rows with expiries, enforced on read,** not ledger entries and not cron-released balances ([Expiry Is Enforced on Read](/docs/building-blocks/reservations-and-holds#expiry-is-enforced-on-read)).
 - **Buying power reads one consistent snapshot:** the lines up to a watermark and the holds as of the same moment, and the result is stored with its inputs when it gated an order or a withdrawal.
-- **Customer-only locations are enforced.** A ledger account with `customer_only = true` rejects any line posting the firm's own assets to it, which is the NYDFS segregation rule as a constraint.
-- **Snapshots are written once per close** with the watermark of the last entry included; a late entry that changes a closed day produces a correction entry dated to that day and a restated snapshot, never an edit.
+- **Customer-only locations are enforced.** A posting check rejects any entry that moves the firm's own assets into a location with `customer_only = true` (or a wallet whose purpose is customer omnibus), which is the NYDFS segregation rule as a constraint.
+- **Snapshots are written once per close** with the last entry included (`through_entry_id`); a late entry that changes a closed day produces a correction entry dated to that day and a restated snapshot, never an edit.
 
 ## Auditing
 
@@ -328,7 +340,7 @@ Broker-dealer books are examined by FINRA and the SEC and audited annually; cryp
 
 - **Every journal entry and line,** append-only, with trade date, settlement date and recorded time, as the 17a-3 blotters, ledgers and customer account ledgers.
 - **The stock record by settlement date** for every security, derivable from the lines, with each night's reconciliation to DTC, the clearing house and custodians and every break with its cause and cure.
-- **Omnibus wallet reconciliations** of customer owner accounts against customer-only wallet balances on chain, per asset and network, with dust and fee entries.
+- **Omnibus wallet reconciliations** of customer lines against customer-only wallet balances on chain, per asset and network, with dust and fee entries.
 - **End-of-day position snapshots** with mark prices and sources, as the basis for statements and margin calls.
 - **Buying power and withdrawable computations** that gated orders and withdrawals, with their inputs, so "why was I allowed to" and "why wasn't I" have answers.
 - **Every hold** with its reason, placement, expiry and release.

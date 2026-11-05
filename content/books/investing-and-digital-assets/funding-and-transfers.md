@@ -135,7 +135,7 @@ The ACATS case shows why the receiving and carrying firms both need controls: th
 
 ## How to Build It
 
-These are deltas against the core data model in The Investing & Digital Assets Business, at the start of this book: `transfers` (with `method` ach, wire, card, acats, onchain, internal, journal; direction; status; holds; linked `onchain_transactions`), `journal_entries`, `accounts` and `cases`, plus this part's `balance_holds` ([How to Build It](/books/investing-and-digital-assets/ledgers-and-positions#how-to-build-it)). Linked bank accounts reuse Payments' `bank_accounts` and ACH entries and returns reuse its `ach_entries` and `ach_returns` ([How to Build It](/books/payments/ach#how-to-build-it)); a brokerage deposit's `transfers` row points at the `ach_entries` row that carries it. What funding adds is the transfer's event history, instant credit as an advance with its limit, ACATS transfers with their clocks and asset lines, and funding limits.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `transfers` (with `method` ach, wire, card, acats, onchain, internal or journal, `direction`, a `status` of requested, pending, held, completed, returned, rejected or canceled, `available_at`, and the linked `onchain_transactions`), `journal_entries`, `accounts` and `cases`, plus this part's `balance_holds` ([How to Build It](/books/investing-and-digital-assets/ledgers-and-positions#how-to-build-it)). Linked bank accounts reuse Payments' `bank_accounts` and ACH entries and returns reuse its `ach_entries` and `ach_returns` ([How to Build It](/books/payments/ach#how-to-build-it)); a brokerage deposit's `transfers` row points at the `ach_entries` row that carries it. `transfers.status` is the coarse state the rest of the system reads; what funding adds is the transfer's detailed event history, instant credit as an advance with its limit, ACATS transfers with their clocks and asset lines, and funding limits.
 
 ```sql
 CREATE TABLE transfer_events (               -- the state history of every transfer, append-only
@@ -148,7 +148,7 @@ CREATE TABLE transfer_events (               -- the state history of every trans
   PRIMARY KEY (transfer_id, seq)
 );
 
-CREATE TABLE instant_credit_advances (       -- the firm's money advanced against a pending deposit
+CREATE TABLE instant_deposit_credits (       -- the firm's money advanced against a pending deposit
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   transfer_id        UUID NOT NULL REFERENCES transfers (id),
   account_id         UUID NOT NULL REFERENCES accounts (id),
@@ -193,7 +193,7 @@ CREATE TABLE acats_transfers (               -- one TIF, either side
   out_fee            BIGINT                  -- charged when we are carrying
 );
 
-CREATE TABLE acats_asset_lines (             -- each position or cash amount on the TIF
+CREATE TABLE acats_assets (                  -- each position or cash amount on the TIF
   transfer_id        UUID NOT NULL REFERENCES acats_transfers (transfer_id),
   line               INT NOT NULL,
   instrument_id      UUID NOT NULL REFERENCES instruments (id),
@@ -217,9 +217,9 @@ A crypto withdrawal runs requested, held (value holds and review), approved, bro
 
 How it runs:
 
-1. **On an ACH deposit,** post the pending entry, compute the instant limit from `funding_limits` and the formula, and if granted, record an `instant_credit_advances` row and its entry; place a `balance_holds` row against withdrawal of the deposit's value until the hold policy's date.
-2. **At settlement,** post cash, reverse the pending entry and mark the advance `repaid`; at the end of the 60-day window, mark the transfer `final` (the hold usually lifted long before).
-3. **On a return,** reverse the pending or settled entry, convert the used advance into a deficit, open a case, restrict instant access in `funding_limits` with reason `after_return`, and if the customer doesn't cover, liquidate under the account agreement and record recovery or write-off.
+1. **On an ACH deposit,** create the `transfers` row as `pending` with its `available_at` (no journal entry yet), compute the instant limit from `funding_limits` and the formula, and if granted, record an `instant_deposit_credits` row and its entry; place a `balance_holds` row against withdrawal of the deposit's value until the hold policy's date.
+2. **At settlement,** post the cash entry, complete the transfer and mark the advance `repaid`; at the end of the 60-day window, mark the transfer `final` (the hold usually lifted long before).
+3. **On a return,** mark the transfer `returned`, reverse the cash entry if it had posted, convert the used advance into a deficit, open a case, restrict instant access in `funding_limits` with reason `after_return`, and if the customer doesn't cover, liquidate under the account agreement and record recovery or write-off.
 4. **On an ACATS instruction as carrying firm,** compute `validation_due_on` with the business-day calendar, run the fraud checks of Notice 23-06 and notify the customer, then validate or take a listed exception; on validation of a full transfer, freeze the account by capability, not by deleting anything.
 5. **As receiving firm,** reconcile each settled asset line to the NSCC output, chase basis statements past 15 days, and keep the residual window open for six months.
 6. **On a crypto withdrawal,** check every value hold against the account before approving; the order is irreversible, so the check is the control.
@@ -236,7 +236,7 @@ Design notes:
 FINRA examines funding, ACATS processing and AML controls; state regulators and NYDFS examine crypto withdrawals. Keep:
 
 - **Every transfer with its event history,** source account details as verified, holds placed and released, and the journal entries it posted.
-- **Every instant credit advance** with the limit, inputs, use, outcome and recovery; returns by cohort and the policy changes they caused.
+- **Every instant deposit credit** with the limit, inputs, use, outcome and recovery; returns by cohort and the policy changes they caused.
 - **Every ACATS instruction** with validation or exception and its date against the deadline, the customer notification sent, asset lines and their settlement, nontransferable instructions, fails and their resolution, basis statements and residuals through the six-month window.
 - **Every new bank link and crypto address** with verification, cooling-off and the notices sent.
 - **Fraud cases and SAR referrals** tied to the transfers that triggered them, including failed attempts, as Notice 23-06 suggests.

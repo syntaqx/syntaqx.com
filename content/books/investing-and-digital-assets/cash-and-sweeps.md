@@ -132,7 +132,7 @@ So as of November 2026 an issuer may not pay yield, the OCC won't presume that a
 
 ## How to Build It
 
-These are deltas against the core data model in The Investing & Digital Assets Business, at the start of this book: `accounts`, `instruments` (USD and each money market fund), `journal_entries`, `legal_entities` and `disclosures`. Where cash is swept to banks, the per-bank, per-night placement records are the shape of Banking & Lending's `sweep_programs`, `sweep_program_banks`, `sweep_exclusions` and `sweep_placements` ([How to Build It](/books/banking-and-lending/sweeps-and-yield#how-to-build-it)), reused here with the brokerage account as the swept account; the insured amount comes from [Deposit Insurance](/books/banking-and-lending/deposit-insurance#how-to-build-it)'s determination over those placements. What a broker adds is the cash vehicle per account and date, the consent and notices 15c3-3(j) requires, tiered rate schedules, daily accruals and crypto reward programs.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `accounts`, `instruments` (USD and each money market fund), `positions` (fund shares), `transfers`, `journal_entries`, `legal_entities` and `disclosures`. Where cash is swept to banks, the program and its banks reuse Banking & Lending's `sweep_programs`, `sweep_program_banks` and `sweep_exclusions` ([How to Build It](/books/banking-and-lending/sweeps-and-yield#how-to-build-it)) with the brokerage account as the swept account, and `sweep_balances` below is the broker's version of its per-night `sweep_placements`; the insured amount comes from [Deposit Insurance](/books/banking-and-lending/deposit-insurance#how-to-build-it)'s determination over those balances. What a broker adds is the cash vehicle per account and date, the consent and notices 15c3-3(j) requires, tiered rate schedules, daily accruals and crypto reward programs.
 
 ```sql
 CREATE TABLE cash_vehicles (                  -- the products cash can sit in
@@ -147,7 +147,7 @@ CREATE TABLE cash_vehicles (                  -- the products cash can sit in
   valid_during       DATERANGE NOT NULL
 );
 
-CREATE TABLE account_cash_elections (         -- which vehicle each account's cash is in, by date
+CREATE TABLE sweep_elections (                -- which vehicle each account's cash is in, by date
   account_id         UUID NOT NULL REFERENCES accounts (id),
   cash_vehicle_id    UUID NOT NULL REFERENCES cash_vehicles (id),
   balance_from       BIGINT NOT NULL DEFAULT 0, -- tiered placement: first $10,000 free credit, the rest swept
@@ -176,7 +176,7 @@ CREATE TABLE sweep_change_notices (           -- 30 calendar days before any cha
   CHECK (effective_on >= sent_on + 30)
 );
 
-CREATE TABLE cash_rate_schedules (            -- tiered, effective-dated rates
+CREATE TABLE cash_rate_tiers (                -- tiered, effective-dated rates
   cash_vehicle_id    UUID NOT NULL REFERENCES cash_vehicles (id),
   tier_from          BIGINT NOT NULL,
   tier_to            BIGINT,
@@ -185,6 +185,17 @@ CREATE TABLE cash_rate_schedules (            -- tiered, effective-dated rates
   bank_rate_bps      NUMERIC(10,4),            -- what the program bank pays, for the spread record
   valid_during       DATERANGE NOT NULL,
   PRIMARY KEY (cash_vehicle_id, tier_from, eligibility, valid_during)
+);
+
+CREATE TABLE sweep_balances (                 -- each account's cash by vehicle and bank, per business date
+  account_id         UUID NOT NULL REFERENCES accounts (id),
+  business_date      DATE NOT NULL,
+  cash_vehicle_id    UUID NOT NULL REFERENCES cash_vehicles (id),
+  institution        TEXT NOT NULL,            -- the program bank, the excess bank, the broker itself or the fund
+  principal          BIGINT NOT NULL CHECK (principal >= 0),
+  accrued_interest   BIGINT NOT NULL DEFAULT 0,
+  over_target        BOOLEAN NOT NULL,         -- overflow above per_bank_target, uninsured unless covered elsewhere
+  PRIMARY KEY (account_id, business_date, cash_vehicle_id, institution)
 );
 
 CREATE TABLE cash_interest_accruals (         -- one row per account per day, kept at high precision
@@ -231,11 +242,11 @@ FROM month;
 
 How it runs:
 
-1. **Each night, allocate each account's cash** across its elections in balance order (free credit up to its tier, then the sweep), and for a bank sweep compute target placements per bank under `per_bank_target`, `max_banks` and the customer's exclusions; write placements for the business date and post movements at settlement, as Banking & Lending's sweep does.
+1. **Each night, allocate each account's cash** across its elections in balance order (free credit up to its tier, then the sweep), and for a bank sweep compute target balances per bank under `per_bank_target`, `max_banks` and the customer's exclusions; write `sweep_balances` for the business date and post movements at settlement, as Banking & Lending's sweep does.
 2. **Accrue interest daily** from the rate schedule in force that day for the account's tier and eligibility, at high precision, with the bank's rate beside it.
 3. **Pay monthly** by the query above, one journal entry per account; for free credits the expense is the broker's, for bank sweeps the bank's payment passes through less the broker's fee.
 4. **Before any change, send notices** and refuse to make the change effective earlier than 30 days after sending; new accounts can't be swept without a consent row.
-5. **Run the insurance determination** nightly over placements plus the customer's disclosed other deposits, and show the customer last night's insured figure.
+5. **Run the insurance determination** nightly over `sweep_balances` plus the customer's disclosed other deposits, and show the customer last night's insured figure.
 
 Design notes:
 

@@ -147,7 +147,7 @@ The SEC amended the rule on May 16, 2024 (89 FR 47688, published June 3, 2024, e
 
 ## How to Build It
 
-These are deltas against the core data model in The Investing & Digital Assets Business, at the start of this book, whose names this chapter uses: `parties`, `party_identities`, `accounts` (with `account_type`, `legal_entity_id`, `capabilities`, status), `account_parties`, `legal_entities` and `disclosures`. What opening adds is the application that becomes an account, the versioned investment profile, each capability approval, tax certifications, reliance certifications between firms, and exploitation holds.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `parties`, `party_identities`, `accounts` (with `account_type`, `legal_entity_id`, `capabilities`, `options_level` and `status`), `account_parties` (whose roles include `custodian`, `trustee` and `trusted_contact`), `legal_entities` and `disclosures`. What opening adds is the application that becomes an account, the versioned investment profile, each capability approval, tax certifications, reliance certifications between firms, and senior investor holds.
 
 ```sql
 CREATE TABLE account_applications (          -- one request to open one account at one entity
@@ -239,7 +239,7 @@ CREATE TABLE tax_certifications (            -- W-9, W-8BEN, W-8BEN-E
   document_ref       TEXT NOT NULL
 );
 
-CREATE TABLE exploitation_holds (            -- FINRA 2165
+CREATE TABLE senior_investor_holds (         -- FINRA 2165
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   account_id         UUID NOT NULL REFERENCES accounts (id),
   scope              TEXT NOT NULL CHECK (scope IN ('disbursement', 'transaction')),
@@ -262,7 +262,7 @@ The application's state machine follows the vendors' and Alpaca's public statuse
 
 - `verifying` runs the identity checks of [Verifying Identity in Software](/books/banking-and-lending/kyc-and-account-opening#verifying-identity-in-software), skipped when `cip_basis` is `existing_customer` or `reliance`, which must point at the evidence (the existing verified identity or the reliance agreement in force that day).
 - `action_required` carries a reason and a document request; it times out to `rejected` under the CIP's "when to close" rule.
-- `approved` to `opened` creates the `accounts` row, its `account_parties`, the profile's version 1 and one `capability_approvals` row per requested capability, all in one transaction; the account's `capabilities` column is a cache of the approvals in force, rebuilt from them.
+- `approved` to `opened` creates the `accounts` row, its `account_parties`, the profile's version 1 and one `capability_approvals` row per requested capability, all in one transaction; the account's `capabilities` and `options_level` columns are a cache of the approvals in force, rebuilt from them, and its `status` is `pending` until then.
 
 Design notes:
 
