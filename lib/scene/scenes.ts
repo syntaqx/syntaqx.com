@@ -3395,98 +3395,111 @@ const bank: SceneFn = (s) => {
 };
 
 /**
- * Investing & Digital Assets: a candlestick chart along the back, green
- * candles up and red down, the live one at the end still printing, and a
- * chain of blocks in front, a new block dropping onto its end in turn and
- * linking in. On hover the blocks step apart along their links.
+ * Investing & Digital Assets: a vault on its plinth, its round door's dial
+ * turning, a rising chart on the roof with the last bar still printing, and
+ * a chain of blocks feeding value into its side. On hover the door swings
+ * out and the chart lifts off the roof.
  */
 const market: SceneFn = (s) => {
-  const T = 2.8;
-  const ph = (s.t % T) / T;
-  // candles: [open, close, low, high], trending up, read left to right
-  const candles: [number, number, number, number][] = [
-    [0.5, 1.4, 0.3, 1.7],
-    [1.4, 0.95, 0.7, 1.8],
-    [0.95, 2.1, 0.8, 2.4],
-    [2.1, 1.75, 1.45, 2.6],
-    [1.75, 2.95, 1.6, 3.3],
-    [2.95, 2.5, 2.25, 3.5],
-  ];
-  // both rows run along x + y = const, which lies flat across the frame
-  const [cw, gap] = [0.6, 0.8];
-  const at = (i: number): [number, number] => [0.9 + i * gap, 5.5 - i * gap];
-  const mid = (i: number): [number, number] => [at(i)[0] + cw / 2, at(i)[1] + cw / 2];
-  const candle = (
-    i: number,
-    [o, c, lo, hi]: [number, number, number, number],
-    live = false,
-  ): Part[] => {
-    const [x, y] = at(i);
-    const ink = live ? { accent: true } : c >= o ? { good: true } : { warn: true };
-    return [
-      { kind: "line", a: [...mid(i), lo], b: [...mid(i), hi], alpha: 0.7, ...ink },
-      { kind: "box", box: box(x, y, Math.min(o, c), cw, cw, Math.abs(c - o)), ...ink },
-    ];
-  };
-  // the live candle prints up from its open, overshoots and settles back
-  const close = 3 + 0.7 * Math.sin(ease(ph) * Math.PI * 0.8);
-  const last = [2.5, close, 2.35, close + 0.3] satisfies [number, number, number, number];
-  const n = candles.length;
-  const [[sx, sy], [ex, ey], w] = [mid(0), mid(n), 0.75];
-  // the chain: three blocks, then a fourth dropping onto the end each cycle
-  const d = 1.9 + s.spread * 0.45;
-  const bs = 1.1;
-  const blk = (i: number): [number, number] => [2.4 + i * d, 8.5 - i * d];
-  const fall = ease(Math.min(1, ph / 0.4));
-  const bz = (1 - fall) * 3;
-  // links run corner to corner along the row, at half height
-  const link = (i: number, accent = false): Part => ({
-    kind: "line",
-    a: [blk(i)[0] + bs, blk(i)[1], bs / 2],
-    b: [blk(i + 1)[0], blk(i + 1)[1] + bs, bs / 2],
-    dashed: s.spread > 0.05,
-    alpha: 0.7,
-    accent,
+  // the vault: a strongroom with a round door on its front face
+  const [x0, y0, a, b, h] = [1, 1.6, 4.8, 4, 3];
+  const [x1, y1] = [x0 + a, y0 + b];
+  const [dx, dz, r] = [x0 + a / 2, 1.45, 1.05];
+  const out = s.spread * 0.9;
+  const ring = (rad: number, y: number, n = 40): V3[] =>
+    Array.from({ length: n }, (_, i): V3 => {
+      const t = (i / n) * Math.PI * 2;
+      return [dx + Math.cos(t) * rad, y, dz + Math.sin(t) * rad];
+    });
+  // the dial turns a little each cycle, the way a combination is dialed
+  const turn = ease((s.t % 3) / 3) * Math.PI * 0.5 + Math.floor(s.t / 3) * Math.PI * 0.5;
+  const spokes = [0, 1, 2].map((k): Part => {
+    const t = turn + (k * Math.PI) / 3;
+    const [c, sn] = [Math.cos(t) * r * 0.62, Math.sin(t) * r * 0.62];
+    return {
+      kind: "line",
+      a: [dx - c, y1 + 0.02 + out, dz - sn],
+      b: [dx + c, y1 + 0.02 + out, dz + sn],
+      alpha: 0.8,
+      accent: k === 0,
+    };
   });
-  const [lx, ly] = blk(3);
-  const drop: Part =
-    fall < 1
-      ? {
-          kind: "line",
-          a: [lx + bs / 2, ly + bs / 2, 0],
-          b: [lx + bs / 2, ly + bs / 2, bz],
-          dashed: true,
-          alpha: 0.35,
-        }
-      : link(2, true);
-  const parts: Part[] = [
-    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
-    // the chart's floor under the candles
+  // the chart on the roof: bars rising left to right, the last one still printing
+  const lift = s.spread * 0.7;
+  const bars = [0.55, 0.9, 0.7, 1.25, 1.05, 1.6];
+  const T = 2.6;
+  const ph = (s.t % T) / T;
+  const live = 1.8 + 0.5 * Math.sin(ease(ph) * Math.PI);
+  const [bw, by] = [0.5, y0 + b / 2 - 0.25];
+  const bx = (i: number) => x0 + 0.35 + i * 0.6;
+  const bar = (i: number, height: number, accent = false): Part[] => [
     {
-      kind: "plane",
-      pts: [
-        [sx - 0.6 - w, sy + 0.6 - w, 0],
-        [ex + 0.6 - w, ey - 0.6 - w, 0],
-        [ex + 0.6 + w, ey - 0.6 + w, 0],
-        [sx - 0.6 + w, sy + 0.6 + w, 0],
-      ],
-      v: 0.16,
+      kind: "box",
+      box: box(bx(i), by, h + lift, bw, bw, height),
+      ...(accent ? { accent: true } : {}),
     },
-    ...candles.flatMap((c, i) => candle(i, c)),
-    ...candle(n, last, true),
-    // the last price, drawn across the chart at the live candle's close
     {
       kind: "line",
-      a: [sx - 0.6, sy + 0.6, close],
-      b: [ex + 0.6, ey - 0.6, close],
-      dashed: true,
-      alpha: 0.35,
+      a: [bx(i) + bw / 2, by + bw / 2, h + lift + height],
+      b: [bx(i) + bw / 2, by + bw / 2, h + lift + height + 0.3],
+      alpha: 0.6,
+      accent,
     },
-    ...[0, 1, 2].map((i): Part => ({ kind: "box", box: box(...blk(i), 0, bs, bs, bs) })),
+  ];
+  // the chain: blocks along the right, linked into the vault's side
+  const bs = 1.1;
+  const blocks: [number, number][] = [
+    [8.5, 1.0],
+    [8.0, 3.2],
+    [7.5, 5.4],
+  ];
+  const link = (i: number): Part => ({
+    kind: "line",
+    a: [blocks[i][0] + bs / 2, blocks[i][1] + bs, bs / 2],
+    b: [blocks[i + 1][0] + bs / 2, blocks[i + 1][1], bs / 2],
+    alpha: 0.8,
+  });
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // plinth, then the vault
+    { kind: "box", box: box(x0 - 0.3, y0 - 0.3, 0, a + 0.6, b + 0.6, 0.25) },
+    { kind: "box", box: box(x0, y0, 0.25, a, b, h - 0.25) },
+    // the door: frame, door, inner ring, spokes, then the hinge line
+    { kind: "plane", pts: ring(r + 0.18, y1 + 0.01), v: 0.06 },
+    ...(out > 0.05
+      ? [
+          {
+            kind: "line",
+            a: [dx - r, y1 + 0.01, dz],
+            b: [dx - r, y1 + 0.02 + out, dz],
+            dashed: true,
+            alpha: 0.4,
+          } satisfies Part,
+        ]
+      : []),
+    { kind: "plane", pts: ring(r, y1 + 0.02 + out), v: 0.3 },
+    { kind: "plane", pts: ring(r * 0.72, y1 + 0.02 + out), v: 0.16 },
+    ...spokes,
+    { kind: "plane", pts: ring(r * 0.16, y1 + 0.03 + out, 16), v: 0.4 },
+    // the cable from the chain into the vault's side
+    {
+      kind: "cable",
+      pts: [
+        [blocks[1][0], blocks[1][1] + bs / 2, 0.02],
+        [x1 + 0.3, blocks[1][1] + bs / 2, 0.02],
+      ],
+      speed: 0.5,
+      accent: true,
+    },
     link(0),
     link(1),
-    drop,
-    { kind: "box", box: box(lx, ly, bz, bs, bs, bs), accent: true },
+    ...bars.flatMap((v, i) => bar(i, v)),
+    ...bar(bars.length, live, true),
+    ...blocks.map(([x, y], i): Part => ({
+      kind: "box",
+      box: box(x, y, 0, bs, bs, bs),
+      ...(i === 1 ? { accent: true, soft: true } : {}),
+    })),
   ];
   return {
     parts,
@@ -3495,8 +3508,8 @@ const market: SceneFn = (s) => {
       [10, 0, 0],
       [10, 10, 0],
       [0, 0, 0],
-      [ex, ey, 4.2],
-      [lx, ly, 4.4],
+      [bx(6), by, h + 2.4],
+      [x0, y0, h + 1.6],
     ],
     axes: ground(10),
   };
