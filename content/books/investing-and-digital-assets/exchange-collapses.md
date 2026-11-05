@@ -33,7 +33,7 @@ The contagion ran through loans: lenders borrowed customers' coins to lend to tr
 
 ## Terra
 
-TerraUSD (UST) was an algorithmic stablecoin: it held no reserve of dollars and kept its peg through a mint-and-burn relationship with LUNA, the chain's own token. When holders ran, the mechanism minted LUNA to absorb UST redemptions, LUNA's price fell, and the loop accelerated. In May 2022 UST de-pegged and the collapse wiped out about $40 billion of value. After a jury found Terraform Labs and Do Kwon liable for fraud, they agreed in June 2024 to pay more than $4.5 billion to the SEC: Terraform $3,586,875,883 of disgorgement, $466,952,423 of prejudgment interest and a $420,000,000 penalty, and Kwon an $80,000,000 penalty. The criminal case followed in the US; I couldn't open its record on this pass. <!-- source-gap: do-kwon-criminal | missing | Do Kwon's guilty plea and sentence in SDNY | closes with: DOJ SDNY press releases (justice.gov returned empty on 2026-11-05) or the docket | checked: 2026-11-05 --> The design lessons are in Depegs, Runs & Synthetic Dollars; for an exchange, Terra is the reason a stablecoin's listing review asks what backs it and how redemption works, not just what it trades at.
+TerraUSD (UST) was an algorithmic stablecoin: it held no reserve of dollars and kept its peg through a mint-and-burn relationship with LUNA, the chain's own token. When holders ran, the mechanism minted LUNA to absorb UST redemptions, LUNA's price fell, and the loop accelerated. In May 2022 UST de-pegged and the collapse wiped out about $40 billion of value. After a jury found Terraform Labs and Do Kwon liable for fraud, they agreed in June 2024 to pay more than $4.5 billion to the SEC: Terraform $3,586,875,883 of disgorgement, $466,952,423 of prejudgment interest and a $420,000,000 penalty, and Kwon an $80,000,000 penalty. The criminal case followed in the US; I couldn't open its record on this pass. <!-- source-gap: do-kwon-criminal | missing | Do Kwon's guilty plea and sentence in SDNY | closes with: DOJ SDNY press releases (justice.gov returned empty on 2026-11-05) or the docket | checked: 2026-11-05 --> The design lessons are in [Depegs, Runs & Synthetic Dollars](/books/investing-and-digital-assets/depegs-and-synthetic-dollars#terra-s-ust); for an exchange, Terra is the reason a stablecoin's listing review asks what backs it and how redemption works, not just what it trades at.
 
 ## Celsius: the Terms Decided
 
@@ -51,7 +51,7 @@ BlockFi's interest accounts (BIAs) let investors lend crypto to BlockFi for a va
 
 Genesis was the lender behind Gemini Earn. The SEC charged both on January 12, 2023: Gemini Earn had 340,000 investors; Genesis lent their crypto out and paid Gemini an agent fee "as high as 4.29 percent"; and in November 2022 "Genesis announced that it would not allow its Gemini Earn investors to withdraw," freezing "approximately $900 million in investor assets." The New York Attorney General sued Gemini, Genesis and their parent in October 2023 and announced settlements of $2 billion with Genesis in May 2024 and $50 million with Gemini in June 2024.
 
-The structure is the same in both: an exchange or app collects customer coins into a yield product, a lender takes them, and the lender's solvency becomes the customer's risk, usually without the customer having chosen the lender. Cash, Sweeps & Yield covers the yield programs, and Prime Brokerage, OTC & Crypto Lending covers institutional lending after 2022.
+The structure is the same in both: an exchange or app collects customer coins into a yield product, a lender takes them, and the lender's solvency becomes the customer's risk, usually without the customer having chosen the lender. [Cash, Sweeps & Yield](/books/investing-and-digital-assets/cash-and-sweeps#crypto-yield-blockfi-celsius-and-gemini-earn) covers the yield programs, and Prime Brokerage, OTC & Crypto Lending covers institutional lending after 2022.
 
 ## FTX: the Engineering Failures
 
@@ -97,16 +97,16 @@ By June 2023 FTX's debtors had "recovered approximately $7 billion in liquid ass
 | --- | --- | --- |
 | A customer with a $65 billion borrow limit and `allow_negative` | No account may go negative without a margin agreement, collateral and the same liquidation rules as everyone; no per-account exemption flags | Perpetuals & Crypto Derivatives; Margin & Short Selling |
 | No logs of who changed the borrow value | Every change to a risk parameter or account flag is a versioned, approved, logged event | [Audit Trails](/docs/building-blocks/audit-trails) |
-| Customer dollars in Alameda and North Dimension bank accounts | Customer cash only in accounts titled for customers' benefit at the customers' legal entity, reconciled daily | Ledgers, Positions & Buying Power; Cash, Sweeps & Yield |
+| Customer dollars in Alameda and North Dimension bank accounts | Customer cash only in accounts titled for customers' benefit at the customers' legal entity, reconciled daily | [Ledgers, Positions & Buying Power](/books/investing-and-digital-assets/ledgers-and-positions); Cash, Sweeps & Yield |
 | A liability hidden in `fiat@ftx.com` | Every customer liability is on a customer ledger line, by account; no unmapped internal accounts | [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model) |
 | Negative balances netted against positive ones | Proof of liabilities with non-negative leaves | [The Negative-Balance Attack](/books/investing-and-digital-assets/proof-of-reserves#the-negative-balance-attack) |
-| "90% cold" said, almost all hot held | Wallet tiers with limits, reported from the wallet inventory, not from statements | Hot, Warm & Cold Wallets |
+| "90% cold" said, almost all hot held | Wallet tiers with limits, reported from the wallet inventory, not from statements | [Hot, Warm & Cold Wallets](/books/investing-and-digital-assets/hot-and-cold-wallets) |
 | Keys in plain text and secrets managers | Keys generated and held in HSMs, enclaves or MPC; quorum signing; backups of shares | [Keys, Signing & Key Management](/books/investing-and-digital-assets/keys-and-signing#generating-a-key) |
 | One shared cloud account, no MFA, no alerts | Separate accounts per entity, enforced MFA, alerting on privileged access | [Just-in-Time Access and Break-Glass](/docs/security/infrastructure-access#just-in-time-access-and-break-glass) |
 | Celsius's terms transferring title | Custody products keep title with the customer, in terms, ledger and disclosures; yield products say plainly that the customer is a lender | Qualified Custody; Cash, Sweeps & Yield |
 | Voyager's FDIC claims | Insurance statements only where records support them | [Pass-Through Coverage](/books/banking-and-lending/deposit-insurance#pass-through-coverage) |
 | Gemini Earn's lender freezing withdrawals | A customer's counterparty risk disclosed by name, with exposure limits | Prime Brokerage, OTC & Crypto Lending |
-| Terra's unbacked peg | Listing review of what backs a stablecoin and how it redeems | Listing & Delisting Assets; Depegs, Runs & Synthetic Dollars |
+| Terra's unbacked peg | Listing review of what backs a stablecoin and how it redeems | [Listing & Delisting Assets](/books/investing-and-digital-assets/listing-assets); Depegs, Runs & Synthetic Dollars |
 | Brand entities sharing books | Every account, wallet and entry carries one legal entity | [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model) |
 
 ## How to Build It

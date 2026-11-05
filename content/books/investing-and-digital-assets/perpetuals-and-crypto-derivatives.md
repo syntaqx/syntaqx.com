@@ -180,7 +180,7 @@ FTI Consulting's review gives the sequence. A threatened 100% tariff on China hi
 - **ADL broke hedges.** "ADL can involuntarily close profitable shorts," and on the day some well-hedged shorts were reduced or closed, leaving portfolios exposed.
 - **Aftermath.** By late December, open interest was down more than 40% from October highs, and several venues had tightened leverage caps, raised haircuts on fragile collateral and moved toward multi-venue oracle pricing.
 
-FTI's lessons are design rules: multi-venue, liquidity-weighted oracles with outlier controls; stress tests in which depth falls 90%; liquidation engines tested against "short, violent dislocations"; and margin logic, haircuts and ADL triggers documented publicly. My additions: a collateral asset's mark should never come from the venue's own book alone, a haircut schedule should assume a stablecoin can trade at a discount for an hour, and the ADL rules a customer agreed to are a disclosure the venue stores by version. Depegs, Runs & Synthetic Dollars covers USDe's design.
+FTI's lessons are design rules: multi-venue, liquidity-weighted oracles with outlier controls; stress tests in which depth falls 90%; liquidation engines tested against "short, violent dislocations"; and margin logic, haircuts and ADL triggers documented publicly. My additions: a collateral asset's mark should never come from the venue's own book alone, a haircut schedule should assume a stablecoin can trade at a discount for an hour, and the ADL rules a customer agreed to are a disclosure the venue stores by version. [Depegs, Runs & Synthetic Dollars](/books/investing-and-digital-assets/depegs-and-synthetic-dollars#synthetic-dollars-ethena-s-usde) covers USDe's design.
 
 ## Options and Deribit
 
