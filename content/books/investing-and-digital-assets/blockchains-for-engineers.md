@@ -31,9 +31,9 @@ What platforms publish follows from that. Kraken's deposit page, updated October
 | Date | Event | What it changed for a platform |
 | --- | --- | --- |
 | 2008 | The Bitcoin whitepaper, with the attacker-catch-up probability table in section 11 | Confirmations as a probability, not a rule |
-| Mar 2013 | A Bitcoin 0.8 node accepts a block that 0.7 nodes reject; the chain splits until miners downgrade (BIP-50) | Software versions are part of consensus; a fork can run for hours, with "one large double spend" |
-| Nov 22, 2016 | EIP-155 replay protection (Spurious Dragon, block 2,675,000) | Signatures bound to a chain ID; a transaction for one EVM chain can't be replayed on another |
+| Mar 2013 | A Bitcoin 0.8 node accepts a block that 0.7 nodes reject; the chain splits until miners downgrade (BIP-50) | Software versions are part of consensus; a fork lasts until miners intervene, with "at least one large double spend" |
 | Nov 15, 2016 | SegWit (BIP-141) signaling begins; a block weight limit of 4,000,000 | Fees quoted per virtual byte, not per byte |
+| Nov 22, 2016 | EIP-155 replay protection (Spurious Dragon, block 2,675,000) | Signatures bound to a chain ID; a transaction for one EVM chain can't be replayed on another |
 | Aug 5, 2021 | London upgrade, EIP-1559 (block 12,965,000) | A protocol base fee that is burned; type-2 transactions with a fee cap and a tip |
 | Sep 15, 2022 | The Merge: Ethereum moves to proof of stake | Finality as an explicit checkpoint, roughly every epoch |
 | Mar 13, 2024 | Dencun, EIP-4844 blobs | Rollups post data cheaply; L2 fees fall |
@@ -113,7 +113,7 @@ Bitcoin never finalizes. Section 11 of the whitepaper computes the probability t
 
 "Time in proof-of-stake Ethereum is divided into slots (12 seconds) and epochs (32 slots)." At each epoch boundary validators vote on checkpoints; a checkpoint with "at least two-thirds of the total staked ETH" behind it is justified, and the justified checkpoint before it becomes finalized. Reverting a finalized block would require an attacker to "commit to losing at least one-third of the total supply of staked ETH." In the normal case a block is finalized about two epochs after it is proposed (2 × 32 × 12 s, about 12.8 minutes, which is arithmetic, not a guarantee), consistent with Circle's 15 to 19 minutes for about 65 blocks. The JSON-RPC API exposes the levels as block tags: `latest`, `safe` and `finalized`.
 
-Finality can stall. If the chain fails to finalize "for more than four epochs," the inactivity leak begins draining stake from offline validators until the rest are two-thirds again. During a stall blocks keep coming, `latest` keeps advancing and `finalized` doesn't. A crediting rule written as "N confirmations" keeps crediting through a stall; a rule written as "finalized" stops, which is the behavior a platform wants. My default for Ethereum and every chain that publishes a finality signal is to credit at the signal, with a confirmation count only as a floor for chains that don't.
+Finality can stall. If the chain fails to finalize "for more than four epochs," the inactivity leak begins draining stake from validators not voting with the majority until the rest are two-thirds again. During a stall blocks keep coming, `latest` keeps advancing and `finalized` doesn't. A crediting rule written as "N confirmations" keeps crediting through a stall; a rule written as "finalized" stops, which is the behavior a platform wants. My default for Ethereum and every chain that publishes a finality signal is to credit at the signal, with a confirmation count only as a floor for chains that don't.
 
 ### Solana: commitment levels
 

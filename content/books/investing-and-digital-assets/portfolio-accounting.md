@@ -21,8 +21,8 @@ Portfolio accounting is mostly sold to advisers as a platform, and the vendors d
 | Vendor | What it describes | What stands out |
 | --- | --- | --- |
 | **Orion** | Portfolio accounting to "automate performance reporting, billing, and oversight"; trading with "model management"; a TAMP through Orion Portfolio Solutions | "$6.8T" of advisor-managed assets administered on its platform and "100,000+" professionals on its Redtail CRM (as of September 30, 2026) |
-| **Envestnet** | Trading, direct indexing and a tax management overlay | Acquired Vestmark |
-| **Altruist** | Fee billing on the custodian's own data, by AUM, flat, hourly or one-off, monthly, quarterly or annually | Accounting, billing and custody on one platform |
+| **Envestnet** | Trading, direct indexing and a tax management overlay | Announced it would acquire Vestmark |
+| **Altruist** | Fee billing by AUM, flat, hourly or one-off, monthly, quarterly or annually | Billing at a firm that is also the clearing and custody broker ([RIA Custodians & Advisor Platforms](/books/investing-and-digital-assets/advisor-platforms#how-the-platforms-do-it)) |
 | **Betterment** (Advisor Solutions) | Managed portfolios and reporting for third-party advisers on its custody | A wrap fee tiered from 0.12% to 0.20% by the advising firm's aggregate balance |
 
 The shared design: **one valuation history and one flow history per account,** from which performance, billing and rebalancing all read, so the fee a client paid and the return they were shown come from the same numbers.
@@ -125,7 +125,7 @@ The Global Investment Performance Standards, owned by CFA Institute, are a volun
 
 - **Time-weighted by default.** "The firm must present time-weighted returns unless certain criteria are met," and may present money-weighted returns only if it "has control over the external cash flows" and the portfolios are closed-end, fixed life, fixed commitment, or hold illiquid investments as a significant part of the strategy (1.A.35). A robo-adviser or RIA managing open accounts reports TWR.
 - **Valuation.** For time-weighted returns, portfolios are valued at least monthly, as of the calendar month end or last business day, and "on the date of all large cash flows," which the firm must define for each composite (2.A.23); returns are calculated at least monthly, sub-period returns at each large cash flow if not daily, and flows that aren't large adjusted by daily weighting (2.A.24).
-- **Money-weighted, where allowed:** annualized since-inception returns using daily external cash flows (2.A.28).
+- **Money-weighted, where allowed:** annualized since-inception returns using daily external cash flows (2.A.29).
 - **Composites.** "All actual, fee-paying, discretionary segregated accounts must be included in at least one composite" (3.A.2), and composite returns are asset-weighted from their members' returns, by beginning-of-period values or a method that also reflects external cash flows.
 - **Fees.** Gross-of-fees returns are reduced by transaction costs; net-of-fees by transaction costs and the investment management fee. For bundled fees where transaction costs can't be separated, gross returns are reduced by the entire bundled fee or the part that includes transaction costs, and net returns by the entire bundled fee or the part that includes both. For wrap fee composites, "pure gross-of-fees" returns (before the whole wrap fee) must be labeled as such and shown as supplemental information.
 
@@ -271,12 +271,12 @@ Performance is tested by the SEC under the marketing rule, by GIPS verifiers, an
 
 **Standards and protocols**
 
-- [CFA Institute: Global Investment Performance Standards for Firms, 2020 edition](https://www.gipsstandards.org/wp-content/uploads/2021/03/2020_gips_standards_firms.pdf), the January 1, 2020 effective date, the December 31, 2020 requirement, time-weighted returns by default and the money-weighted criteria (1.A.35), valuation and large cash flows (2.A.23, 2.A.24), daily flows for money-weighted returns (2.A.28), composite membership (3.A.2) and asset weighting, bundled fees and pure gross-of-fees returns for wrap composites
+- [CFA Institute: Global Investment Performance Standards for Firms, 2020 edition](https://www.gipsstandards.org/wp-content/uploads/2021/03/2020_gips_standards_firms.pdf), the January 1, 2020 effective date, the December 31, 2020 requirement, time-weighted returns by default and the money-weighted criteria (1.A.35), valuation and large cash flows (2.A.23, 2.A.24), daily flows for money-weighted returns (2.A.29), composite membership (3.A.2) and asset weighting, bundled fees and pure gross-of-fees returns for wrap composites
 - [CFA Institute: GIPS standards for firms](https://www.gipsstandards.org/standards/gips-standards-for-firms/), the standard's home page and errata
 
 **Vendor documentation**
 
 - [Orion](https://orion.com/), portfolio accounting, billing and oversight, model management, its TAMP, and the $6.8 trillion and 100,000+ figures as of September 30, 2026
-- [Envestnet](https://www.envestnet.com/), trading, direct indexing, tax management and the Vestmark acquisition
+- [Envestnet](https://www.envestnet.com/), trading, direct indexing, tax management and the announced Vestmark acquisition
 - [Altruist: Fee billing](https://altruist.com/fee-billing/), fee types, frequencies and routing a household's fees to a designated account
 - [Betterment: Form ADV Part 2A brochure (October 27, 2026)](https://www.betterment.com/adv), the Advisor Solutions wrap fee from 0.12% to 0.20%

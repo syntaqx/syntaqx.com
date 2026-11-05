@@ -19,7 +19,7 @@ What wallet vendors publish about their models, as of November 2026:
 | --- | --- | --- | --- |
 | **MetaMask** (Smart Accounts Kit) | EOA, with smart accounts under ERC-4337 and an EIP-7702 "Stateless 7702" mode | On the user's device | Smart accounts can grant scoped "delegations" to other accounts "under defined rules and restrictions" |
 | **Safe** | Contract account (multisig) | With each owner: EOAs, other contracts or passkeys | Threshold of owners; guards and modules |
-| **Privy** (Stripe) | Embedded wallet | Shamir 2-of-2: an enclave share and an auth share released on login | Key reconstructed in a Nitro enclave per operation; wallet policies checked before signing |
+| **Privy** | Embedded wallet | Shamir 2-of-2: an enclave share and an auth share released on login | Key reconstructed in a Nitro enclave per operation; wallet policies checked before signing |
 | **Turnkey** | Embedded or API wallet | Generated and used inside attested enclaves | Deny-wins policies over decoded transactions |
 | **Coinbase** wallet SDK | Smart and EOA wallets | Varies by product | Base's documentation now points to Coinbase Developer Platform and calls the SDK the Coinbase Wallet SDK |
 
@@ -37,7 +37,7 @@ The bank regulators state the mirror image for custody: taking possession of a c
 
 ## Browser and Mobile Wallets
 
-A browser extension or mobile wallet holds an EOA's key, usually derived from a BIP-39 seed the user is told to write down ([HD Wallets](/books/investing-and-digital-assets/keys-and-signing#hd-wallets)). Apps talk to it through a small set of JSON-RPC methods: `eth_sendTransaction` (build, sign and send), `personal_sign` (sign a message with a prefix that "prevents misuse where a malicious DApp can sign arbitrary data"), `eth_signTypedData` (sign EIP-712 structured data) and `eth_signTransaction`. The last two are where most losses start, because a typed-data signature can be a permit or an order that moves assets later, with no transaction for the wallet to show at the moment of signing.
+A browser extension or mobile wallet holds an EOA's key, usually derived from a BIP-39 seed the user is told to write down ([HD Wallets](/books/investing-and-digital-assets/keys-and-signing#hd-wallets)). Apps talk to it through a small set of JSON-RPC methods: `eth_sendTransaction` (build, sign and send), `personal_sign` (sign a message with a prefix that "prevents misuse where a malicious DApp can sign arbitrary data"), `eth_signTypedData` (sign EIP-712 structured data) and `eth_signTransaction`. The message-signing methods are where many losses start, because a typed-data signature can be a permit or an order that moves assets later, with no transaction for the wallet to show at the moment of signing.
 
 ## Smart Accounts
 
@@ -67,9 +67,9 @@ Worked: a phishing page asks a user to "upgrade your wallet" and requests a type
 
 ## Passkey and Embedded Wallets
 
-A passkey is a P-256 key held in a phone's secure hardware or a FIDO authenticator. Until 2025 Ethereum could verify only secp256k1 signatures natively, so passkey wallets verified P-256 in contract code at high gas cost. EIP-7951 (Final) added a `P256VERIFY` precompile at address `0x100` costing 6,900 gas, shipped in Fusaka, for signatures from "Apple Secure Enclave, Android Keystore, and FIDO2/WebAuthn authenticators." A smart account whose owner is a passkey can now be verified cheaply on L1. Safe lists passkeys among its owner types.
+A passkey is a P-256 key held in a phone's secure hardware or a FIDO authenticator. Until 2025 Ethereum could verify only secp256k1 signatures natively, so passkey wallets verified P-256 in contract code at high gas cost. EIP-7951 (Final) added a `P256VERIFY` precompile at address `0x100` costing 6,900 gas, shipped in Fusaka, for signatures from "Apple Secure Enclave, Android Keystore, and FIDO2/WebAuthn devices." A smart account whose owner is a passkey can now be verified cheaply on L1. Safe lists passkeys among its owner types.
 
-Embedded wallets go further: the app creates a wallet at sign-up, with no seed phrase shown. Privy splits the key into an enclave share and an auth share released "only with valid credentials," reconstructed inside a Nitro enclave in memory, used and discarded; Turnkey generates keys in enclaves and signs under policies. The trade:
+Embedded wallets go further: the app creates a wallet at sign-up, with no seed phrase shown. Privy splits the key into an enclave share and an auth share "accessible only with valid authentication credentials," reconstructed inside a Nitro enclave in memory, used and discarded; Turnkey generates keys in enclaves and signs under policies. The trade:
 
 - **Recovery is account recovery.** Losing a seed phrase is replaced by the provider's login and recovery flow, so the wallet is only as safe as that flow (email, SMS and support resets are the attack surface; [Account Security & Fraud](/books/investing-and-digital-assets/account-security)).
 - **The provider's role decides the legal model.** If the provider or the app can reconstruct and sign without the user's credential, the user doesn't have total independent control.
@@ -96,7 +96,7 @@ Most losses from self-custody wallets come from the user signing something, not 
 
 A drainer kit chains these: a cloned site, a connection request, a simulation that looks harmless, then the signature that matters. The defense is transaction simulation (what balances change if this is signed), decoding of typed data, and a risk check of the spender or operator against known drainer contracts, all shown before the signature, not after.
 
-Address poisoning needs no signature at all. Tsuchiya, Dong, Soska and Christin measured 270 million attack attempts against 17 million victims on Ethereum and BNB Smart Chain over two years, at least $83.8 million lost in 6,633 incidents, about 13 times more than previously reported. The attacker generates an address that matches the first and last characters of one the victim has used, then puts it into the victim's history with a zero-value or dust transfer (or a fake token's `Transfer` event); the victim later copies the wrong address from history. Wallet defenses: show full addresses or a verified name, hide zero-value and unknown-token transfers from history, warn when a destination shares a prefix and suffix with a known counterparty but differs inside, and offer an address book with verified entries.
+Address poisoning needs no signature at all. Tsuchiya, Dong, Soska and Christin measured 270 million attack attempts against 17 million victims on Ethereum and BNB Smart Chain over two years, 13 times more attempts than previously reported, and at least $83.8 million lost in 6,633 incidents. The attacker generates an address that matches the first and last characters of one the victim has used, then puts it into the victim's history with a zero-value or dust transfer (or a fake token's `Transfer` event); the victim later copies the wrong address from history. Wallet defenses: show full addresses or a verified name, hide zero-value and unknown-token transfers from history, warn when a destination shares a prefix and suffix with a known counterparty but differs inside, and offer an address book with verified entries.
 
 ## A Regulated Platform's Self-Custody Wallet
 
