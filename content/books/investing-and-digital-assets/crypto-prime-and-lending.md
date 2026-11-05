@@ -87,7 +87,7 @@ Genesis was the largest crypto lender of the last cycle and the lender behind Ge
 - **Concentration.** Genesis's loan book was "highly concentrated in a small number of counterparties"; Alameda Research was the borrower for "nearly 60 percent" of Genesis's outstanding loans to third parties.
 - **Undersecured loans.** "Gemini knew Genesis' loans were undersecured," and didn't tell Earn investors; Gemini had said it "had vetted Genesis through a risk management framework."
 - **A borrower default hidden by a note.** Three Arrows Capital "defaulted on billions in loans," Genesis lost more than $100 million on Babel Finance, and total losses exceeded $1.1 billion; DCG agreed to pay Genesis "$1.1 billion in a decade at only a one percent interest rate," which the suit says concealed Genesis's condition.
-- **The customer never chose the borrower.** More than 230,000 Earn investors lent through Gemini to Genesis, which lent to trading firms; when Genesis stopped Earn withdrawals they were creditors of a lender two steps away.
+- **The customer never chose the borrower.** Gemini Earn's investors (340,000 by the SEC's count, more than 230,000 by the New York Attorney General's) lent through Gemini to Genesis, which lent to trading firms; when Genesis stopped Earn withdrawals they were creditors of a lender two steps away.
 
 The Attorney General announced settlements worth $2 billion with Genesis in May 2024 and $50 million in kind from Gemini in June 2024 ([BlockFi and Genesis: Lending Customers' Coins](/books/investing-and-digital-assets/exchange-collapses#blockfi-and-genesis-lending-customers-coins) has the SEC side). The engineering failures map onto controls a lending system can enforce:
 
@@ -252,6 +252,7 @@ What a lender's auditor, a regulator or a bankruptcy examiner reconstructs:
 - [iShares Bitcoin Trust: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1980994/000143774926006058/bit20251231_10k.htm), Trade Credits from Coinbase Credit, their terms and the lien
 
 **Courts and enforcement**
+- [SEC: Press Release 2023-7, SEC charges Genesis and Gemini (January 12, 2023)](https://www.sec.gov/news/press-release/2023-7), Gemini Earn's 340,000 investors
 
 - [New York Attorney General: Suit against Gemini, Genesis and DCG (October 19, 2023)](https://ag.ny.gov/press-release/2023/attorney-general-james-sues-cryptocurrency-companies-gemini-genesis-and-dcg), investors and losses, Three Arrows and Babel defaults, the DCG note, concentration in Alameda and undersecured loans
 - [New York Attorney General: Settlement worth $2 billion with Genesis (May 20, 2024)](https://ag.ny.gov/press-release/2024/attorney-general-james-secures-settlement-worth-2-billion-crypto-firm-genesis), the settlement and the New York ban
