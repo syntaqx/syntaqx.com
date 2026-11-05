@@ -82,6 +82,8 @@ The supervisory baseline is the FFIEC's **Authentication and Access to Financial
 - **Authenticate the call center as hard as the app.** The FFIEC calls out call center and help desk authentication because the reset that a phone agent performs is the bypass the attacker wants. Agents act through delegated, logged sessions ([Support Access](/docs/security/support-access#delegation-not-impersonation)).
 - **Watch logins at scale:** credential stuffing shows as many accounts tried from few sources, and it is a rate-limiting and detection problem before it's a fraud one ([Credential Stuffing and Enumeration](/docs/security/authentication#credential-stuffing-and-enumeration)).
 
+At a broker or crypto exchange a takeover ends in a withdrawal that can't be pulled back, so the controls sit on new destinations: holds and allowlists ([Withdrawal Holds and Allowlists](/books/investing-and-digital-assets/account-security#withdrawal-holds-and-allowlists)).
+
 ## P2P Scams and the Zelle Suits
 
 P2P networks made instant, irrevocable payments to any phone number or email a default feature of a checking account, which is what made them a scam rail. Two lawsuits frame where US liability stands:
@@ -128,7 +130,7 @@ The interagency **Statement on Elder Financial Exploitation** (December 4, 2024;
 
 The **Senior Safe Act** (12 USC 3423) gives an institution and its trained supervisory, compliance or legal staff immunity in civil and administrative proceedings for good-faith reports of suspected exploitation of someone 65 or older to regulators, law enforcement or adult protective services, if the employees were trained within a year of taking the role. Brokerage has a codified hold: FINRA Rule 2165 lets a member place a temporary hold on disbursements for a "specified adult" for 15 business days, extendable, with notice to the trusted contact. Banks have no federal equivalent, which is why their holds depend on state law and their account agreements.
 
-Exploitation by someone the customer knows is the hard case for systems, because the person is often an authorized signer, a joint owner or an agent under a power of attorney, and their transfers are authorized. The signals are changes in pattern (new signers, new cash withdrawals, payments to a new person, a sudden change of address or statement delivery), and the response is a case, a call, possibly a hold and a report, not a Reg E claim.
+Exploitation by someone the customer knows is the hard case for systems, because the person is often an authorized signer, a joint owner or an agent under a power of attorney, and their transfers are authorized. The signals are changes in pattern (new signers, new cash withdrawals, payments to a new person, a sudden change of address or statement delivery), and the response is a case, a call, possibly a hold and a report, not a Reg E claim. A broker's versions of the same tools, a trusted contact on file and a temporary hold under FINRA Rule 2165, are in [Trusted Contacts and Senior Holds](/books/investing-and-digital-assets/opening-accounts#trusted-contacts-and-senior-holds).
 
 ## The UK Contrast
 

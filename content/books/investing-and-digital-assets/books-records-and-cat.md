@@ -25,7 +25,7 @@ How the record and reporting obligations show up across firms and vendors, as of
 | **DriveWealth** | In its omnibus model, "DriveWealth has no knowledge of your individual customers"; the client keeps its own books and records | Individual, bulk and cashless models keep customer-level records at DriveWealth |
 | **Slack, Microsoft and archivers** | Communications capture for 17a-4 | Covered in [Capture: What an Archive Needs From the Tool](/books/workplace-and-collaboration/regulated-communications#capture-what-an-archive-needs-from-the-tool) |
 
-The table's lesson is that **the records duty follows the books.** Whoever holds the customer-level ledger is the one that must make and keep the customer-level records and report each customer's orders to CAT, and Brokerage as a Service covers how the carrying agreement allocates that.
+The table's lesson is that **the records duty follows the books.** Whoever holds the customer-level ledger is the one that must make and keep the customer-level records and report each customer's orders to CAT, and [Brokerage as a Service](/books/investing-and-digital-assets/brokerage-as-a-service) covers how the carrying agreement allocates that.
 
 ## What Must Be Made: Rule 17a-3
 

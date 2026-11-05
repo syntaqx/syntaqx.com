@@ -155,7 +155,7 @@ Three crypto specifics change the flow classification. **Staking rewards and air
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `positions`, `transfers`, `instruments` and `fees`, with Chain Data & Indexing's `price_marks` for crypto and Robo-Advisors & Model Portfolios' `model_portfolios`. This chapter adds valuations, external flows, performance periods, benchmarks and composites.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `positions`, `transfers`, `instruments` and `fees`, with [Chain Data & Indexing](/books/investing-and-digital-assets/chain-data-and-indexing)'s `price_marks` for crypto and [Robo-Advisors & Model Portfolios](/books/investing-and-digital-assets/robo-advisors)' `model_portfolios`. This chapter adds valuations, external flows, performance periods, benchmarks and composites.
 
 ```sql
 CREATE TABLE valuations (                    -- an account's value at a valuation point, versioned

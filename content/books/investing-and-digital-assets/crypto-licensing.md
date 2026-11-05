@@ -43,7 +43,7 @@ Federally, a crypto business that accepts and transmits value is a money transmi
 | Anonymizing services provider (a custodial mixer) | A money transmitter |
 | Anonymizing software provider | Not a money transmitter: "engaged in trade and not money transmission" |
 
-The last two rows are the distinction the Tornado Cash and Samourai prosecutions tested (AML & the Travel Rule for Crypto).
+The last two rows are the distinction the Tornado Cash and Samourai prosecutions tested ([AML & the Travel Rule for Crypto](/books/investing-and-digital-assets/crypto-aml-and-travel-rule)).
 
 Once inside the definition, the duties are the MSB rules in 31 CFR part 1022:
 
@@ -187,7 +187,7 @@ CREATE TABLE jurisdiction_permissions (    -- resolved: may this entity do this 
 );
 ```
 
-The permission table is derived, not hand-kept: a job rebuilds it from registrations, conditions with `machine_rule`, passport notifications (Beyond the US adds `passporting_notifications`) and the activity map, and every product gate reads it. Ending a transitional period is then a date already in the data: the rows with `basis = 'transitional'` for EU CASP services carried `valid_during` ranges ending no later than July 1, 2026, and a gate that read them stopped serving on time.
+The permission table is derived, not hand-kept: a job rebuilds it from registrations, conditions with `machine_rule`, passport notifications ([Beyond the US](/books/investing-and-digital-assets/beyond-the-us) adds `passporting_notifications`) and the activity map, and every product gate reads it. Ending a transitional period is then a date already in the data: the rows with `basis = 'transitional'` for EU CASP services carried `valid_during` ranges ending no later than July 1, 2026, and a gate that read them stopped serving on time.
 
 The MiCA clock in code, counting working days and pausing for an information request (holidays per member state come from the calendar the platform already keeps for settlement):
 

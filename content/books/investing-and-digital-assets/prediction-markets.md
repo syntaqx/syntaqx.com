@@ -221,7 +221,7 @@ For 100 contracts at 62 cents with a 700 basis point coefficient this returns 1,
 - **Every determination with its evidence.** The source's publication, the time it was read, who determined the outcome, and any revision before settlement.
 - **Every geography decision with its legal basis.** Which categories were offered where, when that changed, and the order or ruling behind each change, so a regulator or court can see what the firm did on any date.
 - **Every fee with its schedule.** The schedule version, the model fee, the rounding fee and the rebate per fill.
-- **Every surveillance case on an event market.** Insider and manipulation alerts on mention and other thin markets, with the accounts and orders involved, as `cases` rows (Market Surveillance & Manipulation covers the systems).
+- **Every surveillance case on an event market.** Insider and manipulation alerts on mention and other thin markets, with the accounts and orders involved, as `cases` rows ([Market Surveillance & Manipulation](/books/investing-and-digital-assets/market-surveillance) covers the systems).
 - **Every reversal.** Court-ordered cancellations and regulator-ordered reinstatements, each with its `cases` row and the entries it produced.
 
 ## What This Means for the System You Build

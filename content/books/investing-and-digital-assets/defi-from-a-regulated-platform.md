@@ -74,7 +74,7 @@ A custodial exchange screens a withdrawal address once. A DEX swap touches a rou
 | **Pools, routers, hooks, bridges** | On the approved list with a current review of the deployed code hash | `contract_risk_reviews` ([Smart Contract Risk & Exploits](/books/investing-and-digital-assets/smart-contract-risk#how-to-build-it)) |
 | **Allowance targets** | Exactly the provider's published contract for that chain | Pinned per provider and chain |
 | **Recipient and counterparty addresses** | Sanctions lists, exposure to sanctioned or stolen funds, known drainer contracts | Analytics providers and OFAC lists ([Screening Wallets and Addresses](/books/payments/stablecoins#screening-wallets-and-addresses)) |
-| **The customer's own wallet** | Exposure scoring on its history, like a deposit address | On-Chain Analytics & Investigations |
+| **The customer's own wallet** | Exposure scoring on its history, like a deposit address | [On-Chain Analytics & Investigations](/books/investing-and-digital-assets/blockchain-analytics) |
 
 Two points distinguish this from screening a payment. First, most of what a swap touches is code, not a person, and code has no nationality; the question for a contract is whether it is safe and whether it is itself sanctioned, not who owns it. Second, the screen has to run in the quote path, in milliseconds, against a route the aggregator chose; a route that includes an unapproved pool is rejected and requoted with that pool excluded, not shown with a warning.
 
@@ -84,7 +84,7 @@ The IRS's 2024 rules would have pulled DeFi front ends into broker reporting. T.
 
 What that leaves, as of November 2026:
 
-- **Custodial platforms are still brokers.** The June 2024 final regulations, which "apply to brokers that take possession of the digital assets being sold by their customers," are unaffected: Form 1099-DA gross proceeds for transactions from January 1, 2025 and basis for certain transactions from January 1, 2026 (Crypto Tax). A custodial account's DEX-sourced trades are the platform's trades and are reported like any other.
+- **Custodial platforms are still brokers.** The June 2024 final regulations, which "apply to brokers that take possession of the digital assets being sold by their customers," are unaffected: Form 1099-DA gross proceeds for transactions from January 1, 2025 and basis for certain transactions from January 1, 2026 ([Crypto Tax](/books/investing-and-digital-assets/crypto-tax#the-broker-s-side)). A custodial account's DEX-sourced trades are the platform's trades and are reported like any other.
 - **Self-custody swaps through a front end have no broker reporting.** The IRS's page on the June 2024 rules says they "do not include reporting requirements for brokers commonly known as decentralized or non-custodial brokers." The platform has no 1099-DA obligation for a swap the customer signs from their own wallet, and the customer still owes tax on it. A platform that offers a transaction history export helps the customer and doesn't create a reporting obligation by doing so.
 - **The disapproval constrains a replacement.** Under 5 U.S.C. 801(b)(2), a disapproved rule "may not be reissued in substantially the same form" unless "specifically authorized by a law enacted after the date of the joint resolution," so DeFi broker reporting would need legislation.
 
@@ -102,7 +102,7 @@ What a platform takes from that sequence:
 
 Every DeFi product needs disclosures that a custodial trade doesn't, and they belong both in the terms and on the screen at the moment they matter:
 
-- **Custody and protection.** The customer holds the keys; the platform can't recover lost keys or reverse transfers. Protections that apply to the custodial account don't apply: the SEC's trading and markets staff note that "Non-security crypto assets are not protected by SIPA," and a self-custody wallet isn't an account at the broker at all (Customer Protection, Net Capital & SIPC).
+- **Custody and protection.** The customer holds the keys; the platform can't recover lost keys or reverse transfers. Protections that apply to the custodial account don't apply: the SEC's trading and markets staff note that "Non-security crypto assets are not protected by SIPA," and a self-custody wallet isn't an account at the broker at all ([Customer Protection, Net Capital & SIPC](/books/investing-and-digital-assets/customer-protection)).
 - **Who the counterparty is.** A swap executes against pools, market makers or fillers chosen by an aggregator, not against the platform; the platform's fee and the route are shown.
 - **Fees, each separately,** as in the worked table, and the fact that network fees are charged on failed swaps.
 - **Price risk inside the trade.** Price impact, slippage, the maximum the customer accepted, and MEV exposure if the customer opts out of private submission.

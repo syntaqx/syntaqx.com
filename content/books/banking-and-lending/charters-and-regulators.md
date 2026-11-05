@@ -88,7 +88,7 @@ A national trust bank is a national bank limited to fiduciary and related activi
 - **July 10, 2026:** final approval for First National Digital Currency Bank, N.A. to open.
 - **May 29, 2026:** preliminary conditional approval for Laser Digital National Trust Bank (Nomura), for digital asset, securities and fiat custody as a fiduciary, staking, and customer-directed spot trading for custody customers. The decision recites that uninsured national trust banks reported $7.0 trillion of assets under administration at the end of 2025.
 
-A trust bank's limits matter to anyone building on one: no insured deposits means no pass-through insurance for customer balances, and whether it can get a Federal Reserve master account to settle payments directly is a separate question from its charter. Stablecoin issuance under federal law is in the Payments volume's [Stablecoins](/books/payments/stablecoins#the-law-in-the-united-states).
+A trust bank's limits matter to anyone building on one: no insured deposits means no pass-through insurance for customer balances, and whether it can get a Federal Reserve master account to settle payments directly is a separate question from its charter. Stablecoin issuance under federal law is in the Payments volume's [Stablecoins](/books/payments/stablecoins#the-law-in-the-united-states). The crypto custodians' charters, from Anchorage's 2021 conversion to the December 12, 2025 conditional approvals, and what custody under them means, are in [Qualified Custody](/books/investing-and-digital-assets/qualified-custody#national-trust-banks-and-the-occ) and [Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses#trust-charters-for-custody).
 
 ## Holding Companies
 

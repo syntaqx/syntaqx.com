@@ -11,7 +11,7 @@ An option is a contract for the right, not the obligation, to buy (a call) or se
 
 The listed market is standardized. Every US listed option is cleared by the Options Clearing Corporation (OCC), the clearing agency for every US options exchange (16 of them when the SEC staff described it in 2021), which stands between buyer and seller, so a customer's counterparty is never the person on the other side of the trade. Terms (underlying, strike, expiration, style, multiplier) are fixed by the exchanges; the customer chooses only which series, which side and how many. The rules that bind the broker are FINRA Rule 2360 (approval, disclosure, exercise and allocation of assignments), SEC Rule 9b-1 (the Options Disclosure Document), and the margin rules in FINRA Rule 4210, whose stock side is in [Margin & Short Selling](/books/investing-and-digital-assets/margin-and-short-selling).
 
-This chapter covers series and symbols, approval levels, payoffs and requirements with worked numbers, exercise and assignment, early assignment around a dividend, expiration day and 0DTE, multi-leg orders, options order flow, and what January 2021 taught. Account approval itself is in [Opening Accounts](/books/investing-and-digital-assets/opening-accounts#capabilities-and-approvals); futures and options on futures are in Futures & FCMs, and crypto options venues in Perpetuals & Crypto Derivatives, both later in this book.
+This chapter covers series and symbols, approval levels, payoffs and requirements with worked numbers, exercise and assignment, early assignment around a dividend, expiration day and 0DTE, multi-leg orders, options order flow, and what January 2021 taught. Account approval itself is in [Opening Accounts](/books/investing-and-digital-assets/opening-accounts#capabilities-and-approvals); futures and options on futures are in [Futures & FCMs](/books/investing-and-digital-assets/futures-and-fcms), and crypto options venues in [Perpetuals & Crypto Derivatives](/books/investing-and-digital-assets/perpetuals-and-crypto-derivatives), both later in this book.
 
 ## How the Platforms Do It
 
@@ -139,7 +139,7 @@ Two lessons stuck. **Product limits are risk controls.** One broker described in
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `instruments` (with `instrument_type = 'option'` and the OCC symbol as `symbol`), `orders`, `positions`, `asset_events` and `journal_entries`, and against `capability_approvals` from [Opening Accounts](/books/investing-and-digital-assets/opening-accounts#capabilities-and-approvals). This chapter adds the series terms, the strategy table, exercise instructions, assignments and expiration runs. Multi-leg orders use `order_legs` from Orders & Order Types.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `instruments` (with `instrument_type = 'option'` and the OCC symbol as `symbol`), `orders`, `positions`, `asset_events` and `journal_entries`, and against `capability_approvals` from [Opening Accounts](/books/investing-and-digital-assets/opening-accounts#capabilities-and-approvals). This chapter adds the series terms, the strategy table, exercise instructions, assignments and expiration runs. Multi-leg orders use `order_legs` from [Orders & Order Types](/books/investing-and-digital-assets/orders-and-order-types).
 
 ```sql
 CREATE TABLE option_series (                -- the terms of one listed series

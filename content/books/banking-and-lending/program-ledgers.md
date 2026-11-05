@@ -56,7 +56,7 @@ Every business day, after the bank's end of day, three totals must agree: the FB
 3. **The platform updates its mirror accounts** to the FBO balances the bank posted.
 4. **The bank reconciles,** with auto-matching, and investigates any difference.
 
-The FDIC's custodial accounts proposal states the same requirement as a rule: reconciliation against the beneficial ownership records "no less frequently than at the close of business daily", allowing for unposted and timing variances under standard banking practice. My rule is stricter about what counts as explained: every in-transit amount must be an itemized list of entries that will clear on a known date, and anything else is a break that the program funds from its operating account the same day while it's investigated, so the FBO never holds less than the owners are owed.
+The FDIC's custodial accounts proposal states the same requirement as a rule: reconciliation against the beneficial ownership records "no less frequently than at the close of business daily", allowing for unposted and timing variances under standard banking practice. My rule is stricter about what counts as explained: every in-transit amount must be an itemized list of entries that will clear on a known date, and anything else is a break that the program funds from its operating account the same day while it's investigated, so the FBO never holds less than the owners are owed. An exchange runs the same check daily against its wallets on chain ([Hot, Warm & Cold Wallets](/books/investing-and-digital-assets/hot-and-cold-wallets#treasury-reconciliation)).
 
 ## Worked Numbers: One Night's Reconciliation
 
@@ -136,7 +136,7 @@ Read as an incident report, the failure has five causes, each a design decision:
 4. **A known break was left open.** A deficit of tens of millions was known by September 2023 and disputed for seven months before the filing. Every later problem was larger because this one was carried.
 5. **Pooled income had no owner.** Interest and rebates credited to omnibus accounts weren't allocated as they arrived, so about $31 million sat in the reconciliation as money whose ownership had to be argued.
 
-Each has a direct control: the bank holds or continuously receives the per-owner record; the record is per owner, not a summary; every inter-bank movement is recorded at both banks with the owner attached; breaks are funded and closed daily; and pooled income is allocated on the day it posts. Those are, almost line for line, what the FDIC proposed.
+Each has a direct control: the bank holds or continuously receives the per-owner record; the record is per owner, not a summary; every inter-bank movement is recorded at both banks with the owner attached; breaks are funded and closed daily; and pooled income is allocated on the day it posts. Those are, almost line for line, what the FDIC proposed. Brokerage and crypto have the same structure under other names: an omnibus account whose owners exist only in the platform's ledger ([Ledgers, Positions & Buying Power](/books/investing-and-digital-assets/ledgers-and-positions#omnibus-and-segregated)), a brokerage-as-a-service partner whose obligations have to be allocated in writing ([Brokerage as a Service](/books/investing-and-digital-assets/brokerage-as-a-service#who-owns-which-obligation)), and FTX's `fiat@` account as the failure ([FTX, Celsius & the 2022 Collapse](/books/investing-and-digital-assets/exchange-collapses#the-fiat-account-and-the-bank-accounts)).
 
 ## What the Custodial Proposal Would Require
 

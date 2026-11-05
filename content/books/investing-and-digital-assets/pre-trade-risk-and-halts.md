@@ -12,7 +12,7 @@ Every order a broker sends is a promise the broker's own capital stands behind. 
 
 Three layers of control stand between an order and a disorderly market. The **broker's pre-trade checks**, required by SEC Rule 15c3-5, reject orders that exceed credit or capital thresholds, look erroneous or break a regulatory restriction, and a kill switch stops a firm, a client or a strategy outright. The **market's single-stock controls**, the Limit Up-Limit Down plan, keep each NMS stock's trades inside price bands and pause it when they can't. The **market-wide circuit breakers** halt all US equity and options trading after a 7% or 13% fall in the S&P 500 and close it after 20%. A fourth control isn't a rule at all: when a clearing house raises a member's deposit, the member may stop customers from buying, as several brokers did in January 2021.
 
-This chapter covers the market access rule, the checks themselves with worked numbers, kill switches, LULD bands for a Tier 1 stock, market-wide circuit breakers, trading halts and the short sale price test, clearing deposit spikes and the January 2021 restrictions, and the price bands and modes crypto venues use instead. The order lifecycle the checks sit in is in Orders & Order Types, and capacity, load shedding and outages in Peak Days, Outages & Resilience, both in this book.
+This chapter covers the market access rule, the checks themselves with worked numbers, kill switches, LULD bands for a Tier 1 stock, market-wide circuit breakers, trading halts and the short sale price test, clearing deposit spikes and the January 2021 restrictions, and the price bands and modes crypto venues use instead. The order lifecycle the checks sit in is in [Orders & Order Types](/books/investing-and-digital-assets/orders-and-order-types), and capacity, load shedding and outages in [Peak Days, Outages & Resilience](/books/investing-and-digital-assets/peak-days-and-outages), both in this book.
 
 ## How the Platforms Do It
 
@@ -100,7 +100,7 @@ Bands are doubled for the last 25 minutes of the day for Tier 1 stocks and Tier 
 
 If the $180 stock's five-minute average falls to $178.00, 1.1% below the reference, the reference updates and the bands become $169.10 and $186.90; at $179.00, 0.6% away, they don't move. A broker's order system consumes the bands from the SIP and uses them two ways: as a pre-trade check (a limit buy above the upper band can't execute, and a market order during a limit state may not either), and as a customer message, because a customer whose market order sits unfilled during a pause needs to be told why.
 
-The 2010 Flash Crash that produced LULD, and its rollout through 2013, are in [Crises & the Rules They Wrote](/books/investing-and-digital-assets/crises-and-the-rules#2010-the-flash-crash). Overnight sessions have their own static bands, covered in Extended Hours & 24-Hour Trading.
+The 2010 Flash Crash that produced LULD, and its rollout through 2013, are in [Crises & the Rules They Wrote](/books/investing-and-digital-assets/crises-and-the-rules#2010-the-flash-crash). Overnight sessions have their own static bands, covered in [Extended Hours & 24-Hour Trading](/books/investing-and-digital-assets/extended-and-overnight-trading#what-had-to-change-around-the-exchanges).
 
 ## Market-Wide Circuit Breakers
 
@@ -134,7 +134,7 @@ The SEC staff report describes what they did:
 - **Restricted correspondents:** a clearing firm told the brokers it cleared for to stop new purchases in three stocks, and lifted it that afternoon.
 - **Ran out of capacity:** one firm's system reached its limit of unique order IDs on January 27 and restricted new GME and AMC purchases for the last hour and a half the next day.
 
-The engineering lessons are concrete. **Restrictions are instrument-level product modes** (normal, position closing only, position-limited, no fractional, raised margin), set by risk in minutes and enforced by the same pre-trade checks as everything else. **The clearing deposit is an input to risk,** forecast intraday from the broker's own net buying by symbol, not a surprise in the morning; the [crises chapter](/books/investing-and-digital-assets/crises-and-the-rules#2021-meme-stocks-and-t-1) traces how the episode led to T+1, and Clearing & Settlement covers the deposit calculation. **Customers must be told,** at the point of the order, what is restricted and why; the staff report noted firms differed in how and when they did.
+The engineering lessons are concrete. **Restrictions are instrument-level product modes** (normal, position closing only, position-limited, no fractional, raised margin), set by risk in minutes and enforced by the same pre-trade checks as everything else. **The clearing deposit is an input to risk,** forecast intraday from the broker's own net buying by symbol, not a surprise in the morning; the [crises chapter](/books/investing-and-digital-assets/crises-and-the-rules#2021-meme-stocks-and-t-1) traces how the episode led to T+1, and [Clearing & Settlement](/books/investing-and-digital-assets/clearing-and-settlement) covers the deposit calculation. **Customers must be told,** at the point of the order, what is restricted and why; the staff report noted firms differed in how and when they did.
 
 ## Crypto Venues
 
@@ -144,11 +144,11 @@ Crypto has no market-wide circuit breaker and no LULD plan: every venue runs its
 - **Market modes.** A venue can move a pair to cancel-only, limit-only, post-only or halted, for a listing, an incident, a chain halt or a delisting, recorded as `market_modes` history in [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#how-to-build-it). It is the crypto equivalent of a single-stock halt, declared by the operator instead of by a plan.
 - **Client limits.** Rate limits and cancel-on-disconnect (Coinbase Exchange's are above), self-trade prevention and maximum open orders per symbol.
 
-What crypto lacks is coordination: when one venue pauses, others keep trading, and its customers' liquidations and arbitrage move elsewhere. The liquidation side of a crypto volatility day, including the October 10, 2025 cascade, is in Perpetuals & Crypto Derivatives later in this book.
+What crypto lacks is coordination: when one venue pauses, others keep trading, and its customers' liquidations and arbitrage move elsewhere. The liquidation side of a crypto volatility day, including the October 10, 2025 cascade, is in [Perpetuals & Crypto Derivatives](/books/investing-and-digital-assets/perpetuals-and-crypto-derivatives) later in this book.
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model) (`orders` and `order_events`, `instruments` with status `halted` and `close_only`, `accounts`, `venues`, `cases`). This chapter adds the risk limits, a record of every check, halts, instrument restrictions and kill switch events. Crypto pairs keep `trading_pairs.mode` and `market_modes` from How a Crypto Exchange Works; a securities halt is a `trading_halts` row, and both map to the same "can this order route" question in the check below.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model) (`orders` and `order_events`, `instruments` with status `halted` and `close_only`, `accounts`, `venues`, `cases`). This chapter adds the risk limits, a record of every check, halts, instrument restrictions and kill switch events. Crypto pairs keep `trading_pairs.mode` and `market_modes` from [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture); a securities halt is a `trading_halts` row, and both map to the same "can this order route" question in the check below.
 
 ```sql
 CREATE TABLE risk_limits (                  -- parameters for every check, versioned

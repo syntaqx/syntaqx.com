@@ -97,12 +97,12 @@ The case for designing the failure path as carefully as the fast path is public.
 Three lessons I take from it:
 
 - **Placement is part of the quorum design.** Five replicas in one failure domain are one replica for a data hall failure. Latency pulled them together; the recovery plan has to assume they fail together and say what happens next.
-- **Recovery modes are product features.** `cancel_only` lets customers reduce risk before anything trades; an `auction` reopening finds a price after an outage instead of letting the first order trade through a stale book. `trading_pairs.mode` already carries `pre_open`, `auction`, `post_only`, `limit_only`, `cancel_only` and `halted`, and each mode needs tested engine behavior and customer messaging.
+- **Recovery modes are product features.** `cancel_only` lets customers reduce risk before anything trades; an `auction` reopening finds a price after an outage instead of letting the first order trade through a stale book. `trading_pairs.mode` already carries `pre_open`, `auction`, `post_only`, `limit_only`, `cancel_only` and `halted`, and each mode needs tested engine behavior and customer messaging; the platform-wide version is in [Load Shedding and Degraded Modes](/books/investing-and-digital-assets/peak-days-and-outages#load-shedding-and-degraded-modes).
 - **Everything downstream replays too.** Market data, execution reports and the ledger consume the engine's output sequence; after recovery they resume from the last sequence they processed, and any gap is detected by sequence, not by time.
 
 ## Self-Trade Prevention
 
-A firm running several strategies, or a market maker quoting both sides, can send an order that would trade with its own resting order. A self-trade changes no ownership and prints volume that misleads everyone, and wash trading is a surveillance matter (Market Surveillance & Manipulation). Venues prevent it in the engine. Coinbase Exchange forbids self-trading outright and lets the taker choose the mode, defaulting to decrement and cancel, with cancel oldest, cancel newest and cancel both. Binance offers expire taker, expire maker, expire both, decrement (both orders reduced by the prevented quantity and the smaller expires), none, and a transfer mode across accounts in a trade group; a prevented order ends as `EXPIRED_IN_MATCH` with a `preventedMatchId` that can be queried later.
+A firm running several strategies, or a market maker quoting both sides, can send an order that would trade with its own resting order. A self-trade changes no ownership and prints volume that misleads everyone, and wash trading is a surveillance matter ([Market Surveillance & Manipulation](/books/investing-and-digital-assets/market-surveillance)). Venues prevent it in the engine. Coinbase Exchange forbids self-trading outright and lets the taker choose the mode, defaulting to decrement and cancel, with cancel oldest, cancel newest and cancel both. Binance offers expire taker, expire maker, expire both, decrement (both orders reduced by the prevented quantity and the smaller expires), none, and a transfer mode across accounts in a trade group; a prevented order ends as `EXPIRED_IN_MATCH` with a `preventedMatchId` that can be queried later.
 
 Worked numbers, my own, on the book above with S2 (5 at 100.02) owned by the same account as the incoming buy for 10 at 100.03, under a decrement mode like Binance's:
 
@@ -129,7 +129,7 @@ Read together: the matching itself is microseconds; replication is the expensive
 
 ## One Design for Securities and Crypto
 
-The engine doesn't change between a stock and a token; the rules around it do. `trading_pairs` from How a Crypto Exchange Works fits a securities venue with the mapping below:
+The engine doesn't change between a stock and a token; the rules around it do. `trading_pairs` from [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture) fits a securities venue with the mapping below:
 
 | `trading_pairs` column | Crypto venue | Securities venue (exchange or ATS) |
 | --- | --- | --- |
@@ -143,7 +143,7 @@ And the rules a securities venue adds outside the engine:
 
 - **Order protection.** An exchange may not execute through a better protected quotation elsewhere while Rule 611 stands, so the engine either routes the marketable part out, rejects it, or accepts ISOs whose sender swept the better prices; a crypto venue has no such duty.
 - **Sessions and auctions.** Single-price auctions at the open and close use a different matching algorithm (maximize volume at one price) on the same book.
-- **Halts and volatility limits.** Trading halts and price bands are inputs to the engine as mode changes; Pre-Trade Risk, Halts & Volatility covers them.
+- **Halts and volatility limits.** Trading halts and price bands are inputs to the engine as mode changes; [Pre-Trade Risk, Halts & Volatility](/books/investing-and-digital-assets/pre-trade-risk-and-halts) covers them.
 - **Reporting.** Every trade is reported to the consolidated tape and the audit trail with the venue's timestamps.
 
 An on-chain order book is the same engine with the chain as the sequencer: Hyperliquid's book is fully on-chain with price-time priority, so the block's transaction order is the input order, and its tick and lot rules (prices with at most five significant figures) are enforced by the protocol rather than by a venue's gateway.

@@ -167,7 +167,7 @@ A bank's ledger is checked by end of day, by the auditors, by the program's reco
 | Every inbound message processed once | `inbound_messages` received but not processed after its window; processed twice | Every window |
 | Loan balances equal allocations | Principal bucket balance = sum of principal allocations | Nightly |
 
-Each check writes a row to `invariant_checks` with its result, so "were the books right on March 14" is a query, and a difference opens work with an owner rather than a log line nobody reads ([Alert Design](/docs/observability/dashboards-and-alerts#alert-design)).
+Each check writes a row to `invariant_checks` with its result, so "were the books right on March 14" is a query, and a difference opens work with an owner rather than a log line nobody reads ([Alert Design](/docs/observability/dashboards-and-alerts#alert-design)). The brokerage and exchange version, with the checks the 2022 crypto collapses would have failed, is [Invariants Checked Continuously](/books/investing-and-digital-assets/trading-platform-architecture#invariants-checked-continuously) in the Investing & Digital Assets volume.
 
 ## A Reference Architecture
 

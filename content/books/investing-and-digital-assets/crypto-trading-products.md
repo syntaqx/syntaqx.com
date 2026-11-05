@@ -9,7 +9,7 @@ tags = ["crypto", "exchanges", "fees", "trading", "otc", "market-makers"]
 
 The same bitcoin can cost a customer 1.5% or 0.05% to buy on the same exchange, depending on which button they press. A simple buy in the app shows one price, takes a spread and a fee, and is built for someone buying $50 on a phone; the advanced order book charges a published maker or taker fee that falls with volume, and is built for traders and APIs; the OTC desk quotes a block of $5 million all-in and settles it off the book. Each is a separate product with its own pricing, its own execution path, its own revenue line and its own disclosures, and most of an exchange's consumer revenue comes from the first one.
 
-This chapter covers the simple buy and convert and how a spread price is built, the order book's maker/taker schedules with the tier math worked through for Kraken, Gemini and Binance, RFQ and OTC desks, recurring buys, limit orders on brokers, how a platform sources liquidity and hedges what it quotes, and the market makers that make the books worth trading on. The venue underneath is [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#the-two-front-doors); how brokers and exchanges make money overall, with PFOF compared, is How Brokers & Exchanges Make Money; best execution across venues is [Order Routing, PFOF & Best Execution](/books/investing-and-digital-assets/routing-and-best-execution); derivatives are Perpetuals & Crypto Derivatives.
+This chapter covers the simple buy and convert and how a spread price is built, the order book's maker/taker schedules with the tier math worked through for Kraken, Gemini and Binance, RFQ and OTC desks, recurring buys, limit orders on brokers, how a platform sources liquidity and hedges what it quotes, and the market makers that make the books worth trading on. The venue underneath is [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#the-two-front-doors); how brokers and exchanges make money overall, with PFOF compared, is [How Brokers & Exchanges Make Money](/books/investing-and-digital-assets/revenue-models); best execution across venues is [Order Routing, PFOF & Best Execution](/books/investing-and-digital-assets/routing-and-best-execution); derivatives are [Perpetuals & Crypto Derivatives](/books/investing-and-digital-assets/perpetuals-and-crypto-derivatives).
 
 ## How the Platforms Do It
 
@@ -191,23 +191,23 @@ Large orders don't go through the book, because a $5 million market order moves 
 
 **Kraken's OTC desk** starts at $50,000 equivalent (lowered from a higher minimum on March 11, 2025), quotes all-inclusive prices ("we do not charge you any fees"), offers RFQ inside Kraken Pro and Kraken Custody, and settles within 24 hours for eligible clients.
 
-For the ledger, an OTC trade is an execution like any other with the venue set to the desk and the counterparty recorded: same journal entries, same tax lots, same surveillance. Deferred settlement is the twist. A trade agreed now and settled within 24 hours is an obligation on both sides until both legs arrive, recorded in the core model's `settlements` with its due time, and the credit the desk extends to a client between trade and settlement is exactly the exposure that Prime Brokerage, OTC & Crypto Lending deals with.
+For the ledger, an OTC trade is an execution like any other with the venue set to the desk and the counterparty recorded: same journal entries, same tax lots, same surveillance. Deferred settlement is the twist. A trade agreed now and settled within 24 hours is an obligation on both sides until both legs arrive, recorded in the core model's `settlements` with its due time, and the credit the desk extends to a client between trade and settlement is exactly the exposure that [Prime Brokerage, OTC & Crypto Lending](/books/investing-and-digital-assets/crypto-prime-and-lending) deals with.
 
 ## Recurring Buys
 
 A recurring buy is a schedule that places simple buys, priced like one: Kraken charges its 1% instant fee on recurring trades, and Gemini includes a spread in recurring orders as in instant buys. The engine is small and the edge cases are the product:
 
-- **Funding.** A recurring buy funded by a bank debit is a buy against money that can still be returned. Either wait for the debit to clear or credit it as an instant deposit inside the credit limits in Funding & Account Transfers, and never let the bought coins leave the platform before it settles.
+- **Funding.** A recurring buy funded by a bank debit is a buy against money that can still be returned. Either wait for the debit to clear or credit it as an instant deposit inside the credit limits in [Funding & Account Transfers](/books/investing-and-digital-assets/funding-and-transfers), and never let the bought coins leave the platform before it settles.
 - **Insufficient funds.** Skip, retry once, or pause the plan, decided in advance and shown to the customer; never buy a partial amount silently.
 - **Price.** The run executes at the quote at run time; randomizing run times within a window keeps millions of plans from hitting the market in the same second.
 - **Rounding and minimums.** $5 of an asset at a high price is a small number of base units; the asset's minimum order size and decimals set a floor below which the run is skipped.
-- **Records.** Each run is its own execution, its own tax lot and its own confirmation, which makes a weekly $10 plan 52 lots a year (Cost Basis, Tax Lots & Wash Sales).
+- **Records.** Each run is its own execution, its own tax lot and its own confirmation, which makes a weekly $10 plan 52 lots a year ([Cost Basis, Tax Lots & Wash Sales](/books/investing-and-digital-assets/cost-basis-and-tax-lots)).
 
-The broker-side version for stocks is Fractional Shares & Recurring Investing; the mechanics carry over except that crypto runs on weekends.
+The broker-side version for stocks is [Fractional Shares & Recurring Investing](/books/investing-and-digital-assets/fractional-and-recurring); the mechanics carry over except that crypto runs on weekends.
 
 ## Limit Orders on Brokers
 
-A broker that routes simple buys to market makers still needs somewhere to rest a limit order. Robinhood says its limit orders "generally" route to Bitstamp, "a partner exchange and affiliate," and that customers can choose exchange routing for a fee of 0.00% to 0.95% instead of commission-free market maker routing. The design question is the same as in equities: where an order rests, who sees it, what it pays, and whether the affiliate relationship is disclosed with the routing, which Order Routing, PFOF & Best Execution covers in full.
+A broker that routes simple buys to market makers still needs somewhere to rest a limit order. Robinhood says its limit orders "generally" route to Bitstamp, "a partner exchange and affiliate," and that customers can choose exchange routing for a fee of 0.00% to 0.95% instead of commission-free market maker routing. The design question is the same as in equities: where an order rests, who sees it, what it pays, and whether the affiliate relationship is disclosed with the routing, which [Order Routing, PFOF & Best Execution](/books/investing-and-digital-assets/routing-and-best-execution) covers in full.
 
 ## Liquidity Sourcing and Market Makers
 
@@ -229,7 +229,7 @@ Market makers run thousands of orders a second and need guarantees the retail pr
 
 ## How to Build It
 
-These are deltas against the core data model in [The Investing & Digital Assets Business](/books/investing-and-digital-assets/investing-business#the-core-data-model) (`fee_schedules` with its versioned `terms`, `fees` with the execution each was charged on, `orders` and `order_events`, `executions` with venue, price, quantity, liquidity flag and capacity, `settlements`, `disclosures`), and against [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#how-to-build-it) (`product_offerings`, `trading_pairs`). This chapter normalizes a schedule's tiers into `fee_tiers` with each account's daily assignment, and adds convert quotes, RFQ quotes, hedges, recurring plans and runs, and liquidity providers with their program terms.
+These are deltas against the core data model in [The Investing & Digital Assets Business](/books/investing-and-digital-assets/investing-business#the-core-data-model) (`fee_schedules` with its versioned `terms`, `fees` with the execution each was charged on, `orders` and `order_events`, `executions` with venue, price, quantity, liquidity flag and capacity, `settlements`, `disclosures`), and against [How a Crypto Exchange Works](/books/investing-and-digital-assets/crypto-exchange-architecture#how-to-build-it) (`product_offerings`, `trading_pairs`). This chapter normalizes a schedule's tiers into `fee_tiers` with each account's daily assignment, and adds convert quotes, RFQ quotes, hedges, recurring runs (on the `recurring_plans` table from [Fractional Shares & Recurring Investing](/books/investing-and-digital-assets/fractional-and-recurring#how-to-build-it)), and liquidity providers with their program terms.
 
 ```sql
 CREATE TABLE fee_tiers (                        -- the tiers in one fee_schedules version's terms, as rows
@@ -311,17 +311,15 @@ CREATE TABLE hedges (                           -- principal flow offset on a ve
   created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE recurring_plans (
-  id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  account_id      UUID NOT NULL REFERENCES accounts (id),
-  buy_instrument_id UUID NOT NULL REFERENCES instruments (id),
-  amount_usd      BIGINT NOT NULL CHECK (amount_usd > 0),  -- cents
-  frequency       TEXT NOT NULL CHECK (frequency IN ('daily', 'weekly', 'biweekly', 'monthly')),
-  funding         TEXT NOT NULL CHECK (funding IN ('cash_balance', 'bank_debit', 'card')),
-  on_insufficient TEXT NOT NULL CHECK (on_insufficient IN ('skip', 'retry_once', 'pause')),
-  next_run_at     TIMESTAMPTZ NOT NULL,
-  status          TEXT NOT NULL CHECK (status IN ('active', 'paused', 'canceled'))
-);
+-- recurring_plans is defined in Fractional Shares & Recurring Investing (notional in
+-- minor units, frequency, funding, status); a crypto plan runs at a time of day, 24/7,
+-- can be card-funded, and says what happens when funds are short
+ALTER TABLE recurring_plans
+  ADD COLUMN next_run_at     TIMESTAMPTZ,
+  ADD COLUMN on_insufficient TEXT CHECK (on_insufficient IN ('skip', 'retry_once', 'pause')),
+  DROP CONSTRAINT recurring_plans_funding_check,
+  ADD CONSTRAINT recurring_plans_funding_check
+    CHECK (funding IN ('buying_power', 'bank', 'dividend', 'card'));
 
 CREATE TABLE recurring_runs (
   plan_id        UUID NOT NULL REFERENCES recurring_plans (id),

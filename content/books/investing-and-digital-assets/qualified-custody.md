@@ -118,7 +118,7 @@ A worked illustration of a shared policy, my own numbers: a custodian holds $40 
 
 ## How to Build It
 
-`legal_entities` already carries `kind` values for `trust_company` and `national_trust_bank`; `entity_registrations` in Regulators & Licenses records the charter. Three tables make an arrangement's qualification a record rather than a claim:
+`legal_entities` already carries `kind` values for `trust_company` and `national_trust_bank`; `entity_registrations` in [Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses) records the charter. Three tables make an arrangement's qualification a record rather than a claim:
 
 ```sql
 CREATE TABLE custody_arrangements (        -- who holds which client's assets, under what terms
