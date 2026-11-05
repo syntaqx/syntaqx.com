@@ -103,9 +103,9 @@ By June 2023 FTX's debtors had "recovered approximately $7 billion in liquid ass
 | "90% cold" said, almost all hot held | Wallet tiers with limits, reported from the wallet inventory, not from statements | [Hot, Warm & Cold Wallets](/books/investing-and-digital-assets/hot-and-cold-wallets) |
 | Keys in plain text and secrets managers | Keys generated and held in HSMs, enclaves or MPC; quorum signing; backups of shares | [Keys, Signing & Key Management](/books/investing-and-digital-assets/keys-and-signing#generating-a-key) |
 | One shared cloud account, no MFA, no alerts | Separate accounts per entity, enforced MFA, alerting on privileged access | [Just-in-Time Access and Break-Glass](/docs/security/infrastructure-access#just-in-time-access-and-break-glass) |
-| Celsius's terms transferring title | Custody products keep title with the customer, in terms, ledger and disclosures; yield products say plainly that the customer is a lender | Qualified Custody; Cash, Sweeps & Yield |
+| Celsius's terms transferring title | Custody products keep title with the customer, in terms, ledger and disclosures; yield products say plainly that the customer is a lender | [Qualified Custody](/books/investing-and-digital-assets/qualified-custody); Cash, Sweeps & Yield |
 | Voyager's FDIC claims | Insurance statements only where records support them | [Pass-Through Coverage](/books/banking-and-lending/deposit-insurance#pass-through-coverage) |
-| Gemini Earn's lender freezing withdrawals | A customer's counterparty risk disclosed by name, with exposure limits | Prime Brokerage, OTC & Crypto Lending |
+| Gemini Earn's lender freezing withdrawals | A customer's counterparty risk disclosed by name, with exposure limits | [Prime Brokerage, OTC & Crypto Lending](/books/investing-and-digital-assets/crypto-prime-and-lending#the-genesis-and-three-arrows-lessons) |
 | Terra's unbacked peg | Listing review of what backs a stablecoin and how it redeems | [Listing & Delisting Assets](/books/investing-and-digital-assets/listing-assets); Depegs, Runs & Synthetic Dollars |
 | Brand entities sharing books | Every account, wallet and entry carries one legal entity | [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model) |
 

@@ -79,7 +79,7 @@ What the split means in the systems:
 
 ## Trust Charters for Custody
 
-A trust charter lets a firm hold assets as a fiduciary rather than as a money transmitter, and for crypto custodians it is what qualifies them to hold assets for advisers, funds and ETPs (Qualified Custody covers the custody rule). Two routes are in use:
+A trust charter lets a firm hold assets as a fiduciary rather than as a money transmitter, and for crypto custodians it is what qualifies them to hold assets for advisers, funds and ETPs ([Qualified Custody](/books/investing-and-digital-assets/qualified-custody) covers the custody rule). Two routes are in use:
 
 - **State trust companies.** NYDFS lets a limited purpose trust company chartered under the New York Banking Law conduct virtual currency business without a separate BitLicense, with the Superintendent's approval; unlike a BitLicensee it can exercise fiduciary powers and transmit money in New York without a separate money transmitter license. Coinbase Custody Trust Company is one.
 - **National trust banks.** On December 12, 2025, the OCC conditionally approved de novo national trust banks for Circle (First National Digital Currency Bank) and Ripple, and conversions of BitGo, Fidelity Digital Assets and Paxos from state trust companies; BitGo's 10-K reports the conversion to BitGo Bank & Trust, National Association. A national trust bank holds no insured deposits and answers to the OCC (Banking & Lending's [Trust Banks and Novel Charters](/books/banking-and-lending/charters-and-regulators#trust-banks-and-novel-charters) covers the charter's limits).
