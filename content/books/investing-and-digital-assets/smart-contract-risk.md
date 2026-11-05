@@ -31,12 +31,14 @@ No row is sufficient. The protocols that have lost the most money mostly had the
 
 ## The Loss Record
 
-rekt.news's leaderboard, as shown on November 5, 2026, mixes DeFi exploits with exchange hacks and frauds, so it is a record of where money left, not of smart contract bugs alone. The DeFi entries in its top 25, with the cause by class:
+rekt.news's leaderboard, as shown on November 5, 2026, mixes DeFi exploits with exchange hacks and frauds, so it is a record of where money left, not of smart contract bugs alone. The DeFi and bridge-contract entries in its top 25 (leaving out the Ronin and BNB Bridge hacks; Ronin is in [The Bridge Hacks](/books/investing-and-digital-assets/layer-2s-and-bridges#the-bridge-hacks)), with the cause by class:
 
 | Rank | Protocol | Loss (rekt.news) | Date | Class |
 | --- | --- | --- | --- | --- |
 | 4 | Poly Network | $611 million | Aug 10, 2021 | Cross-chain access control |
 | 8 | Wormhole | $326 million | Feb 2, 2022 | Signature verification |
+| 11 | KelpDAO | $290 million | Apr 18, 2026 | Cross-chain verification: a forged message accepted by a single required verifier |
+| 12 | Drift Protocol | $285 million | Apr 1, 2026 | Admin key compromise: multisig signers socially engineered into pre-signing |
 | 14 | Cetus (Sui) | $223 million | May 22, 2025 | Arithmetic overflow check |
 | 17 | Euler Finance | $197 million | Mar 13, 2023 | Missing health check |
 | 19 | Nomad | $190 million | Aug 1, 2022 | Bad upgrade |
@@ -59,7 +61,7 @@ My reading rule for a platform's review: read the scope section first (which com
 
 Formal verification proves that code satisfies properties written in a specification language: "total debt never exceeds total supply plus reserves," "a user's health factor can't fall below one through their own deposit," "only the timelock can call this function." A prover checks every possible execution, not a sample. Aave's audit folder holds fourteen Certora reports across its V3 versions, which is what continuous verification looks like in practice: the properties are maintained alongside the code and rechecked on every release.
 
-Its limit is the specification. A property nobody thought to write is a property nobody proved. Euler's bug was exactly that kind: the protocol's own invariant was that users can't make themselves unhealthy, and the new `donateToReserves` function "lacked a health check to make sure that an existing user wouldn't be able to put themselves in an unhealthy state just by donating to the reserves." A specification that stated that invariant over every function would have caught it; a specification of the functions that existed before the change wouldn't.
+Its limit is the specification. A property nobody thought to write is a property nobody proved. Euler's bug was exactly that kind: the protocol's own invariant was that users can't make themselves unhealthy, and the new `donateToReserves` function "lacked a health check to make sure that an existing user wouldn't be able to put themselves in an unhealthy state." A specification that stated that invariant over every function would have caught it; a specification of the functions that existed before the change wouldn't.
 
 ## Bug Bounties and Contests
 
@@ -82,18 +84,18 @@ Nomad is the case for the last point: an upgrade set its trusted root to a value
 
 ## Governance and Timelocks
 
-On-chain governance turns token holdings into authority over the protocol's code and parameters. Compound's documents the usual shape: an address needs 25,000 delegated COMP to propose, "Voting lasts for 3 days," a proposal needs at least 400,000 votes in favor, and a passed proposal "can be implemented 2 days later" through a timelock whose "hard-coded minimum delay ... is the least amount of notice possible for a governance action." OpenZeppelin's `TimelockController` is the common building block: it is "in charge of introducing a delay between a proposal and its execution," with proposers who schedule and cancel and executors who run operations "once the timelock expires."
+On-chain governance turns token holdings into authority over the protocol's code and parameters. Compound's documents the usual shape: an address needs delegated COMP above a proposal threshold (the docs' example is 25,000 COMP) to propose, a proposal then "enters a 2 day review period," "Voting lasts for 3 days," a proposal needs at least 400,000 votes in favor, and a passed proposal "can be implemented 2 days later" through a timelock whose "hard-coded minimum delay ... is the least amount of notice possible for a governance action." OpenZeppelin's `TimelockController` is the common building block: it is "in charge of introducing a delay between a proposal and its execution," with proposers who schedule and cancel and executors who run operations "once the timelock expires."
 
 ### Worked numbers: the notice a timelock gives
 
-Under Compound's published rules, a proposal that passes gives anyone watching at least 3 days of voting plus 2 days of timelock, five days from the start of the vote to the earliest execution, to read what it does. A platform whose customers hold positions in the protocol has that window to:
+Under Compound's published rules, a proposal that passes gives anyone watching a 2-day review period, 3 days of voting and 2 days of timelock, seven days from submission to the earliest execution, to read what it does. A platform whose customers hold positions in the protocol has that window to:
 
 | Day | What the platform can do |
 | --- | --- |
-| 0 (proposal live) | Decode the proposal's calls; flag parameter changes affecting customers' positions; flag code changes for review |
-| 0 to 3 (voting) | Review new implementation code against its audit; warn customers whose health factors the change would cut |
-| 3 to 5 (queued) | Decide to keep or stop routing; publish the decision |
-| 5 (executable) | Re-read the executed calls against the queued ones |
+| 0 to 2 (review period) | Decode the proposal's calls; flag parameter changes affecting customers' positions; flag code changes for review |
+| 2 to 5 (voting) | Review new implementation code against its audit; warn customers whose health factors the change would cut |
+| 5 to 7 (queued) | Decide to keep or stop routing; publish the decision |
+| 7 (executable) | Re-read the executed calls against the queued ones |
 
 The window only helps if someone uses it. Compound's September 2021 loss passed through this process: per rekt.news, an upgraded rewards contract from Proposal 62 wrongly distributed about $80 million of excess COMP, and a fix needed a new proposal (Proposal 64) and a new delay before it could execute, so the same timelock that protects against bad proposals also slows the fix.
 
@@ -106,7 +108,7 @@ Votes can be bought, and in DeFi they can be borrowed. Beanstalk's governance ha
 | Class | Case | What broke | Design lesson |
 | --- | --- | --- | --- |
 | **Reentrancy** | The DAO, 2016 | Per ethereum.org, "an insecure contract was drained of over 3.6 million ETH"; Ethereum hard-forked at block 1,920,000 on July 20, 2016 to move the funds to a contract with a single `withdraw` function | Update state before external calls; the chain's social layer is the last resort, and it was used once |
-| **Reentrancy (compiler)** | Curve pools, Jul 30, 2023 | Vyper acknowledged "a malfunctioning reentrancy lock" in versions 0.2.15, 0.2.16 and 0.3.0; four pools were drained (LlamaRisk post-mortem) | The compiler is part of the code under review; pin and audit toolchain versions |
+| **Reentrancy (compiler)** | Curve pools, Jul 30, 2023 | Vyper acknowledged "a bug affecting Vyper versions 0.2.15, 0.2.16, and 0.3.0," which LlamaRisk's post-mortem describes as "a malfunctioning reentrancy lock"; four pools were drained | The compiler is part of the code under review; pin and audit toolchain versions |
 | **Missing check** | Euler Finance, Mar 13, 2023 | `donateToReserves` let a user make their own position unhealthy, then self-liquidate for the bonus; about $197 million taken | Every new function must preserve every invariant, checked across functions |
 | **Rounding** | KyberSwap Elastic, Nov 22, 2023 | A "double rounding error" left liquidity "unrecalculated ... upon crossing a tick"; about $55.2 million taken, $48.7 million by the exploiter and $6.6 million by bots copying it | Round in the protocol's favor everywhere, and test boundary amounts at every tick crossing |
 | **Rounding** | Balancer V2, Nov 3, 2025 | Per rekt.news, a scaling function that always rounded down, combined with deferred settlement in batch swaps, repeated over dozens of tiny swaps; about $128 million | Small errors compound when an attacker controls the loop count |
@@ -127,7 +129,7 @@ When a protocol is being drained, minutes matter, and the actors are the team, w
 - **Rescue.** SEAL's Safe Harbor is "an on-chain agreement that protocols adopt to pre-authorize whitehat interventions during active exploits": a white hat who front-runs the attacker and moves funds to the protocol's designated recovery address keeps a bounty "set at 10% of recovered assets (capped at $1M)" and must return the rest "within 72 hours." SEAL lists 33 adopting protocols. Without it, a white hat who takes funds to protect them has done something that looks exactly like theft.
 - **Negotiate.** Teams offer the attacker a bounty and immunity from civil claims in exchange for returning funds, by on-chain message. Euler's exploiter began returning funds five days later and returned the rest by April 3, 2023; Euler reports "100% of the stolen funds were recovered."
 - **Freeze at the edges.** Stablecoin issuers can freeze stolen USDC or USDT ([Seizure, Burn and Reissue](/books/investing-and-digital-assets/freezes-and-onchain-compliance#seizure-burn-and-reissue) in Freezes, Blacklists & Seizures); validators of a small chain can act, as Sui's froze $162 million after Cetus and, per rekt.news, Berachain rolled back by hard fork after Balancer's exploit; exchanges freeze deposits traced to the attacker ([On-Chain Analytics & Investigations](/books/investing-and-digital-assets/blockchain-analytics)).
-- **Compensate.** KyberSwap paid affected users from its treasury through a grant program, with "grants covering 100% of the affected funds" for users who applied.
+- **Compensate.** KyberSwap paid affected users from its treasury through a grant program for unrecovered funds: one option paid 60%, the other 100% over 12 months, and KyberSwap reported "grants covering 100% of the affected funds" distributed to applicants.
 
 For a platform, the exploit is an incident in its own systems even though the code isn't its own. Its playbook when a protocol or token it supports is exploited:
 
@@ -230,7 +232,7 @@ Notes on the sketch:
 
 - [OpenZeppelin Contracts 5.x: Proxies](https://docs.openzeppelin.com/contracts/5.x/api/proxy), transparent and UUPS patterns and the difficulty of upgrading safely
 - [OpenZeppelin Contracts 5.x: Governance](https://docs.openzeppelin.com/contracts/5.x/api/governance), `TimelockController`, proposers, executors and delays
-- [Compound: Governance](https://docs.compound.xyz/v2/governance/), proposal threshold, three-day voting, quorum and the two-day timelock
+- [Compound: Governance](https://docs.compound.xyz/v2/governance/), proposal threshold, the two-day review period, three-day voting, quorum and the two-day timelock
 - [ethereum.org: History of Ethereum forks](https://ethereum.org/en/ethereum-forks/), the DAO fork at block 1,920,000 and the 3.6 million ETH drained
 - [Aave v3 origin: audits](https://github.com/aave-dao/aave-v3-origin/tree/main/audits), audit and formal verification reports by firm and version
 
@@ -251,4 +253,6 @@ Notes on the sketch:
 - [rekt.news: Compound](https://rekt.news/compound-rekt), Proposal 62's distribution bug and the Proposal 64 fix
 - [rekt.news: Balancer Rekt II](https://rekt.news/balancer-rekt2), the rounding exploit of November 3, 2025, the Berachain rollback and recoveries
 - [rekt.news: Cetus](https://rekt.news/cetus-rekt), the overflow check and $162 million frozen by Sui validators
+- [rekt.news: KelpDAO](https://rekt.news/kelpdao-rekt), the forged cross-chain packet and the 1-of-1 verifier configuration
+- [rekt.news: Drift Protocol](https://rekt.news/drift-protocol-rekt), the pre-signed transactions and the admin takeover
 - [rekt.news: Poly Network](https://rekt.news/polynetwork-rekt), the cross-chain manager calling the keeper contract
