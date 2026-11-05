@@ -19,7 +19,7 @@ How the main issuers mint, redeem and hold the reserve, from their own pages and
 | --- | --- | --- | --- | --- |
 | **Circle (USDC, EURC)** | Institutions onboarded to Circle Mint (identity verification, KYC, sanctions screening, suitability) | Minting free; basic redemption free and initiated within two business days; standard redemption initiated nearly instantly for a nominal fee | About 88% of USDC reserves in the Circle Reserve Fund (a 2a-7 government money market fund managed by BlackRock, only for Circle, custody at BNY), the rest cash at large banks; EURC reserves all cash | Holdings disclosed weekly; monthly assurance by a Big Four firm |
 | **Tether (USDT)** | Verified customers | $150 verification; 0.1% to acquire; the greater of $1,000 or 0.1% to redeem; $100,000 minimum either way | $132.4B of Treasury bills, direct and indirect, of $191.5B total assets (September 30, 2026) | Quarterly attestation by BDO; circulation typically daily |
-| **Paxos (PYUSD, USDG, USDP)** | Paxos's institutional customers; PayPal users buy and sell PYUSD one to one in PayPal and Venmo | No PayPal fee to buy, sell or hold PYUSD | Dollar deposits, Treasuries and cash equivalents (PYUSD) | Issuer reports per token |
+| **Paxos (PYUSD, USDG, USDP)** | Paxos's institutional customers; PayPal users buy and sell PYUSD one to one in PayPal and Venmo | No PayPal fee to buy, sell or hold PYUSD | US dollar reserves and cash equivalents (PYUSD) | Issuer reports per token |
 | **Ripple (RLUSD)** | Ripple's institutional customers | Not documented publicly | Cash deposits, Treasuries and government money market funds in segregated accounts; BNY primary custodian | Monthly attestations |
 | **Anchorage Digital Bank (USAT, for Tether)** | Anchorage is the issuer, under OCC supervision | Not documented publicly | Cantor Fitzgerald as reserve custodian and primary dealer | Not documented publicly |
 
@@ -311,16 +311,17 @@ Design notes:
 **Standards and protocols**
 
 - [Circle: FiatToken design (stablecoin-evm)](https://raw.githubusercontent.com/circlefin/stablecoin-evm/master/doc/tokendesign.md), the owner, master minter, minter, pauser, blacklister and rescuer roles, `configureMinter`, `removeMinter`, allowances and their resets, mint and burn rules and the proxy upgrade path
-- [Circle: CCTP overview](https://developers.circle.com/cctp), burn-and-mint transfers, Fast and Standard timing, hooks and the non-USDC token service
+- [Circle: CCTP overview](https://developers.circle.com/cctp), burn-and-mint transfers, Fast and Standard timing (about 8 to 20 seconds; 15 to 19 minutes on Ethereum and L2s), hooks and the non-USDC token service
 - [Circle: CCTP technical guide](https://developers.circle.com/cctp/technical-guide), `depositForBurn`, `MessageTransmitterV2`, Iris attestations, `receiveMessage`, finality thresholds 1000 and 2000, fees and nonces
-- [Circle: CCTP fees](https://developers.circle.com/cctp/concepts/fees), the 0 basis point Standard fee, Fast Transfer fees by source chain and the Fast Transfer allowance
+- [Circle: CCTP fees](https://developers.circle.com/cctp/concepts/fees), free Standard Transfers, route-dependent Fast Transfer fees deducted at mint and the Fast Transfer allowance
+- [Circle: Iris API, Fast Transfer fees from Ethereum](https://iris-api.circle.com/v2/burn/USDC/fees/0/6), [from Solana](https://iris-api.circle.com/v2/burn/USDC/fees/5/0) and [from Linea](https://iris-api.circle.com/v2/burn/USDC/fees/11/0), minimum fees of 1, 1 and 13 basis points at finality threshold 1000 and 0 at 2000, read November 5, 2026
 
 **Vendor documentation**
 
 - [Circle: Transparency and stability](https://www.circle.com/transparency), the Circle Reserve Fund's holdings, daily reporting via BlackRock, weekly disclosure and monthly assurance
 - [Tether: Fees](https://tether.to/en/fees/), verification, acquisition and redemption fees and the $100,000 minimum
 - [Tether: Q3 2026 attestation release (October 30, 2026)](https://tether.io/news/tether-generates-1-5-billion-in-q3-net-operating-profit-as-reserve-buffer-doubles-to-almost-8-billion/), total assets, Treasury bill exposure and BDO
-- [PayPal: What is PayPal USD (PYUSD)?](https://www.paypal.com/us/cshelp/article/what-is-paypal-usd-pyusd-help1005), Paxos as issuer, backing and buying and selling one to one
+- [PayPal: PayPal USD (PYUSD)](https://www.paypal.com/us/digital-wallet/manage-money/crypto/pyusd), Paxos as issuer, backing and no fees to buy, sell or hold
 - [Ripple: RLUSD](https://ripple.com/solutions/stablecoin/), reserve assets, segregated accounts, BNY and monthly attestations
 
 **In practice**

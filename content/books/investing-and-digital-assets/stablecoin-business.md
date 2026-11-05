@@ -7,13 +7,13 @@ part = "Stablecoins"
 tags = ["stablecoins", "circle", "tether", "reserve-income", "distribution", "business-models"]
 +++
 
-A fiat-backed stablecoin issuer runs one of the simplest business models in finance and one of the hardest to keep. A customer hands it a dollar, it hands back a token, and it invests the dollar in Treasury bills, overnight repo and bank deposits while the token circulates. It pays the holder nothing: the GENIUS Act forbids it. Its revenue is the yield on the float, so it is a bet on two numbers, the size of the float and the short-term interest rate, and the issuer controls neither. The size of the float depends on where tokens are held and used, which is decided by exchanges, wallets, payment companies and trading venues, and those distributors have learned to charge for it. The result, read from the filings, is an issuer that earns billions and keeps a minority of it.
+A fiat-backed stablecoin issuer runs one of the simplest business models in finance and one of the hardest to keep. A customer hands it a dollar, it hands back a token, and it invests the dollar in Treasury bills, overnight repo and bank deposits while the token circulates. It pays the holder nothing, and once the GENIUS Act takes effect a US permitted issuer may not. Its revenue is the yield on the float, so it is a bet on two numbers, the size of the float and the short-term interest rate, and the issuer controls neither. The size of the float depends on where tokens are held and used, which is decided by exchanges, wallets, payment companies and trading venues, and those distributors have learned to charge for it. The result, read from the filings, is an issuer that earns billions and keeps a minority of it.
 
 This chapter is the economics: how reserve income is earned and measured, what Circle pays Coinbase, Binance and others and why, how Tether's numbers differ, who issues the rest of the supply, how sensitive each model is to a rate cut, and why banks, fintechs and exchanges all want a coin of their own. The mechanics of minting, the reserve and redemption are in [Issuing a Stablecoin](/books/investing-and-digital-assets/issuing-a-stablecoin), the law in [Stablecoin Law](/books/investing-and-digital-assets/stablecoin-law), and moving money with a stablecoin as a payment rail is the Payments volume's [Stablecoins & Crypto Rails](/books/payments/stablecoins). The foundation's overview of the same money is [Reserve Income](/books/investing-and-digital-assets/investing-business#reserve-income), and how it sits beside a broker's and an exchange's other revenue is [Reserve Income and Distribution Payments](/books/investing-and-digital-assets/revenue-models#reserve-income-and-distribution-payments).
 
 ## How the Platforms Do It
 
-The largest dollar stablecoins and how each issuer is set up, as of November 2026. Circulation is DefiLlama's cross-issuer figure on November 5, 2026, which differs from issuers' own numbers (Tether reports about $184 billion issued at September 30, Circle $73.9 billion of USDC); I use DefiLlama for comparisons across issuers and each issuer's filing for its own economics.
+The largest dollar stablecoins and how each issuer is set up, as of November 2026. Circulation is DefiLlama's cross-issuer figure on November 5, 2026, which differs from issuers' own numbers (Tether reports about $183.5 billion issued at September 30, Circle $73.9 billion of USDC); I use DefiLlama for comparisons across issuers and each issuer's filing for its own economics.
 
 | Token | Issuer | Circulating (DefiLlama, Nov 5, 2026) | Backing | How it reaches holders |
 | --- | --- | --- | --- | --- |
@@ -21,9 +21,9 @@ The largest dollar stablecoins and how each issuer is set up, as of November 202
 | **USDC** | Circle | $70.8B | About 88% in the Circle Reserve Fund, a BlackRock-managed government money market fund, the rest cash at large banks (December 31, 2025) | Circle Mint for institutions; Coinbase and Binance under paid distribution agreements |
 | **USDS** and **DAI** | Sky (formerly MakerDAO) | $6.5B and $4.7B | Crypto collateral in vaults and other assets; DAI and USDS convert one to one | Protocol, not a company issuer; covered in [Depegs, Runs & Synthetic Dollars](/books/investing-and-digital-assets/depegs-and-synthetic-dollars) |
 | **USDe** | Ethena | $4.6B | Crypto and other assets hedged with short futures (a synthetic dollar, not a reserve-backed one) | Whitelisted minters; everyone else on exchanges and pools |
-| **USD1** | World Liberty Financial | $3.7B | Not covered in this chapter's sources | Not covered in this chapter's sources |
+| **USD1** | World Liberty Financial | $3.7B | "U.S. cash, U.S. government money market funds, and other cash equivalents"; monthly reserve reports | Through partners and protocols; minting by arrangement with World Liberty Financial; redeemable one to one for dollars |
 | **USDG** | Paxos (Global Dollar Network) | $2.7B | Dollar reserves; issued by Paxos Digital Singapore (MAS) and Paxos Issuance Europe (Finland, MiCA) | Network members, offered up to 100% of the reserve returns on USDG held on their platforms |
-| **PYUSD** | Paxos for PayPal | $2.7B | "US dollar deposits, US treasuries, and similar cash equivalents" | PayPal and Venmo, which pay holders a variable reward |
+| **PYUSD** | Paxos for PayPal | $2.7B | "Fully backed by US dollar reserves and cash equivalents" | PayPal and Venmo, which pay holders a variable reward |
 | **RLUSD** | Ripple | $2.6B | Cash deposits, Treasuries and government money market funds; BNY primary reserve custodian; monthly attestations | Issued through an NYDFS limited purpose trust company; redeemable at par |
 
 Three patterns run through the table. **Two issuers hold most of the market:** USDT and USDC together are about $248 billion of the roughly $276 billion across the nine tokens above. **The newer coins are distribution deals with an issuer behind them:** PayPal's coin is issued by Paxos, USDG is Paxos's coin shared with its network, and Tether's US token USAT, launched January 27, 2026, is issued by Anchorage Digital Bank, N.A. with Cantor Fitzgerald as reserve custodian. **The token that isn't reserve-backed is a different product:** USDe and DAI earn and fail for different reasons, and the last chapter of this part treats them separately.
@@ -67,7 +67,7 @@ The 10-K does not disclose the size of the issuer portion. What it shows is the 
 
 ### Binance and the Ecosystem Agreement
 
-Binance was the first approved participant under the Stablecoin Ecosystem Agreement. In November 2024 Circle paid it a one-time upfront fee of $60.3 million, agreed monthly incentive fees on USDC balances subject to minimum balance requirements, and Binance agreed to hold part of its corporate treasury in USDC for a two-year term. An expanded agreement in August 2025 pays monthly incentive fees on USDC held through Binance's smart contract wallet services, runs four years with a one-year tail, and sits outside the ecosystem agreement. In the third quarter of 2026 Binance announced a $100 million equity investment in Circle and a renewed partnership focused on emerging markets. The 10-K describes distribution as concentrated in "a few key distributors" with many smaller ones.
+Binance was the first approved participant under the Stablecoin Ecosystem Agreement. In November 2024 Circle paid it a one-time upfront fee of $60.3 million, agreed monthly incentive fees on USDC balances on Binance's platform and in its treasury, subject to minimum balance requirements, and Binance agreed to hold part of its corporate treasury in USDC for a two-year term. An expanded agreement in August 2025 pays monthly incentive fees on USDC held through Circle's Modular Smart Contract Wallet services, runs four years with a one-year tail if not extended, and supersedes the non-treasury portion of the November 2024 agreement. Circle's third-quarter 2026 release reports that Binance announced a $100 million equity investment in Circle and a renewed and expanded partnership to promote USDC, with an emphasis on emerging markets. The 10-K describes distribution as concentrated in "a few key distributors" with many smaller ones.
 
 ### The Same Idea at Paxos
 
@@ -112,7 +112,7 @@ Tether runs the same model, and its releases report net operating profit without
 
 Three things differ from Circle. **Fees on the flows.** Tether charges a $150 verification fee, 0.1% to acquire tokens, the greater of $1,000 or 0.1% to redeem, and sets a $100,000 minimum for either; Circle Mint charges nothing to mint and nothing for basic redemption. **Assets beyond the GENIUS list.** The attestation's total assets exceed the Treasury exposure by about $59 billion, which the release doesn't break down; USDT is partly backed by bitcoin and gold, which is why its fit with the GENIUS reserve list has been questioned, and the $7.95 billion excess is the cushion that absorbs those assets' price moves. **An attestation, not an audit.** Tether publishes a quarterly attestation of management's assertions at a point in time, and circulation "typically" daily; it is not an audit of financial statements, and GENIUS's audited-statements requirement above $50 billion would apply only to an issuer inside the US regime. Tether's US answer is a separate token: USAT, issued by Anchorage Digital Bank under federal supervision, while Tether says USDT is "progressing towards GENIUS Act compliance."
 
-My arithmetic on the quarter: $1.5 billion of profit on about $184 billion issued is about 0.8% for the quarter, or about 3.3% a year, on liabilities that cost nothing. A Treasury bill portfolio of $132.4 billion at a 3.5% yield (my assumption, in line with Circle's reserve return rate for the same quarter) earns about $1.16 billion a quarter by itself.
+My arithmetic on the quarter: $1.5 billion of profit on about $183.5 billion issued is about 0.8% for the quarter, or about 3.3% a year, on liabilities that cost nothing. A Treasury bill portfolio of $132.4 billion at a 3.5% yield (my assumption, in line with Circle's reserve return rate for the same quarter) earns about $1.16 billion a quarter by itself.
 
 ## Rate Sensitivity
 
@@ -126,7 +126,7 @@ Because the float reprices with the policy rate, the first question an analyst a
 
 The distributor shares the loss. Payments under the Coinbase agreement are a share of net reserve income, so a cut shrinks what Coinbase receives in proportion; with about 40% of revenue retained after distribution, Circle's own share of a 25 basis point cut is closer to $73 million than $183 million. What a cut doesn't shrink are operating costs, which Circle guided at $570 million to $585 million of adjusted operating expenses for 2026. An issuer's defenses are the ones visible in the filings: grow the float (Circle's guidance is a 40% multi-year compound growth rate in USDC circulation), earn revenue that isn't the float (Circle's other revenue, guided at $310 million to $330 million for 2026, from subscriptions, services, transactions and the ARC presale), and own more of the distribution.
 
-The rate also cuts the other way. Circle's 10-K notes that yield-bearing alternatives, tokenized money market funds among them, became more attractive than stablecoins "particularly in the high-interest-rate environment"; at 5% a holder gives up more by holding a non-yielding token, which is exactly when the distributor's reward matters most ([Tokenized Treasuries & Funds](/books/investing-and-digital-assets/tokenized-funds), a later chapter of this volume, covers the alternative).
+The rate also cuts the other way. Circle's 10-K notes that yield-bearing alternatives, tokenized money market funds among them, had become increasingly attractive "Particularly in the current high interest rate environment"; at 5% a holder gives up more by holding a non-yielding token, which is exactly when the distributor's reward matters most ([Tokenized Treasuries & Funds](/books/investing-and-digital-assets/tokenized-funds), a later chapter of this volume, covers the alternative).
 
 ## Bank-Issued and Fintech-Branded Coins
 
@@ -219,7 +219,7 @@ Design notes:
 - **Every agreement and version,** signed, with the date each took effect and the renewal terms, because a counterparty, an auditor and, under the GENIUS Act's audited statements for issuers above $50 billion, related-party disclosure all ask for them.
 - **Daily accruals tied to statements:** reserve income per day matched to the reserve fund's and banks' statements, with the balances-by-location snapshot each day used.
 - **Every payment's calculation,** reproducible from stored inputs, with any dispute and its resolution.
-- **Reported metrics from the same records:** average circulation, reserve return rate, on-platform share and RLDC computed by queries over these tables, so the numbers in an earnings release can be re-run (the volume's Metrics chapter defines each).
+- **Reported metrics from the same records:** average circulation, reserve return rate, on-platform share and RLDC computed by queries over these tables, so the numbers in an earnings release can be re-run ([Investing & Digital Assets Metrics](/books/investing-and-digital-assets/investing-metrics) defines each).
 
 ## What This Means for the System You Build
 
@@ -239,13 +239,11 @@ Design notes:
 
 **Regulators and guidance**
 
-- [Mayer Brown: OCC finalizes GENIUS Act rulemaking](https://www.mayerbrown.com/en/insights/publications/2026/11/occ-finalizes-genius-act-rulemaking), the affiliate and related-third-party yield presumption not finalized and anti-evasion authority kept
 - [OCC: Conditional approvals for five national trust banks (December 12, 2025)](https://www.occ.gov/news-issuances/news-releases/2025/nr-occ-2025-125.html), First National Digital Currency Bank and Ripple National Trust Bank, and the BitGo, Fidelity Digital Assets and Paxos conversions
-- [Baker McKenzie: The CLARITY Act's yield compromise](https://blockchain.bakermckenzie.com/2026/05/05/the-clarity-acts-yield-compromise-what-the-senate-actually-agreed-to-and-why-it-matters/), the May 1, 2026 Tillis-Alsobrooks language on deposit-equivalent rewards and activity-based rewards
 
 **Filings**
 
-- [Circle Internet Group: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1876042/000187604226000062/crcl-20251231.htm), revenue, reserve income, the reserve return rate, distribution and transaction costs, Coinbase payments, RLDC, USDC flows and market share, the Coinbase and Binance agreements, reserve composition, the 90 basis point yield decline and the trust charter plan
+- [Circle Internet Group: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1876042/000187604226000062/crcl-20251231.htm), revenue, reserve income, the reserve return rate, distribution and transaction costs, Coinbase payments, RLDC, USDC flows and market share, the Coinbase and Binance agreements, reserve composition, the 90 basis point yield decline, yield-bearing alternatives and the trust charter plan
 - [Circle Internet Group: Third quarter 2026 results (November 4, 2026)](https://www.sec.gov/Archives/edgar/data/1876042/000187604226000309/finalq3epr-110326.htm), reserve income, the 3.5% reserve return rate, other revenue and the ARC presale, distribution costs, RLDC, USDC on platform, guidance, Arc and the Binance investment
 - [Coinbase Global: Form 10-Q for the third quarter of 2026](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000122/coin-20260930.htm), stablecoin revenue for the quarter and nine months and the unchanged Circle arrangement
 
@@ -256,10 +254,13 @@ Design notes:
 - [Tether: Transparency](https://tether.to/en/transparency/), circulation typically published daily
 - [Circle: Transparency and stability](https://www.circle.com/transparency), the Circle Reserve Fund, weekly holdings disclosure and monthly Big Four assurance
 - [Global Dollar Network](https://www.globaldollar.com/), USDG's issuing entities and partner returns of up to 100% of reserve returns on platform balances
-- [PayPal: What is PayPal USD (PYUSD)?](https://www.paypal.com/us/cshelp/article/what-is-paypal-usd-pyusd-help1005), Paxos as issuer, backing, chains and the variable reward
+- [PayPal: PayPal USD (PYUSD)](https://www.paypal.com/us/digital-wallet/manage-money/crypto/pyusd), Paxos as issuer, backing and the variable reward paid monthly on the average daily balance
 - [Ripple: RLUSD](https://ripple.com/solutions/stablecoin/), the NYDFS trust company, reserve assets, BNY as custodian and monthly attestations
+- [World Liberty Financial: USD1](https://worldlibertyfinancial.com/usd1), USD1's reserve assets, monthly reserve reports, minting through World Liberty Financial and one-to-one redemption
 
 **In practice**
 
+- [Mayer Brown: OCC finalizes GENIUS Act rulemaking](https://www.mayerbrown.com/en/insights/publications/2026/11/occ-finalizes-genius-act-rulemaking), the affiliate and related-third-party yield presumption not finalized and anti-evasion authority kept
+- [Baker McKenzie: The CLARITY Act's yield compromise](https://blockchain.bakermckenzie.com/2026/05/05/the-clarity-acts-yield-compromise-what-the-senate-actually-agreed-to-and-why-it-matters/), the May 1, 2026 Tillis-Alsobrooks language on deposit-equivalent rewards and activity-based rewards
 - [DefiLlama: Stablecoins](https://stablecoins.llama.fi/stablecoins?includePrices=false), circulating supply by token on November 5, 2026
 - [Decrypt: Tether launches USAT issued by Anchorage Digital (January 27, 2026)](https://decrypt.co/356045/tether-launches-us-regulated-stablecoin-issued-anchorage-digital), the issuer, Cantor Fitzgerald as custodian, Tether's statement on USDT and GENIUS, and the questions about USDT's partial bitcoin and gold backing
