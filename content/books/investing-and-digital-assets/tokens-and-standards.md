@@ -130,7 +130,7 @@ An upgrade can change anything: add a fee, add a blacklist, change decimals in e
 
 - **Know who holds the admin key** (a multisig, a timelock, an issuer's custody) for every token it lists, and record it.
 - **Watch the slots and events.** An unannounced `Upgraded` on a listed token is an incident: pause deposits of that token until someone has read the new implementation.
-- **Disclose it.** Customers holding a token through the platform carry the issuer's admin risk; the risk disclosure says so; upgradeability as an exploit class is Smart Contract Risk & Exploits.
+- **Disclose it.** Customers holding a token through the platform carry the issuer's admin risk; the risk disclosure says so; upgradeability as an exploit class is [Smart Contract Risk & Exploits](/books/investing-and-digital-assets/smart-contract-risk#upgradeability-and-admin-keys).
 
 ## Freeze and Blacklist Functions
 

@@ -101,7 +101,7 @@ A broadcast transaction sits in each node's mempool until a block includes it, a
 
 - **Seen is not received.** A pending transaction is evidence of intent. Show it to the customer as pending if the product wants to, never as a balance.
 - **A broadcast can disappear without failing.** A node can evict a low-fee transaction, and the platform's own transaction can be dropped from every mempool while its record still says `pending`. A withdrawal that hasn't been included after a deadline is rebroadcast or replaced, and the record moves to a state that says so.
-- **The mempool leaks intent.** On Ethereum a pending transaction is public before it is included, which is the source of front-running and sandwiching (Oracles & MEV covers what that costs a user).
+- **The mempool leaks intent.** On Ethereum a pending transaction is public before it is included, which is the source of front-running and sandwiching ([Oracles & MEV](/books/investing-and-digital-assets/oracles-and-mev#sandwiches) covers what that costs a user).
 
 ## Finality Per Chain
 
