@@ -111,7 +111,7 @@ The CFTC's posture moved in steps, as of November 2026:
 
 - **Perpetual contracts on DCMs.** A policy statement adopted May 29, 2026 (91 FR 33160, June 3, 2026) accompanied an order letting a DCM list a futures contract on the spot price of bitcoin, and said that for perpetuals on other asset classes the case-by-case review of Regulation 40.3 fits.
 - **24/7 futures.** A request for comment (91 FR 38335, June 25, 2026) asked how margin calls and settlement work overnight, on weekends and on holidays when Fedwire and CHIPS don't operate, and whether 24/7 contracts need extra initial margin before weekends. The comment period ran to August 26, 2026 (91 FR 47158), which also sought comment on a 24/7 oil contract NYMEX self-certified on July 8, 2026 and the Commission stayed on July 9.
-- **Crypto market rules.** The CFTC published "Regulation Crypto Asset Transactions and Regulation Crypto Asset Markets" on October 13, 2026; Securities, Commodities & Crypto Market Structure covers it.
+- **Crypto market rules.** The CFTC published "Regulation Crypto Asset Transactions and Regulation Crypto Asset Markets" on October 13, 2026; [Securities, Commodities & Crypto Market Structure](/books/investing-and-digital-assets/securities-or-commodities) covers it.
 
 For the FCM the hard part of 24/7 crypto futures is the rulebook's business day. Daily settlement, the 6:00 pm residual interest deadline and the noon segregation filing are all defined on business days, while the contract's price moves all weekend. Weekend losses accrue against margin that can't be topped up by wire until Monday, which is why the CFTC asked about weekend buffers and why FCMs offering these contracts liquidate in real time rather than call.
 

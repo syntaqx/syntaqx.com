@@ -155,7 +155,7 @@ Kraken's public engineering is about the services around the book: its core back
 
 Where an exchange is incorporated and licensed decides which products it may offer to whom, and the industry's largest enforcement cases are about getting that wrong.
 
-- **US spot exchanges** register with FinCEN as money services businesses, hold state money transmitter licenses (or a trust charter) and in New York a BitLicense or limited purpose trust charter. Spot crypto that isn't a security has had no federal market regulator; derivatives need CFTC registration. Licensing in depth is Licensing a Crypto Business.
+- **US spot exchanges** register with FinCEN as money services businesses, hold state money transmitter licenses (or a trust charter) and in New York a BitLicense or limited purpose trust charter. Spot crypto that isn't a security has had no federal market regulator; derivatives need CFTC registration. Licensing in depth is [Licensing a Crypto Business](/books/investing-and-digital-assets/crypto-licensing).
 - **Offshore affiliates** offer what US entities can't, most of all perpetual futures. Coinbase International Exchange is licensed in Bermuda and offers perpetuals to eligible non-US customers; Kraken's futures schedule excludes the US, Canada and New Zealand.
 - **Separate US companies** for brands that grew offshore: Binance.US is a different company from Binance.com, with its own registration and its own customers.
 
