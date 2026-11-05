@@ -38,7 +38,7 @@ A native asset moves by a transaction whose value field the protocol itself debi
 
 ### The interface
 
-ERC-20 (created November 19, 2015) defines six functions and two events. The parts an exchange calls:
+ERC-20 (created November 19, 2015) defines six required functions, three optional ones (`name`, `symbol`, `decimals`) and two events. The parts an exchange calls:
 
 ```solidity
 interface IERC20 {
@@ -82,7 +82,7 @@ Three risks live in that flow:
 
 ### Permits
 
-EIP-2612 adds `permit(owner, spender, value, deadline, v, r, s)`, which sets an allowance from an off-chain signature over the typed struct `Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)`, so the owner pays no gas and needs no ETH. The EIP notes that a permit can be front-run (harmlessly, since the result is the same) and that the owner can limit exposure by setting a near `deadline`. Uniswap's Permit2 generalizes the idea: each token gets one standard approval to the Permit2 contract, after which spenders are authorized by signatures, either a standing allowance that carries "their own `expiration`" or a one-time transfer that "leaves no lingering approval." Permits move the dangerous moment from an on-chain transaction, which a wallet shows with a destination and a fee, to a signature over structured data, which many users approve without reading. Smart contract wallets such as Safe can't produce these signatures at all, per OpenZeppelin, so contracts that accept permits also need a plain `approve` path.
+EIP-2612 adds `permit(owner, spender, value, deadline, v, r, s)`, which sets an allowance from an off-chain signature over the typed struct `Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)`, so the owner pays no gas and needs no ETH. The EIP notes that a permit can be front-run (harmlessly, since the result is the same) and that the owner can limit exposure by setting a near `deadline`. Uniswap's Permit2 generalizes the idea: each token gets one standard approval to the Permit2 contract, after which spenders are authorized by signatures, either a standing allowance that carries "their own `expiration`" or a one-time transfer that "leaves no standing allowance." Permits move the dangerous moment from an on-chain transaction, which a wallet shows with a destination and a fee, to a signature over structured data, which many users approve without reading. Smart contract wallets such as Safe can't produce these signatures at all, per OpenZeppelin, so contracts that accept permits also need a plain `approve` path.
 
 ## Nonstandard Tokens
 
@@ -96,7 +96,7 @@ Some tokens deliver less than the amount sent. Token-2022's transfer fee extensi
 
 ### Rebasing tokens
 
-stETH's balances change without anyone sending anything. Per Lido's integration guide, balances update when the oracle reports, "Rebases can be negative" if validators are penalized, and the balance is derived from a share count whose value changes with each report. Transfers can arrive 1 to 2 wei short because of integer division, and "Most cross-chain token bridges have no mechanics to handle rebases." For an exchange:
+stETH's balances change without anyone sending anything. Per Lido's integration guide, balances update when the oracle reports, "The rebase can be positive or negative, depending on the validators' performance," and the balance is derived from a share count whose value changes with each report. Transfers can arrive 1 to 2 wei short because of integer division, and "Most cross-chain token bridges have no mechanics to handle rebases." For an exchange:
 
 - **Customer balances can't be a copy of the chain's numbers.** Either the platform passes rebases through (posting a daily rebase journal to every holder, positive or negative), or it supports only the non-rebasing wrapper (wstETH), whose balance is fixed and whose price rises.
 - **Event-driven crediting misses rebases,** because a rebase emits no per-holder `Transfer`. Reconciliation by balance catches it.
@@ -104,7 +104,7 @@ stETH's balances change without anyone sending anything. Per Lido's integration 
 
 ## NFTs: ERC-721 and ERC-1155
 
-ERC-721 (created January 24, 2018) identifies each token by a `uint256` ID inside its contract, so "the pair of contract address and tokenId" identifies the asset globally. `safeTransferFrom` checks whether the recipient is a contract and calls `onERC721Received`, reverting if the expected value doesn't come back. Approval is per token (`approve`) or per operator for everything the owner holds (`setApprovalForAll`: "The operator can manage all NFTs of the owner"). Metadata is optional: `tokenURI` returns a URI, usually to JSON off chain, which the contract doesn't guarantee stays the same.
+ERC-721 (created January 24, 2018) identifies each token by a `uint256` ID inside its contract, so the pair `(contract address, uint256 tokenId)` is "a globally unique and fully-qualified identifier" for the asset. `safeTransferFrom` checks whether the recipient is a contract and calls `onERC721Received`, reverting if the expected value doesn't come back. Approval is per token (`approve`) or per operator for everything the owner holds (`setApprovalForAll`: "The operator can manage all NFTs of the owner"). Metadata is optional: `tokenURI` returns a URI, usually to JSON off chain, which the contract doesn't guarantee stays the same.
 
 ERC-1155 (created June 17, 2018) puts any mix of fungible and non-fungible token types in one contract, transfers them singly or in batches (`TransferSingle`, `TransferBatch`), and has only operator-wide approval: "`setApprovalForAll` allows an operator to manage one's entire set of tokens on behalf of the approver."
 
@@ -196,7 +196,7 @@ CREATE TABLE token_admin_changes (         -- changes to a listed token's powers
   kind             TEXT NOT NULL CHECK (kind IN ('upgraded', 'admin_changed', 'paused',
                      'unpaused', 'blacklisted', 'unblacklisted', 'role_changed', 'funds_destroyed')),
   subject_address  TEXT,                   -- the address blacklisted, the new implementation
-  affects_platform BOOLEAN NOT NULL,       -- one of our addresses, or a listed behavior change
+  affects_platform BOOLEAN NOT NULL,       -- a platform address, or a listed behavior change
   case_id          UUID REFERENCES cases (id),
   detected_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -208,7 +208,7 @@ Notes on the sketch:
 - **NFT identity.** An ERC-721 or ERC-1155 holding is an `asset_networks` row for the collection plus a token ID carried on the position and on each journal line's metadata; quantity is 1 for ERC-721 and any integer for ERC-1155.
 - **Controls are read, not assumed.** A job reads the EIP-1967 slots and role holders of every listed token daily and updates `token_contracts`; a difference writes a `token_admin_changes` row.
 - **An upgrade pauses the asset.** `upgraded` on a listed token sets `deposits_enabled` and `withdrawals_enabled` false on that `asset_networks` row until a person reviews the new implementation, and emits `asset_network.paused` through the [outbox](/docs/architecture/events#the-transactional-outbox).
-- **A blacklist hit on our address is a case.** `blacklisted` with a platform address as subject opens a `cases` row and moves affected customer balances to a restricted ledger account.
+- **A blacklist hit on a platform address is a case.** `blacklisted` with a platform address as subject opens a `cases` row and moves affected customer balances to a restricted ledger account.
 - **Unlisted tokens never credit.** Transfers from contracts that have no `asset_networks` row are recorded and reviewed as misdirected deposits ([Deposits & Withdrawals](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals)), never shown as balances.
 - **Payments' `assets`** table is this volume's `instruments` plus `asset_networks`: its `code` ('USDC.ethereum') is one `asset_networks` row, and its `decimals` is `decimals_on_chain`.
 
@@ -251,7 +251,7 @@ Notes on the sketch:
 - [Circle: Transfer USDC on Solana](https://developers.circle.com/stablecoins/quickstart-transfer-10-usdc-on-solana), USDC's six decimal places
 - [Lido: Tokens integration guide](https://docs.lido.fi/guides/lido-tokens-integration-guide), stETH rebases and shares, the 1 to 2 wei corner case and wstETH for DeFi and bridges
 - [OpenZeppelin Contracts 5.x: ERC-20](https://docs.openzeppelin.com/contracts/5.x/api/token/erc20), the 18-decimal default, `SafeERC20`, `forceApprove` and permit limitations for contract wallets
-- [Uniswap: Permit2 overview](https://developers.uniswap.org/contracts/permit2/overview), signature-based allowances and transfers with expirations
+- [Uniswap: Permit2 overview](https://developers.uniswap.org/docs/protocols/permit2/overview), one approval per token, signature-based allowances with expirations and one-time transfers
 
 **In practice**
 

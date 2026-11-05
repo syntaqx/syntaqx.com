@@ -20,8 +20,8 @@ Published methodologies and terms, as of November 2026:
 
 | Platform | What it harvests | Wash sale protection | What it says about results |
 | --- | --- | --- | --- |
-| **Betterment** | ETF lots in managed taxable portfolios; a primary, secondary and tertiary ticker per asset class (developed markets: VEA, SCHF, IEFA); harvests when "the benefit, net of cost, exceeds a certain threshold," with cost including trading, execution and the higher cost of owning the replacement | Tertiary tickers keep IRA deposits from washing taxable losses; coordination with a spouse's Betterment account on request; "Parallel Position Management" holds alternates instead of switching back after 30 days | "69% of TLH customers in 2022–2023 saw potential savings exceeding their fees" (company estimate) |
-| **Wealthfront** | "Every ETF tax lot in each eligible account every day"; sells a lot below basis and buys the same dollar amount of a "similar but not substantially identical" ETF (US stocks: VTI and ITOT) when the expected benefit outweighs trading and opportunity costs | Holds the alternate "for a minimum of 30 days"; monitors linked spousal accounts and IRAs on request; outside accounts are the client's responsibility | "the median ratio of tax benefit to fee is 4.2x"; an average harvesting yield of 4.00% for risk score 8 accounts across 2012 to 2025 vintages (company figures) |
+| **Betterment** | ETF lots in managed taxable portfolios; a primary, secondary and tertiary ticker per asset class (developed markets: VEA, SCHF, IEFA); harvests when "the benefit, net of cost, exceeds a certain threshold," with cost including trading, execution and the higher cost of owning the replacement | Tertiary tickers keep IRA deposits from washing taxable losses; coordination with a spouse's Betterment account on request; "Parallel Position Management" holds alternates instead of switching back after 30 days 69% of TLH customers in 2022 and 2023 "saw potential savings in excess of the Betterment fees charged on their taxable accounts for the year" (company estimate) |
+| **Wealthfront** | "Every ETF tax lot in each eligible account every day"; sells a lot below basis and buys the same dollar amount of "a similar, but not substantially identical, ETF" (US stocks: VTI and ITOT) when the expected benefit outweighs trading and opportunity costs | Holds the alternate "for a minimum of 30 days"; monitors linked spousal accounts and IRAs on request; outside accounts are the client's responsibility | "the median ratio of tax benefit to fee is 4.2x"; an average harvesting yield of 4.00% for risk score 8 accounts across 2012 to 2025 vintages (company figures) |
 | **Wealthfront** (direct indexing) | S&P 500 Direct at 0.09% a year, Nasdaq-100 at 0.12%, $5,000 minimum (as of September 10, 2026) | | |
 | **Frec** | 26 indices, fees from 0.09% (S&P 500, $5,000 minimum) to 0.35%, minimums $5,000 to $50,000 (Russell 1000 at 0.22% and $20,000) | | A simulated long-only Russell 1000 after-tax excess return of 1.34% over 2005 to 2025 (hypothetical, company figure) |
 
@@ -106,8 +106,8 @@ Platforms price direct indexing at 0.09% (Wealthfront's and Frec's S&P 500) to 0
 
 Every sale in a taxable managed account chooses lots, and harvesting changes which choice is right:
 
-- **For harvests:** the lots with the largest loss per share, short-term first if the customer has short-term gains to offset (Betterment sells losses first and short-term gains last).
-- **For rebalances and withdrawals:** the highest-basis lots, to realize the least gain, with long-term preferred over short-term when both have gains. A tax-minimizing method is a standing election per account ([Lot Relief Methods](/books/investing-and-digital-assets/cost-basis-and-tax-lots#lot-relief-methods)).
+- **For harvests:** the lots with the largest loss per share, short-term first if the customer has short-term gains to offset.
+- **For rebalances and withdrawals:** the highest-basis lots, to realize the least gain, with long-term preferred over short-term when both have gains (Betterment's withdrawals "always sell any losses first," and short-term gain lots "are the last to be sold"). A tax-minimizing method is a standing election per account ([Lot Relief Methods](/books/investing-and-digital-assets/cost-basis-and-tax-lots#lot-relief-methods)).
 - **For fees:** a fee-funding sale is a sale like any other; picking a loss lot for it can wash against a recent purchase, so the engine runs the same window check.
 - **Gifts and donations:** the lowest-basis, longest-held lots go to charity, which removes the deferred gain entirely.
 
@@ -247,6 +247,10 @@ Harvesting is examined as advice (did it do what the brochure says), as marketin
 **Law and regulation**
 
 - [17 CFR 275.206(4)-1: Investment adviser marketing](https://www.law.cornell.edu/cfr/text/17/275.206(4)-1), hypothetical performance conditions in (d)(6) and the substantiation requirement in (a)(2)
+
+**Regulators and guidance**
+
+- [IRS: Publication 550, Investment Income and Expenses](https://www.irs.gov/publications/p550), wash sales triggered by a spouse's purchase and by an IRA or Roth IRA purchase, with no basis added in the IRA case
 
 **Vendor documentation**
 

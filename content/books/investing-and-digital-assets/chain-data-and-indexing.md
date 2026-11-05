@@ -23,7 +23,7 @@ The tools a platform reads chains with, from their documentation, as of November
 | **Bitcoin Core ZMQ** | Push notifications from a node | `hashblock`, `rawblock`, `hashtx`, `rawtx`, and `sequence`, which reports blocks connected and disconnected | "ZMQ notification can get lost during transmission"; sequence numbers detect gaps |
 | **Anza Geyser plugins** | A validator streaming its own data | Accounts, slots, blocks and transactions to external stores (Postgres, Kafka); slot status `Processed`, `Confirmed`, `Rooted` | Runs inside a validator or RPC node; confirmed can arrive before processed |
 | **The Graph** | Hosted and decentralized indexing | Subgraphs ("a custom API built on blockchain data") queried with GraphQL; Substreams for parallel indexing written in Rust, compiled to WASM | Handles forks inside the engine; the platform still owns crediting rules |
-| **Goldsky** | Managed chain data pipelines | Mirror pipelines into the platform's own database; Turbo is the recommended product for new pipelines | Product line changing; check what is current |
+| **Goldsky** | Managed chain data pipelines | Mirror streams data such as subgraph entities into a database of the platform's choice | Mirror "has been superseded by Turbo," which Goldsky says to use for all new pipelines |
 
 None of these is the platform's ledger. They are sources; the ingestion pipeline turns their output into records with block hashes and finality states, and the platform's own rules decide what those records mean.
 
@@ -52,7 +52,7 @@ type Block struct {
 }
 
 type Store interface {
-	CanonicalAt(n uint64) (Block, bool) // our stored canonical block at height n
+	CanonicalAt(n uint64) (Block, bool) // the stored canonical block at height n
 	OrphanFrom(n uint64) error          // marks n and above orphaned and emits reversals
 }
 
@@ -60,7 +60,7 @@ type Node interface {
 	BlockByNumber(n uint64) (Block, error)
 }
 
-// ForkPoint returns the highest height at or below head where our chain and the
+// ForkPoint returns the highest height at or below head where the stored chain and the
 // node's agree. It never searches below finalized: disagreement there is an incident.
 func ForkPoint(s Store, node Node, head, finalized uint64) (uint64, error) {
 	for n := head + 1; n > finalized; {
@@ -98,7 +98,7 @@ pub struct Block {
 }
 
 pub trait Store {
-    fn canonical_at(&self, n: u64) -> Option<Block>;  // our stored canonical block at height n
+    fn canonical_at(&self, n: u64) -> Option<Block>;  // the stored canonical block at height n
     fn orphan_from(&mut self, n: u64) -> anyhow::Result<()>;  // marks n and above orphaned
 }
 
@@ -106,7 +106,7 @@ pub trait Node {
     fn block_by_number(&self, n: u64) -> anyhow::Result<Block>;
 }
 
-/// Highest height at or below `head` where our chain and the node's agree.
+/// Highest height at or below `head` where the stored chain and the node's agree.
 /// Never searches below `finalized`: disagreement there is an incident.
 pub fn fork_point(s: &impl Store, node: &impl Node, head: u64, finalized: u64) -> anyhow::Result<u64> {
     for n in (finalized..=head).rev() {
@@ -161,7 +161,7 @@ The cleanest reconciliation is the chain's own answer: the balance of each platf
 Three ways to get from raw chain data to queryable records:
 
 - **Build it.** Run nodes, follow heads, decode logs and traces into the platform's own tables. The most control, and the only option for the ledger-facing path, because the crediting rules and the audit trail belong to the platform.
-- **Use an indexing protocol or managed pipeline.** The Graph's subgraphs map events to entities queried by GraphQL; Substreams transforms blocks in parallel in Rust compiled to WASM and writes to a sink; managed pipelines such as Goldsky's write decoded chain data into the platform's own database. Good for product features (history screens, portfolio views, analytics) where a delay or a provider outage degrades a page rather than a balance.
+- **Use an indexing protocol or managed pipeline.** The Graph's subgraphs map events to entities queried by GraphQL; Substreams transforms blocks in parallel in Rust compiled to WASM and writes to a sink; managed pipelines such as Goldsky's stream indexed data into a database the platform chooses. Good for product features (history screens, portfolio views, analytics) where a delay or a provider outage degrades a page rather than a balance.
 - **Use a data warehouse provider.** Hosted SQL over decoded chain data serves analytics, research and investigations, joined with the platform's own data in its warehouse ([Separating Production and Analytics](/docs/data/separating-production-and-analytics)).
 
 My default: the ledger-facing path (deposits, withdrawals, reconciliation, proof of reserves) is built in-house on the platform's own nodes with a provider as second source; everything customer-facing that isn't a balance can use an indexer; analytics use whatever is cheapest to query, with the chain as the tiebreaker.
@@ -174,7 +174,7 @@ A crypto platform marks positions around the clock: for portfolio values, margin
 
 - **The platform's own order books.** Always available, and dangerous alone. On October 10, 2025, USDe "traded in the mid-$0.60s on Binance" while it "stayed much closer to $1" elsewhere, and because "many leveraged products priced collateral using the venue's own spot price," accounts that would have been solvent under cross-venue pricing were liquidated (FTI Consulting's analysis). The lesson FTI draws: "Multi-venue, liquidity-weighted oracles with outlier controls" should "become standard."
 - **External venue data.** Trades and books from other exchanges, aggregated by the platform or bought from a market data vendor; the methodology (which venues, how weighted, how outliers are excluded) is the vendor's product.
-- **On-chain oracles.** For DeFi integrations and for marking tokens that trade mostly on chain. Pyth's documentation describes two models: one where "Each transaction carries a signed price, verified on the spot," and one where "A signed update is verified and stored on-chain" and "Any contract can read the stored price until a newer update replaces it." Push-model feeds update on a deviation threshold or a heartbeat, so a reader checks the update time against the feed's heartbeat before trusting a value. <!-- source-gap: chainlink-feed-parameters | missing | Chainlink Data Feeds update on deviation thresholds and heartbeats, and consumers check updatedAt for staleness | closes with: docs.chain.link data feeds overview and API reference pages opened (404 to fetcher on 2026-11-05) | checked: 2026-11-05 --> The specific parameters for the most used push-model feeds aren't sourced here because their documentation didn't load for this chapter.
+- **On-chain oracles.** For DeFi integrations and for marking tokens that trade mostly on chain. Pyth's documentation describes two models: one where "Each transaction carries a signed price, verified on the spot," and one where "A signed update is verified and stored on-chain" and "Any contract can read the stored price until a newer update replaces it." Chainlink's push-model feeds start a new aggregation round when off-chain values deviate beyond a threshold or when a heartbeat interval has passed since the last update ("The first condition that is met triggers an update"), and `latestRoundData` returns an `updatedAt` timestamp "for checking data freshness," so a reader compares it with the feed's heartbeat before trusting a value.
 
 ### A mark methodology
 
@@ -215,7 +215,7 @@ CREATE TABLE observed_transfers (         -- decoded logs, trace transfers, acco
   from_address     TEXT,
   to_address       TEXT,
   amount_base      NUMERIC(78,0),
-  touches_platform BOOLEAN NOT NULL,       -- any of our addresses involved
+  touches_platform BOOLEAN NOT NULL,       -- any platform address involved
   FOREIGN KEY (chain_id, block_hash) REFERENCES blocks (chain_id, hash),
   UNIQUE (chain_id, block_hash, tx_hash, position)
 );
@@ -296,8 +296,10 @@ Notes on the sketch:
 - [Anza: Geyser plugins](https://docs.anza.xyz/validator/geyser), streaming accounts, slots, blocks and transactions and slot statuses
 - [The Graph: Subgraphs](https://thegraph.com/docs/en/subgraphs/developing/introduction/), custom APIs over blockchain data queried with GraphQL
 - [The Graph: Substreams](https://thegraph.com/docs/en/substreams/overview/), parallel indexing in Rust compiled to WASM
-- [Goldsky: Mirror](https://docs.goldsky.com/mirror/introduction), managed pipelines and the move to Turbo for new pipelines
+- [Goldsky: Mirror](https://docs.goldsky.com/mirror/introduction), streaming subgraph entities into a chosen database and Turbo superseding Mirror for new pipelines
 - [Pyth: Pull updates](https://docs.pyth.network/price-feeds/core/pull-updates), per-transaction signed prices and stored on-chain updates
+- [Chainlink: Decentralized data model (documentation source)](https://github.com/smartcontractkit/documentation/blob/main/src/content/architecture-overview/architecture-decentralized-model.mdx), deviation and heartbeat thresholds and the first one met triggering an update
+- [Chainlink: Data Feeds API reference (documentation source)](https://github.com/smartcontractkit/documentation/blob/main/src/content/data-feeds/api-reference.mdx), `latestRoundData` and its `updatedAt` timestamp for checking freshness
 
 **In practice**
 
