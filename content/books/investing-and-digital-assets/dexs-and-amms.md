@@ -213,7 +213,7 @@ The engineering differences from an AMM swap: the order is an off-chain signatur
 
 An order book can also be the chain. Hyperliquid's HyperCore keeps margin and matching engine state in consensus: it "does not rely on the crutch of off-chain order books," is "secured by HyperBFT, a variant of HotStuff consensus," and "currently supports approximately 200k orders/sec," with "end-to-end latency" of "a median 0.2 seconds and 99th percentile 0.9 seconds" for a co-located client, by its own documentation. "The Hyperliquid state consists of HyperCore and the general purpose HyperEVM," so contracts on the EVM side can interact with the book.
 
-For an integrator this behaves more like a centralized exchange's API than a pool: limit orders, cancels and price-time priority, with a validator set rather than a company running the matching engine. It removes AMM price impact and impermanent loss and brings back the order book's problems: thin books, market maker withdrawal under stress, and liquidations driven by the venue's own marks (Perpetuals & Crypto Derivatives). The matching engine itself is Order Books & Matching Engines.
+For an integrator this behaves more like a centralized exchange's API than a pool: limit orders, cancels and price-time priority, with a validator set rather than a company running the matching engine. It removes AMM price impact and impermanent loss and brings back the order book's problems: thin books, market maker withdrawal under stress, and liquidations driven by the venue's own marks (Perpetuals & Crypto Derivatives). The matching engine itself is [Order Books & Matching Engines](/books/investing-and-digital-assets/order-books-and-matching).
 
 ## How to Build It
 
