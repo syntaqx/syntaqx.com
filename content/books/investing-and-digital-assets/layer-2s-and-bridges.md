@@ -19,10 +19,10 @@ As published by the projects and by ETHBEAT (the risk tracker formerly called L2
 | System | Kind | Who orders or attests | Withdrawal or settlement to Ethereum | Upgrade and exit terms |
 | --- | --- | --- | --- | --- |
 | **OP Stack** (OP Mainnet and chains built on it) | Optimistic rollup | A sequencer | Initiate on L2, prove on L1 against a fault dispute game, finalize after "the fault challenge period (7 days on mainnet)" | Per chain |
-| **Base** | OP Stack optimistic rollup, chain ID 8453 | One sequencer, which "can be modified by Base Multisig 1"; batch sender, output proposer and challenger are each an "EOA managed by Coinbase Technologies" | ETHBEAT lists a 5-day challenge period; OP Stack fault proofs since October 30, 2024, and TEE and ZK proof arms added May 26, 2026 | ETHBEAT: Stage 1; exit window "None" for unwanted upgrades |
-| **Arbitrum One** | Optimistic rollup | A sequencer | Messages via `ArbSys.sendTxToL1`, executed on L1 with a Merkle proof once the assertion is confirmed; the docs give the dispute window as "~6.4 days" in one place and "approximately 7-day" in another | Per its governance |
+| **Base** | OP Stack optimistic rollup, chain ID 8453 | One sequencer, which "can be modified by Base Multisig 1"; batch sender, output proposer and challenger are each an "EOA managed by Coinbase Technologies" | ETHBEAT lists a 5-day challenge period (1 day when both proof arms commit); OP Stack fault proofs since October 30, 2024, and TEE and ZK proof arms added May 26, 2026 | ETHBEAT: Stage 1; exit window "None" for unwanted upgrades |
+| **Arbitrum One** | Optimistic rollup | A sequencer | Messages via `ArbSys.sendTxToL1`, executed on L1 with a Merkle proof once the assertion is confirmed; the docs give the dispute window as "6.4 days" in one place and "approximately 7-day" in another | Per its governance |
 | **ZK rollups** (generic) | Validity rollup | An operator | "There are no delays when moving funds from a ZK-rollup to Ethereum" once the L1 contract accepts the validity proof | Per chain |
-| **Circle CCTP** | Burn-and-mint for USDC (and registered tokens) | Circle's attestation service (Iris) | Standard: waits about 65 Ethereum blocks (15 to 19 minutes) on Ethereum, Arbitrum and Base; fast: 2 blocks on Ethereum, 1 on Base, with a fee of 0 to 13 basis points by source chain | "Standard Transfers are free" on most deployments |
+| **Circle CCTP** | Burn-and-mint for USDC (and registered tokens) | Circle's attestation service (Iris) | Standard: waits about 65 Ethereum blocks (15 to 19 minutes) on Ethereum, Arbitrum and Base; fast: 2 blocks on Ethereum, 1 on Arbitrum and Base, with a fee set per source chain (1 basis point from Ethereum, 1.3 from Base, 13 from Linea on November 5, 2026) | "Standard Transfers are free" on most deployments |
 | **LayerZero v2** | Messaging; tokens via the OFT standard | Decentralized verifier networks (DVNs) chosen per application pathway as "X-of-Y-of-N" | The destination executes once the configured DVNs verify | Each application sets its own security |
 
 The column that matters most for a custodian is the last one: who can change the contracts that hold the money, and whether users get time to leave first.
@@ -35,13 +35,13 @@ An optimistic rollup posts transaction data to Ethereum and a claim about the re
 
 ### Data on Ethereum: blobs
 
-Since Dencun (March 13, 2024), rollups post data as blobs under EIP-4844: each blob is 4,096 field elements of 32 bytes, 131,072 bytes, priced by a separate blob base fee that rises or falls exponentially with demand above or below a target (the update fraction of 3,338,477 gives roughly 1.125x per block, like EIP-1559's one-eighth), and burned. The original target was 3 blobs per block with a maximum of 6; Pectra raised them to 6 and 9, and Fusaka added blob-parameter-only forks to raise them between upgrades. Nodes keep blobs for 4,096 epochs, about 18 days (4,096 × 32 × 12 s), after which a rollup's history depends on archivers, not Ethereum.
+Since Dencun (March 13, 2024), rollups post data as blobs under EIP-4844: each blob is 4,096 field elements of 32 bytes, 131,072 bytes, priced by a separate blob base fee that rises or falls exponentially with demand above or below a target, and burned. The original target was 3 blobs per block with a maximum of 6, and the update fraction of 3,338,477 capped the move at roughly 1.125x per block, like EIP-1559's one-eighth. Pectra (May 7, 2025) raised the target and maximum to 6 and 9 and retuned the fraction to 5,007,716, so a full block now raises the fee about 8.2% and an empty one cuts it about 14.5%; Fusaka (December 3, 2025) added blob-parameter-only forks to raise them between upgrades. Nodes keep blobs for 4,096 epochs, about 18 days (4,096 × 32 × 12 s), after which a rollup's history depends on archivers, not Ethereum.
 
 ### Sequencers
 
 The sequencer "has priority access to the rollup chain" and decides the order of transactions. On most rollups there is one, run by the rollup's operator, which brings three consequences an exchange has to plan for:
 
-- **A sequencer outage stops the chain.** Ethereum keeps producing blocks, but the rollup produces none; deposits and withdrawals on it stop, and the forced-inclusion path works only after its delay. <!-- source-gap: base-sequencer-outage-2025 | secondary | Base sequencer outage on Aug 5, 2025 (about 33 minutes, failover to an unprovisioned sequencer) | closes with: Base status page or Base engineering post-mortem opened | checked: 2026-11-05 --> Rollup sequencer outages have happened in production; this chapter gives no incident durations because only press accounts of them were available.
+- **A sequencer outage stops the chain.** Ethereum keeps producing blocks, but the rollup produces none; deposits and withdrawals on it stop, and the forced-inclusion path works only after its delay. Base's status page records one: on June 25, 2026 it reported block production unhealthy at 16:03 UTC, traced it to "a consensus problem that caused an invalid block to be sequenced" after block 47806542, and reported sequencing resumed at 17:51 UTC; the chain halted again the next day from 15:33 to 15:47 UTC, and each time node operators had to restart their nodes to resume syncing.
 - **The sequencer's confirmation is a promise.** A transaction is ordered in seconds, but it is final only when the batch carrying it is posted to Ethereum and Ethereum finalizes that block.
 - **The sequencer sees order flow first,** which is a conflict when the operator also trades (below).
 
@@ -84,7 +84,7 @@ The distinction that matters for an exchange: a wrapped token from a lock-and-mi
 
 ### Circle's CCTP
 
-CCTP is "a permissionless onchain utility" that burns USDC on the source chain and mints it on the destination after Circle's attestation, with no liquidity pool in between. A standard transfer waits for the source chain's hard finality (about 65 blocks on Ethereum and the rollups that settle to it, 32 blocks or about 17 seconds on Solana); a fast transfer attests after a few blocks (2 on Ethereum, about 20 seconds; 1 on Base, about 8 seconds) and is backed by "Circle's Fast Transfer allowance," for a fee of 0 to 13 basis points depending on the source chain; Circle's documentation says "Do not hardcode fee values" and to read them from its fee API. Hooks let the destination chain run an action on arrival. For an exchange rebalancing USDC between chains, CCTP replaces a 7-day canonical withdrawal with minutes and replaces a third-party bridge's risk with the issuer's, which it already carries by holding USDC at all.
+CCTP is "a permissionless onchain utility" that burns USDC on the source chain and mints it on the destination after Circle's attestation, with no liquidity pool in between. A standard transfer waits for the source chain's hard finality (about 65 blocks on Ethereum and the rollups that settle to it, 32 blocks or about 17 seconds on Solana); a fast transfer attests after a few blocks (2 on Ethereum, about 20 seconds; 1 on Base, about 8 seconds) and is backed by "Circle's Fast Transfer allowance," for a fee set per source chain (Circle's fee API returned 1 basis point from Ethereum, 1.3 from Base and 13 from Linea on November 5, 2026, and some chains charge none); Circle's documentation says "Do not hardcode fee values" and to read them from its fee API. Hooks let the destination chain run an action on arrival. For an exchange rebalancing USDC between chains, CCTP replaces a 7-day canonical withdrawal with minutes and replaces a third-party bridge's risk with the issuer's, which it already carries by holding USDC at all.
 
 ### Messaging networks
 
@@ -233,8 +233,9 @@ Notes on the sketch:
 - [EIP-4844: Shard blob transactions](https://eips.ethereum.org/EIPS/eip-4844), blob size, original target and maximum, the blob base fee and retention
 - [Ethereum: Optimistic rollups](https://ethereum.org/en/developers/docs/scaling/optimistic-rollups/), the sequencer, direct submission to the rollup contract and the seven-day challenge period
 - [Ethereum: ZK-rollups](https://ethereum.org/en/developers/docs/scaling/zk-rollups/), no withdrawal delay after proof acceptance, the operator and forced exits
-- [Ethereum: Pectra](https://ethereum.org/en/roadmap/pectra/), the blob target and maximum raised to 6 and 9
-- [Ethereum: Fusaka](https://ethereum.org/en/roadmap/fusaka/), blob-parameter-only forks
+- [EIP-7691: Blob throughput increase](https://eips.ethereum.org/EIPS/eip-7691), the Pectra update fraction of 5,007,716 and the 8.2% and 14.5% per-block moves
+- [Ethereum: Pectra](https://ethereum.org/en/roadmap/pectra/), the blob target and maximum raised to 6 and 9, activated May 7, 2025
+- [Ethereum: Fusaka](https://ethereum.org/en/roadmap/fusaka/), blob-parameter-only forks, live December 3, 2025
 - [Ethereum: History of forks](https://ethereum.org/en/ethereum-forks/), Dencun on March 13, 2024
 
 **Vendor documentation**
@@ -243,11 +244,13 @@ Notes on the sketch:
 - [Arbitrum: L2-to-L1 messaging](https://docs.arbitrum.io/how-arbitrum-works/deep-dives/l2-to-l1-messaging), `sendTxToL1`, assertions, the Outbox and the dispute window
 - [Base: Connecting to Base](https://docs.base.org/base-chain/quickstart/connecting-to-base), chain ID 8453 and the sequencer endpoint
 - [Base: Contracts](https://docs.base.org/base-chain/network-information/base-contracts), operating roles as EOAs managed by Coinbase Technologies
+- [Base status: Base Mainnet Chain Stall (June 25 to 26, 2026)](https://base-l2.statuspage.io/incidents/5c4gm1wzbjs4), the invalid block after 47806542, the timeline and node restarts
 - [ETHBEAT: Base](https://ethbeat.org/scaling/projects/base), Stage 1, the sequencer and Base Multisig 1, fault proofs since October 30, 2024, the added proof arms, the 5-day challenge period and no exit window
 - [ETHBEAT: Stages](https://ethbeat.org/stages), the Stage 0, 1 and 2 requirements and the rename from L2BEAT
 - [Circle: CCTP](https://developers.circle.com/cctp), burn-and-mint, attestation and hooks
 - [Circle: CCTP required block confirmations](https://developers.circle.com/cctp/required-block-confirmations), standard and fast waits per chain
-- [Circle: CCTP fees](https://developers.circle.com/cctp/concepts/fees), fast transfer fees by source chain, the fast transfer allowance and free standard transfers
+- [Circle: CCTP fees](https://developers.circle.com/cctp/concepts/fees), the fee API, the fast transfer allowance, free standard transfers and the advice not to hardcode fees
+- [Circle Iris API: USDC fees from Ethereum](https://iris-api.circle.com/v2/burn/USDC/fees/0/6), [from Base](https://iris-api.circle.com/v2/burn/USDC/fees/6/0) and [from Linea](https://iris-api.circle.com/v2/burn/USDC/fees/11/0), fast transfer minimum fees of 1, 1.3 and 13 basis points on November 5, 2026
 - [Circle: USDC contract addresses](https://developers.circle.com/stablecoins/usdc-contract-addresses), bridged USDC.e not issued by Circle
 - [LayerZero: Message security](https://docs.layerzero.network/v2/concepts/protocol/message-security), DVNs per pathway and X-of-Y-of-N configuration
 - [LayerZero v2 documentation](https://docs.layerzero.network/v2), the OFT standard
@@ -257,5 +260,5 @@ Notes on the sketch:
 - [Chainalysis: Cross-chain bridge hacks in 2022 (August 2, 2022)](https://www.chainalysis.com/blog/cross-chain-bridge-hacks-2022/), $2 billion across 13 hacks, 69% of funds stolen and about $1 billion by North Korea-linked hackers
 - [CertiK: Wormhole bridge exploit incident analysis](https://www.certik.com/resources/blog/wormhole-bridge-exploit-incident-analysis), the 120,000 wETH mint, the unchecked sysvar account and Jump's replacement (secondary)
 - [Halborn: Explained, the Ronin hack (March 2022)](https://www.halborn.com/blog/post/explained-the-ronin-hack-march-2022), amounts, the 5-of-9 threshold, the unrevoked Axie DAO allowlist and discovery six days later (secondary)
-- [Mandiant: Dissecting the Nomad bridge hack](https://cloud.google.com/blog/topics/threat-intelligence/dissecting-nomad-bridge-hack), the zero trusted root, `process()`, copycats and funds returned (secondary)
+- [Mandiant: Dissecting the Nomad bridge hack](https://cloud.google.com/blog/topics/threat-intelligence/dissecting-nomad-bridge-hack), the zero trusted root (quoting Halborn), copycats, over $190 million taken and $36 million returned (secondary)
 - [Decrypt: Multichain shutters operations (July 14, 2023)](https://decrypt.co/148559/multichain-shutters-operations-chinese-police-take-ceo-sister-custody), the CEO's detention, server access and assets moved from MPC wallets (press)

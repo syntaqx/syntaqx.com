@@ -18,9 +18,9 @@ What exchanges and custody vendors publish about moving coins in and out, as of 
 | Platform | Deposit side | Withdrawal side |
 | --- | --- | --- |
 | **Binance** | Network chosen by the customer must match the sending platform's; memo required on some networks and tag for XRP or the deposit "cannot be detected"; a wrong network means funds "might be lost and cannot be recovered" | Proof of reserves covers liabilities; withdrawal policy not detailed on the deposit pages |
-| **BitGo** | Every wallet is 2-of-3 (user, backup, BitGo key); Ethereum receive addresses are forwarder contracts whose ERC-20 balances BitGo can consolidate with one signature (`flushForwarderTokens`); the BitGo-key address is the gas tank | Custody wallets are all cold; on-chain withdrawals from custody completed within a 24-hour SLA after verification and review |
-| **Circle** (CCTP) | Publishes the blocks it waits for per chain: hard finality, and a faster soft-finality option on some chains | Burn-and-mint across chains, attested after the source chain's finality |
-| **Coinbase** | Trading entities hold customer crypto in omnibus wallets with a ledger; custody entities in dedicated addresses | Discloses that it may "experience temporary process-related withdrawal delays"; reimbursed retail customers socially engineered into sending funds after its 2025 support-data theft |
+| **BitGo** | Every wallet is 2-of-3 (user, backup, BitGo key); Ethereum receive addresses are forwarder contracts whose ERC-20 balances BitGo can consolidate with one signature (`flushForwarderTokens`); the BitGo-key address is the gas tank | Custody wallets are all cold; an SLA to complete on-chain withdrawals from custody wallets within 24 hours |
+| **Circle** (CCTP) | Publishes the blocks it waits for per chain: hard finality for a Standard Transfer, and a faster Fast Transfer on some chains | Burn-and-mint across chains, attested after hard finality for a Standard Transfer or after a block or two for a Fast Transfer |
+| **Coinbase** | Trading entities hold customer crypto in omnibus wallets with a ledger; custody entities in dedicated addresses | Discloses that it may "experience temporary process-related withdrawal delays"; offered to reimburse customers who sent funds to the threat actor after its 2025 support-data theft |
 | **Fireblocks** | Each asset wallet has at least one deposit address; in retail omnibus setups, a completed deposit to an end-client vault triggers a sweep to the omnibus vault | Gas Station auto-fuels a vault with the base asset when a deposit or withdrawal is detected; hot, warm and cold defined by where the approving key share sits |
 | **Gemini** | Customer custodial funds in segregated bank accounts | Address allowlisting restricts withdrawals to approved addresses; 2FA required for withdrawals |
 | **Kraken** | Bitcoin credited after 3 confirmations; privacy-feature deposits (Litecoin MWEB, Dash PrivateSend, private Aleo transfers) and Zcash block rewards not credited; a published fee table for recovering mistaken deposits | Email confirmation to add a withdrawal address; a global settings time lock |
@@ -61,7 +61,7 @@ A deposit is credited when the exchange believes the chain won't take it back. E
 | --- | --- | --- |
 | **Bitcoin** | Probabilistic: each block on top makes a reorg less likely | Kraken credits after 3 confirmations. Since Bitcoin Core 28.0 (October 2, 2024), `mempoolfullrbf` defaults to on, so any unconfirmed transaction can be replaced: zero-confirmation credit is unsafe regardless of whether the sender signaled replaceability |
 | **Ethereum** | Checkpoint finality: 12-second slots, 32-slot epochs; a checkpoint is finalized when a later one is justified by votes from two-thirds of staked ETH | Reverting a finalized block costs at least one-third of all staked ETH. JSON-RPC exposes `safe` and `finalized` block tags. Circle waits about 65 blocks, 15 to 19 minutes, for hard finality |
-| **Ethereum rollups** (Arbitrum, Base, OP Mainnet) | The sequencer's quick confirmation, then the batch's finality on Ethereum | Circle's hard finality is about 65 Ethereum blocks, 15 to 19 minutes; its soft finality is 1 block, about 8 seconds. Withdrawals from a rollup to Ethereum are a separate, days-long process (below) |
+| **Ethereum rollups** (Arbitrum, Base, OP Mainnet) | The sequencer's quick confirmation, then the batch's finality on Ethereum | Circle's Standard Transfer waits for hard finality, about 65 Ethereum blocks, 15 to 19 minutes; its Fast Transfer attests after 1 block, about 8 seconds. Withdrawals from a rollup to Ethereum are a separate, days-long process (below) |
 | **Solana** | Commitment levels: processed (may roll back), confirmed (66%+ of stake voted), finalized (31+ confirmed blocks on top) under Tower BFT | Circle waits 32 blocks, about 17 seconds. Under the Alpenglow consensus, live on mainnet-beta since October 21, 2026, confirmed and finalized are the same status |
 | **Polygon PoS** | Milestone finality | Circle waits 2 to 3 blocks, about 8 seconds |
 | **BNB Smart Chain** | Fast finality | Circle waits 3 blocks, about 2 seconds |
@@ -226,7 +226,7 @@ Ethereum's fee is gas used times (base fee plus priority fee); a plain ETH trans
 | Total for an EOA sweep | 81,000 | 0.0001701 | $0.51 |
 | Forwarder pull (assume 50,000 gas) | 50,000 | 0.000105 | $0.32 |
 
-A sweep rule I'd start from: sweep a deposit address when its balance is at least 20 times the sweep cost (so fees stay under 5% of what's moved), or when it's older than a day and above a dust floor, or immediately when a hot wallet needs the liquidity. At these prices, 20 × $0.51 is about $10, so a $5 USDC deposit waits for the next deposit to the same address or for cheaper gas. At a 50 gwei base fee the same sweep costs about $12.50 and the threshold rises to $250; the rule is in gas terms, so it adapts by itself. Sweeps are batched when the base fee is low and never block a withdrawal: a withdrawal is paid from the hot wallet, and the sweep refills the hot wallet later.
+A sweep rule I'd start from: sweep a deposit address when its balance is at least 20 times the sweep cost (so fees stay under 5% of what's moved), or when it's older than a day and above a dust floor, or immediately when a hot wallet needs the liquidity. At these prices, 20 × $0.51 is about $10, so a $5 USDC deposit waits for the next deposit to the same address or for cheaper gas. At a 50 gwei base fee the same sweep costs about $12.17 and the threshold rises to about $243; the rule is in gas terms, so it adapts by itself. Sweeps are batched when the base fee is low and never block a withdrawal: a withdrawal is paid from the hot wallet, and the sweep refills the hot wallet later.
 
 ### UTXO chains: consolidation, not sweeping
 
@@ -259,13 +259,13 @@ Allowed transitions: `requested → checking → (held ↔ checking) → approve
 What runs in `checking`, roughly in order of cost:
 
 - **Authentication and session:** a second factor at the time of the withdrawal, not just at login; Gemini requires 2FA for withdrawals by default.
-- **Address controls.** An allowlist (Gemini restricts withdrawals to allowlisted addresses; Kraken emails a confirmation before a new withdrawal address can be used, and offers a global settings time lock), a cooling period on newly added addresses, and address validation for the chain: format and checksum, not a known token contract, the right network.
+- **Address controls.** An allowlist (Gemini restricts withdrawals to allowlisted addresses; Kraken sends email confirmations for adding new withdrawal addresses, and offers a global settings time lock), a cooling period on newly added addresses, and address validation for the chain: format and checksum, not a known token contract, the right network.
 - **Account risk:** recent password, 2FA or email changes, a new device, a recent fiat deposit that could still be returned, velocity against the account's history. The account takeover patterns these defend against are in [Account Security & Fraud](/books/investing-and-digital-assets/account-security#withdrawal-holds-and-allowlists) and the Banking & Lending volume's [Account Takeover](/books/banking-and-lending/account-takeover-and-scams#account-takeover).
 - **Destination screening:** sanctions and exposure scoring of the destination address with a blockchain analytics provider, recorded with the provider, list version and result; the program behind it is in the Banking & Lending volume's [Sanctions Screening](/books/banking-and-lending/sanctions-screening).
 - **Travel Rule:** if the destination is another virtual asset service provider and the amount is over the threshold, the originator and beneficiary data must go with it (below).
 - **Hot wallet liquidity:** if the hot wallet can't cover the withdrawal within its limits, it waits for a refill from warm or cold storage rather than drawing the hot wallet below its floor ([Hot, Warm & Cold Wallets](/books/investing-and-digital-assets/hot-and-cold-wallets#withdrawal-liquidity)).
 
-Address controls matter more after a data breach than after a hack. Coinbase's May 2025 incident wasn't key theft: a threat actor paid support contractors to pull customer data from internal tools, and used it to socially engineer customers into sending funds. Coinbase estimated the cost at $180 million to $400 million and paid $311.2 million in 2025, much of it reimbursing customers. Address poisoning works the same seam from the other side: a USENIX Security 2025 study counted 270 million attack attempts against 17 million victims on Ethereum and BNB Smart Chain over two years, with at least $83.8 million lost, by planting look-alike addresses in a victim's history. A withdrawal form that autocompletes from transaction history invites it; one that picks from a verified address book doesn't. The exchange side of both is in [Exchange Security & Hacks](/books/investing-and-digital-assets/exchange-security); the scams themselves are the User-Generated Platforms volume's [Crypto Investment Scams](/books/user-generated-platforms/crypto-investment-scams).
+Address controls matter more after a data breach than after a hack. Coinbase's May 2025 incident wasn't key theft: a threat actor paid contractors or employees in support roles outside the US to pull customer data from internal systems, and Coinbase said it may reimburse customers who sent funds to the threat actor as a direct result. It preliminarily estimated the cost of remediation and reimbursements at "approximately $180 million to $400 million" and reported paying $311.2 million for the incident in 2025. Address poisoning works the same seam from the other side: a USENIX Security 2025 study counted 270 million attack attempts against 17 million victims on Ethereum and BNB Smart Chain over two years, with at least $83.8 million lost, by planting look-alike addresses in a victim's history. A withdrawal form that autocompletes from transaction history invites it; one that picks from a verified address book doesn't. The exchange side of both is in [Exchange Security & Hacks](/books/investing-and-digital-assets/exchange-security); the scams themselves are the User-Generated Platforms volume's [Crypto Investment Scams](/books/user-generated-platforms/crypto-investment-scams).
 
 ### Batching
 
@@ -290,7 +290,7 @@ Every replacement is a new transaction hash for the same withdrawal. The `withdr
 
 ### Withdrawals out of a rollup
 
-Withdrawing from a rollup to Ethereum is a protocol process, not a transfer. On OP Stack chains (Base among them) the withdrawal is initiated on L2, proved on L1 against a dispute game, and finalized after a seven-day challenge period; Arbitrum's is similar with its own dispute window. An exchange holding liquidity on both sides doesn't make customers wait: it pays the customer on Ethereum from its own Ethereum wallet and rebalances between chains on its own schedule, through the native bridge or a burn-and-mint service like CCTP. How bridges and rollup withdrawals work is in [Layer 2s, Bridges & Cross-Chain](/books/investing-and-digital-assets/layer-2s-and-bridges).
+Withdrawing from a rollup to Ethereum is a protocol process, not a transfer. On OP Stack chains (Base among them) the withdrawal is initiated on L2, proved on L1 against a dispute game, and finalized after the challenge period (7 days in the OP Stack docs; ETHBEAT lists 5 days for Base); Arbitrum's is similar with its own dispute window. An exchange holding liquidity on both sides doesn't make customers wait: it pays the customer on Ethereum from its own Ethereum wallet and rebalances between chains on its own schedule, through the native bridge or a burn-and-mint service like CCTP. How bridges and rollup withdrawals work is in [Layer 2s, Bridges & Cross-Chain](/books/investing-and-digital-assets/layer-2s-and-bridges).
 
 ## Wrong Networks and Recovery
 
@@ -483,7 +483,7 @@ What an examiner, auditor or incident reviewer asks for, and where it lives:
 
 **Filings**
 
-- [Coinbase Global: Form 8-K, Item 1.05 (May 14, 2025)](https://www.sec.gov/Archives/edgar/data/1679788/000167978825000094/coin-20250514.htm), support contractors paid to pull customer data, social engineering of customers, and the $180 million to $400 million estimate
+- [Coinbase Global: Form 8-K, Item 1.05 (May 14, 2025)](https://www.sec.gov/Archives/edgar/data/1679788/000167978825000094/coin-20250514.htm), support-role contractors or employees paid to pull customer data, possible reimbursement of customers who sent funds, and the $180 million to $400 million estimate
 - [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), omnibus and dedicated-address custody, temporary withdrawal delays, and $311.2 million paid in 2025 for the incident
 
 **Standards and protocols**
@@ -498,15 +498,16 @@ What an examiner, auditor or incident reviewer asks for, and where it lives:
 - [Ethereum: Fusaka](https://ethereum.org/en/roadmap/fusaka/), live December 3, 2025, and EIP-7825's 2^24 gas cap per transaction
 - [Anza: Commitment status](https://docs.anza.xyz/consensus/commitments), processed, confirmed and finalized under Tower BFT, and their meaning under Alpenglow
 - [Anza: Alpenglow](https://www.anza.xyz/alpenglow), live on mainnet-beta (10/21), TowerBFT retired
-- [OP Stack: Withdrawal flow](https://docs.optimism.io/stack/transactions/withdrawal-flow), initiate, prove and finalize after the seven-day challenge period
+- [OP Stack: Withdrawal flow](https://docs.optimism.io/stack/transactions/withdrawal-flow), initiate, prove and finalize after the seven-day challenge period on mainnet
+- [ETHBEAT: Base](https://ethbeat.org/scaling/projects/base), the 5-day challenge period on Base
 - [Arbitrum: L2 to L1 messaging](https://docs.arbitrum.io/how-arbitrum-works/deep-dives/l2-to-l1-messaging), the dispute window and outbox execution
 - [XRP Ledger: Source and destination tags](https://xrpl.org/docs/concepts/transactions/source-and-destination-tags), 32-bit tags, the per-address reserve, `RequireDest` and unpredictable assignment
 
 **Vendor documentation**
 
 - [Binance: How to deposit crypto](https://www.binance.com/en/support/faq/how-to-deposit-crypto-to-binance-115003764971), matching networks, memo and tag requirements, and wrong-network losses
-- [BitGo: Wallet types](https://developers.bitgo.com/concepts/wallet-types), 2-of-3 keys, cold custody wallets, forwarder consolidation with one signature, the gas tank, and the 24-hour withdrawal SLA
-- [Circle: Required block confirmations](https://developers.circle.com/cctp/required-block-confirmations), hard and soft finality per chain
+- [BitGo: Wallet types](https://developers.bitgo.com/concepts/wallet-types), 2-of-3 keys, cold custody wallets, forwarder consolidation with one signature, the gas tank, and the 24-hour SLA for custody withdrawals
+- [Circle: Required block confirmations](https://developers.circle.com/cctp/required-block-confirmations), hard finality for Standard Transfers and the Fast Transfer wait per chain
 - [Fireblocks: Work with Gas Station](https://developers.fireblocks.com/docs/work-with-gas-station), auto-fueling on detected deposits and withdrawals, and sweeps to an omnibus vault on completion
 - [Fireblocks: Capabilities](https://developers.fireblocks.com/docs/capabilities), deposit addresses per asset wallet and hot, warm and cold key-share placement
 - [Gemini: Security](https://www.gemini.com/security), address allowlisting and 2FA for withdrawals

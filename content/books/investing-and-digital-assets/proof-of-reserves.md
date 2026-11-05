@@ -46,7 +46,7 @@ Kraken's leaves show the details a real tree adds. The Record ID is "SHA256(conc
 
 ### A worked inclusion proof
 
-A tree of four customers' BTC balances, in satoshis, with my own serialization: a leaf hash is SHA-256 of `salt|account|balance`, a parent's hash is SHA-256 of `left_hash|left_sum|right_hash|right_sum`. Hashes are shown to 16 hex characters; the full values are in the code below.
+A tree of four customers' BTC balances, in satoshis, with my own serialization: a leaf hash is SHA-256 of `salt|account|balance`, a parent's hash is SHA-256 of `left_hash|left_sum|right_hash|right_sum`. Hashes are shown to 16 hex characters; parents hash the full 64-character values, which the code below computes.
 
 ```text
                          root  sum 300,000,000  hash 75875e30af5e82f8
@@ -151,11 +151,11 @@ fn verify_inclusion(salt: &str, account_id: &str, balance: i64, path: &[Step], r
 }
 ```
 
-The tree leaks something by design: the sibling sums. Customer 1002 learns that customer 1001 holds exactly 1.5 BTC (not who, because the leaf is salted). Vitalik's post notes the leak: a plain list leaks every balance, and sum trees leak less, but "some information about group balances" still gets out. Padding the tree with zero-balance leaves, randomizing positions per snapshot, and splitting large balances across leaves reduce it; zero-knowledge proofs remove it.
+The tree leaks something by design: the sibling sums. Customer 1002 learns that customer 1001 holds exactly 1.5 BTC (not who, because the leaf is salted). Vitalik's post notes the leak: a plain list leaks every balance, and sum trees leak less, but an observer can still learn that a small set of users holds a given total. Padding the tree with zero-balance leaves, randomizing positions per snapshot, and splitting large balances across leaves reduce it; zero-knowledge proofs remove it.
 
 ## The Negative-Balance Attack
 
-The sum tree has one structural weakness: a sum can include negative numbers. Vitalik's example is an exchange owing 1,390 ETH while holding 890: it adds a fake account with a balance of −500 ETH, and the tree's total is now 890, fully "covered." The sum tree partly defends itself, because the fake leaf's −500 flows into every parent above it, so any customer whose path passes a parent with a suspicious sum can object; the exchange gets away with it only if "nobody in the entire right half of the tree checks their balance proof," or if it hides the shortfall by leaving real customers out of the tree instead.
+The sum tree has one structural weakness: a sum can include negative numbers. Vitalik's example is an exchange owing 1,390 ETH while holding 890: it adds a fake account with a balance of −500 ETH, and the tree's total is now 890, apparently covered. The sum tree partly defends itself, because the fake leaf's −500 flows into every parent above it, so any customer whose path passes a parent with a suspicious sum can object; the exchange gets away with it only if, in Vitalik's words, "nobody in the entire right half of the tree checks their balance proof," or if it hides the shortfall by leaving real customers out of the tree instead.
 
 In the worked tree, replacing customer 1004 with a fake leaf of −0.6 BTC drops n23's sum from 1.25 BTC to 0.2 BTC, below customer 1003's own 0.8 BTC. Customer 1003's proof path would carry a sibling with a negative sum, which the verifier above rejects, and customer 1002 would see n23 summing to less than any honest subtree of two customers could. Both checks depend on customers running the verifier; most don't.
 

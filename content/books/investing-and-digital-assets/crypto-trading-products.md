@@ -20,7 +20,7 @@ Pricing as each platform publishes it, as of November 2026:
 | **Binance** | Not covered here | Regular users 0.100% / 0.100%, or 0.075% / 0.075% paying fees in BNB; VIP tiers by 30-day volume and BNB balance down to 0.011% / 0.023% at VIP 9 | Spot Liquidity Provider Program with maker rebates by weekly maker volume share |
 | **Coinbase** | Fees "through volume-based transaction fees and a spread"; transaction fees are "either a flat fee or a percentage"; acts as agent, revenue reported net | Tiered maker/taker schedule for Coinbase Advanced; rates not quoted here (see below) | Coinbase Prime RFQ: quotes valid 3 seconds by default, up to 30 seconds |
 | **Gemini** | "Gemini includes a spread in the quoted price" for instant and recurring buys; fees vary by payment method and size | ActiveTrader and API 0.60% / 1.20% at $0 of 30-day volume, down to 0% / 0.02% at $250 million; 0% / 0% on RLUSD/USD, USDC/GUSD and GUSD/USD (schedule effective September 1, 2026) | OTC desk listed as a product |
-| **Kraken** | App and Instant Buy: 1% on instant and recurring trades, 1.5% on custom orders, up to $2 on small trades, plus a spread "included in the price" | Kraken Pro 0.40% / 0.80% at Tier 1, down to 0% / 0.05% at $500 million, tiered by the better of 30-day volume or assets on platform | OTC desk from $50,000, all-in quotes with no fees, settlement within 24 hours for eligible clients |
+| **Kraken** | App and Instant Buy: 1% on instant and recurring trades, 1.5% on custom orders, up to $2 on small trades, and "the price you see includes a spread" | Kraken Pro 0.40% / 0.80% at Tier 1, down to 0% / 0.05% at $500 million, tiered by the better of 30-day volume or assets on platform | OTC desk from $50,000, all-in quotes with no fees, settlement within 24 hours for eligible clients |
 | **Robinhood** | Market maker routing commission-free: as of June 15, 2026, $0.95 per $100 of notional to Robinhood from its market maker, included in the spread; exchange routing at 0.00% to 0.95% | Limit orders generally route to Bitstamp, an affiliate | Not offered to retail |
 
 Coinbase's Advanced and Exchange tiers aren't quoted in this chapter: its help center refused automated access, and secondary summaries disagree about a 2026 change.<!-- source-gap: coinbase-advanced-fee-tiers | missing | Coinbase Advanced Trade maker/taker tiers as of November 2026 | closes with: the Coinbase help center fee page or the Exchange API fee endpoint documentation with tier values | checked: 2026-11-05 -->
@@ -64,7 +64,7 @@ Between quoting and filling, the price moves. A platform that fills simple buys 
 - **Netting.** Customers buying and selling in the same second offset each other; only the net needs hedging.
 - **Inventory limits.** A cap on the unhedged position per asset, after which quotes widen or pause.
 
-Platforms that act as agent instead don't carry this risk: Robinhood says it routes "all cryptocurrency transactions initiated by customers to third-party market makers" and "never" acts as counterparty, settling bilaterally with its liquidity providers "on a net basis once per business day"; Coinbase concludes it "acts as an agent in transactions between customers" and reports revenue net. Whether a platform is principal or agent decides how revenue is reported (BitGo's revenue is dominated by gross "digital asset sales" from principal-style flows, so its headline revenue isn't comparable to Coinbase's net revenue), what the customer is told, and who owns the hedge. It also decides the controls: an agent needs a best-execution policy for where it routes; a principal needs inventory limits and a disclosed markup.
+Platforms that act as agent instead don't carry this risk: Robinhood says it routes "all cryptocurrency transactions initiated by customers to third-party market makers or exchange liquidity providers" as agent, with spot transactions "generally aggregated and settled on a net basis once per business day"; Coinbase concludes it "acts as an agent in transactions between customers" and reports revenue net. Whether a platform is principal or agent decides how revenue is reported (BitGo's revenue is dominated by gross "digital asset sales" from principal-style flows, so its headline revenue isn't comparable to Coinbase's net revenue), what the customer is told, and who owns the hedge. It also decides the controls: an agent needs a best-execution policy for where it routes; a principal needs inventory limits and a disclosed markup.
 
 ## The Order Book: Maker, Taker and Tiers
 
@@ -74,7 +74,7 @@ An order that rests on the book adds liquidity and pays the **maker** fee; an or
 
 ### Kraken Pro spot, as published
 
-| Tier | 30-day volume (or assets on platform) | Maker | Taker |
+| Tier | 30-day volume | Maker | Taker |
 | --- | --- | --- | --- |
 | 1 | $0+ | 0.40% | 0.80% |
 | 2 | $2,500+ | 0.30% | 0.60% |
@@ -90,7 +90,7 @@ An order that rests on the book adds liquidity and pays the **maker** fee; an or
 | 12 | $10,000,000+ | 0.00% | 0.10% |
 | Pro 1 to Pro 5 | $50,000,000+ to $500,000,000+ | 0.00% | 0.09% to 0.05% |
 
-Stablecoin and FX pairs run a separate schedule from 0.20% / 0.20% down to near zero. Kraken's page calls the cross-platform tiers recently introduced and carries no date, so check it before quoting a figure; tiers move.
+Assets on platform qualify from Tier 3 on, at their own thresholds ($20,000 for Tier 3, $10 million for Tier 12, $100 million for Pro 5). Stablecoin and FX pairs run a separate schedule from 0.20% / 0.20% down to 0.00% / 0.001% at $100 million. Kraken's page calls the cross-platform tiers recently introduced and carries no date, so check it before quoting a figure; tiers move.
 
 ### Gemini ActiveTrader, effective September 1, 2026 (basis points)
 
@@ -122,7 +122,7 @@ A trader with $3 million of 30-day volume, 70% of it taker, places a $200,000 ta
 | --- | --- | --- | --- | --- |
 | Kraken Pro | Tier 10 ($2.5 million+): 0.04% / 0.15% | $300 | $80 | 0.7 × 0.15% + 0.3 × 0.04% = 0.117% |
 | Gemini ActiveTrader | $1 million tier: 5 / 10 bps | $200 | $100 | 0.7 × 0.10% + 0.3 × 0.05% = 0.085% |
-| Binance, no VIP (no BNB balance) | Regular: 0.100% / 0.100%; 0.075% paying in BNB | $200 ($150) | $200 ($150) | 0.100% (0.075%) |
+| Binance, no VIP (under the 5 BNB VIP 1 needs) | Regular: 0.100% / 0.100%; 0.075% paying in BNB | $200 ($150) | $200 ($150) | 0.100% (0.075%) |
 
 Crossing a tier boundary changes the rate on every future trade, not on the volume above the boundary, so a trader near a threshold has an incentive to trade just enough to cross it, and the exchange has to decide when a new tier takes effect (on the next daily recalculation is the usual answer; mid-day changes make fee audits miserable). Two more rules belong in the fee engine: **the tier is computed from a rolling window of executions in the quote's dollar value at execution time**, recomputed on a schedule and stored with the date; and **the fee on each execution is computed from the tier in force when the order was matched**, stored on the execution, never recomputed later.
 
@@ -181,7 +181,7 @@ pub fn fee(notional_cents: i64, rate: i64) -> i64 {
 }
 ```
 
-A $200,000 taker execution at Kraken's Tier 10 is `Fee(20_000_000, 1_500)` = 30,000 cents, or $300. Rates are integers in hundredths of a basis point so that 0.00825% (825) is exact, and the multiplication stays well inside 64 bits for any single execution an exchange would accept. Rounding direction is a disclosed policy; rounding up on fees and down on quantities both favor the house, so state it.
+A $200,000 taker execution at Kraken's Tier 10 is `Fee(20_000_000, 1_500)` = 30,000 cents, or $300. Rates are integers in hundredths of a basis point so that 12.5 basis points (1,250) and a −0.006% rebate (−60) are exact; Binance's BNB-discounted 0.00825% is 82.5 in that unit, so a venue quoting rates like it needs thousandths of a basis point (825) and a denominator of 10,000,000. Pick the unit from the finest rate any schedule publishes. The multiplication stays well inside 64 bits for any single execution an exchange would accept. Rounding direction is a disclosed policy; rounding up on fees and down on quantities both favor the house, so state it.
 
 ## RFQ and OTC Desks
 
@@ -376,7 +376,7 @@ What an examiner, auditor or customer complaint asks for:
 - [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), volume-based fees and a spread, flat or percentage transaction fees, and 2025 transaction revenue by consumer, institutional and other
 - [Coinbase Global: Form 10-K for 2025, revenue recognition note](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/R11.htm), agent in transactions between customers, revenue net and at execution
 - [Coinbase Global: Form 10-Q for Q3 2026](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000122/coin-20260930.htm), consumer transaction revenue in the third quarters of 2026 and 2025
-- [Robinhood Markets: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000023/hood-20251231.htm), routing as agent to market makers, never a counterparty, net daily settlement with liquidity providers, and transaction rebates
+- [Robinhood Markets: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000023/hood-20251231.htm), routing as agent to market makers or exchange liquidity providers, net daily settlement of spot transactions, and transaction rebates
 - [BitGo Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1740604/000174060426000020/btgo-form10xk.htm), revenue dominated by gross digital asset sales
 - [Gemini Space Station: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/2055592/000205559226000026/gemi-20251231.htm), transaction fees as the majority of revenue and the OTC desk
 
