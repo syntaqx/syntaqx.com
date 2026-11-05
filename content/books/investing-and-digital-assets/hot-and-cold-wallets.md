@@ -18,16 +18,16 @@ What exchanges, custodians and vendors disclose about wallet tiers, as of Novemb
 
 | Company | Tiers and limits, as disclosed | Keys and facilities | Assurance and insurance |
 | --- | --- | --- | --- |
-| **BitGo** | Custody wallets are all cold; qualified custody "100% supported by cold storage"; hot wallets only for self-custody clients | 2-of-3 keys (user, backup, BitGo) for multisig and MPC; in custody wallets BitGo holds all three | Up to $250 million of insurance for assets in qualified custody; withdrawals from custody within a 24-hour SLA |
+| **BitGo** | Custody wallets are all cold; qualified custody "100% supported by cold storage"; hot wallets only for self-custody clients | 2-of-3 keys (user, backup, BitGo) for multisig and MPC; for custody wallets BitGo creates all three and distributes them so "no one person controls more than one key for a given wallet" | Up to $250 million of insurance for assets in qualified custody; withdrawals from custody within a 24-hour SLA |
 | **Coinbase** | "Generally seek to hold no more than 2% of custodied assets in hot wallets at any given time" | Cold wallet key material stored "at facilities within the United States and internationally" | Holds corporate assets in excess of the total in its hot wallets; a commercial crime policy with a one-year term and no automatic renewal |
 | **Fireblocks** | Hot, warm and cold defined by where the third MPC key share sits: an API co-signer (automated), a networked phone (warm), or an air-gapped phone approving by two-way QR codes (cold); a workspace is hot and warm, or cold only | MPC-CMP key shares; Admin Quorum for sensitive workspace changes | Vendor platform; the client sets policy |
 | **Gemini** | No split published | Not published | SOC 1 Type 2 and SOC 2 Type 2 |
-| **iShares Bitcoin Trust** (custodied by Coinbase Custody) | Vault Balance in segregated cold addresses; Trading Balance omnibus at the prime execution agent, swept back daily; vault to trading can take up to 24 hours | Keys in cold storage in undisclosed US and European facilities; no single individual has access to full private keys | The custodian's crime policy is shared across all its customers |
+| **iShares Bitcoin Trust** (custodied by Coinbase Custody) | Vault Balance in segregated cold addresses; Trading Balance omnibus at the prime execution agent, swept back daily; vault to trading can take up to 24 hours | Keys in cold storage in undisclosed US and European facilities; no single individual has access to full private keys | The crime policy, held by Coinbase Global, is shared among all of Coinbase's customers |
 | **Kraken** | "Advanced cold storage and hot wallet solutions"; no split published | Infrastructure in caged facilities under 24/7 armed guard | ISO/IEC 27001:2022, SOC 2 Type 1, periodic proof of reserves with an external auditor |
 
 And the counterexample on the public record. FTX told third parties it had a "standard hot wallet/cold wallet setup" with a two-day trading float in hot wallets; the debtors' first interim report found virtually all crypto in hot wallets, little cold storage outside Japan (where cold storage was required), no multisig or MPC, private keys to over $100 million of ETH in plain text on a server, keys to billions in AWS Secrets Manager or a password vault, and no backups. The intended design FTX described is exactly the one in this chapter. It just didn't exist.
 
-Bank regulators' joint statement of July 14, 2025 on crypto-asset safekeeping describes the same choices from the supervisor's side: control of the private keys is the essence of safekeeping, cold, hot and hybrid storage are each a risk decision, key generation, storage and destruction need controls, and a bank stays responsible for what a sub-custodian does.
+Bank regulators' joint statement of July 14, 2025 on crypto-asset safekeeping describes the same choices from the supervisor's side: safekeeping "entails controlling the cryptographic keys," the method of holding assets (cold, hot or hybrid) belongs in the customer agreement, an audit should cover "cryptographic key generation, storage, and deletion," and a bank is responsible for the activities its sub-custodian performs.
 
 ## The Tiers
 
@@ -81,7 +81,7 @@ The balance limit caps what a hot wallet compromise can take; velocity limits ca
 
 Moving coins down a tier (hot to warm, warm to cold) can be automated, because the destination is fixed: the policy allows the hot signer to send to the exchange's own cold addresses and nowhere else new, so an attacker who triggers it only moves coins somewhere safer. Moving coins up a tier (cold to warm, warm to hot) is the opposite: it brings large amounts toward the automated path, it happens on a schedule an insider or an attacker can learn, and it's signed by people looking at a screen.
 
-Bybit's February 21, 2025 loss, about $1.5 billion and the largest crypto theft on record, happened during exactly that operation. The FBI attributed it to North Korea. During a routine transfer from an ETH multisig cold wallet to a hot wallet, Bybit's signers loaded the Safe{Wallet} web interface, whose JavaScript in Safe's cloud storage had been modified to activate only for Bybit's cold wallet; investigators traced it to a compromised Safe developer machine. The interface showed a normal transfer; the transaction the signers approved changed a `call` into a `delegatecall` to an attacker contract, handing it control of the multisig, and over 400,000 ETH and stETH moved out. The hardware signers displayed a hash, the quorum approved it, and nothing in the path decoded what was actually being signed. The full incident is in [Exchange Security & Hacks](/books/investing-and-digital-assets/exchange-security).
+Bybit's February 21, 2025 loss, about $1.5 billion and the largest crypto theft on record until Binance's in October 2026, happened during exactly that operation. The FBI attributed it to North Korea. During a routine transfer from an ETH multisig cold wallet to a hot wallet, Bybit's signers loaded the Safe{Wallet} web interface, whose JavaScript in Safe's cloud storage had been modified to activate only for Bybit's cold wallet; investigators traced it to a compromised Safe developer machine. The interface showed a normal transfer; the transaction the signers approved changed a `call` into a `delegatecall` to an attacker contract, handing it control of the multisig, and over 400,000 ETH and stETH moved out. The hardware signers displayed a hash, the quorum approved it, and nothing in the path decoded what was actually being signed. The full incident is in [Bybit, February 21, 2025](/books/investing-and-digital-assets/keys-and-signing#bybit-february-21-2025), and the hack record around it in [Exchange Security & Hacks](/books/investing-and-digital-assets/exchange-security).
 
 What a cold-to-hot move needs, from that record:
 
@@ -93,7 +93,7 @@ What a cold-to-hot move needs, from that record:
 
 ### Rebalancing across chains
 
-The same asset on several chains (USDC on Ethereum, Solana and Base, for example) is one instrument and several asset networks, and withdrawals don't arrive in proportion to holdings. An exchange rebalances between chains through the issuer's burn-and-mint service where one exists (Circle's CCTP waits for the source chain's finality before minting on the destination), or by redeeming on one chain and minting on another with the issuer. Each cross-chain move is a treasury transfer with in-transit state on both ledgers, covered in [Layer 2s, Bridges & Cross-Chain](/books/investing-and-digital-assets/layer-2s-and-bridges).
+The same asset on several chains (USDC on Ethereum, Solana and Base, for example) is one instrument and several asset networks, and withdrawals don't arrive in proportion to holdings. An exchange rebalances between chains through the issuer's burn-and-mint service where one exists (Circle's CCTP attests a burn only after the source transaction reaches the finality its transfer type requires, hard finality for a standard transfer, and the mint on the destination follows the attestation), or by redeeming on one chain and minting on another with the issuer. Each cross-chain move is a treasury transfer with in-transit state on both ledgers, covered in [Layer 2s, Bridges & Cross-Chain](/books/investing-and-digital-assets/layer-2s-and-bridges).
 
 ## Cold Storage Ceremonies
 
@@ -282,13 +282,13 @@ What a custody examiner, SOC auditor or incident reviewer asks for:
 
 **Regulators and guidance**
 
-- [Federal Reserve, FDIC and OCC: Crypto-asset safekeeping by banking organizations (July 14, 2025)](https://www.federalreserve.gov/newsevents/pressreleases/bcreg20250714a.htm), control of keys as safekeeping, cold, hot and hybrid storage, key generation and destruction, and sub-custodian responsibility ([statement PDF](https://www.federalreserve.gov/newsevents/pressreleases/files/bcreg20250714a1.pdf))
+- [Federal Reserve, FDIC and OCC: Crypto-asset safekeeping by banking organizations (July 14, 2025)](https://www.federalreserve.gov/newsevents/pressreleases/bcreg20250714a.htm), control of keys as safekeeping, cold, hot or hybrid storage in the customer agreement, auditing key generation, storage and deletion, and sub-custodian responsibility ([statement PDF](https://www.federalreserve.gov/newsevents/pressreleases/files/bcreg20250714a1.pdf))
 
 **Filings**
 
 - [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), no more than 2% of custodied assets in hot wallets, cold key material in US and international facilities, corporate assets above hot wallet totals, the one-year crime policy, and temporary withdrawal delays
 - [BitGo Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1740604/000174060426000020/btgo-form10xk.htm), qualified custody fully in cold storage and up to $250 million of insurance
-- [iShares Bitcoin Trust ETF: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1980994/000143774926006058/bit20251231_10k.htm), Vault and Trading Balances, cold keys in undisclosed US and European facilities, no individual with full keys, the 24-hour move, and shared crime coverage
+- [iShares Bitcoin Trust ETF: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1980994/000143774926006058/bit20251231_10k.htm), Vault and Trading Balances, cold keys in undisclosed US and European facilities, no individual with full keys, the 24-hour move, and crime coverage shared across Coinbase's customers
 
 **Courts and enforcement**
 
@@ -301,8 +301,8 @@ What a custody examiner, SOC auditor or incident reviewer asks for:
 
 **Vendor documentation**
 
-- [BitGo: Wallet types](https://developers.bitgo.com/concepts/wallet-types), 2-of-3 keys, custody wallets all cold, and the 24-hour SLA
-- [Circle: Required block confirmations](https://developers.circle.com/cctp/required-block-confirmations), source-chain finality before a cross-chain mint
+- [BitGo: Wallet types](https://developers.bitgo.com/concepts/wallet-types), 2-of-3 keys, custody keys distributed so no one person controls more than one, custody wallets all cold, and the 24-hour SLA
+- [Circle: Required block confirmations](https://developers.circle.com/cctp/required-block-confirmations), the finality Circle waits for before attesting, by transfer type
 - [Fireblocks: Capabilities](https://developers.fireblocks.com/docs/capabilities), hot, warm and cold by key-share location, and Admin Quorum
 - [Gemini: Security](https://www.gemini.com/security), SOC 1 Type 2 and SOC 2 Type 2
 - [Kraken: Security](https://www.kraken.com/features/security), cold storage and hot wallets, physical security, ISO 27001 and SOC 2 Type 1
