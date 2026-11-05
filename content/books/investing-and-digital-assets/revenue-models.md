@@ -98,7 +98,7 @@ A broker lends customers' margin securities, and with consent their fully paid s
 
 A stablecoin issuer earns the yield on the reserve backing its tokens and may not pay holders interest, so the income is the issuer's to keep or to share with the firms that distribute the token.
 
-**Circle in 2025.** Reserve income was $2,636.8 million on an average of $64,870 million of USDC in circulation at a reserve return rate of 4.1%; $64.87 billion at 4.1% is about $2.66 billion, close to the reported figure (my check). Distribution and transaction costs were $1,661.5 million, about 60% of total revenue and reserve income of $2,746.6 million, and about $1.4 billion of them went to Coinbase. Circle reported a net loss of $69.5 million from continuing operations for the year.
+**Circle in 2025.** Reserve income was $2,636.8 million on an average of $64,870 million of USDC in circulation at a reserve return rate of 4.1%; $64.87 billion at 4.1% is about $2.66 billion, close to the reported figure (my check). Distribution and transaction costs were $1,661.5 million, about 60% of total revenue and reserve income of $2,746.6 million (63% of reserve income alone), and about $1.4 billion of them went to Coinbase. Circle reported a net loss of $69.5 million from continuing operations for the year.
 
 **The waterfall.** Circle's 10-K describes the collaboration agreement with Coinbase: payments are computed from a daily payment base equal to net reserve income; Circle retains an issuer portion; each party receives the income on USDC held on its own platform; and Coinbase "receives half of the remaining amount of income generated from stablecoins circulated in the broader ecosystem," after payments to approved third parties. A worked illustration with assumed shares (the issuer retention tier is redacted in the filed agreement): on $1,000 of daily net reserve income, if the issuer retains 10% ($100), USDC on Coinbase's platform is 30% of circulation ($270 of the remaining $900 to Coinbase), USDC on Circle's platform is 18% ($162 to Circle), and the rest of the ecosystem's $468 is split half and half, Coinbase receives $504 and Circle keeps $496 including its retention. With those assumptions, a partner holding 30% of the supply receives about half the income, which is the shape of Circle's 2025 numbers.
 
@@ -112,7 +112,7 @@ Three of the four meters are rates. The filings describe the exposure; the arith
 
 | Business | Rate-sensitive balance (latest) | Effect of 25 bp on a full year, unhedged |
 | --- | --- | --- |
-| Circle | $73.9 billion of USDC in circulation | About $185 million of reserve income, of which about 60% would have gone to distribution at 2025's ratio |
+| Circle | $73.9 billion of USDC in circulation | About $185 million of reserve income, of which about 63% would have gone to distribution at 2025's ratio to reserve income |
 | Robinhood | $32.3 billion cash sweep plus a $22.1 billion margin book | About $136 million gross across both, before any change in rates paid to customers |
 | Interactive Brokers | $186.2 billion customer credits plus $105.2 billion margin loans | About $728 million gross across both, before any change in rates paid to customers |
 | Schwab | $492.8 billion transactional sweep cash plus $187.9 billion margin loans | About $1.7 billion gross across both, before any change in rates paid to clients |
