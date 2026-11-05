@@ -102,7 +102,7 @@ Crypto markets are where wash trading is easiest to see and hardest to stop. On 
 
 For a crypto venue, surveillance has three layers:
 
-- **The book.** The same spoofing, layering and wash trade models as above, run on the venue's own orders, with self-trade prevention at the matching engine so the venue doesn't print trades between accounts with one owner (Order Books & Matching Engines covers self-trade prevention).
+- **The book.** The same spoofing, layering and wash trade models as above, run on the venue's own orders, with self-trade prevention at the matching engine so the venue doesn't print trades between accounts with one owner ([Order Books & Matching Engines](/books/investing-and-digital-assets/order-books-and-matching) covers self-trade prevention).
 - **The customer graph.** Accounts linked by KYC data, devices, funding sources and on-chain addresses, so that wash trading across "unrelated" accounts is visible; On-Chain Analytics & Investigations covers clustering.
 - **The listing window.** Trading in an asset before its listing is announced, on the venue and on chain from addresses linked to employees, is the insider pattern the Wahi case exposed.
 
@@ -192,7 +192,7 @@ Design notes:
 - **The `parties` link matters as much as the account.** Manipulation runs across accounts; alerts carry the party, and related-party groupings come from `party_identities`, funding sources and devices.
 - **Thresholds are versioned data** with approvals and backtests, and every alert points at the model version that raised it.
 - **A closed alert must have a reason and a closer;** the check constraint makes an undocumented disposition impossible rather than discouraged.
-- **Restricted and watch lists are inputs to pre-trade checks,** not only to surveillance: an employee order in a restricted name is blocked before it reaches a venue (Pre-Trade Risk, Halts & Volatility covers the checks).
+- **Restricted and watch lists are inputs to pre-trade checks,** not only to surveillance: an employee order in a restricted name is blocked before it reaches a venue ([Pre-Trade Risk, Halts & Volatility](/books/investing-and-digital-assets/pre-trade-risk-and-halts) covers the checks).
 
 ## Auditing
 
