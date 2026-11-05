@@ -23,7 +23,7 @@ Where large platforms hold their non-US licenses, from the regulators' registers
 | **Bullish** | | | Licensed VATP in Hong Kong, February 18, 2025 |
 | **Bybit** | Bybit EU GmbH, Austria, May 28, 2025 | Bybit Fintech FZE (exchange only) | Hong Kong applicant, not deemed licensed |
 | **Coinbase** | Coinbase Luxembourg S.A., CSSF, June 20, 2025 | | Coinbase on Japan's FSA register |
-| **Crypto.com** | Foris DAX MT, Malta, January 27, 2025 | Foris DAX Middle East FZE | Deemed licensed in Hong Kong as an applicant |
+| **Crypto.com** | Foris DAX MT, Malta, January 27, 2025 | Foris DAX Middle East FZE | Deemed-to-be-licensed applicant in Hong Kong, not yet SFC-licensed |
 | **eToro** | eToro (Europe) Ltd, Cyprus, January 16, 2025 | | |
 | **Kraken** | Payward Europe Solutions and Payward Global Solutions, Central Bank of Ireland, June 25, 2025 | Payward FZCO | |
 | **OKX** | OKX Europe, Malta, January 27, 2025 | OKX Middle East Fintech FZE | OKCoin Japan on the FSA register |
@@ -43,7 +43,7 @@ An investment firm authorized under MiFID II in one member state can provide its
 MiCA's CASP authorization, passport, capital classes and transitional periods are in [The EU: MiCA CASP Authorization](/books/investing-and-digital-assets/crypto-licensing#the-eu-mica-casp-authorization). What an operator of an EU platform lives with after July 1, 2026:
 
 - **No grandfathering left.** Every transitional period ended by July 1, 2026, and ESMA's interim register publishes a list of non-compliant entities (NCASP) alongside the authorized CASPs, updated weekly; the register page showed a last update of November 5, 2026.
-- **The service letters are the license.** Each register entry lists the Article 3(1)(16) services authorized; Circle's French entity, for example, is authorized for custody (a) and transfer (j) only, and Bitvavo for custody, a trading platform and transfer. A product that adds a service needs the authorization to add a letter first.
+- **The service letters are the license.** Each register entry lists the Article 3(1)(16) services authorized; Circle's French e-money entity, for example, which notified under Article 60 rather than applying, is listed for custody (a) and transfer (j) only, and Bitvavo for custody, a trading platform and transfer. A product that adds a service needs the authorization to add a letter first.
 - **Listings follow white papers** ([The EU: admission to trading under MiCA](/books/investing-and-digital-assets/listing-assets#the-eu-admission-to-trading-under-mica)), and stablecoins only from authorized issuers ([MiCA and non-compliant stablecoins](/books/investing-and-digital-assets/listing-assets#mica-and-non-compliant-stablecoins)).
 - **Travel Rule data goes with every crypto transfer,** with no threshold in the EU ([The Travel Rule](/books/payments/stablecoins#the-travel-rule)).
 
@@ -84,7 +84,7 @@ The Securities and Futures Commission licenses virtual asset trading platforms. 
 
 ## The UAE: Dubai's VARA
 
-Dubai's Virtual Assets Regulatory Authority licenses virtual asset activities under its Virtual Assets and Related Activities Regulations 2023 (the current version effective June 19, 2025), in categories that read like a license map of their own: exchange (including exchange-traded derivatives), broker-dealer, management and investment, custody, Category 1 virtual asset issuance, lending and borrowing, and advisory. Its public register lists 60 licensed virtual asset service providers, the latest licensed on October 20, 2026, including Binance FZE, OKX Middle East Fintech FZE, Bybit Fintech FZE, Foris DAX Middle East FZE (Crypto.com), Payward FZCO, Deribit, HashKey MENA, Hex Trust, Standard Chartered and Zand Bank. Each license is by activity, so an entity licensed only for exchange services can't offer custody or lending to its customers without adding the activity.
+Dubai's Virtual Assets Regulatory Authority licenses virtual asset activities under its Virtual Assets and Related Activities Regulations 2023 (the current version effective June 19, 2025), in categories that read like a license map of their own: exchange (including exchange-traded derivatives), broker-dealer, management and investment, custody, Category 1 virtual asset issuance, lending and borrowing, transfer and settlement, and advisory. Its public register lists 60 licensed virtual asset service providers, the latest Bybit Fintech FZE on October 20, 2026, including Binance FZE, OKX Middle East Fintech FZE, Bybit Fintech FZE, Foris DAX Middle East FZE (Crypto.com), Payward FZCO, Deribit, HashKey MENA, Hex Trust, Standard Chartered and Zand Bank. Each license is by activity, so an entity licensed only for exchange services can't offer custody or lending to its customers without adding the activity.
 
 ## Japan
 
@@ -185,6 +185,7 @@ Design notes:
 - [ESMA Interactive Single Rulebook: MiFIR Article 39a](https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifir/article-39a-prohibition-receiving-payment), the PFOF prohibition, the venue rebate exception and the opt-out to June 30, 2026
 - [MAS: Guidelines on Consumer Protection Measures by Digital Payment Token Service Providers (PS-G03)](https://www.mas.gov.sg/-/media/mas-media-library/regulation/guidelines/pso/ps-g03-guidelines-on-consumer-protection-measures-by-digital-payment-token-service-providers/guidelines-on-provision-of-consumer-protection-safeguards-by-digital-payment-token-service-providers.pdf), effective dates, the 90% cold wallet share, resident controllers, no use of retail assets, the Risk Awareness Assessment, the incentive and credit bans, the market and broker separation and the accredited investor haircut
 - [VARA: Virtual Assets and Related Activities Regulations 2023](https://rulebooks.vara.ae/rulebook/virtual-assets-and-related-activities-regulations-2023), the regulations and the current version's effective date
+- [VARA: Schedule 1, VA Activities](https://rulebooks.vara.ae/rulebook/schedule-1-va-activities), the eight licensed activity categories
 
 **Regulators and guidance**
 

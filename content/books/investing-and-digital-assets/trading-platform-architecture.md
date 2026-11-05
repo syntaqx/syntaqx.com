@@ -28,7 +28,7 @@ Four patterns run through the table:
 
 - **The account is the unit of scale.** Robinhood's shards, Alpaca's OMS nodes and every exchange's balance service partition by customer account, because almost every invariant a customer cares about (buying power, open orders, holds, positions) lives inside one account.
 - **The log comes before the state.** Alpaca's write-ahead log and Coinbase's replicated input log are the same idea at different speeds: the sequenced input is the durable record, and the in-memory state is rebuilt from it.
-- **Isolation is the reliability feature.** Robinhood sharded the whole stack, not only the database, so that failures "are now limited to one shard" and features roll out a shard at a time. That is the cell pattern ([Cells and Shuffle Sharding](/books/hosting-and-cloud/regions-zones-and-cells#cells-and-shuffle-sharding)).
+- **Isolation is the reliability feature.** Robinhood sharded the whole stack, not only the database, so that failures are, in its words, "now limited to one shard" and features roll out a shard at a time. That is the cell pattern ([Cells and Shuffle Sharding](/books/hosting-and-cloud/regions-zones-and-cells#cells-and-shuffle-sharding)).
 - **Rewrites are strangled, not cut over.** Kraken's endpoint-by-endpoint migration behind a shared test suite is the playbook's [Strangle Instead of Rewriting](/docs/architecture/replacing-systems#strangle-instead-of-rewriting), applied to a live exchange.
 
 ## The Services
@@ -107,7 +107,7 @@ Two specifics:
 
 ## Operating Without a Close
 
-Crypto venues never close, and US equities move to 23/5 on exchanges from December 6, 2026; Robinhood announced 24/7 trading of select US equities at its September 2026 summit without saying it was live in its third quarter release. What that does to the operating calendar (end of day at 8:00 pm, halts on a schedule, a weekend as the only full stop) is in [Operating a Broker That Never Closes](/books/investing-and-digital-assets/extended-and-overnight-trading#operating-a-broker-that-never-closes). What it does to the architecture:
+Crypto venues never close, and US equities are scheduled to move to 23/5 on exchanges from Sunday, December 6, 2026 (the date CAT's September 2026 alert gives); Robinhood announced 24/7 trading of select US equities at its September 2026 summit without saying it was live in its third quarter release. What that does to the operating calendar (end of day at 8:00 pm, halts on a schedule, a weekend as the only full stop) is in [Operating a Broker That Never Closes](/books/investing-and-digital-assets/extended-and-overnight-trading#operating-a-broker-that-never-closes). What it does to the architecture:
 
 - **No maintenance window.** Schema changes are expand-then-contract and online; deploys restart followers and then hand over leadership, as Coinbase describes for its engine; a migration that needs a freeze freezes one shard at a time.
 - **Trade date is data, per instrument.** A crypto fill has no trade date to roll; an equity fill at 9:30 pm has tomorrow's. The posting service stamps each entry's `effective_date` from the instrument's session calendar at the time of the input, carried on the input so replay agrees.
@@ -342,11 +342,16 @@ The records in this chapter are what an examiner, an auditor, a clearing house, 
 
 ## References
 
+**Regulators and guidance**
+
+- [CAT NMS Plan: CAT Alert 2026-02, 23x5 trading CAT reporting requirements (September 23, 2026)](https://www.catnmsplan.com/cat-alerts/cat-alert-2026-02-23x5-trading-cat-reporting-requirements), overnight exchange trading expected from Sunday, December 6, 2026
+
 **In practice**
 
 - [Robinhood: How we scaled Robinhood's brokerage system for greater reliability (June 25, 2021)](https://robinhood.com/newsroom/how-we-scaled-robinhoods-brokerage-system-for-greater-reliability), the single database, the options evaluated, application-level shards with their own servers, database and pipeline, mapping records, the routing and aggregation layers, Kafka per shard, shard counts and peak requests per second
 - [Robinhood: Scaling Robinhood crypto systems (September 9, 2022)](https://robinhood.com/newsroom/scaling-robinhood-crypto-systems/), query audits, read-path caching only, load testing, throttling, whole-stack sharding and the extracted settlement component
 - [Alpaca: Alpaca launches next-gen order management system (November 22, 2021)](https://alpaca.markets/blog/alpaca-launches-next-gen-order-management-system/), the v0, v1 and v2 designs, in-memory account state, the Redpanda write-ahead log, hydration and replay, balancers and latency figures
 - [Kraken: Oxidizing Kraken, improving Kraken infrastructure using Rust (February 19, 2021)](https://blog.kraken.com/product/engineering/oxidizing-kraken-improving-kraken-infrastructure-using-rust), the endpoint-by-endpoint migration, the shared integration test suite, lines of Rust and throughput per instance
-- [InfoQ: Coinbase AWS failure postmortem (June 16, 2026)](https://infoq.com/news/2026/06/coinbase-aws-failure-postmortem), the five-node Raft cluster in one placement group, the quorum loss, the recovery through cancel-only and auction modes, and the remediations
+- [InfoQ: Frank Yu on Coinbase's exchange systems in the cloud (QCon San Francisco presentation, posted April 23, 2026)](https://www.infoq.com/presentations/exchange-systems-cloud/), the single-threaded core, Raft over the input log across five nodes, snapshots on a follower, follower-first rolling deploys and recovery by replay
+- [InfoQ: Coinbase AWS failure postmortem (June 16, 2026)](https://www.infoq.com/news/2026/06/coinbase-aws-failure-postmortem/), the May 7, 2026 data hall cooling failure, the five-node Raft cluster in one placement group, the quorum loss, the recovery through cancel-only and auction modes, and the remediations
 - [Robinhood Markets: Third quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000164/q32026robinhoodexhibit991.htm), 24/7 trading of select US equities announced at the September 2026 summit

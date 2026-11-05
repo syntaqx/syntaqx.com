@@ -20,7 +20,7 @@ Seven choices change most numbers in this chapter, and each definition below sta
 - **The activity window.** 45 days (Robinhood funded customers), 270 days (Schwab active accounts), 28 days (Coinbase MTUs). A longer window holds dormant customers in the count longer.
 - **What counts as activity.** A positive balance, a transaction, a login, a passive event such as a dividend or a staking reward. Robinhood excludes "amounts that are deposited into a Funded Customer account by the Company with no action taken by the unique person," so a free share alone doesn't make a customer funded.
 - **Average or end of period.** ARPU divides by an average of customers; which average (two points, monthly, daily) moves the result.
-- **Annualized how.** A quarter times four, or the trailing twelve months. Robinhood's 10-K and its quarterly releases use different growth rates for net deposits (below).
+- **Annualized how.** A quarter times four, or the trailing twelve months. Robinhood's quarterly releases report two growth rates for net deposits (below).
 - **Gross or net, and of what.** Net deposits net of withdrawals and of interest and fees charged; volume counting both sides or one; Coinbase counting "half of the value of trades that we routed off our platform."
 - **Scope changes.** Acquisitions and new programs enter the count on a date: Robinhood's net deposits included TradePMR from March 2026, WonderFi from June 2026, and Trump Account contributions and Treasury seed funding from July 2026. A growth rate across a scope change measures the acquisition.
 
@@ -38,7 +38,7 @@ As of November 2026, from each company's own filings (definitions quoted or clos
 | **Robinhood** | ARPU | "total revenue for a given period divided by the average number of Funded Customers on the last day of that period and the last day of the immediately preceding period"; quarterly releases annualize it |
 | **Robinhood** | Gold Subscriber | A unique person who, at period end, is subscribed to Robinhood Gold and "has made at least one Robinhood Gold subscription fee payment" |
 | **Schwab** | Active brokerage accounts | "Brokerage accounts with activity within the preceding 270 days" |
-| **Schwab** | Core net new assets | "Net new client assets before significant one-time inflows or outflows, such as acquisitions/divestitures," and excluding other extraordinary flows |
+| **Schwab** | Core net new client assets | "Net new client assets before significant one-time inflows or outflows, such as acquisitions/divestitures," or extraordinary flows relating to a specific client (generally over $25 billion from 2025) and off-platform brokered CDs |
 | **Schwab** | Daily average trades | Daily average revenue trades by clients plus trades by clients in asset-based pricing relationships and other trades the glossary lists |
 | **Interactive Brokers** | DARTs | "Daily average revenue trades ("DARTs") are based on customer orders" |
 | **Coinbase** | Monthly Transacting User | "a consumer who actively or passively transacts in one or more products on our platform at least once during the rolling 28-day period ending on the date of measurement"; the 10-K warns the metric "may overstate the number of unique customers" |
@@ -91,16 +91,16 @@ Two definitions of "money in" live side by side, and confusing them is the commo
 
 The same account can show $10,000 of net deposits and $9,600 of external flows in a quarter in which it received $400 of dividends. Both are right; they answer different questions.
 
-**Net deposits growth rate,** two ways from the same filings. Robinhood's 10-K defines the growth rate as "aggregate Net Deposits over a specified 12 month period, divided by Total Platform Assets for the fiscal quarter that immediately precedes such 12 month period." Its quarterly release uses "Net Deposits for a specified quarter multiplied by 4," over platform assets at the end of the prior quarter. For the third quarter of 2026:
+**Net deposits growth rate,** two ways from the same filing. Robinhood's release defines the 12-month growth rate as "aggregate Net Deposits over a specified 12-month period, divided by Total Platform Assets for the fiscal quarter that immediately precedes such 12-month period." The same release's annualized rate uses "Net Deposits for a specified quarter multiplied by 4," over platform assets at the end of the prior quarter. For the third quarter of 2026:
 
 | Method | Numerator | Denominator | Rate |
 | --- | --- | --- | --- |
 | Quarterly, annualized | $15.7 billion × 4 = $62.8 billion | Total Platform Assets at the end of Q2 2026: $369 billion | 17.0% (reported as 17%) |
 | Trailing twelve months | $71.0 billion, Q4 2025 through Q3 2026 | Total Platform Assets at the end of Q3 2025: about $333 billion, implied by the reported 19% growth to $396 billion | about 21.3% (reported as 21%) |
 
-Both are Robinhood's own definitions, in the same release. The four-point gap is not an error: the second quarter's $21.7 billion of net deposits sits in the trailing twelve months and not in the annualized quarter. A dashboard that shows "net deposit growth" without the method beside it will be read as whichever the reader expects.
+Both are Robinhood's own definitions, in the same release. The four-point gap is not an error: the trailing figure includes the second quarter's $21.7 billion, well above the third quarter's $15.7 billion, and divides by platform assets a year older and about $36 billion smaller. A dashboard that shows "net deposit growth" without the method beside it will be read as whichever the reader expects.
 
-**Core net new assets** (Schwab) excludes one-time flows such as acquisitions, so it measures organic growth; Robinhood's net deposits instead state the date each acquisition entered. Either is defensible; mixing them across firms is not.
+**Core net new client assets** (Schwab) excludes one-time flows such as acquisitions, so it measures organic growth; Robinhood's net deposits instead state the date each acquisition entered. Either is defensible; mixing them across firms is not.
 
 ## Trading Activity and Take Rate
 
@@ -143,7 +143,7 @@ The gap is small here because the customer count grew 1% in the quarter; for a p
 | **RLDC and margin** | Revenue and reserve income less distribution, transaction and other costs, and that over revenue | The issuer's economics after paying distributors ([Distribution Costs](/books/investing-and-digital-assets/stablecoin-business#distribution-costs)) |
 | **Velocity** | On-chain transfer volume ÷ average circulation | Not an issuer-defined metric; Circle reports on-chain volume without defining it |
 
-**Worked numbers: checking reserve income against its definition.** Circle's third quarter 2026 release reports average USDC in circulation of $73.3 billion, a reserve return rate of 3.5% and reserve income of $658 million. Computing reserve income from circulation: $73.3 billion × 3.5% × 92 ÷ 365 = $647 million, $11 million short. Solving the other way, $658 million ÷ (3.5% × 92 ÷ 365) implies an average reserve balance of about $74.6 billion, above average circulation. Both are consistent with the definition, which divides by reserves, not circulation, and with a rounded rate (3.45% to 3.55% spans about $73.6 billion to $75.7 billion). The lesson for a builder: a rate published to one decimal can't reproduce income to the million, and a metric whose denominator differs from the obvious one has to say so in its definition. Velocity in the same quarter, by my arithmetic, was $13.9 trillion ÷ $73.3 billion, about 190 times in the quarter, a figure that mostly measures trading and DeFi churn, not payments.
+**Worked numbers: checking reserve income against its definition.** Circle's third quarter 2026 release reports average USDC in circulation of $73.3 billion, a reserve return rate of 3.5% and reserve income of $658 million. Computing reserve income from circulation: $73.3 billion × 3.5% × 92 ÷ 365 = $647 million, $11 million short. Solving the other way, $658 million ÷ (3.5% × 92 ÷ 365) implies an average reserve balance of about $74.6 billion, above average circulation. Both are consistent with the definition, which divides by reserves, not circulation, and with a rounded rate (3.45% to 3.55% spans about $73.5 billion to $75.7 billion). The lesson for a builder: a rate published to one decimal can't reproduce income to the million, and a metric whose denominator differs from the obvious one has to say so in its definition. Velocity in the same quarter, by my arithmetic, was $13.9 trillion ÷ $73.3 billion, about 190 times in the quarter, a figure that mostly measures trading and DeFi churn, not payments.
 
 ## Definitions as Code, Restatements as Rows
 
@@ -300,10 +300,10 @@ What auditors, the SEC's reviewers and investors ask of a public broker's or exc
 
 **Filings**
 
-- [Robinhood Markets: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000023/hood-20251231.htm), definitions of Funded Customers, Total Platform Assets, Net Deposits and its 12-month growth rate, ARPU, Gold Subscribers, notional volume and options contracts traded
-- [Robinhood Markets: Third quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000164/q32026robinhoodexhibit991.htm), Q3 2026 revenues, funded customers, platform assets, net deposits and both growth rates, ARPU, trading volumes, the Net Deposits definition and its scope changes, joint account counting
+- [Robinhood Markets: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000023/hood-20251231.htm), the key performance metrics it reports, including Funded Customers, Total Platform Assets, Net Deposits, ARPU and Gold Subscribers
+- [Robinhood Markets: Third quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000164/q32026robinhoodexhibit991.htm), Q3 2026 revenues, crypto revenue, funded customers, platform assets, net deposits and both growth rates with their definitions, ARPU, trading volumes by venue, and the definitions of Funded Customers (with joint account counting), Total Platform Assets, Net Deposits (with its scope changes), ARPU and Gold Subscribers
 - [Robinhood Markets: Second quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000113/q22026robinhoodexhibit991.htm), funded customers, Total Platform Assets and Net Deposits at the end of Q2 2026
-- [Charles Schwab: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/316709/000031670926000009/schw-20251231.htm), definitions of active brokerage accounts, client assets, core net new assets and daily average trades
+- [Charles Schwab: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/316709/000031670926000009/schw-20251231.htm), glossary definitions of active brokerage accounts, core net new client assets and daily average trades
 - [Interactive Brokers: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1381197/000138119726000062/ibkr-20251231.htm), the DARTs definition
 - [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), definitions of Monthly Transacting Users, Trading Volume and Assets on Platform, and the MTU overstatement risk
 - [Coinbase Global: Q3 2026 earnings deck (Form 8-K exhibit)](https://www.sec.gov/Archives/edgar/data/0001679788/000167978826000121/q326earningsdeck_vsec.htm), consumer and institutional volume, the 2026 Total Trading Volume definition and its relation to the old metric
