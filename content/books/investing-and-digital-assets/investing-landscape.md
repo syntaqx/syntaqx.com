@@ -123,12 +123,12 @@ Dated, from each acquirer's filing or announcement, as of November 2026:
 | October 2, 2020 | Morgan Stanley completes its all-stock acquisition of E*Trade at 1.0432 Morgan Stanley shares per share | A wirehouse buys a retail online broker |
 | October 6, 2020 | Charles Schwab completes its acquisition of TD Ameritrade at 1.0837 Schwab shares per share | Two of the largest retail brokers combine, followed by a multi-year account conversion ([Conversions, Shutdowns & Distributions](/books/investing-and-digital-assets/conversions-and-shutdowns)) |
 | February 4, 2025 | Stripe completes its acquisition of Bridge, a stablecoin infrastructure company | A payments company buys stablecoin rails ([Stablecoins](/books/payments/stablecoins)) |
-| February 26, 2025 | Robinhood completes its acquisition of TradePMR, an RIA custody and portfolio platform, for about $175 million of cash plus about $100 million of unvested stock compensation | A retail broker buys an advisor custodian |
+| February 26, 2025 | Robinhood completes its acquisition of TradePMR, an RIA custody and portfolio platform, for consideration with a fair value of about $175 million, plus unvested shares valued at about $100 million | A retail broker buys an advisor custodian |
 | June 2, 2025 | Robinhood completes its acquisition of Bitstamp, about $224 million of cash at fair value | A US broker buys a licensed global crypto exchange |
 | August 14, 2025 | Coinbase completes its acquisition of Deribit for $4.29 billion ($721 million of cash and $3.57 billion of stock), $2.82 billion of it goodwill | A US exchange buys an offshore crypto options venue, and its volume turns mostly to derivatives |
 | October 8, 2025 | Coinbase acquires Echo (Gm Echo Ltd) for $176 million ($68 million of cash, $108 million of stock) | Exchanges keep buying adjacent products |
 | December 12, 2025 | The OCC conditionally approves national trust banks for Circle and Ripple and conversions for BitGo, Fidelity Digital Assets and Paxos | Crypto custodians and issuers move under federal supervision |
-| January 20, 2026 | Rothera, Robinhood's joint venture with Susquehanna, acquires 90% of MIAXdx, renamed Rothera E&C | A broker co-owns a CFTC-licensed exchange and clearing house |
+| January 2026 | Rothera, Robinhood's joint venture with Susquehanna, acquires 90% of MIAXdx, renamed Rothera E&C | A broker co-owns a CFTC-licensed exchange and clearing house |
 | March 2, 2026 | Charles Schwab completes its acquisition of Forge Global, agreed November 5, 2025 at $45.00 a share in cash | A retail broker buys a private-company share marketplace |
 | June 2026 | Robinhood completes its acquisition of WonderFi, agreed May 12, 2025 at C$0.36 a share | A US broker buys outside the US |
 
@@ -140,7 +140,7 @@ Three patterns run through the list. **Brokers buy crypto, and crypto buys deriv
 
 Crypto and fintech firms went public in a run that started in May 2025. From each final prospectus (Form 424B4):
 
-| Prospectus date | Company | Venue and ticker | Price | Shares offered | Net proceeds to the company |
+| Prospectus date | Company | Venue and ticker | Price | Shares offered | Proceeds to the company before expenses |
 | --- | --- | --- | --- | --- | --- |
 | May 13, 2025 | eToro | Nasdaq, ETOR | $52.00 | 5,961,509 by the company and 5,961,509 by selling holders | $291.4 million |
 | June 4, 2025 | Circle | NYSE, CRCL | $31.00 | 34,000,000 (14.8 million by the company, 19.2 million by selling holders) | $433.6 million |
@@ -168,7 +168,7 @@ CREATE TABLE market_participants (         -- outside firms: counterparties, pee
   lei                 CHAR(20),              -- ISO 17442 legal entity identifier
   crd_number          INT,                   -- FINRA CRD, for broker-dealers and advisers
   sec_cik             INT,                   -- EDGAR filer ID, for filings
-  venue_id            UUID REFERENCES venues (id),  -- when the firm is also a venue we route to
+  venue_id            UUID REFERENCES venues (id),  -- when the firm is also a venue orders route to
   parent_id           UUID REFERENCES market_participants (id),
   is_public           BOOLEAN NOT NULL,
   UNIQUE (lei)
@@ -240,6 +240,7 @@ Design notes:
 - [Robinhood Markets: Third quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000164/q32026robinhoodexhibit991.htm), funded customers, platform assets, Gold subscribers, margin book, cash sweep, trading volumes and crypto notional by app and Bitstamp
 - [Robinhood Markets: Form 10-Q for the third quarter of 2026](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000167/hood-20260930.htm), Citadel Securities' share of net revenues and the WonderFi closing
 - [Robinhood Markets: Form 10-Q for the second quarter of 2025](https://www.sec.gov/Archives/edgar/data/1783879/000178387925000251/hood-20250630.htm), the TradePMR and Bitstamp closings and consideration, and the WonderFi agreement
+- [Robinhood Markets: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1783879/000178387926000023/hood-20251231.htm), Rothera's January 2026 acquisition of 90% of MIAXdx and its renaming
 - [Robinhood Securities: Rule 606 report, second quarter 2026](https://cdn.finra.org/606/2026/287900_606_NMS_2026_Q2_V1.pdf), April 2026 S&P 500 venue shares and payments
 - [Coinbase Global: Third quarter 2026 earnings deck](https://www.sec.gov/Archives/edgar/data/0001679788/000167978826000121/q326earningsdeck_vsec.htm), assets on platform and share of market capitalization, trading volume share and volume by product
 - [Coinbase Global: Form 10-Q for the third quarter of 2026](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000122/coin-20260930.htm), the Deribit and Echo acquisitions

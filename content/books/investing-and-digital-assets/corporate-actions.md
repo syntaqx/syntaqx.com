@@ -20,7 +20,7 @@ What platforms and the depository publish about corporate actions, as of Novembe
 
 | Platform | What it processes | How it treats fractions and orders | Voluntary events and votes |
 | --- | --- | --- | --- |
-| **Alpaca** (mandatory corporate actions) | Cash and stock dividends, forward and reverse splits, spinoffs, cash, stock and mixed mergers, full calls, liquidations, name changes; a stock-and-cash merger posts three entries (remove the old security, allocate new shares, allocate cash) | "For reverse splits all GTC orders will be canceled"; for forward splits "GTC buy limits and sell stops are adjusted"; a CUSIP change makes "the current asset" inactive and adds a new one; dividends post gross (`DIV`) with foreign withholding separately (`DIVNRA`) | Tender, exchange and rights offers, election mergers, consents and warrant exercises by email instruction, at "$100 per client per voluntary corporate action" |
+| **Alpaca** (mandatory corporate actions) | Cash and stock dividends, forward and reverse splits, spinoffs, cash, stock and mixed mergers, full calls, liquidations, name changes; a stock-and-cash merger posts three entries (remove the old security, allocate new shares, allocate cash) | "For reverse splits all GTC orders will be canceled"; for forward splits "GTC buy limits and sell stops are adjusted"; a CUSIP change makes "the current asset" inactive and adds a new one; dividends post gross (`DIV`) with foreign withholding separately (`DIVNRA`) | Tender, exchange and rights offers, election mergers, consents and warrant exercises, announced to customers by email with instructions, at "$100 per client per voluntary corporate action" |
 | **DTC** (Corporate Actions Processing) | "Announcements, elections, payments and reporting" for distributions, redemptions and reorganizations, across about 1.44 million issues and more than $100 trillion of securities serviced (Q2 2026) | Allocates to participants by position; participants allocate to their customers | Collects instructions from participants where an event needs them; ISO 20022 messaging |
 | **Fidelity** (fractional positions) | Dividends on fractional-only positions "in proportion to your ownership interest," supported to $0.01 | Fractions reinvest like full shares in its dividend reinvestment program | "You will not be able to participate in proxy voting" for the fractional portion, and most voluntary corporate actions are unavailable for it |
 | **Robinhood** (fractional shares) | Dividends on fractions "rounded to the nearest penny" | Forward splits deliver proportional fractions; reverse splits pay "the cash equivalent of any fractional (non-whole) share amounts" | Robinhood will "aggregate and report votes on fractional shares" |
@@ -65,7 +65,7 @@ A split changes the number of shares and nothing else: same company, same total 
 | 2 | Jul 8, 2026 | 10.5 | $1,890.00 | 31.5 | $1,890.00 | $60.00 |
 | **Total** | | **50.5** | **$7,890.00** | **151.5** | **$7,890.00** | |
 
-The ledger entry is one balanced set in XYZ: the customer up 101 shares, the DTC location up 101 shares (DTC credits the firm's account with the new shares on the payable date). Market value is unchanged because the price fell to a third. Open orders are part of the same event: a GTC limit buy for 20 shares at $140 becomes 60 shares at $46.67, or is canceled and the customer told; a stop that isn't adjusted becomes a sell order three times too high. Alpaca adjusts GTC buy limits and sell stops on a forward split; my default is to adjust only where the arithmetic is exact and cancel the rest with a notice.
+The ledger entry is one balanced set in XYZ: the customer line +101 shares, the DTC location line −101 (101 more shares held there; DTC credits the firm's account with the new shares on the payable date). Market value is unchanged because the price fell to a third. Open orders are part of the same event: a GTC limit buy for 20 shares at $140 becomes 60 shares at $46.67, or is canceled and the customer told; a stop that isn't adjusted becomes a sell order three times too high. Alpaca adjusts GTC buy limits and sell stops on a forward split; my default is to adjust only where the arithmetic is exact and cancel the rest with a notice.
 
 A **reverse split** consolidates shares, usually to lift a low price above an exchange's minimum, and creates fractions for anyone whose position doesn't divide evenly. Issuers pay **cash in lieu** of the fractions, and Publication 550 treats that cash as "an amount realized on the sale of the fractional shares": a sale, with a gain or loss against the fraction's share of basis.
 
@@ -114,7 +114,7 @@ A **tender offer** asks holders to sell their shares to the bidder or the issuer
 
 ## DTC Processing
 
-DTC is the industry's corporate action processor for street-name securities: its Corporate Actions Processing service "manages announcements, elections, payments and reporting across the lifecycle of an event," for distributions, redemptions and reorganizations, across about 1.44 million issues serviced (Q2 2026), with ISO 20022 message specifications for participants. From a participant's side the flow is:
+DTC is the industry's corporate action processor for street-name securities: its Corporate Actions Processing service lets participants "Manage corporate action announcements, elections, payments and reporting through one reliable service," for distributions, redemptions and reorganizations, across about 1.44 million issues serviced (Q2 2026), with ISO 20022 message specifications for participants. From a participant's side the flow is:
 
 1. **Announcement.** DTC publishes the event's terms (type, ratios, rates, dates, options, deadlines) to participants; the broker loads it as an `asset_events` row, from the feed rather than retyped, and compares it to at least one other source (the issuer's press release, a data vendor).
 2. **Entitlement.** On the record date (or the ex-date, for events where the entitlement follows trades), DTC computes each participant's entitlement on its DTC position. The broker computes each account's entitlement on its own books, and the two totals have to agree with the firm's DTC position plus its fails and pending deliveries.
@@ -126,7 +126,7 @@ An introducing broker's clearing firm does this for it, and the introducing brok
 
 ## Fractional Entitlements
 
-Fractional shares inherit every corporate action with the arithmetic made visible. A forward split multiplies fractions (Robinhood delivers "the proportional fractional shares"), a dividend pays to the cent, a reverse split turns fractions into cash, a merger turns them into fractions of the new company or into cash, and a spinoff can create a fraction of the new company from a whole number of the old. The firm's rule has to be the same at every event: compute each account's entitlement at the instrument's quantity precision, round cash to the cent with one stated rule, cash out fractions the firm won't carry, and book what is left over to a firm account so that customers' positions plus the firm's own equal what the firm received from DTC. Where fractions are held in the firm's inventory, the firm is itself a holder and receives its own entitlement, which is part of the reconciliation. [Fractional Shares & Recurring Investing](/books/investing-and-digital-assets/fractional-and-recurring#rounding-and-residuals) has the worked allocation.
+Fractional shares inherit every corporate action with the arithmetic made visible. A forward split multiplies fractions (Robinhood customers "receive the relevant amount of fractional shares"), a dividend pays to the cent, a reverse split turns fractions into cash, a merger turns them into fractions of the new company or into cash, and a spinoff can create a fraction of the new company from a whole number of the old. The firm's rule has to be the same at every event: compute each account's entitlement at the instrument's quantity precision, round cash to the cent with one stated rule, cash out fractions the firm won't carry, and book what is left over to a firm account so that customers' positions plus the firm's own equal what the firm received from DTC. Where fractions are held in the firm's inventory, the firm is itself a holder and receives its own entitlement, which is part of the reconciliation. [Fractional Shares & Recurring Investing](/books/investing-and-digital-assets/fractional-and-recurring#rounding-and-residuals) has the worked allocation.
 
 Voluntary events are harder for fractions: a fraction can't be tendered at DTC because DTC holds whole shares, which is why Fidelity says most voluntary corporate actions aren't available for the fractional portion. A firm that offers it is tendering whole shares from its own inventory against its customers' fractions, and takes the proration risk itself.
 
@@ -182,7 +182,7 @@ ALTER TABLE asset_events
 CREATE TABLE asset_event_entitlements (       -- what each account gets, computed once per revision
   asset_event_id     UUID NOT NULL REFERENCES asset_events (id),
   revision           INT NOT NULL,
-  account_id         UUID NOT NULL REFERENCES accounts (id),   -- the firm's own entitlement uses its firm account
+  account_id         UUID REFERENCES accounts (id),            -- NULL: the firm's own entitlement (firm lines carry no account)
   eligible_quantity  NUMERIC(78, 0) NOT NULL,                  -- position at record date, ex-date or snapshot block
   cash_amount        BIGINT NOT NULL DEFAULT 0,                -- minor units, gross
   withholding_amount BIGINT NOT NULL DEFAULT 0,
@@ -191,7 +191,7 @@ CREATE TABLE asset_event_entitlements (       -- what each account gets, compute
   rounding_rule      TEXT NOT NULL,                            -- 'half_even_cents', 'truncate_9dp', ...
   status             TEXT NOT NULL CHECK (status IN ('computed', 'posted', 'reversed')),
   journal_entry_id   UUID REFERENCES journal_entries (id),
-  PRIMARY KEY (asset_event_id, revision, account_id)
+  UNIQUE NULLS NOT DISTINCT (asset_event_id, revision, account_id)
 );
 
 CREATE TABLE proxy_votes (                    -- record-date entitlement, what was sent, what came back
@@ -238,7 +238,7 @@ WITH holders AS (
   WHERE jl.instrument_id = :instrument
     AND jl.ledger_account IN ('customer', 'firm')
     AND je.effective_date < :ex_date                         -- bought before the ex-date
-  GROUP BY jl.account_id
+  GROUP BY jl.account_id                                     -- firm lines group as one NULL row
   HAVING SUM(jl.amount) > 0
 )
 SELECT account_id, qty,
