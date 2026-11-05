@@ -18,10 +18,10 @@ As of November 2026, from the firms' filings and help pages and from regulators:
 | Who | What's public | Source |
 | --- | --- | --- |
 | **Coinbase** | Support contractors and employees outside the US were paid to pull customer data from internal tools; no passwords or keys were taken, and the data was used to socially engineer customers into sending funds; Coinbase said it would "voluntarily reimburse" eligible retail customers who did, estimated $180 million to $400 million in costs, fired the people involved, added fraud monitoring and warnings, and opened a US support hub ([Coinbase, May 2025](/books/investing-and-digital-assets/exchange-security#coinbase-may-2025)) | Form 8-K, May 14, 2025 |
-| **Kraken** | Two-factor authentication set separately for sign-in, funding (deposits and withdrawals) and trading; "Step-up 2FA" requires a code to add, edit or remove 2FA settings ("Without the Step-up 2FA code no changes can be made"); a Global Settings Lock that requires a Master Key; an email confirmation before a new withdrawal address can be used ([The Checks](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals#the-checks)) | Support center |
+| **Kraken** | Two-factor authentication set separately for sign-in, funding (deposits and withdrawals) and trading; "Step-up 2FA" requires a code to add, edit or remove 2FA settings ("Without the Step-up 2FA code no changes can be made"); a Global Settings Lock, which Kraken says to enable only after a Master Key; email confirmations for adding new withdrawal addresses ([The Checks](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals#the-checks)) | Support center |
 | **Gemini** | Withdrawals restricted to allowlisted addresses and 2FA required for withdrawals by default ([The Checks](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals#the-checks)) | Support center, via that chapter |
 | **FINRA** | ACATS takeover: an account opened in the victim's name at a receiving firm pulls their real account over, with effective practices for both firms ([Transfer Fraud](/books/investing-and-digital-assets/funding-and-transfers#transfer-fraud)); Rule 2165 holds for specified adults ([Trusted Contacts and Senior Holds](/books/investing-and-digital-assets/opening-accounts#trusted-contacts-and-senior-holds)) | Regulatory Notices 22-21 and 23-06; Rule 2165 |
-| **FCC** | Wireless carriers must use secure authentication before moving a number to a new device or carrier and notify customers immediately of SIM change and port-out requests | Report and Order, December 2023 |
+| **FCC** | Wireless carriers must use secure authentication before moving a number to a new device or carrier and notify customers immediately of SIM change and port-out requests | Report and Order (88 FR 85794, December 8, 2023) |
 
 Three patterns run through it:
 
@@ -34,7 +34,7 @@ Three patterns run through it:
 The takeover sequence (get a credential, get past the second factor, make it stick, prepare the exit, move the value) is the same as at a bank ([Account Takeover](/books/banking-and-lending/account-takeover-and-scams#account-takeover)). Brokers and exchanges add their own versions of each step:
 
 - **Credential phishing and stuffing.** Look-alike login pages for exchanges, and passwords reused from other breaches; a rate-limiting and detection problem first ([Credential Stuffing and Enumeration](/docs/security/authentication#credential-stuffing-and-enumeration)).
-- **SIM swaps and port-outs.** An attacker persuades a carrier to move the victim's number, then receives the SMS codes. The FCC's December 2023 order requires carriers to authenticate customers securely before redirecting a number and to notify them immediately of SIM change or port-out requests; the platform still treats SMS as the weakest factor it accepts and never as the only one for a withdrawal or a security change.
+- **SIM swaps and port-outs.** An attacker persuades a carrier to move the victim's number, then receives the SMS codes. The FCC's 2023 order requires carriers to authenticate customers securely before redirecting a number and to notify them immediately of SIM change or port-out requests; the platform still treats SMS as the weakest factor it accepts and never as the only one for a withdrawal or a security change.
 - **Support impersonation.** A call or message "from the exchange's security team" warning of a compromise and walking the customer through moving funds to a "safe" address, or installing remote-access software. Leaked support data makes it believable.
 - **ACATS takeover.** An identity thief opens an account at another broker and requests a full transfer of the victim's account ([Transfer Fraud](/books/investing-and-digital-assets/funding-and-transfers#transfer-fraud)).
 - **Changed bank link.** The attacker links a new bank account, sells the positions and withdraws cash; at a broker this is the takeover's exit.
@@ -105,7 +105,7 @@ Coinbase's May 2025 incident is the template: the threat actor paid "multiple co
 - **Support can't move money or weaken an account.** An agent can't remove a hold, change a contact point, add a withdrawal address or reset 2FA on the customer's say-so over the phone. Those actions require the customer's step-up from a bound device, or a recovery process with identity verification that the agent starts but doesn't complete ([Delegation, Not Impersonation](/docs/security/support-access#delegation-not-impersonation)).
 - **An agent trying is a signal.** An agent who opens a hold, attempts a contact change or views many high-balance accounts outside their queue generates an alert to someone else.
 - **Inbound calls are not the exchange.** The platform tells customers, standing and in the app, that it will never ask them to move funds, never ask for a code, and never call to warn about a compromise without the same message appearing in the app. In-app messaging is the only channel that can ask for anything.
-- **Reimbursement decisions are policy.** Coinbase reimbursed customers socially engineered "as a direct result of the Incident"; a firm that wants that option needs to know which customers were in the leaked data and which losses followed from it, which is a join between the incident's affected accounts and the takeover cases (below).
+- **Reimbursement decisions are policy.** Coinbase reimbursed customers socially engineered "as a direct result of this Incident"; a firm that wants that option needs to know which customers were in the leaked data and which losses followed from it, which is a join between the incident's affected accounts and the takeover cases (below).
 
 ## Breach Notice
 
@@ -113,7 +113,7 @@ A breach of customer data at a broker-dealer is now a notice duty with a clock. 
 
 ## Senior Investors and Exploitation
 
-Exploitation of older customers is the case where the customer is giving the instruction, sincerely, on someone else's behalf. The broker's tools are the trusted contact (FINRA Rule 4512) and the temporary hold under Rule 2165, with its notice within two business days and its 15, 10 and 30 business day clocks, worked through in [Trusted Contacts and Senior Holds](/books/investing-and-digital-assets/opening-accounts#trusted-contacts-and-senior-holds). FINRA's proposed Rule 2166, which would allow a delay of up to five business days for any adult, had not been adopted as of November 2026 (same section). In the model, a 2165 hold is a `withdrawal_holds` row with reason `senior_exploitation` pointing at the `senior_investor_holds` record that carries the rule's clocks, so the withdrawal pipeline reads one table for every hold and the 2165 record keeps its own. The bank's side, including suspicious activity reporting, is in [Elder Financial Exploitation](/books/banking-and-lending/account-takeover-and-scams#elder-financial-exploitation).
+Exploitation of older customers is the case where the customer is giving the instruction, sincerely, on someone else's behalf. The broker's tools are the trusted contact (FINRA Rule 4512) and the temporary hold under Rule 2165, with its notice within two business days and its 15, 10 and 30 business day clocks, worked through in [Trusted Contacts and Senior Holds](/books/investing-and-digital-assets/opening-accounts#trusted-contacts-and-senior-holds). FINRA's proposed Rule 2166, which would allow a delay of up to five business days for any adult, was put out for comment in Regulatory Notice 26-02 (January 8, 2026), and the notice shows no adoption as of November 2026 (same section). In the model, a 2165 hold is a `withdrawal_holds` row with reason `senior_exploitation` pointing at the `senior_investor_holds` record that carries the rule's clocks, so the withdrawal pipeline reads one table for every hold and the 2165 record keeps its own. The bank's side, including suspicious activity reporting, is in [Elder Financial Exploitation](/books/banking-and-lending/account-takeover-and-scams#elder-financial-exploitation).
 
 ## Restitution
 
@@ -265,7 +265,7 @@ pub fn decide_hold(w: &Withdrawal, events: &[SecurityEvent], p: &Policy) -> Hold
 }
 ```
 
-With the worked numbers' policy (24-hour cooling, 48-hour security change hold, 80% review share), the 02:14 request gets three reasons and a release no earlier than 01:36 two days later, pending review.
+With the worked numbers' policy (24-hour cooling, 48-hour security change hold, 80% review share), the 02:14 request gets all three kinds of reason (cooling, security change, review) and a release no earlier than 01:36 two days later, pending review.
 
 Customers in a breached dataset, for the stricter policy and the direct warning; the incident's affected accounts come from the incident record:
 
@@ -320,11 +320,14 @@ The records a regulator, an arbitrator, a court or the customer asks for after a
 
 **Law and regulation**
 
-- [FINRA Rule 2165 (Financial Exploitation of Specified Adults)](https://www.finra.org/rules-guidance/rulebooks/finra-rules/2165), temporary holds on disbursements and transactions for specified adults
+- [FINRA Rule 2165 (Financial Exploitation of Specified Adults)](https://www.finra.org/rules-guidance/rulebooks/finra-rules/2165), temporary holds on disbursements and transactions for specified adults: 15 business days, extendable by 10 and then 30, with notice within two business days
 
 **Regulators and guidance**
 
-- [Federal Register: Protecting Consumers From SIM-Swap and Port-Out Fraud (FCC Report and Order, December 8, 2023)](https://www.federalregister.gov/documents/2023/12/08/2023-26338/protecting-consumers-from-sim-swap-and-port-out-fraud), secure authentication before a number is redirected and immediate notice of SIM change and port-out requests
+- [FINRA Regulatory Notice 22-21 (October 6, 2022)](https://www.finra.org/rules-guidance/notices/22-21), fraudulent ACATS transfers using accounts opened in victims' names
+- [FINRA Regulatory Notice 23-06 (March 28, 2023)](https://www.finra.org/rules-guidance/notices/23-06), effective practices against fraudulent ACATS transfers
+- [FINRA Regulatory Notice 26-02 (January 8, 2026)](https://www.finra.org/rules-guidance/notices/26-02), the proposed Rule 2166 delay of up to five business days, out for comment
+- [Federal Register: Protecting Consumers From SIM-Swap and Port-Out Fraud (FCC Report and Order, 88 FR 85794, December 8, 2023)](https://www.federalregister.gov/documents/2023/12/08/2023-26338/protecting-consumers-from-sim-swap-and-port-out-fraud), secure authentication before a number is redirected and immediate notice of SIM change and port-out requests
 - [SEC: SEC adopts amendments to Regulation S-P (press release 2024-58, May 16, 2024)](https://www.sec.gov/newsroom/press-releases/2024-58), the 30-day notice and the 18 and 24 month compliance periods
 - [Federal Register: Regulation S-P, Privacy of Consumer Financial Information and Safeguarding Customer Information (89 FR 47688, June 3, 2024)](https://www.federalregister.gov/documents/2024/06/03/2024-11116/regulation-s-p-privacy-of-consumer-financial-information-and-safeguarding-customer-information), the incident response program, customer notice, the 72-hour service provider notice and the August 2, 2024 effective date
 
@@ -334,4 +337,5 @@ The records a regulator, an arbitrator, a court or the customer asks for after a
 
 **Vendor documentation**
 
-- [Kraken: Secure your account with two-factor authentication (2FA)](https://support.kraken.com/hc/en-us/articles/360000426923-Global-Settings-Lock-GSL-), separate sign-in, funding and trading 2FA, Step-up 2FA and the Global Settings Lock's Master Key requirement
+- [Kraken: Secure your account with two-factor authentication (2FA)](https://support.kraken.com/hc/en-us/articles/360000426923-Global-Settings-Lock-GSL-), separate sign-in, funding and trading 2FA, Step-up 2FA, and enabling the Global Settings Lock only after a Master Key
+- [Kraken: Security](https://www.kraken.com/features/security), email confirmations for new withdrawal addresses and the global settings time lock

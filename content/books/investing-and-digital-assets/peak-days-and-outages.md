@@ -25,7 +25,7 @@ The public record of outages at brokers and exchanges, as of November 2026, from
 | January 27 to 28, 2021 | One broker (unnamed by the SEC staff) | Its system reached its limit of unique order IDs, and it restricted new GME and AMC purchases for the last ninety minutes the next day ([Clearing Deposits and the January 2021 Restrictions](/books/investing-and-digital-assets/pre-trade-risk-and-halts#clearing-deposits-and-the-january-2021-restrictions)) | SEC staff report, via that chapter |
 | 2025 | Coinbase | "approximately 10 outages, with an average outage duration of 74.2 minutes" | 2025 Form 10-K |
 | May 7, 2026 | Coinbase Exchange | Cooling failure in one us-east-1 data hall; three of five matching engine nodes lost, no automated cross-zone failover; customers couldn't buy, sell, deposit, withdraw or transfer for several hours; markets reopened through cancel-only and auction modes ([Replay and Recovery](/books/investing-and-digital-assets/order-books-and-matching#replay-and-recovery)) | InfoQ report of Coinbase's postmortem |
-| October 29, 2026 | Binance | Withdrawals suspended after a hot wallet compromise and reopened asset by asset from November 5, deposits open throughout ([Binance, October 29, 2026](/books/investing-and-digital-assets/exchange-security#binance-october-29-2026)) | Binance's updates |
+| October 29, 2026 | Binance | Withdrawals suspended after a hot wallet compromise; as of its November 5 update, reopening asset by asset, with deposit services open ([Binance, October 29, 2026](/books/investing-and-digital-assets/exchange-security#binance-october-29-2026)) | Binance's updates |
 
 Four lessons run through it:
 
@@ -52,14 +52,14 @@ A worked plan of my own for a hypothetical broker with 12 million funded account
 
 **The normal day.** 3 million orders a day. The first 15 minutes carry 12% of them: 360,000 orders in 900 seconds, 400 a second on average, and the busiest second runs at three times that average, 1,200 orders a second. Each order produces about six writes to the posting service and its outbox (the buying power hold, the route, the venue acknowledgment, an average 1.3 fills, the hold release and the confirm event), so 7,200 writes a second at the opening peak.
 
-**The surge factor.** Robinhood's 7.5x over six months is the public anchor; my plan uses 10x on orders for a single morning, because a squeeze concentrates new demand in hours, not months.
+**The surge factor.** Robinhood's 7.5x over six months (750,000 over 100,000 requests a second, which its engineers called "a 7x increase") is the public anchor; my plan uses 10x on orders for a single morning, because a squeeze concentrates new demand in hours, not months.
 
 | Count | Normal opening peak | Meme-day plan (10x) | Tested capacity (2x the plan) |
 | --- | --- | --- | --- |
 | Orders a second, platform | 1,200 | 12,000 | 24,000 |
 | Posting writes a second, platform (6 per order) | 7,200 | 72,000 | 144,000 |
 | Posting writes a second, per shard (10 shards) | 720 | 7,200 | 14,400 |
-| Orders a second in the top symbol (60% of flow) | 120 | 7,200 | 14,400 |
+| Orders a second in the top symbol (10% of flow normally, 60% on the meme day) | 120 | 7,200 | 14,400 |
 | Account applications an hour | 2,000 | 20,000 | Vendor limit: 12,000 (below) |
 | Orders in the day | 3 million | 30 million | Order ID space: 10 million a day (below) |
 
@@ -70,7 +70,7 @@ What the table finds that a single load test wouldn't:
 - **Third parties have limits too.** If the identity verification vendor's contract allows 12,000 checks an hour, 20,000 applications an hour queue. That is fine if account opening is designed to queue with an honest wait message ([Position and Wait Messages](/docs/architecture/admission-control#position-and-wait-messages)); it's an outage if the signup flow times out and retries.
 - **Identifier spaces run out.** Suppose order IDs carry a daily sequence capped at 10 million. A normal day uses 30% of it. On the meme day, with a quarter of the 30 million orders in the first hour (7.5 million) and the rest spread over the remaining five and a half hours (about 4.1 million an hour), the cap falls about 37 minutes into the second hour, around 11:07 am. The broker the SEC staff found had reached its limit of unique order IDs in January 2021 had a version of this problem ([Clearing Deposits and the January 2021 Restrictions](/books/investing-and-digital-assets/pre-trade-risk-and-halts#clearing-deposits-and-the-january-2021-restrictions)). Every counter, sequence and fixed-width field gets the same 10x check.
 
-The plan is tested, not just computed: replayed production traffic at the plan's rates against a production-like shard (Robinhood's crypto team built "an in-house framework" to replay production reads at scaled rates), synthetic orders against venue test environments, and a game day that loses a shard at the planned peak ([Runbooks and Game Days](/docs/operations/disaster-recovery#runbooks-and-game-days)).
+The plan is tested, not just computed: replayed production traffic at the plan's rates against a production-like shard (Robinhood's crypto team load tested with its "in-house framework," replaying recorded production reads at scaled rates), synthetic orders against venue test environments, and a game day that loses a shard at the planned peak ([Runbooks and Game Days](/docs/operations/disaster-recovery#runbooks-and-game-days)).
 
 ## Load Shedding and Degraded Modes
 
@@ -82,7 +82,7 @@ When demand exceeds capacity anyway, the platform chooses what fails. The playbo
 4. **Quotes,** conflated to a lower rate before any connection is dropped ([Fan-Out to Millions of Clients](/books/investing-and-digital-assets/market-data#fan-out-to-millions-of-clients)).
 5. **Funding and withdrawals** of cash, which can queue with a clear message.
 6. **Account opening,** queued.
-7. **Everything else:** charts, news, discovery, referrals, notifications that aren't about orders. Robinhood's crypto team built throttling to "temporarily disable less critical features."
+7. **Everything else:** charts, news, discovery, referrals, notifications that aren't about orders. Robinhood's crypto team built throttling for "temporarily turning off certain less business critical features."
 
 Each step is a degraded mode the platform can enter on purpose, per scope:
 
@@ -102,7 +102,7 @@ Two rules make the modes safe. **A mode is a row, not a deploy:** `degradation_m
 
 A broker or exchange is a chain of other firms' systems, and volatility loads all of them at once:
 
-- **Venues and liquidity providers.** March 9, 2020 was a venue's protocol change the broker hadn't tested. Robinhood's 2025 10-K warns that liquidity provider disruptions "have in the past, and may in the future, impair our ability to execute" customer orders, "particularly during peak trading hours." Every venue change goes through certification before it reaches production, and routing has a fallback per symbol when one destination drops.
+- **Venues and liquidity providers.** March 9, 2020 was a venue's protocol change the broker hadn't tested. Robinhood's 2025 10-K warns that disruptions at its liquidity providers have in the past, and may in the future, "impair our ability to execute our client's orders," and names downtime "particularly during peak trading hours." Every venue change goes through certification before it reaches production, and routing has a fallback per symbol when one destination drops.
 - **The clearing house.** NSCC's deposit calls rise with volatility; the January 2021 restrictions came from a deposit, not a failed server ([Clearing Deposits and the January 2021 Restrictions](/books/investing-and-digital-assets/pre-trade-risk-and-halts#clearing-deposits-and-the-january-2021-restrictions)).
 - **The cloud zone.** Coinbase's engine was co-located in one placement group for latency, so a data hall failure took a quorum at once. Placement is part of the quorum design ([Blast Radius in Real Outages](/books/hosting-and-cloud/regions-zones-and-cells#blast-radius-in-real-outages)).
 - **Chains and rollups.** A congested chain delays withdrawals; a rollup's sequencer outage stops deposits and withdrawals on it ([Layer 2s, Bridges & Cross-Chain](/books/investing-and-digital-assets/layer-2s-and-bridges)).
@@ -112,7 +112,7 @@ My rule for the week before a known risk (a big expiration, an index rebalance, 
 
 ## Status Communication
 
-FINRA's order describes the worst version: during the March 2020 outage customers "could not communicate with the firm because the firm's only support options at the time (email and an in-application customer contact portal) also experienced disruptions," and "the firm had no live customer service telephone line." Rule 4370 requires a plan for "alternate communications with customers," and the order found the plan promised phone contact the firm couldn't provide.
+FINRA's order describes the worst version: during the March 2020 outage customers "could not communicate with the firm" because its only support options, email and an in-application contact portal, were also disrupted, and "the firm had no live customer service telephone line." Rule 4370 requires a plan for "alternate communications between customers and the member," and the order found the plan promised phone contact the firm couldn't provide.
 
 What I build:
 
@@ -128,8 +128,8 @@ Regulation Systems Compliance and Integrity (17 CFR 242.1000 to 242.1007) is the
 What it requires of SCI systems (those that directly support trading, clearance and settlement, order routing, market data, market regulation or surveillance):
 
 - **Policies with capacity planning and stress tests.** Rule 1001(a) requires "reasonable current and future technological infrastructure capacity planning estimates" and "periodic capacity stress tests," the formal version of the plan above.
-- **Business continuity with stated targets.** Backup and recovery "sufficiently resilient and geographically diverse" to achieve "two-hour resumption of critical SCI systems and next business day resumption of trading" after a wide-scale disruption.
-- **Corrective action and notice to the SEC.** On a reasonable basis to conclude an SCI event (a systems disruption, a systems compliance issue or a systems intrusion) has occurred: corrective action, notice to the SEC "immediately," a written notification "within 24 hours," regular updates, and a final report within five business days after resolution (or an interim one within 30 calendar days if it isn't resolved by then). Events with no or a de minimis impact are logged and reported quarterly instead.
+- **Business continuity with stated targets.** Backup and recovery "sufficiently resilient and geographically diverse" to achieve "next business day resumption of trading and two-hour resumption of critical SCI systems" after a wide-scale disruption.
+- **Corrective action and notice to the SEC.** On a reasonable basis to conclude an SCI event (a systems disruption, a systems compliance issue or a systems intrusion) has occurred: corrective action, notice to the SEC "immediately," a written notification "within 24 hours," regular updates, and a final report within five business days after resolution (or an interim one within 30 calendar days if it isn't resolved by then). Events with no or a de minimis impact are recorded instead, and disruptions and intrusions among them are summarized to the SEC quarterly.
 - **Telling members.** Information about a systems disruption goes "promptly" to the members or participants affected, and for a major SCI event to all of them.
 
 Two uses for a broker or crypto exchange that isn't covered. **Its venues are,** so their SCI notices are part of the broker's incident inputs: a venue's disruption notice is a routing decision. **The rule is a good template.** Capacity estimates, stress tests, a two-hour target for critical systems, classified events with clocks and notice to affected participants are exactly what a crypto venue's board should ask for; the EU's DORA imposes its own version on EU crypto-asset service providers and NYDFS's Part 500 on New York licensees, both covered in the Banking & Lending volume's [Security, Resilience & Incident Notice](/books/banking-and-lending/security-and-resilience#business-continuity-and-operational-resilience).
@@ -307,4 +307,5 @@ The records an examiner, a plaintiff's lawyer or an arbitration panel asks for a
 
 - [Robinhood: How we scaled Robinhood's brokerage system for greater reliability (June 25, 2021)](https://robinhood.com/newsroom/how-we-scaled-robinhoods-brokerage-system-for-greater-reliability), peak load of 100,000 requests a second in December 2019 and 750,000 in June 2020
 - [Robinhood: Scaling Robinhood crypto systems (September 9, 2022)](https://robinhood.com/newsroom/scaling-robinhood-crypto-systems/), replaying production reads for load tests and throttling less critical features
-- [InfoQ: Coinbase AWS failure postmortem (June 16, 2026)](https://infoq.com/news/2026/06/coinbase-aws-failure-postmortem), the May 7, 2026 outage, its duration and its recovery through cancel-only and auction modes
+- [InfoQ: Coinbase AWS failure postmortem (June 16, 2026)](https://www.infoq.com/news/2026/06/coinbase-aws-failure-postmortem/), the May 7, 2026 us-east-1 cooling failure, the loss of three of five nodes, no automated cross-zone failover, several hours without buys, sells, deposits, withdrawals or transfers, and the recovery through cancel-only and auction modes
+- [Binance: Security incident recovery update #8 (November 5, 2026)](https://www.binance.com/en/support/announcement/detail/a225a3b6084c41dc8c8dfb33f4de5872), withdrawals reopening by network and asset, prioritized by demand, with deposit services open
