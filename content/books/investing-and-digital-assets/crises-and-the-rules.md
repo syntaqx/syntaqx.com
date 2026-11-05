@@ -34,7 +34,7 @@ Reading the rules as answers to specific failures is the fastest way to understa
 
 The Dow Jones Industrial Average fell nearly 13% on Black Monday, October 28, 1929, and nearly 12% more the next day. From its peak of 381.17 on September 3, 1929 it fell to 41.22 on July 8, 1932, 89% below the peak, and didn't regain the 1929 high until November 23, 1954. Congress answered with two statutes: the Securities Act of 1933 (enacted May 27, 1933), which requires registration and disclosure for securities offered to the public, and the Securities Exchange Act of 1934 (June 6, 1934), which regulates exchanges, brokers and trading and created the Securities and Exchange Commission.
 
-Everything in this volume that says "registered" traces here: the broker-dealer registration in [Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses#which-registration-each-activity-needs), the disclosure duties behind every confirm and statement, and the question of whether a token is a security, which is a question about the 1933 Act (Securities, Commodities & Crypto Market Structure).
+Everything in this volume that says "registered" traces here: the broker-dealer registration in [Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses#which-registration-each-activity-needs), the disclosure duties behind every confirm and statement, and the question of whether a token is a security, which is a question about the 1933 Act ([Securities, Commodities & Crypto Market Structure](/books/investing-and-digital-assets/securities-or-commodities)).
 
 ## 1968 to 1972: The Paperwork Crisis and SIPC
 
@@ -68,7 +68,7 @@ MF Global declared bankruptcy on October 31, 2011 with deficiencies in its custo
 
 ## 2014: Mt. Gox
 
-Mt. Gox, a bitcoin exchange in Tokyo, applied for civil rehabilitation on February 28, 2014; the application was dismissed and bankruptcy proceedings began on April 24, 2014. The repayment of creditors is still running: on October 16, 2026 the trustee moved the deadline for base, early lump-sum and intermediate repayments from October 31, 2026 to October 31, 2027, after earlier extensions in 2023, 2024 and 2025. Two licensing regimes followed. Japan's Payment Services Act, amended in 2016, brought virtual currency exchange businesses under regulation from April 1, 2017. New York's BitLicense regulation, 23 NYCRR Part 200, took effect on June 24, 2015. Licensing a Crypto Business covers both; Exchange Security & Hacks covers the hack record that started here.
+Mt. Gox, a bitcoin exchange in Tokyo, applied for civil rehabilitation on February 28, 2014; the application was dismissed and bankruptcy proceedings began on April 24, 2014. The repayment of creditors is still running: on October 16, 2026 the trustee moved the deadline for base, early lump-sum and intermediate repayments from October 31, 2026 to October 31, 2027, after earlier extensions in 2023, 2024 and 2025. Two licensing regimes followed. Japan's Payment Services Act, amended in 2016, brought virtual currency exchange businesses under regulation from April 1, 2017. New York's BitLicense regulation, 23 NYCRR Part 200, took effect on June 24, 2015. [Licensing a Crypto Business](/books/investing-and-digital-assets/crypto-licensing) covers both; Exchange Security & Hacks covers the hack record that started here.
 
 ## 2021: Meme Stocks and T+1
 

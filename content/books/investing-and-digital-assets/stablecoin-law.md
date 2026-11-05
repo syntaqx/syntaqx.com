@@ -116,7 +116,7 @@ New York's June 8, 2022 guidance remains the most detailed state standard and a 
 
 ### California
 
-California's Digital Financial Assets Law requires a license (or a pending application or exemption) for digital financial asset business with California residents from July 1, 2026, covers persons who issue a digital financial asset with authority to redeem it for money, and prohibits offering stablecoins to California residents unless the stablecoin meets the law's reserve requirements; the DFPI notes that issuer requirements "depend on the characteristics of the stablecoin." Exchanges licensing under it are the volume's Licensing a Crypto Business chapter.
+California's Digital Financial Assets Law requires a license (or a pending application or exemption) for digital financial asset business with California residents from July 1, 2026, covers persons who issue a digital financial asset with authority to redeem it for money, and prohibits offering stablecoins to California residents unless the stablecoin meets the law's reserve requirements; the DFPI notes that issuer requirements "depend on the characteristics of the stablecoin." Exchanges licensing under it are the volume's [Licensing a Crypto Business](/books/investing-and-digital-assets/crypto-licensing) chapter.
 
 ## The EU: MiCA
 
@@ -128,7 +128,7 @@ For an EMT issuer the reserve rules come from MiCA and the E-Money Directive tog
 - **A significant EMT** (one the EBA classifies as significant by size and use) brings ART-style rules to an EMI issuer: the reserve, custody and investment rules of Articles 36 to 38 and parts of Article 45 apply instead of the E-Money Directive's safeguarding article, with higher own funds, and an independent audit of the reserve every six months (Article 58(1), (2)).
 - **An EMT in a non-EU currency is capped as a means of exchange.** Article 58(3) applies Articles 22, 23 and 24(3) to EMTs denominated in a currency that is not an official currency of a Member State. Under Article 23, when the quarterly average of transactions a day used as a means of exchange within a single currency area exceeds 1 million transactions and EUR 200,000,000, the issuer must stop issuing and within 40 working days submit a plan to keep usage below both thresholds; issuance resumes only when the authority has evidence usage is below them. For a dollar EMT such as USDC issued in the EU, this is the clause that limits it to something other than a euro-area payment instrument at scale.
 
-Circle issues USDC and EURC in the EEA through its French EMI, and Paxos issues USDG through its Finnish entity; CASP transitional periods ended July 1, 2026, so an EU exchange offering the public a stablecoin whose issuer isn't authorized is out of compliance. Licensing a CASP is the volume's Beyond the US chapter.
+Circle issues USDC and EURC in the EEA through its French EMI, and Paxos issues USDG through its Finnish entity; CASP transitional periods ended July 1, 2026, so an EU exchange offering the public a stablecoin whose issuer isn't authorized is out of compliance. Licensing a CASP is [The EU: MiCA CASP Authorization](/books/investing-and-digital-assets/crypto-licensing#the-eu-mica-casp-authorization) in Licensing a Crypto Business.
 
 ## The UK
 
