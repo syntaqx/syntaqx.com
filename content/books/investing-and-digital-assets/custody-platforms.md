@@ -18,7 +18,7 @@ What the platforms say publicly, as of November 2026:
 
 | Platform | Who holds the keys | Account model | Approvals and policy | Settlement without leaving custody |
 | --- | --- | --- | --- | --- |
-| **Anchorage Digital** | The national trust bank, in "HSM-secured cold storage" | Segregated custody, "bankruptcy-remote" | "Biometric approvals for global, 24/7 transaction authorization" | Staking and voting "directly from custody without assets leaving the platform"; an "Atlas settlement network" is named but not described on the custody page |
+| **Anchorage Digital** | The national trust bank, in "HSM-secured cold storage" | Segregated custody, "bankruptcy-remote" | "Secure biometric approvals for global, 24/7 transaction authorization" | Staking and voting "directly from custody without assets leaving the platform"; an "Atlas settlement network" is named but not described on the custody page |
 | **BitGo** | Custody wallets: BitGo creates all three keys, cold only; self-custody wallets: the client creates the user and backup keys | Custody wallets segregated; Go Accounts are "an omnibus custody wallet" for multi-asset trading and settlement | Custody withdrawals signed "after video ID verification with a BitGo Bank & Trust operator," with a 24-hour SLA; policies can waive video verification under client-set conditions | Go Network: "near-instantaneous settlement," client-to-client movements "generally free of charge" |
 | **Coinbase Prime** | Coinbase Custody Trust Company, cold storage | Segregated vault plus an omnibus trading balance at Coinbase, Inc. (the ETF model) | Not detailed in the 10-K | Trading balance at the prime broker, swept to the vault daily; trade credit from Coinbase Credit |
 | **Copper** | MPC-based custody | Not stated on the pages read | Not stated on the pages read | ClearLoop: "single net settlement" under "pre-agreed operating rules"; "$3bn" of monthly off-exchange settlements and "$105bn" of monthly notional trading supported by protected collateral |
@@ -46,7 +46,7 @@ A custodian can hold each client's assets at its own addresses or pool them; bot
 - **Segregated** wallets prove ownership on chain: a client or its auditor can check the balance at its addresses. They cost a key set or derivation path per client, a sweep and fee per movement, and on account-model chains a gas balance per address. The joint statement notes separate accounts "could require the generation and management of a greater number of key pairs."
 - **Omnibus** wallets are cheaper and faster to settle from, and are "larger targets for theft." Ownership exists only in the custodian's ledger, so NYDFS requires that an omnibus wallet hold "only virtual currency of customers" and that the beneficial interest records stay current and reconcilable to the chain.
 
-Most institutional platforms use both: a segregated cold vault for what's held and an omnibus balance for what's being traded. The iShares Bitcoin Trust's 10-K is the clearest public description, with a segregated Vault Balance and an omnibus Trading Balance at the prime execution agent where the Trust "has only a pro rata claim," swept back each trading day ([Two ledgers in one product](/books/investing-and-digital-assets/crypto-exchange-architecture#two-ledgers-in-one-product-the-etf-custody-model)). The engineering rule is that a client's balance is always the sum of its segregated holdings and its ledger share of each omnibus pool, and the omnibus pool's on-chain balance must equal the sum of all clients' shares plus nothing of the custodian's own.
+Most institutional platforms use both: a segregated cold vault for what's held and an omnibus balance for what's being traded. The iShares Bitcoin Trust's 10-K is the clearest public description, with a segregated Vault Balance and an omnibus Trading Balance at the prime execution agent that "represents an entitlement to a pro rata share of the bitcoin (and cash) the Prime Execution Agent holds," swept back each trading day ([Two ledgers in one product](/books/investing-and-digital-assets/crypto-exchange-architecture#two-ledgers-in-one-product-the-etf-custody-model)). The engineering rule is that a client's balance is always the sum of its segregated holdings and its ledger share of each omnibus pool, and the omnibus pool's on-chain balance must equal the sum of all clients' shares plus nothing of the custodian's own.
 
 ## Governance and Quorum Policies
 
@@ -117,7 +117,7 @@ Institutional clients run custody through APIs as much as portals: create a wall
 
 ## Custody Fees
 
-Custodians rarely publish fee schedules; BitGo's 10-K says it charges "recurring account and custody fees, as well as transaction fees for certain movements of assets," and Coinbase charges institutions "a separate fee based on total assets in custody." The common structure is an annual rate in basis points on the value held, accrued daily and billed monthly. A worked month with an assumed 20 basis points a year, my own numbers:
+Custodians rarely publish fee schedules; BitGo's 10-K says it charges "recurring account and custody fees, as well as transaction fees for certain movements of assets," and Coinbase charges institutions "a separate fee based on the total assets stored in custody on our platform." The common structure is an annual rate in basis points on the value held, accrued daily and billed monthly. A worked month with an assumed 20 basis points a year, my own numbers:
 
 ```text
 days  BTC held   BTC price   value held      daily fee (value × 0.0020 / 365)   for the days
@@ -264,8 +264,8 @@ What a client's auditor, a regulator or a counterparty asks a custody platform t
 **Filings**
 
 - [BitGo Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1740604/000174060426000020/btgo-form10xk.htm), Go Network settlement, client-to-client movements and the fee types
-- [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), Prime custody in cold storage and the fee on total assets in custody
-- [iShares Bitcoin Trust: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1980994/000143774926006058/bit20251231_10k.htm), the Vault and Trading Balances, the pro rata claim and the daily sweep
+- [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), Prime custody in cold storage and the fee on total assets stored in custody
+- [iShares Bitcoin Trust: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1980994/000143774926006058/bit20251231_10k.htm), the Vault and Trading Balances, the pro rata entitlement, the daily sweep and Trade Credit from Coinbase Credit
 
 **Vendor documentation**
 
