@@ -184,7 +184,7 @@ The rules I'd write down for a platform's marks:
 - **A staleness limit per source.** A price older than its limit is not used; if too few sources remain, the mark freezes and the instrument goes to a reduced-risk mode (no new leverage) instead of marking on one venue.
 - **The platform's own book as one input, never the only one,** especially for collateral that is supposed to be worth a dollar.
 - **Stablecoins marked to their peg only while the market agrees** within a band, and to market otherwise, with the switch logged.
-- **Every mark stored with its inputs,** so a liquidation, a statement value or a tax lot can be reconstructed. Market data entitlements and fan-out are Market Data; portfolio performance at 24/7 marks is Portfolio Accounting & Performance; oracle manipulation is [Oracles & MEV](/books/investing-and-digital-assets/oracles-and-mev#oracle-manipulation).
+- **Every mark stored with its inputs,** so a liquidation, a statement value or a tax lot can be reconstructed. Market data entitlements and fan-out are [Market Data](/books/investing-and-digital-assets/market-data); portfolio performance at 24/7 marks is Portfolio Accounting & Performance; oracle manipulation is [Oracles & MEV](/books/investing-and-digital-assets/oracles-and-mev#oracle-manipulation).
 
 ## How to Build It
 

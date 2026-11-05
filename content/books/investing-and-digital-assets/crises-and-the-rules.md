@@ -44,7 +44,7 @@ The lesson for a system is the one the crisis taught: the records were the failu
 
 ## 1975: The National Market System
 
-The Securities Acts Amendments of 1975 (Pub. L. 94-29, June 4, 1975) added §11A to the Exchange Act, finding the securities markets "an important national asset which must be preserved and strengthened" and directing the SEC to facilitate a national market system linking them. Regulation NMS, the consolidated quote and the order protection and access rules that US Equity Market Structure covers are the system that mandate built.
+The Securities Acts Amendments of 1975 (Pub. L. 94-29, June 4, 1975) added §11A to the Exchange Act, finding the securities markets "an important national asset which must be preserved and strengthened" and directing the SEC to facilitate a national market system linking them. Regulation NMS, the consolidated quote and the order protection and access rules that [US Equity Market Structure](/books/investing-and-digital-assets/equity-market-structure) covers are the system that mandate built.
 
 ## 1987: The Crash and Circuit Breakers
 

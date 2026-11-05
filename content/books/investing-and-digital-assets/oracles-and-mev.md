@@ -139,7 +139,7 @@ A user who doesn't want to be sandwiched has to keep the transaction out of the 
 - **Order flow auctions.** MEV-Share shares hints about the transaction with searchers "according to their privacy preferences," lets them bid to back-run it, and requires that the user be paid "by default 90%" of the MEV created.
 - **Intents.** UniswapX and CoW Protocol take a signed order instead of a transaction, so there is nothing to sandwich and fillers or solvers compete to give the user the surplus ([Intents and Batch Auctions](/books/investing-and-digital-assets/dexs-and-amms#intents-and-batch-auctions)).
 
-Private order flow has its own concentration problem: a wallet that sends all its users' transactions to one builder makes that builder more likely to win blocks, and exclusive flow is a business asset. A platform choosing a route for its customers' transactions is choosing who sees them first, and that choice belongs in its order routing disclosure the way a broker discloses where it sends orders (Order Routing, PFOF & Best Execution).
+Private order flow has its own concentration problem: a wallet that sends all its users' transactions to one builder makes that builder more likely to win blocks, and exclusive flow is a business asset. A platform choosing a route for its customers' transactions is choosing who sees them first, and that choice belongs in its order routing disclosure the way a broker discloses where it sends orders ([Order Routing, PFOF & Best Execution](/books/investing-and-digital-assets/routing-and-best-execution)).
 
 ## What It Costs a User
 

@@ -139,7 +139,7 @@ The engine checks every account against maintenance margin at every mark update,
 3. **Backstop.** If book liquidation fails and equity falls further (below two-thirds of maintenance on Hyperliquid), a backstop takes the position at the mark: Hyperliquid's liquidator vault, or the venue's insurance fund on centralized venues.
 4. **Socialize.** If the backstop can't absorb the loss, auto-deleveraging closes opposing positions.
 
-Engineering consequences: the engine is part of the matching path (a liquidation order is an order, sequenced like any other; Order Books & Matching Engines has the engine's design), its inputs are marks rather than trades, and it has to keep working when the book is empty, which is exactly when it is needed.
+Engineering consequences: the engine is part of the matching path (a liquidation order is an order, sequenced like any other; [Order Books & Matching Engines](/books/investing-and-digital-assets/order-books-and-matching) has the engine's design), its inputs are marks rather than trades, and it has to keep working when the book is empty, which is exactly when it is needed.
 
 ## Insurance Funds and Auto-Deleveraging
 
