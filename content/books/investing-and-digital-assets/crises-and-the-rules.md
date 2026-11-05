@@ -40,7 +40,7 @@ Everything in this volume that says "registered" traces here: the broker-dealer 
 
 In the late 1960s, trading volume outran the industry's paper-based back offices. SIPC's own history describes "the paperwork crunch, brought on by unexpectedly high trading volume," followed by a market decline in which hundreds of firms merged or closed and some "were unable to meet their obligations to customers and went bankrupt." The Securities Investor Protection Act of 1970 (Pub. L. 91-598, December 30, 1970) created SIPC to oversee the liquidation of failed brokers, initially protecting each customer up to $50,000 with a $20,000 ceiling for cash; today the limits are $500,000 and $250,000. SIPC reports advancing $3.6 billion to enable the recovery of $143.8 billion for about 773,000 investors. The SEC's customer protection rule, Rule 15c3-3, followed in 1972 (37 FR 25226, November 29, 1972): a broker must keep customers' fully paid securities in its possession or control and keep a reserve against what it owes them in cash.
 
-The lesson for a system is the one the crisis taught: the records were the failure. A broker that can't say which securities it holds for whom, and where, can't protect them, and Customer Protection, Net Capital & SIPC covers the possession-or-control and reserve computations that are now daily for the largest firms.
+The lesson for a system is the one the crisis taught: the records were the failure. A broker that can't say which securities it holds for whom, and where, can't protect them, and [Customer Protection, Net Capital & SIPC](/books/investing-and-digital-assets/customer-protection#possession-or-control) covers the possession-or-control and reserve computations that are now daily for the largest firms.
 
 ## 1975: The National Market System
 
@@ -60,7 +60,7 @@ On October 19, 1987, the Dow fell 508 points, 22.6%, the largest one-day percent
 
 On May 6, 2010, US markets fell more than 5% in a matter of minutes. The SEC and CFTC staff needed until September 30, 2010 to publish their joint findings on what had happened. The rules came in steps: single-stock circuit breakers approved June 10, 2010 (a five-minute pause in an S&P 500 stock after a 10% move in five minutes), expanded in September 2010 to Russell 1000 stocks and some ETFs, with clearer rules for breaking erroneous trades (on May 6, only trades more than 60% from the reference price were broken); then the Limit Up-Limit Down plan, approved with the new market-wide circuit breakers on June 1, 2012 and implemented by February 4, 2013; and Rule 613 (Release 34-67457, 77 FR 45722, adopted July 11, 2012), requiring the exchanges and FINRA to create a consolidated audit trail of every order, so the next reconstruction wouldn't take months.
 
-Pre-Trade Risk, Halts & Volatility covers LULD bands and what an order system does in a pause; Books, Records & the Audit Trail covers CAT reporting.
+Pre-Trade Risk, Halts & Volatility covers LULD bands and what an order system does in a pause; [Books, Records & the Audit Trail](/books/investing-and-digital-assets/books-records-and-cat#the-consolidated-audit-trail) covers CAT reporting.
 
 ## 2011: MF Global
 
@@ -74,7 +74,7 @@ Mt. Gox, a bitcoin exchange in Tokyo, applied for civil rehabilitation on Februa
 
 In late January 2021, retail buying in GameStop and other stocks sent prices and volatility up, and the clearing system's margin calls followed. On January 27, 2021, NSCC made intraday margin calls on 36 clearing members totaling $6.9 billion, bringing total required margin across members to $25.5 billion. The SEC staff's report on the episode (October 2021) described how "volatility combined with settlement risks led some firms to temporarily restrict trading," and noted that "one method to mitigate the systemic risk" posed by thinly capitalized broker-dealers "is to shorten the settlement cycle."
 
-The SEC adopted T+1 on February 15, 2023 (Release 34-96930, 88 FR 13872), with a compliance date of May 28, 2024: one business day of settlement risk instead of two, and same-day allocation, confirmation and affirmation of institutional trades. Clearing & Settlement covers the cycle and the clearing fund; Pre-Trade Risk, Halts & Volatility covers the buying restrictions.
+The SEC adopted T+1 on February 15, 2023 (Release 34-96930, 88 FR 13872), with a compliance date of May 28, 2024: one business day of settlement risk instead of two, and same-day allocation, confirmation and affirmation of institutional trades. [Clearing & Settlement](/books/investing-and-digital-assets/clearing-and-settlement#t-1-and-the-affirmation-deadline) covers the cycle and the clearing fund; Pre-Trade Risk, Halts & Volatility covers the buying restrictions.
 
 ## 2022: Terra, Celsius, Voyager and FTX
 

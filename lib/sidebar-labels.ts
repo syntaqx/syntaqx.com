@@ -15,6 +15,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Catalog and Pricing": "Catalog",
   "Chains and Wallets": "Chains",
   "Chat and Messaging": "Chat",
+  "Clearing and Settlement": "Clearing",
   "Clients and Delivery": "Clients",
   "Communications Platforms": "Communications",
   "Communities and Conversation": "Communities",
