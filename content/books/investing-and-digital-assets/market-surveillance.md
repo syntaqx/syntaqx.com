@@ -31,7 +31,7 @@ The common shape: **the order book is the evidence, and surveillance needs all o
 
 **Spoofing and layering.** Placing orders with the intent to cancel them before execution, to make the book look heavier on one side and draw other traders' prices toward the spoofer's real order on the other side. Layering is the same with several orders at stepped prices. The Commodity Exchange Act names it: "bidding or offering with the intent to cancel the bid or offer before execution" is unlawful (7 USC 6c(a)(5)(C)); in securities, Exchange Act section 9(a)(2) prohibits "a series of transactions" effected "for the purpose of inducing the purchase or sale of such security by others", and Rule 10b-5 reaches the rest. The largest case is J.P. Morgan's: on September 29, 2020 the CFTC announced $920.2 million in penalty, restitution and disgorgement for spoofing precious metals and Treasury futures from at least 2008 to 2016 with "hundreds of thousands" of spoof orders, then the largest monetary relief in CFTC history, with parallel DOJ and SEC actions. The CFTC's 2015 complaint against Navinder Sarao alleged a "Layering Algorithm" in E-mini S&P futures over more than 400 trading days and that his orders contributed to the order book imbalance on May 6, 2010.
 
-**Wash trading.** Trades with no change in beneficial ownership, to print volume or a price. Section 9(a)(1) bans wash sales and matched orders in listed securities, and FINRA Rule 6140(b) bars transactions involving "no change in the beneficial ownership." The detection problem is the beneficial owner: two accounts that look unrelated may share an owner, an address, a device or a funding source.
+**Wash trading.** Trades with no change in beneficial ownership, to print volume or a price. Section 9(a)(1) bans wash sales and matched orders in "any security other than a government security," and FINRA Rule 6140(b) bars transactions involving "no change in the beneficial ownership." The detection problem is the beneficial owner: two accounts that look unrelated may share an owner, an address, a device or a funding source.
 
 **Marking the close and ramping.** Trading near the close to move the closing price, which settles derivatives, sets fund NAVs and triggers margin. Rule 6140(a) bars entering successively higher or lower priced orders "for the purpose of unduly or improperly influencing the market price," and the CEA separately bans conduct that "demonstrates intentional or reckless disregard for the orderly execution of transactions during the closing period" (7 USC 6c(a)(5)(B)).
 
@@ -74,7 +74,7 @@ The features a model computes over a window around each execution:
 | Gain against the pre-sequence touch | $15.00 | The economic motive |
 | Repetitions in the day and across days | 400 a day | Pattern, not accident |
 
-A rule like "alert when opposite-side orders exceed 10 times the executed quantity, at least 90% are canceled within one second, and an execution on the other side falls inside the window, repeated at least 20 times across 5 days" (my illustrative thresholds, not any regulator's) catches this trader. It will also fire on legitimate market makers, who cancel most of their quotes, which is why the thresholds need calibrating per product and participant type and why the alert goes to a person rather than to an automatic penalty. FINRA's report names "poorly calibrated or never-reevaluated thresholds" as a finding, and recommends tailoring thresholds by product class and reviewing patterns across days, customers and alert types.
+A rule like "alert when opposite-side orders exceed 10 times the executed quantity, at least 90% are canceled within one second, and an execution on the other side falls inside the window, repeated at least 20 times across 5 days" (my illustrative thresholds, not any regulator's) catches this trader. It will also fire on legitimate market makers, who cancel most of their quotes, which is why the thresholds need calibrating per product and participant type and why the alert goes to a person rather than to an automatic penalty. FINRA's report names "thresholds set too low or too high to identify meaningful activity" and failing to periodically evaluate thresholds as findings, faults reviews that don't look at patterns across appropriate lengths of time, customers and alert types, and lists tailoring thresholds by product class as an effective practice.
 
 ## From Alerts to Cases
 
@@ -84,7 +84,7 @@ A surveillance system is a pipeline: ingest every order event and execution (inc
 
 What makes the pipeline defensible:
 
-- **Every alert has an owner, a clock and a disposition.** FINRA lists "not performing timely reviews of surveillance alerts or exception reports" and undocumented dispositions among its findings. An alert closed as a false positive needs the reason written down, so the next reviewer and the examiner can see it.
+- **Every alert has an owner, a clock and a disposition.** FINRA lists "not performing timely reviews of surveillance alerts or exception reports" and "not documenting alert review findings" among its findings. An alert closed as a false positive needs the reason written down, so the next reviewer and the examiner can see it.
 - **Alerts link to their evidence.** The orders and executions that triggered an alert are attached by reference, with the feature values at the time, so a reviewer months later sees what the model saw.
 - **Related accounts are joined in.** FINRA's effective practices include comparing related-account surveillance against account-opening data to catch wash and prearranged trades: shared addresses, devices, bank accounts, beneficial owners.
 - **Cases leave the surveillance system.** A confirmed pattern becomes a case in the firm's case management (the core model's `cases`), may lead to a suspicious activity report (Banking & Lending's [Suspicious Activity Reports](/books/banking-and-lending/bsa-aml#suspicious-activity-reports)), restrictions on the account, and a referral to FINRA or the exchange.
@@ -180,7 +180,7 @@ SELECT w.execution_id,
 FROM win w
 JOIN orders o2 ON o2.account_id = w.account_id
               AND o2.instrument_id = w.instrument_id
-              AND o2.side <> w.trade_side
+              AND (o2.side = 'buy') <> (w.trade_side = 'buy')  -- sell and sell_short are one side
               AND w.w @> o2.placed_at
 GROUP BY w.execution_id, w.traded_qty
 HAVING SUM(o2.quantity) >= 10 * w.traded_qty;  -- the model version's parameters, not literals, in production

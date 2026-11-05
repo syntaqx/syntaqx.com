@@ -24,16 +24,16 @@ Public descriptions, as of November 2026 (alphabetical):
 | **Atomic** | Embedded investing: custom indexing, bond ladders, cash sweep, money market funds, Treasury bills, fractional stocks, funds | An "SEC-licensed investment advisor and FINRA-registered broker-dealer" (Atomic Brokerage and Atomic Invest) | Assets held at BNY Pershing and The Bank of New York Mellon |
 | **DriveWealth** | Embedded investing API: US equities, ETFs, funds, fixed income, options, $1 fractional | Individual, bulk, cashless and omnibus models | In omnibus "DriveWealth has no knowledge of your individual customers" and provides "only the underlying execution and clearing infrastructure" |
 | **Paxos** | Crypto brokerage and custody for other firms | A US national trust bank regulated by the OCC | "Paxos never trades against your clients"; custody "on a fiduciary basis"; Interactive Brokers is one client |
-| **Zero Hash** (zerohash) | Crypto and stablecoin infrastructure | Licensed provider behind partner apps | A money transmitter "in 51 U.S. jurisdictions," a NYDFS BitLicense holder, a FinCEN and FINTRAC MSB |
-| **Bakkt** | Digital asset trading, stablecoin payments, custody for partners | Licensed provider behind partner apps | Bakkt Financial Solutions I holds a New York BitLicense and money transmitter licenses where required; sold its custody trust company in 2025 |
+| **Zero Hash** (zerohash) | Crypto and stablecoin infrastructure | Licensed provider behind partner apps | A regulated money transmitter that "can operate in 51 U.S. jurisdictions," licensed for virtual currency business by NYDFS, a FinCEN-registered MSB and registered with FINTRAC |
+| **Bakkt** | Digital asset trading, stablecoin payments, custody through third-party custodians (BitGo, Coinbase Custody, Fireblocks Trust) | Licensed provider behind partner apps | Bakkt Financial Solutions I holds a New York BitLicense and money transmitter licenses where required; sold its custody trust company in 2025 |
 
-Three patterns. **The provider's license is the product.** A partner app gets clearing memberships, a broker-dealer registration, a trust charter or 51 money transmitter licenses by contract instead of by application. **Structure decides who is the record keeper,** and the providers say so plainly in their docs. **Crypto and securities usually come from different entities,** even at one provider (Alpaca Securities and Alpaca Crypto), because the licenses and the protections differ ([One Company, Many Entities](/books/investing-and-digital-assets/regulators-and-licenses#one-company-many-entities)).
+Three patterns. **The provider's license is the product.** A partner app gets clearing memberships, a broker-dealer registration, a trust charter or money transmission coverage in 51 jurisdictions by contract instead of by application. **Structure decides who is the record keeper,** and the providers say so plainly in their docs. **Crypto and securities usually come from different entities,** even at one provider (Alpaca Securities and Alpaca Crypto), because the licenses and the protections differ ([One Company, Many Entities](/books/investing-and-digital-assets/regulators-and-licenses#one-company-many-entities)).
 
 ## Fully Disclosed and Omnibus
 
 **Fully disclosed.** Each end customer has an account at the carrying broker in their own name. The carrying broker knows the customer's identity, holds the assets in its stock record against that account, sends or makes available statements and confirms, issues the 1099, includes the customer's free credits in its reserve formula, and reports the customer to CAT. The partner may be an introducing broker-dealer (which then owns suitability and its own supervision) or a non-broker app that refers customers and presents the provider's account. DriveWealth's "individual" model, in which "DriveWealth handles all cash custody and tracks each customer's balance independently," is the disclosed shape; Alpaca's fully disclosed setup makes the partner run "a robust Customer Identification Program (CIP)" that Alpaca reviews, so identity work is shared but the account is still in the customer's name at Alpaca.
 
-**Omnibus.** The partner, a registered broker-dealer or a foreign firm, holds one account at the provider, and its own ledger divides it among its customers. Alpaca's omnibus setup is "one firm trading account" with a sub-tag on each order, and the partner does local tax reporting; DriveWealth's omnibus client handles "customer onboarding and KYC" and its own books and records. The provider executes, clears and custodies; the partner is the one that must keep the stock record by customer, run possession or control and the reserve formula for its customers if it's a US carrying broker, send statements, and know who owns what if either firm fails.
+**Omnibus.** The partner, a registered broker-dealer or a foreign firm, holds one account at the provider, and its own ledger divides it among its customers. Alpaca's omnibus setup is "one main trading account for the entire trading flow of your customers" with a sub-tag on each order, and the partner does local tax reporting; DriveWealth's omnibus client handles "customer onboarding and KYC" and its own books and records. The provider executes, clears and custodies; the partner is the one that must keep the stock record by customer, run possession or control and the reserve formula for its customers if it's a US carrying broker, send statements, and know who owns what if either firm fails.
 
 **Hybrids.** DriveWealth's bulk model has the partner hold customer cash and settle with one net wire a day; its cashless model has the partner check buying power before orders. Alpaca's journals (`JNLC` to journal cash and `JNLS` to journal securities between a firm account and a customer account) let a partner prefund a firm account and fund customers instantly from it. These split cash and securities duties differently from the clean disclosed case, and each needs its own reconciliation.
 
@@ -51,7 +51,7 @@ The $4,500 of returns is the partner's loss to chase: the customers already have
 
 ## Who Owns Which Obligation
 
-FINRA Rule 4311 requires every agreement for carrying accounts to be approved by FINRA in advance and to allocate, at a minimum: "Opening and approving accounts", "Acceptance of orders", "Transmission of orders for execution", "Execution of orders", "Extension of credit", "Receipt and delivery of funds and securities", "Preparation and transmission of confirmations", "Maintenance of books and records" and "Monitoring of accounts". The carrying firm must take responsibility for safeguarding funds and securities under Rule 15c3-3 and for customer account statements; an introducing firm may prepare or send statements only with FINRA's prior written approval.
+FINRA Rule 4311 requires the carrying firm to submit every agreement for carrying accounts to FINRA for prior approval, and each fully disclosed agreement to allocate, at a minimum: "Opening and approving accounts", "Acceptance of orders", "Transmission of orders for execution", "Execution of orders", "Extension of credit", "Receipt and delivery of funds and securities", "Preparation and transmission of confirmations", "Maintenance of books and records" and "Monitoring of accounts". The carrying firm must take responsibility for safeguarding funds and securities under Rule 15c3-3 and for customer account statements; an introducing firm may prepare or send statements only with FINRA's prior written approval.
 
 A typical allocation by structure, as I'd draw it from the rule and the providers' documentation:
 
@@ -93,7 +93,7 @@ The contract is the system's spec. The terms that become engineering:
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `legal_entities` (the partner and the provider are both entities, one of them external) and `accounts`. This chapter adds the program, the allocation of obligations, and the customer-level sub-accounts an omnibus partner keeps.
+These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `legal_entities` (the partner and the provider are both entities, one of them external) and `accounts`. This chapter adds the program, the allocation of obligations, the customer-level sub-accounts an omnibus partner keeps, and the provider's daily statements.
 
 ```sql
 CREATE TABLE partner_programs (              -- one provider relationship
@@ -137,6 +137,15 @@ CREATE TABLE omnibus_subaccounts (           -- the partner's customers inside o
   closed_at            TIMESTAMPTZ,
   UNIQUE (partner_program_id, provider_subtag)
 );
+
+CREATE TABLE provider_statements (           -- the provider's daily position file, loaded unchanged
+  partner_program_id   UUID NOT NULL REFERENCES partner_programs (id),
+  as_of_date           DATE NOT NULL,
+  instrument_id        UUID NOT NULL REFERENCES instruments (id),
+  quantity             NUMERIC(78, 0) NOT NULL,  -- smallest units, as the provider reports it
+  source_file          TEXT NOT NULL,            -- the file or API response it came from
+  PRIMARY KEY (partner_program_id, as_of_date, instrument_id)
+);
 ```
 
 The omnibus invariant on the partner's books, per instrument at the close: the location lines at the provider's omnibus account equal what the provider's daily statement reports. The owner side (customers plus the partner's own position) balances against those location lines by construction, so this one comparison proves both.
@@ -156,7 +165,6 @@ WHERE pp.id = :program
   AND COALESCE(jl.settles_on, je.effective_date) <= :d
 GROUP BY jl.instrument_id, ps.quantity
 HAVING -SUM(jl.amount) <> ps.quantity;
--- provider_statements holds the provider's daily position file as loaded, unchanged;
 -- each row returned is a recon_break on the program's reconciliation
 ```
 
@@ -201,7 +209,7 @@ Both sides of the program answer to examiners:
 **Filings**
 
 - [Interactive Brokers: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1381197/000138119726000062/ibkr-20251231.htm), crypto through Paxos Trust Company or Zero Hash LLC, which execute, clear and custody it
-- [Bakkt: Form 10-Q for the quarter ended June 30, 2026](https://www.sec.gov/Archives/edgar/data/1820302/000162828026055275/bakkt-20260630.htm), the business, Bakkt Financial Solutions I's licenses, the 2025 sale of Bakkt Trust, Webull's non-renewal notice of March 14, 2025
+- [Bakkt: Form 10-Q for the quarter ended June 30, 2026](https://www.sec.gov/Archives/edgar/data/1820302/000162828026055275/bakkt-20260630.htm), the business, third-party custodians, Bakkt Financial Solutions I's licenses, the 2025 sale of Bakkt Trust, Webull's non-renewal notice of March 14, 2025
 
 **Vendor documentation**
 
@@ -212,6 +220,7 @@ Both sides of the program answer to examiners:
 - [Alpaca: Crypto trading](https://docs.alpaca.markets/us/docs/crypto-trading-1.md), Alpaca Crypto LLC, the separate agreement, no FDIC or SIPC protection
 - [Apex Fintech Solutions](https://apexfintechsolutions.com/), AscendOS and the September 30, 2026 metrics
 - [Atomic](https://atomicvest.com/), the adviser and broker-dealer, products, and custody at BNY Pershing
+- [DriveWealth](https://www.drivewealth.com/), the products offered and investing from $1
 - [DriveWealth: Choosing your integration model](https://developer.drivewealth.com/apis/docs/choosing-your-integration-model.md), the individual, bulk, cashless and omnibus models and what each party handles
 - [Paxos](https://www.paxos.com/), Paxos Trust Company as an OCC-regulated national trust bank
 - [Paxos: Crypto brokerage](https://www.paxos.com/crypto-brokerage), never trading against clients, fiduciary custody, named clients

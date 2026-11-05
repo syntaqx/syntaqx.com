@@ -115,7 +115,7 @@ A **fail to deliver** is a short CNS position not delivered on settlement date; 
 
 **Regulation SHO close-out.** Separately from CNS, Rule 204 requires a clearing participant with a fail to deliver to close it out by borrowing or buying shares "by the beginning of regular trading hours on the settlement day following the settlement date." If the fail came from a long sale (the customer owned the shares but delivered late) or from bona fide market making, the deadline is the third consecutive settlement day after settlement date. A participant that misses the deadline is in the **penalty box**: neither it nor any broker clearing through it may sell that security short without first borrowing or arranging to borrow it, until the close-out purchase settles. [Margin & Short Selling](/books/investing-and-digital-assets/margin-and-short-selling) covers locates and the short side.
 
-**Inside the broker,** a fail also triggers the customer protection rules: a customer's securities the firm failed to receive for more than 30 calendar days must be obtained "through a buy-in or otherwise" ([Customer Protection, Net Capital & SIPC](/books/investing-and-digital-assets/customer-protection)), and an aged fail moves through the reserve formula as a credit.
+**Inside the broker,** a fail also triggers the customer protection rules: a customer's securities the firm failed to receive for more than 30 calendar days must be obtained "through a buy-in procedure or otherwise" ([Customer Protection, Net Capital & SIPC](/books/investing-and-digital-assets/customer-protection)), and an aged fail moves through the reserve formula as a credit.
 
 The settlement obligation's life as a state machine:
 
