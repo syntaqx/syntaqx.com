@@ -18,7 +18,7 @@ The ways a token holds a dollar, with the main examples as of November 2026 (cir
 
 | Design | Example | What backs a token | What restores the peg | How it breaks |
 | --- | --- | --- | --- | --- |
-| **Fiat-backed** | USDC ($70.8B), USDT ($177.5B), PYUSD, RLUSD | Cash, Treasury bills, repo, government money market funds at custodians | Onboarded institutions redeem at par and arbitrage the exchange price | A reserve asset becomes unavailable or worth less than par; redemption stops |
+| **Fiat-backed** | USDC ($70.7B), USDT ($177.4B), PYUSD, RLUSD | Cash, Treasury bills, repo, government money market funds at custodians | Onboarded institutions redeem at par and arbitrage the exchange price | A reserve asset becomes unavailable or worth less than par; redemption stops |
 | **Crypto-collateralized** | DAI ($4.7B) and USDS ($6.5B), Sky | Over-collateralized vaults of crypto and other assets; a peg stability module holding other stablecoins | Liquidations of under-collateralized vaults; one-to-one swaps with USDC in the stability module | Collateral falls faster than liquidations can clear; the backing stablecoin itself depegs |
 | **Synthetic (delta-neutral)** | USDe ($4.6B), Ethena | Crypto and other assets paired with short perpetual futures of the same size, plus stablecoins and tokenized bills | Whitelisted minters redeem with Ethena; a reserve fund covers negative revenue | Funding turns negative for long; an exchange holding the hedge fails; a venue misprices it |
 | **Algorithmic** | UST (Terra), collapsed May 2022 | A promise to swap for $1 of a sister token (LUNA) the protocol mints | Arbitrage burns the coin and mints the sister token | The sister token's value falls with the coin's, in a loop |
@@ -46,7 +46,7 @@ My illustration, the $10 billion issuer from the reserve ladder in [Issuing a St
 
 ## USDC at Silicon Valley Bank
 
-On Friday, March 10, 2023, Silicon Valley Bank was closed and the FDIC appointed receiver. Circle held $3.3 billion of USDC's reserve as a deposit there, about 8% of the total, and its 10-K later noted that more than $3 billion of transfers from SVB had failed to settle before the receivership. With redemptions dependent on banks that weren't open until Monday and part of the reserve now a claim on a failed bank, USDC traded as low as 87 cents on Kraken at 07:16 UTC on Saturday, March 11, according to CoinDesk's report that day, which also noted that MakerDAO's DAI depegged.
+On Friday, March 10, 2023, Silicon Valley Bank was closed and the FDIC appointed receiver. Circle held $3.3 billion of USDC's reserve as a deposit there, about 8% of the total, and its 10-K later noted that more than $3 billion of transfers from SVB had failed to settle before the receivership. With redemptions dependent on banks that weren't open until Monday and part of the reserve now a claim on a failed bank, USDC traded as low as 87 cents against USDT on Kraken at 07:16 UTC on Saturday, March 11, according to CoinDesk's report that day, which also noted that MakerDAO's DAI depegged.
 
 On Sunday, March 12, the Treasury, the Federal Reserve and the FDIC invoked the systemic risk exception to protect all of SVB's depositors ([The Least-Cost Test and the Systemic Risk Exception](/books/banking-and-lending/bank-failures#the-least-cost-test-and-the-systemic-risk-exception)). Circle announced that "The $3.3B USDC reserve deposit held at Silicon Valley Bank, about 8% of the USDC total reserve, will be fully available when U.S. banks open tomorrow morning," that "No USDC cash reserves were held at Signature Bank," and that as of March 11 the reserve was "collateralized 77% ($32.4B) with short-dated U.S. Treasury Bills" with "The cash portion of the USDC reserve, 23% ($9.7B), is now held primarily at BNY Mellon." The peg returned with the bank deposits.
 
@@ -61,9 +61,9 @@ What the weekend showed, in engineering terms:
 
 UST was an algorithmic stablecoin on the Terra blockchain, and the SEC's complaint against Terraform Labs describes the mechanism: "holders of LUNA could swap $1.00 worth of LUNA for 1 UST based on LUNA's then-current market price. And holders of UST could likewise exchange 1 UST for $1.00 worth of LUNA." If UST fell below a dollar, "traders could buy UST at that price and exchange it for $1 of LUNA 'burning' UST and 'minting' LUNA," which was supposed to reduce UST supply until the price recovered. Nothing backed the swap but LUNA's market price, which was itself sustained by demand for UST. By May 2022 there were about 19 billion UST, 14 billion of it deposited in the Anchor Protocol, a Terra lending protocol that paid depositors a high fixed yield.
 
-Large UST sales began around May 7, 2022. Each UST redeemed minted more LUNA, LUNA's price fell, each further redemption minted more LUNA still, and UST's price fell "to near zero"; by the end of May, UST, LUNA and related tokens "were essentially worthless, wiping out more than $40 billion in combined market value." The SEC's complaint also alleged that when UST had depegged in May 2021, a US trading firm bought more than $20 million of UST to restore the peg under an arrangement with Terraform, while the market was told the algorithm had done it; the SEC settled with that firm, Tai Mo Shan, a Jump Trading affiliate, in December 2024.
+Large UST sales began around May 7, 2022. Each UST redeemed minted more LUNA, LUNA's price fell, each further redemption minted more LUNA still, and UST's price fell "to near zero"; by the end of May, UST, LUNA and related tokens "were essentially worthless, wiping out more than $40 billion in combined market value." The SEC's complaint also alleged that when UST had depegged in May 2021, a US trading firm bought large amounts of UST to restore the peg under an arrangement with Terraform, while the market was told the algorithm had done it; the SEC settled with that firm, Tai Mo Shan, a subsidiary of Jump Crypto Holdings, in December 2024, finding it had bought "more than $20 million UST."
 
-The aftermath: a jury found Terraform and Do Kwon liable, and on June 12, 2024 the court approved a final judgment under which Terraform owes $4,473,828,306 and Kwon must transfer at least $204,320,196. Kwon pleaded guilty in August 2025 to wire fraud and conspiracy to defraud and was sentenced on December 11, 2025 by Judge Paul Engelmayer in the Southern District of New York to 15 years in prison. Terra's place in the 2022 collapse is the volume's [FTX, Celsius & the 2022 Collapse](/books/investing-and-digital-assets/exchange-collapses) chapter.
+The aftermath: a jury found Terraform and Do Kwon liable, and on June 12, 2024 the court approved a final judgment under which Terraform owes $4,473,828,306 and Kwon must transfer at least $204,320,196. Kwon pleaded guilty in August 2025 to wire fraud and to conspiracy to commit securities fraud, commodities fraud and wire fraud, and was sentenced on December 11, 2025 by Judge Paul A. Engelmayer in the Southern District of New York to 15 years in prison and forfeiture of over $19 million. Terra's place in the 2022 collapse is the volume's [FTX, Celsius & the 2022 Collapse](/books/investing-and-digital-assets/exchange-collapses) chapter.
 
 ### Worked Numbers: The Loop
 
@@ -93,7 +93,7 @@ My illustration, with a hypothetical 150% liquidation ratio and the documentatio
 | Open | 10 ETH at $3,000 | $30,000 | 15,000 DAI | 200% | Safe |
 | ETH falls to $2,250 | 10 ETH | $22,500 | 15,000 DAI | 150% | At the line |
 | ETH falls to $2,100 | 10 ETH | $21,000 | 15,000 DAI | 140% | Liquidated: target 16,950 DAI (15,000 + 13%) |
-| Dutch auction sells 8.5 ETH at $2,000 | 1.5 ETH returned | | 0 | | 17,000 DAI raised, 16,950 needed |
+| Dutch auction sells 8.475 ETH at $2,000 | 1.525 ETH returned to the vault | | 0 | | 16,950 DAI raised, the target; the auction stops there |
 
 The system is safe as long as auctions clear above the debt. In a crash fast enough that collateral falls through the debt before buyers arrive, or one where the auctions' buyers can't get DAI to bid with, the auction raises less than the debt and the protocol is left with bad debt that it has to cover from its own buffers. And because much of the system's liquidity sits in USDC in the stability module, DAI is a crypto-collateralized coin that depends, in a crisis, on a fiat-backed one: on March 11, 2023 both depegged. Lending protocols and liquidation mechanics in general are the volume's [DeFi Lending & Liquidations](/books/investing-and-digital-assets/defi-lending) chapter.
 
@@ -131,7 +131,7 @@ The difference is the run analysis. A tokenized deposit is as safe as the bank, 
 
 ## Operational Depegs
 
-Not every break is economic. On October 15, 2025, Paxos minted 300 trillion PYUSD on Ethereum in error during an internal transfer and burned the excess within about 30 minutes; Paxos said "There is no security breach. Customer funds are safe," and Aave temporarily froze PYUSD markets while it was outstanding. The token's price didn't need to move for the event to matter: lending protocols, exchanges and indexers that read total supply saw a coin with more supply than the world's money, and the ones that paused did the right thing. The controls are in [Issuing a Stablecoin](/books/investing-and-digital-assets/issuing-a-stablecoin#minter-allowances): an allowance that makes a mint of that size impossible, and an alarm on any mint without a matching request.
+Not every break is economic. On October 15, 2025, Paxos minted 300 trillion PYUSD on Ethereum in what it called a technical error and burned the excess within about 30 minutes; Paxos said "There is no security breach. Customer funds are safe," and Aave temporarily froze PYUSD markets while it was outstanding. The token's price didn't need to move for the event to matter: lending protocols, exchanges and indexers that read total supply saw a coin with more supply than the world's money, and the ones that paused did the right thing. The controls are in [Issuing a Stablecoin](/books/investing-and-digital-assets/issuing-a-stablecoin#minter-allowances): an allowance that makes a mint of that size impossible, and an alarm on any mint without a matching request.
 
 ## What Reserves and Redemption Rules Prevent
 
@@ -139,7 +139,7 @@ Each GENIUS Act and OCC rule answers a failure above:
 
 | Failure | Case | Rule |
 | --- | --- | --- |
-| Reserve in an asset that falls when the coin does | UST | Reserves only in currency, insured deposits, short Treasuries, Treasury repo and government money market funds (12 U.S.C. 5903(a)(1)) |
+| Reserve in an asset that falls when the coin does | UST | Reserves only in currency, insured deposits, short Treasuries, Treasury repo and government money market funds (12 U.S.C. 5903(a)(1)(A)) |
 | Reserve concentrated in one bank | USDC at SVB | OCC: no more than 40% with one counterparty; at least 5% on demand; stress tests |
 | Reserve lent out or pledged | 2022 lenders (the volume's [FTX, Celsius & the 2022 Collapse](/books/investing-and-digital-assets/exchange-collapses) chapter) | No pledging or reuse except margin, custody and redemption liquidity (5903(a)(2)) |
 | Holders unsure what's in the reserve | Every run | Monthly published composition, examined and certified (5903(a)(1)(C), (a)(3)) |
@@ -219,6 +219,7 @@ Design notes:
 
 **Regulators and guidance**
 
+- [OCC: Implementing the GENIUS Act (91 FR 67000, October 23, 2026)](https://www.federalregister.gov/api/v1/documents/2026-21706.json), the final rule (12 CFR part 15), docket OCC-2025-0372, effective January 18, 2027
 - [Mayer Brown: OCC finalizes GENIUS Act rulemaking](https://www.mayerbrown.com/en/insights/publications/2026/11/occ-finalizes-genius-act-rulemaking), the 40% counterparty cap, the 5% on-demand floor, stress testing, the operational backstop and the 10% redemption notice
 - [Federal Reserve: Barr, speech at DC Fintech Week (October 16, 2025)](https://www.federalreserve.gov/newsevents/speech/barr20251016a.htm), redemption at par, run susceptibility and the deposit regime's robustness
 - [Federal Reserve: New forms of money and the US monetary aggregates (FEDS Notes, September 4, 2026)](https://www.federalreserve.gov/econres/notes/feds-notes/new-forms-of-money-and-the-u-s-monetary-aggregates-20260904.html), tokenized deposits compared with payment stablecoins
@@ -229,8 +230,9 @@ Design notes:
 - [SEC v. Terraform Labs and Do Kwon: amended complaint](https://www.sec.gov/files/terraform-labs-pte-ltd-amended-complaint.pdf), the UST-LUNA swap, 19 billion UST and 14 billion in Anchor, the May 2022 collapse and the $40 billion loss, and the 2021 peg support
 - [SEC: Terraform and Kwon agree to pay more than $4.5 billion (June 13, 2024)](https://www.sec.gov/newsroom/press-releases/2024-73), the settlement after the jury verdict
 - [SEC: Distributions in SEC v. Terraform Labs and Kwon](https://www.sec.gov/enforcement-litigation/distributions-harmed-investors/sec-v-terraform-labs-pte-ltd-do-hyeong-kwon-no-23-cv-1346-jsr-sdny), the June 12, 2024 final judgment amounts
-- [SEC: Tai Mo Shan settlement (December 20, 2024)](https://www.sec.gov/newsroom/press-releases/2024-212), the 2021 UST purchases to restore the peg
-- [The Block: Do Kwon sentenced to 15 years (December 11, 2025)](https://theblock.co/news/regulation/2025-12-11-terraform-labs-founder-do-kwon-sentenced-to-15-years-over-40-billion-terra-luna-collapse-inner-city-press-382204), the sentence, judge and August 2025 plea
+- [SEC: Tai Mo Shan settlement (December 20, 2024)](https://www.sec.gov/newsroom/press-releases/2024-212), the 2021 UST purchases to restore the peg, including more than $20 million of UST, by a subsidiary of Jump Crypto Holdings
+- [US Attorney's Office, SDNY: United States v. Kwon](https://www.justice.gov/usao-sdny/united-states-v-kwon-23-cr-151-pae-terraform-labs-fraud), the December 11, 2025 sentence, the charges and the forfeiture
+- [The Block: Do Kwon sentenced to 15 years (December 11, 2025)](https://theblock.co/news/regulation/2025-12-11-terraform-labs-founder-do-kwon-sentenced-to-15-years-over-40-billion-terra-luna-collapse-inner-city-press-382204), the August 2025 plea
 
 **Filings**
 
@@ -253,7 +255,7 @@ Design notes:
 
 **In practice**
 
-- [CoinDesk: USDC and the crypto market after Silicon Valley Bank (March 11, 2023)](https://www.coindesk.com/markets/2023/03/11/usdc-stablecoin-and-crypto-market-go-haywire-after-silicon-valley-bank-collapses), USDC at 87 cents on Kraken and DAI's depeg
+- [CoinDesk: USDC and the crypto market after Silicon Valley Bank (March 11, 2023)](https://www.coindesk.com/markets/2023/03/11/usdc-stablecoin-and-crypto-market-go-haywire-after-silicon-valley-bank-collapses), USDC at 87 cents against USDT on Kraken and DAI's depeg
 - [Protos: Binance's USDe depeg (October 13, 2025)](https://protos.com/binance-usde-depeg-exchange-millions), USDe at about 65 cents on Binance, on-chain deviations under 30 basis points, Binance's statement and about $283 million reimbursed
-- [The Block: Paxos mistakenly mints 300 trillion PYUSD (October 15, 2025)](https://www.theblock.co/post/374870/paxos-mistakenly-mints-300-trillion), the mint, the burn within about 30 minutes, Paxos's statement and Aave's freeze
+- [The Block: Paxos mistakenly mints 300 trillion PYUSD (October 15, 2025)](https://www.theblock.co/post/374870/paxos-mistakenly-mints-300-trillion), the mint (a "technical error"), the burn within about 30 minutes, Paxos's statement and Aave's freeze
 - [DefiLlama: Stablecoins](https://stablecoins.llama.fi/stablecoins?includePrices=false), circulating supply by token on November 5, 2026

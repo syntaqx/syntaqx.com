@@ -19,7 +19,7 @@ From their documentation and source code, as of November 2026:
 | Protocol | Market structure | Collateral rule | Liquidation | Bad debt |
 | --- | --- | --- | --- | --- |
 | **Aave V3** | One pool per market; every listed asset can be supplied and, if enabled, borrowed | Per-asset LTV (borrowing limit) and a higher liquidation threshold; a health factor across all collateral | Below health factor 1.0; up to 50% of a debt per call, 100% at or below 0.95 or on small positions; fixed per-asset bonus, part of it taken as a protocol fee | Umbrella: stakers of aTokens are slashed to cover a deficit in the asset they staked |
-| **Aave V4** | A Liquidity Hub holding shared liquidity, Spokes for "specific supply and borrowing use cases, asset types, or risk profiles" | Per Spoke; a user risk premium on top of the shared borrow rate | Repay only enough to reach a Target Health Factor; a bonus that rises as health falls, "a Dutch-auction style incentive" | Per design, isolated by Spoke |
+| **Aave V4** | A Liquidity Hub holding shared liquidity, Spokes for "specific supply and borrowing use cases, asset types, or risk profiles" | Per Spoke; a user risk premium on top of the shared borrow rate | Repay only enough to reach a Target Health Factor; a bonus that rises as health falls, "a Dutch-auction style incentive" | Spokes keep independent accounting; the V4 overview doesn't describe deficit coverage |
 | **Aave Horizon** | A "licensed, separate instance of the Aave Protocol" for real-world assets | RWA collateral is permissioned to holders allowlisted by the issuers | Aave mechanics | Aave mechanics |
 | **Compound III** | One borrowable base asset per market (USDC, for example); other assets are collateral only | A borrow collateral factor per asset and a separate, higher liquidation collateral factor | `absorb` by anyone moves an underwater account's collateral to the protocol; `buyCollateral` sells it at a discount | Absorptions are "paid for by the protocol's reserves of the base asset" |
 
@@ -86,10 +86,10 @@ Five points of utilization above the kink multiply the borrow rate by 8.5. A pla
 From Aave's `LiquidationLogic` and liquidation documentation:
 
 - **Eligibility:** health factor below 1.0.
-- **Close factor:** a liquidator may repay up to 50% of a debt (`DEFAULT_LIQUIDATION_CLOSE_FACTOR = 0.5e4`, in basis points) while the health factor is above 0.95 (`CLOSE_FACTOR_HF_THRESHOLD = 0.95e18`), "below (inclusive) which the full amount of debt becomes liquidatable." Positions whose collateral or debt is below $2,000 (`MIN_BASE_MAX_CLOSE_FACTOR_THRESHOLD = 2000e8`) can be liquidated in full.
+- **Close factor:** a liquidator may repay up to 50% of a debt (`DEFAULT_LIQUIDATION_CLOSE_FACTOR = 0.5e4`, in basis points) while the health factor is above 0.95 (`CLOSE_FACTOR_HF_THRESHOLD = 0.95e18`), "below(inclusive) which the full amount of debt becomes liquidatable." Positions whose collateral or debt is below $2,000 (`MIN_BASE_MAX_CLOSE_FACTOR_THRESHOLD = 2000e8`) can be liquidated in full.
 - **No dust:** "If less than $1,000 USD of debt would remain in the target reserve, you must liquidate all of it" (`MIN_LEFTOVER_BASE`), so liquidations don't leave positions too small for anyone to bother clearing.
 - **Collateral paid:** the repaid debt converted to the collateral asset at oracle prices, times the asset's liquidation bonus (`baseCollateral.percentMulFloor(liquidationBonus)`), capped at the borrower's balance.
-- **Protocol fee:** taken "only from the bonus portion," as a percentage of the bonus, and sent to the treasury.
+- **Protocol fee:** a percentage of the bonus portion only (`bonusCollateral.percentMulCeil(liquidationProtocolFeePercentage)`), subtracted from what the liquidator receives and sent to the treasury.
 
 Aave V4 replaces the fixed bonus and close factor: liquidators "repay only enough debt to restore the position to a Target Health Factor set at the Spoke level," and the bonus rises as the health factor falls, prioritizing the riskiest positions.
 
@@ -108,7 +108,7 @@ ETH falls from 3,000 to 2,400. The borrower above now has collateral of 10 × 2,
 | Borrower left with | 10 − 4.375 ETH, and 10,000 USDC of debt | 5.625 ETH ($13,500) |
 | Health factor after | 13,500 × 0.83 / 10,000 | **1.1205** |
 
-The liquidator made $450 before gas and before the price risk of holding ETH, and the borrower paid $500 for being liquidated (the bonus), plus the $50 fee that went to the protocol. The position is healthy again with half its debt. Compound III's version differs in shape: `absorb` "can be called by any address to liquidate an underwater account," the protocol takes the collateral and credits the account the collateral's value minus a penalty, and liquidators then `buyCollateral` from the protocol "at a discount" derived from the store-front price factor and the asset's liquidation factor, while protocol reserves are below a governance-set target.
+The liquidator made $450 before gas and before the price risk of holding ETH, and the borrower paid $500 for being liquidated (the bonus), of which $50 went to the protocol as its fee. The position is healthy again with half its debt. Compound III's version differs in shape: `absorb` "can be called by any address to liquidate an underwater account," the protocol takes the collateral and credits the account the collateral's value minus a penalty, and liquidators then `buyCollateral` from the protocol "at a discount" derived from the store-front price factor and the asset's liquidation factor, while protocol reserves are below a governance-set target.
 
 ### Bots and the race
 
@@ -260,7 +260,7 @@ Notes on the sketch:
 
 **Standards and protocols**
 
-- [Aave: Liquidations](https://aave.com/docs/concepts/liquidations), eligibility below health factor 1.0, the $1,000 leftover rule, bonus against gas, and V4's Dutch-auction bonus
+- [Aave: Liquidations](https://aave.com/docs/concepts/liquidations), eligibility below health factor 1.0, the $1,000 leftover rule, bonus against gas, and a bonus that follows a Dutch auction
 - [Aave V3 origin: LiquidationLogic.sol](https://raw.githubusercontent.com/aave-dao/aave-v3-origin/main/src/contracts/protocol/libraries/logic/LiquidationLogic.sol), the 50% close factor, the 0.95 threshold, the $2,000 and $1,000 limits, the bonus calculation and the protocol fee on the bonus
 - [Aave V3 origin: GenericLogic.sol](https://raw.githubusercontent.com/aave-dao/aave-v3-origin/main/src/contracts/protocol/libraries/logic/GenericLogic.sol), the weighted liquidation threshold, the health factor and average LTV
 - [Aave V3 origin: DefaultReserveInterestRateStrategyV2.sol](https://raw.githubusercontent.com/aave-dao/aave-v3-origin/main/src/contracts/misc/DefaultReserveInterestRateStrategyV2.sol), the kinked variable rate and the supply rate with reserve factor

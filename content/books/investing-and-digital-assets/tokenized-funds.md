@@ -20,7 +20,7 @@ The largest tokenized Treasury and money market products, with distributed value
 
 | Product | Manager or issuer | Value (rwa.xyz) | Who can hold it | How income reaches the holder | Record and chains |
 | --- | --- | ---: | --- | --- | --- |
-| **USDY** | Ondo | $2.40B | "General access" in Ondo's terms | A "tokenized note secured by US Treasuries" | 12 networks |
+| **USDY** | Ondo | $2.40B | "Qualifying non-US individual and institutional investors" | A "tokenized note secured by US Treasuries" | 12 networks |
 | **USYC** | Circle | $2.24B | Not documented on the pages I opened | Not documented on the pages I opened | Solana, Ethereum, BNB Chain, Arc |
 | **BUIDL** (BlackRock USD Institutional Digital Liquidity Fund) | BlackRock, tokenized by Securitize | $1.89B | Qualified purchasers; transfers "only ... to whitelisted investors" | Accrued daily to the holder of record at 3:00 p.m. ET, paid the next business day "in the form of new BUIDL tokens" | Aptos, Arbitrum, Avalanche, BNB Chain, Ethereum, Optimism, Polygon, Solana |
 | **BENJI / FOBXX** (Franklin OnChain U.S. Government Money Fund) | Franklin Templeton | $1.10B | Retail through the Benji app; institutions | Declared daily, "automatically reinvested in additional shares at NAV on the payable date" | Transfer agent's blockchain-integrated record; Stellar primary, with Polygon, Aptos, Avalanche, Arbitrum, Ethereum, Solana and Base |
@@ -46,14 +46,14 @@ Products that look the same on a block explorer can be neither. USDY is describe
 
 Two consequences follow for a holder's platform:
 
-- **The fund's documents beat the token's code.** If the transfer agent's record and the chain disagree, the agent's record governs for FOBXX by the prospectus's own words. Franklin's agent corrects errors or unauthorized transactions by adding "a correcting instruction to a later block" rather than deleting history, so the chain is append-only even when the agent overrides it. A platform reconciling its customers' holdings reads the chain and the agent's statements, and treats a mismatch as a break, not as a ledger choice.
+- **The fund's documents beat the token's code.** If the transfer agent's record and the chain disagree, the agent's record governs for FOBXX by the prospectus's own words. Franklin's agent corrects errors or unauthorized transactions by "adding an appropriate instruction to another subsequent block" rather than deleting history, so the chain is append-only even when the agent overrides it. A platform reconciling its customers' holdings reads the chain and the agent's statements, and treats a mismatch as a break, not as a ledger choice.
 - **Securities law follows the share.** A tokenized fund share is sold under the fund's registration or offering exemption, held by eligible investors only, and transferred under the fund's rules. Selling it to a customer is a securities business for the platform's broker-dealer, not its crypto entity ([Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses)).
 
 ## The Transfer Agent on Chain
 
 In a traditional fund the transfer agent keeps the shareholder file, processes purchases and redemptions, pays dividends and answers to the SEC's transfer agent rules. A tokenized fund keeps all of that and adds a chain to the agent's system. Franklin's arrangement, from the prospectus:
 
-- **Wallets per investor.** The transfer agent creates a Stellar wallet for each investor unless the investor asks for another approved network. Wallets are either agent-hosted, where "the transfer agent holds the private key," or investor-managed, "currently an option available only to institutional investors."
+- **Wallets per investor.** The transfer agent creates a Stellar wallet for each investor unless the investor asks for another approved network. Wallets are either agent-hosted, where the private key "will be held by the Fund's transfer agent," or investor-managed, "currently an option available only to institutional investors."
 - **The agent controls the record.** Purchases mint to the investor's wallet, redemptions burn from it, and the agent can correct the record with a later instruction.
 - **Lost keys are an operation, not a loss.** For an agent-hosted wallet the agent holds the key; for an investor-managed wallet the investor does, and correcting a lost key "may require information collection and operational tasks" and "may render the investor's holdings unavailable while these activities take place."
 
@@ -63,20 +63,20 @@ The rules that govern the agent (registration, turnaround, the master securityho
 
 ## Allowlists
 
-An allowlist is the on-chain list of addresses the agent has approved to hold the token. A transfer to any other address reverts. Every product above has one, under different names (BUIDL "only permits token transfers to whitelisted investors"; Franklin's peer-to-peer transfers run between "whitelisted wallets"; Superstate investors tokenize shares once they have "a compatible allowlist address from the portal").
+An allowlist is the on-chain list of addresses the agent has approved to hold the token. A transfer to any other address reverts. Every product above has one, under different names (BUIDL "only permits token transfers to whitelisted investors"; both sides of a Franklin peer-to-peer transfer need a permissioned, "whitelisted" wallet registered with the transfer agent; Superstate investors tokenize shares once they have "a compatible allowlist address from the portal").
 
 The allowlist is where off-chain onboarding meets on-chain enforcement, and a platform that holds these tokens for customers has to fit into it:
 
 - **Who is on the list: the customer or the platform.** A custodian that holds a tokenized fund in an omnibus wallet gets one allowlisted address for all its customers, and the fund's record shows one holder. Eligibility of each underlying customer is then the platform's job and its contract with the fund, the same omnibus question as street name for stocks ([Omnibus and Segregated](/books/investing-and-digital-assets/ledgers-and-positions#omnibus-and-segregated)). A segregated model allowlists each customer's address and makes the fund's record match the platform's.
 - **Adding an address takes time.** The fund's agent, not the platform, writes the list. A customer who wants to withdraw tokens to a new address waits for the agent's approval, so the withdrawal flow has a state for it.
 - **Removal freezes the holder.** An address taken off the list can't send or receive. The ledger keeps the position and marks it restricted, the same treatment as a frozen stablecoin balance ([Freeze and Blacklist Functions](/books/investing-and-digital-assets/tokens-and-standards#freeze-and-blacklist-functions)).
-- **Protocols are holders too.** A lending market or an AMM pool that holds the token needs its contract address on the list. Superstate's issuers "allowlist protocols ... on launch day"; Aave's permissioned instance limits supply to "qualified users allowlisted by the RWA issuers" ([Real-World-Asset Collateral](/books/investing-and-digital-assets/defi-lending#real-world-asset-collateral)).
+- **Protocols are holders too.** A lending market or an AMM pool that holds the token needs its contract address on the list. for Superstate's issuer-native shares, "On launch day, we will allowlist supported protocols"; Aave's permissioned instance limits supply to "qualified users allowlisted by the RWA issuers" ([Real-World-Asset Collateral](/books/investing-and-digital-assets/defi-lending#real-world-asset-collateral)).
 
 ## NAV and Income on Chain
 
 A fund's NAV is struck on the fund's schedule and its income accrues on calendar days. The token has to carry both.
 
-**When the NAV is struck.** FOBXX "typically calculates its NAV as of each hour from 8:00 a.m. (Eastern time)" until "normally, 5:00 p.m. (Eastern time)," on days the fund is open for business, and orders are "processed at the NAV next calculated" after receipt: forward pricing, as for any mutual fund. Same-day purchases and redemptions must arrive before 2 p.m. Pacific (5 p.m. Eastern), and redemption proceeds go out by electronic funds transfer within seven days. BUIDL takes redemption requests "between 8:00 AM and 3:00 PM ET on the applicable Redemption Date to achieve same-day settlement." USTB's NAV per share "updates around the clock"; Bitwise's USCC on Superstate sets it "daily at 5pm ET"; OUSG updates "at the end of each Business Day." The chain never closes; every one of these funds still has a cutoff.
+**When the NAV is struck.** FOBXX "typically calculates its NAV as of each hour from 8:00 a.m. (Eastern time)" until "normally, 5:00 p.m. (Eastern time)," on days the fund is open for business, and orders are "processed at the NAV next calculated" after receipt: forward pricing, as for any mutual fund. A same-day investment must be received and accepted before 2 p.m. Pacific (5 p.m. Eastern), redemption requests run against the same 2 p.m. cutoff, and redemption proceeds go out by electronic funds transfer within seven days. BUIDL takes redemption requests "between 8:00 AM and 3:00 PM ET on the applicable Redemption Date to achieve same-day settlement." USTB's NAV per share "updates around the clock"; Bitwise's USCC on Superstate sets it "daily at 5pm ET"; OUSG updates "at the end of each Business Day." The chain never closes; every one of these funds still has a cutoff.
 
 **How income is paid.** At a stable $1.00 NAV, income has to be paid as more units, or the token would drift above a dollar. BUIDL mints new tokens to each holder's wallet; FOBXX reinvests in additional shares. A floating NAV fund pays nothing: Superstate's funds use "an accumulating model rather than cash distributions," so "the NAV/S increases over time" and fees accrue into it too. The three models, for the same income:
 
@@ -109,7 +109,7 @@ For the ledger, each distribution is an `asset_events` row of kind `dividend` pa
 
 ## Transfers and Secondary Liquidity
 
-The chain makes a share transferable outside the fund's purchase and redemption window, within the allowlist. Franklin allows peer-to-peer transfers "between whitelisted wallets on any approved network or between two approved networks," processed on blockchain confirmation with no minimum, and says plainly that "Peer-to-peer transfers do not constitute a public trading market" and that the fund "does not require transfers to occur at NAV." Two eligible holders can therefore trade a $1.00 share at $0.999 on a Saturday, and the fund doesn't stand behind the price.
+The chain makes a share transferable outside the fund's purchase and redemption window, within the allowlist. Franklin allows peer-to-peer transfers between whitelisted wallets "within any approved blockchain network or between any two approved blockchain networks," processed on blockchain confirmation with no minimum, and says plainly that "Peer-to-peer transfers do not constitute a public trading market" and that "the Fund does not require that peer-to-peer transfers occur at NAV." Two eligible holders can therefore trade a $1.00 share at $0.999 on a Saturday, and the fund doesn't stand behind the price.
 
 Instant liquidity, where it exists, comes from someone's balance sheet, not the fund. Ondo lets an OUSG investor who pays in USDC or PYUSD "immediately receive OUSG tokens" and redeem for USDC instantly, within 24-hour limits shown on its site and a $5,000 minimum; the non-instant path has $100,000 and $50,000 minimums. The instant leg is Ondo using its own liquidity (bank deposits and USDC in the portfolio) and settling with the underlying funds on their schedule. A platform offering "instant" redemption of a tokenized fund is extending the same credit: it pays the customer now and waits for the fund, and that exposure belongs in its risk limits and its disclosures.
 
@@ -119,7 +119,7 @@ The other route out is a market. The SEC's tokenized NMS stock exemption of Sept
 
 A share that can sit in a smart contract and pays daily is better collateral than cash at a bank, which pays nothing on a margin account's weekend, and better than a Treasury bill, which can't move on a Sunday. Three uses lead:
 
-- **Stablecoin reserves.** The GENIUS Act's eligible reserves include government money market funds investing only in the listed assets and "tokenized forms" of eligible assets (12 U.S.C. 5903(a)(1)). A tokenized government MMF share can back a payment stablecoin under the statute, subject to the regulators' rules and the issuer's liquidity ladder ([The Reserve](/books/investing-and-digital-assets/issuing-a-stablecoin#the-reserve)).
+- **Stablecoin reserves.** The GENIUS Act's eligible reserves include registered government money market funds "invested solely in underlying assets described in clauses (i) through (v)," and eligible reserves may be held "in tokenized form" (12 U.S.C. 5903(a)(1)(A)(vi) and (viii)). A tokenized government MMF share can back a payment stablecoin under the statute, subject to the regulators' rules and the issuer's liquidity ladder ([The Reserve](/books/investing-and-digital-assets/issuing-a-stablecoin#the-reserve)).
 - **Margin and lending collateral.** Permissioned lending markets accept tokenized funds and stocks from allowlisted users ([Real-World-Asset Collateral](/books/investing-and-digital-assets/defi-lending#real-world-asset-collateral)). The allowlist binds the liquidator, and the fund's cutoffs decide how fast seized collateral becomes dollars.
 - **Fund of funds.** OUSG holds other managers' tokenized funds. A platform that accepts OUSG as collateral is taking the liquidity of two funds and the issuer's instant-redemption balance sheet, stacked.
 
@@ -245,7 +245,7 @@ A tokenized fund position is a securities position and a chain balance at once. 
 
 **Law and regulation**
 
-- [12 U.S.C. 5903: Requirements for issuing payment stablecoins](https://www.law.cornell.edu/uscode/text/12/5903), eligible reserve assets including government money market funds and tokenized forms of eligible assets
+- [12 U.S.C. 5903: Requirements for issuing payment stablecoins](https://www.law.cornell.edu/uscode/text/12/5903), eligible reserve assets including registered government money market funds (a)(1)(A)(vi) and reserves in tokenized form (a)(1)(A)(viii)
 
 **Regulators and guidance**
 
