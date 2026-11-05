@@ -69,7 +69,7 @@ Three consequences for a platform:
 
 - **Halts propagate.** The SEC's exemption makes its venues stop trading when the primary market halts the stock. A platform that offers wrapper tokens on its own book should do the same by rule, from the same halt feed it uses for the stock ([Pre-Trade Risk, Halts & Volatility](/books/investing-and-digital-assets/pre-trade-risk-and-halts)).
 - **Marks need a policy.** A position valued at Friday's close all weekend understates risk; one valued at the token's thin weekend trades overstates noise. Lending protocols hold the last price over weekends and price the gap with lower collateral factors ([Real-World-Asset Collateral](/books/investing-and-digital-assets/defi-lending#real-world-asset-collateral)). My default is to mark at the underlying's last regular-session or extended-session price, show the token's own last trade beside it, and widen margin over the closed hours.
-- **Hours are converging.** US venues plan longer sessions (Extended Hours & 24-Hour Trading, later in this book), and DTC's tokens already move peer to peer around the clock. The gap a wrapper fills narrows as the market's own hours grow.
+- **Hours are converging.** US venues plan longer sessions ([23/5 on Exchanges](/books/investing-and-digital-assets/extended-and-overnight-trading#23-5-on-exchanges)), and DTC's tokens already move peer to peer around the clock. The gap a wrapper fills narrows as the market's own hours grow.
 
 ## Corporate Actions Through a Wrapper
 
