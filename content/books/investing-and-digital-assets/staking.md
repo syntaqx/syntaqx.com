@@ -127,7 +127,7 @@ Read together, the 2023 order and the 2025 statement give a product its design c
 
 ## Staking in ETPs
 
-A fund that stakes faces the same three decisions as a platform plus one more, keeping enough unstaked to meet redemptions on the chain's exit timeline; Crypto ETPs covers how a fund stakes, how it keeps enough unstaked to meet redemptions, and how rewards reach NAV. I haven't opened the primary filings for which products stake and on what terms, so I leave the specifics to that chapter. <!-- source-gap: staking-in-etps | missing | which US ETPs stake, since when, through which custodians and providers, and the share staked | closes with: the products' prospectuses or 8-K/424B filings and the exchange rule filings | checked: 2026-11-05 -->
+A fund that stakes faces the same three decisions as a platform plus one more, keeping enough unstaked to meet redemptions on the chain's exit timeline; [Crypto ETPs](/books/investing-and-digital-assets/crypto-etps#staking-inside-etps) covers how a fund stakes, how it keeps enough unstaked to meet redemptions, and how rewards reach NAV. I haven't opened the primary filings for which products stake and on what terms, so I leave the specifics to that chapter. <!-- source-gap: staking-in-etps | missing | which US ETPs stake, since when, through which custodians and providers, and the share staked | closes with: the products' prospectuses or 8-K/424B filings and the exchange rule filings | checked: 2026-11-05 -->
 
 ## Tax
 

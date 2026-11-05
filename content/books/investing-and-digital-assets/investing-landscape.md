@@ -79,7 +79,7 @@ Institutional crypto custody is a small set of firms, now mostly with bank or tr
 | **Anchorage Digital Bank** | A national trust bank; named the iShares Bitcoin Trust's additional bitcoin custodian, with no current plan to move the trust's bitcoin there |
 | **BitGo** | $81.6 billion of assets on platform at December 31, 2025, down 9.2% from $89.9 billion; over 5,320 clients in over 100 countries, over 1,770 assets supported, $15.6 billion staked, up to $250 million of insurance for qualified custody; listed on NYSE in January 2026 |
 | **Fidelity Digital Assets, Paxos, Circle, Ripple** | Conditionally approved for national trust bank charters (Fidelity Digital Assets, Paxos and BitGo as conversions, Circle and Ripple de novo) on December 12, 2025 |
-| **Fireblocks, Copper, BNY and others** | Custody technology and services for exchanges, funds and banks; Custody Platforms & Policy Engines compares the models |
+| **Fireblocks, Copper, BNY and others** | Custody technology and services for exchanges, funds and banks; [Custody Platforms & Policy Engines](/books/investing-and-digital-assets/custody-platforms) compares the models |
 
 The concentration worth noticing is in the ETFs: the iShares Bitcoin Trust names one custodian for its bitcoin and an affiliate of the same group as its prime execution agent, and Crypto ETPs covers what that means. The charter wave is in [Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses#trust-charters-for-custody), and the general rules for trust banks are in Banking & Lending's [Trust Banks and Novel Charters](/books/banking-and-lending/charters-and-regulators#trust-banks-and-novel-charters).
 
