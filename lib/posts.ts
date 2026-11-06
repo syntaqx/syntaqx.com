@@ -517,6 +517,30 @@ function rehypeCodeTabs() {
   };
 }
 
+/**
+ * Tables scroll sideways inside their own box (`.table-scroll`), so a wide
+ * one doesn't stretch the page on a phone.
+ */
+function rehypeTableScroll() {
+  return (tree: HastNode) => {
+    const walk = (n: HastNode) => {
+      n.children = n.children?.map((child) => {
+        if (child.tagName !== "table") {
+          walk(child);
+          return child;
+        }
+        return {
+          type: "element",
+          tagName: "div",
+          properties: { className: ["table-scroll"] },
+          children: [child],
+        };
+      });
+    };
+    walk(tree);
+  };
+}
+
 export async function markdownToHtml(markdown: string, toc?: Heading[]): Promise<string> {
   const result = await remark()
     .use(remarkGfm)
@@ -525,6 +549,7 @@ export async function markdownToHtml(markdown: string, toc?: Heading[]): Promise
     .use(rehypeDiagrams)
     .use(rehypeCallouts)
     .use(rehypeCodeTabs)
+    .use(rehypeTableScroll)
     .use(rehypeShiki, {
       themes: {
         dark: "vitesse-dark",
