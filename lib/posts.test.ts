@@ -102,7 +102,7 @@ describe("markdownToHtml diagrams", () => {
     const html = await markdownToHtml(
       "| a | b |\n| - | - |\n| 1 | 2 |\n\n~~gone~~\n\n- [x] done\n- [ ] todo\n\nSee https://example.com.\n\nNoted.[^1]\n\n[^1]: The footnote.",
     );
-    expect(html).toContain("<table>");
+    expect(html).toContain('<div class="table-scroll"><table>');
     expect(html).toContain("<del>gone</del>");
     expect(html).toContain('<input type="checkbox" checked disabled>');
     expect(html).toContain('<a href="https://example.com">https://example.com</a>');

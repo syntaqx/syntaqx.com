@@ -1065,11 +1065,14 @@ body:has([data-full-bleed]) {
   fill: var(--fig-accent);
 }
 
-/* GFM tables */
+/* GFM tables, each in a box that scrolls sideways (rehypeTableScroll). */
+.prose .table-scroll {
+  overflow-x: auto;
+  margin: 1.75em 0;
+}
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.75em 0;
   font-size: 0.875rem;
   line-height: 1.5;
 }
