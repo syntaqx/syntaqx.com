@@ -1,6 +1,6 @@
 +++
 title = "AI at Home"
-description = "Open-weight models on home hardware: VRAM and bandwidth math, GPUs and unified memory, runtimes, quantization, model licenses, power and privacy."
+description = "Open-weight models on home hardware: VRAM and bandwidth math, MoE offload, GPUs and unified memory, runtimes, quantization, model licenses, power and privacy."
 category = "Hosting & Cloud Industry"
 order = 2112
 part = "Homelab"
@@ -9,7 +9,7 @@ tags = ["homelab", "local-ai", "llm-inference", "gpu", "quantization", "open-wei
 
 Running a language model at home is the homelab's version of an inference provider: the same weights the hosted open-model APIs serve, the same OpenAI-shaped endpoint, the same token meters, on one machine whose owner is also its only customer. What makes it hard is not software. The runtimes install in minutes. It is that a model is a few tens or hundreds of gigabytes that must sit in fast memory, and every generated token reads most of it again, so the questions are how much memory, how fast, at what precision, under which license, and at what cost in watts.
 
-This chapter covers the open-weight model families and their licenses, dated; the memory math (weights at each precision plus the KV cache) and why memory bandwidth sets decode speed; consumer GPUs, used datacenter cards, Apple Silicon, AMD Strix Halo and NVIDIA DGX Spark; the runtimes (llama.cpp, Ollama, LM Studio, vLLM, SGLang, ExLlama, MLX); quantization formats; front ends and the OpenAI-compatible API as the seam; local RAG and agents; image and speech models; power, heat and privacy. It adds no tables to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model): a home model is a `model_endpoint` resource, and its token meters are the same `usage_events` with a cost of zero. The wider homelab is [The Homelab](/books/hosting-and-cloud/homelab); giving a VM the GPU is [Hypervisors at Home](/books/hosting-and-cloud/hypervisors-at-home#pcie-and-gpu-passthrough); reaching the box from outside is [Exposing Home Services](/books/hosting-and-cloud/exposing-home-services). The comparison of home, colocation, rented GPUs, hosted open models and frontier APIs on cost and breakeven belongs to [Where AI Runs: Home, Colo, Cloud or Frontier](/books/hosting-and-cloud/where-ai-runs#the-economics), and GPU rental prices to [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#gpu-prices-dated).
+This chapter covers the open-weight model families and their licenses, dated; the memory math (weights at each precision plus the KV cache) and why memory bandwidth sets decode speed; running mixture-of-experts models larger than VRAM by keeping the experts in system RAM and caching the hot ones on the GPU; consumer GPUs, used datacenter cards, Apple Silicon, AMD Strix Halo and NVIDIA DGX Spark; the runtimes (llama.cpp, Ollama, LM Studio, vLLM, SGLang, ExLlama, MLX); quantization formats; front ends and the OpenAI-compatible API as the seam; local RAG and agents; image and speech models; power, heat and privacy. It adds no tables to [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model): a home model is a `model_endpoint` resource, and its token meters are the same `usage_events` with a cost of zero. The wider homelab is [The Homelab](/books/hosting-and-cloud/homelab); giving a VM the GPU is [Hypervisors at Home](/books/hosting-and-cloud/hypervisors-at-home#pcie-and-gpu-passthrough); reaching the box from outside is [Exposing Home Services](/books/hosting-and-cloud/exposing-home-services). The comparison of home, colocation, rented GPUs, hosted open models and frontier APIs on cost and breakeven belongs to [Where AI Runs: Home, Colo, Cloud or Frontier](/books/hosting-and-cloud/where-ai-runs#the-economics), and GPU rental prices to [GPU & AI Clouds](/books/hosting-and-cloud/gpu-and-ai-clouds#gpu-prices-dated).
 
 ## How the Vendors Do It
 
@@ -57,17 +57,22 @@ Local inference started as an accident and became an industry in about two years
 | October 28, 2024 | OSI releases the Open Source AI Definition 1.0 | A test that "open weights" mostly fail |
 | January 6, 2025 | NVIDIA announces RTX 50, "the first consumer GPUs to support FP4," and Project DIGITS at "starting at $3,000" | FP4 in hardware at home; a 128 GB desktop box |
 | January 20, 2025 | DeepSeek R1 under MIT, with six distilled dense models | A frontier-class reasoning model with no license conditions |
+| April 2, 2025 | llama.cpp merges `--override-tensor` (`-ot`); `-ngl 99 -ot exps=CPU` keeps MoE experts on the CPU | An MoE model larger than VRAM on one GPU; the experts run at CPU and RAM speed |
 | April 29, 2025 | Qwen3 under Apache 2.0, dense 0.6B to 32B and two MoE models | A permissive family covering every home size |
 | May 15, 2025 | Ollama describes a new engine using GGML directly from Go | Less dependence on llama.cpp's release cycle |
 | June 24, 2025 | NVIDIA introduces NVFP4 | 4-bit floats with finer scales on Blackwell |
 | July 8, 2025 | LM Studio drops its separate license for work use | A free desktop runtime for employers too |
+| August 4, 2025 | llama.cpp adds `--cpu-moe` and `--n-cpu-moe N` | The same split without writing regular expressions |
 | August 5, 2025 | OpenAI's gpt-oss-120b and gpt-oss-20b under Apache 2.0, shipped in MXFP4 | A US lab's open weights sized for one 80 GB GPU and a 16 GB machine |
 | October 15, 2025 | DGX Spark orders open; $3,999 for the Founders Edition | Grace Blackwell with 128 GB on a desk |
 | February 2026 | DGX Spark Founders Edition rises to $4,699 "due to memory supply constraints" | The DRAM shortage reaches the hardware list price |
 | April 2, 2026 | Gemma 4 under Apache 2.0, replacing the Gemma Terms of Use | Google's open models without a use policy |
 | April 8, 2026 | Meta launches Muse Spark with no weights | The Llama line's successor closed, for now |
 | July 27, 2026 | Kimi K3 weights (2.8T parameters) | The largest open release yet, under a revenue-clause license |
+| August 2026 | Qwen3.8-Flash-Next: 125B MoE with 6B active, plus a 51B n-gram embedding, under the Qwen Community License 1.0 | A preview of Qwen4's architecture whose experts are most of its size |
 | August 25, 2026 | Mac Studio with M5 Ultra, up to 512 GB at 1.2 TB/s | Half a terabyte of fast memory on a desk |
+| September 24, 2026 | Strata v0.1.0: an MIT engine that keeps every expert in RAM and learns which to cache in VRAM | Qwen3.8-Flash-Next on a gaming PC; a young project for a few models |
+| October 7, 2026 | llama.cpp merges a GPU cache for MoE experts kept in host memory (`--moe-cache-mib`) | Hot experts on the GPU instead of a fixed split; VRAM spent on the cache instead of whole layers |
 | October 15, 2026 | Meta releases Muse Spark Open (816B total, 42B active) under the Muse Model License | Meta back in open weights, with a MaaS clause |
 
 The through-line: each step moved a constraint. Quantization moved the memory floor, llama.cpp and GGUF moved the software floor, the OpenAI-compatible endpoint removed the integration cost, and the labs' licenses moved from research-only to Apache 2.0 for most mid-size models, while the largest releases picked up new conditions aimed at resellers.
@@ -108,9 +113,54 @@ Generating a token reads every active weight once, so single-user decode is, in 
 
 That is the case for mixture-of-experts models at home: capacity is set by total parameters, speed by active parameters. A 128 GB box with modest bandwidth runs a 117B MoE model at a usable speed and a 72B dense model slowly. Prompt processing (prefill) is the opposite: NVIDIA describes it as a matrix-matrix operation that "effectively saturates GPU utilization," which is where discrete GPUs keep a lead on long prompts. Throughput is a serving property, not a model property: vLLM's 24x came from batching many requests, and a home box with one user gets the single-stream ceiling above.
 
+## MoE Bigger Than VRAM
+
+"Does not fit" in the table above assumes the whole model sits in VRAM. A mixture-of-experts model doesn't need that, because most of its weights are experts and each token uses few of them. Qwen3.8-Flash-Next shows the shape: 48 layers, each with 512 routed experts of which a token uses 10, plus one shared expert, so a token touches about 2% of each layer's routed experts. Its model card lists "125B with 6B activated, plus 51B n-gram embedding and 4B MTP" (a multi-token-prediction layer for drafting). Its weights fall into three groups that belong in different places:
+
+- **Weights every token uses:** the attention and Gated DeltaNet mixers, routers, shared experts and output head, plus the KV cache. These stay on the GPU.
+- **Routed experts,** the bulk of the file. Each token needs a few, so system RAM can hold them as long as the frequently used ones are close to the GPU.
+- **The n-gram embedding,** a lookup table read a few rows per token. Qwen calls it "more amenable to offloading than Mixture-of-Experts (MoE)," and Strata reads its 28.8 GB table from SSD through the operating system's file cache.
+
+Runtimes have placed the experts in three ways:
+
+| Approach | Since | Where the experts live | What it costs |
+| --- | --- | --- | --- |
+| **Static split** in llama.cpp: `-ot exps=CPU`, then `--cpu-moe` and `--n-cpu-moe N` | `-ot` merged April 2, 2025; `--n-cpu-moe` August 4, 2025 | In RAM for the chosen layers, computed by the CPU | Those layers run at CPU and RAM speed whichever experts a token picks |
+| **Expert cache** in llama.cpp: `--moe-cache-mib N` | Merged October 7, 2026 | All in RAM, with a least-recently-used cache of experts on the GPU; "only the misses are uploaded" | Batches of 32 tokens or fewer only, so prompt processing takes the regular offload path; the PR's author found a cache of "10% of the total expert size is good" |
+| **Learned cache** in Strata | v0.1.0, September 24, 2026 | "all 24,576 experts, pinned" in RAM; the rest of VRAM caches the experts "asked most often," learned while in use and optionally saved across restarts; the CPU computes the misses in place rather than uploading them | Supports a few models (Qwen3.8-Flash-Next, Qwen3.6-35B-A3B, DeepSeek V4.1-Flash); every speed figure is the project's own |
+
+A cache works here because routing is uneven: some experts are asked for far more often than others. The llama.cpp PR's own benchmark shows how much. Its author ran Qwen3.8-Flash-Next at Q4_0 (93.7 GiB, 65.4 GiB of it experts) on a 16-thread EPYC 7742 with a PCIe 4.0 x16 link, a 32k context and no multi-token prediction, and measured decode speed against llama.cpp's `--fit` placement without the cache:
+
+| GPU | Settings | Cache as a share of expert bytes (my arithmetic) | Hit rate | Decode | Against `--fit` alone |
+| --- | --- | --- | --- | --- | --- |
+| RTX 4090, 24 GB | `--fit` | None | | 25.0 tokens/s | 1.0x |
+| RTX 4090 | `--fit --moe-cache-mib 6544` | 10% | 72% | 39.4 tokens/s | 1.57x |
+| RTX 4090 | `-cmoe --moe-cache-mib 11000` | 16% | 77% | 40.7 tokens/s | 1.62x |
+| RTX 5090, 32 GB | `--fit` | None | | 30.8 tokens/s | 1.0x |
+| RTX 5090 | `--fit --moe-cache-mib 6544` | 10% | 77% | 54.5 tokens/s | 1.77x |
+| RTX 5090 | `-cmoe --moe-cache-mib 19000` | 28% | 89% | 67.8 tokens/s | 2.20x |
+
+A cache holding a sixth of the experts' bytes served three quarters of the lookups. The arithmetic from the same figures: 65.4 GiB over 24,576 experts is about 2.7 MiB each, and a token's 480 routed experts (10 in each of 48 layers) are about 1.3 GiB, so at a 77% hit rate about 0.3 GiB per token still comes from host memory. That remainder, not the GPU, sets the speed, which is why a bigger cache and a faster PCIe link or RAM matter more than the card's own bandwidth. Strata reports 87 to 93 tokens/s at Q2_0 and 52 to 53 at IQ3_S on an RTX 5070 12 GB with 64 GB of DDR5-5200 (engine 0.1.26, multi-token prediction on); those are the project's own measurements with different quants and drafting on, so they don't compare with the table.
+
+The capacity question moves from VRAM to system RAM. Strata's rule is "RAM is at least the experts plus about 10 GB for the OS and other programs," with its Qwen3.8-Flash-Next quants needing 34 GB of RAM for experts at Q2_0 up to 50 GB at IQ3_S, so "With 64 GB of RAM every size fits (IQ3_S with little else open)." Unsloth's GGUF file sets (Dynamic v3.1, re-uploaded November 4, 2026) show the quality traded for that fit, measured against the full-precision model:
+
+| Unsloth quant | GB | Top-1 (%) | Mean KLD |
+| --- | --- | --- | --- |
+| UD-IQ1_M | 74.5 | 79.7 | 0.315 |
+| UD-Q2_K_XL | 78.9 | 82.7 | 0.225 |
+| UD-IQ3_XXS | 82.0 | 85.4 | 0.165 |
+| UD-Q3_K_XL | 90.0 | 88.3 | 0.107 |
+| UD-IQ4_XS | 93.7 | 89.6 | 0.084 |
+| UD-Q4_K_XL | 111.3 | 92.3 | 0.047 |
+| Q8_0 | 188.2 | 94.1 | 0.027 |
+
+Mean KLD doubles from IQ4_XS to IQ3_XXS and nearly quadruples by IQ1_M: the same "below about 3 bits only to fit at all" trade as the [quantization rule](#quantization), now chosen by the RAM in the box rather than the VRAM on the card.
+
+What this changes: a desktop with a 24 GB card and 64 GB of RAM runs a 125B-parameter MoE model, a class that [the hardware tiers](#hardware-tiers) otherwise put on 128 GB unified-memory machines. The limits are real. Speed depends on the hit rate, so on what the cache has learned; long prompts in llama.cpp skip the cache; the benchmark above is one author's on one machine; and RAM, the new capacity limit, is what the 2026 memory shortage made expensive.
+
 ## Hardware Tiers
 
-**One consumer GPU.** VRAM tiers are 12, 16, 24 and 32 GB. The RTX 50 series adds FP4 in hardware. A 16 GB card runs 8B to 14B models at 8 bits or gpt-oss-20b; 24 GB runs 27B to 32B models at 4 bits with a moderate context; 32 GB runs them with a long one.
+**One consumer GPU.** VRAM tiers are 12, 16, 24 and 32 GB. The RTX 50 series adds FP4 in hardware. A 16 GB card runs 8B to 14B models at 8 bits or gpt-oss-20b; 24 GB runs 27B to 32B models at 4 bits with a moderate context; 32 GB runs them with a long one. With 64 GB or more of system RAM beside it, either card also runs 100B-class MoE models by keeping the experts in RAM ([MoE Bigger Than VRAM](#moe-bigger-than-vram)).
 
 **Two or more GPUs.** Without NVLink, runtimes split layers (pipeline) or tensors across cards over PCIe. ExLlamaV3 lists "tensor-parallel and expert-parallel inference for consumer multi-GPU setups," and llama.cpp splits layers across devices. Layer splits pass little data between cards per token; tensor parallelism passes more, so the PCIe link width each slot gets on the board matters for it.
 
@@ -130,11 +180,12 @@ That is the case for mixture-of-experts models at home: capacity is set by total
 | **vLLM** | June 20, 2023 | Apache 2.0 | Hugging Face safetensors with AWQ, GPTQ, FP8 and others; GGUF | NVIDIA from Volta, AMD, Intel GPUs, x86 and Arm CPUs | PagedAttention, continuous batching | OpenAI-compatible server |
 | **SGLang** | December 2023 paper, January 2024 repository | Apache 2.0 | Hugging Face formats | GPU servers | RadixAttention prefix cache, structured generation | OpenAI-compatible server |
 | **ExLlamaV2 / ExLlamaV3** | August 2023 / April 2025 | MIT | EXL2 (2 to 8 bpw, mixed per layer); EXL3 ("a streamlined variant of QTIP") | NVIDIA CUDA | Single user, fast on consumer cards; V3 adds tensor and expert parallelism; V2 archived in favor of V3 | OpenAI API through TabbyAPI |
+| **Strata** | September 24, 2026 | MIT, built with parts of ggml | GGUF quants of the few models it supports | NVIDIA RTX 20 to 50, recent AMD Radeon, Intel Arc on Linux, Apple Silicon, Strix Halo, DGX Spark | One request at a time unless `--batch` or `--parallel` asks for more; learned expert cache in VRAM, every expert in RAM | OpenAI Chat Completions and Responses, Anthropic Messages, on `127.0.0.1:8080` |
 | **MLX** (`mlx-lm`) | Early December 2023 | MIT | MLX safetensors | Apple Silicon | Array framework on unified memory | Python API; LM Studio serves MLX models |
 
 Two others fill niches: NVIDIA's TensorRT-LLM (open source since October 19, 2023) compiles models for NVIDIA GPUs with in-flight batching, and llamafile ships a model as one executable.
 
-The choice falls out of the workload. One user on one machine wants llama.cpp or a wrapper around it (Ollama, LM Studio), because GGUF runs on every backend and partial offload lets a model spill into system RAM. Several users, or an agent firing parallel requests, want vLLM or SGLang, whose batching turns one GPU into a small inference service. A Mac wants MLX or a runtime that uses it.
+The choice falls out of the workload. One user on one machine wants llama.cpp or a wrapper around it (Ollama, LM Studio), because GGUF runs on every backend and partial offload lets a model spill into system RAM; for an MoE model larger than VRAM, that means llama.cpp's expert flags or Strata for the models it supports. Several users, or an agent firing parallel requests, want vLLM or SGLang, whose batching turns one GPU into a small inference service. A Mac wants MLX or a runtime that uses it.
 
 ## Quantization
 
@@ -164,6 +215,7 @@ The working rule: 8-bit (FP8 or Q8_0) when it fits, because the measured loss is
 | **Qwen3** | Alibaba Qwen | April 29, 2025 | Dense 0.6B to 32B; MoE 30B-A3B, 235B-A22B | Apache 2.0 | None |
 | **Qwen3.8 27B** | Alibaba Qwen | August 2026 | 27B | Apache 2.0 | None |
 | **Qwen3.8-Max** | Alibaba Qwen | August 2026 | 2.4T total, 95B active | Qwen3.8-Max License | Name display above 100 million monthly users or $20 million monthly revenue; MaaS or "AI Work Assistant" businesses over $50 million in 12 months need a separate license; internal use exempt |
+| **Qwen3.8-Flash-Next** | Alibaba Qwen | August 2026 | 125B total, 6B active, plus 51B n-gram embedding and 4B MTP | Qwen Community License 1.0 | Name display above 100 million monthly users or $20 million monthly revenue; a "Model as a Service or AI Work Assistant business" needs a separate license for commercial use; internal use exempt |
 | **DeepSeek R1** | DeepSeek | January 20, 2025 | Plus six distilled dense models | MIT | None |
 | **DeepSeek V4** | DeepSeek | V4-Pro weights April 23, 2026; V4-Pro-0813 August 13, 2026; V4.1-Flash September 10, 2026 | 1.65T (V4-Pro-0813), 763B (V4.1-Flash) | MIT | None |
 | **Mistral Small 3** | Mistral AI | January 2025 | 24B | Apache 2.0 | None |
@@ -177,7 +229,7 @@ The working rule: 8-bit (FP8 or Q8_0) when it fits, because the measured loss is
 | **GLM-5.3 / GLM-5.3-Flash** | Z.ai | August 28, 2026 / August 26, 2026 | Large MoE / Flash | GLM-5.3 License / MIT | GLM-5.3: MaaS businesses over $10 billion in 12 months must pass Z.ai's security review first |
 | **Phi-4** | Microsoft | December 2024 | 14B | MIT | None |
 
-The pattern as of October 2026: the mid-size models a home machine can run are mostly Apache 2.0 or MIT (Qwen, DeepSeek, Gemma 4, gpt-oss, Muse Glimmer, GLM Flash, Mistral Small). The largest releases (Kimi K3, Qwen3.8-Max, Muse Spark Open, GLM-5.3) use a newer "permissive plus model-as-a-service clause" pattern that targets API resellers and exempts home and internal use. Meta's own line went from noncommercial (2023) to community licenses (2023 to 2025) to closed (April 2026) and back to a custom license (October 2026).
+The pattern as of October 2026: the mid-size models a home machine can run are mostly Apache 2.0 or MIT (Qwen, DeepSeek, Gemma 4, gpt-oss, Muse Glimmer, GLM Flash, Mistral Small). The largest releases (Kimi K3, Qwen3.8-Max, Muse Spark Open, GLM-5.3) use a newer "permissive plus model-as-a-service clause" pattern that targets API resellers and exempts home and internal use. Qwen3.8-Flash-Next brought the pattern down to a model a home box can run: its Qwen Community License 1.0 carries the same name-display and MaaS clauses as Qwen3.8-Max, while Qwen3.8 27B stayed Apache 2.0. Meta's own line went from noncommercial (2023) to community licenses (2023 to 2025) to closed (April 2026) and back to a custom license (October 2026).
 
 > [!WARNING]
 > "Modified MIT" is not MIT. Mistral Medium 3.5's license gives no rights at all to anyone whose company (or employer) had global consolidated monthly revenue above $20 million in the preceding month, so an employee of a large company cannot run it even internally, even at home for work, without a commercial license from Mistral. Read the license file of every model, not its tag.
@@ -228,11 +280,14 @@ Local inference sends nothing: prompts, documents and outputs stay on hardware t
 
 The residual risks at home are different, not absent. Model files come from strangers: prefer the lab's own repository or a well-known quantizer, and safetensors or GGUF over formats that execute code on load. An agent with tools can exfiltrate what a chat could not, which is the security doc's subject. And a front end exposed to the internet is a data store of every conversation.
 
+Privacy is who can read the data; sovereignty is whose law and whose decisions reach it. [Sovereign Cloud](/books/hosting-and-cloud/compliance-programs#sovereign-cloud) covers the provider side: data location, operator access, key control and which government can compel the provider. A home box sits at the far end of that spectrum, with no provider to compel, no region to choose and no operator holding admin access, and a downloaded model keeps working after its lab deprecates it, reprices it or goes offline. Two things don't stay home. The license still governs the weights (Gemma's older terms reserve Google's right to "restrict (remotely or otherwise)" usage), and the training data and alignment were decided by the lab. Local inference makes the inference sovereign, not the model.
+
 ## The Alternatives
 
 | Option | Model | Strengths | Failure modes | Cost | Who it suits |
 | --- | --- | --- | --- | --- | --- |
 | **One 24 to 32 GB GPU** with llama.cpp or Ollama | Dense 8B to 32B at 4 to 8 bits | Fastest per dollar for models that fit; CUDA everywhere | Capacity cliff above 32 GB; 575 W under load | Card plus a desktop | Most home users |
+| **One 24 to 32 GB GPU plus 64 GB or more of RAM,** experts offloaded | 100B-class MoE | Uses a desktop's RAM; GPU speed on the weights every token uses | Speed depends on the cache hit rate, PCIe and RAM; long prompts take the slow path; young software | Card plus RAM | Desktop owners who want large MoE models |
 | **Two or more consumer GPUs** | 70B dense, larger MoE | More VRAM per dollar | PCIe splits, lanes, power, heat, noise | Cards, PSU, circuit | Enthusiasts who want 70B dense |
 | **Used datacenter cards** | 40 to 80 GB per card | High bandwidth and capacity | No price series, form factors, cooling, no warranty | Market price | Builders with server chassis |
 | **128 GB unified memory** (DGX Spark, Strix Halo) | 100B-class MoE | Capacity, quiet, low power | Slow on large dense models; prefill slower than a discrete GPU | $4,699 for a Spark Founders Edition; Strix Halo set by builders | MoE models, development against NVIDIA's stack |
@@ -245,7 +300,7 @@ Licensing cuts across every row: the hardware decides what fits, the license dec
 
 My default is one NVIDIA card with 24 to 32 GB (an RTX 5090 new, or a used RTX 3090 if price matters more than speed and FP4) in a Linux box, running llama.cpp's `llama-server` or Ollama in a container, with Open WebUI in front and the context set explicitly to what the work needs. The models I'd start with are Apache 2.0 or MIT ones that fit at 4 to 8 bits: a Qwen3 or Qwen3.8 27B-to-32B model, Gemma 4 31B, or gpt-oss-20b, with gpt-oss-120b only if the machine has the memory. I'd point every client at the OpenAI-compatible endpoint, so the same code can overflow to a hosted provider when a task needs a bigger model.
 
-I'd pick a 128 GB unified-memory box instead when the goal is 100B-class MoE models (gpt-oss-120b, Qwen3 235B-A22B at about 3 bits) rather than speed on 30B dense ones, and a Mac Studio when the goal is the largest open models on one desk. I'd switch to vLLM when more than one person or an agent with parallel calls uses the box. And I'd read the license file before the model card: the permissive families are good enough that a revenue-clause or "Modified MIT" model has to earn its place.
+For 100B-class MoE models I'd try expert offload first when the desktop already has a 24 GB-plus card and 64 GB or more of RAM: llama.cpp's `--cpu-moe` with `--moe-cache-mib`, or Strata for the models it supports. I'd pick a 128 GB unified-memory box instead when the goal is those models (gpt-oss-120b, Qwen3 235B-A22B at about 3 bits) without a desktop to build on, rather than speed on 30B dense ones, and a Mac Studio when the goal is the largest open models on one desk. I'd switch to vLLM when more than one person or an agent with parallel calls uses the box. And I'd read the license file before the model card: the permissive families are good enough that a revenue-clause or "Modified MIT" model has to earn its place.
 
 What would change this is the work itself. Epoch's May 2026 measurement puts the best open weights about four months behind the closed frontier on average, so for tasks that need frontier quality I'd use a frontier API and keep the home box for private, offline and bulk work.
 
@@ -334,6 +389,7 @@ The zero price is the point: the same meters priced at a hosted provider's per-t
 
 - **Size memory before buying hardware:** weights at the chosen precision plus the KV cache at the context you will actually use.
 - **Treat bandwidth as the speed limit** for one user, and prefer MoE models on high-capacity, low-bandwidth machines.
+- **Treat VRAM as a cache for MoE experts** when the model doesn't fit: the weights every token uses on the GPU, the experts in RAM, and the RAM sized for the experts.
 - **Set the context window explicitly;** runtime defaults are sized to VRAM and truncation can be silent.
 - **Default to 8-bit when it fits and 4 to 5 bits when it doesn't,** and check quality on your own task.
 - **Code against the OpenAI-compatible endpoint** so local, hosted open and frontier models are a base URL apart.
@@ -385,6 +441,13 @@ The zero price is the point: the same meters priced at a hosted provider's per-t
 - [llama.cpp](https://github.com/ggml-org/llama.cpp), MIT, backends
 - [llama.cpp: server README](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md), endpoints, flags and the CUDA server image
 - [llama.cpp: GGUF pull request #2398](https://github.com/ggml-org/llama.cpp/pull/2398), August 21, 2023
+- [llama.cpp: pull request #11397](https://github.com/ggml-org/llama.cpp/pull/11397), `--override-tensor`, merged April 2, 2025, with the `-ot exps=CPU` example
+- [llama.cpp: pull request #15077](https://github.com/ggml-org/llama.cpp/pull/15077), `--cpu-moe` and `--n-cpu-moe`, merged August 4, 2025
+- [llama.cpp: pull request #29887](https://github.com/ggml-org/llama.cpp/pull/29887), GPU cache for MoE experts kept in host memory, merged October 7, 2026; LRU, small batches only, sizing and the author's RTX 4090 and 5090 benchmark
+- [Strata](https://github.com/Niko1221/Strata), MIT, supported models and hardware; [releases](https://github.com/Niko1221/Strata/releases), v0.1.0 September 24, 2026 to v0.2.11 November 5, 2026, batch and parallel request notes
+- [Strata: How it works](https://raw.githubusercontent.com/Niko1221/Strata/main/docs/HOW_IT_WORKS.md), what sits on the GPU, in RAM and on SSD, 24,576 experts, the learned cache
+- [Strata: Details](https://raw.githubusercontent.com/Niko1221/Strata/main/docs/DETAILS.md), API endpoints and port, saved expert profile, the project's RTX 5070 measurements
+- [Strata: Models](https://raw.githubusercontent.com/Niko1221/Strata/main/docs/MODELS.md), RAM rule and expert RAM per quant
 - [Ollama: first commit](https://github.com/ollama/ollama/commit/8fa91332fa942909fb9206876e41c64599fe33ca), June 22, 2023
 - [Ollama: OpenAI compatibility](https://ollama.com/blog/openai-compatibility), February 8, 2024
 - [Ollama: new multimodal engine](https://ollama.com/blog/multimodal-models), May 15, 2025, GGML used directly
@@ -426,6 +489,8 @@ The zero price is the point: the same meters priced at a hosted provider's per-t
 - [Qwen: Qwen3](https://qwenlm.github.io/blog/qwen3/), April 29, 2025, sizes and Apache 2.0
 - [Qwen: Qwen3.8-27B](https://huggingface.co/Qwen/Qwen3.8-27B), Apache 2.0
 - [Qwen: Qwen3.8-Max LICENSE](https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/raw/main/LICENSE), display and MaaS clauses
+- [Qwen: Qwen3.8-Flash-Next](https://huggingface.co/Qwen/Qwen3.8-Flash-Next), [config](https://huggingface.co/Qwen/Qwen3.8-Flash-Next/raw/main/config.json) and [LICENSE](https://huggingface.co/Qwen/Qwen3.8-Flash-Next/raw/main/LICENSE), parameters, 48 layers, 512 experts with 10 routed and 1 shared active, n-gram embedding and offloading, Qwen Community License 1.0
+- [Unsloth: Qwen3.8-Flash-Next](https://unsloth.ai/docs/models/qwen3.8-next), Dynamic v3.1 GGUFs of November 4, 2026, sizes, top-1 and KLD per quant
 - [DeepSeek: R1](https://huggingface.co/deepseek-ai/DeepSeek-R1), January 20, 2025, MIT and distilled models
 - [DeepSeek: V4-Pro](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro), weights and MIT
 - [Mistral AI: Mistral Large 2](https://mistral.ai/news/mistral-large-2407), July 24, 2024, research license
