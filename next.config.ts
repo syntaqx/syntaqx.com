@@ -140,6 +140,15 @@ export const sectionRedirects = [
   })),
 ];
 
+// Posts renamed after Google indexed them.
+export const postRedirects = [
+  {
+    source: "/posts/the-evolution-of-software-engineering-in-the-age-of-ai",
+    destination: "/posts/evolution-of-software-engineering",
+    permanent: true,
+  },
+];
+
 // Post tags consolidated (November 2026): near-duplicates merged and
 // one-post tags folded into the tag that covers them.
 export const tagRedirects = Object.entries({
@@ -182,6 +191,7 @@ const nextConfig: NextConfig = {
   redirects: async () => [
     ...docRedirects(),
     ...sectionRedirects,
+    ...postRedirects,
     ...tagRedirects,
     ...resumeHostRedirects,
   ],
