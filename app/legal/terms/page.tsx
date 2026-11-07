@@ -32,8 +32,9 @@ export default function TermsPage() {
           accurate, or be fit for any particular purpose. Use at your own risk.
         </p>
         <p>
-          That includes the one-time secrets tool. It&apos;s a working demo, not a vault: don&apos;t
-          send anything through it you couldn&apos;t afford to lose or have leaked.
+          That includes one-time secrets. They have no uptime guarantee: if the service is down, a
+          link won&apos;t open until it&apos;s back, and an unread secret is gone once it expires.
+          Keep your own copy of anything you can&apos;t afford to lose.
         </p>
       </Section>
 

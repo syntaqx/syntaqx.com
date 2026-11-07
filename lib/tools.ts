@@ -27,7 +27,7 @@ export const tools: Tool[] = [
   {
     title: "One-Time Secrets",
     description:
-      "Share a password or token through a link that works once. Encrypted in your browser; the server only holds ciphertext.",
+      "Share a password, token or file through a link that works once. Encrypted in your browser; the server only holds ciphertext.",
     href: "/tools/secrets",
     tags: ["secrets", "encryption", "sharing"],
   },

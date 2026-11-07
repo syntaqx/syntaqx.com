@@ -8,12 +8,16 @@
  *
  * Links from the API itself (`api.syntaqx.com/secrets/{id}`) carry no key:
  * the server encrypted those, and GET returns the plaintext.
+ *
+ * Every secret the page makes also carries a check derived from the key
+ * (`checkFor`), so a read without the right key is refused instead of
+ * burning the secret.
  */
 
 export const PAGE_PATH = "/tools/secrets";
 
-/** The most a browser-encrypted secret can hold; the API takes 8 KB of ciphertext. */
-export const MAX_PLAINTEXT_BYTES = 4 * 1024;
+/** The most a browser-encrypted secret can hold; the API takes 96 KB of ciphertext. */
+export const MAX_PLAINTEXT_BYTES = 64 * 1024;
 
 export type SecretLink =
   { kind: "browser"; id: string; key?: string } | { kind: "api"; id: string };
@@ -40,15 +44,25 @@ export function newKey(): string {
 const importKey = (key: string) =>
   crypto.subtle.importKey("raw", fromBase64url(key), "AES-GCM", false, ["encrypt", "decrypt"]);
 
+/**
+ * The `check` sent with a secret and on every read: SHA-256 of `check:` + the
+ * key, base64url. It proves the reader has the key without revealing it.
+ */
+export async function checkFor(key: string): Promise<string> {
+  return base64url(
+    new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`check:${key}`))),
+  );
+}
+
 /** base64url(iv || ciphertext), the string sent to the API as `secret`. */
-export async function encrypt(key: string, plaintext: string): Promise<string> {
+export async function encrypt(
+  key: string,
+  plaintext: string | Uint8Array<ArrayBuffer>,
+): Promise<string> {
   const iv = crypto.getRandomValues(new Uint8Array(12));
+  const data = typeof plaintext === "string" ? new TextEncoder().encode(plaintext) : plaintext;
   const ciphertext = new Uint8Array(
-    await crypto.subtle.encrypt(
-      { name: "AES-GCM", iv },
-      await importKey(key),
-      new TextEncoder().encode(plaintext),
-    ),
+    await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await importKey(key), data),
   );
   const out = new Uint8Array(iv.length + ciphertext.length);
   out.set(iv);
@@ -57,14 +71,50 @@ export async function encrypt(key: string, plaintext: string): Promise<string> {
 }
 
 /** Throws when the key doesn't match: GCM authenticates the ciphertext. */
-export async function decrypt(key: string, payload: string): Promise<string> {
+export async function decryptBytes(key: string, payload: string): Promise<Uint8Array> {
   const bytes = fromBase64url(payload);
-  const plaintext = await crypto.subtle.decrypt(
-    { name: "AES-GCM", iv: bytes.slice(0, 12) },
-    await importKey(key),
-    bytes.slice(12),
+  return new Uint8Array(
+    await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: bytes.slice(0, 12) },
+      await importKey(key),
+      bytes.slice(12),
+    ),
   );
-  return new TextDecoder().decode(plaintext);
+}
+
+export async function decrypt(key: string, payload: string): Promise<string> {
+  return new TextDecoder().decode(await decryptBytes(key, payload));
+}
+
+// --- Files ----------------------------------------------------------------------
+
+/**
+ * A file is sent as one plaintext: this marker, a JSON line with its name and
+ * type, then its bytes. Text secrets are sent as plain UTF-8, so a script that
+ * only handles text never has to know about files.
+ */
+const FILE_MARKER = "\0syntaqx-file\n";
+
+export type Revealed =
+  { kind: "text"; text: string } | { kind: "file"; name: string; type: string; bytes: Uint8Array };
+
+export function packFile(name: string, type: string, bytes: Uint8Array): Uint8Array<ArrayBuffer> {
+  const header = new TextEncoder().encode(`${FILE_MARKER}${JSON.stringify({ name, type })}\n`);
+  const out = new Uint8Array(header.length + bytes.length);
+  out.set(header);
+  out.set(bytes, header.length);
+  return out;
+}
+
+export function unpack(plaintext: Uint8Array): Revealed {
+  const marker = new TextEncoder().encode(FILE_MARKER);
+  const isFile = marker.every((b, i) => plaintext[i] === b);
+  if (!isFile) return { kind: "text", text: new TextDecoder().decode(plaintext) };
+  const end = plaintext.indexOf(0x0a, marker.length);
+  const { name, type } = JSON.parse(
+    new TextDecoder().decode(plaintext.subarray(marker.length, end)),
+  ) as { name: string; type: string };
+  return { kind: "file", name, type, bytes: plaintext.subarray(end + 1) };
 }
 
 /** The page link: `#id/key`, or `#id` when the key is sent separately. */
@@ -72,10 +122,15 @@ export function pageLink(origin: string, id: string, key?: string): string {
   return `${origin}${PAGE_PATH}#${key ? `${id}/${key}` : id}`;
 }
 
-/** Read a fragment (`id/key` or `id`), with or without the leading `#`. */
+/**
+ * Read a fragment (`id/key`, `id`, or `api/id` for an API link a browser was
+ * redirected from), with or without the leading `#`.
+ */
 export function parseFragment(fragment: string): SecretLink | null {
   const [id, key, ...rest] = fragment.replace(/^#/, "").split("/");
-  if (rest.length || !ID.test(id)) return null;
+  if (rest.length) return null;
+  if (id === "api") return key && ID.test(key) ? { kind: "api", id: key } : null;
+  if (!ID.test(id)) return null;
   if (key === undefined || key === "") return { kind: "browser", id };
   return KEY.test(key) ? { kind: "browser", id, key } : null;
 }

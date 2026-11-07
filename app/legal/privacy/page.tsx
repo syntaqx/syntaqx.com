@@ -74,7 +74,8 @@ export default function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-2">
           <li>
             <strong className="text-foreground">Rate limiting</strong>: a request count per IP
-            address, kept for up to an hour.
+            address, kept for up to an hour, and a count of one-time secrets created per IP address,
+            kept for a day.
           </li>
           <li>
             <strong className="text-foreground">Idempotency keys</strong>: if you send an{" "}
@@ -84,10 +85,16 @@ export default function PrivacyPage() {
             includes what you sent.
           </li>
           <li>
-            <strong className="text-foreground">One-time secrets</strong>: a secret is encrypted in
-            your browser and stored only as ciphertext, under a hash of its id. The key lives in the
-            link, so I can&apos;t read what&apos;s stored. It&apos;s deleted the first time
-            it&apos;s read, or after its expiry (24 hours at most).
+            <strong className="text-foreground">One-time secrets</strong>: a secret or file made on{" "}
+            <Link href="/tools/secrets" className="text-primary hover:underline">
+              the secrets page
+            </Link>{" "}
+            is encrypted in your browser and stored only as ciphertext, under a hash of its id, with
+            a hash of its key that lets the server turn away a wrong key. The key itself lives in
+            the link, so I can&apos;t read what&apos;s stored. A &ldquo;For scripts&rdquo; link, or
+            a secret sent straight to the API, is encrypted by the server instead, so the server
+            sees it while storing it. Either way, it&apos;s deleted the first time it&apos;s read,
+            or after its expiry (7 days at most).
           </li>
         </ul>
       </Section>
