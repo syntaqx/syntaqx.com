@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { CACHE, errorResponse, invalidField, json } from "@/lib/api";
 import { registry } from "@/lib/openapi";
+import { clientKey } from "@/lib/ratelimit";
 import {
+  DAILY_CREATE_LIMIT,
   DEFAULT_TTL_SECONDS,
   MAX_SECRET_BYTES,
   MAX_TTL_SECONDS,
@@ -10,6 +12,7 @@ import {
   lookupKey,
   newSecretId,
   secretStore,
+  validCheck,
 } from "@/lib/secrets";
 
 // ---------------------------------------------------------------------------
@@ -38,7 +41,7 @@ registry.registerPath({
   operationId: "createSecret",
   summary: "Create a one-time secret",
   description:
-    "Stores a secret behind a one-time link: the first GET of the link returns it and deletes it, and an unread secret expires after `ttl` seconds. It's stored encrypted under a key derived from the link, so only the link can read it. For end-to-end encryption, encrypt before sending and keep the key out of the request, as https://www.syntaqx.com/tools/secrets does: the API stores whatever string you send. It backs that tool and https://www.syntaqx.com/posts/github-actions-secret-inputs. There's no SLA, so don't send production credentials.",
+    "Stores a secret behind a one-time link: the first GET of the link returns it and deletes it, and an unread secret expires after `ttl` seconds. It's stored encrypted under a key derived from the link, so only the link can read it. For end-to-end encryption, encrypt before sending and keep the key out of the request, as https://www.syntaqx.com/tools/secrets does: the API stores whatever string you send. Send `check` with it and a read must present the same value in a `Secret-Check` header, so a wrong key or a link without its key can't burn the secret. Each client can create 100 secrets a day.",
   tags: ["Utilities"],
   request: {
     body: {
@@ -47,10 +50,18 @@ registry.registerPath({
         "application/json": {
           schema: z
             .object({
-              secret: z.string().min(1).openapi({ description: "Up to 8 KB of UTF-8" }),
+              secret: z.string().min(1).openapi({ description: "Up to 96 KB of UTF-8" }),
               ttl: z.number().int().min(MIN_TTL_SECONDS).max(MAX_TTL_SECONDS).optional().openapi({
-                description: "Seconds until an unread secret expires (60 to 86400, default 3600)",
+                description: "Seconds until an unread secret expires (60 to 604800, default 3600)",
               }),
+              check: z
+                .string()
+                .regex(/^[A-Za-z0-9_-]{43}$/)
+                .optional()
+                .openapi({
+                  description:
+                    "Optional base64url SHA-256 (43 characters) a read must send back as `Secret-Check`. /tools/secrets sends SHA-256 of `check:` + its key.",
+                }),
             })
             .openapi({ example: { secret: "hunter2", ttl: 600 } }),
         },
@@ -63,9 +74,9 @@ registry.registerPath({
       content: { "application/json": { schema: CreatedSecret } },
     },
     400: errorDoc("Malformed JSON"),
-    413: errorDoc("Secret over 8 KB"),
-    422: errorDoc("Missing secret, or ttl out of range"),
-    429: errorDoc("Rate limited"),
+    413: errorDoc("Secret over 96 KB"),
+    422: errorDoc("Missing secret, ttl out of range, or a malformed check"),
+    429: errorDoc("Rate limited, or over 100 secrets today"),
     503: errorDoc("Secret storage unavailable; nothing was stored"),
   },
 });
@@ -92,12 +103,19 @@ export async function POST(request: Request) {
     return invalidField("secret", "The body must be a JSON object with a secret.");
   }
 
-  const { secret, ttl = DEFAULT_TTL_SECONDS } = body as { secret?: unknown; ttl?: unknown };
+  const {
+    secret,
+    ttl = DEFAULT_TTL_SECONDS,
+    check,
+  } = body as { secret?: unknown; ttl?: unknown; check?: unknown };
   if (typeof secret !== "string" || secret.length === 0) {
     return invalidField("secret", "secret must be a non-empty string.");
   }
   if (new TextEncoder().encode(secret).length > MAX_SECRET_BYTES) {
-    return errorResponse(413, "secret must not exceed 8 KB.");
+    return errorResponse(413, "secret must not exceed 96 KB.");
+  }
+  if (check !== undefined && (typeof check !== "string" || !validCheck(check))) {
+    return invalidField("check", "check must be a 43-character base64url SHA-256.");
   }
   if (
     typeof ttl !== "number" ||
@@ -112,8 +130,15 @@ export async function POST(request: Request) {
   }
 
   const id = newSecretId();
+  let stored: boolean;
   try {
-    await secretStore().put(await lookupKey(id), await encryptSecret(id, secret), ttl);
+    stored = await secretStore().put(
+      await lookupKey(id),
+      await encryptSecret(id, secret),
+      ttl,
+      check as string | undefined,
+      clientKey(request),
+    );
   } catch (error) {
     console.error("secrets: storage unavailable", error);
     return errorResponse(
@@ -122,6 +147,13 @@ export async function POST(request: Request) {
       {
         headers: { "Retry-After": "1", "Cache-Control": CACHE.none },
       },
+    );
+  }
+  if (!stored) {
+    return errorResponse(
+      429,
+      `That's ${DAILY_CREATE_LIMIT} secrets from you today. Nothing was stored; try again tomorrow.`,
+      { headers: { "Cache-Control": CACHE.none } },
     );
   }
 

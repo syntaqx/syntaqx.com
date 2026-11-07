@@ -3,7 +3,7 @@ import { pageMetadata } from "@/lib/metadata";
 export const metadata = pageMetadata(
   "/tools/secrets",
   "One-Time Secrets",
-  "Share a password or token through a one-time link that expires. Encrypted in your browser with AES-256-GCM; the server only holds ciphertext, deleted once read.",
+  "Share a password, token or file through a one-time link that expires. Encrypted in your browser with AES-256-GCM; the server only holds ciphertext, deleted once read.",
 );
 
 export default function SecretsLayout({ children }: { children: React.ReactNode }) {

@@ -14,7 +14,7 @@ function corsHeaders(): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS, QUERY",
-    "Access-Control-Allow-Headers": `Content-Type, Authorization, Api-Version, Idempotency-Key, If-None-Match, ${METHOD_OVERRIDE_HEADER}`,
+    "Access-Control-Allow-Headers": `Content-Type, Authorization, Api-Version, Idempotency-Key, If-None-Match, Secret-Check, ${METHOD_OVERRIDE_HEADER}`,
     "Access-Control-Expose-Headers":
       "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, Request-Id, X-Request-ID, Accept-Query, ETag, Idempotent-Replayed, Secret-Expires-At",
     "Access-Control-Max-Age": "86400",

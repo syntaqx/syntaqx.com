@@ -2,11 +2,13 @@ import { z } from "zod";
 import { CACHE, errorResponse, json } from "@/lib/api";
 import { registry } from "@/lib/openapi";
 import {
+  CHECK_HEADER,
   EXPIRES_AT_HEADER,
   decryptSecret,
   lookupKey,
   secretStore,
   validSecretId,
+  type TakeResult,
 } from "@/lib/secrets";
 
 // ---------------------------------------------------------------------------
@@ -26,16 +28,23 @@ registry.registerPath({
   operationId: "getSecret",
   summary: "Read a one-time secret",
   description:
-    "Returns the secret and deletes it, so a second read is a 404. Expired secrets are a 404 too.",
+    "Returns the secret and deletes it, so a second read is a 404. Expired secrets are a 404 too. A request that accepts `text/html` (a browser, or a chat app previewing the link) is redirected to https://www.syntaqx.com/tools/secrets instead, which reveals it only on a click.",
   tags: ["Utilities"],
   request: {
     params: z.object({ id: z.string().openapi({ example: "pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M" }) }),
+    headers: z.object({
+      "Secret-Check": z.string().optional().openapi({
+        description: "The `check` the secret was created with, if it had one",
+      }),
+    }),
   },
   responses: {
     200: {
       description: "The secret, now deleted",
       content: { "application/json": { schema: Secret } },
     },
+    303: { description: "Sent to the reveal page: the request accepts text/html" },
+    403: errorDoc("Missing or wrong Secret-Check; the secret wasn't read or deleted"),
     404: errorDoc("No secret with that id: already read, expired, or never created"),
     429: errorDoc("Rate limited"),
     503: errorDoc("Secret storage unavailable; the secret wasn't read"),
@@ -97,13 +106,34 @@ export async function HEAD(_request: Request, { params }: { params: Promise<{ id
   });
 }
 
-export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+/** Where a person who opens an API link lands: the page, on www for the api subdomain. */
+function revealPage(request: Request, id: string): string {
+  const host = request.headers.get("host");
+  const origin = host?.startsWith("api.")
+    ? `https://www.${host.slice(4)}`
+    : new URL(request.url).origin;
+  return `${origin}/tools/secrets#api/${id}`;
+}
+
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!validSecretId(id)) return notFound();
 
-  let stored: string | null;
+  // A browser, or a chat app unfurling the link, asks for HTML. Send it to the
+  // page, which only reveals on a click, instead of burning the secret.
+  if (request.headers.get("accept")?.includes("text/html")) {
+    return new Response(null, {
+      status: 303,
+      headers: { Location: revealPage(request, id), "Cache-Control": CACHE.none },
+    });
+  }
+
+  let taken: TakeResult;
   try {
-    stored = await secretStore().take(await lookupKey(id));
+    taken = await secretStore().take(
+      await lookupKey(id),
+      request.headers.get(CHECK_HEADER) ?? undefined,
+    );
   } catch (error) {
     console.error("secrets: storage unavailable", error);
     return errorResponse(
@@ -114,10 +144,17 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
       },
     );
   }
-  if (stored === null) return notFound();
+  if (taken.status === "missing") return notFound();
+  if (taken.status === "denied") {
+    return errorResponse(
+      403,
+      `This secret needs the ${CHECK_HEADER} it was created with. It wasn't read or deleted.`,
+      { headers: { "Cache-Control": CACHE.none } },
+    );
+  }
 
   return json(
-    { secret: await decryptSecret(id, stored) },
+    { secret: await decryptSecret(id, taken.value) },
     { headers: { "Cache-Control": CACHE.none } },
   );
 }

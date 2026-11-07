@@ -1,7 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { POST } from "./route";
 import { GET, HEAD } from "./[id]/route";
-import { lookupKey, memorySecretStore, setSecretStore, type SecretStore } from "@/lib/secrets";
+import {
+  DAILY_CREATE_LIMIT,
+  lookupKey,
+  memorySecretStore,
+  setSecretStore,
+  type SecretStore,
+} from "@/lib/secrets";
 
 const create = (body: unknown) =>
   POST(
@@ -67,8 +73,8 @@ describe("POST /secrets and GET /secrets/{id}", () => {
   it("stores ciphertext under a hash of the id, never the id or plaintext", async () => {
     const stored = new Map<string, string>();
     setSecretStore({
-      put: async (lookup, value) => void stored.set(lookup, value),
-      take: async () => null,
+      put: async (lookup, value) => !!stored.set(lookup, value),
+      take: async () => ({ status: "missing" }),
       ttl: async () => null,
     });
     const { id } = await (await create({ secret: "hunter2" })).json();
@@ -94,8 +100,47 @@ describe("POST /secrets and GET /secrets/{id}", () => {
     expect((await create({})).status).toBe(422);
     expect((await create({ secret: "" })).status).toBe(422);
     expect((await create({ secret: "x", ttl: 30 })).status).toBe(422);
-    expect((await create({ secret: "x", ttl: 86401 })).status).toBe(422);
-    expect((await create({ secret: "x".repeat(8193) })).status).toBe(413);
+    expect((await create({ secret: "x", ttl: 604801 })).status).toBe(422);
+    expect((await create({ secret: "x".repeat(96 * 1024 + 1) })).status).toBe(413);
+  });
+
+  it("refuses a read without the check, and keeps the secret", async () => {
+    const check = "c".repeat(43);
+    const { id } = await (await create({ secret: "x", check })).json();
+    const readWith = (value?: string) =>
+      GET(
+        new Request(`http://localhost/api/secrets/${id}`, {
+          headers: value ? { "Secret-Check": value } : {},
+        }),
+        { params: Promise.resolve({ id }) },
+      );
+    expect((await readWith()).status).toBe(403);
+    expect((await readWith("d".repeat(43))).status).toBe(403);
+    const ok = await readWith(check);
+    expect(ok.status).toBe(200);
+    expect(await ok.json()).toEqual({ secret: "x" });
+    expect((await readWith(check)).status).toBe(404);
+    expect((await create({ secret: "x", check: "short" })).status).toBe(422);
+  });
+
+  it("sends a browser to the reveal page instead of burning the secret", async () => {
+    const { id } = await (await create({ secret: "x" })).json();
+    const browser = await GET(
+      new Request(`https://api.syntaqx.com/secrets/${id}`, {
+        headers: { host: "api.syntaqx.com", accept: "text/html,application/xhtml+xml,*/*;q=0.8" },
+      }),
+      { params: Promise.resolve({ id }) },
+    );
+    expect(browser.status).toBe(303);
+    expect(browser.headers.get("Location")).toBe(`https://www.syntaqx.com/tools/secrets#api/${id}`);
+    expect((await read(id)).status).toBe(200);
+  });
+
+  it("caps how many secrets one client creates a day", async () => {
+    for (let i = 0; i < DAILY_CREATE_LIMIT; i++) {
+      expect((await create({ secret: "x" })).status).toBe(201);
+    }
+    expect((await create({ secret: "x" })).status).toBe(429);
   });
 
   it("404s a malformed or unknown id", async () => {

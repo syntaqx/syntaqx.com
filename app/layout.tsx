@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { SearchButton } from "@/components/search";
 import { Nav, MobileMenu } from "@/components/nav";
 import { TopProgressBar } from "@/components/top-progress-bar";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@/components/analytics";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { footerNav, socials, SITE_URL } from "@/lib/constants";
 import "./globals.css";
