@@ -3,7 +3,14 @@ import type { Metadata } from "next";
 /** Longer descriptions are cut off in results, and crawlers flag them. */
 export const MAX_DESCRIPTION = 160;
 
-/** Title, description and the Open Graph fields that would otherwise fall back to the homepage's. */
+/** A page-level `alternates` replaces the layout's wholesale, so pages restate the feed. */
+const RSS = [{ url: "/feed.xml", title: "syntaqx RSS feed" }];
+
+/**
+ * Title, description, canonical URL, and the Open Graph fields that would
+ * otherwise fall back to the homepage's. The canonical keeps query-string
+ * variants (`/about?x=1`) from reading as duplicates.
+ */
 export function pageMetadata(path: string, title: string, description: string): Metadata {
   if (description.length > MAX_DESCRIPTION) {
     console.warn(
@@ -13,19 +20,20 @@ export function pageMetadata(path: string, title: string, description: string): 
   return {
     title,
     description,
+    alternates: { canonical: path, types: { "application/rss+xml": RSS } },
     openGraph: { title, description, url: path, siteName: "syntaqx", type: "website" },
   };
 }
 
 /**
- * Points agents at a docs or books page's Markdown (its path plus .md). A
- * page-level `alternates` replaces the layout's wholesale, so the RSS feed is
- * restated.
+ * The canonical URL of a docs or books page, and its Markdown for agents (its
+ * path plus .md).
  */
 export function markdownAlternates(path: string): Metadata["alternates"] {
   return {
+    canonical: path,
     types: {
-      "application/rss+xml": [{ url: "/feed.xml", title: "syntaqx RSS feed" }],
+      "application/rss+xml": RSS,
       "text/markdown": `${path}.md`,
     },
   };
