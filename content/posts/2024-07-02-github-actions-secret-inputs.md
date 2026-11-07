@@ -119,12 +119,12 @@ To initially test my theory, I added a simple handler to my personal API that wo
 - `POST https://api.syntaqx.com/secrets` - Create a new secret, get back a one-time link
 - `GET https://api.syntaqx.com/secrets/{id}` - Retrieve the secret, which deletes it
 
-> [!NOTE] Update, October 2026
-> The original proof of concept kept values in memory and is long gone. These endpoints are live again, rebuilt so you can follow this post for real: secrets are stored in Redis, encrypted under a key derived from the link (so the stored data alone can't be read), deleted on the first read, and expire unread after an hour by default (`ttl`, from 60 seconds up to a day). The [API reference](/docs/api) has the full schema.
+> [!NOTE] Update, November 2026
+> The original proof of concept kept values in memory and is long gone. These endpoints are live again, and everything in this post works against them as written: secrets are stored in Redis, encrypted under a key derived from the link (so the stored data alone can't be read), deleted on the first read, and expire unread after an hour by default (`ttl`, from 60 seconds up to 7 days). The [API reference](/docs/api) has the full schema.
 >
-> It's still a demo with no SLA, so don't send it production credentials. We ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
+> At the time, we ended up going with a self-hosted [Yopass](https://yopass.se/) in our final workflow, which gave Engineers a UI to easily paste their secrets into and get a one-time link to retrieve them without the need for a script.
 >
-> That UI exists here now too: [One-Time Secrets](/tools/secrets) encrypts in your browser and keeps the key in the link's `#fragment`, so the server only ever holds ciphertext. Tick __For scripts__ and it makes the kind of link this workflow reads instead.
+> That UI exists here now too, and it's what I use to share secrets with people: [One-Time Secrets](/tools/secrets) encrypts in your browser and keeps the key in the link's `#fragment`, so the server only ever holds ciphertext. It takes text or a file up to 64 KB, can split the key out to send over a second channel, shows you when the link has been opened, and won't give the ciphertext to anyone who can't prove they hold the key, so a wrong key or a chat app's link preview can't burn it. Tick __For scripts__ and it makes the kind of link this workflow reads instead.
 >
 > Choose your own adventure.
 
@@ -225,7 +225,49 @@ The inputs go through `env` rather than straight into the script with `${{ }}`, 
 
 ### Keeping the server out of it
 
-A __For scripts__ link means the server encrypts the secret, so for a moment it sees the value. A regular link from [One-Time Secrets](/tools/secrets) doesn't have that problem: the browser encrypted it, and the key is in the link after the `#`. The runners already have Node, so the workflow can decrypt it the same way the page does. Swap the retrieve step for this one, and pass the page link as `url`:
+A __For scripts__ link means the server encrypts the secret, so for a moment it sees the value. A regular link from [One-Time Secrets](/tools/secrets) doesn't have that problem: the browser encrypted it, and the key is in the link after the `#`.
+
+You can make the same kind of link from a terminal, so the value is encrypted before it leaves your machine. This version of `create-secret.sh` needs Node 20 or later:
+
+```sh
+#!/usr/bin/env bash
+# Usage: ./create-secret.sh [ttl-seconds]
+set -euo pipefail
+
+read -rsp 'Secret: ' secret
+echo >&2
+
+printf '%s' "$secret" | node --input-type=module -e '
+  const chunks = [];
+  for await (const chunk of process.stdin) chunks.push(chunk);
+  const raw = crypto.getRandomValues(new Uint8Array(32));
+  const key = Buffer.from(raw).toString("base64url");
+  const aes = await crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt"]);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const sealed = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, aes, Buffer.concat(chunks));
+  const check = await crypto.subtle.digest("SHA-256", Buffer.from(`check:${key}`));
+  const res = await fetch("https://api.syntaqx.com/secrets", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      secret: Buffer.concat([iv, Buffer.from(sealed)]).toString("base64url"),
+      ttl: Number(process.argv[1]),
+      check: Buffer.from(check).toString("base64url"),
+    }),
+  });
+  if (!res.ok) throw new Error((await res.json()).message);
+  const { id } = await res.json();
+  console.log(`https://www.syntaqx.com/tools/secrets#${id}/${key}`);
+' "${1:-3600}"
+```
+
+```sh
+$ ./create-secret.sh 600
+Secret:
+https://www.syntaqx.com/tools/secrets#pX3c0Qb7e1u9KkHn4WfTz2aLr8YdVs6M/Qm9yZS1rZXktZXhhbXBsZS1ub3QtYS1yZWFsLWtleQA
+```
+
+That link opens on the page for a person, or in a workflow. The runners already have Node, so the workflow can decrypt it the same way the page does. Swap the retrieve step for this one, and pass the page link as `url`:
 
 ```yaml
       -
@@ -240,7 +282,10 @@ A __For scripts__ link means the server encrypts the secret, so for a moment it 
           fi
           VALUE=$(node --input-type=module -e '
             const [id, key] = new URL(process.argv[1]).hash.slice(1).split("/");
-            const res = await fetch(`https://api.syntaqx.com/secrets/${id}`);
+            const check = await crypto.subtle.digest("SHA-256", Buffer.from(`check:${key}`));
+            const res = await fetch(`https://api.syntaqx.com/secrets/${id}`, {
+              headers: { "Secret-Check": Buffer.from(check).toString("base64url") },
+            });
             if (!res.ok) throw new Error("That link was already used, has expired, or never existed");
             const bytes = Buffer.from((await res.json()).secret, "base64url");
             const aes = await crypto.subtle.importKey("raw", Buffer.from(key, "base64url"), "AES-GCM", false, ["decrypt"]);
@@ -251,7 +296,7 @@ A __For scripts__ link means the server encrypts the secret, so for a moment it 
           echo "value=$VALUE" >> "$GITHUB_OUTPUT"
 ```
 
-The format is small on purpose: the key is 32 random bytes, and the stored value is the 12-byte IV followed by the AES-256-GCM ciphertext, both base64url. Leave __Send the key separately__ off for links you hand to a workflow, since the step expects the key in the link.
+The format is small on purpose: the key is 32 random bytes, and the stored value is the 12-byte IV followed by the AES-256-GCM ciphertext, both base64url. The `Secret-Check` header is SHA-256 of `check:` plus the key. The secret was created with the same value, and the API won't give the ciphertext up without it, so someone holding the link without its key can't burn it. Leave __Send the key separately__ off for links you hand to a workflow, since the step expects the key in the link.
 
 Which surprisingly worked! The value was masked and never exposed in the logs.
 
