@@ -7,7 +7,7 @@ export const metadata = pageMetadata(
   "The terms governing use of syntaqx.com: what you can expect from this site and what I expect from visitors. Plain language, no surprises.",
 );
 
-const lastUpdated = "September 2026";
+const lastUpdated = "November 2026";
 
 export default function TermsPage() {
   return (
@@ -31,6 +31,10 @@ export default function TermsPage() {
           warranty of any kind. I make no promise that anything will work, be available, be
           accurate, or be fit for any particular purpose. Use at your own risk.
         </p>
+        <p>
+          That includes the one-time secrets tool. It&apos;s a working demo, not a vault: don&apos;t
+          send anything through it you couldn&apos;t afford to lose or have leaked.
+        </p>
       </Section>
 
       <Section title="2. I reserve the right to do whatever I want">
@@ -49,7 +53,24 @@ export default function TermsPage() {
         </p>
       </Section>
 
-      <Section title="4. Limitation of liability">
+      <Section title="4. Using the content">
+        <p>
+          The site&apos;s source, including the posts, docs and books, is public on{" "}
+          <a href="https://github.com/syntaqx/syntaqx.com" className="text-primary hover:underline">
+            GitHub
+          </a>{" "}
+          under the{" "}
+          <a
+            href="https://github.com/syntaqx/syntaqx.com/blob/main/LICENSE"
+            className="text-primary hover:underline"
+          >
+            MIT License
+          </a>
+          . Reuse it under those terms, which ask that you keep the copyright notice.
+        </p>
+      </Section>
+
+      <Section title="5. Limitation of liability">
         <p>
           To the maximum extent permitted by law, I am not liable for any indirect, incidental,
           special, consequential, or punitive damages arising from your use of the site. If a court
@@ -58,19 +79,19 @@ export default function TermsPage() {
         </p>
       </Section>
 
-      <Section title="5. Changes">
+      <Section title="6. Changes">
         <p>
           I may update these terms whenever. The &ldquo;last updated&rdquo; date at the top will
           reflect when. Continued use after a change means you accept the new version.
         </p>
       </Section>
 
-      <Section title="6. Contact">
+      <Section title="7. Contact">
         <p>
-          Questions? Open an issue on{" "}
-          <a href="https://github.com/syntaqx" className="text-primary hover:underline">
-            GitHub
-          </a>
+          Questions?{" "}
+          <Link href="/contact" className="text-primary hover:underline">
+            Get in touch
+          </Link>
           .
         </p>
       </Section>
