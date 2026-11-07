@@ -327,9 +327,9 @@ export function webApplication({
     "@context": CONTEXT,
     "@graph": [
       {
-        // Product too, for crawlers that classify tool pages as products;
-        // the free Offer below keeps it accurate.
-        "@type": ["WebApplication", "Product"],
+        // Not also Product: Google reads Product + Offer as a merchant
+        // listing and flags it for missing image, shipping and returns.
+        "@type": "WebApplication",
         name,
         description,
         url: abs(path),

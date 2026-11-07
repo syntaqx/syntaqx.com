@@ -207,7 +207,7 @@ describe("schema builders", () => {
     });
     const node = graph[0];
     expect(node).toMatchObject({
-      "@type": ["WebApplication", "Product"],
+      "@type": "WebApplication",
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Any",
       isAccessibleForFree: true,
