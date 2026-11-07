@@ -7,7 +7,7 @@ export const metadata = pageMetadata(
   "How syntaqx.com handles your data: what's collected, what isn't, and the choices you have. I try to collect as little as possible.",
 );
 
-const lastUpdated = "September 2026";
+const lastUpdated = "November 2026";
 
 export default function PrivacyPage() {
   return (
@@ -45,7 +45,8 @@ export default function PrivacyPage() {
           <li>
             <strong className="text-foreground">Sentry</strong>: error and performance traces when
             something breaks. May include URL, browser, IP-derived approximate location, and a stack
-            trace. See{" "}
+            trace. Session Replay is off, and the decryption key in a one-time secret link is
+            stripped before anything is sent. See{" "}
             <a href="https://sentry.io/privacy/" className="text-primary hover:underline">
               Sentry&apos;s privacy policy
             </a>
@@ -62,18 +63,50 @@ export default function PrivacyPage() {
         </p>
       </Section>
 
+      <Section title="What I store when you use the API or tools">
+        <p>
+          The public API and tools keep short-lived data in{" "}
+          <a href="https://upstash.com/trust/privacy.pdf" className="text-primary hover:underline">
+            Upstash Redis
+          </a>
+          . All of it expires on its own:
+        </p>
+        <ul className="list-disc pl-5 space-y-2">
+          <li>
+            <strong className="text-foreground">Rate limiting</strong>: a request count per IP
+            address, kept for up to an hour.
+          </li>
+          <li>
+            <strong className="text-foreground">Idempotency keys</strong>: if you send an{" "}
+            <code className="text-foreground">Idempotency-Key</code> header, the response to that
+            request is stored under your IP address for 24 hours so a retry gets the same answer. On
+            endpoints like <code className="text-foreground">/api/echo</code>, that response
+            includes what you sent.
+          </li>
+          <li>
+            <strong className="text-foreground">One-time secrets</strong>: a secret is encrypted in
+            your browser and stored only as ciphertext, under a hash of its id. The key lives in the
+            link, so I can&apos;t read what&apos;s stored. It&apos;s deleted the first time
+            it&apos;s read, or after its expiry (24 hours at most).
+          </li>
+        </ul>
+      </Section>
+
       <Section title="Accounts">
         <p>
           There are no accounts. The site has no sign-in, no user database, and stores nothing about
-          you beyond the visit data listed above.
+          you beyond the data listed above.
         </p>
       </Section>
 
       <Section title="Cookies and local storage">
         <p>
-          Your theme preference (light / dark / system) is stored in your browser&apos;s{" "}
-          <code className="text-foreground">localStorage</code>, which never leaves your device. No
-          other cookies are set.
+          No cookies are set. A few preferences are kept in your browser&apos;s{" "}
+          <code className="text-foreground">localStorage</code> and never leave your device: your
+          theme (light, dark or system), the code language you last picked, and your recent
+          searches. The one-time secrets tool keeps the link you just made in{" "}
+          <code className="text-foreground">sessionStorage</code> until it&apos;s revealed, so a
+          reload doesn&apos;t lose it.
         </p>
       </Section>
 
@@ -93,10 +126,10 @@ export default function PrivacyPage() {
 
       <Section title="Contact">
         <p>
-          Questions? Open an issue on{" "}
-          <a href="https://github.com/syntaqx" className="text-primary hover:underline">
-            GitHub
-          </a>
+          Questions?{" "}
+          <Link href="/contact" className="text-primary hover:underline">
+            Get in touch
+          </Link>
           .
         </p>
       </Section>
