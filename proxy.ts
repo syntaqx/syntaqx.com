@@ -14,9 +14,9 @@ function corsHeaders(): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS, QUERY",
-    "Access-Control-Allow-Headers": `Content-Type, Authorization, Api-Version, Idempotency-Key, If-None-Match, Secret-Check, ${METHOD_OVERRIDE_HEADER}`,
+    "Access-Control-Allow-Headers": `Content-Type, Authorization, Api-Version, Idempotency-Key, If-None-Match, Secret-Check, Mcp-Protocol-Version, Mcp-Session-Id, Last-Event-ID, ${METHOD_OVERRIDE_HEADER}`,
     "Access-Control-Expose-Headers":
-      "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, Request-Id, X-Request-ID, Accept-Query, ETag, Idempotent-Replayed, Secret-Expires-At",
+      "Api-Version, Deprecation, Sunset, Link, RateLimit, RateLimit-Policy, Retry-After, Request-Id, X-Request-ID, Accept-Query, ETag, Idempotent-Replayed, Secret-Expires-At, Mcp-Session-Id",
     "Access-Control-Max-Age": "86400",
   };
 }
@@ -108,7 +108,11 @@ export async function proxy(request: NextRequest): Promise<Response> {
   const host = request.headers.get("host") || "";
   const { pathname } = request.nextUrl;
   const isApiSubdomain = host.startsWith("api.");
-  const isApiPath = pathname.startsWith("/api") || isApiSubdomain;
+  // The MCP server: mcp.syntaqx.com (mcp.localhost:3000 locally), or /mcp on
+  // any host. All of it is API traffic, served by app/mcp.
+  const isMcpSubdomain = host.startsWith("mcp.");
+  const isMcpPath = pathname === "/mcp" || isMcpSubdomain;
+  const isApiPath = pathname.startsWith("/api") || isApiSubdomain || isMcpPath;
 
   // Handle CORS preflight for API routes
   if (request.method === "OPTIONS" && isApiPath) {
@@ -144,9 +148,12 @@ export async function proxy(request: NextRequest): Promise<Response> {
 
   // Production: api.syntaqx.com/<path> → /api/<path>, with the root serving
   // the endpoint index. Unknown paths reach the /api catch-all (404).
-  if (isApiSubdomain) {
+  // mcp.syntaqx.com and /mcp → /mcp; other mcp.* paths reach that 404 too.
+  if (isApiSubdomain || isMcpPath) {
     const url = request.nextUrl.clone();
-    url.pathname = pathname === "/" || pathname === "" ? "/api" : `/api${pathname}`;
+    const root = pathname === "/" || pathname === "";
+    if (isMcpPath) url.pathname = root || pathname === "/mcp" ? "/mcp" : `/api${pathname}`;
+    else url.pathname = root ? "/api" : `/api${pathname}`;
     const response = NextResponse.rewrite(url, { request: { headers: forwardedHeaders(request) } });
     for (const [k, v] of Object.entries({ ...apiHeaders, ...corsHeaders() })) {
       response.headers.set(k, v);
@@ -170,8 +177,11 @@ export async function proxy(request: NextRequest): Promise<Response> {
 export const config = {
   matcher: [
     "/api/:path*",
-    // Every path on the api subdomain. The host condition keeps the main
-    // site's pages out of the proxy.
+    "/mcp",
+    // Every path on the api and mcp subdomains. The host condition keeps the
+    // main site's pages out of the proxy.
     { source: "/:path*", has: [{ type: "host", value: "api.syntaqx.com" }] },
+    { source: "/:path*", has: [{ type: "host", value: "mcp.syntaqx.com" }] },
+    { source: "/:path*", has: [{ type: "host", value: "mcp.localhost" }] },
   ],
 };

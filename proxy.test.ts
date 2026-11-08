@@ -189,6 +189,47 @@ describe("proxy: api subdomain", () => {
   });
 });
 
+describe("proxy: mcp server", () => {
+  const rewrite = async (url: string, host: string, method = "POST") =>
+    ((await proxy(makeRequest(url, { host, method }))) as Response).headers;
+
+  it("rewrites the mcp subdomain root and /mcp to /mcp, rate-limited", async () => {
+    const headers = await rewrite("https://mcp.syntaqx.com/", "mcp.syntaqx.com");
+    expect(headers.get("x-middleware-rewrite")).toBe("https://mcp.syntaqx.com/mcp");
+    expect(headers.get("X-RateLimit-Limit")).toBe("5000");
+    expect(
+      (await rewrite("https://mcp.syntaqx.com/mcp", "mcp.syntaqx.com")).get("x-middleware-rewrite"),
+    ).toBe("https://mcp.syntaqx.com/mcp");
+  });
+
+  it("serves /mcp on the main domain and locally, including mcp.localhost", async () => {
+    expect(
+      (await rewrite("http://localhost:3000/mcp", "localhost:3000")).get("x-middleware-rewrite"),
+    ).toBe("http://localhost:3000/mcp");
+    expect(
+      (await rewrite("http://mcp.localhost:3000/", "mcp.localhost:3000")).get(
+        "x-middleware-rewrite",
+      ),
+    ).toBe("http://mcp.localhost:3000/mcp");
+  });
+
+  it("sends other mcp subdomain paths to the API's 404", async () => {
+    expect(
+      (await rewrite("https://mcp.syntaqx.com/nope", "mcp.syntaqx.com", "GET")).get(
+        "x-middleware-rewrite",
+      ),
+    ).toBe("https://mcp.syntaqx.com/api/nope");
+  });
+
+  it("answers CORS preflight with the MCP headers allowed", async () => {
+    const res = (await proxy(
+      makeRequest("https://mcp.syntaqx.com/", { host: "mcp.syntaqx.com", method: "OPTIONS" }),
+    )) as Response;
+    expect(res.status).toBe(204);
+    expect(res.headers.get("Access-Control-Allow-Headers")).toContain("Mcp-Protocol-Version");
+  });
+});
+
 describe("proxy: HTTP QUERY", () => {
   const HELLO_SHA256 = "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9";
 
