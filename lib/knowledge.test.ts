@@ -1,14 +1,6 @@
 import { describe, it, expect } from "vitest";
-import {
-  buildIndex,
-  isOpinion,
-  parseTarget,
-  read,
-  search,
-  splitSections,
-  tokenize,
-  type Section,
-} from "@/lib/knowledge";
+import { isOpinion, parseTarget, read, search, searchDetailed, tokenize } from "@/lib/knowledge";
+import { buildIndex, splitSections, type Section } from "@/lib/knowledge-index";
 
 describe("tokenize", () => {
   it("drops stopwords and folds plurals", () => {
@@ -119,6 +111,23 @@ describe("search", () => {
     expect(search("what should I use", {}, idx)).toEqual([]);
   });
 
+  it("snippets tables as text, without the rule row", () => {
+    const tables = buildIndex([
+      section({ text: "| Engine | License |\n| --- | --- |\n| Postgres | PostgreSQL |" }),
+    ]);
+    const [hit] = search("license", {}, tables);
+    expect(hit.snippet).toBe("Engine · License Postgres · PostgreSQL");
+  });
+
+  it("counts options weighed together, not named in passing", () => {
+    const pair = buildIndex([
+      section({ path: "/docs/a", text: "Postgres or MongoDB? Postgres, unless MongoDB fits." }),
+      section({ path: "/docs/b", text: "Adapters for Postgres, MySQL and MongoDB." }),
+    ]);
+    const { comparison } = searchDetailed("postgres or mongodb", {}, pair);
+    expect(comparison).toMatchObject({ together: 1, opinionsTogether: 1 });
+  });
+
   it("snippets around the match", () => {
     const [hit] = search("hmac", {}, idx);
     expect(hit.snippet).toContain("HMAC");
@@ -148,5 +157,34 @@ describe("read", () => {
   it("explains a missing page or section", () => {
     expect(read("/docs/nope")).toMatchObject({ ok: false });
     expect(read("/docs/requests/idempotency", "nope")).toMatchObject({ ok: false });
+  });
+});
+
+describe("the prebuilt index", () => {
+  it("round-trips through disk with identical results", async () => {
+    const os = await import("node:os");
+    const fsp = await import("node:fs/promises");
+    const path = await import("node:path");
+    const { writeIndex, loadIndex } = await import("@/lib/knowledge-index");
+    const sections = splitSections("## Webhooks\nSign them.\n## Queues\nPostgres or a broker.").map(
+      (s) => ({ kind: "playbook" as const, path: "/docs/x", title: "X", ...s }),
+    );
+    const built = buildIndex(sections);
+    const dir = await fsp.mkdtemp(path.join(os.tmpdir(), "knowledge-"));
+    try {
+      writeIndex(built, dir);
+      const loaded = loadIndex(dir)!;
+      expect(loaded).not.toBeNull();
+      for (const q of ["webhooks", "postgres or a broker", "queues"]) {
+        expect(search(q, {}, loaded)).toEqual(search(q, {}, built));
+      }
+    } finally {
+      await fsp.rm(dir, { recursive: true });
+    }
+  });
+
+  it("is null when missing", async () => {
+    const { loadIndex } = await import("@/lib/knowledge-index");
+    expect(loadIndex("/nonexistent/knowledge")).toBeNull();
   });
 });

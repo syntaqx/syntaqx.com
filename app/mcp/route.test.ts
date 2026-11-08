@@ -33,6 +33,21 @@ describe("/mcp", () => {
     expect(text).toContain("claude mcp add --transport http syntaqx https://mcp.syntaqx.com");
   });
 
+  it("sends a browser to the setup page", () => {
+    const res = GET(new Request("http://localhost/mcp", { headers: { Accept: "text/html" } }));
+    expect((res as Response).status).toBe(302);
+    expect((res as Response).headers.get("location")).toBe("https://www.syntaqx.com/docs/mcp");
+  });
+
+  it("reports a comparison for an either-or question, leading with its note", async () => {
+    const { result: call } = await result(
+      await rpc("tools/call", { name: "search", arguments: { query: "svelte or vue" } }),
+    );
+    const { comparison } = call.structuredContent;
+    expect(comparison.options.map((o: { option: string }) => o.option)).toEqual(["svelte", "vue"]);
+    expect(call.content[0].text).toMatch(/^Chase's writing doesn't mention svelte/);
+  });
+
   it("initializes with the attribution instructions", async () => {
     const res = await rpc("initialize", {
       protocolVersion: "2025-06-18",

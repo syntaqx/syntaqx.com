@@ -198,7 +198,7 @@ const nextConfig: NextConfig = {
   // The Markdown route reads content/ at request time.
   outputFileTracingIncludes: {
     "/md/[[...path]]": ["./content/**/*"],
-    "/mcp": ["./content/**/*"],
+    "/mcp": ["./content/**/*", "./.generated/knowledge/**/*"],
     "/api/docs": ["./content/docs/**/*"],
     "/api/docs/[...slug]": ["./content/docs/**/*"],
     // The PDF renderer reads its font files from node_modules.

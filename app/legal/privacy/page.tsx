@@ -78,6 +78,10 @@ export default function PrivacyPage() {
             kept for a day.
           </li>
           <li>
+            <strong className="text-foreground">The MCP server</strong>: requests count toward the
+            same rate limit. What you search for or read through it isn&apos;t stored.
+          </li>
+          <li>
             <strong className="text-foreground">Idempotency keys</strong>: if you send an{" "}
             <code className="text-foreground">Idempotency-Key</code> header, the response to that
             request is stored under your IP address for 24 hours so a retry gets the same answer. On

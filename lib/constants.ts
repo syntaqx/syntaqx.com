@@ -2,6 +2,8 @@
 // the apex (syntaqx.com) 307-redirects to it. Every canonical/OG/sitemap URL
 // MUST use this so we never emit a URL that immediately redirects.
 export const SITE_URL = "https://www.syntaqx.com";
+/** The MCP server (app/mcp), for searching the playbook, posts and books. */
+export const MCP_URL = "https://mcp.syntaqx.com";
 
 export const CONTACT_EMAIL = "syntaqx@gmail.com";
 
@@ -79,6 +81,7 @@ export const footerNav: {
     label: "developers",
     links: [
       { href: "/docs/api", label: "api" },
+      { href: "/docs/mcp", label: "mcp" },
       { href: "/openapi.json", label: "openapi", file: true },
       { href: "/llms.txt", label: "llms.txt", file: true },
     ],

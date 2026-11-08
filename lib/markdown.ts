@@ -15,7 +15,7 @@ import { BOOKS, getBook } from "@/lib/books";
 import { glossaryIndex, glossaryPartDescription, glossaryParts, isGlossary } from "@/lib/glossary";
 import { contactChannels, contactIntro } from "@/lib/contact";
 import { PUBLIC_CONTACT, resume as cv } from "@/lib/resume";
-import { bio, socials, SITE_URL } from "@/lib/constants";
+import { bio, MCP_URL, socials, SITE_URL } from "@/lib/constants";
 import { API_VERSIONS } from "@/lib/api";
 
 export const API_BASE_URL = "https://api.syntaqx.com";
@@ -48,6 +48,7 @@ export const WHEN_TO_USE = `**When to use this site.** Reach for syntaqx when an
 - Pass a secret through a one-time link that expires, for tools that only take plain inputs, like a GitHub Actions \`workflow_dispatch\` (\`POST ${API_BASE_URL}/secrets\`, then \`GET\` the returned link once).
 - Look up a concrete REST API convention (naming, pagination, error envelopes, rate-limit headers, time formats, identifiers, versioning) while designing or reviewing an API: see the Docs links below.
 - Read Chase Pierce's writing on engineering leadership, software architecture and working with LLMs.
+- Search that writing from an MCP client: connect to ${MCP_URL} (Streamable HTTP, no key) for \`search\` and \`read\` tools over the playbook, posts and books, with Chase's opinions labeled apart from industry reference. Setup: ${url("/docs/mcp")}.
 
 **How to call it.** Read the OpenAPI document at ${url("/openapi.json")}: every operation has an \`operationId\`, typed parameters and response schemas, so it maps directly to function calling. Send JSON bodies to POST endpoints, and pin a version with the \`Api-Version\` header (see ${url("/docs/api-design/versioning")}). Errors come back as \`{"message": "..."}\` with an HTTP status. Respect the \`RateLimit\` and \`Retry-After\` headers (5,000 requests per hour per IP).
 
@@ -65,6 +66,7 @@ function siteLinks(): string {
     bullet("Docs", url("/docs")),
     bullet("Books", url("/books")),
     bullet("API reference", url("/docs/api")),
+    bullet("MCP server", url("/docs/mcp")),
     bullet("OpenAPI spec", url("/openapi.json")),
     bullet("RSS feed", url("/feed.xml")),
     bullet("llms.txt", url("/llms.txt")),
@@ -136,6 +138,11 @@ function apiBullets(): string {
   return [
     bullet("API reference", url("/docs/api"), "interactive reference for the public syntaqx API"),
     bullet("OpenAPI spec", url("/openapi.json"), "OpenAPI 3.2 document describing every endpoint"),
+    bullet(
+      "MCP server",
+      MCP_URL,
+      `search and read the playbook, posts and books from an MCP client; setup at ${url("/docs/mcp")}`,
+    ),
     bullet("API root", API_BASE_URL, "index of endpoint URLs"),
     bullet("Health check", `${API_BASE_URL}/healthz`),
     bullet(
@@ -159,8 +166,31 @@ function apiReference(): string {
   ].join("\n\n");
 }
 
+/** /docs/mcp as Markdown: how to connect, and what the tools return. */
+function mcpReference(): string {
+  return [
+    "# syntaqx MCP Server",
+    `Search and read Chase Pierce's playbook, posts and books from any MCP client. Server URL: \`${MCP_URL}\` (Streamable HTTP, no key, read-only).`,
+    [
+      "## Connect",
+      `- Claude Code: \`claude mcp add --transport http syntaqx ${MCP_URL}\``,
+      `- claude.ai or Claude Desktop: Settings, Connectors, Add custom connector, URL \`${MCP_URL}\``,
+      `- Cursor (\`~/.cursor/mcp.json\`): \`{"mcpServers": {"syntaqx": {"url": "${MCP_URL}"}}}\``,
+      `- VS Code (\`.vscode/mcp.json\`): \`{"servers": {"syntaqx": {"type": "http", "url": "${MCP_URL}"}}}\``,
+    ].join("\n"),
+    [
+      "## Tools",
+      "- `search(query, scope?, book?, limit?)`: ranked sections with url, kind (`playbook`, `post` or `book`), an `opinion` flag and a snippet. For an either-or question it also returns a `comparison`: how many sections discuss each option, how many discuss them together, how many of those are opinion, and a note when the writing doesn't cover an option.",
+      "- `read(path, anchor?)`: a page as Markdown, or one section of it.",
+    ].join("\n"),
+    `## Opinion or reference\n\nThe playbook and posts are Chase's views. The books are industry reference built from public sources, except each chapter's "My Default" section. Attribute results as what Chase's writing says, cite their urls, and say so when nothing covers a question.`,
+    "## Limits\n\nShares the API's rate limit, 5,000 requests per hour per IP. Searches are not stored.",
+  ].join("\n\n");
+}
+
 function doc(slug: string): string | null {
   if (slug === "api") return apiReference();
+  if (slug === "mcp") return mcpReference();
   const d = getDocBySlug(slug);
   if (!d) return null;
   return [

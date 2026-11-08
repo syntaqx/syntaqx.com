@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/git-history.mjs && shadcn build && next build && node scripts/pagefind.mjs",
+    "build": "node scripts/git-history.mjs && shadcn build && npm run knowledge:index && next build && node scripts/pagefind.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -17,6 +17,7 @@
     "dwg:render": "node scripts/dwg/render.mjs",
     "links": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-doc-links.mjs",
     "gaps": "node scripts/source-gaps.mjs",
+    "knowledge:index": "esbuild scripts/knowledge-index.mts --bundle --platform=node --format=esm --packages=external --outfile=.generated/knowledge-index.mjs --log-level=warning && node .generated/knowledge-index.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "resume:pdf": "esbuild scripts/resume-pdf.mts --bundle --platform=node --format=esm --packages=external --jsx=automatic --outfile=.private/resume-pdf.mjs --log-level=warning && node .private/resume-pdf.mjs",

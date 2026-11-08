@@ -25,7 +25,15 @@ function DocsTree({ categories, onNavigate }: DocsSidebarProps & { onNavigate?: 
     },
     {
       name: "Reference",
-      sections: [{ name: "API Reference", items: [{ href: "/docs/api", title: "API Reference" }] }],
+      sections: [
+        {
+          name: "Developers",
+          items: [
+            { href: "/docs/api", title: "API Reference" },
+            { href: "/docs/mcp", title: "MCP Server" },
+          ],
+        },
+      ],
     },
   ];
   return (
