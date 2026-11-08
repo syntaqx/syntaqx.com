@@ -3876,6 +3876,78 @@ const library: SceneFn = (s) => {
   };
 };
 
+/**
+ * Legal: a sheet of fine print under a magnifying glass. The lens eases from
+ * line to line, and the line under it lights up and reads as what it says in
+ * plain words: no cookies, no accounts, as is.
+ */
+const legal: SceneFn = (s) => {
+  const [x, y, A, B] = [1.6, 1.0, 6.8, 8.4];
+  const paper = 0.12;
+  const lines = [9.4, 7.6, 9.8, 6.2, 9, 9.6, 4.6, 9.2, 8.2, 6.8, 9.6, 3.4];
+  // the lines the lens stops on, and what each says in plain words
+  const stops: [number, string][] = [
+    [1, "no cookies"],
+    [4, "no accounts"],
+    [7, "nothing sold"],
+    [10, "as is"],
+  ];
+  const T = 1.9;
+  // offset so the resting frame (and the OG image) has a line lit
+  const now = s.t + T * 0.7;
+  const k = Math.floor(now / T) % stops.length;
+  const ph = (now % T) / T;
+  const settled = ph >= 0.35;
+  const at = (row: number): [number, number] => [
+    x + 0.5 + (lines[row] * 0.55) / 2,
+    y + 1.5 + row * 0.55,
+  ];
+  const [fx, fy] = at(stops[(k + stops.length - 1) % stops.length][0]);
+  const [tx, ty] = at(stops[k][0]);
+  const e = settled ? 1 : ease(ph / 0.35);
+  const [cx, cy] = [fx + (tx - fx) * e, fy + (ty - fy) * e];
+  const lens = 1.5 + s.spread * 1.2 + bob(s, 0.1);
+  const r = 1.05;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    { kind: "box", box: box(x, y, 0, A, B, paper) },
+    {
+      kind: "plane",
+      pts: quad(x, y, paper, A, B),
+      v: 0.14,
+      rows: { lengths: lines, ...(settled ? { accentRow: stops[k][0] } : {}) },
+    },
+    { kind: "line", a: [cx, cy, paper], b: [cx, cy, lens], dashed: true, alpha: 0.45 },
+    { kind: "cyl", cx, cy, z: lens, r, h: 0.14, soft: true, accent: settled },
+    { kind: "box", box: box(cx + r - 0.1, cy - 0.16, lens + 0.02, 2, 0.32, 0.1), accent: true },
+    { kind: "label", at: [x, y + B, paper], text: "the fine print", dx: -1, dy: 1 },
+    ...(settled
+      ? [
+          {
+            kind: "label" as const,
+            at: [cx + r, cy, lens + 0.14] as V3,
+            text: stops[k][1],
+            dx: 1.6,
+            dy: -1.2,
+            accent: true,
+          },
+        ]
+      : []),
+  ];
+  return {
+    parts,
+    ext: [
+      [0, 10, 0],
+      [10, 0, 0],
+      [10, 10, 0],
+      [0, 0, 0],
+      [x + A, y, lens + 2],
+      [x, y, lens + 1.6],
+    ],
+    axes: ground(10),
+  };
+};
+
 export const scenes = {
   system,
   loop,
@@ -3906,6 +3978,7 @@ export const scenes = {
   cloud,
   board,
   library,
+  legal,
 } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 

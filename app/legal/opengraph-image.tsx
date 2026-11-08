@@ -9,7 +9,7 @@ export const contentType = "image/png";
 export default function Image() {
   return segmentCard(metadata, {
     kicker: "Legal",
-    scene: "scaffold",
+    scene: "legal",
     path: "/legal",
   });
 }
