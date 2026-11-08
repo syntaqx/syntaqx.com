@@ -6,7 +6,7 @@
 
 import { McpServer, createMcpHandler } from "@modelcontextprotocol/server";
 import { z } from "zod";
-import { BOOK_SLUGS, KINDS, parseTarget, read, search } from "@/lib/knowledge";
+import { BOOK_SLUGS, KINDS, parseTarget, read, searchDetailed } from "@/lib/knowledge";
 
 export const INSTRUCTIONS = `Search and read the published writing of Chase Pierce (syntaqx), from syntaqx.com.
 
@@ -22,6 +22,7 @@ When you use this material:
 - Cite the url of every result you rely on.
 - If search finds nothing relevant, say his writing doesn't cover it rather than guessing what he would say.
 - Before an architecture, tooling or process decision, search the playbook for his default.
+- For an either-or question, ask it as one (search "X or Y"). The response's comparison says how many sections discuss each option and how many of those that weigh them together are opinion; pass its note on rather than stretching a passing mention or a book's comparison into his recommendation.
 
 Search returns ranked sections with snippets; read a result's path and anchor to get the section, or the path alone for the whole page.`;
 
@@ -62,18 +63,23 @@ export function createServer(): McpServer {
     {
       title: "Search Chase's writing",
       description:
-        "Search the syntaqx.com playbook, posts and books. Returns ranked sections with their kind, url, path, anchor and a snippet.",
+        'Search the syntaqx.com playbook, posts and books. Returns ranked sections with their kind, opinion flag, url, path, anchor and a snippet. Either-or questions ("postgres or mongodb", "kafka vs rabbitmq") work: results favor sections that weigh every option, and a comparison reports how much the writing covers each.',
       inputSchema: searchInput,
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
     async ({ query, scope, book, limit }) => {
-      const results = search(query, { kinds: scope === "all" ? undefined : [scope], book, limit });
-      if (!results.length) {
-        return text(`No results for "${query}". Chase's writing may not cover this.`);
-      }
+      const response = searchDetailed(query, {
+        kinds: scope === "all" ? undefined : [scope],
+        book,
+        limit,
+      });
+      const note = response.comparison?.note;
+      const lead = response.results.length
+        ? note
+        : (note ?? `No results for "${query}". Chase's writing may not cover this.`);
       return {
-        ...text(JSON.stringify(results, null, 2)),
-        structuredContent: { results },
+        ...text([lead, JSON.stringify(response, null, 2)].filter(Boolean).join("\n\n")),
+        structuredContent: { ...response },
       };
     },
   );

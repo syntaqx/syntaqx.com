@@ -23,6 +23,9 @@
 # pagefind (generated at build time)
 /public/pagefind
 
+# MCP search index (npm run knowledge:index, generated at build time)
+/.generated/
+
 # misc
 .DS_Store
 *.pem

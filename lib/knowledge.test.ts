@@ -1,14 +1,6 @@
 import { describe, it, expect } from "vitest";
-import {
-  buildIndex,
-  isOpinion,
-  parseTarget,
-  read,
-  search,
-  splitSections,
-  tokenize,
-  type Section,
-} from "@/lib/knowledge";
+import { isOpinion, parseTarget, read, search, tokenize } from "@/lib/knowledge";
+import { buildIndex, splitSections, type Section } from "@/lib/knowledge-index";
 
 describe("tokenize", () => {
   it("drops stopwords and folds plurals", () => {
@@ -148,5 +140,34 @@ describe("read", () => {
   it("explains a missing page or section", () => {
     expect(read("/docs/nope")).toMatchObject({ ok: false });
     expect(read("/docs/requests/idempotency", "nope")).toMatchObject({ ok: false });
+  });
+});
+
+describe("the prebuilt index", () => {
+  it("round-trips through disk with identical results", async () => {
+    const os = await import("node:os");
+    const fsp = await import("node:fs/promises");
+    const path = await import("node:path");
+    const { writeIndex, loadIndex } = await import("@/lib/knowledge-index");
+    const sections = splitSections("## Webhooks\nSign them.\n## Queues\nPostgres or a broker.").map(
+      (s) => ({ kind: "playbook" as const, path: "/docs/x", title: "X", ...s }),
+    );
+    const built = buildIndex(sections);
+    const dir = await fsp.mkdtemp(path.join(os.tmpdir(), "knowledge-"));
+    try {
+      writeIndex(built, dir);
+      const loaded = loadIndex(dir)!;
+      expect(loaded).not.toBeNull();
+      for (const q of ["webhooks", "postgres or a broker", "queues"]) {
+        expect(search(q, {}, loaded)).toEqual(search(q, {}, built));
+      }
+    } finally {
+      await fsp.rm(dir, { recursive: true });
+    }
+  });
+
+  it("is null when missing", async () => {
+    const { loadIndex } = await import("@/lib/knowledge-index");
+    expect(loadIndex("/nonexistent/knowledge")).toBeNull();
   });
 });

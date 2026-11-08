@@ -105,6 +105,7 @@ const JUMP_TO = [
   { url: "/docs", title: "Docs", hint: "The playbook, by section" },
   { url: "/docs/playbook", title: "The Playbook", hint: "Start here" },
   { url: "/docs/api", title: "API Reference", hint: "The public syntaqx API" },
+  { url: "/docs/mcp", title: "MCP Server", hint: "Search this site from your agent" },
   ...BOOKS.map((b) => ({ url: `/books/${b.slug}`, title: b.name, hint: "Book" })),
   { url: "/posts", title: "Posts", hint: "Writing" },
 ];

@@ -1,41 +1,36 @@
 /**
  * Search over everything the site publishes, for the MCP server (and later
- * ask.syntaqx.com): the playbook, posts and books, split into sections at
- * their h2/h3 headings and ranked with BM25.
+ * ask.syntaqx.com): the playbook, posts and books, ranked by section with
+ * BM25 plus a few signals for the questions people actually ask, and
+ * either-or questions ("postgres or mongodb") above all:
  *
- * The index is built in memory on first use (about 1.3s and 250MB over
- * ~12k sections) and kept for the life of the instance.
+ * - Coverage: a section that matches more of the query's words ranks higher.
+ * - Comparison: a section that discusses every option beats one that
+ *   discusses only one, and each option keeps at least one result.
+ * - Decisions: for a "which should I use" question, sections written as a
+ *   decision (My Default, Choosing, X or Y, Alternatives) rank higher.
+ * - Titles: a page whose title names the topic beats one that mentions it.
+ *
+ * For a comparison, search also reports how much the writing covers each
+ * option, so a client can say "Chase hasn't written about MongoDB" instead of
+ * stretching a passing mention into an opinion.
  */
 
-import { getAllBookChapters, getAllDocs } from "@/lib/docs";
-import { getAllPosts, slugifyTag } from "@/lib/posts";
+import {
+  KINDS,
+  getIndex,
+  isOpinion,
+  normalize,
+  tokenize,
+  type Index,
+  type Kind,
+  type Section,
+} from "@/lib/knowledge-index";
 import { BOOKS } from "@/lib/books";
 import { renderMarkdownPage } from "@/lib/markdown";
 import { SITE_URL } from "@/lib/constants";
 
-/**
- * What a result is, which decides how it may be quoted:
- * - `playbook`: Chase's own defaults and opinions (/docs).
- * - `post`: Chase's essays (/posts).
- * - `book`: industry reference built from public sources (/books). It
- *   describes how an industry works; it is not Chase's opinion, except in a
- *   chapter's "My Default" section.
- */
-export type Kind = "playbook" | "post" | "book";
-export const KINDS: readonly Kind[] = ["playbook", "post", "book"];
-
-export interface Section {
-  kind: Kind;
-  /** The page's site path, e.g. /docs/requests/idempotency. */
-  path: string;
-  /** The heading's anchor id, or "" for the text before the first heading. */
-  anchor: string;
-  title: string;
-  heading: string;
-  /** For books, the book's slug. */
-  book?: string;
-  text: string;
-}
+export { KINDS, isOpinion, tokenize, type Kind, type Section };
 
 export interface SearchResult {
   kind: Kind;
@@ -47,145 +42,80 @@ export interface SearchResult {
   book?: string;
   /** Chase's own view: the playbook, posts, and a book's "My Default" sections. */
   opinion: boolean;
+  /** For a comparison: the options this section discusses. */
+  covers?: string[];
   snippet: string;
   score: number;
 }
 
-export const isOpinion = (s: Pick<Section, "kind" | "heading">) =>
-  s.kind !== "book" || /^My Default/.test(s.heading);
-
-const STOPWORDS = new Set(
-  "a an and are as at be best but by can do does for from has have how i if in into is it its me my of on or should so that the their then there these this to use using vs was we what when where which while who why will with would you your".split(
-    " ",
-  ),
-);
-
-/** Lowercase word tokens with a light plural fold, so "webhooks" finds "webhook". */
-export function tokenize(text: string): string[] {
-  const out: string[] = [];
-  for (const raw of text.toLowerCase().match(/[a-z0-9]+/g) ?? []) {
-    if (raw.length < 2 || STOPWORDS.has(raw)) continue;
-    out.push(raw.length > 3 && raw.endsWith("s") && !raw.endsWith("ss") ? raw.slice(0, -1) : raw);
-  }
-  return out;
+export interface Comparison {
+  options: { option: string; sections: number }[];
+  /** Sections that discuss every option. */
+  together: number;
+  /** Of those, how many are Chase's own view rather than reference. */
+  opinionsTogether: number;
+  /** Plain-language caveat for the client to pass on, when there is one. */
+  note?: string;
 }
 
-/** A heading's plain text, the way the rendered page sees it. */
-function headingText(markdown: string): string {
-  return markdown
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/[`*_]/g, "")
-    .trim();
+export interface SearchResponse {
+  results: SearchResult[];
+  comparison?: Comparison;
 }
 
-/**
- * Split a Markdown body at h2/h3 headings outside code fences. Anchors match
- * the ids the page gives its headings (see rehypeSectionIds in lib/posts).
- * The References section is left out: it is citations, not prose.
- */
-export function splitSections(
-  markdown: string,
-): { heading: string; anchor: string; text: string }[] {
-  const sections: { heading: string; anchor: string; text: string }[] = [];
-  const seen = new Map<string, number>();
-  let current = { heading: "", anchor: "", lines: [] as string[] };
-  let fence = false;
-  const flush = () => {
-    const text = current.lines.join("\n").trim();
-    if (text && current.heading !== "References") {
-      sections.push({ heading: current.heading, anchor: current.anchor, text });
-    }
-  };
-  for (const line of markdown.split("\n")) {
-    if (/^\s*(```|~~~)/.test(line)) fence = !fence;
-    const match = !fence && line.match(/^(##|###) (.+)$/);
-    if (match) {
-      flush();
-      const heading = headingText(match[2]);
-      const base = slugifyTag(heading) || "section";
-      const count = seen.get(base) ?? 0;
-      seen.set(base, count + 1);
-      current = { heading, anchor: count ? `${base}-${count}` : base, lines: [] };
-    } else {
-      current.lines.push(line);
-    }
-  }
-  flush();
-  return sections;
-}
-
-function collectSections(): Section[] {
-  const sections: Section[] = [];
-  const add = (kind: Kind, path: string, title: string, body: string, book?: string) => {
-    for (const s of splitSections(body)) sections.push({ kind, path, title, book, ...s });
-  };
-  for (const d of getAllDocs()) add("playbook", `/docs/${d.slug}`, d.title, d.content);
-  for (const p of getAllPosts()) add("post", `/posts/${p.slug}`, p.title, p.content);
-  for (const c of getAllBookChapters()) {
-    add("book", `/books/${c.slug}`, c.title, c.content, c.slug.split("/")[0]);
-  }
-  return sections;
-}
-
-interface Postings {
-  ids: Uint32Array;
-  tfs: Float32Array;
-}
-
-interface Index {
-  sections: Section[];
-  lengths: Float32Array;
-  avgLength: number;
-  postings: Map<string, Postings>;
-}
-
-// Title and heading words count more than body words.
-const TITLE_WEIGHT = 3;
-const HEADING_WEIGHT = 2;
 // The playbook and posts are what this exists for; the books are ~90% of the
 // words, so without a nudge they crowd out the opinions on shared topics.
 const KIND_BOOST: Record<Kind, number> = { playbook: 1.3, post: 1.2, book: 1 };
+/** A section that matches every query word scores up to this much more. */
+const COVERAGE_BOOST = 1;
+/** A section that discusses every option scores up to this much more. */
+const COMPARISON_BOOST = 1.5;
+const DECISION_BOOST = 0.4;
+const TITLE_BOOST = 0.6;
 const MAX_PER_PAGE = 2;
 const K1 = 1.2;
 const B = 0.75;
 
-export function buildIndex(sections: Section[]): Index {
-  const building = new Map<string, Map<number, number>>();
-  const lengths = new Float32Array(sections.length);
-  let total = 0;
-  sections.forEach((s, id) => {
-    const counts = new Map<string, number>();
-    const bump = (text: string, weight: number) => {
-      for (const t of tokenize(text)) counts.set(t, (counts.get(t) ?? 0) + weight);
-    };
-    bump(s.text, 1);
-    // Length normalizes on the body only, so a long section's title words
-    // still count (the BM25F idea, without per-field parameters).
-    let length = 0;
-    for (const tf of counts.values()) length += tf;
-    bump(s.title, TITLE_WEIGHT);
-    bump(s.heading, HEADING_WEIGHT);
-    for (const [term, tf] of counts) {
-      let list = building.get(term);
-      if (!list) building.set(term, (list = new Map()));
-      list.set(id, tf);
-    }
-    lengths[id] = length;
-    total += length;
-  });
-  const postings = new Map<string, Postings>();
-  for (const [term, list] of building) {
-    postings.set(term, {
-      ids: Uint32Array.from(list.keys()),
-      tfs: Float32Array.from(list.values()),
-    });
-  }
-  return { sections, lengths, avgLength: total / Math.max(sections.length, 1), postings };
+const DECISION_QUERY =
+  /\b(or|vs\.?|versus|should|which|choose|choosing|pick|default|defaults|recommend|recommended|better|best|prefer)\b/i;
+const DECISION_HEADING =
+  /\b(or|vs\.?|versus|choos(e|ing)|my defaults?|how i choose|when (not )?to|alternatives|trade-?offs?|side by side|compared|which|default)\b/i;
+const OPTION_SPLIT = /\s*(?:,|\bor\b|\bvs\.?(?=\s|$)|\bversus\b|\s\/\s)\s*/i;
+
+export interface ParsedQuery {
+  terms: string[];
+  /** Two or more options for an either-or question, each with its own terms. */
+  options: { label: string; terms: string[] }[];
+  decision: boolean;
 }
 
-let index: Index | null = null;
-function getIndex(): Index {
-  return (index ??= buildIndex(collectSections()));
+/**
+ * Split "should I use postgres or a message broker" into its options. Words
+ * shared by every option ("continuous" in "continuous delivery vs continuous
+ * deployment") are context, not what tells the options apart.
+ */
+export function parseQuery(query: string): ParsedQuery {
+  const terms = [...new Set(tokenize(query))];
+  const decision = DECISION_QUERY.test(query);
+  if (!/\b(or|vs\.?|versus)\b|\s\/\s/i.test(query)) return { terms, options: [], decision };
+  const segments = query
+    .split(OPTION_SPLIT)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const segmentTerms = segments.map((s) => new Set(tokenize(s)));
+  const options = segments
+    .map((segment, i) => {
+      const own = [...segmentTerms[i]].filter((t) =>
+        segmentTerms.every((other, j) => j === i || !other.has(t)),
+      );
+      const words = (segment.match(/[a-z0-9]+/gi) ?? []).filter((w) => {
+        const t = normalize(w);
+        return t !== null && own.includes(t);
+      });
+      return { label: words.join(" "), terms: own };
+    })
+    .filter((o) => o.terms.length > 0);
+  return { terms, options: options.length >= 2 ? options : [], decision };
 }
 
 /** Plain text around the first query term, for a result's snippet. */
@@ -216,61 +146,143 @@ export interface SearchOptions {
   limit?: number;
 }
 
-export function search(
+/**
+ * Sections that discuss an option: they contain at least half its terms, so
+ * "managed containers" needs both words, and "message broker for background
+ * jobs" needs two of its four.
+ */
+function containing(idx: Index, terms: string[]): Set<number> {
+  const hits = new Map<number, number>();
+  for (const t of terms) {
+    for (const id of idx.postings.get(t)?.ids ?? []) hits.set(id, (hits.get(id) ?? 0) + 1);
+  }
+  const need = Math.ceil(terms.length / 2);
+  return new Set([...hits].filter(([, count]) => count >= need).map(([id]) => id));
+}
+
+export function searchDetailed(
   query: string,
   { kinds = KINDS, book, limit = 8 }: SearchOptions = {},
   idx: Index = getIndex(),
-): SearchResult[] {
-  const terms = [...new Set(tokenize(query))];
-  if (!terms.length) return [];
+): SearchResponse {
+  const { terms, options, decision } = parseQuery(query);
+  if (!terms.length) return { results: [] };
+  const allowed = new Set<Kind>(book ? ["book"] : kinds);
+  const inScope = (id: number) => {
+    const s = idx.sections[id];
+    return allowed.has(s.kind) && (!book || s.book === book);
+  };
+
+  // BM25, counting how many query terms each section matched.
   const n = idx.sections.length;
-  const scores = new Map<number, number>();
+  const bm25 = new Map<number, number>();
+  const matched = new Map<number, number>();
   for (const term of terms) {
     const list = idx.postings.get(term);
     if (!list) continue;
     const idf = Math.log(1 + (n - list.ids.length + 0.5) / (list.ids.length + 0.5));
     for (let i = 0; i < list.ids.length; i++) {
       const id = list.ids[i];
+      if (!inScope(id)) continue;
       const tf = list.tfs[i];
       const norm = tf + K1 * (1 - B + (B * idx.lengths[id]) / idx.avgLength);
-      scores.set(id, (scores.get(id) ?? 0) + (idf * tf * (K1 + 1)) / norm);
+      bm25.set(id, (bm25.get(id) ?? 0) + (idf * tf * (K1 + 1)) / norm);
+      matched.set(id, (matched.get(id) ?? 0) + 1);
     }
   }
-  const allowed = new Set(book ? ["book"] : kinds);
+
+  const optionSets = options.map((o) => containing(idx, o.terms));
+  const covers = (id: number) =>
+    options.filter((_, i) => optionSets[i].has(id)).map((o) => o.label);
+
+  const scored = [...bm25].map(([id, base]) => {
+    const s = idx.sections[id];
+    let score = base * KIND_BOOST[s.kind];
+    score *= 1 + COVERAGE_BOOST * ((matched.get(id)! - 1) / Math.max(terms.length - 1, 1));
+    if (options.length) {
+      score *= 1 + COMPARISON_BOOST * ((covers(id).length - 1) / (options.length - 1));
+    }
+    if (decision && (DECISION_HEADING.test(s.heading) || /^My Default/.test(s.heading))) {
+      score *= 1 + DECISION_BOOST;
+    }
+    const title = new Set(tokenize(s.title));
+    score *= 1 + TITLE_BOOST * (terms.filter((t) => title.has(t)).length / terms.length);
+    return { id, score };
+  });
+  scored.sort((a, b) => b.score - a.score);
+
+  // At most two sections per page, so one long page can't fill the list;
+  // read the page for the rest.
   const perPage = new Map<string, number>();
-  return (
-    [...scores]
-      .filter(([id]) => {
-        const s = idx.sections[id];
-        return allowed.has(s.kind) && (!book || s.book === book);
-      })
-      .map(([id, score]) => [id, score * KIND_BOOST[idx.sections[id].kind]] as const)
-      .sort((a, b) => b[1] - a[1])
-      // At most two sections per page, so one long page can't fill the list;
-      // read the page for the rest.
-      .filter(([id]) => {
-        const path = idx.sections[id].path;
-        const n = (perPage.get(path) ?? 0) + 1;
-        perPage.set(path, n);
-        return n <= MAX_PER_PAGE;
-      })
-      .slice(0, limit)
-      .map(([id, score]) => {
-        const s = idx.sections[id];
-        return {
-          kind: s.kind,
-          title: s.title,
-          heading: s.heading,
-          url: `${SITE_URL}${s.path}${s.anchor ? `#${s.anchor}` : ""}`,
-          path: s.path,
-          anchor: s.anchor,
-          ...(s.book ? { book: s.book } : {}),
-          opinion: isOpinion(s),
-          snippet: snippet(s.text, terms),
-          score: Math.round(score * 100) / 100,
-        };
-      })
-  );
+  const ranked = scored.filter(({ id }) => {
+    const path = idx.sections[id].path;
+    const count = (perPage.get(path) ?? 0) + 1;
+    perPage.set(path, count);
+    return count <= MAX_PER_PAGE;
+  });
+  const top = ranked.slice(0, limit);
+
+  // Every option keeps a result, so one well-covered option can't hide the
+  // other: swap the weakest result for the best section on a missing option.
+  options.forEach((_, i) => {
+    if (top.some(({ id }) => optionSets[i].has(id))) return;
+    const best = ranked.find(({ id }) => optionSets[i].has(id) && !top.some((t) => t.id === id));
+    if (best && top.length >= limit) top[top.length - 1] = best;
+    else if (best) top.push(best);
+  });
+
+  const results = top.map(({ id, score }): SearchResult => {
+    const s = idx.sections[id];
+    return {
+      kind: s.kind,
+      title: s.title,
+      heading: s.heading,
+      url: `${SITE_URL}${s.path}${s.anchor ? `#${s.anchor}` : ""}`,
+      path: s.path,
+      anchor: s.anchor,
+      ...(s.book ? { book: s.book } : {}),
+      opinion: isOpinion(s),
+      ...(options.length ? { covers: covers(id) } : {}),
+      snippet: snippet(s.text, terms),
+      score: Math.round(score * 100) / 100,
+    };
+  });
+
+  if (!options.length) return { results };
+  return { results, comparison: compare(idx, options, optionSets, inScope) };
+}
+
+function compare(
+  idx: Index,
+  options: ParsedQuery["options"],
+  optionSets: Set<number>[],
+  inScope: (id: number) => boolean,
+): Comparison {
+  const counts = optionSets.map((set) => [...set].filter(inScope));
+  const both = counts[0].filter((id) => optionSets.every((set) => set.has(id)));
+  const together = both.length;
+  const opinionsTogether = both.filter((id) => isOpinion(idx.sections[id])).length;
+  const summary = options.map((o, i) => ({ option: o.label, sections: counts[i].length }));
+  const missing = summary.filter((o) => o.sections === 0).map((o) => o.option);
+  const thin = summary.filter((o) => o.sections > 0 && o.sections <= 2).map((o) => o.option);
+  let note: string | undefined;
+  if (missing.length) {
+    note = `Chase's writing doesn't mention ${list(missing)}, so it has no view on ${missing.length > 1 ? "them" : "it"}.`;
+  } else if (!together) {
+    note = `No section discusses ${list(options.map((o) => o.label))} together; the results cover each separately.`;
+  } else if (!opinionsTogether) {
+    note = `Only reference material (the books) compares ${list(options.map((o) => o.label))}; none of Chase's own opinion sections do, so don't present a book's comparison as his view.`;
+  } else if (thin.length) {
+    note = `Chase's writing mentions ${list(thin)} only in passing (${thin.length > 1 ? "a section or two each" : "a section or two"}).`;
+  }
+  return { options: summary, together, opinionsTogether, ...(note ? { note } : {}) };
+}
+
+const list = (items: string[]) =>
+  items.length < 3 ? items.join(" or ") : `${items.slice(0, -1).join(", ")} or ${items.at(-1)}`;
+
+export function search(query: string, options?: SearchOptions, idx?: Index): SearchResult[] {
+  return searchDetailed(query, options, idx).results;
 }
 
 /** The book slugs search can filter on. */
