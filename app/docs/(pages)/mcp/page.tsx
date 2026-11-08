@@ -5,35 +5,70 @@ import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Install, ProjectRule } from "./_components/install";
 import { TrySearch } from "./_components/try-search";
 
-const SEARCH_PARAMS: [name: string, type: string, about: string][] = [
-  [
-    "query",
-    "string",
-    'What to look for, in plain words. Either-or questions work: "postgres or mongodb".',
-  ],
-  ["scope", "all | playbook | post | book", "Narrow to one kind of writing. Defaults to all."],
-  ["book", "slug", "Only one book's chapters, e.g. payments or hosting-and-cloud."],
-  ["limit", "1 to 20", "How many sections to return. Defaults to 8."],
+/** A parameter: its name, its type (or the values it takes), and what it does. */
+type Param = { name: string; type: string | string[]; required?: boolean; about: string };
+
+const SEARCH_PARAMS: Param[] = [
+  {
+    name: "query",
+    type: "string",
+    required: true,
+    about: 'What to look for, in plain words. Either-or questions work: "postgres or mongodb".',
+  },
+  {
+    name: "scope",
+    type: ["all", "playbook", "post", "book"],
+    about: "Narrow to one kind of writing. Defaults to all.",
+  },
+  { name: "book", type: "string", about: "One book's slug, e.g. payments or hosting-and-cloud." },
+  { name: "limit", type: "integer", about: "How many sections to return, 1 to 20. Defaults to 8." },
 ];
 
-const READ_PARAMS: [name: string, type: string, about: string][] = [
-  ["path", "path or URL", "A page from a search result, e.g. /docs/requests/idempotency."],
-  ["anchor", "string", "A heading anchor, to read just that section instead of the whole page."],
+const READ_PARAMS: Param[] = [
+  {
+    name: "path",
+    type: "string",
+    required: true,
+    about: "A page path or URL from a search result, e.g. /docs/requests/idempotency.",
+  },
+  {
+    name: "anchor",
+    type: "string",
+    about: "A heading anchor, to read just that section instead of the whole page.",
+  },
 ];
 
-function Params({ rows }: { rows: [string, string, string][] }) {
+/** The same table the API reference uses for parameters. */
+function Params({ rows }: { rows: Param[] }) {
   return (
-    <dl className="border-t border-border text-sm">
-      {rows.map(([name, type, about]) => (
-        <div key={name} className="grid gap-1 border-b border-border py-3 sm:grid-cols-[10rem_1fr]">
-          <dt>
-            <code className="text-foreground">{name}</code>
-            <span className="inst mt-1 block text-[11px] text-muted-foreground">{type}</span>
-          </dt>
-          <dd className="text-muted-foreground">{about}</dd>
+    <div className="border border-border">
+      <div className="inst hidden grid-cols-[1fr_1fr_2fr] border-b border-border bg-card px-4 py-2.5 text-muted-foreground sm:grid">
+        <span>Name</span>
+        <span>Type</span>
+        <span>Description</span>
+      </div>
+      {rows.map((p) => (
+        <div
+          key={p.name}
+          className="grid gap-1.5 border-b border-border px-4 py-3 text-xs last:border-b-0 sm:grid-cols-[1fr_1fr_2fr] sm:gap-0"
+        >
+          <span className="font-mono text-foreground">
+            {p.name}
+            {p.required && <span className="ml-0.5 text-destructive">*</span>}
+          </span>
+          <span className="flex flex-wrap items-start gap-1 text-muted-foreground">
+            {typeof p.type === "string"
+              ? p.type
+              : p.type.map((v) => (
+                  <code key={v} className="border border-border bg-card px-1.5 font-mono">
+                    {v}
+                  </code>
+                ))}
+          </span>
+          <span className="text-muted-foreground">{p.about}</span>
         </div>
       ))}
-    </dl>
+    </div>
   );
 }
 
