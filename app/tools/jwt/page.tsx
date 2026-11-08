@@ -1149,7 +1149,7 @@ export default function JwtPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
+            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
               <li>
                 <a
                   href="https://datatracker.ietf.org/doc/html/rfc7519"

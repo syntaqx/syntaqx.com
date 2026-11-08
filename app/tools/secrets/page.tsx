@@ -929,7 +929,7 @@ export default function SecretsPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="space-y-1.5 px-4 py-3 text-[11px] leading-relaxed">
+            <ul className="space-y-2 px-4 py-3 text-[11px] leading-relaxed">
               <li>
                 <Link
                   href="/posts/github-actions-secret-inputs"
