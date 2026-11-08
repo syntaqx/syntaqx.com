@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useSyncExternalStore } from "react";
+import { useState, useEffect, useSyncExternalStore, type ReactNode } from "react";
 import { ChevronDown, ChevronRight, Play, Server } from "lucide-react";
 import { buildRequest, jsonError, paramKey, SHOWN_RESPONSE_HEADERS } from "@/lib/api-console";
 import { Select } from "@/components/select";
@@ -603,6 +603,23 @@ function Endpoint({
 // Page
 // ---------------------------------------------------------------------------
 
+/**
+ * The spec's description is plain text for machines, with full URLs. On the
+ * page, a syntaqx.com URL becomes a link that shows its path, so it reads
+ * (and wraps) like text.
+ */
+function linkSiteUrls(text: string): ReactNode[] {
+  return text.split(/(https:\/\/www\.syntaqx\.com\/[^\s]*[^\s.])/).map((part, i) =>
+    i % 2 ? (
+      <a key={i} href={part.replace("https://www.syntaqx.com", "")} className="text-link">
+        {part.replace("https://www.syntaqx.com", "")}
+      </a>
+    ) : (
+      part
+    ),
+  );
+}
+
 function ApiHeader({
   title = "syntaqx API",
   description = "Public API for syntaqx.com",
@@ -616,7 +633,7 @@ function ApiHeader({
     <header className="mb-8 border-b border-border pb-8">
       <p className="eyebrow mb-5">api reference</p>
       <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">{title}</h1>
-      <p className="max-w-2xl text-muted-foreground">{description}</p>
+      <p className="max-w-2xl text-muted-foreground">{linkSiteUrls(description)}</p>
       {meta ? (
         <p className="inst mt-5 text-muted-foreground">{meta}</p>
       ) : (

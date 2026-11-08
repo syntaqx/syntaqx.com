@@ -39,11 +39,17 @@ const readTheme = (): ArcadeTheme => {
     line: v("--border", "#1c2423"),
     strong: v("--border-hover", "#2f3a39"),
     primary: v("--primary", "#00d1ca"),
-    amber: "#f2b13c",
-    pink: "#ff9cc7",
-    purple: "#c4a7ff",
-    cyan: "#7edcdc",
-    green: "#a9d5a0",
+    // Pastels on the dark background; deeper versions of the same hues on the
+    // light one, so the bricks keep 3:1 against it (WCAG 1.4.11).
+    ...(lum < 0.5
+      ? { amber: "#f2b13c", pink: "#ff9cc7", purple: "#c4a7ff", cyan: "#7edcdc", green: "#a9d5a0" }
+      : {
+          amber: "#94610a",
+          pink: "#a3386b",
+          purple: "#6a48b0",
+          cyan: "#0a6e78",
+          green: "#3a7a3a",
+        }),
     mono: font("--font-jetbrains", "ui-monospace, monospace"),
     dark: lum < 0.5,
   };

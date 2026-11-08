@@ -98,11 +98,12 @@ export default function McpDocsPage() {
       </header>
 
       <div className="mb-14 flex flex-wrap items-stretch border border-border">
-        <span className="inst flex items-center gap-2 border-r border-border bg-card px-4 py-3 text-muted-foreground">
+        {/* The label sits above the URL on a phone, so the URL stays one line. */}
+        <span className="inst flex w-full items-center gap-2 border-b border-border bg-card px-4 py-3 text-muted-foreground sm:w-auto sm:border-r sm:border-b-0">
           <Plug size={12} className="text-primary" />
           server url
         </span>
-        <code className="flex flex-1 items-center px-4 py-3 font-mono text-sm break-all text-foreground">
+        <code className="flex min-w-0 flex-1 items-center px-4 py-3 font-mono text-sm text-foreground">
           {MCP_URL}
         </code>
         <CopyButton value={MCP_URL} className="m-1.5" aria-label="Copy server URL" />

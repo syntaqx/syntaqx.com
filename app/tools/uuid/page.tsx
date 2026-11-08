@@ -13,6 +13,7 @@ import { Input } from "@/registry/syntaqx/ui/input";
 import { NumberInput } from "@/registry/syntaqx/ui/number-input";
 import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
 import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
+import { ToolHeader } from "@/components/tool-header";
 
 // --- UUID / ULID generators ------------------------------------------------
 
@@ -222,13 +223,12 @@ export default function UuidPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">UUID / ULID Generator</h1>
+      <ToolHeader title={"UUID\u00a0/ ULID Generator"}>
         <p className="max-w-2xl text-muted-foreground">
           Generate, validate, and inspect UUIDs and ULIDs. Everything runs in your browser, nothing
           is sent to a server.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: generator + inspector */}
@@ -354,7 +354,7 @@ export default function UuidPage() {
                 <Input
                   value={inspectInput}
                   onChange={(e) => setInspectInput(e.target.value)}
-                  placeholder="Paste a UUID or ULID to inspect..."
+                  placeholder="Paste a UUID or ULID"
                   spellCheck={false}
                   className="font-mono"
                 />
@@ -440,7 +440,7 @@ export default function UuidPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
+            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
               <li>
                 <a
                   href="https://datatracker.ietf.org/doc/html/rfc9562"

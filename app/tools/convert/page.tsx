@@ -4,6 +4,7 @@ import { Card } from "@/components/card";
 import { JsonLd } from "@/components/json-ld";
 import { converters } from "@/lib/tools";
 import { itemList } from "@/lib/schema";
+import { ToolHeader } from "@/components/tool-header";
 
 export default function ConvertIndexPage() {
   return (
@@ -15,12 +16,11 @@ export default function ConvertIndexPage() {
           converters.map((t) => ({ name: t.title, path: t.href })),
         )}
       />
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Converters</h1>
+      <ToolHeader eyebrow="tools · converters" title="Converters">
         <p className="max-w-2xl text-muted-foreground">
           Conversion tools for text, images, and more.
         </p>
-      </div>
+      </ToolHeader>
       <div className="grid gap-3 sm:grid-cols-2">
         {converters.map((item) => (
           <Link key={item.href} href={item.href} className="group flex flex-col">

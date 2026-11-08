@@ -23,6 +23,7 @@ import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
 import { Spinner } from "@/registry/syntaqx/ui/spinner";
 import { Textarea } from "@/registry/syntaqx/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
+import { ToolHeader } from "@/components/tool-header";
 
 // --- Types ------------------------------------------------------------------
 
@@ -210,15 +211,12 @@ export default function JsToolPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">
-          JavaScript Beautify / Minify / Obfuscate
-        </h1>
+      <ToolHeader title={"JavaScript Beautify\u00a0/ Minify\u00a0/ Obfuscate"}>
         <p className="max-w-2xl text-muted-foreground">
           Format, compress, or obfuscate JavaScript and JSON. Everything runs in your browser,
           nothing is sent to a server.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
@@ -481,7 +479,7 @@ export default function JsToolPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
+            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
               <li>
                 <a
                   href="https://prettier.io/docs/options"

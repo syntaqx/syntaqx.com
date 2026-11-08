@@ -13,6 +13,7 @@ import * as yaml from "js-yaml";
 import * as toml from "smol-toml";
 import { encode as toonEncode, decode as toonDecode } from "@toon-format/toon";
 import { cn } from "@/lib/cn";
+import { ToolHeader } from "@/components/tool-header";
 
 // --- Types ------------------------------------------------------------------
 
@@ -472,12 +473,11 @@ export default function ConvertPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Text Format Converter</h1>
+      <ToolHeader eyebrow="tools · converters" title="Text Format Converter">
         <p className="max-w-2xl text-muted-foreground">
           Edit any format and the others update instantly. Everything runs in your browser.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: editors */}
@@ -672,7 +672,7 @@ export default function ConvertPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
+            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
               <li>
                 <a
                   href="https://www.json.org/json-en.html"

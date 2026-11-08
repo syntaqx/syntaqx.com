@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
 import { Button } from "@/registry/syntaqx/ui/button";
 import { FileDrop, FileDropArea } from "@/registry/syntaqx/ui/file-drop";
 import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
+import { ToolHeader } from "@/components/tool-header";
 
 // --- ICO Encoder (client-side) ----------------------------------------------
 
@@ -259,12 +260,11 @@ export default function FaviconPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Favicon Generator</h1>
+      <ToolHeader eyebrow="tools · converters" title="Favicon Generator">
         <p className="max-w-2xl text-muted-foreground">
           Drop an image and get an ICO with multiple sizes. Everything runs in your browser.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: main area */}

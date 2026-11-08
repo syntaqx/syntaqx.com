@@ -32,6 +32,7 @@ import {
 } from "@/registry/syntaqx/ui/select";
 import { Textarea } from "@/registry/syntaqx/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
+import { ToolHeader } from "@/components/tool-header";
 
 // A static sample JWT (HS256, secret: "secret") with readable claims.
 const SAMPLE_TOKEN =
@@ -638,13 +639,12 @@ export default function JwtPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">JWT Debugger</h1>
+      <ToolHeader title="JWT Debugger">
         <p className="max-w-2xl text-muted-foreground">
           Decode, encode, and verify JSON Web Tokens. Everything runs in your browser, nothing is
           sent to a server.
         </p>
-      </div>
+      </ToolHeader>
 
       {/* Mode toggle + Algorithm selector */}
       <div className="mb-5 flex items-center gap-3 flex-wrap">
@@ -914,7 +914,7 @@ export default function JwtPage() {
                       aria-label="Secret key"
                       value={secret}
                       onChange={(e) => setSecret(e.target.value)}
-                      placeholder={`Secret key for ${decoded.jwt && typeof decoded.jwt.header.alg === "string" ? decoded.jwt.header.alg : "HMAC"} verification...`}
+                      placeholder={`${decoded.jwt && typeof decoded.jwt.header.alg === "string" ? decoded.jwt.header.alg : "HMAC"} secret key`}
                       spellCheck={false}
                       disabled={!decoded.jwt}
                       className="font-mono"
@@ -1149,7 +1149,7 @@ export default function JwtPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
+            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
               <li>
                 <a
                   href="https://datatracker.ietf.org/doc/html/rfc7519"

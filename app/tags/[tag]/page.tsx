@@ -50,7 +50,13 @@ export default async function TagPage({ params }: Props) {
 
   return (
     <div>
-      <PageHeader label="tagged" title={label}>
+      <PageHeader
+        label="tagged"
+        title={label}
+        scene="sorter"
+        sceneLabel="Posts riding a conveyor belt and dropping into bins labeled by topic"
+        hideSceneOnMobile
+      >
         <p>
           {tagged.length} post{tagged.length === 1 ? "" : "s"}
         </p>
