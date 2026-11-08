@@ -2876,10 +2876,12 @@ const tenancy: SceneFn = (s) => {
     parts.push({ kind: "box", box: box(x0, y0, z, a, b, H) });
     for (let u = 0; u < 3; u++) {
       const x = x0 + u * ww + 0.25;
+      // the leased unit's window, lit: shallow, so in iso it reads as its own floor's
+      // window rather than a block hanging over the one below; hover pulls it out
       if (f === litF && u === litU)
         parts.push({
           kind: "box",
-          box: box(x - 0.1, fy, z + 0.18, ww - 0.3, 0.45 + s.spread * 0.4, 0.7),
+          box: box(x - 0.1, fy, z + 0.2, ww - 0.3, 0.14 + s.spread * 0.4, 0.6),
           accent: true,
           handles: true,
         });
@@ -2942,23 +2944,39 @@ const feed: SceneFn = (s) => {
     accent,
     small: !accent,
   });
+  // quarantine, in front of the scanner, and where a flagged upload comes to rest in it
+  const bin = { x: 4.2, y: by + 1.6, a: 1.6, b: 1.2, h: 0.6, wall: 0.12 };
+  const rest: V3 = [bin.x + 0.3, bin.y + 0.2, 0.05];
+  const lift = bin.h + 0.5;
   // the upload: drop on, ride under the scanner, then up to the feed or off to the bin
   let at: V3;
   if (ph < 0.15) at = [x0 + 0.3, by + 0.2, belt + (1 - ease(ph / 0.15)) * 2.4];
   else if (ph < 0.55) at = [x0 + 0.3 + (5 - x0 - 0.3) * ((ph - 0.15) / 0.4), by + 0.2, belt];
   else if (flagged) {
-    const k = ease(Math.min(1, (ph - 0.55) / 0.2));
-    at = [5 - k * 0.3, by + 0.2 + k * 1.8, belt + (0.05 - belt) * k + Math.sin(k * Math.PI) * 0.5];
+    // lifted clear of the bin's walls while it's carried over, then dropped straight in
+    const k = Math.min(1, (ph - 0.55) / 0.2);
+    if (k < 0.65) {
+      const m = ease(k / 0.65);
+      at = [
+        5 + (rest[0] - 5) * m,
+        by + 0.2 + (rest[1] - by - 0.2) * m,
+        belt + (lift - belt) * ease(Math.min(1, m * 1.6)),
+      ];
+    } else at = [rest[0], rest[1], lift + (rest[2] - lift) * ease((k - 0.65) / 0.35)];
   } else {
-    const k = ease(Math.min(1, (ph - 0.55) / 0.4));
+    // up and over to the foot of the screen, where it goes just as the next card
+    // starts scrolling in from the bottom: the upload becomes the newest post
+    const k = ease(Math.min(1, (ph - 0.55) / 0.42));
+    const entry = screenB + 0.15;
     at = [
       5 + (fx - 0.5 - 5) * k,
-      by + 0.2 + (fy + 0.4 - by - 0.2) * k,
-      belt + (screenT - belt) * k,
+      by + 0.2 + (fy + 0.5 - by - 0.2) * k,
+      belt + (entry - belt) * k + Math.sin(k * Math.PI) * 1.4,
     ];
   }
   const scanning = at[0] > ax - 1 && at[0] < ax + 0.6 && at[2] <= belt + 0.01;
   const binned = flagged && ph >= 0.75;
+  const toBin = flagged && ph >= 0.55 && !binned;
   const moving = tile(...at, !(flagged && ph >= 0.45));
   // the feed: cards scrolling up the screen, cut off at its edges
   const face = fy + 0.36;
@@ -3015,7 +3033,8 @@ const feed: SceneFn = (s) => {
       b: [x0 + slide + k * 0.6, by + 1.2, belt],
       alpha: 0.3,
     })),
-    ...(binned || ph >= 0.97 ? [] : [moving]),
+    // on the belt, or rising to the feed; once it's off to quarantine the bin draws it
+    ...(toBin || ph >= 0.97 ? [] : [moving]),
     { kind: "box", box: box(ax, by + 1.35, 0, 0.3, 0.3, 1.9) },
     ...(s.spread > 0.05
       ? [
@@ -3034,8 +3053,16 @@ const feed: SceneFn = (s) => {
       accent: scanning,
       small: !scanning,
     },
-    // quarantine, in front of the scanner
-    ...tray(4.2, by + 1.6, 1.6, 1.2, 0.6, binned ? [tile(4.5, by + 1.8, 0.05, false)] : [], 0.12),
+    // quarantine: whatever's in it, or on its way in, is drawn between its far and near walls
+    ...tray(
+      bin.x,
+      bin.y,
+      bin.a,
+      bin.b,
+      bin.h,
+      binned ? [tile(...rest, false)] : toBin ? [moving] : [],
+      bin.wall,
+    ),
   ];
   return {
     parts,
