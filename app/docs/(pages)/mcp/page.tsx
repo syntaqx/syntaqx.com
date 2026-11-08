@@ -28,7 +28,7 @@ function Params({ rows }: { rows: [string, string, string][] }) {
         <div key={name} className="grid gap-1 border-b border-border py-3 sm:grid-cols-[10rem_1fr]">
           <dt>
             <code className="text-foreground">{name}</code>
-            <span className="inst ml-2 text-[11px] text-muted-foreground">{type}</span>
+            <span className="inst mt-1 block text-[11px] text-muted-foreground">{type}</span>
           </dt>
           <dd className="text-muted-foreground">{about}</dd>
         </div>

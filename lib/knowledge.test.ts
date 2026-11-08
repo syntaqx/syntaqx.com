@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isOpinion, parseTarget, read, search, tokenize } from "@/lib/knowledge";
+import { isOpinion, parseTarget, read, search, searchDetailed, tokenize } from "@/lib/knowledge";
 import { buildIndex, splitSections, type Section } from "@/lib/knowledge-index";
 
 describe("tokenize", () => {
@@ -109,6 +109,23 @@ describe("search", () => {
 
   it("returns nothing for a query of stopwords", () => {
     expect(search("what should I use", {}, idx)).toEqual([]);
+  });
+
+  it("snippets tables as text, without the rule row", () => {
+    const tables = buildIndex([
+      section({ text: "| Engine | License |\n| --- | --- |\n| Postgres | PostgreSQL |" }),
+    ]);
+    const [hit] = search("license", {}, tables);
+    expect(hit.snippet).toBe("Engine · License Postgres · PostgreSQL");
+  });
+
+  it("counts options weighed together, not named in passing", () => {
+    const pair = buildIndex([
+      section({ path: "/docs/a", text: "Postgres or MongoDB? Postgres, unless MongoDB fits." }),
+      section({ path: "/docs/b", text: "Adapters for Postgres, MySQL and MongoDB." }),
+    ]);
+    const { comparison } = searchDetailed("postgres or mongodb", {}, pair);
+    expect(comparison).toMatchObject({ together: 1, opinionsTogether: 1 });
   });
 
   it("snippets around the match", () => {

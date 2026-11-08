@@ -125,7 +125,11 @@ function snippet(text: string, terms: string[], size = 280): string {
     .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
     .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
     .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/[`*_>#|]/g, "")
+    // Tables: drop the |---|---| rule, and let cells read as a list.
+    .replace(/^\s*\|?[\s:|-]*-{3,}[\s:|-]*$/gm, " ")
+    .replace(/[ \t]*\|[ \t]*/g, " · ")
+    .replace(/^ · | · $/gm, "")
+    .replace(/[`*_>#]/g, "")
     .replace(/\s+/g, " ")
     .trim();
   const lower = plain.toLowerCase();
@@ -147,18 +151,36 @@ export interface SearchOptions {
 }
 
 /**
- * Sections that discuss an option: they contain at least half its terms, so
- * "managed containers" needs both words, and "message broker for background
- * jobs" needs two of its four.
+ * Sections that mention an option, with how often. A section mentions it when
+ * it contains at least half its terms, so "managed containers" needs both
+ * words, and "message broker for background jobs" needs two of its four.
  */
-function containing(idx: Index, terms: string[]): Set<number> {
-  const hits = new Map<number, number>();
+function containing(idx: Index, terms: string[]): Map<number, number> {
+  const hits = new Map<number, { terms: number; count: number }>();
   for (const t of terms) {
-    for (const id of idx.postings.get(t)?.ids ?? []) hits.set(id, (hits.get(id) ?? 0) + 1);
+    const list = idx.postings.get(t);
+    if (!list) continue;
+    list.ids.forEach((id, i) => {
+      const hit = hits.get(id) ?? { terms: 0, count: 0 };
+      hits.set(id, { terms: hit.terms + 1, count: hit.count + list.tfs[i] });
+    });
   }
   const need = Math.ceil(terms.length / 2);
-  return new Set([...hits].filter(([, count]) => count >= need).map(([id]) => id));
+  return new Map(
+    [...hits].filter(([, h]) => h.terms >= need).map(([id, h]) => [id, h.count] as const),
+  );
 }
+
+/**
+ * A section weighs an option, rather than naming it in passing (a list of
+ * database adapters, say), when it mentions it at least twice, or names it at
+ * all in a section written as a decision (My Defaults, Choosing, X or Y).
+ */
+const DISCUSSES = 2;
+const isDecision = (s: Section) =>
+  DECISION_HEADING.test(s.heading) || /^My Default/.test(s.heading);
+const weighs = (idx: Index, id: number, mentions: number | undefined) =>
+  mentions !== undefined && (mentions >= DISCUSSES || isDecision(idx.sections[id]));
 
 export function searchDetailed(
   query: string,
@@ -202,7 +224,7 @@ export function searchDetailed(
     if (options.length) {
       score *= 1 + COMPARISON_BOOST * ((covers(id).length - 1) / (options.length - 1));
     }
-    if (decision && (DECISION_HEADING.test(s.heading) || /^My Default/.test(s.heading))) {
+    if (decision && isDecision(s)) {
       score *= 1 + DECISION_BOOST;
     }
     const title = new Set(tokenize(s.title));
@@ -255,31 +277,35 @@ export function searchDetailed(
 function compare(
   idx: Index,
   options: ParsedQuery["options"],
-  optionSets: Set<number>[],
+  optionSets: Map<number, number>[],
   inScope: (id: number) => boolean,
 ): Comparison {
-  const counts = optionSets.map((set) => [...set].filter(inScope));
-  const both = counts[0].filter((id) => optionSets.every((set) => set.has(id)));
+  const counts = optionSets.map((set) => [...set.keys()].filter(inScope));
+  // Together means weighing each option, not naming one in passing.
+  const both = counts[0].filter((id) => optionSets.every((set) => weighs(idx, id, set.get(id))));
   const together = both.length;
   const opinionsTogether = both.filter((id) => isOpinion(idx.sections[id])).length;
   const summary = options.map((o, i) => ({ option: o.label, sections: counts[i].length }));
+  const labels = options.map((o) => o.label);
   const missing = summary.filter((o) => o.sections === 0).map((o) => o.option);
   const thin = summary.filter((o) => o.sections > 0 && o.sections <= 2).map((o) => o.option);
   let note: string | undefined;
   if (missing.length) {
-    note = `Chase's writing doesn't mention ${list(missing)}, so it has no view on ${missing.length > 1 ? "them" : "it"}.`;
+    note = `Chase's writing doesn't mention ${list(missing, "or")}, so it has no view on ${missing.length > 1 ? "them" : "it"}.`;
   } else if (!together) {
-    note = `No section discusses ${list(options.map((o) => o.label))} together; the results cover each separately.`;
+    note = `No section weighs ${list(labels, "and")} together; the results cover each separately.`;
   } else if (!opinionsTogether) {
-    note = `Only reference material (the books) compares ${list(options.map((o) => o.label))}; none of Chase's own opinion sections do, so don't present a book's comparison as his view.`;
+    note = `Only reference material (the books) compares ${list(labels, "and")}; none of Chase's own opinion sections do, so don't present a book's comparison as his view.`;
   } else if (thin.length) {
-    note = `Chase's writing mentions ${list(thin)} only in passing (${thin.length > 1 ? "a section or two each" : "a section or two"}).`;
+    note = `Chase's writing mentions ${list(thin, "and")} only in passing (${thin.length > 1 ? "a section or two each" : "a section or two"}).`;
   }
   return { options: summary, together, opinionsTogether, ...(note ? { note } : {}) };
 }
 
-const list = (items: string[]) =>
-  items.length < 3 ? items.join(" or ") : `${items.slice(0, -1).join(", ")} or ${items.at(-1)}`;
+const list = (items: string[], joiner: "and" | "or") =>
+  items.length < 3
+    ? items.join(` ${joiner} `)
+    : `${items.slice(0, -1).join(", ")} ${joiner} ${items.at(-1)}`;
 
 export function search(query: string, options?: SearchOptions, idx?: Index): SearchResult[] {
   return searchDetailed(query, options, idx).results;

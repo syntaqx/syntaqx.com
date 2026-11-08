@@ -94,3 +94,27 @@ describe("search eval", () => {
     },
   );
 });
+
+/**
+ * Attribution: the comparison has to say whose view weighs the options. These
+ * pin what the writing actually says, so a ranking change can't turn a book's
+ * comparison, or a passing mention, into Chase's recommendation.
+ */
+describe("comparison eval", () => {
+  it("finds Chase's own call where he made one", () => {
+    expect(searchDetailed("rest vs graphql vs grpc").comparison?.opinionsTogether).toBeGreaterThan(
+      0,
+    );
+    expect(searchDetailed("uuid or ulid").comparison?.opinionsTogether).toBeGreaterThan(0);
+  });
+
+  it("says when only the books compare them", () => {
+    for (const q of ["postgres or mongodb", "kafka or rabbitmq"]) {
+      expect(searchDetailed(q).comparison?.note).toMatch(/^Only reference material/);
+    }
+  });
+
+  it("says when the writing doesn't cover an option", () => {
+    expect(searchDetailed("svelte or vue").comparison?.note).toMatch(/doesn't mention svelte/);
+  });
+});
