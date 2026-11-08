@@ -72,11 +72,14 @@ interface SchemaObject {
 
 const METHOD_COLORS: Record<string, string> = {
   get: "text-primary bg-primary/10 border-primary/25",
-  post: "text-blue-400 bg-blue-400/10 border-blue-400/20",
-  put: "text-amber-400 bg-amber-400/10 border-amber-400/20",
-  patch: "text-orange-400 bg-orange-400/10 border-orange-400/20",
+  // Darker shades on the light theme, so each label keeps 4.5:1 on its tint.
+  post: "text-blue-800 bg-blue-500/10 border-blue-500/25 dark:text-blue-400 dark:bg-blue-400/10 dark:border-blue-400/20",
+  put: "text-amber-800 bg-amber-500/10 border-amber-500/25 dark:text-amber-400 dark:bg-amber-400/10 dark:border-amber-400/20",
+  patch:
+    "text-orange-800 bg-orange-500/10 border-orange-500/25 dark:text-orange-400 dark:bg-orange-400/10 dark:border-orange-400/20",
   delete: "text-destructive bg-destructive/10 border-destructive/20",
-  query: "text-violet-400 bg-violet-400/10 border-violet-400/20",
+  query:
+    "text-violet-800 bg-violet-500/10 border-violet-500/25 dark:text-violet-400 dark:bg-violet-400/10 dark:border-violet-400/20",
 };
 
 function resolveRef(spec: OpenApiSpec, schema: SchemaObject): SchemaObject {

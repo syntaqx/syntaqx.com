@@ -211,7 +211,8 @@ export default function RootLayout({
                   href={`https://github.com/syntaqx/syntaqx.com/commit/${build.sha}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${build.label === "dev" ? "Development build from" : "Deployed"} commit ${build.sha.slice(0, 7)}${build.dirty ? " with uncommitted changes" : ""} on GitHub`}
+                  // The name starts with what's shown, so it can be spoken (WCAG 2.5.3).
+                  aria-label={`${build.sha.slice(0, 7)}${build.dirty ? "-dirty" : ""}${build.label ? ` ${build.label}` : ""}: ${build.label === "dev" ? "development build" : "deployed commit"}${build.dirty ? " with uncommitted changes" : ""} on GitHub`}
                   className="flex items-center gap-2 font-mono text-[0.65rem] transition-colors hover:text-foreground"
                 >
                   <span aria-hidden className="tick" />
