@@ -60,11 +60,7 @@ function CardText({ book }: { book: BookCard }) {
   const live = !!book.href;
   return (
     <span className="block p-5">
-      <span
-        className={cn("inst block", live ? "text-muted-foreground" : "text-muted-foreground/70")}
-      >
-        {book.eyebrow}
-      </span>
+      <span className="inst block text-muted-foreground">{book.eyebrow}</span>
       <span
         className={cn(
           "font-voice mt-2 block text-2xl leading-none font-semibold uppercase transition-colors",
@@ -73,12 +69,7 @@ function CardText({ book }: { book: BookCard }) {
       >
         {book.name}
       </span>
-      <span
-        className={cn(
-          "mt-2 min-h-[3lh] text-sm/relaxed  line-clamp-3",
-          live ? "text-muted-foreground" : "text-muted-foreground/70",
-        )}
-      >
+      <span className="mt-2 line-clamp-3 min-h-[3lh] text-sm/relaxed text-muted-foreground">
         {book.summary}
       </span>
     </span>

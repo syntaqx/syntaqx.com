@@ -99,7 +99,7 @@ export function OptionCheckbox({
         <Tooltip>
           <TooltipTrigger
             aria-label={`More about ${label}`}
-            className="inline-flex cursor-help text-muted-foreground transition-colors outline-none hover:text-foreground focus-visible:text-foreground"
+            className="relative inline-flex cursor-help rounded-sm text-muted-foreground transition-colors outline-none after:absolute after:-inset-1.25 after:content-[''] hover:text-foreground focus-visible:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <Info className="size-3.5" />
           </TooltipTrigger>

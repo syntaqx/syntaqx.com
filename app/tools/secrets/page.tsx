@@ -903,7 +903,11 @@ export default function SecretsPage() {
               From a script
             </h3>
             <div className="space-y-2 px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
-              <pre className="overflow-x-auto border border-border bg-background px-2 py-1.5 font-mono text-[10px] text-foreground">
+              <pre
+                tabIndex={0}
+                aria-label="Create a secret with curl"
+                className="overflow-x-auto border border-border bg-background px-2 py-1.5 font-mono text-[10px] text-foreground"
+              >
                 {`curl -s https://api.syntaqx.com/secrets \\
   -H 'Content-Type: application/json' \\
   -d '{"secret":"hunter2","ttl":600}'`}
@@ -912,10 +916,7 @@ export default function SecretsPage() {
                 Returns a <span className="text-foreground">url</span> that hands the secret back
                 once. That&apos;s what &quot;For scripts&quot; makes too. To encrypt locally
                 instead, see the{" "}
-                <Link
-                  href="/posts/github-actions-secret-inputs"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
+                <Link href="/posts/github-actions-secret-inputs" className="text-link">
                   post
                 </Link>
                 .

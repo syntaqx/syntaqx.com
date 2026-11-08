@@ -201,6 +201,8 @@ export function SidebarNav({
 }) {
   const pathname = usePathname();
   const navRef = useCurrentLinkInView();
+  // Section animations wait for this (see .acc-content in globals.css).
+  useEffect(() => navRef.current?.setAttribute("data-ready", ""), [navRef]);
   useMiddleDragScroll(navRef);
   const revealOpened = useRevealOpenedSection(navRef);
   const sections = groups.flatMap((g) => g.sections);

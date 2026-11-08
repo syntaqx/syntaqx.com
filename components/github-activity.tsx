@@ -232,7 +232,13 @@ export function GitHubActivity({
       <div className="min-w-0">
         <div className="flex min-w-0 items-start">
           {/* Grid — scrollable when content overflows */}
-          <div className="relative min-w-0 flex-1 overflow-x-auto" style={{ direction: "rtl" }}>
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label="Contribution calendar, scrolls sideways"
+            className="relative min-w-0 flex-1 overflow-x-auto"
+            style={{ direction: "rtl" }}
+          >
             <div
               className="flex py-0.5"
               style={{

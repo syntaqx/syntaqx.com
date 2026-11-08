@@ -427,10 +427,7 @@ export default function UuidPage() {
               <p>
                 For a deeper look at UUID versions, ULID, auto-increment tradeoffs, and why UUID v7
                 is the recommended default, see the{" "}
-                <Link
-                  href="/docs/fundamentals/identifier-conventions"
-                  className="text-primary hover:underline"
-                >
+                <Link href="/docs/fundamentals/identifier-conventions" className="text-link">
                   Identifier Conventions
                 </Link>{" "}
                 doc.

@@ -8,6 +8,7 @@ import { MarkdownMenu } from "@/components/copy-markdown";
 import { Tip } from "@/components/tip";
 import { Button } from "@/registry/syntaqx/ui/button";
 import { CodeTabsScript } from "@/components/code-tabs";
+import { ScrollRegionsScript } from "@/components/scroll-regions";
 import { Pager, type Neighbor } from "@/components/pager";
 import { JsonLd } from "@/components/json-ld";
 import { DocsHeader } from "@/components/docs-header";
@@ -116,6 +117,7 @@ export async function DocArticle({
       <CopyCodeScript />
       <DiagramViewer />
       <CodeTabsScript />
+      <ScrollRegionsScript />
     </article>
   );
 }

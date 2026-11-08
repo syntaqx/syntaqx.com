@@ -137,7 +137,7 @@ function TzRow({
     <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-baseline gap-x-3">
       <span className="min-w-0 truncate text-muted-foreground">
         {label}
-        {label !== tz && <span className="ml-1 text-xs text-muted-foreground/70">({tz})</span>}
+        {label !== tz && <span className="ml-1 text-xs text-muted-foreground">({tz})</span>}
       </span>
       <span className={cn("whitespace-nowrap", highlight ? "text-primary" : "text-foreground")}>
         {date}

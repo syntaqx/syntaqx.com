@@ -111,6 +111,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground antialiased">
+        {/* First stop for keyboard users: past the header and nav to the page. */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-60 focus:border focus:border-primary focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+        >
+          Skip to content
+        </a>
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>
@@ -136,7 +143,13 @@ export default function RootLayout({
             </div>
           </div>
         </header>
-        <main className="flex-1 mx-auto w-full max-w-7xl px-6 py-12">{children}</main>
+        <main
+          id="main"
+          tabIndex={-1}
+          className="flex-1 mx-auto w-full max-w-7xl px-6 py-12 outline-none"
+        >
+          {children}
+        </main>
         <footer data-pagefind-ignore className="mt-auto border-t border-border">
           <div className="mx-auto grid max-w-7xl gap-10 px-6 py-10 md:grid-cols-[1fr_auto] md:gap-16">
             <div className="grid content-start gap-4">

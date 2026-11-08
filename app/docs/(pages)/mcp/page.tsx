@@ -137,15 +137,15 @@ export default function McpDocsPage() {
         <div className="max-w-2xl space-y-3 text-sm text-muted-foreground">
           <p>
             The{" "}
-            <Link href="/docs" className="text-primary hover:underline">
+            <Link href="/docs" className="text-link">
               playbook
             </Link>{" "}
             and{" "}
-            <Link href="/posts" className="text-primary hover:underline">
+            <Link href="/posts" className="text-link">
               posts
             </Link>{" "}
             are my defaults and views. The{" "}
-            <Link href="/books" className="text-primary hover:underline">
+            <Link href="/books" className="text-link">
               books
             </Link>{" "}
             are reference, built from public sources: how an industry works, not what I think,
@@ -173,7 +173,7 @@ export default function McpDocsPage() {
         <p className="max-w-2xl text-sm text-muted-foreground">
           It shares the API&apos;s rate limit of 5,000 requests per hour per IP. Nothing you search
           for is stored. See the{" "}
-          <Link href="/legal/privacy" className="text-primary hover:underline">
+          <Link href="/legal/privacy" className="text-link">
             privacy policy
           </Link>
           .
