@@ -51,6 +51,8 @@ import SelectDemo from "./select-demo";
 import CheckboxDemo from "./checkbox-demo";
 import ToggleGroupSegmented from "./toggle-group-segmented";
 import ToggleGroupMultiple from "./toggle-group-multiple";
+import TabsDemo from "./tabs-demo";
+import TabsLine from "./tabs-line";
 import FileDropDemo from "./file-drop-demo";
 import FileDropPanel from "./file-drop-panel";
 import TooltipDemo from "./tooltip-demo";
@@ -312,6 +314,23 @@ export const examples: Record<string, Example[]> = {
       description:
         'With `type="multiple"` each item toggles on its own and the value is the list that\'s on. A little `spacing` separates them, so they read as a set of switches rather than one control.',
       Component: ToggleGroupMultiple,
+    },
+  ],
+  tabs: [
+    {
+      slug: "tabs-demo",
+      title: "Default",
+      description:
+        "shadcn's pill tabs in a muted track. Arrow keys move between tabs and Tab moves into the panel, as the tabs pattern expects.",
+      sources: [APG("tabs")],
+      Component: TabsDemo,
+    },
+    {
+      slug: "tabs-line",
+      title: "Line",
+      description:
+        "With `variant=\"line\"` the list is a full-width strip with a rule under it, mono labels, and the active tab underlined in the primary color. It's the site's code tabs, for switching between versions of the same thing: package managers, languages, clients.",
+      Component: TabsLine,
     },
   ],
   "file-drop": [

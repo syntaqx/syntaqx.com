@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { CodeHighlight } from "@/components/code-highlight";
 import { MCP_URL } from "@/lib/constants";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
-import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/syntaqx/ui/tabs";
 
 interface Client {
   id: string;
@@ -53,34 +52,25 @@ const CLIENTS: Client[] = [
 ];
 
 export function Install() {
-  const [id, setId] = useState(CLIENTS[0].id);
-  const client = CLIENTS.find((c) => c.id === id)!;
   return (
-    <div className="border border-border">
-      <ToggleGroup
-        spacing={0}
-        type="single"
-        value={id}
-        onValueChange={(v) => v && setId(v)}
-        aria-label="MCP client"
-        className="flex-wrap items-stretch rounded-none border-b border-border"
-      >
+    <Tabs defaultValue={CLIENTS[0].id} className="gap-0 border border-border">
+      <TabsList variant="line" aria-label="MCP client" className="bg-card">
         {CLIENTS.map((c) => (
-          <ToggleGroupItem
-            key={c.id}
-            value={c.id}
-            className="inst h-auto rounded-none border-r border-border px-4 py-3 text-muted-foreground first:rounded-none last:rounded-none"
-          >
+          <TabsTrigger key={c.id} value={c.id}>
             {c.label}
-          </ToggleGroupItem>
+          </TabsTrigger>
         ))}
-      </ToggleGroup>
-      <p className="px-4 pt-4 text-sm text-muted-foreground">{client.where}</p>
-      <div className="relative">
-        <CodeHighlight code={client.code} lang={client.lang} className="p-4 pr-12 text-sm" />
-        <CopyButton value={client.code} className="absolute top-3 right-3" aria-label="Copy" />
-      </div>
-    </div>
+      </TabsList>
+      {CLIENTS.map((c) => (
+        <TabsContent key={c.id} value={c.id}>
+          <p className="px-4 pt-4 text-muted-foreground">{c.where}</p>
+          <div className="relative">
+            <CodeHighlight code={c.code} lang={c.lang} className="p-4 pr-12" />
+            <CopyButton value={c.code} className="absolute top-3 right-3" aria-label="Copy" />
+          </div>
+        </TabsContent>
+      ))}
+    </Tabs>
   );
 }
 

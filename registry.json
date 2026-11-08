@@ -462,6 +462,24 @@
       }
     },
     {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "shadcn's Tabs: panels behind a row of triggers. The line variant is a full-width strip with mono labels and the active tab underlined, like the site's code tabs.",
+      "dependencies": ["class-variance-authority", "radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/tabs.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["navigation"],
+      "devDependencies": ["shadcn"],
+      "css": {
+        "@import \"shadcn/tailwind.css\"": {}
+      }
+    },
+    {
       "name": "file-drop",
       "type": "registry:ui",
       "title": "File Drop",

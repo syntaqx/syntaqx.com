@@ -14,6 +14,7 @@ export const uiPages: { title: string; description: string; href: string }[] = [
 const COMPONENT_GROUPS = [
   ["actions", "Actions"],
   ["forms", "Forms"],
+  ["navigation", "Navigation"],
   ["overlays", "Overlays"],
   ["feedback", "Feedback"],
   ["data", "Data display"],
