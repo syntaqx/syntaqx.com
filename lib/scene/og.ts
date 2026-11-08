@@ -1,11 +1,11 @@
 import { project, REST, type Scene } from "./iso";
-import { GOOD, HOT, LEVELS, ORANGE, WARN, levels, rasterize } from "./raster";
+import { GAP, GOOD, HOT, LEVELS, ORANGE, WARN, tiles } from "./raster";
 import { sceneAt, type SceneName } from "./scenes";
 import { walk, type Ink, type Pen } from "./walk";
 
 /*
  * Static SVG rendering of a scene for Open Graph images (build time, no DOM).
- * Tiles come from the same rasterizer as the live canvas; line work is
+ * Tiles come from the same tile geometry as the live canvas; line work is
  * rasterized into a fine "ink" grid with the same painter's-order occlusion,
  * then emitted as a handful of <path> elements (one per color and opacity).
  */
@@ -37,17 +37,18 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
   const hot = hex(mix(acc, [255, 255, 255], 0.35));
 
   // Tiles
-  const cols = Math.ceil(width / pitch);
-  const rows = Math.ceil(height / pitch);
-  const { field } = rasterize(scene, cols, rows, 0, wide);
-  const lv = levels(field, 0);
-  const size = pitch - 1;
+  const P = project(scene.ext, width, height, wide);
   const tilePaths = Array.from({ length: ORANGE + 1 }, () => [] as string[]);
-  for (let y = 0; y < rows; y++)
-    for (let x = 0; x < cols; x++) {
-      const v = lv[y * cols + x];
-      if (v) tilePaths[v].push(`M${x * pitch} ${y * pitch}h${size}v${size}h-${size}z`);
-    }
+  for (const t of tiles(scene, P, width, height, {
+    pitch,
+    gap: pitch * GAP,
+    px: 1,
+    light: 0,
+    wide,
+  }))
+    tilePaths[t.lv].push(
+      t.pts.map(([x, y], i) => `${i ? "L" : "M"}${+x.toFixed(1)} ${+y.toFixed(1)}`).join("") + "Z",
+    );
 
   // Line work as vectors, like the canvas: stroked, anti-aliased, on its own
   // layer. Occlusion erases only what's drawn so far, so each solid face
@@ -86,7 +87,7 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
       lines += `<rect x="${n(x - r)}" y="${n(y - r)}" width="${r * 2}" height="${r * 2}" fill="${C.bg}" stroke="${C.fg}" stroke-width="1"/>`;
     },
   };
-  walk(scene, project(scene.ext, width, height, wide), pen, REST);
+  walk(scene, P, pen, REST);
 
   const parts: string[] = [`<rect width="${width}" height="${height}" fill="${C.bg}"/>`];
   for (let k = 1; k <= LEVELS; k++)
