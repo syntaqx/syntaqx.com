@@ -97,7 +97,7 @@ export default function draw() {
     ["E1", "until no warehouse copy is recoverable", `P1+T1+T2 = ${E1}`],
     ["M1", "GDPR response deadline, drawn as 30 days", "1 month"],
   ];
-  const ws = [40, 290, 120];
+  const ws = [40, 320, 120];
   const tx = CX - ws.reduce((a, b) => a + b, 0) / 2;
   const tb = s.table(tx, viewBottom + 52, "Variables · days", rows, { widths: ws });
   s.height = Math.ceil(tb.y + 30);

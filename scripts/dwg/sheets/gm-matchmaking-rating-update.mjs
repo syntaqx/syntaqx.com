@@ -140,7 +140,7 @@ export default function draw() {
     s.nb(ax0 + axW / 2 + 90, vtY - 4, 3);
   }
 
-  const widthsA = [52, 160, 190];
+  const widthsA = [60, 190, 224];
   const twA = widthsA.reduce((a, b) => a + b, 0);
   s.comment("Variables: Elo");
   const ta = s.table(
@@ -164,7 +164,7 @@ export default function draw() {
   );
   s.nb(W / 2 - twA / 2 + 118, vtY + 56 - 11, 1);
   s.comment("Variables: Glicko-2");
-  const widthsB = [52, 160, 190];
+  const widthsB = [60, 190, 224];
   const tb = s.table(
     W / 2 - twA / 2,
     ta.y + 44,

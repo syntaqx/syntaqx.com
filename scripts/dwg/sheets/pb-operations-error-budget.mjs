@@ -146,7 +146,7 @@ export default function draw() {
     ]),
     ...E.map((e, i) => [`E${i + 1}`, `budget gone at R${i + 1}`, `N1 ÷ R${i + 1} = ${e} h`]),
   ];
-  const tb = s.table(352, rowTop + 16, "Variables", rows, { widths: [32, 160, 184] });
+  const tb = s.table(336, rowTop + 16, "Variables", rows, { widths: [40, 168, 184] });
   s.height = Math.ceil(Math.max(tb.y, detailBottom) + 30);
   return s.toString();
 }

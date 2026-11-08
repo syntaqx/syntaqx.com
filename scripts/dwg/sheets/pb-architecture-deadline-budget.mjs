@@ -2,7 +2,7 @@
 // caller's deadline, the full-jitter backoff in detail, fresh timeouts
 // against a propagated deadline, and the variable table. Embedded in
 // content/docs/architecture/retries-and-timeouts.md.
-import { sheet } from "../kit.mjs";
+import { sheet, widthOf } from "../kit.mjs";
 
 // D1, base and cap from the chapter; T1, T2 and three attempts illustrative [5].
 const D1 = 10,
@@ -108,7 +108,7 @@ export default function draw() {
       py = fy + h + 62;
 
     s.text(x0, fy - 8, "fresh timeouts", "sl ink");
-    s.nb(x0 + 92, fy - 11, 4);
+    s.nb(x0 + widthOf("fresh timeouts", "sl") + 10, fy - 11, 4);
     [0, 1, 2].forEach((i) => {
       s.rect(X(i * FRESH), fy, FRESH * k, h, "obj fill-1");
       s.label(X(i * FRESH), fy, FRESH * k, h, `call ${i + 1}`);
@@ -141,7 +141,7 @@ export default function draw() {
   let detailBottom;
   {
     const k = 120,
-      x0 = 56,
+      x0 = CX - (J[1] * k) / 2,
       top = rowTop + 46,
       h = 36;
     const end = x0 + J[1] * k;
@@ -166,8 +166,8 @@ export default function draw() {
   // ---- Variable table ----
   s.comment("Variable table");
   const tb = s.table(
-    312,
-    rowTop + 16,
+    CX - 256,
+    detailBottom + 44,
     "Variables · s",
     [
       ["D1", "caller deadline, passed to every hop", s2(D1)],
@@ -184,8 +184,8 @@ export default function draw() {
       ["W1", "worst wait, fresh 10 s timeout per call", `3 × ${s2(FRESH)} = ${s2(3 * FRESH)}`],
       ["W2", "worst wait, one propagated deadline", `D1 = ${s2(D1)}`],
     ],
-    { widths: [32, 196, 188] },
+    { widths: [40, 248, 224] },
   );
-  s.height = Math.ceil(Math.max(tb.y, detailBottom) + 30);
+  s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

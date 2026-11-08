@@ -159,7 +159,7 @@ export default function draw() {
     ["D2", "first day in V2", "2026-11-01"],
     ["B1", "upper(V1) = lower(V2)", "2026-11-01"],
   ];
-  const widths = [32, 196, 96];
+  const widths = [40, 232, 96];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(W - 32 - tw, rowTop + 16, "Rows · today 2026-10-26", rows, { widths });
   s.height = Math.ceil(Math.max(tb.y, detailBottom) + 30);

@@ -100,7 +100,7 @@ export default function draw() {
     ["L1", "purchase to the last arbitration filing", `F1+C1 = ${L1}`],
     ["P1", "merchant's evidence deadline at a provider", `${P1[0]} to ${P1[1]}`],
   ];
-  const widths = [40, 280, 130];
+  const widths = [40, 338, 130];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(CX - tw / 2, vy + 52, "Variables · calendar days", rows, { widths });
   s.height = Math.ceil(tb.y + 30);

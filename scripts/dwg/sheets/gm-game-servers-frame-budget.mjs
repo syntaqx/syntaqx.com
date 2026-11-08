@@ -84,7 +84,7 @@ export default function draw() {
   let detailBottom;
   {
     const k = 120,
-      x0 = 60,
+      x0 = 40,
       top = rowTop + 30,
       h = 40,
       bot = top + h;
@@ -101,16 +101,23 @@ export default function draw() {
   }
 
   s.comment("Variable table");
-  const tb = s.table(420, rowTop + 14, "Variables · ms", [
-    ["F1", "frame at 128 ticks", "1000 ÷ 128 = 7.8125"],
-    ["O1", "host reserve, 10% of F1", "F1 ÷ 10 = 0.78"],
-    ["G1", "target per game frame", "(F1 − O1) ÷ 3 = 2.34"],
-    ["F1", "check, three games and reserve", "3×G1 + O1 = 7.8125"],
-    ["M1", "measured frame after the work", "< 2.00"],
-    ["H1", "headroom", "G1 − M1 > 0.34"],
-    ["E1", "estimate, 22-client game", "≈ 2.2×G1 = 5.2"],
-    ["S1", "frame when the work started", "50 = 6.4×F1"],
-  ]);
+  const tw = [36, 196, 136];
+  const tb = s.table(
+    W - 20 - tw.reduce((a, b) => a + b, 0),
+    rowTop + 14,
+    "Variables · ms",
+    [
+      ["F1", "frame at 128 ticks", "1000 ÷ 128 = 7.8125"],
+      ["O1", "host reserve, 10% of F1", "F1 ÷ 10 = 0.78"],
+      ["G1", "target per game frame", "(F1 − O1) ÷ 3 = 2.34"],
+      ["F1", "check, three games and reserve", "3×G1 + O1 = 7.8125"],
+      ["M1", "measured frame after the work", "< 2.00"],
+      ["H1", "headroom", "G1 − M1 > 0.34"],
+      ["E1", "estimate, 22-client game", "≈ 2.2×G1 = 5.2"],
+      ["S1", "frame when the work started", "50 = 6.4×F1"],
+    ],
+    { widths: tw },
+  );
 
   // ---- Plan view: frame time then and now, 1 ms = 11 px ----
   s.comment("Plan view: frame time, then and now");

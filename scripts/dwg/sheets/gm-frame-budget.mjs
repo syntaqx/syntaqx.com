@@ -52,7 +52,10 @@ export default function draw() {
     const fills = ["fill-2", "fill-2", "fill-2", "fill-1", "fill-2"];
     T.forEach((_, i) => s.rect(xs[i], top, xs[i + 1] - xs[i], h, `obj ${fills[i]}`));
     s.label(xs[1], top, xs[2] - xs[1], h, "simulation");
-    s.label(xs[2], top, xs[3] - xs[2], h, "render submit");
+    // Two lines: one line fills the 3 ms segment edge to edge.
+    ["render", "submit"].forEach((l, i) =>
+      s.text((xs[2] + xs[3]) / 2, top + h / 2 + 3 - 5.5 + i * 11, l, "sl ink", "middle"),
+    );
     s.label(xs[3], top, xs[4] - xs[3], h, "GPU");
     s.callout((xs[4] + xs[5]) / 2, top + h / 2, xs[5] + 18, top + h / 2, "present");
 
@@ -119,19 +122,19 @@ export default function draw() {
   const rowTop = pipeBottom + 44;
   {
     const k = 330,
-      x0 = 52,
+      x0 = 36,
       top = rowTop + 16,
-      h = 36;
+      h = 44;
     const latch = x0 + T[0] * k;
     s.rect(x0, top, latch - x0, h, "obj fill-2");
     s.rect(latch, top, 110, h, "hatch", { fill: s.hatch });
     s.line(latch, top - 10, latch, top + h + 8, "ctr");
     s.text(latch, top - 14, "latch", "sl ink", "middle");
     s.nb(latch + 30, top - 17.5, 2);
-    for (const x of [77, 117, 172, 254, 297])
-      s.add(`<circle class="dot" cx="${x}" cy="${top + 12}" r="2.2"/>`);
-    s.text((x0 + latch) / 2, top + 28, "device events", "sl ink", "middle");
-    s.text(latch + 55, top + 28, "read next frame", "sl ink ko", "middle");
+    for (const x of [25, 65, 120, 202, 245])
+      s.add(`<circle class="dot" cx="${x0 + x}" cy="${top + 10}" r="2.2"/>`);
+    s.text((x0 + latch) / 2, top + 34, "device events", "sl ink", "middle");
+    s.text(latch + 55, top + 34, "read next frame", "sl ink ko", "middle");
     s.dimH(x0, latch, top + h + 20, "T1", { from: [top + h, top + h], below: true });
     s.viewTitle(
       (x0 + latch + 110) / 2,
@@ -143,8 +146,9 @@ export default function draw() {
 
   // ---- Variable table ----
   s.comment("Variable table");
+  const tw = [36, 162, 188];
   const tb = s.table(
-    400,
+    W - 20 - tw.reduce((a, b) => a + b, 0),
     rowTop + 16,
     "Variables · ms",
     [
@@ -158,7 +162,7 @@ export default function draw() {
       ["P1", "pipelined frame interval", "max(T1+T2+T3, T4+T5) = 9.17"],
       ["W1", "CPU waits for GPU", "P1 − (T1+T2+T3) = 1.67"],
     ],
-    { rowH: 15 },
+    { rowH: 15, widths: tw },
   );
   s.height = Math.ceil(tb.y + 30);
 

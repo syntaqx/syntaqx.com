@@ -107,7 +107,7 @@ export default function draw() {
     ["K1", "markup", `F1 − I1 − N1 = ${K1.toFixed(2)}`],
     ["M1", "merchant funding", "W1 − F1 = 96.80"],
   ];
-  const widths = [50, 230, 190];
+  const widths = [50, 256, 190];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(CX - tw / 2, detailBottom + 50, "Variables · USD", rows, { widths });
   s.height = Math.ceil(tb.y + 30);

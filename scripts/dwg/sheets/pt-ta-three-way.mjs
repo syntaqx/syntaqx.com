@@ -25,7 +25,7 @@ export default function draw() {
         sub: ["every owner, resident and", "other balance, as of the date"],
       },
     ],
-    { h: 54, gap: 40, kind: "store" },
+    { h: 54, gap: 24, kind: "store" },
   );
   s.text(legs[0].cx, top - 10, "matched line by line", "sl", "middle");
   s.text(legs[1].cx, top - 10, "from the ledger", "sl", "middle");

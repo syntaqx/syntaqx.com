@@ -34,10 +34,10 @@ export default function draw() {
   SHAPES.forEach((h, j) => s.text(CX(j), top - 12, h, "lt", "middle"));
   s.line(x, top, W - x, top, "tbl");
 
-  const row = (i, cells, hl) => {
+  const row = (i, cells) => {
     const by = RY(i) + rowH / 2 + 3.2;
-    s.text(x + 8, by, cells[0], hl ? "sl ink hl" : "sl ink");
-    cells.slice(1).forEach((v, j) => s.text(CX(j), by, v, hl ? "tc hl" : "tc", "middle"));
+    s.text(x + 8, by, cells[0], "sl ink");
+    cells.slice(1).forEach((v, j) => s.text(CX(j), by, v, "tc", "middle"));
   };
 
   s.comment("Rows");
@@ -49,7 +49,7 @@ export default function draw() {
   s.comment("The one thing that never moves");
   const sy = RY(ROWS.length) + 6;
   s.rect(x, sy, W - 2 * x, rowH, "obj hl");
-  row(ROWS.length + 6 / rowH, SESSION, true);
+  row(ROWS.length + 6 / rowH, SESSION);
   s.text(x + 8, sy + rowH + 18, "always yours", "sl hl");
 
   s.comment("Where the users live");

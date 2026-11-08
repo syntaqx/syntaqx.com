@@ -9,7 +9,7 @@ export default function draw() {
   const W = 760;
   const s = sheet({ prefix: "pt-pac", width: W });
 
-  const w = 150,
+  const w = 162,
     h = 44,
     cols = 4;
   const gap = (W - 40 - cols * w) / (cols - 1);

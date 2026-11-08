@@ -24,7 +24,7 @@ export default function draw() {
   const region = s.node(lx, row(1), nw, nh, "portfolio", { sub: "region, district, fund" });
   const owner = s.node(rx, row(0), nw, nh, "owner", { sub: "person, fund or investors" });
   const entity = s.node(rx, row(1), nw, nh, "legal entity", { sub: "ownership shares" });
-  const pw = 190;
+  const pw = 204;
   const prop = s.node(W / 2 - pw / 2, row(2) + 18, pw, nh + 4, "property", {
     hl: true,
     sub: "rules, permissions, reports meet",

@@ -1,7 +1,7 @@
 // A game backend as an exploded stack of four layers, with the game server
 // fleet beside it. Plate contents are schematic modules, one per service.
 // Embedded in content/books/gaming/game-backend.md (The Stack).
-import { sheet } from "../kit.mjs";
+import { f, sheet } from "../kit.mjs";
 
 // Plate 300 x 200; with a 70 step a lower plate shows only local y > ~70,
 // so every module sits in the front band y 90..184.
@@ -178,7 +178,7 @@ export default function draw() {
   s.text(fx + fw / 2, fy - 11, "servers", "sl ink", "middle");
   s.nb(fx + fw / 2 + 38, fy - 14.5, 1);
   const ah = `url(#${s.id("ah")})`;
-  s.add(`<circle class="dot" cx="${px}" cy="${py}" r="1.6"/>`);
+  s.add(`<circle class="dot" cx="${f(px)}" cy="${f(py)}" r="1.6"/>`);
   s.path(`M${px},${py}H${fx - 2}`, "leader", { "marker-end": ah });
   s.path(`M${fx - 2},${ry}H${rx + 3}`, "leader", { "marker-end": ah });
   s.nb((px + fx) / 2, py - 9, 2);

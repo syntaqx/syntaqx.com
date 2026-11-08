@@ -67,7 +67,7 @@ export default function draw() {
   CARDS.forEach((c, i) => {
     const cy = ctop + i * (cardH + cardGap);
     s.rect(bx + pad, cy, iw, cardH, c.hl ? "obj hl" : "obj fill-2");
-    s.text(bx + pad + 12, cy + 19, c.when, c.hl ? "tc hl" : "tc");
+    s.text(bx + pad + 12, cy + 19, c.when, "tc");
     s.text(bx + pad + 12, cy + 36, c.note, "sl");
     const bw = c.badge.startsWith("$") ? 60 : 112;
     s.node(bx + pad + iw - 10 - bw, cy + 8, bw, 16, c.badge, {

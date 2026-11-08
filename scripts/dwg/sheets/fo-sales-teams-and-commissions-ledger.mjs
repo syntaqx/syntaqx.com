@@ -32,7 +32,7 @@ export default function draw() {
   s.connect(pending, earned, { hl: true, label: "active,\nfirst visit" });
   s.connect(earned, paid, { hl: true, label: "pay period" });
   s.connect(earned, held, { at: [0.75, 0.5] });
-  s.connect(held, released, { from: "b", to: "t", hl: true, label: "release date", side: "right" });
+  s.connect(held, released, { from: "b", to: "t", hl: true, label: "release date", side: "left" });
 
   s.comment("Cancellations");
   s.connect(pending, voided, {

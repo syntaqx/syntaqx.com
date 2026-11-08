@@ -2,7 +2,7 @@
 // with its royalty-free band and break-even point, the license costs at ten
 // times the scale, and the variable table. Embedded in
 // content/books/gaming/engine-landscape.md (The Cost of Ownership).
-import { sheet } from "../kit.mjs";
+import { sheet, widthOf } from "../kit.mjs";
 
 // Illustrative inputs [4], $M unless noted.
 const G1 = 5,
@@ -89,7 +89,7 @@ export default function draw() {
   let costBottom;
   {
     const k = 1200,
-      x0 = 140,
+      x0 = CX - (R1 * k) / 2,
       X = (v) => x0 + v * k;
     const rows = [
       ["Engine A 5%", R1, "R1", true],
@@ -104,7 +104,7 @@ export default function draw() {
     rows.forEach(([name, v, code, hl, n], i) => {
       const by = rowTop + 22 + i * pitch;
       s.text(x0 - 14, by + h / 2 + 3, name, "sl ink", "end");
-      if (n) s.nb(x0 - 14 - 8 - 70, by + h / 2, n);
+      if (n) s.nb(x0 - 14 - widthOf(name, "sl") - 14, by + h / 2, n);
       if (v > 0) {
         s.rect(x0, by, v * k, h, hl ? "obj hl" : "obj fill-2");
         s.dimH(x0, X(v), by - 8, code, { from: [null, by], hl });
@@ -122,9 +122,9 @@ export default function draw() {
     costBottom = end + 43;
   }
 
-  // ---- Variable table ----
+  // ---- Variable table: below the cost view, centered ----
   s.comment("Variable table");
-  const tb = s.table(430, rowTop + 6, "Variables · $M", [
+  const rowsV = [
     ["G1", "lifetime gross", `E1+B1 = ${m(G1)}`],
     ["E1", "royalty-free first $1M", m(E1)],
     ["B1", "royalty base", `G1−E1 = ${m(B1)}`],
@@ -136,7 +136,10 @@ export default function draw() {
     ["U1", "engine B seats", `N1 × P1 × Y1 = ${m(U1, 3)}`],
     ["L1", "engine C license", m(L1, 3)],
     ["K1", "break-even gross", `E1 + U1 ÷ 0.05 = ${m(K1)}`],
-  ]);
-  s.height = Math.ceil(Math.max(tb.y, costBottom) + 30);
+  ];
+  const ws = [42, 220, 180];
+  const tx = CX - ws.reduce((a, b) => a + b, 0) / 2;
+  const tb = s.table(tx, costBottom + 52, "Variables · $M", rowsV, { widths: ws });
+  s.height = Math.ceil(tb.y + 30);
   return s.toString();
 }

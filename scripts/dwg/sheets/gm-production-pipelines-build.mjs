@@ -1,7 +1,7 @@
 // One change through a build farm as a plan view on a time axis: the
 // serial critical path and the symbol upload off it. Embedded in
 // content/books/gaming/production-pipelines.md (Build Farms).
-import { sheet } from "../kit.mjs";
+import { sheet, widthOf } from "../kit.mjs";
 
 // Minutes. Illustrative except S6, a published 2016 figure [1].
 const S = [3, 14, 12, 6, 4, 18, 3];
@@ -55,7 +55,7 @@ export default function draw() {
     if (names[i]) s.label(xs[i], top, xs[i + 1] - xs[i], h, names[i]);
   });
   s.text(x0 - 12, top + h / 2 + 3, "main", "sl ink", "end");
-  s.nb(x0 - 46, top + h / 2, 3);
+  s.nb(x0 - 12 - widthOf("main", "sl") - 14, top + h / 2, 3);
 
   s.dimH(xs[0], xs[7], top - 22, "B1", { from: [top, top] });
   const cy = bot + 20;
@@ -107,7 +107,7 @@ export default function draw() {
     ["S7", "report, label the build good or bad", "3 · illustrative"],
     ["U1", "upload symbols and the build", "5 · illustrative"],
   ];
-  const widths = [44, 200, 120],
+  const widths = [44, 240, 140],
     tw = widths.reduce((a, b) => a + b, 0);
   const t = s.table(CX - tw / 2, viewBottom + 56, "Variables · minutes", rows, { widths });
   s.height = Math.ceil(t.y + 30);

@@ -99,7 +99,7 @@ export default function draw() {
     ["C1", "column files opened, of 6", "3"],
     ["F1", "fraction read", "(2 x 3) / (8 x 6) = 12.5 %"],
   ];
-  const ws = [40, 250, 160];
+  const ws = [44, 330, 170];
   const tx = CX - ws.reduce((a, b) => a + b, 0) / 2;
   const tb = s.table(tx, viewBottom + 52, "Variables · rows", rows, { widths: ws });
   s.height = Math.ceil(tb.y + 30);

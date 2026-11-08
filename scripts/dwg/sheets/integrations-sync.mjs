@@ -8,7 +8,7 @@ export default function draw() {
   const s = sheet({ prefix: "int-sync", width: W });
 
   const srcX = 20,
-    srcW = 132,
+    srcW = 140,
     h = 40,
     rowGap = 22;
   const Y = (i) => 40 + i * (h + rowGap);
@@ -22,7 +22,7 @@ export default function draw() {
   const full = s.node(srcX, Y(2), srcW, h, "full resync", { sub: "on 410, nightly check" });
 
   s.comment("Receiver");
-  const inbox = s.node(176, Y(0), 140, h, "inbox", { kind: "store", sub: "verify, dedupe, ack" });
+  const inbox = s.node(182, Y(0), 136, h, "inbox", { kind: "store", sub: "verify, dedupe, ack" });
   s.connect(hook, inbox);
 
   s.comment("Shared path");

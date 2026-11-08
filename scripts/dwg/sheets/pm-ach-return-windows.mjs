@@ -107,7 +107,7 @@ export default function draw() {
     ["U1", "unauthorized consumer returns: R05, R07, R10, R11, R51", `${U1} calendar days`],
     ["V1", "Originator's reversal must reach the RDFI", `${V1} banking days`],
   ];
-  const widths = [40, 300, 110];
+  const widths = [40, 344, 120];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · Nacha Operating Rules", rows, {
     widths,

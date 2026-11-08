@@ -4,26 +4,26 @@
   <!-- Notes -->
   <text class="nth" x="32" y="40">NOTES:</text>
   <text class="nt" x="78.6" y="40">(UNLESS OTHERWISE SPECIFIED)</text>
-  <rect class="nb" x="32" y="53.3" width="11" height="11"/>
-  <text class="nbt" x="37.5" y="61.5" text-anchor="middle">1</text>
+  <rect class="nb" x="31" y="52.3" width="13" height="13"/>
+  <text class="nbt" x="37.5" y="62" text-anchor="middle">1</text>
   <text class="nt" x="50" y="62">S1 IS THE TARGET FOR THE SLI, GOOD EVENTS OVER VALID EVENTS, ACROSS A ROLLING 30 DAYS.</text>
-  <rect class="nb" x="32" y="70.3" width="11" height="11"/>
-  <text class="nbt" x="37.5" y="78.5" text-anchor="middle">2</text>
+  <rect class="nb" x="31" y="69.3" width="13" height="13"/>
+  <text class="nbt" x="37.5" y="79" text-anchor="middle">2</text>
   <text class="nt" x="50" y="79">B1 IS 43.2 MINUTES OF FULL OUTAGE, OR A PARTIAL ONE: 1% ERRORS FOR 72 HOURS SPENDS THE SAME BUDGET.</text>
-  <rect class="nb" x="32" y="87.3" width="11" height="11"/>
-  <text class="nbt" x="37.5" y="95.5" text-anchor="middle">3</text>
+  <rect class="nb" x="31" y="86.3" width="13" height="13"/>
+  <text class="nbt" x="37.5" y="96" text-anchor="middle">3</text>
   <text class="nt" x="50" y="96">BURN RATE R IS THE ERROR RATE OVER THE RATE THE SLO ALLOWS; AT R THE BUDGET IS GONE AFTER E = N1 ÷ R.</text>
-  <rect class="nb" x="32" y="104.3" width="11" height="11"/>
-  <text class="nbt" x="37.5" y="112.5" text-anchor="middle">4</text>
+  <rect class="nb" x="31" y="103.3" width="13" height="13"/>
+  <text class="nbt" x="37.5" y="113" text-anchor="middle">4</text>
   <text class="nt" x="50" y="113">AN ALERT FIRES WHEN BOTH ITS LONG WINDOW L AND ITS SHORT WINDOW, L ÷ 12, BURN FASTER THAN R.</text>
-  <text class="nt" x="50" y="130">RATES AND WINDOWS FROM PUBLISHED SRE ALERTING GUIDANCE, 99.9% OVER 30 DAYS. VALUES AND FORMULAS ARE IN THE</text>
-  <text class="nt" x="50" y="143">TABLE.</text>
+  <text class="nt" x="50" y="130">RATES AND WINDOWS FROM PUBLISHED SRE ALERTING GUIDANCE, 99.9% OVER 30 DAYS. VALUES AND FORMULAS ARE</text>
+  <text class="nt" x="50" y="143">IN THE TABLE.</text>
   <!-- Plan view: one SLO window -->
   <rect class="obj fill-2" x="80" y="206" width="599.4" height="30"/>
   <rect class="hatch" x="679.4" y="206" width="0.6" height="30" fill="url(#pb-slo-hatch)"/>
   <text class="sl ink" x="380" y="224" text-anchor="middle">GOOD EVENTS · S1</text>
-  <rect class="nb" x="436.5" y="215.5" width="11" height="11"/>
-  <text class="nbt" x="442" y="223.7" text-anchor="middle">1</text>
+  <rect class="nb" x="435.5" y="214.5" width="13" height="13"/>
+  <text class="nbt" x="442" y="224.2" text-anchor="middle">1</text>
   <path class="ext" d="M80,203L80,180"/>
   <path class="ext" d="M680,203L680,180"/>
   <path class="dim" d="M80,184L680,184" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
@@ -53,16 +53,16 @@
   <path class="ext" d="M140,540L140,559"/>
   <path class="dim" d="M80,555L140,555" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
   <text class="dt" x="110" y="567" text-anchor="middle">L3</text>
-  <rect class="nb" x="148.5" y="549.5" width="11" height="11"/>
-  <text class="nbt" x="154" y="557.7" text-anchor="middle">4</text>
+  <rect class="nb" x="147.5" y="548.5" width="13" height="13"/>
+  <text class="nbt" x="154" y="558.2" text-anchor="middle">4</text>
   <path class="ext" d="M680,540L680,587"/>
   <path class="dim" d="M80,583L680,583" marker-start="url(#pb-slo-ah)" marker-end="url(#pb-slo-ah)"/>
   <text class="dt" x="380" y="595" text-anchor="middle">E3</text>
   <path class="ext" d="M80,559L80,587"/>
   <text class="vt" x="380" y="629" text-anchor="middle">PLAN VIEW · BURN RATE TO EXHAUSTION</text>
   <text class="vs" x="380" y="642" text-anchor="middle">SCALE 1 DAY = 20 PX · TIMELINE · ONE BAR PER ALERT</text>
-  <rect class="nb" x="516.5" y="619.5" width="11" height="11"/>
-  <text class="nbt" x="522" y="627.7" text-anchor="middle">3</text>
+  <rect class="nb" x="515.5" y="618.5" width="13" height="13"/>
+  <text class="nbt" x="522" y="628.2" text-anchor="middle">3</text>
   <!-- Detail A: the error budget -->
   <rect class="hatch" x="56" y="782" width="216" height="30" fill="url(#pb-slo-hatch)"/>
   <text class="sl ink ko" x="164" y="800" text-anchor="middle">ERROR BUDGET</text>
@@ -70,76 +70,76 @@
   <path class="ext" d="M272,779L272,758"/>
   <path class="dim hl" d="M56,762L272,762" marker-start="url(#pb-slo-ah-hl)" marker-end="url(#pb-slo-ah-hl)"/>
   <text class="dt hl" x="164" y="758" text-anchor="middle">B1</text>
-  <rect class="nb" x="176.5" y="749" width="11" height="11"/>
-  <text class="nbt" x="182" y="757.2" text-anchor="middle">2</text>
+  <rect class="nb" x="175.5" y="748" width="13" height="13"/>
+  <text class="nbt" x="182" y="757.7" text-anchor="middle">2</text>
   <text class="vt" x="164" y="852" text-anchor="middle">DETAIL A · THE ERROR BUDGET</text>
   <text class="vs" x="164" y="865" text-anchor="middle">SCALE 360:1 · 1 MIN = 5 PX</text>
   <!-- Variable table -->
-  <text class="vt" x="352" y="695">VARIABLES</text>
-  <rect class="tbl" x="352" y="702" width="376" height="240"/>
-  <path class="tbl" d="M352,717L728,717"/>
-  <path class="tbl" d="M352,732L728,732"/>
-  <path class="tbl" d="M352,747L728,747"/>
-  <path class="tbl" d="M352,762L728,762"/>
-  <path class="tbl" d="M352,777L728,777"/>
-  <path class="tbl" d="M352,792L728,792"/>
-  <path class="tbl" d="M352,807L728,807"/>
-  <path class="tbl" d="M352,822L728,822"/>
-  <path class="tbl" d="M352,837L728,837"/>
-  <path class="tbl" d="M352,852L728,852"/>
-  <path class="tbl" d="M352,867L728,867"/>
-  <path class="tbl" d="M352,882L728,882"/>
-  <path class="tbl" d="M352,897L728,897"/>
-  <path class="tbl" d="M352,912L728,912"/>
-  <path class="tbl" d="M352,927L728,927"/>
-  <path class="tbl" d="M384,702L384,942"/>
+  <text class="vt" x="336" y="695">VARIABLES</text>
+  <rect class="tbl" x="336" y="702" width="392" height="240"/>
+  <path class="tbl" d="M336,717L728,717"/>
+  <path class="tbl" d="M336,732L728,732"/>
+  <path class="tbl" d="M336,747L728,747"/>
+  <path class="tbl" d="M336,762L728,762"/>
+  <path class="tbl" d="M336,777L728,777"/>
+  <path class="tbl" d="M336,792L728,792"/>
+  <path class="tbl" d="M336,807L728,807"/>
+  <path class="tbl" d="M336,822L728,822"/>
+  <path class="tbl" d="M336,837L728,837"/>
+  <path class="tbl" d="M336,852L728,852"/>
+  <path class="tbl" d="M336,867L728,867"/>
+  <path class="tbl" d="M336,882L728,882"/>
+  <path class="tbl" d="M336,897L728,897"/>
+  <path class="tbl" d="M336,912L728,912"/>
+  <path class="tbl" d="M336,927L728,927"/>
+  <path class="tbl" d="M376,702L376,942"/>
   <path class="tbl" d="M544,702L544,942"/>
-  <text class="th" x="358" y="712.2">CODE</text>
-  <text class="th" x="464" y="712.2" text-anchor="middle">VARIABLE</text>
-  <text class="th" x="636" y="712.2" text-anchor="middle">VALUE</text>
-  <text class="tc" x="358" y="727.7">N1</text>
-  <text class="tc" x="464" y="727.7" text-anchor="middle">SLO window</text>
-  <text class="tc" x="636" y="727.7" text-anchor="middle">30 d = 720 h = 43,200 min</text>
-  <text class="tc" x="358" y="742.7">S1</text>
-  <text class="tc" x="464" y="742.7" text-anchor="middle">SLO target</text>
-  <text class="tc" x="636" y="742.7" text-anchor="middle">99.9%</text>
-  <text class="tc" x="358" y="757.7">B1</text>
-  <text class="tc" x="464" y="757.7" text-anchor="middle">error budget</text>
-  <text class="tc" x="636" y="757.7" text-anchor="middle">(1 − S1) × N1 = 43.2 min</text>
-  <text class="tc" x="358" y="772.7">R1</text>
-  <text class="tc" x="464" y="772.7" text-anchor="middle">burn rate, alert 1</text>
-  <text class="tc" x="636" y="772.7" text-anchor="middle">14.4</text>
-  <text class="tc" x="358" y="787.7">R2</text>
-  <text class="tc" x="464" y="787.7" text-anchor="middle">burn rate, alert 2</text>
-  <text class="tc" x="636" y="787.7" text-anchor="middle">6</text>
-  <text class="tc" x="358" y="802.7">R3</text>
-  <text class="tc" x="464" y="802.7" text-anchor="middle">burn rate, alert 3</text>
-  <text class="tc" x="636" y="802.7" text-anchor="middle">1</text>
-  <text class="tc" x="358" y="817.7">L1</text>
-  <text class="tc" x="464" y="817.7" text-anchor="middle">long window, alert 1</text>
-  <text class="tc" x="636" y="817.7" text-anchor="middle">1 h · short 5 min</text>
-  <text class="tc" x="358" y="832.7">L2</text>
-  <text class="tc" x="464" y="832.7" text-anchor="middle">long window, alert 2</text>
-  <text class="tc" x="636" y="832.7" text-anchor="middle">6 h · short 30 min</text>
-  <text class="tc" x="358" y="847.7">L3</text>
-  <text class="tc" x="464" y="847.7" text-anchor="middle">long window, alert 3</text>
-  <text class="tc" x="636" y="847.7" text-anchor="middle">72 h · short 6 h</text>
-  <text class="tc" x="358" y="862.7">C1</text>
-  <text class="tc" x="464" y="862.7" text-anchor="middle">budget spent when 1 fires</text>
-  <text class="tc" x="636" y="862.7" text-anchor="middle">R1 × L1 ÷ N1 = 2%</text>
-  <text class="tc" x="358" y="877.7">C2</text>
-  <text class="tc" x="464" y="877.7" text-anchor="middle">budget spent when 2 fires</text>
-  <text class="tc" x="636" y="877.7" text-anchor="middle">R2 × L2 ÷ N1 = 5%</text>
-  <text class="tc" x="358" y="892.7">C3</text>
-  <text class="tc" x="464" y="892.7" text-anchor="middle">budget spent when 3 fires</text>
-  <text class="tc" x="636" y="892.7" text-anchor="middle">R3 × L3 ÷ N1 = 10%</text>
-  <text class="tc" x="358" y="907.7">E1</text>
-  <text class="tc" x="464" y="907.7" text-anchor="middle">budget gone at R1</text>
-  <text class="tc" x="636" y="907.7" text-anchor="middle">N1 ÷ R1 = 50 h</text>
-  <text class="tc" x="358" y="922.7">E2</text>
-  <text class="tc" x="464" y="922.7" text-anchor="middle">budget gone at R2</text>
-  <text class="tc" x="636" y="922.7" text-anchor="middle">N1 ÷ R2 = 120 h</text>
-  <text class="tc" x="358" y="937.7">E3</text>
-  <text class="tc" x="464" y="937.7" text-anchor="middle">budget gone at R3</text>
-  <text class="tc" x="636" y="937.7" text-anchor="middle">N1 ÷ R3 = 720 h</text>
+  <text class="th" x="342" y="712.7">CODE</text>
+  <text class="th" x="460" y="712.7" text-anchor="middle">VARIABLE</text>
+  <text class="th" x="636" y="712.7" text-anchor="middle">VALUE</text>
+  <text class="tc" x="342" y="728">N1</text>
+  <text class="tc" x="460" y="728" text-anchor="middle">SLO window</text>
+  <text class="tc" x="636" y="728" text-anchor="middle">30 d = 720 h = 43,200 min</text>
+  <text class="tc" x="342" y="743">S1</text>
+  <text class="tc" x="460" y="743" text-anchor="middle">SLO target</text>
+  <text class="tc" x="636" y="743" text-anchor="middle">99.9%</text>
+  <text class="tc" x="342" y="758">B1</text>
+  <text class="tc" x="460" y="758" text-anchor="middle">error budget</text>
+  <text class="tc" x="636" y="758" text-anchor="middle">(1 − S1) × N1 = 43.2 min</text>
+  <text class="tc" x="342" y="773">R1</text>
+  <text class="tc" x="460" y="773" text-anchor="middle">burn rate, alert 1</text>
+  <text class="tc" x="636" y="773" text-anchor="middle">14.4</text>
+  <text class="tc" x="342" y="788">R2</text>
+  <text class="tc" x="460" y="788" text-anchor="middle">burn rate, alert 2</text>
+  <text class="tc" x="636" y="788" text-anchor="middle">6</text>
+  <text class="tc" x="342" y="803">R3</text>
+  <text class="tc" x="460" y="803" text-anchor="middle">burn rate, alert 3</text>
+  <text class="tc" x="636" y="803" text-anchor="middle">1</text>
+  <text class="tc" x="342" y="818">L1</text>
+  <text class="tc" x="460" y="818" text-anchor="middle">long window, alert 1</text>
+  <text class="tc" x="636" y="818" text-anchor="middle">1 h · short 5 min</text>
+  <text class="tc" x="342" y="833">L2</text>
+  <text class="tc" x="460" y="833" text-anchor="middle">long window, alert 2</text>
+  <text class="tc" x="636" y="833" text-anchor="middle">6 h · short 30 min</text>
+  <text class="tc" x="342" y="848">L3</text>
+  <text class="tc" x="460" y="848" text-anchor="middle">long window, alert 3</text>
+  <text class="tc" x="636" y="848" text-anchor="middle">72 h · short 6 h</text>
+  <text class="tc" x="342" y="863">C1</text>
+  <text class="tc" x="460" y="863" text-anchor="middle">budget spent when 1 fires</text>
+  <text class="tc" x="636" y="863" text-anchor="middle">R1 × L1 ÷ N1 = 2%</text>
+  <text class="tc" x="342" y="878">C2</text>
+  <text class="tc" x="460" y="878" text-anchor="middle">budget spent when 2 fires</text>
+  <text class="tc" x="636" y="878" text-anchor="middle">R2 × L2 ÷ N1 = 5%</text>
+  <text class="tc" x="342" y="893">C3</text>
+  <text class="tc" x="460" y="893" text-anchor="middle">budget spent when 3 fires</text>
+  <text class="tc" x="636" y="893" text-anchor="middle">R3 × L3 ÷ N1 = 10%</text>
+  <text class="tc" x="342" y="908">E1</text>
+  <text class="tc" x="460" y="908" text-anchor="middle">budget gone at R1</text>
+  <text class="tc" x="636" y="908" text-anchor="middle">N1 ÷ R1 = 50 h</text>
+  <text class="tc" x="342" y="923">E2</text>
+  <text class="tc" x="460" y="923" text-anchor="middle">budget gone at R2</text>
+  <text class="tc" x="636" y="923" text-anchor="middle">N1 ÷ R2 = 120 h</text>
+  <text class="tc" x="342" y="938">E3</text>
+  <text class="tc" x="460" y="938" text-anchor="middle">budget gone at R3</text>
+  <text class="tc" x="636" y="938" text-anchor="middle">N1 ÷ R3 = 720 h</text>
 </svg>
