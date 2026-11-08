@@ -4,9 +4,9 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { BOOKS } from "./books";
 import { BOOKS_INDEX_SCENE, BOOK_SCENES, POST_SCENES } from "./scene/scenes";
-import { REST } from "./scene/iso";
+import { REST, project } from "./scene/iso";
 import { scenes } from "./scene/scenes";
-import { levels, rasterize } from "./scene/raster";
+import { tiles } from "./scene/raster";
 
 describe("drafts", () => {
   it("treats a post dated after the build as a draft until then", () => {
@@ -66,17 +66,19 @@ describe("book covers", () => {
   });
 });
 
-describe("scene rasterizer", () => {
+describe("scene tiles", () => {
   it("draws every scene with visible tiles and some accent", () => {
     for (const [name, fn] of Object.entries(scenes)) {
-      const { field } = rasterize(fn(REST), 120, 90, 0);
-      const lv = levels(field);
+      const scene = fn(REST);
+      const ts = tiles(scene, project(scene.ext, 600, 450), 600, 450, {
+        pitch: 5,
+        gap: 1.5,
+        px: 1,
+        light: 0,
+      });
+      expect(ts.length, name).toBeGreaterThan(0);
       expect(
-        lv.some((v) => v > 0),
-        name,
-      ).toBe(true);
-      expect(
-        field.acc.some((v) => v > 0),
+        ts.some((t) => t.mark > 0),
         name,
       ).toBe(true);
     }

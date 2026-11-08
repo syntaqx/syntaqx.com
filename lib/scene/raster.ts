@@ -1,16 +1,15 @@
-import { cylSide, circle, project, type Projector, type Scene, type V2, type V3 } from "./iso";
+import { CYL_FRONT, cylSide, circle, type Projector, type Scene, type V2, type V3 } from "./iso";
 
 /*
- * Cell-space rasterization shared by the live canvas and the OG renderer.
- * One cell is one dither tile. No DOM: plain typed arrays and scanlines.
+ * Tile geometry shared by the live canvas and the OG renderer. Every solid
+ * face gets its own grid that fits it exactly (parallelograms on box faces
+ * and planes, columns around cylinder sides, rings on their tops), so tile
+ * rows run parallel to the outline and no tile crosses an edge. The haze
+ * behind the drawing stays a plain screen grid. No DOM: plain arrays.
  */
 
-export interface Field {
-  cols: number;
-  rows: number;
-  lum: Float32Array;
-  acc: Uint8Array;
-}
+/** Gap between tiles, as a share of the pitch. */
+export const GAP = 0.3;
 
 export const LEVELS = 4;
 /** Level value for the brightest accent tiles. */
@@ -47,97 +46,115 @@ const hash = (x: number, y: number) => {
   return s - Math.floor(s);
 };
 
-/** Even-odd scanline fill at cell centers. `fn` receives the cell index. */
-export function scan(pts: V2[], cols: number, rows: number, fn: (i: number) => void) {
-  let minY = Infinity;
-  let maxY = -Infinity;
-  for (const [, y] of pts) {
-    minY = Math.min(minY, y);
-    maxY = Math.max(maxY, y);
-  }
-  const y0 = Math.max(0, Math.ceil(minY - 0.5));
-  const y1 = Math.min(rows - 1, Math.floor(maxY - 0.5));
-  const xs: number[] = [];
-  for (let j = y0; j <= y1; j++) {
-    const yc = j + 0.5;
-    xs.length = 0;
-    for (let k = 0; k < pts.length; k++) {
-      const [ax, ay] = pts[k];
-      const [bx, by] = pts[(k + 1) % pts.length];
-      if ((ay <= yc && by > yc) || (by <= yc && ay > yc)) {
-        xs.push(ax + ((yc - ay) / (by - ay)) * (bx - ax));
-      }
-    }
-    xs.sort((a, b) => a - b);
-    for (let k = 0; k + 1 < xs.length; k += 2) {
-      const a = Math.max(0, Math.ceil(xs[k] - 0.5));
-      const b = Math.min(cols - 1, Math.floor(xs[k + 1] - 0.5));
-      for (let i = a; i <= b; i++) fn(j * cols + i);
-    }
-  }
+/** A tile: its outline in output units and its level (1..LEVELS, HOT, WARN, GOOD, ORANGE). */
+export interface Tile {
+  pts: V2[];
+  lv: number;
+  /** The face's color mark: 0 plain, 1 accent, 2 warn, 3 good, 4 orange. */
+  mark: number;
 }
 
-/** Luminance + accent mask for a scene at cols×rows cells. */
-export function rasterize(
-  scene: Scene,
-  cols: number,
-  rows: number,
-  light: number,
-  wide = false,
-): { field: Field; P: Projector } {
-  const P = project(scene.ext, cols, rows, wide);
-  const lum = new Float32Array(cols * rows);
-  const acc = new Uint8Array(cols * rows);
+/** A face as a parametric surface in output units, u and v in 0..1. */
+interface Face {
+  fn: (u: number, v: number) => V2;
+  outline: V2[];
+  bounds: [number, number, number, number];
+  nu: number;
+  nv: number;
+  /** Discs: concentric rings instead of a u×v grid. */
+  rings?: number;
+  /** Points per u edge of a cell; more for curved surfaces. */
+  steps: number;
+  tone: (u: number) => number;
+  /** 0 plain, 1 accent, 2 warn, 3 good, 4 orange */
+  mark: number;
+}
 
-  // Haze: a soft elliptical glow behind the drawing, which dithers to a
-  // sparse field. It reaches zero inside the frame, so there's no hard edge.
-  const cx = cols * (wide ? 0.68 : 0.5);
-  const cy = rows * 0.5;
-  const rx = cols * (wide ? 0.32 : 0.5);
-  const ry = rows * 0.5;
-  for (let j = 0; j < rows; j++)
-    for (let i = 0; i < cols; i++) {
-      const d = Math.hypot((i + 0.5 - cx) / rx, (j + 0.5 - cy) / ry);
-      lum[j * cols + i] =
-        d < 0.55 ? 0.25 - (d / 0.55) * 0.18 : d < 0.95 ? 0.07 * (1 - (d - 0.55) / 0.4) : 0;
-    }
+const dist = (a: V2, b: V2) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
-  // Coverage is sampled S×S per cell. Only cells wholly inside a face take
-  // its tone; cells an edge cuts through are cleared, so no tile crosses an
-  // outline and every line runs in a clean channel.
-  const S = 4;
-  const cover = new Uint8Array(cols * rows);
-  const touched: number[] = [];
-  // mark: 0 plain, 1 accent, 2 warn, 3 good, 4 orange
-  const fill = (pts: V3[], v: number, mark = 0, alpha = 1) => {
-    const sub = pts.map((p): V2 => {
-      const [x, y] = P(p);
-      return [x * S, y * S];
-    });
-    scan(sub, cols * S, rows * S, (k) => {
-      const sx = k % (cols * S);
-      const i = Math.floor((k - sx) / (cols * S) / S) * cols + Math.floor(sx / S);
-      if (!cover[i]++) touched.push(i);
-    });
-    for (const i of touched) {
-      if (cover[i] === S * S) {
-        lum[i] = lum[i] * (1 - alpha) + v * alpha;
-        acc[i] = mark;
-      } else {
-        lum[i] = 0;
-        acc[i] = 0;
-      }
-      cover[i] = 0;
-    }
-    touched.length = 0;
+const bilerp =
+  (A: V2, B: V2, C: V2, D: V2) =>
+  (u: number, v: number): V2 => [
+    A[0] + (B[0] - A[0]) * u + (D[0] - A[0]) * v + (A[0] - B[0] + C[0] - D[0]) * u * v,
+    A[1] + (B[1] - A[1]) * u + (D[1] - A[1]) * v + (A[1] - B[1] + C[1] - D[1]) * u * v,
+  ];
+
+/** Length of a face's u (or v) line at a fixed value of the other parameter. */
+function arcLen(fn: Face["fn"], along: "u" | "v", at: number, n = 16) {
+  let len = 0;
+  let prev = along === "u" ? fn(0, at) : fn(at, 0);
+  for (let k = 1; k <= n; k++) {
+    const p = along === "u" ? fn(k / n, at) : fn(at, k / n);
+    len += dist(prev, p);
+    prev = p;
+  }
+  return len;
+}
+
+function bounds(pts: V2[]): Face["bounds"] {
+  let x0 = Infinity;
+  let y0 = Infinity;
+  let x1 = -Infinity;
+  let y1 = -Infinity;
+  for (const [x, y] of pts) {
+    x0 = Math.min(x0, x);
+    y0 = Math.min(y0, y);
+    x1 = Math.max(x1, x);
+    y1 = Math.max(y1, y);
+  }
+  return [x0, y0, x1, y1];
+}
+
+function inside(f: Face, x: number, y: number) {
+  const [x0, y0, x1, y1] = f.bounds;
+  if (x < x0 || x > x1 || y < y0 || y > y1) return false;
+  const pts = f.outline;
+  let c = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i];
+    const [xj, yj] = pts[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+
+/** Lambert-ish tone for a cylinder column facing world angle `th`. */
+function cylTone(th: number, lit: boolean, light: number) {
+  const thL = Math.PI / 2 - (light + 1) * (Math.PI / 4) - 0.2;
+  const s = Math.max(0, Math.cos(th - thL));
+  return lit ? 0.35 + 0.6 * s : 0.12 + 0.48 * s;
+}
+
+function quadFace(pts: V2[], g: number, tone: number, mark: number): Face {
+  const fn = bilerp(pts[0], pts[1], pts[2], pts[3]);
+  return {
+    fn,
+    outline: pts,
+    bounds: bounds(pts),
+    nu: Math.max(1, Math.round(dist(pts[0], pts[1]) / g)),
+    nv: Math.max(1, Math.round(dist(pts[0], pts[3]) / g)),
+    steps: 1,
+    tone: () => tone,
+    mark,
   };
+}
 
+/** The scene's solid faces in painter's order, in output units. */
+function faces(scene: Scene, P: Projector, g: number, light: number): Face[] {
+  const out: Face[] = [];
   for (const p of scene.parts) {
-    if (p.kind === "plane" && !p.dashed) fill(p.pts, p.v, 0, 0.82);
+    if (p.kind === "plane" && !p.dashed) {
+      const pts = p.pts.map(P);
+      const tone = p.v + 0.03;
+      if (pts.length === 4) out.push(quadFace(pts, g, tone, 0));
+      // Any other polygon: a fan of triangles, each a quad with a collapsed corner.
+      else
+        for (let k = 1; k + 1 < pts.length; k++)
+          out.push(quadFace([pts[0], pts[k], pts[k + 1], pts[k + 1]], g, tone, 0));
+    }
     if (p.kind === "box" && !p.ghost) {
       const b = p.box;
-      // soft: a colored outline over a plain fill, for any of the three colors
-      const lit = !p.soft && (p.accent || p.warn || p.good || p.orange);
+      const lit = !p.soft && !!(p.accent || p.warn || p.good || p.orange);
       const mark =
         p.soft && (p.warn || p.good || p.orange)
           ? 0
@@ -150,46 +167,241 @@ export function rasterize(
                 : p.accent
                   ? 1
                   : 0;
-      const k = lit ? 1 : 0.85;
-      fill(b.left, (0.42 - light * 0.2) * k + (lit ? 0.2 : 0), mark);
-      fill(b.right, (0.24 + light * 0.2) * k + (lit ? 0.15 : 0), mark);
-      fill(b.top, lit ? 1 : 0.6, mark);
+      // Three tones: light top, mid left, dark right; the pointer swings left and right.
+      out.push(quadFace(b.left.map(P), g, (lit ? 0.66 : 0.42) - light * 0.16, mark));
+      out.push(quadFace(b.right.map(P), g, (lit ? 0.44 : 0.2) + light * 0.16, mark));
+      out.push(quadFace(b.top.map(P), g, lit ? 1 : 0.7, mark));
     }
     if (p.kind === "cyl") {
-      const lit = !p.soft && (p.accent || p.warn || p.good);
+      const lit = !p.soft && !!(p.accent || p.warn || p.good);
       const mark = lit ? (p.warn ? 2 : p.good ? 3 : 1) : 0;
-      fill(cylSide(p), lit ? 0.6 : 0.34 + light * 0.08, mark);
-      fill(circle(p.cx, p.cy, p.z + p.h, p.rt ?? p.r), lit ? 1 : 0.58, mark);
+      const rt = p.rt ?? p.r;
+      const [f0, f1] = CYL_FRONT;
+      const side = (u: number, v: number) => {
+        const th = f0 + (f1 - f0) * u;
+        const r = p.r + (rt - p.r) * v;
+        return P([p.cx + r * Math.cos(th), p.cy + r * Math.sin(th), p.z + p.h * v]);
+      };
+      const so = cylSide(p).map(P);
+      out.push({
+        fn: side,
+        outline: so,
+        bounds: bounds(so),
+        nu: Math.max(1, Math.round(arcLen(side, "u", 0.5) / g)),
+        nv: Math.max(1, Math.round(arcLen(side, "v", 0.5, 2) / g)),
+        steps: 4,
+        tone: (u) => cylTone(f0 + (f1 - f0) * u, lit, light),
+        mark,
+      });
+      const top = (u: number, v: number) => {
+        const th = Math.PI * 2 * u;
+        const r = rt * v;
+        return P([p.cx + r * Math.cos(th), p.cy + r * Math.sin(th), p.z + p.h] as V3);
+      };
+      const to = circle(p.cx, p.cy, p.z + p.h, rt).map(P);
+      out.push({
+        fn: top,
+        outline: to,
+        bounds: bounds(to),
+        nu: 1,
+        nv: 1,
+        rings: Math.max(1, Math.round(arcLen(top, "v", 0.125, 2) / g)),
+        steps: 1,
+        tone: () => (lit ? 1 : 0.7),
+        mark,
+      });
     }
   }
-  return { field: { cols, rows, lum, acc }, P };
+  return out;
 }
 
-/**
- * Quantize the field into tonal levels with ordered dithering between them.
- * 0 = empty, 1..LEVELS = teal tints, HOT = brightest accent. `twinkle`
- * reseeds the sparse background cells so they slowly shimmer.
- */
-export function levels(field: Field, twinkle = 0): Uint8Array {
-  const { cols, rows, lum, acc } = field;
-  const out = new Uint8Array(cols * rows);
-  for (let y = 0; y < rows; y++)
-    for (let x = 0; x < cols; x++) {
-      const i = y * cols + x;
-      let v = lum[i];
-      if (v > 0.005 && v < 0.1 && hash(x + twinkle * 3, y) > 0.985 - v * 0.2) v = 0.2;
-      const lv = Math.min(LEVELS, Math.floor(v * LEVELS + BAYER[y & 7][x & 7] - 0.5));
-      if (lv <= 0) continue;
-      out[i] =
-        acc[i] === 2
-          ? WARN
-          : acc[i] === 3
-            ? GOOD
-            : acc[i] === 4
-              ? ORANGE
-              : acc[i] && lv >= LEVELS
-                ? HOT
-                : lv;
+interface Edge {
+  l?: boolean;
+  r?: boolean;
+  b?: boolean;
+  t?: boolean;
+  /** A whole disc: no gap around u. */
+  closed?: boolean;
+  /** The center of a disc: no gap at v = 0. */
+  center?: boolean;
+}
+
+/** One cell of a face, inset by half the gap (by `margin` along the face's outline). */
+function cell(
+  fn: Face["fn"],
+  u0: number,
+  u1: number,
+  v0: number,
+  v1: number,
+  edge: Edge,
+  steps: number,
+  gap: number,
+  margin: number,
+  min: number,
+): V2[] | null {
+  const um = (u0 + u1) / 2;
+  const vm = (v0 + v1) / 2;
+  const lu = dist(fn(u0, vm), fn(u1, vm));
+  const lv = dist(fn(um, v0), fn(um, v1));
+  if (lu < 0.5 || lv < 0.5) return null;
+  const du = (u1 - u0) / lu;
+  const dv = (v1 - v0) / lv;
+  const a0 = edge.closed ? u0 : u0 + (edge.l ? margin : gap / 2) * du;
+  const a1 = edge.closed ? u1 : u1 - (edge.r ? margin : gap / 2) * du;
+  const b0 = v0 + (edge.b ? margin : edge.center ? 0 : gap / 2) * dv;
+  const b1 = v1 - (edge.t ? margin : gap / 2) * dv;
+  if ((a1 - a0) / du < min || (b1 - b0) / dv < min)
+    // A sliver face (a thin spine): keep one tile with just the half-gap inset.
+    return margin > gap / 2 ? cell(fn, u0, u1, v0, v1, edge, steps, gap, gap / 2, min) : null;
+  const pts: V2[] = [];
+  for (let k = 0; k <= steps; k++) pts.push(fn(a0 + ((a1 - a0) * k) / steps, b0));
+  for (let k = 0; k <= steps; k++) pts.push(fn(a1 - ((a1 - a0) * k) / steps, b1));
+  return pts;
+}
+
+/** Visit a face's cells: a u×v grid, or rings of segments for a disc. */
+function eachCell(
+  f: Face,
+  cb: (
+    u0: number,
+    u1: number,
+    v0: number,
+    v1: number,
+    i: number,
+    j: number,
+    e: Edge,
+    steps: number,
+  ) => void,
+) {
+  if (f.rings) {
+    const n = f.rings;
+    for (let k = 0; k < n; k++) {
+      const ns = k === 0 ? 1 : Math.max(6, Math.round(Math.PI * 2 * (k + 0.5)));
+      for (let s = 0; s < ns; s++)
+        cb(
+          s / ns,
+          (s + 1) / ns,
+          k / n,
+          (k + 1) / n,
+          s,
+          k,
+          { closed: ns === 1, center: k === 0, t: k === n - 1 },
+          ns === 1 ? 20 : Math.max(2, Math.ceil(24 / ns)),
+        );
     }
+    return;
+  }
+  for (let j = 0; j < f.nv; j++)
+    for (let i = 0; i < f.nu; i++)
+      cb(
+        i / f.nu,
+        (i + 1) / f.nu,
+        j / f.nv,
+        (j + 1) / f.nv,
+        i,
+        j,
+        { l: i === 0, r: i === f.nu - 1, b: j === 0, t: j === f.nv - 1 },
+        f.steps,
+      );
+}
+
+const dither = (t: number, i: number, j: number) =>
+  Math.min(LEVELS, Math.floor(t * LEVELS + BAYER[j & 7][i & 7] - 0.5));
+
+const level = (lv: number, mark: number) =>
+  mark === 2 ? WARN : mark === 3 ? GOOD : mark === 4 ? ORANGE : mark && lv >= LEVELS ? HOT : lv;
+
+/**
+ * Tiles for a scene drawn through `P` onto a w×h surface: the haze behind it,
+ * then each face's tiles in painter's order. A tile any later face covers is
+ * dropped, so nearer solids hide farther ones without cutting a tile in two.
+ * `pitch` and `gap` are in output units; `px` is one CSS pixel in them.
+ * `twinkle` reseeds the sparse haze so it slowly shimmers.
+ */
+export function tiles(
+  scene: Scene,
+  P: Projector,
+  w: number,
+  h: number,
+  o: { pitch: number; gap: number; px: number; light: number; twinkle?: number; wide?: boolean },
+): Tile[] {
+  const g = o.pitch;
+  const margin = o.gap + 0.9 * o.px;
+  const fs = faces(scene, P, g, o.light);
+  const out: Tile[] = [];
+  const pad = o.gap / 2;
+  // Faces bucketed on a coarse grid (indices ascending), so a corner only
+  // tests the faces that could contain it.
+  const B = g * 8;
+  const bc = Math.ceil(w / B) + 1;
+  const br = Math.ceil(h / B) + 1;
+  const buckets: number[][] = Array.from({ length: bc * br }, () => []);
+  const bucket = (x: number, y: number) =>
+    Math.min(bc - 1, Math.max(0, Math.floor(x / B))) +
+    Math.min(br - 1, Math.max(0, Math.floor(y / B))) * bc;
+  fs.forEach((f, n) => {
+    const [x0, y0, x1, y1] = f.bounds;
+    const a = bucket(x0, y0);
+    const b = bucket(x1, y1);
+    for (let r = Math.floor(a / bc); r <= Math.floor(b / bc); r++)
+      for (let c = a % bc; c <= b % bc; c++) buckets[r * bc + c].push(n);
+  });
+  // Covered if any corner, pushed out by half a gap, lands inside a face from `from` on.
+  const covered = (pts: V2[], from: number) => {
+    let cx = 0;
+    let cy = 0;
+    for (const [x, y] of pts) {
+      cx += x;
+      cy += y;
+    }
+    cx /= pts.length;
+    cy /= pts.length;
+    for (const [px, py] of pts) {
+      const d = Math.hypot(px - cx, py - cy) || 1;
+      const x = px + ((px - cx) / d) * pad;
+      const y = py + ((py - cy) / d) * pad;
+      const list = buckets[bucket(x, y)];
+      for (let k = list.length - 1; k >= 0 && list[k] >= from; k--)
+        if (inside(fs[list[k]], x, y)) return true;
+    }
+    return false;
+  };
+
+  // Haze: a soft elliptical glow behind the drawing, which dithers to a
+  // sparse field. It reaches zero inside the frame, so there's no hard edge.
+  const cols = Math.ceil(w / g);
+  const rows = Math.ceil(h / g);
+  const hx = cols * (o.wide ? 0.68 : 0.5);
+  const hy = rows * 0.5;
+  const rx = cols * (o.wide ? 0.32 : 0.5);
+  const ry = rows * 0.5;
+  const tw = o.twinkle ?? 0;
+  const size = Math.max(0.5, g - o.gap);
+  for (let j = 0; j < rows; j++)
+    for (let i = 0; i < cols; i++) {
+      const d = Math.hypot((i + 0.5 - hx) / rx, (j + 0.5 - hy) / ry);
+      let v = d < 0.55 ? 0.25 - (d / 0.55) * 0.18 : d < 0.95 ? 0.07 * (1 - (d - 0.55) / 0.4) : 0;
+      if (v > 0.005 && v < 0.1 && hash(i + tw * 3, j) > 0.985 - v * 0.2) v = 0.2;
+      const lv = dither(v, i, j);
+      if (lv <= 0) continue;
+      const x = i * g;
+      const y = j * g;
+      const pts: V2[] = [
+        [x, y],
+        [x + size, y],
+        [x + size, y + size],
+        [x, y + size],
+      ];
+      if (!covered(pts, 0)) out.push({ pts, lv, mark: 0 });
+    }
+
+  fs.forEach((f, n) =>
+    eachCell(f, (u0, u1, v0, v1, i, j, e, steps) => {
+      const lv = dither(f.tone((u0 + u1) / 2), i, j);
+      if (lv <= 0) return;
+      const pts = cell(f.fn, u0, u1, v0, v1, e, steps, o.gap, margin, 0.7 * o.px);
+      if (pts && !covered(pts, n + 1)) out.push({ pts, lv: level(lv, f.mark), mark: f.mark });
+    }),
+  );
   return out;
 }

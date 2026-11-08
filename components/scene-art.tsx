@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { project, type SceneState, type V2 } from "@/lib/scene/iso";
-import { GOOD, HOT, LEVELS, ORANGE, WARN, levels, rasterize } from "@/lib/scene/raster";
+import { GAP, GOOD, HOT, LEVELS, ORANGE, WARN, tiles } from "@/lib/scene/raster";
 import { sceneAt, type SceneName } from "@/lib/scene/scenes";
 import { walk, type Ink, type Pen } from "@/lib/scene/walk";
 import { cn } from "@/lib/cn";
@@ -291,20 +291,24 @@ export function SceneArt({
       const data = sceneAt(scene, st);
       const park = wide && cw >= 640;
 
-      // Tiles: rasterize at one cell per `grain` CSS px.
-      const cols = Math.ceil(cw / grain);
-      const rows = Math.ceil(canvas.clientHeight / grain);
-      const { field } = rasterize(data, cols, rows, st.light, park);
-      const lv = levels(field, reduce ? 0 : Math.floor(st.t * 2));
+      // Tiles: one per `grain` CSS px, laid on each face's own grid.
+      const P = project(data.ext, W, H, park);
+      const ts = tiles(data, P, W, H, {
+        pitch: grain * dpr,
+        gap: grain * GAP * dpr,
+        px: dpr,
+        light: st.light,
+        twinkle: reduce ? 0 : Math.floor(st.t * 2),
+        wide: park,
+      });
       ctx.fillStyle = css(pal.bg);
       ctx.fillRect(0, 0, W, H);
-      const size = (grain - (grain >= 5 ? 1 : 0.6)) * dpr;
       const paths = Array.from({ length: ORANGE + 1 }, () => new Path2D());
-      for (let y = 0; y < rows; y++)
-        for (let x = 0; x < cols; x++) {
-          const v = lv[y * cols + x];
-          if (v) paths[v].rect(x * grain * dpr, y * grain * dpr, size, size);
-        }
+      for (const { pts, lv } of ts) {
+        const p = paths[lv];
+        pts.forEach(([x, y], i) => (i ? p.lineTo(x, y) : p.moveTo(x, y)));
+        p.closePath();
+      }
       for (let k = 1; k <= LEVELS; k++) {
         ctx.fillStyle = css(pal.ramp[k - 1]);
         ctx.fill(paths[k]);
@@ -327,7 +331,7 @@ export function SceneArt({
       const notes: { x: number; y: number; w: number; h: number }[] = [];
       walk(
         data,
-        project(data.ext, W, H, park),
+        P,
         canvasPen(lctx, pal, dpr, W, H, (r) => notes.push(r)),
         st,
       );
