@@ -1,5 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { beforeAll, describe, it, expect } from "vitest";
 import { search, searchDetailed } from "@/lib/knowledge";
+import { getIndex } from "@/lib/knowledge-index";
+
+// The index takes seconds to build on CI; build it before the first case.
+beforeAll(() => void getIndex(), 60_000);
 
 /**
  * Search quality over the real content: questions phrased the way people
