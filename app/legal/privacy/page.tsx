@@ -164,6 +164,7 @@ export default function PrivacyPage() {
       intro="syntaqx.com is my personal site. I try to collect as little as possible. This page lists what I actually collect, why, and who else sees it."
       glance={glance}
       sections={sections}
+      other={TERMS}
       prev={{ href: TERMS.href, label: "Legal", title: TERMS.title }}
     />
   );

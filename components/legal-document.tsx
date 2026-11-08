@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Check } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { DocsToc } from "@/components/docs-toc";
+import { PostToc } from "@/components/post-toc";
 import { Pager, type Neighbor } from "@/components/pager";
 import type { LegalDoc } from "@/lib/legal";
 
@@ -17,15 +18,17 @@ export interface GlanceItem {
 }
 
 /**
- * A legal document in the site's reading layout: the page header, an "At a
- * glance" summary of what it says, numbered sections in the prose measure,
- * an "On this page" rail from xl, and the other document at the foot.
+ * A legal document in the posts' reading layout, since there's no sidebar:
+ * contents on the left, the reading column centered, details on the right.
+ * Under the header, an "At a glance" summary of what it says, then numbered
+ * sections, then the other document.
  */
 export function LegalDocument({
   doc,
   intro,
   glance,
   sections,
+  other,
   prev,
   next,
 }: {
@@ -34,62 +37,88 @@ export function LegalDocument({
   /** Each line restates something the document says; an even count fills the grid. */
   glance: GlanceItem[];
   sections: LegalSection[];
+  /** The other legal document, for the details rail. */
+  other: LegalDoc;
   prev?: Neighbor;
   next?: Neighbor;
 }) {
   return (
-    <article className="xl:grid xl:grid-cols-[minmax(0,1fr)_11rem] xl:gap-10">
-      <div className="min-w-0">
-        <PageHeader label="legal" title={doc.title}>
-          <p>{intro}</p>
-          <p className="inst mt-6 flex flex-wrap gap-x-5 gap-y-1 text-muted-foreground">
-            <span>Updated {doc.updated}</span>
-            <span>{sections.length} sections</span>
-          </p>
-        </PageHeader>
+    <article>
+      <PageHeader label="legal" title={doc.title}>
+        <p>{intro}</p>
+      </PageHeader>
 
-        <section aria-labelledby="at-a-glance" className="mb-14 max-w-176 border border-border">
-          <h2
-            id="at-a-glance"
-            className="inst border-b border-border bg-card px-5 py-3 text-muted-foreground"
-          >
-            At a glance
-          </h2>
-          <ul className="grid gap-px bg-border sm:grid-cols-2">
-            {glance.map((g) => (
-              <li key={g.title} className="flex gap-3 bg-background px-5 py-4">
-                <Check aria-hidden className="mt-1 size-4 shrink-0 text-primary" />
-                <div>
-                  <p className="text-foreground">{g.title}</p>
-                  <p className="mt-0.5 text-sm text-muted-foreground">{g.detail}</p>
-                </div>
-              </li>
+      {/* Contents | reading column | details, as on a post. */}
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,16rem)_minmax(0,44rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,44rem)_minmax(0,1fr)]">
+        <PostToc headings={sections.map((s) => ({ id: s.id, text: s.title }))} />
+
+        <div className="min-w-0" data-toc-body>
+          <section aria-labelledby="at-a-glance" className="mb-12 border border-border">
+            <h2
+              id="at-a-glance"
+              className="inst border-b border-border bg-card px-5 py-3 text-muted-foreground"
+            >
+              At a glance
+            </h2>
+            <ul className="grid gap-px bg-border sm:grid-cols-2">
+              {glance.map((g) => (
+                <li key={g.title} className="flex gap-3 bg-background px-5 py-4">
+                  <Check aria-hidden className="mt-1 size-4 shrink-0 text-primary" />
+                  <div>
+                    <p className="text-foreground">{g.title}</p>
+                    <p className="mt-0.5 text-sm text-muted-foreground">{g.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <div className="prose">
+            {sections.map((s) => (
+              <section key={s.id}>
+                <h2 id={s.id}>
+                  {s.title}
+                  <a href={`#${s.id}`} className="heading-anchor" aria-label={`Link to ${s.title}`}>
+                    #
+                  </a>
+                </h2>
+                {s.body}
+              </section>
             ))}
-          </ul>
-        </section>
+          </div>
 
-        <div className="prose">
-          {sections.map((s) => (
-            <section key={s.id}>
-              <h2 id={s.id}>
-                {s.title}
-                <a href={`#${s.id}`} className="heading-anchor" aria-label={`Link to ${s.title}`}>
-                  #
-                </a>
-              </h2>
-              {s.body}
-            </section>
-          ))}
+          <Pager prev={prev} next={next} />
         </div>
 
-        <Pager prev={prev} next={next} />
+        <aside className="hidden self-start xl:sticky xl:top-24 xl:grid xl:gap-8">
+          <dl className="border-t border-border">
+            {[
+              ["updated", doc.updated],
+              ["sections", String(sections.length)],
+              ["covers", "syntaqx.com"],
+              ["owner", "Chase Pierce"],
+            ].map(([k, v]) => (
+              <div
+                key={k}
+                className="flex items-baseline justify-between gap-4 border-b border-border py-2.5"
+              >
+                <dt className="inst text-muted-foreground">{k}</dt>
+                <dd className="text-sm text-foreground">{v}</dd>
+              </div>
+            ))}
+          </dl>
+          <nav aria-label="Also">
+            <p className="inst mb-1 text-muted-foreground">also</p>
+            <Link
+              href={other.href}
+              className="flex items-baseline justify-between gap-4 border-y border-border py-2.5 text-sm text-foreground transition-colors hover:text-primary"
+            >
+              {other.title}
+              <span className="inst text-muted-foreground">{other.updated}</span>
+            </Link>
+          </nav>
+        </aside>
       </div>
-      <aside className="hidden xl:block">
-        <DocsToc
-          headings={sections.map((s) => ({ id: s.id, text: s.title }))}
-          className="rail-scroll sticky top-16 max-h-[calc(100vh-5rem)] overflow-y-auto"
-        />
-      </aside>
     </article>
   );
 }

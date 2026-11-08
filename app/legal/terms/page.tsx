@@ -109,6 +109,7 @@ export default function TermsPage() {
       intro="syntaqx.com is my personal site. By using it, you agree to these terms. If you don't, don't use the site."
       glance={glance}
       sections={sections}
+      other={PRIVACY}
       next={{ href: PRIVACY.href, label: "Legal", title: PRIVACY.title }}
     />
   );
