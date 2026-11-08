@@ -1,0 +1,25 @@
+name: Accessibility
+
+# Once Vercel finishes a deployment (a PR's preview, or production), run axe
+# against it: one page per route pattern, dark and light, desktop and 320px.
+# See https://www.syntaqx.com/docs/frontend/accessibility#testing
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  axe:
+    name: Accessibility
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Event data goes through the environment, never straight into a script.
+      TARGET: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+      - run: npx playwright install --with-deps chromium
+      - run: npm run a11y -- "$TARGET"

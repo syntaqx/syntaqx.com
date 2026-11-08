@@ -211,14 +211,19 @@ export default function RootLayout({
                   href={`https://github.com/syntaqx/syntaqx.com/commit/${build.sha}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  // The name starts with what's shown, so it can be spoken (WCAG 2.5.3).
-                  aria-label={`${build.sha.slice(0, 7)}${build.dirty ? "-dirty" : ""}${build.label ? ` ${build.label}` : ""}: ${build.label === "dev" ? "development build" : "deployed commit"}${build.dirty ? " with uncommitted changes" : ""} on GitHub`}
                   className="flex items-center gap-2 font-mono text-[0.65rem] transition-colors hover:text-foreground"
                 >
+                  {/* The visible text is the name, so it can be spoken to select
+                      the link (WCAG 2.5.3); the rest is read, not shown. */}
                   <span aria-hidden className="tick" />
-                  {build.sha.slice(0, 7)}
-                  {build.dirty && "-dirty"}
+                  <span>
+                    {build.sha.slice(0, 7)}
+                    {build.dirty && "-dirty"}
+                  </span>
                   {build.label && <span className="text-primary uppercase">{build.label}</span>}
+                  <span className="sr-only">
+                    {`, ${build.label === "dev" ? "development build" : "deployed commit"}${build.dirty ? " with uncommitted changes" : ""} on GitHub`}
+                  </span>
                 </a>
               )}
             </div>
