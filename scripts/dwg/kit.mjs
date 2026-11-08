@@ -22,11 +22,14 @@ const esc = (s) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
+/** Round any long decimals inside a string attribute (hand-built path data). */
+const roundIn = (v) => String(v).replace(/-?\d*\.\d{3,}/g, (n) => f(Number(n)));
+
 /** One element. `attrs` with null/undefined values are skipped; numbers are rounded. */
 export function el(tag, attrs = {}, inner) {
   const a = Object.entries(attrs)
     .filter(([, v]) => v != null && v !== false)
-    .map(([k, v]) => ` ${k}="${typeof v === "number" ? f(v) : esc(v)}"`)
+    .map(([k, v]) => ` ${k}="${typeof v === "number" ? f(v) : esc(roundIn(v))}"`)
     .join("");
   return inner == null ? `<${tag}${a}/>` : `<${tag}${a}>${inner}</${tag}>`;
 }
@@ -48,10 +51,11 @@ export const text = (x, y, s, cls, anchor, extra = {}) =>
  * class's letter-spacing in em. Deliberately a little generous so layout
  * leaves room; used for wrapping notes and sizing table columns.
  */
-export function textWidth(s, size, tracking = 0, caps = false) {
+export function textWidth(s, size, tracking = 0, caps = false, mono = false) {
   let w = 0;
   for (const ch of caps ? String(s).toUpperCase() : String(s)) {
-    if (ch === " ") w += 0.28;
+    if (mono) w += 0.6;
+    else if (ch === " ") w += 0.28;
     else if (/[MW]/.test(ch)) w += 0.86;
     else if (/[A-Z]/.test(ch)) w += 0.68;
     else if (/[0-9]/.test(ch)) w += 0.58;
@@ -64,18 +68,19 @@ export function textWidth(s, size, tracking = 0, caps = false) {
   return w * size;
 }
 
-// Font metrics of the kit's text classes (size, tracking em, caps); keep in
-// step with app/globals.css.
+// Font metrics of the kit's text classes (size, tracking em, caps, mono);
+// keep in step with app/globals.css. Nothing is set below 9: at the docs
+// column a sheet renders a little under 1:1.
 export const TYPE = {
   vt: [11, 0.08, true],
-  vs: [8.5, 0.06, true],
-  sl: [8.5, 0.06, true],
+  vs: [10, 0.06, true],
+  sl: [10, 0.06, true],
   lt: [10, 0.08, true],
   dt: [10, 0.03, false],
-  nt: [9, 0.06, true],
+  nt: [10, 0.06, true],
   nth: [10, 0.06, true],
-  th: [7.5, 0.08, true],
-  tc: [9, 0.02, false],
+  th: [9, 0.08, true],
+  tc: [10, 0, false, true],
 };
 export const widthOf = (s, cls) => textWidth(s, ...TYPE[cls.split(" ")[0]]);
 
@@ -105,12 +110,11 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       },
       el("path", { class: cls, d: "M0,1.6L10,5L0,8.4Z" }),
     );
-  const defs = el(
-    "defs",
-    {},
+  const defList = [
+    [id("ah"), marker("ah", "ah ink")],
+    [id("ah-hl"), marker("ah-hl", "ah hl")],
     [
-      marker("ah", "ah ink"),
-      marker("ah-hl", "ah hl"),
+      id("hatch"),
       el(
         "pattern",
         {
@@ -122,8 +126,8 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
         },
         el("path", { class: "hatch-ln", d: "M0,0V5" }),
       ),
-    ].join(""),
-  );
+    ],
+  ];
 
   const s = {
     prefix,
@@ -133,7 +137,13 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
     hatch: `url(#${id("hatch")})`,
     /** Append raw markup (from el/text or a helper below). */
     add(...m) {
-      parts.push(...m.flat().filter(Boolean));
+      // Hand-built markup too: round long decimals inside attribute values.
+      parts.push(
+        ...m
+          .flat()
+          .filter(Boolean)
+          .map((p) => String(p).replace(/="([^"]*)"/g, (_, v) => `="${roundIn(v)}"`)),
+      );
       return s;
     },
     comment(c) {
@@ -159,8 +169,8 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
     /** Boxed note number, centered on (x, y). */
     nb(x, y, n) {
       return s.add(
-        el("rect", { class: "nb", x: x - 5.5, y: y - 5.5, width: 11, height: 11 }),
-        text(x, y + 2.7, String(n), "nbt", "middle"),
+        el("rect", { class: "nb", x: x - 6.5, y: y - 6.5, width: 13, height: 13 }),
+        text(x, y + 3.2, String(n), "nbt", "middle"),
       );
     },
 
@@ -340,7 +350,7 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
      * rows (tc). First column left-aligned, the rest centered unless `align`
      * ('start' | 'middle' | 'end' per column) says otherwise. `hl` lists
      * body rows (0-based) to accent: an accent box behind the row, its text
-     * in `tc hl`. `hlHead` lists columns whose head takes `th hl`. `headH`
+     * in ink on the accent fill. `hlHead` lists columns whose head takes `th hl`. `headH`
      * sets the header row's height (default rowH): the row offset that
      * lines the body rows up with a column of nodes beside the table.
      * Returns { y: bottom, width, widths, rows } where rows[i] is body row
@@ -377,14 +387,9 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       all.forEach((r, i) => {
         let c = x;
         r.forEach((v, j) => {
-          const cls = i
-            ? hl.includes(i - 1)
-              ? "tc hl"
-              : "tc"
-            : hlHead.includes(j)
-              ? "th hl"
-              : "th";
-          const yy = top(i) + (i ? rowH : headH) / 2 + (i ? 3.2 : 2.7);
+          // Text on an accent row stays ink: teal on the teal fill misses AA in light mode.
+          const cls = i ? "tc" : hlHead.includes(j) ? "th hl" : "th";
+          const yy = top(i) + (i ? rowH : headH) / 2 + (i ? 3.5 : 3.2);
           const a = align[j] ?? (j === 0 ? "start" : "middle");
           const tx = a === "start" ? c + 6 : a === "end" ? c + ws[j] - 6 : c + ws[j] / 2;
           s.add(text(tx, yy, v, cls, a));
@@ -432,7 +437,8 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
       const { kind = "process", end = false, hl = false, fill, code = false, sub, cls } = opts;
       const lines = label == null ? [] : String(label).split("\n");
       const subs = sub == null ? [] : Array.isArray(sub) ? sub : String(sub).split("\n");
-      const lcls = cls ?? (code ? "tc" : "sl ink") + (hl ? " hl" : "");
+      // Labels on an accent fill stay ink; the outline and fill carry the accent.
+      const lcls = cls ?? (code ? "tc" : "sl ink");
       if (w == null)
         w = Math.ceil(
           Math.max(...lines.map((l) => widthOf(l, lcls)), ...subs.map((l) => widthOf(l, "vs")), 0) +
@@ -1234,10 +1240,13 @@ export function sheet({ prefix, width, height = 0, inset = 10, radius = 10, fram
             rx: radius,
           })
         : "";
+      // Only the markers and patterns this sheet uses.
+      const body = parts.join("");
+      const used = defList.filter(([k]) => body.includes(`url(#${k})`)).map(([, d]) => d);
       return [
         `<svg xmlns="http://www.w3.org/2000/svg" class="dwg" viewBox="0 0 ${f(w)} ${f(h)}">`,
         `  <!-- Generated by scripts/dwg/build.mjs from scripts/dwg/sheets; edit the source, not this file. -->`,
-        `  ${defs}`,
+        ...(used.length ? [`  ${el("defs", {}, used.join(""))}`] : []),
         ...(border ? [`  ${border}`] : []),
         ...parts.map((p) => `  ${p}`),
         `</svg>`,

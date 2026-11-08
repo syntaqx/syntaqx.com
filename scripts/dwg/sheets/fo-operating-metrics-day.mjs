@@ -76,7 +76,7 @@ export default function draw() {
       w = hrs * k;
     if (kind === "other") s.rect(x, barY, w, bh, "hatch", { fill: s.hatch });
     else s.rect(x, barY, w, bh, kind === "site" ? "obj hl" : "obj fill-2");
-    if (label) s.label(x, barY, w, bh, label, "sl hl");
+    if (label) s.label(x, barY, w, bh, label);
     xs.push(x + w);
   }
   s.rect(x0, barY, C1 * k, bh, "obj", { fill: "none" });

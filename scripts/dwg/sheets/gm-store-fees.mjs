@@ -79,7 +79,7 @@ export default function draw() {
     s.nb(x0 - 12 - widthOf(STORES[i][0], "sl") - 14, top + i * step + h / 2, nn);
   // What the two fills mean, called out on the first row.
   s.callout(x0 + 1.5 * k, top + 4, x0 + 2.4 * k, top - 16, "fee");
-  s.callout(x0 + 6.5 * k, top + 4, x0 + 7.2 * k, top - 16, "net to developer");
+  s.callout(x0 + 6 * k, top + 4, x0 + 6.6 * k, top - 16, "net to developer");
   const bot = top + 7 * step + h;
   s.viewTitle(
     (x0 + x1) / 2,
@@ -99,7 +99,7 @@ export default function draw() {
       `${m(fee)}, ${m(P1 - fee)}`,
     ]),
   ];
-  const widths = [56, 280, 116];
+  const widths = [56, 318, 124];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(CX - tw / 2, vBottom + 50, "Variables · USD", rows, { widths });
   s.height = Math.ceil(tb.y + 30);

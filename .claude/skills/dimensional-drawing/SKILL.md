@@ -39,9 +39,9 @@ measured: a budget, a timeline with durations, a stack, a layout.
    parts), not hand-typed coordinates, so spacing stays even and the parts sum.
 4. **Build:** `npm run dwg` (or `npm run dwg -- <name>` for one sheet).
 5. **Render and look.** `npm run dwg:render -- public/diagrams/<name>.svg
-<scratchpad>/<name>.png` rasterizes the SVG with the site's diagram CSS
-   inlined (add `--dark` for the dark palette; fonts fall back to Arial, so
-   leave a little slack). Check: no label crosses a line, box or another label; nothing crosses
+<scratchpad>/<name>.png` renders the SVG in headless Chrome with the site's
+   diagram CSS, tokens and fonts (add `--dark` for the dark palette,
+   `--width 680` for the docs column). Check: no label crosses a line, box or another label; nothing crosses
    the sheet edge; gaps between views are even. Fix in the source, rebuild,
    look again.
 6. **Embed** as its own paragraph:
@@ -143,13 +143,13 @@ Line weights, heaviest first: `sheet` 1 · `obj` 1.2 (object outline) ·
 
 Lettering is the site sans in small plain caps (the kit writes caps text in
 caps): `vt` view title, `vs` subtitle, `sl` / `sl ink` labels, `lt` layer
-title, `nt` / `nth` notes, `th` table header; `dt` dimension codes and `tc`
-table cells are sans with tabular figures, `dt` with a paper knockout (`ko`
-adds it to any text). Mono stays for the shared `.t` cells only.
+title, `nt` / `nth` notes, `th` table header; `dt` dimension codes are
+sans with tabular figures and a paper knockout (`ko` adds it to any text);
+`tc` table cells and identifiers are mono. Nothing is set under 9.
 
 Standard-diagram classes: `flow` 0.9 (connectors), `flow alt` dashed (exit
 or exception), `flow hl` 1.2 accent; `sl hl`, `lt hl`, `th hl` and `tc hl`
-accent text.
+accent text, on paper only: on an accent fill text stays ink.
 
 ## Don't
 

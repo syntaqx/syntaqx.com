@@ -129,7 +129,7 @@ export default function draw() {
 
   // ---- Variable table ----
   s.comment("Variable table");
-  const widths = [44, 270, 110],
+  const widths = [44, 322, 110],
     tw = widths.reduce((a, b) => a + b, 0);
   const t = s.table(
     W / 2 - tw / 2,

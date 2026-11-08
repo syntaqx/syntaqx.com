@@ -69,7 +69,7 @@ export default function draw() {
   tl.bar(y1, xTk, X(R1), "obj fill-1");
   s.label(X(0), y1, X(R1) - X(0), h, "removed, media kept");
   s.rect(X(R1), y1, X(R2) - X(R1), h, "obj hl");
-  s.label(X(R1), y1, X(R2) - X(R1), h, "restore", "sl hl");
+  s.label(X(R1), y1, X(R2) - X(R1), h, "restore");
   s.rect(X(R2), y1, xEnd - X(R2), h, "obj fill-2");
   s.label(X(R2), y1, xEnd - X(R2), h, "up");
   s.nb(X(R1) + (X(R2) - X(R1)) / 2, y1 - 10, 3);

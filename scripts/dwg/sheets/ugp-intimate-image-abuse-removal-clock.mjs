@@ -63,7 +63,7 @@ export default function draw() {
     laneX,
     h,
   });
-  s.nb(X(0) + 14, axY - 13.5, 1);
+  s.nb(X(0) + 18, axY - 13.5, 1);
 
   // Request: the incomplete one is logged, the corrected one starts the clock.
   let y = axY + 26;
@@ -115,7 +115,7 @@ export default function draw() {
       `as soon as possible, ${D1} h at most`,
     ],
   ];
-  const widths = [40, 290, 190];
+  const widths = [40, 300, 214];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · TAKE IT DOWN Act Sec. 3(a)(3)", rows, {
     widths,

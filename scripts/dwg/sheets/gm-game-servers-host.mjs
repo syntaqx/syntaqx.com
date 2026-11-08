@@ -164,7 +164,7 @@ export default function draw() {
   ];
   const tw = 40 + 220 + 110;
   const tb = s.table((760 - tw) / 2, vy + 46, "Variables · counts", rows, {
-    widths: [40, 220, 110],
+    widths: [40, 278, 110],
   });
   s.height = Math.ceil(tb.y + 30);
   return s.toString();

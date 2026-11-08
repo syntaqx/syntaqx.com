@@ -17,7 +17,7 @@ export default function draw() {
     yS = yIn + 40 + 40;
 
   s.comment("Input that starts the slide");
-  const notice = s.node(X(1), yIn, w, 40, "carrier notice", {
+  const notice = s.node(X(1) - 10, yIn, w + 20, 40, "carrier notice", {
     kind: "actor",
     sub: "cancellation, nonrenewal",
   });

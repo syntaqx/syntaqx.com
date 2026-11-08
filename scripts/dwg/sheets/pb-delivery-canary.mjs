@@ -133,7 +133,7 @@ export default function draw() {
   let detailBottom;
   {
     const ky = 1000,
-      xd = 76,
+      xd = 60,
       bot = rowTop + 150;
     const Xd = (m) => xd + m * k;
     s.line(Xd(0) - 10, bot, Xd(2 * B) + 10, bot, "ext");
@@ -176,9 +176,9 @@ export default function draw() {
     ["R1", "first canary to everyone", `3 × B = ${R1} min`],
     ["X1", "exposure, rolled back at g2", `(s1 + s2) × B = ${X1.toFixed(1)} min`],
   ];
-  const widths = [40, 176, 140];
+  const widths = [44, 204, 154];
   const tw = widths.reduce((a, b) => a + b, 0);
-  const tb = s.table(W - 32 - tw, rowTop + 16, "Variables · stages from the chapter", rows, {
+  const tb = s.table(W - 20 - tw, rowTop + 16, "Variables · stages from the chapter", rows, {
     widths,
   });
   s.height = Math.ceil(Math.max(tb.y, detailBottom) + 30);

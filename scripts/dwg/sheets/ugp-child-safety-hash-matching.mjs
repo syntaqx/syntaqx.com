@@ -35,7 +35,7 @@ export default function draw() {
     s.node(X(1), r2, w, 60, "act unviewed", {
       sub: ["remove,", "quarantine,", "restrict account"],
     }),
-    s.node(X(2), r2, w, 60, "minimal view", { sub: ["a person confirms", "the near match"] }),
+    s.node(X(2), r2, w, 60, "minimal view", { sub: ["a person", "confirms the", "near match"] }),
     s.node(X(3), r2, w, 60, "specialist", { kind: "store", sub: ["queue, ordered", "by score"] }),
   ];
   const drops = [

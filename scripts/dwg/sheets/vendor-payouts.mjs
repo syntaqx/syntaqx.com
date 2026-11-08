@@ -42,7 +42,7 @@ export default function draw() {
 
   s.comment("One payable");
   const payable = s.node(x, g.rows[2].cy - 15, 110, 30, "payable");
-  s.note(payable, "approved, funded", { dy: 16 });
+  s.note(payable, "approved, funded", { dy: 16, anchor: "left" });
   s.text(x, payable.y - 12, "one payable", "lt");
 
   s.comment("Fan out; the trunk stays ink, the default's branch takes the accent");

@@ -49,7 +49,7 @@ export default function draw() {
       "PC store B account",
       "Device ID",
     ];
-    const accW = 150,
+    const accW = 168,
       accH = 70,
       accX = CX - accW / 2;
     const idsH = ids.length * idH + (ids.length - 1) * idGap;

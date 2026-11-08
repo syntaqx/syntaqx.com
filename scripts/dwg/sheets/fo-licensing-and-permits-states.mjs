@@ -13,10 +13,10 @@ const STATES = [
 
 export default function draw() {
   const W = 760,
-    w = 122,
+    w = 136,
     h = 30,
     ch = 24,
-    gap = 64;
+    gap = 54;
   const x0 = (W - (STATES.length * w + (STATES.length - 1) * gap)) / 2;
   const X = (i) => x0 + i * (w + gap);
   const s = sheet({ prefix: "fo-lp", width: W });

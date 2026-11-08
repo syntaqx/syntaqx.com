@@ -97,7 +97,20 @@ describe("markdownToHtml diagrams", () => {
       "<figcaption><strong>Payment states.</strong> Teal is the happy path.</figcaption>",
     );
     expect(html).not.toContain("<img");
+    expect(html).not.toContain("<!--");
     // The first render loads the syntax highlighter, which can take seconds.
+  }, 30_000);
+
+  it("names a diagram by its alt's first sentence and describes it with the rest", async () => {
+    const html = await markdownToHtml(
+      '![Payment states. Pending moves to settled or failed.](/diagrams/payment-states.svg "Payment states.")',
+    );
+    expect(html).toContain(
+      '<svg role="img" aria-label="Payment states." aria-describedby="payment-states-desc" ',
+    );
+    expect(html).toContain(
+      '<span id="payment-states-desc" class="sr-only">Payment states. Pending moves to settled or failed.</span>',
+    );
   }, 30_000);
 
   it("renders GitHub Flavored Markdown: tables, strikethrough, task lists, autolinks, footnotes", async () => {

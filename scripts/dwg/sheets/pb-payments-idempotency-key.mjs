@@ -112,7 +112,7 @@ export default function draw() {
     ["a5", "K, after R1 · key pruned", "processed as a new operation"],
     ["R1", "key retention, from creation", "at least 24 h, then pruned"],
   ];
-  const widths = [32, 220, 200];
+  const widths = [40, 222, 216];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(CX - tw / 2, viewBottom + 48, "Attempts · same key K", rows, { widths });
   s.height = Math.ceil(tb.y + 30);

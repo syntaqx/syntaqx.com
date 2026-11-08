@@ -120,7 +120,7 @@ export default function draw() {
     ["B1", "business PAD reimbursement claims", `${B1} business days`],
     ["P1", "personal PAD reimbursement claims", `${P1} calendar days`],
   ];
-  const widths = [40, 310, 150];
+  const widths = [40, 346, 170];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(W / 2 - tw / 2, vy + 52, "Variables · Payments Canada Rule H1", rows, {
     widths,

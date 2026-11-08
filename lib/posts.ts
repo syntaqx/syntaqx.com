@@ -376,11 +376,23 @@ function rehypeDiagrams() {
         const caption = lead
           ? `<figcaption><strong>${lead}</strong>${rest ? ` ${rest}` : ""}</figcaption>`
           : "";
+        // A screen reader reads aria-label as one unbroken string, so it gets the
+        // alt's first sentence; the full text is the description, set apart.
+        const [name, more] = alt.split(/(?<=\.)\s+([\s\S]*)/);
+        const descId = `${path.basename(src, ".svg")}-desc`;
+        const desc = more ? `<span id="${descId}" class="sr-only">${alt}</span>` : "";
         const svg = fs
           .readFileSync(path.join(process.cwd(), "public", src), "utf8")
           .replace(/^<\?xml[^>]*>\s*/, "")
-          .replace("<svg ", `<svg role="img" aria-label="${alt}" `);
-        return { type: "raw", value: `<figure class="diagram">${svg}${caption}</figure>` };
+          .replace(/\s*<!--[\s\S]*?-->/g, "")
+          .replace(
+            "<svg ",
+            `<svg role="img" aria-label="${name}"${more ? ` aria-describedby="${descId}"` : ""} `,
+          );
+        return {
+          type: "raw",
+          value: `<figure class="diagram">${svg}${desc}${caption}</figure>`,
+        };
       });
     };
     walk(tree);

@@ -2,7 +2,7 @@
 // view), one interval in detail with the three faster change paths, and the
 // variable table. Dates from Riot's published 2026 League of Legends patch
 // schedule. Embedded in content/books/gaming/live-operations.md.
-import { sheet } from "../kit.mjs";
+import { sheet, widthOf } from "../kit.mjs";
 
 // Intervals in days, patches 26.19 to 26.24 [1].
 const I = [14, 14, 14, 14, 21];
@@ -106,7 +106,7 @@ export default function draw() {
     s.line(X(H1), lane(0) - 4, X(H1), lane(0) + h + 4, "slot");
     s.add(`<circle class="dot" cx="${X(H1)}" cy="${lane(0) + h / 2}" r="2.2"/>`);
     s.text(X(H1) + 8, lane(0) + h / 2 + 3, "hotfix", "sl ink ko");
-    s.nb(X(H1) + 52, lane(0) + h / 2, 3);
+    s.nb(X(H1) + 8 + widthOf("hotfix", "sl") + 12, lane(0) + h / 2, 3);
 
     // Server: override live from D1.
     s.rect(X(0), lane(1), D1 * k, h, "obj fill-2");
@@ -119,7 +119,7 @@ export default function draw() {
     s.rect(X(EV), lane(2), E1 * k, h, "obj fill-1");
     s.add(`<circle class="dot" cx="${X(FLIP)}" cy="${lane(2) + h / 2}" r="2.2"/>`);
     s.text(X(FLIP) + 8, lane(2) + h / 2 + 3, "flip", "sl ink");
-    s.nb(X(FLIP) + 38, lane(2) + h / 2, 4);
+    s.nb(X(FLIP) + 8 + widthOf("flip", "sl") + 12, lane(2) + h / 2, 4);
     s.label(X(EV), lane(2), E1 * k, h, "event live");
 
     s.dimH(X(0), X(H1), top - 16, "H1", { from: [null, lane(0)] });
@@ -154,7 +154,7 @@ export default function draw() {
     ["H1", "patch to client hotfix (illustrative)", String(H1)],
     ["E1", "event start to next patch (illustrative)", String(E1)],
   ];
-  const widths = [52, 280, 140];
+  const widths = [52, 318, 140];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(CX - tw / 2, detailBottom + 50, "Variables · days", rows, { widths });
   s.height = Math.ceil(tb.y + 30);

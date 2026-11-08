@@ -138,7 +138,7 @@ export default function draw() {
     ["T1", "time to refill an empty bucket", `C ÷ r = ${T1} s`],
     ["N1", "most a token bucket lets through in any hour", `C + r × w = ${n(C + q)}`],
   ];
-  const widths = [32, 250, 150];
+  const widths = [40, 282, 150];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(CX - tw / 2, rowBottom + 53 + 48, "Variables", rows, { widths });
   s.height = Math.ceil(tb.y + 30);

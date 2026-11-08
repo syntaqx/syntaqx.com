@@ -14,7 +14,7 @@ export default function draw() {
 
   // Widths per part; the three gaps share what is left.
   const svcW = 80,
-    grpW = 220,
+    grpW = 250,
     relayW = 112,
     brokerW = 130;
   const gap = (W - 2 * x - svcW - grpW - relayW - brokerW) / 3;
@@ -31,8 +31,8 @@ export default function draw() {
   s.group(gx, gy, grpW, gh, "one transaction, one commit");
   const row = (y, table, value, hl) => {
     const n = s.node(gx + pad, y, grpW - 2 * pad, rh, null, { kind: "store", hl });
-    s.text(n.x + 16, n.cy + 3, table, hl ? "tc hl" : "tc");
-    s.text(n.x + n.w - 10, n.cy + 3, value, hl ? "tc hl" : "tc", "end");
+    s.text(n.x + 16, n.cy + 3, table, "tc");
+    s.text(n.x + n.w - 10, n.cy + 3, value, "tc", "end");
     return n;
   };
   const payments = row(gy + pad, "payments", "status = captured");

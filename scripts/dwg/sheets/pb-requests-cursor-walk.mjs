@@ -107,7 +107,7 @@ export default function draw() {
     ["P1", "offset page 2: rows O + 1 to O + L", "rows 4 to 6 = i7, i6, i5"],
     ["P2", "cursor page 2: first L rows after K1", "i6, i5, i4"],
   ];
-  const widths = [32, 270, 160];
+  const widths = [40, 326, 164];
   const tw = widths.reduce((a, b) => a + b, 0);
   const tb = s.table(CX - tw / 2, p2Bottom + 48, "Variables · illustrative", rows, { widths });
   s.height = Math.ceil(tb.y + 30);

@@ -150,10 +150,9 @@ export default function draw() {
     ["K1", "callback window, from the service call", `${K1}`],
     ["T1", "call to last day to file", `H1 + W1 = ${T1}`],
   ];
-  const tw = [36, 172, 84];
-  const vars = s.table(W - 32 - tw.reduce((a, b) => a + b, 0), ty, "Variables · days", rows, {
-    widths: tw,
-  });
-  s.height = Math.ceil(Math.max(hold.y, vars.y) + 30);
+  // Stacked under the hold reasons: side by side they no longer fit.
+  const tw = [36, 248, 100];
+  const vars = s.table(32, hold.y + 48, "Variables · days", rows, { widths: tw });
+  s.height = Math.ceil(vars.y + 30);
   return s.toString();
 }

@@ -135,13 +135,13 @@ export default function draw() {
   );
   const planBottom = vtY + 13;
 
-  // ---- Detail A: arrival before the response deadline, 1 h = 100 px ----
+  // ---- Detail A: arrival before the response deadline, 1 h = 120 px ----
   s.comment("Detail A: on-site arrival");
   const rowTop = planBottom + 40;
   let detailBottom;
   {
-    const kd = 140,
-      dx0 = 60,
+    const kd = 120,
+      dx0 = 56,
       top = rowTop + 44,
       hh = 30;
     const X = (hr) => dx0 + (hr - OPEN) * kd;
@@ -162,7 +162,7 @@ export default function draw() {
       (X(OPEN) + X(RESP_DUE)) / 2,
       top + hh + 70,
       "Detail A · on-site arrival",
-      "Scale 7:1 · 1 h = 140 px · wednesday",
+      "Scale 6:1 · 1 h = 120 px · wednesday",
     );
     detailBottom = top + hh + 83;
   }
@@ -181,9 +181,9 @@ export default function draw() {
     ["S1", "resolution target, call to resolved", "B1+B2+B3+B4 = 16"],
     ["U1", "resolution used, to thu 14:00", "B1+B2+B3+6 = 14"],
   ];
-  const tw = 328;
+  const tw = 384;
   const tb = s.table(W - 32 - tw, rowTop + 16, "Variables · business hours", rows, {
-    widths: [36, 186, 106],
+    widths: [36, 228, 120],
   });
   s.height = Math.ceil(Math.max(tb.y, detailBottom) + 30);
   return s.toString();
