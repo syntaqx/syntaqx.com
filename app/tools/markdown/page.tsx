@@ -22,6 +22,7 @@ import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
 import { Spinner } from "@/registry/syntaqx/ui/spinner";
 import { Textarea } from "@/registry/syntaqx/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
+import { ToolHeader } from "@/components/tool-header";
 
 // --- Types ------------------------------------------------------------------
 
@@ -308,13 +309,12 @@ export default function MarkdownToolPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Markdown Tools</h1>
+      <ToolHeader title="Markdown Tools">
         <p className="max-w-2xl text-muted-foreground">
           Convert HTML or pasted rich text to clean Markdown, render Markdown to HTML, or preview it
           live. Everything runs in your browser.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
@@ -327,10 +327,17 @@ export default function MarkdownToolPage() {
             aria-label="Mode"
             value={mode}
             onValueChange={(v) => v && switchMode(v as Mode)}
-            className="mb-5 flex-wrap"
+            className="mb-5"
           >
-            <ToggleGroupItem value="html-to-md">HTML to Markdown</ToggleGroupItem>
-            <ToggleGroupItem value="md-to-html">Markdown to HTML</ToggleGroupItem>
+            {/* Short labels on a phone, so the three stay one row. */}
+            <ToggleGroupItem value="html-to-md">
+              <span className="sm:hidden">HTML → MD</span>
+              <span className="max-sm:hidden">HTML to Markdown</span>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="md-to-html">
+              <span className="sm:hidden">MD → HTML</span>
+              <span className="max-sm:hidden">Markdown to HTML</span>
+            </ToggleGroupItem>
             <ToggleGroupItem value="preview">Preview</ToggleGroupItem>
           </ToggleGroup>
 
@@ -541,7 +548,7 @@ export default function MarkdownToolPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
+            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
               <li>
                 <a
                   href="https://github.com/mixmark-io/turndown"

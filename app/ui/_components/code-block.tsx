@@ -23,9 +23,15 @@ export async function CodeBlock({
     ...shikiOptions,
   });
 
+  // A one-line command wraps rather than scrolling out of sight on a phone;
+  // copying still gives the exact command. Longer code keeps its lines.
+  const oneLine = !code.trim().includes("\n");
   const body = (
     <div
-      className="code-block min-w-0 flex-1 overflow-auto font-mono text-[0.8125rem]/relaxed"
+      className={cn(
+        "code-block min-w-0 flex-1 overflow-auto font-mono text-[0.8125rem]/relaxed",
+        oneLine && "[&_pre]:break-all [&_pre]:whitespace-pre-wrap",
+      )}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

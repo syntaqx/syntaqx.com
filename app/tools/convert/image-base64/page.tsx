@@ -20,6 +20,7 @@ import { InputGroup, InputGroupTextarea } from "@/registry/syntaqx/ui/input-grou
 import { PasteButton } from "@/registry/syntaqx/ui/paste-button";
 import { Textarea } from "@/registry/syntaqx/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/registry/syntaqx/ui/toggle-group";
+import { ToolHeader } from "@/components/tool-header";
 
 // --- Helpers ----------------------------------------------------------------
 
@@ -265,13 +266,12 @@ export default function ImageBase64Page() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Image / Base64 Converter</h1>
+      <ToolHeader eyebrow="tools · converters" title={"Image\u00a0/ Base64 Converter"}>
         <p className="max-w-2xl text-muted-foreground">
           Convert images to Base64 data URIs and decode Base64 back into images. Everything runs in
           your browser, nothing is sent to a server.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: tool */}
@@ -359,7 +359,7 @@ export default function ImageBase64Page() {
                   value={encodeOutput}
                   readOnly
                   rows={8}
-                  placeholder="Encoded Base64 will appear here..."
+                  placeholder="Base64 appears here"
                   className={cn(codeArea, "break-all")}
                 />
               </Field>
@@ -471,7 +471,7 @@ export default function ImageBase64Page() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
+            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
               <li>
                 <a
                   href="https://datatracker.ietf.org/doc/html/rfc2397"

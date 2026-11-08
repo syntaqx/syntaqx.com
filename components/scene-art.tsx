@@ -70,6 +70,8 @@ function canvasPen(
   onNote?: (rect: { x: number; y: number; w: number; h: number }) => void,
 ): Pen {
   const lw = Math.max(1, dpr * 0.9);
+  /** Label boxes drawn so far this frame, so later labels can avoid them. */
+  const placed: { x: number; y: number; w: number; h: number }[] = [];
   const ink = (k: Ink) =>
     k === "acc"
       ? pal.acc
@@ -117,8 +119,43 @@ function canvasPen(
       ctx.lineWidth = lw;
       ctx.strokeRect(x - r, y - r, r * 2, r * 2);
     },
-    label([x0, y0], [x1, y1], text, accent) {
+    label([x0, y0], [x1, yWant], text, accent) {
       const right = x1 >= x0;
+      ctx.font = `${8.5 * dpr}px ${pal.inst}`;
+      ctx.letterSpacing = `${1.4 * dpr}px`;
+      const t = text.toUpperCase();
+      const tw = ctx.measureText(t).width;
+      // Keep the text inside the radial edge mask (closest-side ellipse,
+      // solid to 86%, then fading), or it vanishes on narrow screens.
+      const k = 0.9;
+      const place = (y: number) => {
+        const dy = Math.abs(y - H / 2);
+        const hw = k * (W / 2) * Math.sqrt(Math.max(0, 1 - (dy / ((k * H) / 2)) ** 2));
+        const x = Math.max(
+          W / 2 - hw,
+          Math.min(W / 2 + hw - tw, right ? x1 + 14 * dpr : x1 - 14 * dpr - tw),
+        );
+        return { x: x - 4 * dpr, y: y - 8 * dpr, w: tw + 8 * dpr, h: 14 * dpr };
+      };
+      // The text is a fixed size while the scene scales with the frame, so on
+      // a phone labels can land on each other: step this one up or down, a
+      // line at a time, to the nearest clear spot.
+      const clear = (b: ReturnType<typeof place>) =>
+        b.y >= 0 &&
+        b.y + b.h <= H &&
+        placed.every(
+          (p) => b.x >= p.x + p.w || p.x >= b.x + b.w || b.y >= p.y + p.h || p.y >= b.y + b.h,
+        );
+      const step = 16 * dpr;
+      let y1 = yWant;
+      for (const n of [0, -1, 1, -2, 2, -3, 3]) {
+        if (clear(place(yWant + n * step))) {
+          y1 = yWant + n * step;
+          break;
+        }
+      }
+      const box = place(y1);
+      placed.push(box);
       ctx.strokeStyle = css(pal.dim, 0.9);
       ctx.lineWidth = lw;
       ctx.beginPath();
@@ -128,23 +165,10 @@ function canvasPen(
       ctx.stroke();
       ctx.fillStyle = css(pal.acc);
       ctx.fillRect(x0 - 1.5 * dpr, y0 - 1.5 * dpr, 3 * dpr, 3 * dpr);
-      ctx.font = `${8.5 * dpr}px ${pal.inst}`;
-      ctx.letterSpacing = `${1.4 * dpr}px`;
-      const t = text.toUpperCase();
-      const tw = ctx.measureText(t).width;
-      // Keep the text inside the radial edge mask (closest-side ellipse,
-      // solid to 86%, then fading), or it vanishes on narrow screens.
-      const k = 0.9;
-      const dy = Math.abs(y1 - H / 2);
-      const hw = k * (W / 2) * Math.sqrt(Math.max(0, 1 - (dy / ((k * H) / 2)) ** 2));
-      const tx = Math.max(
-        W / 2 - hw,
-        Math.min(W / 2 + hw - tw, right ? x1 + 14 * dpr : x1 - 14 * dpr - tw),
-      );
       ctx.fillStyle = css(pal.bg, 0.85);
-      ctx.fillRect(tx - 4 * dpr, y1 - 8 * dpr, tw + 8 * dpr, 14 * dpr);
+      ctx.fillRect(box.x, box.y, box.w, box.h);
       ctx.fillStyle = css(accent ? pal.acc : pal.fg, 0.95);
-      ctx.fillText(t, tx, y1 + 3.5 * dpr);
+      ctx.fillText(t, box.x + 4 * dpr, y1 + 3.5 * dpr);
       ctx.letterSpacing = "0px";
     },
     note(lines, fit, top) {

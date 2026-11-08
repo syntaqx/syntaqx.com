@@ -57,6 +57,7 @@ import {
   type SecretLink,
 } from "@/lib/secret-link";
 import { cn } from "@/lib/cn";
+import { ToolHeader } from "@/components/tool-header";
 
 // --- Link intake --------------------------------------------------------------
 
@@ -846,14 +847,13 @@ export default function SecretsPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">One-Time Secrets</h1>
+      <ToolHeader title="One-Time Secrets">
         <p className="max-w-2xl text-muted-foreground">
           Share a password, token or file through a link that works once. It&apos;s encrypted in
           your browser and the key stays in the link, so the server only ever holds ciphertext, and
           deletes it the moment it&apos;s read.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col gap-8 lg:flex-row">
         <div className="min-w-0 flex-1">
@@ -870,7 +870,7 @@ export default function SecretsPage() {
               <Info size={12} className="text-primary" />
               How it works
             </h3>
-            <ol className="list-decimal space-y-2.5 py-3 pr-4 pl-8 text-[11px] leading-relaxed text-muted-foreground">
+            <ol className="list-decimal space-y-2.5 py-3 pr-4 pl-8 text-[13px] leading-relaxed lg:text-[11px] text-muted-foreground">
               <li>
                 Your browser makes a random 256-bit key and encrypts the secret with{" "}
                 <span className="text-foreground">AES-256-GCM</span>.
@@ -890,7 +890,7 @@ export default function SecretsPage() {
                 here. A wrong key is turned away and the secret survives.
               </li>
             </ol>
-            <p className="border-t border-border px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
+            <p className="border-t border-border px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] text-muted-foreground">
               Up to {byteSize(MAX_PLAINTEXT_BYTES)} per secret, text or file. There&apos;s no uptime
               guarantee, but there doesn&apos;t need to be a security one: the server never has what
               it would take to read your secret.
@@ -902,7 +902,7 @@ export default function SecretsPage() {
               <Terminal size={12} className="text-primary" />
               From a script
             </h3>
-            <div className="space-y-2 px-4 py-3 text-[11px] leading-relaxed text-muted-foreground">
+            <div className="space-y-2 px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] text-muted-foreground">
               <pre
                 tabIndex={0}
                 aria-label="Create a secret with curl"
@@ -929,7 +929,7 @@ export default function SecretsPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="space-y-2 px-4 py-3 text-[11px] leading-relaxed">
+            <ul className="space-y-2 px-4 py-3 text-[13px] leading-relaxed lg:text-[11px]">
               <li>
                 <Link
                   href="/posts/github-actions-secret-inputs"

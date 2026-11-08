@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 import { Button } from "@/registry/syntaqx/ui/button";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Skeleton } from "@/registry/syntaqx/ui/skeleton";
+import { ToolHeader } from "@/components/tool-header";
 
 function Row({ label, value, mono }: { label: string; value: string | null; mono?: boolean }) {
   return (
@@ -160,13 +161,12 @@ export default function WhoamiPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">whoami</h1>
+      <ToolHeader title="whoami">
         <p className="max-w-2xl text-muted-foreground">
           See how you appear on the internet. IP, location, browser, device, and more. Nothing is
           stored.
         </p>
-      </div>
+      </ToolHeader>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left: main content */}
@@ -295,7 +295,7 @@ export default function WhoamiPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
+            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
               <li>
                 <a
                   href="https://datatracker.ietf.org/doc/html/rfc791"
