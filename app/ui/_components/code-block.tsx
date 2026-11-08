@@ -1,6 +1,7 @@
 import { codeToHtml } from "shiki";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { cn } from "@/lib/cn";
+import { shikiOptions } from "@/lib/shiki";
 
 /**
  * Highlighted on the server with the docs' themes, with a copy button and an
@@ -19,8 +20,7 @@ export async function CodeBlock({
 }) {
   const html = await codeToHtml(code.trimEnd(), {
     lang,
-    themes: { dark: "vitesse-dark", light: "vitesse-light" },
-    defaultColor: false,
+    ...shikiOptions,
   });
 
   const body = (

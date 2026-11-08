@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeShiki from "@shikijs/rehype";
+import { shikiOptions } from "@/lib/shiki";
 import { isPostScene, type PostSceneName } from "@/lib/scene/scenes";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
@@ -562,13 +563,7 @@ export async function markdownToHtml(markdown: string, toc?: Heading[]): Promise
     .use(rehypeCallouts)
     .use(rehypeCodeTabs)
     .use(rehypeTableScroll)
-    .use(rehypeShiki, {
-      themes: {
-        dark: "vitesse-dark",
-        light: "vitesse-light",
-      },
-      defaultColor: false,
-    })
+    .use(rehypeShiki, shikiOptions)
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(markdown);
   return result.toString();

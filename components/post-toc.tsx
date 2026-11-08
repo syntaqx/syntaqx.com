@@ -85,7 +85,7 @@ export function PostToc({
             <span
               className={cn(
                 "font-voice text-base leading-none font-semibold",
-                on ? "text-primary" : "text-border-hover",
+                on ? "text-primary" : "text-muted-foreground",
               )}
             >
               {String(i + 1).padStart(2, "0")}

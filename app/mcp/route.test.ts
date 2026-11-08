@@ -1,5 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { beforeAll, describe, it, expect } from "vitest";
 import { GET, POST } from "./route";
+import { getIndex } from "@/lib/knowledge-index";
+
+// Build the search index once, up front: it takes seconds on a busy CI runner,
+// which would otherwise land on whichever test searches first.
+beforeAll(() => void getIndex(), 60_000);
 
 const rpc = (method: string, params: Record<string, unknown> = {}, id = 1) =>
   POST(

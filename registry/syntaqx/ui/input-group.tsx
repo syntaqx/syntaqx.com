@@ -9,6 +9,8 @@ import { Textarea } from "@/registry/syntaqx/ui/textarea";
 
 // shadcn's InputGroup, unchanged in looks, plus the Input's sizes (sm,
 // default, lg) and the addon focusing whichever control the group holds.
+// An addon dims only when the group's control is disabled, not when a
+// button inside the addon is (a disabled Copy shouldn't grey out its label).
 
 const inputGroupVariants = cva(
   [
@@ -54,7 +56,7 @@ function InputGroup({
 }
 
 const inputGroupAddonVariants = cva(
-  "flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-has-disabled/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4",
+  "flex h-auto cursor-text items-center justify-center gap-2 py-1.5 text-sm font-medium text-muted-foreground select-none group-has-[[data-slot=input-group-control]:disabled]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4",
   {
     variants: {
       align: {

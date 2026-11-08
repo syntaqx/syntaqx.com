@@ -1,6 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { beforeAll, describe, it, expect } from "vitest";
 import { isOpinion, parseTarget, read, search, searchDetailed, tokenize } from "@/lib/knowledge";
-import { buildIndex, splitSections, type Section } from "@/lib/knowledge-index";
+import { buildIndex, getIndex, splitSections, type Section } from "@/lib/knowledge-index";
+
+// The real index (for the read tests) takes seconds to build on CI.
+beforeAll(() => void getIndex(), 60_000);
 
 describe("tokenize", () => {
   it("drops stopwords and folds plurals", () => {

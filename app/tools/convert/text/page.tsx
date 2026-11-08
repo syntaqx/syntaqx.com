@@ -672,7 +672,7 @@ export default function ConvertPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
+            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
               <li>
                 <a
                   href="https://www.json.org/json-en.html"

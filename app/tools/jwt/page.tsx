@@ -790,9 +790,7 @@ export default function JwtPage() {
                     />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
-                    {headerJson || (
-                      <span className="text-muted-foreground/30">{"{\n  ...\n}"}</span>
-                    )}
+                    {headerJson || <span className="text-muted-foreground">{"{\n  ...\n}"}</span>}
                   </pre>
                 </div>
 
@@ -807,9 +805,7 @@ export default function JwtPage() {
                     />
                   </div>
                   <pre className="px-3 py-2 text-xs font-mono whitespace-pre-wrap overflow-auto max-h-60 min-h-18">
-                    {payloadJson || (
-                      <span className="text-muted-foreground/30">{"{\n  ...\n}"}</span>
-                    )}
+                    {payloadJson || <span className="text-muted-foreground">{"{\n  ...\n}"}</span>}
                   </pre>
                 </div>
               </div>
@@ -876,7 +872,7 @@ export default function JwtPage() {
                         })
                       ) : (
                         <tr>
-                          <td colSpan={3} className="p-3  text-muted-foreground/30 text-center">
+                          <td colSpan={3} className="p-3  text-muted-foreground text-center">
                             No claims to display
                           </td>
                         </tr>
@@ -1153,7 +1149,7 @@ export default function JwtPage() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
+            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
               <li>
                 <a
                   href="https://datatracker.ietf.org/doc/html/rfc7519"

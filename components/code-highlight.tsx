@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { codeToHtml } from "shiki";
 import { cn } from "@/lib/cn";
+import { shikiOptions } from "@/lib/shiki";
 
 interface CodeHighlightProps {
   code: string;
@@ -24,8 +25,7 @@ export function CodeHighlight({ code, lang, className }: CodeHighlightProps) {
 
     codeToHtml(code, {
       lang,
-      themes: { dark: "vitesse-dark", light: "vitesse-light" },
-      defaultColor: false,
+      ...shikiOptions,
     })
       .then((result) => {
         if (!cancelled) setHtml(result);

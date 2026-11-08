@@ -311,7 +311,7 @@ export default function Base64Page() {
               <ExternalLink size={12} className="text-primary" />
               References
             </h3>
-            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-1.5">
+            <ul className="px-4 py-3 text-[11px] leading-relaxed space-y-2">
               <li>
                 <a
                   href="https://datatracker.ietf.org/doc/html/rfc4648"

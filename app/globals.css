@@ -57,19 +57,19 @@
   :root:not(.dark) {
     --background: #e3e7e4;
     --foreground: #141c1a;
-    --primary: #006e68;
+    --primary: #00615c;
     --primary-foreground: #ffffff;
     --accent: #b5e2df;
     --subtle: #3b4644;
-    --muted-foreground: #52605d;
-    --pink: #b4527c;
-    --jwt-purple: #7c5cbf;
-    --jwt-cyan: #0e8585;
+    --muted-foreground: #4d5a58;
+    --pink: #883e5d;
+    --jwt-purple: #614896;
+    --jwt-cyan: #0a6060;
     --mauve: #a34f74;
     --card: #dbe0dd;
     --border: #c9d0cc;
     --border-hover: #afb9b5;
-    --destructive: #dc2626;
+    --destructive: #a91d1d;
     color-scheme: light;
   }
 }
@@ -96,19 +96,19 @@
 .light {
   --background: #e3e7e4;
   --foreground: #141c1a;
-  --primary: #006e68;
+  --primary: #00615c;
   --primary-foreground: #ffffff;
   --accent: #b5e2df;
   --subtle: #3b4644;
-  --muted-foreground: #52605d;
-  --pink: #b4527c;
-  --jwt-purple: #7c5cbf;
-  --jwt-cyan: #0e8585;
+  --muted-foreground: #4d5a58;
+  --pink: #883e5d;
+  --jwt-purple: #614896;
+  --jwt-cyan: #0a6060;
   --mauve: #a34f74;
   --card: #dbe0dd;
   --border: #c9d0cc;
   --border-hover: #afb9b5;
-  --destructive: #dc2626;
+  --destructive: #a91d1d;
   color-scheme: light;
 }
 
@@ -190,11 +190,28 @@ body:has([data-full-bleed]) {
   overflow-x: clip;
 }
 
+/* A link in running text: color plus an underline, since color alone doesn't
+   mark a link for everyone (WCAG 1.4.1). */
+@utility text-link {
+  color: var(--primary);
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 150ms;
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
 @layer base {
   /* shadcn's base rule: a bare `border` takes the theme's border color, not
      Tailwind v4's currentColor. Its components rely on it. */
   * {
     @apply border-border outline-ring/50;
+  }
+  /* Anchors and focus land below the sticky header (h-12), not under it. */
+  html {
+    scroll-padding-top: 4.5rem;
   }
   h1,
   h2,
@@ -365,7 +382,9 @@ body:has([data-full-bleed]) {
   scrollbar-color: var(--border-hover) transparent;
 }
 
-/* Sidebar sections (Radix Accordion) open and close by height. */
+/* Sidebar sections (Radix Accordion) open and close by height, once the
+   sidebar is hydrated (data-ready): Radix measures the height then, so an
+   animation on first paint would start sections at 0 and jump them open. */
 @keyframes acc-down {
   from {
     height: 0;
@@ -382,10 +401,10 @@ body:has([data-full-bleed]) {
     height: 0;
   }
 }
-.acc-content[data-state="open"] {
+[data-ready] .acc-content[data-state="open"] {
   animation: acc-down 180ms ease-out;
 }
-.acc-content[data-state="closed"] {
+[data-ready] .acc-content[data-state="closed"] {
   animation: acc-up 150ms ease-out;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -661,6 +680,15 @@ body:has([data-full-bleed]) {
 }
 .light .prose pre code span {
   color: var(--shiki-light) !important;
+}
+/* System light, with no theme chosen: the same light colors, like CodeBlock. */
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) .prose pre {
+    background-color: var(--shiki-light-bg, var(--card)) !important;
+  }
+  :root:not(.dark) .prose pre code span {
+    color: var(--shiki-light) !important;
+  }
 }
 /* CodeBlock (the /ui code and install tabs): the same dual theme. */
 .code-block pre {

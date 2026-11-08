@@ -11,7 +11,7 @@ export default function TooltipDemo() {
       <Tooltip>
         <TooltipTrigger
           aria-label="More about Mangle names"
-          className="inline-flex text-muted-foreground transition-colors hover:text-foreground"
+          className="relative inline-flex rounded-sm text-muted-foreground transition-colors outline-none after:absolute after:-inset-1 after:content-[''] hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <Info className="size-4" />
         </TooltipTrigger>

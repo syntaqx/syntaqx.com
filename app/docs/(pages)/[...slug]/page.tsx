@@ -69,10 +69,7 @@ export default async function DocPage({ params }: Props) {
       eyebrow={
         category && category.docs.length > 1 ? (
           <>
-            <Link
-              href={`/docs#${category.section}`}
-              className="text-primary transition-colors hover:text-foreground"
-            >
+            <Link href={`/docs#${category.section}`} className="text-link">
               {category.name}
             </Link>
             <span aria-hidden> · </span>

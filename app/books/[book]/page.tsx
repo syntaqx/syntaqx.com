@@ -79,7 +79,7 @@ export default async function BookCover({ params }: Props) {
         title={book.name}
         eyebrow={
           <>
-            <Link href="/books" className="text-primary transition-colors hover:text-foreground">
+            <Link href="/books" className="text-link">
               Books
             </Link>
             <span aria-hidden> · </span>

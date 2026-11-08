@@ -13,6 +13,7 @@ import Link from "next/link";
 import { PostMeta } from "@/components/post-meta";
 import { CopyCodeScript } from "@/components/copy-code";
 import { CodeTabsScript } from "@/components/code-tabs";
+import { ScrollRegionsScript } from "@/components/scroll-regions";
 import { SceneArt } from "@/components/scene-art";
 import { PostToc } from "@/components/post-toc";
 import { Pager, type Neighbor } from "@/components/pager";
@@ -235,6 +236,7 @@ export default async function PostPage({ params }: Props) {
       </div>
       <CopyCodeScript />
       <CodeTabsScript />
+      <ScrollRegionsScript />
     </article>
   );
 }
