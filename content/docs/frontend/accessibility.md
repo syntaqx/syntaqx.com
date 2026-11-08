@@ -32,6 +32,7 @@ The browser already knows how to make a `<button>` focusable, keyboard-operable 
 - **Use the element that means what you're building:** `<button>` for actions, `<a href>` for navigation, `<nav>`, `<main>`, `<label>`, `<table>` for tabular data, headings in order.
 - **ARIA only when HTML can't do it.** ARIA changes what's announced, not how anything behaves. `role="button"` on a `<div>` makes a screen reader say "button", but the div still ignores Enter and Space and can't receive focus: a broken button that claims to work. That's why the W3C's [first rule of ARIA](https://www.w3.org/TR/using-aria/) is to use a native element whenever one exists.
 - **Custom widgets** (tabs, comboboxes, dialogs) follow the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) patterns, including their keyboard behavior.
+- **The visible text is the name.** Someone using voice control says what they see ("click preview"), so an accessible name has to contain the visible label, ideally starting with it ([2.5.3 Label in Name](https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html)). An `aria-label` that rephrases the text breaks that; add context as visually hidden text after the visible text instead. Watch for adjacent spans with no space between them: "Download" and "PDF" side by side read as "DownloadPDF".
 
 ## Keyboard and Focus
 
@@ -41,6 +42,8 @@ Everything usable with a mouse is usable with a keyboard alone.
 - **Visible focus, always.** Never remove outlines without a replacement. `:focus-visible` shows focus for keyboard users without flashing it on every mouse click.
 - **Dialogs trap focus** while open and return it to the trigger when closed. `Escape` closes them.
 - **A skip link** to the main content on pages with long navigation.
+- **Clear the sticky header.** A sticky header covers whatever scrolls to the top of the viewport: the focused element, and every `#anchor` a heading link jumps to ([2.4.11 Focus Not Obscured](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html)). `scroll-padding-top` on `html`, a little taller than the header, fixes both at once.
+- **Scrollable regions take focus.** A wide table or code block that scrolls sideways has to be reachable by keyboard, or its hidden columns are mouse-only. Give it `tabindex="0"`, `role="region"` and a label, but only while it actually overflows: a tab stop on every table that fits costs keyboard users more than it helps.
 
 ## Color and Contrast
 
@@ -48,6 +51,9 @@ Everything usable with a mouse is usable with a keyboard alone.
 - **UI components and graphics:** at least 3:1 for borders of inputs, focus indicators, icons and chart marks that carry meaning.
 - **Never color alone.** Errors get an icon and text, links get an underline or another cue, charts get labels or patterns.
 - **Check every theme.** A palette that passes in dark mode can fail in light mode. See [Design Tokens & Theming](/docs/frontend/design-tokens).
+- **Check every surface.** A token is checked against each surface it sits on, not only the page background: cards, hover rows, selected rows and tinted badges are all darker (or lighter) than the page, and that's where a borderline color fails.
+- **Opacity is a contrast trap.** Muted text made with opacity (`text-muted/70`), and text set in a color meant for borders, usually lands under 4.5:1. Dim with a text token that's checked, not with transparency.
+- **Syntax highlighting themes fail out of the box.** Popular code themes set comments and punctuation well under 4.5:1. Remap just the failing token colors per theme (Shiki's `colorReplacements` does this), and test the colors the highlighter actually emits against each code background, so a theme upgrade can't quietly bring them back.
 
 ## Motion
 
@@ -67,7 +73,7 @@ Forms are where most accessibility failures cost someone a task: unlabeled input
 
 Automated tools are necessary and nowhere near sufficient. They can tell that an image has `alt` text, not whether it describes the image; that a button has a name, not whether the name makes sense. [axe-core](https://github.com/dequelabs/axe-core), the engine behind most of them, reports finding about 57% of WCAG issues on average, so a clean report means the easy half is done. The rest takes a person:
 
-1. **Automated checks in CI** with axe on key pages, failing the build on new violations ([wiring it into the suite](/docs/quality/cross-platform-testing#automated-accessibility-checks)).
+1. **Automated checks in CI** with axe, failing the build on new violations ([wiring it into the suite](/docs/quality/cross-platform-testing#automated-accessibility-checks)). Pick one page per route pattern from the sitemap, so a new kind of page is covered the day it ships, and run it in every theme and at 320px width: most contrast failures only show in one theme, and most overflow and target-size failures only at the narrow width. Once, when you adopt it, crawl every URL: content-driven pages (a table, a code block, a long word) fail in ways their template doesn't. Block your error reporter's ingestion while it runs, or the crawl files its own issues.
 2. **A keyboard pass** on every new flow: unplug the mouse and finish the task.
 3. **A screen reader pass** on new components: VoiceOver on macOS and iOS, NVDA on Windows.
 4. **Zoom to 200%** and check at 320px width: content reflows, nothing overlaps or gets cut off.
@@ -83,11 +89,15 @@ In the US, the Department of Justice's position is that the ADA applies to the w
 - [W3C: Web Content Accessibility Guidelines (WCAG) 2.2](https://www.w3.org/TR/WCAG22/), success criteria, contrast ratios and conformance levels
 - [W3C: What's New in WCAG 2.2](https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/), the nine criteria added in 2.2
 - [W3C: Using ARIA](https://www.w3.org/TR/using-aria/), the rules of ARIA use, starting with native HTML first
+- [W3C: Understanding Label in Name (2.5.3)](https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html), why the accessible name contains the visible label
+- [W3C: Understanding Focus Not Obscured (2.4.11)](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html), sticky headers and focused content
 
 **Reference**
 
 - [W3C: ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/), keyboard and ARIA patterns for custom widgets
 - [MDN: prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), detecting the reduced-motion preference
+- [MDN: scroll-padding-top](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-padding-top), keeping scrolled-to content clear of a sticky header
+- [Shiki: Color Replacements](https://shiki.style/guide/theme-colors#color-replacements), remapping a theme's token colors
 - [Deque: axe-core](https://github.com/dequelabs/axe-core), the automated testing engine and what share of issues it catches
 
 **In practice**
