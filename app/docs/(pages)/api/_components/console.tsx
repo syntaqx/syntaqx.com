@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { ChevronDown, ChevronRight, Play, Server } from "lucide-react";
 import { buildRequest, jsonError, paramKey, SHOWN_RESPONSE_HEADERS } from "@/lib/api-console";
 import { Select } from "@/components/select";
@@ -201,6 +201,12 @@ function ParamTable({ params }: { params: ParameterObject[] }) {
   );
 }
 
+/** The URL hash, for useSyncExternalStore. */
+const subscribeHash = (onChange: () => void) => {
+  window.addEventListener("hashchange", onChange);
+  return () => window.removeEventListener("hashchange", onChange);
+};
+
 function Endpoint({
   method,
   path,
@@ -215,8 +221,15 @@ function Endpoint({
   baseUrl: string;
 }) {
   const anchor = op.operationId;
-  // Opened directly when the URL hash points at this operation.
-  const [open, setOpen] = useState(() => !!anchor && window.location.hash === `#${anchor}`);
+  // Open while the URL hash points at this operation, until it's toggled. The
+  // server has no hash, so a deep link opens on the client.
+  const hash = useSyncExternalStore(
+    subscribeHash,
+    () => window.location.hash,
+    () => "",
+  );
+  const [toggled, setOpen] = useState<boolean | null>(null);
+  const open = toggled ?? (!!anchor && hash === `#${anchor}`);
   const [trying, setTrying] = useState(false);
   const [result, setResult] = useState<{
     status: number;
