@@ -45,10 +45,21 @@ function render(scene: Scene, width: number, height: number, pitch: number, wide
     px: 1,
     light: 0,
     wide,
-  }))
-    tilePaths[t.lv].push(
-      t.pts.map(([x, y], i) => `${i ? "L" : "M"}${+x.toFixed(1)} ${+y.toFixed(1)}`).join("") + "Z",
-    );
+  })) {
+    // Absolute move, then relative steps on a 0.1 grid: short numbers, no drift.
+    const q = t.pts.map(([x, y]) => [Math.round(x * 10), Math.round(y * 10)]);
+    const f = (v: number) => {
+      const s = String(v / 10);
+      return s.startsWith("0.") ? s.slice(1) : s.startsWith("-0.") ? "-" + s.slice(2) : s;
+    };
+    let d = `M${f(q[0][0])} ${f(q[0][1])}l`;
+    for (let i = 1; i < q.length; i++) {
+      const dx = f(q[i][0] - q[i - 1][0]);
+      const dy = f(q[i][1] - q[i - 1][1]);
+      d += `${i > 1 && !dx.startsWith("-") ? " " : ""}${dx}${dy.startsWith("-") ? "" : " "}${dy}`;
+    }
+    tilePaths[t.lv].push(d + "z");
+  }
 
   // Line work as vectors, like the canvas: stroked, anti-aliased, on its own
   // layer. Occlusion erases only what's drawn so far, so each solid face
