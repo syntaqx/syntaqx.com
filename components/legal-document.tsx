@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { PostToc } from "@/components/post-toc";
 import { Pager, type Neighbor } from "@/components/pager";
@@ -114,7 +114,7 @@ export function LegalDocument({
               className="flex items-baseline justify-between gap-4 border-y border-border py-2.5 text-sm text-foreground transition-colors hover:text-primary"
             >
               {other.title}
-              <span className="inst text-muted-foreground">{other.updated}</span>
+              <ArrowRight aria-hidden className="size-3.5 shrink-0 text-muted-foreground" />
             </Link>
           </nav>
         </aside>
