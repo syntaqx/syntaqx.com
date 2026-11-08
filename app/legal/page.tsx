@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Card } from "@/components/card";
+import { PageHeader } from "@/components/page-header";
 import { pageMetadata } from "@/lib/metadata";
+import { LEGAL_DOCS } from "@/lib/legal";
 
 export const metadata = pageMetadata(
   "/legal",
@@ -9,46 +10,39 @@ export const metadata = pageMetadata(
   "Legal information for syntaqx.com: the Terms of Service that govern using the site, and the Privacy policy covering how your data is handled.",
 );
 
-const pages = [
-  {
-    href: "/legal/terms",
-    title: "Terms of Service",
-    description:
-      "What you can expect from the site and what I expect from visitors. Plain language, no surprises.",
-  },
-  {
-    href: "/legal/privacy",
-    title: "Privacy",
-    description:
-      "What's collected, what isn't, and the choices you have. I try to collect as little as possible.",
-  },
-];
-
 export default function LegalPage() {
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="mb-3 text-3xl leading-[0.95] sm:text-4xl">Legal</h1>
-        <p className="max-w-2xl text-muted-foreground">
-          The terms and privacy policy for syntaqx.com.
+      <PageHeader
+        label="legal"
+        title="The fine print, in plain words"
+        scene="legal"
+        sceneLabel="A magnifying glass moving down a page of fine print, each line under it lighting up"
+      >
+        <p>
+          The terms and privacy policy for syntaqx.com. The short version: no accounts, no cookies,
+          no ad trackers, nothing sold, and everything is provided as is.
         </p>
-      </div>
+      </PageHeader>
 
-      <div className="grid gap-3">
-        {pages.map((page) => (
-          <Link key={page.href} href={page.href} className="group flex flex-col">
-            <Card hover className="flex flex-col h-full">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl leading-none text-foreground transition-colors group-hover:text-primary">
-                  {page.title}
-                </h2>
-                <ArrowRight
-                  size={12}
-                  className="text-muted-foreground group-hover:text-primary transition-colors"
-                />
-              </div>
-              <p className="text-xs/relaxed text-muted-foreground ">{page.description}</p>
-            </Card>
+      <div className="grid gap-4 md:grid-cols-2">
+        {LEGAL_DOCS.map((doc) => (
+          <Link
+            key={doc.href}
+            href={doc.href}
+            className="group flex flex-col border border-border bg-card p-6 transition-colors hover:border-primary"
+          >
+            <span className="inst text-muted-foreground">Updated {doc.updated}</span>
+            <span className="mt-4 flex items-center justify-between gap-4">
+              <span className="text-2xl leading-none text-foreground transition-colors group-hover:text-primary">
+                {doc.title}
+              </span>
+              <ArrowRight
+                aria-hidden
+                className="size-4 shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:text-primary"
+              />
+            </span>
+            <span className="mt-3 text-sm/relaxed text-muted-foreground">{doc.summary}</span>
           </Link>
         ))}
       </div>
