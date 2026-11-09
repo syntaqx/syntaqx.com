@@ -23,8 +23,10 @@ jobs:
     env:
       # Event data goes through the environment, never straight into a script.
       TARGET: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+      # The runner image ships Chrome. Installing Playwright's own Chromium
+      # with its apt dependencies usually takes 15s and sometimes over 3 min.
+      CHROME_PATH: /usr/bin/google-chrome
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
-      - run: npx playwright install --with-deps chromium
       - run: npm run a11y -- "$TARGET" --shard ${{ matrix.shard }}/4
