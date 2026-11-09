@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 export interface ActivityDayInfo {
   count: number;
   label: string | null;
+  upcoming: boolean;
 }
 
 // Same timings as the Radix provider this replaced: a short delay before
@@ -121,7 +122,7 @@ export function ActivityGridTooltips({
           >
             {day.label && <span className="block font-medium text-foreground">{day.label}</span>}
             <span className="block text-foreground">
-              {day.count} contribution{day.count === 1 ? "" : "s"}
+              {day.upcoming ? "Upcoming" : `${day.count} contribution${day.count === 1 ? "" : "s"}`}
             </span>
             <span className="block text-muted-foreground">{active.date}</span>
             <svg
