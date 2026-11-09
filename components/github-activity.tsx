@@ -7,6 +7,8 @@ export interface ContributionDay {
   date: string;
   level: number; // 0-4
   count: number;
+  /** A day after the owner's today, drawn only to show planned time off. */
+  upcoming?: boolean;
 }
 
 export interface ContributionData {
@@ -72,6 +74,13 @@ const LEVEL_COLORS = [
 ];
 
 const VACATION_RING = "ring-1 ring-amber-500/60 ring-inset";
+// Days that haven't happened: hollow and dashed, so they can't pass for a
+// quiet day. Borders, not rings, so today's ring can't collide with them.
+const UPCOMING = "border border-dashed border-muted-foreground/40";
+const UPCOMING_VACATION = "border border-dashed border-amber-500/70";
+// Show upcoming days only for a vacation starting within this many days, so
+// a trip booked months out doesn't push the past year off the grid.
+const UPCOMING_HORIZON_DAYS = 30;
 // A dot, not a ring: it reads on any fill level and leaves the ring free
 // for today's highlight.
 const HOLIDAY_DOT =
@@ -83,6 +92,29 @@ function vacationFor(date: string): string | null {
     if (date >= v.start && date < v.end) return v.label;
   }
   return null;
+}
+
+/** YYYY-MM-DD shifted by whole days (calendar math, no timezone). */
+function addDays(date: string, n: number): string {
+  const d = new Date(date + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
+/** Days after `today` through the last day of any vacation starting within
+ *  the horizon. Empty when nothing is coming up. */
+function upcomingDays(today: string): ContributionDay[] {
+  const horizon = addDays(today, UPCOMING_HORIZON_DAYS);
+  let last = today;
+  for (const v of vacations) {
+    const end = addDays(v.end, -1); // `end` is exclusive
+    if (end > today && v.start <= horizon && end > last) last = end;
+  }
+  const out: ContributionDay[] = [];
+  for (let d = addDays(today, 1); d <= last; d = addDays(d, 1)) {
+    out.push({ date: d, level: 0, count: 0, upcoming: true });
+  }
+  return out;
 }
 
 /** nth weekday of a month, e.g. 3rd Monday of January. */
@@ -171,9 +203,13 @@ export function GitHubActivity({
     month: "2-digit",
     day: "2-digit",
   }).format(new Date());
-  const recentDays = days.filter((d) => d.date <= ownerToday);
+  const pastDays = days.filter((d) => d.date <= ownerToday);
 
-  if (recentDays.length === 0) return null;
+  if (pastDays.length === 0) return null;
+
+  // GitHub's padding is dropped above; planned vacation days are added back
+  // as our own upcoming cells, styled so they can't read as activity.
+  const recentDays = [...pastDays, ...upcomingDays(ownerToday)];
 
   // Tooltip data, keyed by date, for the single delegated grid tooltip.
   const dayInfo: Record<string, ActivityDayInfo> = {};
@@ -182,6 +218,7 @@ export function GitHubActivity({
     dayInfo[d.date] = {
       count: d.count,
       label: vacation ? `Vacation (${vacation})` : holidayFor(d.date),
+      upcoming: d.upcoming ?? false,
     };
   }
 
@@ -190,10 +227,6 @@ export function GitHubActivity({
   for (let i = 0; i < recentDays.length; i += 7) {
     weeks.push(recentDays.slice(i, i + 7));
   }
-
-  // No future-day padding: the grid ends at the last day GitHub returned.
-  // Drawing dashed sentinel cells for "the rest of the month" reads as
-  // activity that hasn't happened yet, which is misleading.
 
   // Group weeks by month
   const monthGroups: { label: string; weeks: ContributionDay[][] }[] = [];
@@ -291,11 +324,13 @@ export function GitHubActivity({
                           const vacation = vacationFor(day.date);
                           const holiday = !vacation ? holidayFor(day.date) : null;
                           const base = LEVEL_COLORS[day.level];
-                          const className = vacation
-                            ? `${base} ${VACATION_RING}`
-                            : holiday
-                              ? `${base} ${HOLIDAY_DOT}`
-                              : base;
+                          const className = day.upcoming
+                            ? cn(vacation ? UPCOMING_VACATION : UPCOMING, holiday && HOLIDAY_DOT)
+                            : vacation
+                              ? `${base} ${VACATION_RING}`
+                              : holiday
+                                ? `${base} ${HOLIDAY_DOT}`
+                                : base;
                           return <div key={day.date} data-date={day.date} className={className} />;
                         }),
                       )}
@@ -317,6 +352,12 @@ export function GitHubActivity({
             <div className={cn("size-2.5  rounded-xs bg-border/50", VACATION_RING)} />
             <span className="inst text-[0.5rem] text-muted-foreground">Vacation</span>
           </div>
+          {recentDays.length > pastDays.length && (
+            <div className="flex items-center gap-1.5">
+              <div className={cn("size-2.5 rounded-xs", UPCOMING)} />
+              <span className="inst text-[0.5rem] text-muted-foreground">Upcoming</span>
+            </div>
+          )}
           <div className="flex items-center gap-1.5">
             <div className={cn("size-2.5  rounded-xs bg-border/50", HOLIDAY_DOT)} />
             <span className="inst text-[0.5rem] text-muted-foreground">US Holiday</span>
