@@ -78,9 +78,6 @@ const VACATION_RING = "ring-1 ring-amber-500/60 ring-inset";
 // quiet day. Borders, not rings, so today's ring can't collide with them.
 const UPCOMING = "border border-dashed border-muted-foreground/40";
 const UPCOMING_VACATION = "border border-dashed border-amber-500/70";
-// Extend past the current week only for a vacation starting within this many
-// days, so a trip booked months out doesn't push the past year off the grid.
-const UPCOMING_HORIZON_DAYS = 30;
 // A dot, not a ring: it reads on any fill level and leaves the ring free
 // for today's highlight.
 const HOLIDAY_DOT =
@@ -101,16 +98,10 @@ function addDays(date: string, n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** Days after `today` through the end of its week (Saturday), or through the
- *  last day of any vacation starting within the horizon, whichever is later. */
+/** Days after `today` through the end of its week (Saturday). */
 function upcomingDays(today: string): ContributionDay[] {
-  const horizon = addDays(today, UPCOMING_HORIZON_DAYS);
   const dow = new Date(today + "T00:00:00Z").getUTCDay();
-  let last = addDays(today, 6 - dow);
-  for (const v of vacations) {
-    const end = addDays(v.end, -1); // `end` is exclusive
-    if (end > today && v.start <= horizon && end > last) last = end;
-  }
+  const last = addDays(today, 6 - dow);
   const out: ContributionDay[] = [];
   for (let d = addDays(today, 1); d <= last; d = addDays(d, 1)) {
     out.push({ date: d, level: 0, count: 0, upcoming: true });
@@ -208,9 +199,8 @@ export function GitHubActivity({
 
   if (pastDays.length === 0) return null;
 
-  // GitHub's padding is dropped above; the rest of this week (and any planned
-  // vacation) is added back as our own upcoming cells, styled so they can't
-  // read as activity.
+  // GitHub's padding is dropped above; the rest of this week is added back as
+  // our own upcoming cells, styled so they can't read as activity.
   const recentDays = [...pastDays, ...upcomingDays(ownerToday)];
 
   // Tooltip data, keyed by date, for the single delegated grid tooltip.
