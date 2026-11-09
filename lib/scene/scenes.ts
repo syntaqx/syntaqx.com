@@ -1064,6 +1064,10 @@ const sprawl: SceneFn = (s) => {
   // the platform always stands at full height; only the weekend apps come and go
   const official = (v: SprawlNode) => v.kind === "core" || v.kind === "db" || v.kind === "svc";
   const height = (v: SprawlNode) => v.h * (official(v) ? 1 : grow(v.k));
+  // the year ends degraded: as the weekend apps sink, the platform they were
+  // wired into is left half-red, not back to clean teal
+  const scarred = ph >= 0.9;
+  const worn = { warn: true, soft: true };
 
   // painter's order: everything on the floor sorted back to front; a
   // database sits just in front of what owns it
@@ -1074,7 +1078,9 @@ const sprawl: SceneFn = (s) => {
     const weekend = (v.kind === "app" || v.kind === "laptop") && !v.adopted;
     // the app hit by the CVE fills solid red like the platform does: this one's a sev
     const red = !down.has(v.i)
-      ? undefined
+      ? scarred && !weekend
+        ? worn
+        : undefined
       : weekend && !(breach && v.i === origin)
         ? Math.floor(s.t * 5) % 2
           ? {}
@@ -1156,8 +1162,7 @@ const sprawl: SceneFn = (s) => {
           z: 0,
           r: 0.35,
           h: 0.75,
-          accent: true,
-          soft: true,
+          ...(scarred ? worn : { accent: true, soft: true }),
         },
       });
     // once adopted, its data moves into Postgres and its little database goes away
