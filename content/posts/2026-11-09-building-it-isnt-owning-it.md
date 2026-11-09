@@ -62,7 +62,7 @@ The sales lead's app is the one that plugs into what you run. It calls an intern
 
 The code is fine in all of these. The tests pass! The agent doesn't know where your boundaries are unless you tell it.
 
-One of these is a nuisance. Ten, from ten people who never talked, mean ten logins, ten copies of the customer table and ten ideas of what an order is. Each one made sense on its own, because it never had to make sense next to the other nine. Three of them email finance a revenue report, each with a different number, and nobody in engineering knows those reports exist until the board asks which one is right. Nobody holds the whole picture, because there was never a moment where anyone had to.
+One of these is a nuisance. Ten is a mess: built by people who never talked, each with its own login, its own copy of the customer table and its own idea of what an order is. Each one made sense on its own, because it never had to make sense next to the other nine. Three of them email finance a revenue report, each with a different number, and nobody in engineering knows those reports exist until the board asks which one is right. Nobody holds the whole picture, because there was never a moment where anyone had to.
 
 Most products should be a [modular monolith](/docs/architecture/service-boundaries), boring on purpose: real seams between modules, each owning its tables, in one deploy. When a piece needs to scale or fail on its own, splitting it out is cheap, because the team wrote down where the boundary is, which module owns which data, and how it gets across. An agent rarely suggests one, because "put it in the app we already have" doesn't sound like much of an answer.
 
