@@ -11,15 +11,22 @@ permissions:
 
 jobs:
   axe:
-    name: Accessibility
+    name: Accessibility (${{ matrix.shard }}/4)
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
+    # axe is CPU-bound: four runners finish in about a third of one's time.
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     timeout-minutes: 20
     env:
       # Event data goes through the environment, never straight into a script.
       TARGET: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+      # The runner image ships Chrome. Installing Playwright's own Chromium
+      # with its apt dependencies usually takes 15s and sometimes over 3 min.
+      CHROME_PATH: /usr/bin/google-chrome
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
-      - run: npx playwright install --with-deps chromium
-      - run: npm run a11y -- "$TARGET"
+      - run: npm run a11y -- "$TARGET" --shard ${{ matrix.shard }}/4
