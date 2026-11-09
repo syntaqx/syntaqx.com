@@ -7,7 +7,7 @@ name: Scheduled posts
 
 on:
   schedule:
-    - cron: "0 13 * * *"
+    - cron: "23 13 * * *" # off the hour: top-of-hour runs queue for hours
   workflow_dispatch:
 
 permissions:
