@@ -3,8 +3,9 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
-import { onCLS } from "web-vitals/attribution";
+import { onCLS, onINP, onLCP } from "web-vitals/attribution";
 import { clsReport, type RouteMark } from "@/lib/cls-report";
+import { inpReport, lcpReport } from "@/lib/vitals-report";
 
 // A /tools/secrets link carries its decryption key in the fragment. The page
 // strips it on load, but Sentry reads the URL first, so drop it from
@@ -14,7 +15,11 @@ function scrub<T>(event: T): T {
   return JSON.parse(JSON.stringify(event).replace(SECRET_FRAGMENT, "$1"));
 }
 
-const production = process.env.VERCEL_ENV === "production";
+// Headless browsers are audit and screenshot harnesses, not readers: their
+// cold-cache layout shifts and injected-script errors were all of Sentry's
+// noise. Real visitors never send that user agent.
+const production =
+  process.env.VERCEL_ENV === "production" && !navigator.userAgent.includes("HeadlessChrome");
 
 Sentry.init({
   beforeSend: scrub,
@@ -53,6 +58,15 @@ if (production) {
   onCLS((metric) => {
     const report = clsReport(metric, routes, [innerWidth, innerHeight]);
     if (report) Sentry.captureMessage("Layout shift above 0.1", { level: "warning", ...report });
+  });
+  // Slow interactions and loads, with the element and where the time went.
+  onINP((metric) => {
+    const report = inpReport(metric, routes, [innerWidth, innerHeight]);
+    if (report) Sentry.captureMessage("Interaction above 200ms", { level: "warning", ...report });
+  });
+  onLCP((metric) => {
+    const report = lcpReport(metric, routes[0].path, [innerWidth, innerHeight]);
+    if (report) Sentry.captureMessage("Largest paint above 2.5s", { level: "warning", ...report });
   });
 }
 
