@@ -9,7 +9,7 @@ tags = ["insurance", "homeowners", "renters", "replacement-cost", "hurricane-ded
 
 Homeowners insurance is the second largest personal line, $188.7 billion of direct premium in 2025 by NAIC's count, and the one where the US market is under the most strain. A policy bundles property coverage for the house, other structures and belongings, living expenses while the house can't be lived in, and personal liability, all priced on a building's location, age, construction and roof, and all exposed to the same catastrophes as the neighbors' policies. Lenders require it, so most homeowners can't simply drop it when the price rises, and states regulate it closely: what an insurer may refuse to write because of a roof's age, what deductibles it must offer, how it pays a claim and when it may nonrenew.
 
-This chapter covers the policy forms and coverages, replacement cost and actual cash value worked on a roof claim, roof age rules, wind and hurricane deductibles worked, mortgagee requirements and escrow, condominium and renters coverage, and the availability problems outside Florida and California. Property claims handling (estimating, appraisal, public adjusters) is Property Claims; the Florida and California markets and residual property plans are Stressed & Residual Markets; renters insurance requirements at a rental property are Property Tech's.
+This chapter covers the policy forms and coverages, replacement cost and actual cash value worked on a roof claim, roof age rules, wind and hurricane deductibles worked, mortgagee requirements and escrow, condominium and renters coverage, and the availability problems outside Florida and California. Property claims handling (estimating, appraisal, public adjusters) is [Property Claims](/books/insurance/property-claims); the Florida and California markets and residual property plans are [Stressed & Residual Markets](/books/insurance/stressed-markets); renters insurance requirements at a rental property are Property Tech's.
 
 ## How the Platforms Do It
 
@@ -24,11 +24,11 @@ NAIC's 2025 market share data for homeowners multiple peril, as of November 2026
 | Farmers | 5.46% | 49.69% |
 | **Industry total** | **$188.69 billion** | |
 
-Behind the national writers are regional carriers, Florida and Gulf specialists (Universal, HCI and others whose reinsurance programs are in Reinsurance Structures), state residual plans, and insurtechs that write renters and homeowners through apps. Lemonade's 2025 10-K describes a product set of renters, homeowners, pet, car and term life (life through Legal & General), more than 3 million customers, and about 45% of 2025 gross written premium from California, New York and Texas.
+Behind the national writers are regional carriers, Florida and Gulf specialists (Universal, HCI and others whose reinsurance programs are in [Reinsurance Structures](/books/insurance/reinsurance-structures)), state residual plans, and insurtechs that write renters and homeowners through apps. Lemonade's 2025 10-K describes a product set of renters, homeowners, pet, car and term life (life through Legal & General), more than 3 million customers, and about 45% of 2025 gross written premium from California, New York and Texas.
 
 ## Forms and Coverages
 
-Most homeowners policies follow forms published by ISO (Verisk) or a few other advisory organizations, adopted with state amendatory endorsements (Products, Coverages & Forms). The family, by convention:
+Most homeowners policies follow forms published by ISO (Verisk) or a few other advisory organizations, adopted with state amendatory endorsements ([Products, Coverages & Forms](/books/insurance/products-and-coverages)). The family, by convention:
 
 | Form | For | Perils |
 | --- | --- | --- |
@@ -64,7 +64,7 @@ A worked roof claim, mine: hail destroys a roof with a replacement cost of $24,0
 | Replacement cost, ACV first | ACV = $24,000 × (1 − 12/20) = $9,600; $9,600 − $2,000 | $7,600 now, then $14,400 holdback when the roof is replaced |
 | A roof payment schedule paying 50% at age 12 (an illustrative schedule, mine) | $24,000 × 50% − $2,000 | $10,000, with no holdback |
 
-The schedule and the depreciation method are filed terms. The claims system reads them from the policy version in force on the loss date; the estimate, depreciation and holdback are tracked as separate amounts on the exposure, and the holdback is a reserve that stays open until proof of replacement or the policy's deadline for it (Property Claims).
+The schedule and the depreciation method are filed terms. The claims system reads them from the policy version in force on the loss date; the estimate, depreciation and holdback are tracked as separate amounts on the exposure, and the holdback is a reserve that stays open until proof of replacement or the policy's deadline for it ([Property Claims](/books/insurance/property-claims)).
 
 ## Wind, Hail and Hurricane Deductibles
 
@@ -78,7 +78,7 @@ A worked season, mine: Coverage A of $400,000 with a 2% hurricane deductible, $8
 | Hurricane 2, October | $15,000 | $2,000 | $0 | $13,000 |
 | Hailstorm, November (not a hurricane) | $5,000 | the all-other-perils deductible, say $1,000 | | $4,000 |
 
-The deductible is a running balance per policy per calendar year across claims, not a field on one claim: the claims system queries prior hurricane claims under the same policy in the same year (and, at renewal, across two policy terms that straddle the calendar year) before applying it. Which events count as hurricanes is set by the policy definition and the event record (Catastrophe Events).
+The deductible is a running balance per policy per calendar year across claims, not a field on one claim: the claims system queries prior hurricane claims under the same policy in the same year (and, at renewal, across two policy terms that straddle the calendar year) before applying it. Which events count as hurricanes is set by the policy definition and the event record ([Catastrophe Events](/books/insurance/catastrophes)).
 
 ```go tab="Go"
 // HurricaneDeductible applies a calendar-year hurricane deductible to a
@@ -102,11 +102,11 @@ pub fn hurricane_deductible(loss: i64, annual: i64, absorbed: i64) -> (i64, i64)
 
 ## Mortgagees, Escrow and Lender Requirements
 
-A mortgaged home's policy names the lender as **mortgagee**, which gives the lender rights to notice and to claim payments (Cancellation, Nonrenewal & Notice Law; Property Claims). The lender's investor sets the coverage it requires. Fannie Mae's Selling Guide (B7-3-02, as published November 4, 2026) requires property insurance on one- to four-unit properties to "provide coverage on a replacement cost basis," though roofs need not be insured on a replacement cost basis, and caps the deductible: the maximum "is 5% of the property insurance coverage amount," and a separate deductible for a peril such as wind is also capped at 5%.
+A mortgaged home's policy names the lender as **mortgagee**, which gives the lender rights to notice and to claim payments ([Cancellation, Nonrenewal & Notice Law](/books/insurance/cancellation-and-nonrenewal); [Property Claims](/books/insurance/property-claims)). The lender's investor sets the coverage it requires. Fannie Mae's Selling Guide (B7-3-02, as published November 4, 2026) requires property insurance on one- to four-unit properties to "provide coverage on a replacement cost basis," though roofs need not be insured on a replacement cost basis, and caps the deductible: the maximum "is 5% of the property insurance coverage amount," and a separate deductible for a peril such as wind is also capped at 5%.
 
 That puts a lender rule into the product: a 10% hurricane deductible on a $400,000 dwelling is $40,000, twice Fannie Mae's $20,000 cap, so an agent selling it on a Fannie Mae loan creates a policy the servicer will reject. The quote can check the mortgagee's investor requirements at bind when they're known.
 
-**Escrow.** Most servicers collect the premium monthly with the mortgage payment and pay the insurer from an escrow account. RESPA's Regulation X lets the servicer hold a cushion "no greater than one-sixth (1/6) of the estimated total annual payments" from the account, requires an annual escrow analysis, and requires a surplus of $50 or more to be refunded within 30 days (12 CFR 1024.17). A worked figure, mine: a $3,600 annual premium and $4,800 of property taxes make $8,400 of annual disbursements, $700 a month, and a cushion of at most $1,400. A premium increase at renewal lands in the next escrow analysis as a shortage the homeowner repays, which is how a homeowners rate increase becomes a mortgage payment increase. The servicer's side is in [Escrow](/books/banking-and-lending/mortgage-servicing#escrow); the insurer's side is billing the mortgagee and accepting the escrow disbursement (Billing & Premium Finance).
+**Escrow.** Most servicers collect the premium monthly with the mortgage payment and pay the insurer from an escrow account. RESPA's Regulation X lets the servicer hold a cushion "no greater than one-sixth (1/6) of the estimated total annual payments" from the account, requires an annual escrow analysis, and requires a surplus of $50 or more to be refunded within 30 days (12 CFR 1024.17). A worked figure, mine: a $3,600 annual premium and $4,800 of property taxes make $8,400 of annual disbursements, $700 a month, and a cushion of at most $1,400. A premium increase at renewal lands in the next escrow analysis as a shortage the homeowner repays, which is how a homeowners rate increase becomes a mortgage payment increase. The servicer's side is in [Escrow](/books/banking-and-lending/mortgage-servicing#escrow); the insurer's side is billing the mortgagee and accepting the escrow disbursement ([Billing & Premium Finance](/books/insurance/billing-and-premium-finance)).
 
 **Force placement.** If coverage lapses, the servicer may buy **force-placed** (lender-placed) insurance and charge the borrower, after an initial notice "at least 45 days before" any charge, a reminder no earlier than 30 days after the first notice and at least 15 days before the charge, and must cancel and refund within 15 days of receiving evidence of coverage (12 CFR 1024.37). The lender-placed product and the servicer's process are in [Force-Placed Insurance](/books/banking-and-lending/mortgage-servicing#force-placed-insurance) and [Master and Force-Placed Policies](/books/property-tech/insurance-deposits-and-guarantees#master-and-force-placed-policies); for the voluntary insurer the event that starts it is its own cancellation or nonrenewal notice to the mortgagee.
 
@@ -118,7 +118,7 @@ That puts a lender rule into the product: a 10% hurricane deductible on a $400,0
 
 ## Availability Outside Florida and California
 
-Florida and California are where the homeowners market broke most visibly (Stressed & Residual Markets), but the pressure is national. The Treasury's Federal Insurance Office, analyzing data from over 330 insurers on more than 246 million policies for 2018 to 2022 (released January 16, 2025), found:
+Florida and California are where the homeowners market broke most visibly ([Stressed & Residual Markets](/books/insurance/stressed-markets)), but the pressure is national. The Treasury's Federal Insurance Office, analyzing data from over 330 insurers on more than 246 million policies for 2018 to 2022 (released January 16, 2025), found:
 
 - Nonrenewal rates in the highest-risk ZIP codes were "about 80 percent higher" than in the lowest-risk ones.
 - Homeowners in the riskiest 20% of ZIP codes paid an average premium of $2,321, 82% more than those in the least risky 20%.
@@ -126,7 +126,7 @@ Florida and California are where the homeowners market broke most visibly (Stres
 
 FIO's September 2026 annual report adds the 2025 turn: homeowners lines "benefited from nearly 12 percent growth in net premiums earned and an approximately 10 percent decline in net losses incurred," and personal lines posted a second consecutive year of underwriting profit despite significant catastrophe losses. Prices rose to meet costs, so availability eased in places while affordability did not.<!-- source-gap: homeowners-availability-states | missing | state-level homeowners availability data outside Florida and California (e.g. Louisiana, Texas, Colorado, Iowa nonrenewal and residual plan growth) | closes with: a state DOI or residual plan report with 2025-2026 figures, or the NAIC homeowners market data call | checked: 2026-11-10 -->
 
-For the system, availability shows up as underwriting and notice volume: tighter eligibility rules by geography and roof (Underwriting Rules, Referrals & Models), more nonrenewals with state notice periods and moratoria after disasters (Catastrophe Events), more referrals to residual plans and surplus lines markets, and more mitigation data (roof type, opening protection, defensible space) collected to qualify for coverage or discounts.
+For the system, availability shows up as underwriting and notice volume: tighter eligibility rules by geography and roof ([Underwriting Rules, Referrals & Models](/books/insurance/underwriting)), more nonrenewals with state notice periods and moratoria after disasters ([Catastrophe Events](/books/insurance/catastrophes)), more referrals to residual plans and surplus lines markets, and more mitigation data (roof type, opening protection, defensible space) collected to qualify for coverage or discounts.
 
 ## How to Build It
 

@@ -9,7 +9,7 @@ tags = ["insurance", "rating", "rate-manuals", "loss-costs", "personal-auto", "r
 
 An insurance rate is a filed price list plus a filed recipe. The list is a set of tables: a base rate for each coverage in each territory, and factors (relativities) for the driver class, the vehicle, the limit, the deductible, the driving record and every discount. The recipe is the order in which those tables are read, multiplied, added and rounded. Both are part of the rate filing, and in most states charging anything other than what the filing produces is a violation, whether the difference is a wrong factor or a rounding step done in the wrong place. A market conduct examiner tests a rating engine by rerating a sample of policies by hand from the filed manual and comparing to the penny.
 
-That makes a rating engine an unusual piece of software. Its logic is owned by actuaries and regulators, not engineers; it changes on a schedule set by filings, by state, with effective dates that apply to new business and renewals separately; and every result has to be explainable after the fact, step by step, for a policy quoted years ago. This chapter covers the rating algorithm as filed, the tables it reads, how advisory organizations' loss costs become a company's rates, the rounding order, a worked personal auto premium from a published North Carolina manual, and how rate changes get versioned and dated. What you may and may not rate on is What You May Rate On; the filing process itself (prior approval, file-and-use, SERFF, objections) is Filing Rates & Forms.
+That makes a rating engine an unusual piece of software. Its logic is owned by actuaries and regulators, not engineers; it changes on a schedule set by filings, by state, with effective dates that apply to new business and renewals separately; and every result has to be explainable after the fact, step by step, for a policy quoted years ago. This chapter covers the rating algorithm as filed, the tables it reads, how advisory organizations' loss costs become a company's rates, the rounding order, a worked personal auto premium from a published North Carolina manual, and how rate changes get versioned and dated. What you may and may not rate on is [What You May Rate On](/books/insurance/rating-factors-and-limits); the filing process itself (prior approval, file-and-use, SERFF, objections) is [Filing Rates & Forms](/books/insurance/rate-and-form-filing).
 
 ## How the Platforms Do It
 
@@ -46,7 +46,7 @@ A territory is a geographic rating cell. Historically territories were groups of
 - **Territory definitions change with filings.** A new territory map is a new table version, effective for new business and renewals on its date. A policy rated in territory 140 last year may renew in territory 145; the old policy's worksheet must still show 140.
 - **Midterm moves re-rate pro rata.** North Carolina's Rule 9 lets the premium be adjusted by endorsement when an auto moves to another rating territory, or moves temporarily for at least 30 consecutive days, charging "on a pro rata basis the rate or rates for the territories in which the auto is garaged during the remainder of the policy period."
 
-Territory is also where rating meets fairness law. A territory factor built from loss experience can correlate with race or income, which is why some states restrict how territories are drawn and why the disparate impact debate in What You May Rate On reaches territories as well as credit.
+Territory is also where rating meets fairness law. A territory factor built from loss experience can correlate with race or income, which is why some states restrict how territories are drawn and why the disparate impact debate in [What You May Rate On](/books/insurance/rating-factors-and-limits) reaches territories as well as credit.
 
 ## Loss Costs and Loss Cost Multipliers
 
@@ -175,7 +175,7 @@ Rating uses decimal arithmetic to the precision the manual implies and converts 
 
 A rate change is a new version of some tables (and sometimes of the step list), approved by a filing, effective on a date, with a rule of application that says which policies it reaches. The parts:
 
-- **Effective dates differ for new business and renewals.** Filings commonly set one date for new business and a later one for renewals, so renewal notices can go out on the new rate with the lead time notice law requires (Cancellation, Nonrenewal & Notice Law). The foundation's `products` table carries both (`effective_from`, `renewal_from`).
+- **Effective dates differ for new business and renewals.** Filings commonly set one date for new business and a later one for renewals, so renewal notices can go out on the new rate with the lead time notice law requires ([Cancellation, Nonrenewal & Notice Law](/books/insurance/cancellation-and-nonrenewal)). The foundation's `products` table carries both (`effective_from`, `renewal_from`).
 - **The date that selects the version is the policy's effective date, not the processing date.** A quote run on September 28 for a policy effective October 2 uses the October 1 tables. North Carolina's form and rule changes in its April 1, 2026 circular apply "to all new and renewal policies becoming effective on or after October 1, 2026."
 - **Midterm changes use inception rates or current rates, consistently.** NCRB's Rule 9 lets a company compute an added car, a transferred coverage or a changed limit or deductible "using the rates and rules in effect at the inception of the policy or at the time the change is made," but requires that the election "be applied consistently by the company and shall not be made on a policy by policy basis." That election is a product-level setting the engine reads, not a per-transaction choice.
 - **Small adjustments have their own rule.** The same rule lets a premium adjustment of $2 or less be waived or made subject to a $2 minimum (with the actual return premium refunded on request), and lets a company skip charging or refunding an adjustment made within 30 days before the end of a six-month term or 60 days before the end of a longer one, except on the insured's request.
@@ -185,7 +185,7 @@ Rate versions are append-only: a new version is a new row with a validity window
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `products` (a filed product per line and state, with `effective_from`, `renewal_from`, `rate_filing_id`) and `quotes` (defined in Quote, Bind & Issue, holding the `rating_worksheet`). This chapter defines `rate_tables` and its entries, `territories`, the ordered rating algorithm, and `rating_steps`, the stored worksheet.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `products` (a filed product per line and state, with `effective_from`, `renewal_from`, `rate_filing_id`) and `quotes` (defined in [Quote, Bind & Issue](/books/insurance/quote-bind-and-issue), holding the `rating_worksheet_ref` that points at this chapter's `rating_steps`). This chapter defines `rate_tables` and its entries, `territories`, the ordered rating algorithm, and `rating_steps`, the stored worksheet.
 
 ```sql
 CREATE TABLE rate_tables (                 -- a versioned factor or rate table
@@ -271,7 +271,7 @@ LIMIT 1;
 Design choices that matter:
 
 - **Rate from the stored worksheet, rerate from the tables.** The quote's premium is the sum of its final `rating_steps`; a rerate for an examiner or a regression test runs the same algorithm version against the same table versions and must reproduce every row.
-- **Rating is a pure function** of inputs and table versions. Consumer reports, telematics scores and prefilled data are fetched before rating and passed in as inputs with their own records (Consumer Reports & Third-Party Data), so a rerate does not refetch anything.
+- **Rating is a pure function** of inputs and table versions. Consumer reports, telematics scores and prefilled data are fetched before rating and passed in as inputs with their own records ([Consumer Reports & Third-Party Data](/books/insurance/consumer-reports-and-third-party-data)), so a rerate does not refetch anything.
 - **Regression-test every filing.** Before a new table version goes live, rate a corpus of stored quotes on old and new versions and compare the distribution of changes to the filing's stated rate impact; a filed +6.5% that rates as +9% means a table or step is wrong.
 
 ## Auditing

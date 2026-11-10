@@ -66,7 +66,7 @@ The bureau publishes the classification manual, files advisory loss costs (or, i
 
 **Competitive.** Many states have a state fund that competes with private insurers and serves as the insurer of last resort; California's State Compensation Insurance Fund and the New York State Insurance Fund are among the largest workers' compensation writers in the country. Texas Mutual, a mutual, pays dividends that "are based on performance, are not guaranteed and must comply with Texas Department of Insurance rules."
 
-**Residual markets.** In other states, employers that can't buy coverage voluntarily go to an assigned risk plan, with servicing carriers issuing the policies; NCCI's experience rating guide lists the assigned risk adjustment programs (ARAP, Florida's FLARAP, SARAP and Massachusetts's MAARAP) that surcharge residual market employers by their experience. Residual markets in general are covered in Stressed & Residual Markets in the Regulation part.
+**Residual markets.** In other states, employers that can't buy coverage voluntarily go to an assigned risk plan, with servicing carriers issuing the policies; NCCI's experience rating guide lists the assigned risk adjustment programs (ARAP, Florida's FLARAP, SARAP and Massachusetts's MAARAP) that surcharge residual market employers by their experience. Residual markets in general are covered in [Stressed & Residual Markets](/books/insurance/stressed-markets) in the Regulation part.
 
 ## Texas Non-Subscription
 

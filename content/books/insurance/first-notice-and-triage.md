@@ -52,7 +52,7 @@ Two practical rules. First, **record notice when it arrives, not when it is keye
 
 ## Verifying Coverage
 
-The first coverage question is mechanical: was there a policy in force for this risk on the loss date, as the insurer knew it then and knows it now? The answer is a bitemporal query against policy versions, because an endorsement processed after the loss can change what was covered on the loss date (adding a car the day before the accident, effective the day before), and a cancellation for nonpayment may or may not have taken effect depending on whether its notice was timely (Cancellation, Nonrenewal & Notice Law). The claim stores the policy version it was opened against, the recorded time of that version, and any later version that changed the answer.
+The first coverage question is mechanical: was there a policy in force for this risk on the loss date, as the insurer knew it then and knows it now? The answer is a bitemporal query against policy versions, because an endorsement processed after the loss can change what was covered on the loss date (adding a car the day before the accident, effective the day before), and a cancellation for nonpayment may or may not have taken effect depending on whether its notice was timely ([Cancellation, Nonrenewal & Notice Law](/books/insurance/cancellation-and-nonrenewal)). The claim stores the policy version it was opened against, the recorded time of that version, and any later version that changed the answer.
 
 The questions verification answers, in order:
 
@@ -103,7 +103,7 @@ Typical segments and where they go:
 
 **Authority.** Each adjuster has reserve and payment authority by line and amount; a claim whose expected severity exceeds the assignee's authority routes to someone with enough, or carries a referral task from the start ([Exposures, Reserves & Payments](/books/insurance/reserves-and-payments#authority-and-approvals)).
 
-Rules for the rules: segmentation is a scoring and rules problem with all the governance of one ([Risk Scoring](/docs/building-blocks/risk-scoring#scores-bands-and-the-human-middle)); keep the rule set versioned, record which rule assigned each claim and why, and treat a model that triages claims as an AI system under the NAIC bulletin where the state has adopted it (Data, AI & Privacy Rules). Reassignment is an event with a reason, because a claim that bounces between adjusters is a claim whose clocks get missed.
+Rules for the rules: segmentation is a scoring and rules problem with all the governance of one ([Risk Scoring](/docs/building-blocks/risk-scoring#scores-bands-and-the-human-middle)); keep the rule set versioned, record which rule assigned each claim and why, and treat a model that triages claims as an AI system under the NAIC bulletin where the state has adopted it ([Data, AI & Privacy Rules](/books/insurance/data-ai-and-privacy-rules)). Reassignment is an event with a reason, because a claim that bounces between adjusters is a claim whose clocks get missed.
 
 ## The Claim File Opened
 
@@ -112,10 +112,10 @@ When intake is done, the claim file holds:
 - **The claim** with loss and reported times, channel, cause of loss, loss state, catastrophe code, segment, handling office and adjuster.
 - **The policy context**: the term and version it was opened against (verified or unverified), with the coverages, limits and deductibles as of the loss date.
 - **Incidents**: what was damaged or hurt, each with its facts (general, injury, property, vehicle, or a trip for travel claims).
-- **Exposures**: one claimant against one coverage, each with its own adjuster, reserve lines and status (Exposures, Reserves & Payments).
+- **Exposures**: one claimant against one coverage, each with its own adjuster, reserve lines and status ([Exposures, Reserves & Payments](/books/insurance/reserves-and-payments)).
 - **Parties and roles**: insured, claimants, drivers, witnesses, attorneys, vendors.
 - **Coverage positions** for any open issue, with their letters.
-- **Tasks** for every clock the notice started, each with its rule (Claim Handling Law & Clocks), and the first activities from setup rules.
+- **Tasks** for every clock the notice started, each with its rule ([Claim Handling Law & Clocks](/books/insurance/claim-handling-law)), and the first activities from setup rules.
 - **Documents**: the FNOL record itself, photos, the police report, recorded statements, each noted as to date received, processed or mailed.
 
 That last point is a model regulation requirement, not good hygiene: Model 902 requires claim files detailed enough "to permit reconstruction of the insurer's activities relative to each claim," each relevant document "noted as to date received, date processed or date mailed," and claim data (claim number, line of coverage, date of loss, date of payment, date of denial or date closed without payment) accessible for open and closed files for the current year and the two preceding years. Market conduct examiners sample claim files and reconstruct them; a system that can't produce the timeline is the finding ([Audit Trails](/docs/building-blocks/audit-trails#producing-records)).
@@ -198,7 +198,7 @@ Design choices:
 - **The coverage answer as it was:** the policy version and recorded time the claim opened against, and every later change to it.
 - **Every coverage position** with the facts-known date, the deadline, the rule, the letter and its proof of delivery.
 - **Every segmentation and assignment** with the rule version, inputs and reason, and every reassignment.
-- **Each document** dated as received, processed or mailed, so a market conduct examiner can reconstruct the file (Market Conduct & Unfair Practices).
+- **Each document** dated as received, processed or mailed, so a market conduct examiner can reconstruct the file ([Market Conduct & Unfair Practices](/books/insurance/market-conduct)).
 
 ## What This Means for the System You Build
 

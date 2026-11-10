@@ -10,7 +10,7 @@ tags = ["insurance", "policy-administration", "endorsements", "renewals", "bitem
 
 A policy changes all the time. A car is added in April, a driver removed in June, an address corrected back to January because the insured moved before the policy started, a deductible raised, a mortgagee replaced, and then the whole thing renews in December on new rates. Each change is a policy transaction with an effective date, and each one writes a premium difference for the time remaining. The hard part isn't any single change; it's that changes arrive out of order. An endorsement processed in July can be effective in April, before a change that was processed in May and effective in June, and the June change was priced on a policy that, as of now, never existed. The system has to reverse the later change, apply the earlier one, reapply the later one on top, and write only the net premium difference, while keeping a record of what it believed at every point along the way.
 
-This is the core of policy administration and the reason the foundation's model makes the transaction the source and the version a view ([The Core Data Model](/books/insurance/insurance-business#the-core-data-model)). This chapter covers midterm changes and their premium deltas, out-of-sequence endorsements with a worked replay, preemption between concurrent changes, rewrites, renewal processing and offers, conditional renewal, bitemporal policy versions, and how vendors model transactions. Cancellation and reinstatement are Cancellation, Nonrenewal & Notice Law; the rating of each change is How a Rate Is Built.
+This is the core of policy administration and the reason the foundation's model makes the transaction the source and the version a view ([The Core Data Model](/books/insurance/insurance-business#the-core-data-model)). This chapter covers midterm changes and their premium deltas, out-of-sequence endorsements with a worked replay, preemption between concurrent changes, rewrites, renewal processing and offers, conditional renewal, bitemporal policy versions, and how vendors model transactions. Cancellation and reinstatement are [Cancellation, Nonrenewal & Notice Law](/books/insurance/cancellation-and-nonrenewal); the rating of each change is [How a Rate Is Built](/books/insurance/how-a-rate-is-built).
 
 ## How the Platforms Do It
 
@@ -27,7 +27,7 @@ Both vendors land on the same design: transactions are first-class and immutable
 
 An endorsement changes the policy from its effective date to the end of the term. The premium it writes is the difference in full-term premium between the new and old versions, times the share of the term remaining. North Carolina's bureau manual states the rule for auto: if an auto or coverage is added to expire with the policy, "the premium for such additional insurance shall be computed pro rata"; the same for a transfer from one auto to another; and the premium for a change in limits or deductibles is computed using "the rates and rules in effect at the inception of the policy or at the time the change is made," with the company's choice of inception or current rates applied consistently, not policy by policy (NCRB Personal Auto Manual Rule 9).
 
-A worked endorsement, mine, using the collision premium from How a Rate Is Built. An annual policy runs from 12:01 a.m. January 1, 2027 to 12:01 a.m. January 1, 2028, 365 days, issued without collision. On April 1, 2027 the insured adds collision with a $500 deductible, full-term premium $602. Days remaining: 275. Written premium: $602 × 275 / 365 = $453.56. The policy's written premium for the term is now the original premium plus $453.56; the new collision coverage earns over the 275 days from April 1. Day counts are the default; some filings use a pro rata table by days or months, which is a rate table like any other.
+A worked endorsement, mine, using the collision premium from [How a Rate Is Built](/books/insurance/how-a-rate-is-built). An annual policy runs from 12:01 a.m. January 1, 2027 to 12:01 a.m. January 1, 2028, 365 days, issued without collision. On April 1, 2027 the insured adds collision with a $500 deductible, full-term premium $602. Days remaining: 275. Written premium: $602 × 275 / 365 = $453.56. The policy's written premium for the term is now the original premium plus $453.56; the new collision coverage earns over the 275 days from April 1. Day counts are the default; some filings use a pro rata table by days or months, which is a rate table like any other.
 
 Small adjustments have rules of their own. Under the same manual, an amendment producing an adjustment of $2 or less may be waived or made subject to a $2 minimum (the actual return premium refunded if the insured asks); a $2 minimum applies when the insured asks for added coverage, a higher limit or a lower deductible; returns under $2 needn't be refunded on a cancellation, a lower limit or a higher deductible unless asked; and an adjustment arising within 30 days before the end of a six-month term, or 60 days before the end of a longer one, needn't be charged or refunded, except actual refunds on request. These are the kinds of rules that belong in the product configuration as named settings rather than in code, because each state and program sets them differently.
 
@@ -82,7 +82,7 @@ pub fn pro_rata(term_premium: i64, start: NaiveDate, end: NaiveDate, effective: 
 }
 ```
 
-The function takes local dates because the policy's days are local days at the risk; the conversion from the stored instants happens once, in the zone the policy records (Quote, Bind & Issue).
+The function takes local dates because the policy's days are local days at the risk; the conversion from the stored instants happens once, in the zone the policy records ([Quote, Bind & Issue](/books/insurance/quote-bind-and-issue)).
 
 ## Out-of-Sequence Endorsements
 
@@ -109,7 +109,7 @@ What can go wrong in a replay, and what the vendors do about it:
 - **Conflicting field changes.** If T2 had also changed car 1's garaging address and T3 changes it differently, reapplying T2 would overwrite T3. Guidewire reports the conflicts at quote time and makes the user choose per field; its documentation's example shows a date of birth changed in three transactions, with the latest value winning under `acceptYours`.
 - **Reapplying a change to something that no longer exists.** If the backdated change removed the car the later change modified, Socotra ignores change instructions "for elements that no longer exist as a result of reapplied transactions."
 - **Rerating with which rates?** The reapplied transactions rate on the same basis (inception or current rates) the product's election says, not on whatever is current at replay time, unless the election is current rates.
-- **Downstream effects.** Commissions, cessions, taxes and statistical records follow the premium entries, so they reverse and reapply too; a replay that rewrites premium without them leaves the agent's statement and the reinsurer's bordereau wrong (Commissions & Agency Accounting; Reinsurance Operations).
+- **Downstream effects.** Commissions, cessions, taxes and statistical records follow the premium entries, so they reverse and reapply too; a replay that rewrites premium without them leaves the agent's statement and the reinsurer's bordereau wrong ([Commissions & Agency Accounting](/books/insurance/commissions-and-agency-accounting); [Reinsurance Operations](/books/insurance/reinsurance-operations)).
 
 ## Preemption
 
@@ -124,12 +124,12 @@ A rewrite replaces a policy, or the remainder of a term, with a new term or a ne
 A renewal is a new term created before the current one ends. The renewal job runs in stages, each with a clock set by notice law:
 
 1. **Create** the renewal transaction ahead of expiration: Socotra's auto-renewal plans use `renewalCreateLeadDays`; the lead time has to exceed the longest notice period the renewal might need.
-2. **Underwrite**: re-run eligibility and referrals on current rules, order fresh reports where the product refreshes them (motor vehicle records, credit at the refresh interval), and decide renew, renew with changes, or nonrenew. Referral reasons attached to the policy midterm surface here (Underwriting Rules, Referrals & Models).
+2. **Underwrite**: re-run eligibility and referrals on current rules, order fresh reports where the product refreshes them (motor vehicle records, credit at the refresh interval), and decide renew, renew with changes, or nonrenew. Referral reasons attached to the policy midterm surface here ([Underwriting Rules, Referrals & Models](/books/insurance/underwriting)).
 3. **Rate** on the product version and tables effective for renewals on the renewal date (`renewal_from`), with telematics or other earned adjustments that apply at renewal.
 4. **Offer and notify** within the required lead time: a renewal offer with the premium, and any change notice or nonrenewal notice.
 5. **Bind** on payment or automatically: Guidewire binds renewals with no material changes or underwriting issues automatically; renewals with issues need someone to act.
 
-Lead times for the offer, from state law (Cancellation, Nonrenewal & Notice Law has the full notice rules):
+Lead times for the offer, from state law ([Cancellation, Nonrenewal & Notice Law](/books/insurance/cancellation-and-nonrenewal) has the full notice rules):
 
 | State | Rule |
 | --- | --- |
@@ -156,7 +156,7 @@ Each transaction produces policy versions with two time ranges: **effective**, w
 | v3 | Aggregate | Apr 1 to Jun 1 (new territory, one car) | From Jul 15 |
 | v4 | Aggregate | Jun 1 to Jan 1, 2028 (new territory, two cars) | From Jul 15 |
 
-Two queries make the model useful. **What was covered on a date, as we know it now** (a claim reported today for a May 15 loss): the version whose effective range contains May 15 and whose recorded range contains now, which is v3. **What did we believe on a past date** (an examiner asking what the policy showed when the July 1 ID cards were printed): the version whose recorded range contains July 1, which for May 15 is v1'. Neither question is answerable from a policy row that was updated in place, and both get asked: the first by claims every day, the second by courts and regulators when something went wrong.
+Two queries make the model useful. **What was covered on a date, as the system knows it now** (a claim reported today for a May 15 loss): the version whose effective range contains May 15 and whose recorded range contains now, which is v3. **What did the system believe on a past date** (an examiner asking what the policy showed when the July 1 ID cards were printed): the version whose recorded range contains July 1, which for May 15 is v1'. Neither question is answerable from a policy row that was updated in place, and both get asked: the first by claims every day, the second by courts and regulators when something went wrong.
 
 ## How to Build It
 

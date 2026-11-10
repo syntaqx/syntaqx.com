@@ -89,7 +89,7 @@ Two insurance-specific points. Licensing exemptions don't reach these laws: Flor
 
 ## Quote-Request Privacy
 
-A quote request is already a privacy relationship. Under the NAIC's privacy regulation implementing the Gramm-Leach-Bliley Act (Model 672), "an applicant for insurance prior to the inception of insurance coverage is a licensee's consumer," so the driver who submits a quote form to an agency or carrier is a consumer whose nonpublic personal information is covered from that moment, before any policy. A lead seller that isn't a licensee sits outside that regulation, which is why the FTC acts against marketplaces directly. For a carrier or agency buying leads, the data received becomes nonpublic personal information in its hands, subject to its privacy notice and to the rules on disclosing it to nonaffiliated third parties; reselling a lead it bought, or sharing it with another carrier, is a disclosure. Data, AI & Privacy Rules covers the notices and opt-outs.
+A quote request is already a privacy relationship. Under the NAIC's privacy regulation implementing the Gramm-Leach-Bliley Act (Model 672), "an applicant for insurance prior to the inception of insurance coverage is a licensee's consumer," so the driver who submits a quote form to an agency or carrier is a consumer whose nonpublic personal information is covered from that moment, before any policy. A lead seller that isn't a licensee sits outside that regulation, which is why the FTC acts against marketplaces directly. For a carrier or agency buying leads, the data received becomes nonpublic personal information in its hands, subject to its privacy notice and to the rules on disclosing it to nonaffiliated third parties; reselling a lead it bought, or sharing it with another carrier, is a disclosure. [Data, AI & Privacy Rules](/books/insurance/data-ai-and-privacy-rules) covers the notices and opt-outs.
 
 ## How to Build It
 
@@ -126,7 +126,7 @@ CREATE TABLE consents (                    -- one grant, by seller, number, chan
   party_id           UUID NOT NULL REFERENCES parties (id),
   lead_id            UUID REFERENCES leads (id),
   seller_names       TEXT[] NOT NULL,       -- as displayed in the consent language
-  names_us           BOOLEAN NOT NULL,      -- our seller name appeared, verified
+  names_us           BOOLEAN NOT NULL,      -- the seller's own name appeared, verified
   phone_e164         TEXT NOT NULL,
   channels           TEXT[] NOT NULL,       -- 'autodialed_call', 'prerecorded', 'sms'
   purpose            TEXT NOT NULL CHECK (purpose IN ('telemarketing', 'informational')),

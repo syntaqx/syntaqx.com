@@ -62,7 +62,7 @@ A license is issued for named lines of authority. The model act's section 7(A) l
 | Credit | Limited line credit insurance (credit life, credit disability, credit property, GAP and similar coverage tied to an extension of credit) |
 | Other | Any other line permitted under state law, including the limited lines each state defines and, separately, surplus lines licenses |
 
-The mapping from a product to a required line of authority is data, per state: a homeowners policy needs property and casualty (or personal lines), commercial general liability needs casualty, a fixed annuity needs life, a variable annuity needs the variable line plus a securities registration. The limited lines are where embedded insurance lives, because a rental counter clerk or an electronics retailer can sell under a limited license without the full exam (Embedded Insurance).
+The mapping from a product to a required line of authority is data, per state: a homeowners policy needs property and casualty (or personal lines), commercial general liability needs casualty, a fixed annuity needs life, a variable annuity needs the variable line plus a securities registration. The limited lines are where embedded insurance lives, because a rental counter clerk or an electronics retailer can sell under a limited license without the full exam ([Embedded Insurance](/books/insurance/embedded-insurance)).
 
 ## Resident and Nonresident Licenses
 

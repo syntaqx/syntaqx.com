@@ -46,7 +46,7 @@ Most states require insurers (and self-insurers and their TPAs) to report claims
 
 Each transaction carries a maintenance type code naming the event, and each state publishes its own implementation guide, element requirement tables and event table: which transactions it requires, which data elements are mandatory for each, the edits it applies and the deadline for each event, all versioned with effective dates. Texas's guide is an example: Release 3.1.4, implemented July 26, 2023, with claims the carrier knew of before that date reported as legacy claims. The state acknowledges each transaction (accepted, accepted with errors, or rejected), and errors must be corrected and resent.
 
-<!-- source-gap: iaiabc-mtc-codes | missing | the list of FROI and SROI maintenance type codes and their meanings in IAIABC Release 3.1 | closes with: a state implementation guide or event table that reproduces the codes publicly | checked: 2026-11-09 --> The code list is in the IAIABC's paid implementation guide, so I describe the events without their codes.
+The IAIABC publishes its own guide for members only, but California publishes the codes in its implementation guide and valid values table, and [IAIABC Claims EDI](/books/insurance/acord-and-data-standards#iaiabc-claims-edi) reproduces them with California's deadlines: FROI 00 (original), 01 (cancel), 02 (change), 04 (denial), AU (acquired/unallocated) and CO (correction); SROI codes such as IP (initial indemnity payment), FN (final), the P1 to P9 and S1 to S9 series, and periodic report codes (AN, BM, BW, MN, QT, SA).
 
 For the system, EDI is a reporting engine driven by claim events:
 
@@ -173,11 +173,10 @@ For the system: every claimant needs a Medicare status query (CMS's query proces
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). A workers' compensation claim has a medical exposure and an indemnity exposure for the employee (both with the employee as claimant), benefit periods that drive indemnity payments, state and federal reports driven by events, and medical bills priced by fee schedule.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). A workers' compensation claim has a medical exposure and an indemnity exposure for the employee (both with the employee as claimant), benefit periods that drive indemnity payments, state and federal reports driven by events, and medical bills priced by fee schedule. Whose law governs the claim is the `claims.jurisdiction` column [First Notice, Coverage & Triage](/books/insurance/first-notice-and-triage#how-to-build-it) adds.
 
 ```sql
 ALTER TABLE claims
-  ADD COLUMN jurisdiction_state TEXT,       -- whose law governs the claim
   ADD COLUMN employer_notice_at TIMESTAMPTZ, -- the employer's knowledge of the injury
   ADD COLUMN carrier_notice_at  TIMESTAMPTZ, -- written notice to the insurer, starts clocks
   ADD COLUMN compensability     TEXT CHECK (compensability IN ('pending', 'accepted',
@@ -311,6 +310,7 @@ Design notes:
 - [California DIR: Official Medical Fee Schedule physician update, Release 2026-16](https://www.dir.ca.gov/DIRNews/2026/2026-16.html), conformity to Medicare's 2026 changes, effective March 1, 2026
 - [Texas Department of Insurance: Maximum and minimum weekly benefits](https://www.tdi.texas.gov/wc/employee/maxminbens.html), temporary income benefit limits for fiscal years 2026 and 2027
 - [Texas Department of Insurance: Medical fee guideline conversion factors](https://www.tdi.texas.gov/wc/fee/conversionfactors.html), the 2026 conversion factors of $72.07 and $90.48
+- [California EDI Implementation Guide for FROI/SROI, Version 3.1 (PDF)](https://www.dir.ca.gov/dwc/DWCPropRegs/WCIS-Regulations/Final-Regulations/Guides/FROISROICAImplementationGuide-Final.pdf) and the [California FROI/SROI Valid Values Table, Release 1 v3.1 (PDF)](https://www.dir.ca.gov/dwc/WCIS/FROISROI_ValidValuesTable_V_31.pdf), the FROI, SROI and periodic maintenance type codes
 - [Texas DWC EDI (Verisk)](https://txdwcedi.info/) and the [Texas Claim EDI Release 3.1.4 Implementation Guide (PDF)](https://txdwcedi.info/documents/txedi31guide0723.pdf), the July 26, 2023 implementation, legacy claims, the 1995 Release 1.0 mandate and the rules at 28 TAC 124.100 to 124.108
 - [CMS: Mandatory insurer reporting (Section 111)](https://www.cms.gov/medicare/coordination-benefits-recovery/mandatory-insurer-reporting), responsible reporting entities under 42 USC 1395y(b)(8)
 - [CMS: MMSEA Section 111 NGHP User Guide v8.6, Chapter III, October 5, 2026 (PDF)](https://www.cms.gov/files/document/mmsea-111-october-5-2026-nghp-user-guide-version-8-6-chapter-iii-policy-guidance.pdf), ORM reporting from January 1, 2010, the $750 medicals-only exclusion and the TPOC thresholds by date

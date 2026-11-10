@@ -10,7 +10,7 @@ tags = ["insurance", "policy-administration", "cancellation", "nonrenewal", "not
 
 An insured can end a policy whenever they like. An insurer can't. Every state limits why an insurer may cancel a personal auto or homeowners policy midterm, how much notice it must give, how the notice must be delivered and proved, what reasons it must state, and how much premium it must return; most also limit why and with how much notice it may decline to renew. The rules differ by state, by line, by reason (nonpayment gets the shortest notice almost everywhere) and by how long the policy has been in force (the first 60 days are often an underwriting period with fewer restrictions). A notice mailed a day late is not a notice: the cancellation fails, coverage continues, and a claim in the gap is covered. That is why cancellation and nonrenewal are the most deadline-dense code in a policy system, and why the dates must be computed from rules with citations, stored, and proven.
 
-This chapter covers who may cancel and on what grounds, notice periods by state and reason with a worked calculation across states, proof of mailing and electronic delivery, return premium (pro rata versus short rate, with the numbers), reinstatement and lapse, and notices to lienholders and mortgagees. Premium finance cancellations, which run through a finance company's power of attorney, are in Billing & Premium Finance; renewal offers and conditional renewal are in [Endorsements, Renewals & the Policy Transaction Model](/books/insurance/endorsements-and-renewals#renewals).
+This chapter covers who may cancel and on what grounds, notice periods by state and reason with a worked calculation across states, proof of mailing and electronic delivery, return premium (pro rata versus short rate, with the numbers), reinstatement and lapse, and notices to lienholders and mortgagees. Premium finance cancellations, which run through a finance company's power of attorney, are in [Billing & Premium Finance](/books/insurance/billing-and-premium-finance); renewal offers and conditional renewal are in [Endorsements, Renewals & the Policy Transaction Model](/books/insurance/endorsements-and-renewals#renewals).
 
 ## How the Platforms Do It
 
@@ -135,7 +135,7 @@ Calendar days are the norm in these statutes; a rule that counts business days (
 
 ## Proof of Mailing and Delivery
 
-Cancellation law is mailing law. New York: mailing to the named insured at the policy address "shall be sufficient proof of the giving of notice," a notice missing a required provision isn't effective, and a copy goes to the agent or broker "within seven days of the time such notice is mailed to the named insured" (3425(h)). Florida accepts "United States postal proof of mailing, certified or registered mailing" as sufficient proof (627.728(5)). Texas counts from the date the insurer mails. California's commercial cancellation rule applies the Code of Civil Procedure's mailing rules (677.2), and its auto rule requires notice to the named insured, lienholder or additional interest (662). Electronic delivery can substitute where the state's e-commerce law allows it: NCOIL's model treats proper electronic delivery as equivalent to certified mail or a certificate of mailing, with consent, receipt measures and a paper fallback (Quote, Bind & Issue).
+Cancellation law is mailing law. New York: mailing to the named insured at the policy address "shall be sufficient proof of the giving of notice," a notice missing a required provision isn't effective, and a copy goes to the agent or broker "within seven days of the time such notice is mailed to the named insured" (3425(h)). Florida accepts "United States postal proof of mailing, certified or registered mailing" as sufficient proof (627.728(5)). Texas counts from the date the insurer mails. California's commercial cancellation rule applies the Code of Civil Procedure's mailing rules (677.2), and its auto rule requires notice to the named insured, lienholder or additional interest (662). Electronic delivery can substitute where the state's e-commerce law allows it: NCOIL's model treats proper electronic delivery as equivalent to certified mail or a certificate of mailing, with consent, receipt measures and a paper fallback ([Quote, Bind & Issue](/books/insurance/quote-bind-and-issue)).
 
 What the system keeps for each notice: the rendered notice, the address used and where it came from (the policy address as of the mailing date), the mail vendor's batch and acceptance record or the USPS certificate of mailing (or the e-delivery consent and provider receipt), the date and time mailed, the agent copy and its date, and the computed deadline with the rule that set it. Returned mail is a signal the renewal and billing teams need, whatever its legal effect in the state.
 
@@ -143,7 +143,7 @@ What the system keeps for each notice: the rendered notice, the address used and
 
 When a policy cancels midterm, the unearned premium goes back. **Pro rata** returns exactly the unearned share. **Short rate** returns less, keeping a penalty for early cancellation, by a table or a percentage. The usual rule, and North Carolina's amendatory endorsement states it in the contract: "If the named insured or a premium finance company cancels this policy, the premium owed or premium refund due will be calculated according to the short rate provisions contained in our manuals. If we cancel this policy, any premium owed or premium refund will be calculated on a pro-rata basis." The NCRB manual carries one-year, three-month and six-month short rate tables. States limit the penalty: Florida prohibits short rate tables or procedures that return less than 90% of the pro rata unearned premium without actuarial or other justification, and prohibits fully earned premium provisions except for specialized, short-term coverage (crop hail, flood, events) and minimum premium policies (Fla. Admin. Code 69O-170.010). California requires pro rata, not short rate, when a financed policy is cancelled, with exceptions (Ins. Code 673(g)).
 
-A worked refund, mine, on the $1,444 annual policy from How a Rate Is Built, effective January 1, 2027. Cancellation effective August 20, 2027: 231 days used, 134 days unearned.
+A worked refund, mine, on the $1,444 annual policy from [How a Rate Is Built](/books/insurance/how-a-rate-is-built), effective January 1, 2027. Cancellation effective August 20, 2027: 231 days used, 134 days unearned.
 
 | Cancelled by | Method | Return premium |
 | --- | --- | --- |
@@ -152,7 +152,7 @@ A worked refund, mine, on the $1,444 annual policy from How a Rate Is Built, eff
 | Insured, on a filed short rate table | The table's factor for 231 days | Per the filed table |
 | Premium finance company in New York, 20 days into the term | Pro rata to the finance company, less minimum earned | Earned pro rata is $79.12, below the minimum of the greater of 10% ($144.40) or $60, so the insurer keeps $144.40 and returns **$1,299.60** |
 
-The last row is New York Banking Law 576: the insurer returns gross unearned premium, computed pro rata, to the finance agency within 60 days after the effective date of cancellation, and may retain a minimum earned premium of 10% of the gross premium or $60, whichever is greater (Billing & Premium Finance). Return premium is a set of negative `premium_entries` on the cancellation transaction, each with its earning window, and the refund itself is a billing event: it may first apply to an outstanding balance, and it carries a commission clawback (Commissions & Agency Accounting). Policy fees and inspection fees that the state treats as fully earned stay out of the refund, which is why fees are separate entry kinds in the foundation model.
+The last row is New York Banking Law 576: the insurer returns gross unearned premium, computed pro rata, to the finance agency within 60 days after the effective date of cancellation, and may retain a minimum earned premium of 10% of the gross premium or $60, whichever is greater ([Billing & Premium Finance](/books/insurance/billing-and-premium-finance)). Return premium is a set of negative `premium_entries` on the cancellation transaction, each with its earning window, and the refund itself is a billing event: it may first apply to an outstanding balance, and it carries a commission clawback ([Commissions & Agency Accounting](/books/insurance/commissions-and-agency-accounting)). Policy fees and inspection fees that the state treats as fully earned stay out of the refund, which is why fees are separate entry kinds in the foundation model.
 
 ## Reinstatement and Lapse
 
@@ -166,7 +166,7 @@ A lender with an interest in the property gets its own notice. California's auto
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `policy_transactions` (`kind` cancellation, reinstatement, nonrenewal; `reason`), `party_roles`, `premium_entries`, and `documents` (Quote, Bind & Issue). This chapter defines `notice_rules` and `notices`.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `policy_transactions` (`kind` cancellation, reinstatement, nonrenewal; `reason`), `party_roles`, `premium_entries`, and `documents` ([Quote, Bind & Issue](/books/insurance/quote-bind-and-issue)). This chapter defines `notice_rules` and `notices`.
 
 ```sql
 CREATE TABLE notice_rules (                -- the law, as data, with its citation
@@ -236,7 +236,7 @@ ORDER BY n.must_mail_by;
 Design choices:
 
 - **The cancellation date is derived from the notice, never typed.** A user can choose a later date; the system refuses an earlier one.
-- **Rules are versioned with effective dates and recheck dates,** like rating factor rules, and the product's amendatory endorsement is tested against them (Products, Coverages & Forms).
+- **Rules are versioned with effective dates and recheck dates,** like rating factor rules, and the product's amendatory endorsement is tested against them ([Products, Coverages & Forms](/books/insurance/products-and-coverages)).
 - **Return premium uses the method the source implies** (insured, insurer, finance company) and the state floor, computed from premium entries, with fees by their earning rule.
 - **Portfolio caps run before mailing:** New York's 2% per territory nonrenewal cap is a count the renewal job checks.
 

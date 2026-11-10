@@ -203,7 +203,7 @@ Escheat isn't the end of the claim: a beneficiary who turns up later claims from
 Death claims use the core model's `claims` (cause `death`), `exposures` (one per beneficiary and coverage), `reserves`, `claim_payments` and `claim_tasks`, and the `party_roles` history for the designation as of the date of death. Contestability and suicide reviews are claim tasks with their rule references; interest is a computed component of each payment. This chapter adds the DMF match and the escheatment:
 
 ```sql
-CREATE TABLE dmf_matches (                 -- a candidate death and what we did about it
+CREATE TABLE dmf_matches (                 -- a candidate death and what was done about it
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   run_id             UUID NOT NULL,         -- the comparison run (full or update file)
   source             TEXT NOT NULL CHECK (source IN ('ssa_ladmf', 'commercial_equivalent',

@@ -39,7 +39,7 @@ A franchised dealer sells new vehicles of the brands it holds franchises for, pl
 | **Vehicle** | One VIN, at a selling price | The order line |
 | **Trade-in** | The customer's car, at an allowance, with its loan payoff | A purchase from the customer, netted against the sale |
 | **Fees** | Documentation fee, title and registration fees, taxes | Order charges, some passed to the state |
-| **Add-ons** | Service contracts, GAP, maintenance plans, protection products, accessories | F&I products, each optional |
+| **Add-ons** | Service contracts, GAP, maintenance plans, protection products, accessories | F&I products, each optional; the products themselves are in [Vehicle Service Contracts & GAP](/books/insurance/vehicle-service-contracts-and-gap) |
 | **Financing or lease** | A retail installment contract or lease the dealer arranges and assigns to a lender | A contract with its own disclosures, often a dealer reserve |
 | **Down payment** | Cash, card or rebate | Tenders |
 

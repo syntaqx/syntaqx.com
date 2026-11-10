@@ -158,7 +158,7 @@ The carrier's group system runs on the **census**: who is eligible, in which cla
 
 ## How to Build It
 
-Group business uses the core model's `policies` (the master policy, with the employer as named insured), `parties` (employer and covered people), `coverages` (per class and benefit), `claims` with `claim_tasks` for ERISA clocks, Billing & Premium Finance's `invoices` and `payments` for the list bill, and [Life Underwriting](/books/insurance/life-underwriting#how-to-build-it)'s `evidence_orders` for EOI. This chapter adds the census and the certificate:
+Group business uses the core model's `policies` (the master policy, with the employer as named insured), `parties` (employer and covered people), `coverages` (per class and benefit), `claims` with `claim_tasks` for ERISA clocks, [Billing & Premium Finance](/books/insurance/billing-and-premium-finance)'s `invoices` and `payments` for the list bill, and [Life Underwriting](/books/insurance/life-underwriting#how-to-build-it)'s `evidence_orders` for EOI. This chapter adds the census and the certificate:
 
 ```sql
 CREATE TABLE group_census (                -- one covered person's group facts, effective-dated

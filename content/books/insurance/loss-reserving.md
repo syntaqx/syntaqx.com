@@ -10,7 +10,7 @@ tags = ["insurance", "loss-reserving", "ibnr", "schedule-p", "actuarial", "prope
 
 An insurer's largest liability is a guess about the past. On December 31 it owes money on claims that happened during the year and before: some reported, adjusted and reserved claim by claim, some reported but not yet understood, and some that haven't been reported at all because the injured party hasn't sued yet or the water damage is still behind a wall. The **loss reserve** (statutory: losses and loss adjustment expenses unpaid) is the insurer's estimate of all of it. It is the line on the balance sheet that moves earnings most, the one regulators test hardest, and the one that most often turns a profitable year into a restated one when, three years later, the estimate proves short.
 
-Reserving is a data problem before it is an actuarial one. Every method in this chapter reads the same raw material: the history of case reserves and payments by claim, grouped by when the loss happened and observed at successive dates. If the claims system overwrites reserves, loses the accident date, mixes defense costs into indemnity or can't say what a claim's reserve was on last December 31, no method can recover it. This chapter covers what a reserve contains, the development triangle, the chain ladder and Bornhuetter-Ferguson methods worked on one triangle, loss adjustment expense, Schedule P, the statement of actuarial opinion, how reserve development shows up in a 10-K, and adverse development covers. Case reserves themselves, set by adjusters on each exposure, are in Exposures, Reserves & Payments; how reserves sit in the statutory statement is in Statutory Accounting & the Annual Statement.
+Reserving is a data problem before it is an actuarial one. Every method in this chapter reads the same raw material: the history of case reserves and payments by claim, grouped by when the loss happened and observed at successive dates. If the claims system overwrites reserves, loses the accident date, mixes defense costs into indemnity or can't say what a claim's reserve was on last December 31, no method can recover it. This chapter covers what a reserve contains, the development triangle, the chain ladder and Bornhuetter-Ferguson methods worked on one triangle, loss adjustment expense, Schedule P, the statement of actuarial opinion, how reserve development shows up in a 10-K, and adverse development covers. Case reserves themselves, set by adjusters on each exposure, are in [Exposures, Reserves & Payments](/books/insurance/reserves-and-payments); how reserves sit in the statutory statement is in [Statutory Accounting & the Annual Statement](/books/insurance/statutory-accounting).
 
 ## How the Platforms Do It
 
@@ -18,7 +18,7 @@ Reserving runs on three layers of software, as of November 2026: the claims syst
 
 | Layer | Examples | What it holds or does |
 | --- | --- | --- |
-| **Claims system** | Core claims suites and in-house systems (Core Platforms surveys them) | Reserves and payments per exposure and cost type, each change a dated transaction |
+| **Claims system** | Core claims suites and in-house systems ([Core Platforms](/books/insurance/core-platforms) surveys them) | Reserves and payments per exposure and cost type, each change a dated transaction |
 | **Triangle builder** | The insurer's warehouse, actuarial data marts | Accident year by development age arrays of paid, reported (paid plus case), claim counts and earned premium, as of each valuation date |
 | **Actuarial methods** | The CAS reference text (Friedland), commercial reserving packages, spreadsheets and R or Python code | Development factors, expected claims, Bornhuetter-Ferguson, Cape Cod, frequency-severity, Berquist-Sherman adjustments, selections and ranges |
 | **Statutory output** | Annual statement software | Schedule P by line and accident year, the statement of actuarial opinion and its exhibits |
@@ -41,7 +41,7 @@ Components 2 through 5 together are **broad IBNR**, and it is the actuary's numb
 Three time axes organize the data, and mixing them is the commonest error:
 
 - **Accident year** (or accident period): when the loss happened. Most P&C reserving uses it.
-- **Report year**: when it was reported, used for claims-made lines (Professional & Management Liability).
+- **Report year**: when it was reported, used for claims-made lines ([Professional & Management Liability](/books/insurance/professional-and-management-liability)).
 - **Policy year**: when the policy incepted, used where premium and exposure tie to the policy (workers' compensation audits, some reinsurance).
 
 The fourth axis is the **valuation date**: when you looked. A triangle is accident year on one axis and age (months from the start of the accident year to the valuation date) on the other.
@@ -183,9 +183,9 @@ DCC is reserved with the same triangle methods as losses, often as a ratio to lo
 
 Schedule P is the reserving part of the statutory annual statement. Friedland quotes Sholom Feldblum: "Schedule P is the actuarial portion of the Annual Statement and is critical to monitoring the solvency of insurers." It holds a ten-year summary, by line, of earned premium, loss and expense payments and unpaid amounts, and development schedules by line for incurred net losses, paid net losses, and bulk and IBNR reserves. Because each year's Schedule P shows ten accident years at ten valuation dates, a regulator, rating agency or investor can rebuild the insurer's triangles from its public filings and test its reserves without asking.
 
-What that requires of the ledger is in Statutory Accounting & the Annual Statement; the reserving-specific points:
+What that requires of the ledger is in [Statutory Accounting & the Annual Statement](/books/insurance/statutory-accounting); the reserving-specific points:
 
-- **Net of reinsurance, and gross.** Schedule P is largely net, so ceded reserves by accident year (from the cessions in Reinsurance Operations) must be computable for the same cells.
+- **Net of reinsurance, and gross.** Schedule P is largely net, so ceded reserves by accident year (from the cessions in [Reinsurance Operations](/books/insurance/reinsurance-operations)) must be computable for the same cells.
 - **Lines are statement lines,** not product codes: every claim maps to a Schedule P line through its policy's line of business.
 - **Prior valuations are frozen.** The 2025 Schedule P's 2022 column has to equal what was reported in the 2022 statement for that cell, so the build reads the reserve and payment history as recorded on each valuation date, not as corrected later ([Temporal Data](/docs/database/temporal-data#recorded-time-and-corrections)).
 
@@ -210,7 +210,7 @@ Everest Group's 10-K for 2025 shows the scale. Prior-year development increased 
 Three patterns to read for, as a reader of filings:
 
 - **Development by accident year,** not in total. Favorable development on old years can mask adverse development on recent ones; the development tables show which.
-- **Lines with long tails,** where liability and litigation claims emerge years after the policy year (the excess casualty and liability lines in the Everest example). Bad Faith & Litigation covers what the filings say drives them.
+- **Lines with long tails,** where liability and litigation claims emerge years after the policy year (the excess casualty and liability lines in the Everest example). [Bad Faith & Litigation](/books/insurance/bad-faith-and-litigation) covers what the filings say drives them.
 - **Reserve actions paired with reinsurance,** which is the next section.
 
 ## Adverse Development Covers and Loss Portfolio Transfers
@@ -219,11 +219,11 @@ An insurer that wants to cap its exposure to further development on old years ca
 
 Everest's cover, effective October 1, 2025, is a public example. Everest Re and Bermuda Re entered agreements with State National Insurance Company and MS Transverse Insurance Company, supported on a retrocessional basis by Longtail Re, an affiliate of Stone Ridge Capital. The subject business is accident years 2024 and prior for substantially all North American liabilities in the Insurance and Other segments, with $5.4 billion of carried reserves at September 30, 2025 ($5.0 billion at December 31, 2025). It has three layers: an "in the money" first layer, a second layer of $700 million in excess of $5.4 billion, and a third layer of $500 million. Everest transferred $1,250 million of in-the-money reserves for the first two layers, paid about $122 million for the third, and co-participates for $100 million in each of the upper two. At December 31, 2025, covered losses ceded to State National were $1,253 million.
 
-For the system, an ADC is a reinsurance contract whose subject is reserves on a set of accident years, not policies written in a period: its cessions are computed from the development of those cells, which is one more reason the triangles have to be rebuildable exactly (Reinsurance Structures covers the contract shapes).
+For the system, an ADC is a reinsurance contract whose subject is reserves on a set of accident years, not policies written in a period: its cessions are computed from the development of those cells, which is one more reason the triangles have to be rebuildable exactly ([Reinsurance Structures](/books/insurance/reinsurance-structures) covers the contract shapes).
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `reserves` (every case reserve change by exposure and `cost_type`, never updated) and `claim_payments` already hold the raw history. This chapter adds `loss_triangles` (a stored, frozen triangle per valuation), its cells, and `ibnr_estimates` (the booked selection). `statement_lines` (Statutory Accounting & the Annual Statement) maps lines; `cessions` (Reinsurance Operations) supplies ceded amounts.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `reserves` (every case reserve change by exposure and `cost_type`, never updated) and `claim_payments` already hold the raw history. This chapter adds `loss_triangles` (a stored, frozen triangle per valuation), its cells, and `ibnr_estimates` (the booked selection). `statement_lines` ([Statutory Accounting & the Annual Statement](/books/insurance/statutory-accounting)) maps lines; `cessions` ([Reinsurance Operations](/books/insurance/reinsurance-operations)) supplies ceded amounts.
 
 ```sql
 CREATE TABLE reserving_segments (          -- the grain actuaries reserve at

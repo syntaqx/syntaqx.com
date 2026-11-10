@@ -10,7 +10,7 @@ tags = ["insurance", "claims", "reserves", "claim-payments", "lae", "exposures"]
 
 A claim is a container; the money moves on exposures. One rear-end collision can carry the insured's collision coverage for their own car, rental reimbursement, the other driver's property damage claim against the insured's liability coverage, two bodily injury claims against the same coverage with a per-person and per-accident limit, and a medical payments claim for a passenger. Each has its own claimant, its own limit and deductible, its own adjuster, its own reserve, its own payments and its own statistical and reinsurance coding. A system that stores "the reserve on the claim" or pays "the claim" can't apply a limit, report Schedule P, compute a reinsurance recovery or show an examiner which coverage each dollar was paid under, which the model act requires.
 
-This chapter covers exposures, case reserves by cost type and the practices behind them, a reserve walk with payments worked to the dollar, reserving guidelines and authority, paying claimants and vendors (multi-payee and mortgagee checks, methods), OFAC screening and 1099 reporting on claim payments, and closing and reopening. What actuaries do with the reserve history (triangles, IBNR, development) is Loss Reserving & Development; the rails a payment rides on are in [Payments](/books/payments/vendor-payouts#the-methods); recoveries are in [Subrogation, Salvage & Recovery](/books/insurance/subrogation-and-salvage).
+This chapter covers exposures, case reserves by cost type and the practices behind them, a reserve walk with payments worked to the dollar, reserving guidelines and authority, paying claimants and vendors (multi-payee and mortgagee checks, methods), OFAC screening and 1099 reporting on claim payments, and closing and reopening. What actuaries do with the reserve history (triangles, IBNR, development) is [Loss Reserving & Development](/books/insurance/loss-reserving); the rails a payment rides on are in [Payments](/books/payments/vendor-payouts#the-methods); recoveries are in [Subrogation, Salvage & Recovery](/books/insurance/subrogation-and-salvage).
 
 ## Exposures
 
@@ -65,8 +65,8 @@ A reserving guideline is the insurer's written standard for case reserves: which
 
 Two more guideline rules matter to the ledger:
 
-- **Ceded case reserves follow the gross ones.** For quota share, the ceded case reserve is the reinsurer's share; for excess of loss, it's the case outstanding above the retention, when the adjuster reserves on a total-limits basis. A reserve change above a treaty's reporting threshold triggers a notice to the reinsurer (Reinsurance Operations).
-- **Recoveries are tracked separately.** Some insurers net expected salvage and subrogation into the case reserve; many track only actual recoveries. Either way, the recovery is its own record (Subrogation, Salvage & Recovery).
+- **Ceded case reserves follow the gross ones.** For quota share, the ceded case reserve is the reinsurer's share; for excess of loss, it's the case outstanding above the retention, when the adjuster reserves on a total-limits basis. A reserve change above a treaty's reporting threshold triggers a notice to the reinsurer ([Reinsurance Operations](/books/insurance/reinsurance-operations)).
+- **Recoveries are tracked separately.** Some insurers net expected salvage and subrogation into the case reserve; many track only actual recoveries. Either way, the recovery is its own record ([Subrogation, Salvage & Recovery](/books/insurance/subrogation-and-salvage)).
 
 ## Authority and Approvals
 
@@ -102,7 +102,7 @@ Reopening is common and lawful: a supplement on a repair, more damage found, a d
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `exposures`, `reserves`, `claim_payments`, and `statement_line` on reserves and payments (Statutory Accounting & the Annual Statement). This chapter adds `reserve_guidelines`, `authority_limits` and `payment_approvals`, plus payee and screening columns.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `exposures`, `reserves`, `claim_payments`, and `statement_line` on reserves and payments ([Statutory Accounting & the Annual Statement](/books/insurance/statutory-accounting)). This chapter adds `reserve_guidelines`, `authority_limits` and `payment_approvals`, plus payee and screening columns.
 
 ```sql
 ALTER TABLE exposures

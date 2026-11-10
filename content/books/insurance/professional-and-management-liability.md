@@ -187,7 +187,7 @@ CREATE TABLE claims_made_terms (           -- the trigger data for a claims-made
   defense_within_limits BOOLEAN NOT NULL,
   dwl_cap_pct        NUMERIC(5, 2),         -- 50.00 under 11 NYCRR 71.3 unless waived
   maturity_year      INT NOT NULL,          -- rating input derived from retro_date
-  prior_acts_from_carrier TEXT              -- nose: the prior insurer whose retro date we honor
+  prior_acts_from_carrier TEXT              -- nose: the prior insurer whose retro date is honored
 );
 
 CREATE TABLE extended_reporting_periods (  -- automatic and purchased tails

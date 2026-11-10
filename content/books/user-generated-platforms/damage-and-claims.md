@@ -103,7 +103,7 @@ Automated review is coming for the simple cases: Airbnb says some requests are r
 
 ### Total Loss
 
-When repair costs approach the vehicle's value, it's a total loss, paid at actual cash value up to the plan's cap (Outdoorsy's $300,000, Turo's $200,000), and **the lienholder is paid first**: a financed vehicle's payoff goes to the lender before anything reaches the host. The claim therefore needs the lienholder and payoff amount (recorded on the asset at onboarding: [Supply Onboarding & Verification](/books/user-generated-platforms/supply-onboarding)), and the title transfers to whoever paid. The listing is retired; the asset record stays, with the total loss on its history.
+When repair costs approach the vehicle's value, it's a total loss, paid at actual cash value up to the plan's cap (Outdoorsy's $300,000, Turo's $200,000), and **the lienholder is paid first**: a financed vehicle's payoff goes to the lender before anything reaches the host. The claim therefore needs the lienholder and payoff amount (recorded on the asset at onboarding: [Supply Onboarding & Verification](/books/user-generated-platforms/supply-onboarding)), and the title transfers to whoever paid. The listing is retired; the asset record stays, with the total loss on its history. How an auto insurer decides and values a total loss (comparables, taxes and fees, state title brands) is in Insurance's [Auto Claims & Total Loss](/books/insurance/auto-claims-and-total-loss#when-a-car-is-a-total-loss).
 
 Loss of use (the bookings a host loses while the vehicle is repaired) is excluded by Outdoorsy's host protection and by Turo's plans ("no loss of income"), and included in Airbnb's host damage protection for stays. Whether it's covered is a term of the product, and hosts ask about it more than anything else.
 
@@ -122,7 +122,7 @@ Each payment is a ledger entry with its source, so a claim's settlement can be r
 
 ### Recovery and Subrogation
 
-When the platform, its plan or an insurer pays a host for damage the guest caused, it steps into the host's claim against the guest (subrogation) and recovers what it can: from the guest's card, from the guest's own insurer where the platform's coverage was excess, or through collections. Outdoorsy's terms have hosts appoint Outdoorsy or an affiliate as attorney-in-fact to file and receive insurance claims, which lets the platform pursue the insurers directly. Recovery is a separate record from settlement: the host is paid on the plan's terms whatever is later recovered, and the recovered amounts reduce the platform's or insurer's loss.
+When the platform, its plan or an insurer pays a host for damage the guest caused, it steps into the host's claim against the guest (subrogation) and recovers what it can: from the guest's card, from the guest's own insurer where the platform's coverage was excess, or through collections. Outdoorsy's terms have hosts appoint Outdoorsy or an affiliate as attorney-in-fact to file and receive insurance claims, which lets the platform pursue the insurers directly. Recovery is a separate record from settlement: the host is paid on the plan's terms whatever is later recovered, and the recovered amounts reduce the platform's or insurer's loss. The insurer's side (waivers, inter-company arbitration, recovery accounting) is in Insurance's [Subrogation, Salvage & Recovery](/books/insurance/subrogation-and-salvage).
 
 ## Fraud-Aware Settlement
 

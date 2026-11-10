@@ -46,7 +46,7 @@ A statistical record differs from an accounting entry in four ways:
 
 What a statistical plan asks of the system:
 
-- **Statistical codes live on the product.** Every coverage definition carries its plan code (the core's `coverage_definitions.statistical_code`, Products, Coverages & Forms), and every rating characteristic the plan reports is a stored rating input on the quote, not a value reconstructed later.
+- **Statistical codes live on the product.** Every coverage definition carries its plan code (the core's `coverage_definitions.statistical_code`, [Products, Coverages & Forms](/books/insurance/products-and-coverages)), and every rating characteristic the plan reports is a stored rating input on the quote, not a value reconstructed later.
 - **Premium transactions are reported as they happened.** A midterm endorsement reports its premium change with its own effective date; a cancellation reports the return premium; an out-of-sequence replay reports the reversals and reapplications, so the agent's policy-year premium matches the insurer's ([Out-of-Sequence Endorsements](/books/insurance/endorsements-and-renewals#out-of-sequence-endorsements)).
 - **Losses are reported by accident date and coverage** from the exposure, with paid and outstanding amounts, and changes reported as they occur.
 - **Edits run before submission.** Agents return records that fail validity and consistency edits, and the insurer corrects and resubmits within the plan's window; the system tracks each submission and its errors like any acknowledged exchange ([Data Models in Practice](/books/insurance/acord-and-data-standards#data-models-in-practice)).
@@ -116,7 +116,7 @@ My numbers, simplified to the statutory structure. A P&C insurer writes $100,000
 
 Now a Florida-domiciled P&C insurer writes $10,000,000 of direct premium in Texas. Texas tax at 1.6% is $160,000. Florida's burden on the same $10,000,000 at its 1.75% rate, ignoring Florida's credits and Texas's other charges to keep the example to one line, is $175,000. Because the home state's burden is higher, the insurer owes Texas a retaliatory tax of **$15,000** on top of the $160,000, for $175,000 in all. A Texas-domiciled insurer writing in Florida would see the comparison run the other way, and owe no retaliatory tax there on this line, because Texas's 1.6% is the lower rate. The real comparison aggregates every tax, fee and assessment on both sides, which is why the retaliatory computation needs each state's full charge schedule, not just its headline rate.
 
-What premium tax asks of the system: direct premium by state and line on the statutory basis (the State Page), the state's rate and its base (written or received, what's deductible), the insurer's legal form and domicile, credits with their own evidence (salary records, income tax returns), prepayment schedules and amounts by state, and the home state's charges for retaliation. Rates and rules are dated rows in the rulebook (the core's `jurisdiction_rules` already uses `premium_tax_rate` as an example key, The State System).
+What premium tax asks of the system: direct premium by state and line on the statutory basis (the State Page), the state's rate and its base (written or received, what's deductible), the insurer's legal form and domicile, credits with their own evidence (salary records, income tax returns), prepayment schedules and amounts by state, and the home state's charges for retaliation. Rates and rules are dated rows in the rulebook (the core's `jurisdiction_rules` already uses `premium_tax_rate` as an example key, [The State System](/books/insurance/the-state-system)).
 
 ## How Reporting Shapes the Ledger
 
@@ -132,7 +132,7 @@ Working back from the reports gives the ledger's requirements:
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). The statement is `statement_lines`, `statement_line_mappings`, `statement_values` and `annual_statement_runs` (Statutory Accounting); tax rates are `jurisdiction_rules` (The State System) and surplus lines taxes `sl_tax_rules` (Excess & Surplus Lines); claims EDI is `edi_reports` (Workers' Comp Claims); feed batches are `ledger_feeds` (Insurance System Architecture). This chapter adds statistical records, data calls and tax filings:
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). The statement is `statement_lines`, `statement_line_mappings`, `statement_values` and `annual_statement_runs` (Statutory Accounting); tax rates are `jurisdiction_rules` ([The State System](/books/insurance/the-state-system)) and surplus lines taxes `sl_tax_rules` ([Excess & Surplus Lines](/books/insurance/excess-and-surplus-lines)); claims EDI is `edi_reports` ([Workers' Comp Claims](/books/insurance/workers-comp-claims)); feed batches are `ledger_feeds` ([Insurance System Architecture](/books/insurance/insurance-system-architecture)). This chapter adds statistical records, data calls and tax filings:
 
 ```sql
 CREATE TABLE stat_records (                -- one record under one statistical plan

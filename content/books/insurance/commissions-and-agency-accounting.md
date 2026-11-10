@@ -49,7 +49,7 @@ Schedules can pay different rates on new business and renewals, and incentives o
 - **What counts as new is a rule.** A rewrite (a policy cancelled and reissued on a new policy number to change product or company) may be paid as new or as renewal depending on the contract; a policy moved to the agency by a producer of record change may earn renewal rates from the next term ([Who the Agent Works For](/books/insurance/agents-brokers-and-channels#who-the-agent-works-for)). Store the rule and the classification on the transaction.
 - **The renewal is the agency's asset.** Goosehead's franchise agreement charges a 20% royalty on first-term commissions and 50% on renewal commissions, including renewals moved to a different carrier, and its 2025 revenue shows renewal royalties of $170.8 million against $30.2 million of new business royalties. Who keeps the renewal commission when an agent leaves is a contract term, and the system follows the contract, not the agent.
 
-Life and annuity commissions run on a different shape, with first-year commissions, renewal commissions over a set number of years and chargebacks if a policy lapses early; In-Force Administration covers them.
+Life and annuity commissions run on a different shape, with first-year commissions, renewal commissions over a set number of years and chargebacks if a policy lapses early; [In-Force Administration](/books/insurance/in-force-administration) covers them.
 
 ## Contingent and Profit-Sharing Commissions
 
@@ -123,11 +123,11 @@ Three numbers, then, for every agency period: commission recognized on transacti
 Who bills the insured decides where the money flows:
 
 - **Agency bill.** The agency invoices the insured, collects the gross premium and remits the premium net of its commission to the carrier, on an account current (a periodic statement of every transaction and the net due). California's statute lists remitting "net of commissions" as one of the ways a licensee may handle premium it receives (Cal. Ins. Code 1734). The agency holds premium between collection and remittance and does the collection work.
-- **Direct bill.** The carrier bills and collects from the insured (Billing & Premium Finance) and pays the agency its commission, with a commission statement listing every transaction it was paid on. Ivans downloads Direct Bill Commission Statements from carriers into agency systems for monthly reconciliation.
+- **Direct bill.** The carrier bills and collects from the insured ([Billing & Premium Finance](/books/insurance/billing-and-premium-finance)) and pays the agency its commission, with a commission statement listing every transaction it was paid on. Ivans downloads Direct Bill Commission Statements from carriers into agency systems for monthly reconciliation.
 
 A worked agency-bill month, mine: the agency collected $48,000.00 of gross premium on transactions with $6,480.00 of commission, and refunded $2,000.00 of return premium on cancellations whose commission was $270.00. The account current shows net due to the carrier of (48,000.00 - 2,000.00) - (6,480.00 - 270.00) = 46,000.00 - 6,210.00 = **$39,790.00**. The agency's earned commission for the month is $6,210.00, which it may move from its premium account to its operating account; the $39,790.00 stays in trust until remitted.
 
-Agency bill also creates **receivables on both sides**: where the agency contract makes the agency responsible for premium it billed, its books carry what insureds owe it, what it owes carriers and the timing between them, and the carrier carries agents' balances as an asset; NAIC's IRIS ratios include agents' balances to surplus (Solvency & Capital).
+Agency bill also creates **receivables on both sides**: where the agency contract makes the agency responsible for premium it billed, its books carry what insureds owe it, what it owes carriers and the timing between them, and the carrier carries agents' balances as an asset; NAIC's IRIS ratios include agents' balances to surplus ([Solvency & Capital](/books/insurance/solvency-and-capital)).
 
 ## Trust Accounts and Fiduciary Funds
 
@@ -160,7 +160,7 @@ Three cases need explicit rules:
 
 - **Cancellation after the producer is terminated.** The chargeback is still owed, and the carrier offsets it against any remaining commission or bills the former producer.
 - **Commission paid after termination.** Under the model act, renewal and deferred commissions may be paid to a producer who was licensed at the time of the sale ([Checking Before You Bind and Pay](/books/insurance/producer-licensing#checking-before-you-bind-and-pay)); whether they are owed is the agency contract's question, and the system needs both answers on the record.
-- **Audits and premium adjustments.** A workers' compensation or general liability audit that adds or returns premium months after expiration adds or returns commission too, at the original term's rate (Rating Workers' Comp & Premium Audit).
+- **Audits and premium adjustments.** A workers' compensation or general liability audit that adds or returns premium months after expiration adds or returns commission too, at the original term's rate ([Rating Workers' Comp & Premium Audit](/books/insurance/rating-workers-comp)).
 
 ## How to Build It
 

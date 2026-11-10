@@ -9,7 +9,7 @@ tags = ["insurance", "personal-auto", "no-fault", "uninsured-motorists", "sr-22"
 
 Personal auto is the largest line in US property and casualty insurance: $371.0 billion of the industry's $1.11 trillion of direct premium in 2025, by NAIC's count, written by State Farm, Progressive, GEICO, Allstate and USAA at the top and a long tail of regionals and direct writers below them. It is also the most regulated product most people buy, because driving without it is illegal in nearly every state. The state sets minimum liability limits, decides whether injuries are paid by the driver's own insurer regardless of fault (no-fault) or by the at-fault driver's, requires or makes optional coverage against uninsured and underinsured drivers, and increasingly watches each insured car through an electronic verification system that suspends registrations when coverage lapses.
 
-For the system, a personal auto policy is a bundle of separately limited coverages per vehicle and driver, each governed by state rules that change what must be offered, what can be rejected and in what form, and what the policy reports to the state. This chapter covers compulsory insurance and minimum limits, no-fault and personal injury protection with worked benefits, uninsured and underinsured motorists coverage and stacking worked, the rideshare and delivery gaps, SR-22 and FR-44 filings, state insurance verification, and the 2022-2025 rate cycle. Rating is How a Rate Is Built and What You May Rate On; telematics is Telematics & Usage-Based Insurance; auto claims and total losses are Auto Claims & Total Loss.
+For the system, a personal auto policy is a bundle of separately limited coverages per vehicle and driver, each governed by state rules that change what must be offered, what can be rejected and in what form, and what the policy reports to the state. This chapter covers compulsory insurance and minimum limits, no-fault and personal injury protection with worked benefits, uninsured and underinsured motorists coverage and stacking worked, the rideshare and delivery gaps, SR-22 and FR-44 filings, state insurance verification, and the 2022-2025 rate cycle. Rating is [How a Rate Is Built](/books/insurance/how-a-rate-is-built) and [What You May Rate On](/books/insurance/rating-factors-and-limits); telematics is [Telematics & Usage-Based Insurance](/books/insurance/telematics); auto claims and total losses are [Auto Claims & Total Loss](/books/insurance/auto-claims-and-total-loss).
 
 ## How the Platforms Do It
 
@@ -24,7 +24,7 @@ As of November 2026, NAIC's 2025 market share data for private passenger auto:
 | USAA | 6.19% |
 | **Industry total** | **$371.04 billion** |
 
-The leaders reach customers differently (captive agents, independent agents, direct online and phone; Agents, Brokers & Channels), but they administer the same product shape: a policy with listed drivers and vehicles, liability coverages at the policy or vehicle level, physical damage coverages per vehicle, and state-required coverages and forms. The Federal Insurance Office's September 2026 report notes that private passenger auto liability alone is about 19% of P&C direct premium, and that personal auto results "continued to recover from poor results in 2022."
+The leaders reach customers differently (captive agents, independent agents, direct online and phone; [Agents, Brokers & Channels](/books/insurance/agents-brokers-and-channels)), but they administer the same product shape: a policy with listed drivers and vehicles, liability coverages at the policy or vehicle level, physical damage coverages per vehicle, and state-required coverages and forms. The Federal Insurance Office's September 2026 report notes that private passenger auto liability alone is about 19% of P&C direct premium, and that personal auto results "continued to recover from poor results in 2022."
 
 ## Compulsory Insurance and Minimum Limits
 
@@ -39,7 +39,7 @@ The Insurance Information Institute's table of financial responsibility limits b
 What minimums mean in software:
 
 - **A floor in the product configuration** per state and effective date; the quote can't offer less, and a renewal after the effective date must be raised (California's change applied at renewal, so every California renewal on or after January 1, 2025 needed the new floor).
-- **A residual market** for drivers no one voluntarily insures (Stressed & Residual Markets), because a compulsory product must be available to every licensed driver.
+- **A residual market** for drivers no one voluntarily insures ([Stressed & Residual Markets](/books/insurance/stressed-markets)), because a compulsory product must be available to every licensed driver.
 - **Proof to the state**, by ID card and increasingly by electronic reporting (below).
 
 ## No-Fault and Personal Injury Protection
@@ -150,13 +150,13 @@ The auto market went through its sharpest repricing in decades. The consumer pri
 | 2024 | 11.3% |
 | 2025 | 2.8% |
 
-The 12-month change peaked at 22.6% in April 2024; by 2026 it turned negative, reaching −5.0% in September 2026 (BLS has no October 2025 figure, a gap from the 2025 lapse in appropriations). Behind it: repair costs, used car values and injury severity rose faster than rates after 2021, insurers filed large rate increases state by state (Filing Rates & Forms), and results recovered. Progressive's net premiums earned went from $49.2 billion in 2022 to $58.7 billion in 2023 and $70.8 billion in 2024; FIO reports that by 2025 personal lines recorded a second consecutive year of underwriting profit and that personal rate increases "have abated," in isolated cases turning to reductions.
+The 12-month change peaked at 22.6% in April 2024; by 2026 it turned negative, reaching −5.0% in September 2026 (BLS has no October 2025 figure, a gap from the 2025 lapse in appropriations). Behind it: repair costs, used car values and injury severity rose faster than rates after 2021, insurers filed large rate increases state by state ([Filing Rates & Forms](/books/insurance/rate-and-form-filing)), and results recovered. Progressive's net premiums earned went from $49.2 billion in 2022 to $58.7 billion in 2023 and $70.8 billion in 2024; FIO reports that by 2025 personal lines recorded a second consecutive year of underwriting profit and that personal rate increases "have abated," in isolated cases turning to reductions.
 
-For the system the cycle shows up as volume: hundreds of state rate filings a year per large carrier, each a new rate table version with new business and renewal effective dates (How a Rate Is Built), and renewal offers with larger changes that trigger state notice rules (Endorsements, Renewals & the Policy Transaction Model).
+For the system the cycle shows up as volume: hundreds of state rate filings a year per large carrier, each a new rate table version with new business and renewal effective dates ([How a Rate Is Built](/books/insurance/how-a-rate-is-built)), and renewal offers with larger changes that trigger state notice rules ([Endorsements, Renewals & the Policy Transaction Model](/books/insurance/endorsements-and-renewals)).
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `risks` (kinds `vehicle` and `driver`), `coverages` (codes such as `bi`, `pd`, `pip`, `um`, `uim`, `coll`, `comp`), `policy_transactions`, `notices` (Cancellation, Nonrenewal & Notice Law) and `regulatory_filings` (Filing Rates & Forms). This chapter adds `coverage_elections` (signed selections and rejections), `insurance_verifications` (reports and inquiries with a state system) and `sr22_filings`.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `risks` (kinds `vehicle` and `driver`), `coverages` (codes such as `bi`, `pd`, `pip`, `um`, `uim`, `coll`, `comp`), `policy_transactions`, `notices` ([Cancellation, Nonrenewal & Notice Law](/books/insurance/cancellation-and-nonrenewal)) and `regulatory_filings` ([Filing Rates & Forms](/books/insurance/rate-and-form-filing)). This chapter adds `coverage_elections` (signed selections and rejections), `insurance_verifications` (reports and inquiries with a state system) and `sr22_filings`.
 
 ```sql
 CREATE TABLE coverage_elections (          -- what the insured chose, on which form

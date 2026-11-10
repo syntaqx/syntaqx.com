@@ -190,7 +190,7 @@ Rideshare insurance is defined by the driver's app state, which makes the timeli
 
 Uber and Lyft publish the same three periods nationally: $50,000, $100,000 and $25,000 liability while waiting (where personal insurance doesn't apply) and at least $1,000,000 en route and on trip, with contingent collision and comprehensive at a $2,500 deductible; Lyft notes lower en-route limits in Maryland and Arizona. Prop 22 adds occupational accident insurance for California drivers while online: medical expenses up to at least $1,000,000 and disability payments of 66% of average weekly earnings.
 
-A claim asks one question first: which period was the driver in at the moment of the accident? The answer comes from the same state timeline that minimum pay uses, so keep it once, keep it immutable, and record the coverage in force for each period with its policy and insurer. How marketplaces sell and broker protection is in [Insurance Law: Who May Sell It](/books/user-generated-platforms/deposits-and-protection#insurance-law-who-may-sell-it).
+A claim asks one question first: which period was the driver in at the moment of the accident? The answer comes from the same state timeline that minimum pay uses, so keep it once, keep it immutable, and record the coverage in force for each period with its policy and insurer. How marketplaces sell and broker protection is in [Insurance Law: Who May Sell It](/books/user-generated-platforms/deposits-and-protection#insurance-law-who-may-sell-it). The personal auto side, the exclusion for driving for a fee and the endorsements carriers file for the logged-in period, is in Insurance's [Rideshare and Delivery Gaps](/books/insurance/personal-auto#rideshare-and-delivery-gaps).
 
 ## Worker Payouts
 

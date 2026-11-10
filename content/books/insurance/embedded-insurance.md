@@ -193,7 +193,7 @@ pub fn may_present(c: &OfferContext) -> Option<String> {
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). An embedded partner is a party; if it's licensed, it's also a `producers` row with `producer_licenses` (an agency or a limited lines entity, Producer Licensing & Appointments) and `appointments`; its channel is `embedded` in `channels` (Agents, Brokers & Channels); its compensation is `commissions` rows (Commissions & Agency Accounting); a travel retailer is also a `travel_retailer_registrations` row under its limited lines travel producer (Pet & Travel Insurance). Each offer is a `quotes` row. This chapter adds the partner agreement and the presentation record:
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). An embedded partner is a party; if it's licensed, it's also a `producers` row with `producer_licenses` (an agency or a limited lines entity, [Producer Licensing & Appointments](/books/insurance/producer-licensing)) and `appointments`; its channel is `embedded` in `channels` ([Agents, Brokers & Channels](/books/insurance/agents-brokers-and-channels)); its compensation is `commissions` rows ([Commissions & Agency Accounting](/books/insurance/commissions-and-agency-accounting)); a travel retailer is also a `travel_retailer_registrations` row under its limited lines travel producer ([Pet & Travel Insurance](/books/insurance/pet-and-travel)). Each offer is a `quotes` row. This chapter adds the partner agreement and the presentation record:
 
 ```sql
 CREATE TABLE distribution_partners (       -- a business that offers coverage in its own flow

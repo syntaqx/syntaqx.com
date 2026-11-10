@@ -107,7 +107,7 @@ The NAIC summarized its response in December 2025: updated asset adequacy testin
 
 ## How to Build It
 
-Reserves are computed by actuarial models outside the administration system, but the inputs come from it and the results must be stored against it. The life chapters' records feed the models: `policies`, `policy_values` and riders for the in-force, `reinsurance_contracts` and `cessions` (defined in Reinsurance Structures and Reinsurance Operations) for what was ceded, which gain the life forms through their `form` values (`yrt`, `coinsurance`, `modco`, `funds_withheld`) and a `block_or_flow` marker. This chapter adds the valuation record:
+Reserves are computed by actuarial models outside the administration system, but the inputs come from it and the results must be stored against it. The life chapters' records feed the models: `policies`, `policy_values` and riders for the in-force, `reinsurance_contracts` and `cessions` (defined in [Reinsurance Structures](/books/insurance/reinsurance-structures) and [Reinsurance Operations](/books/insurance/reinsurance-operations)) for what was ceded, which gain the life forms through their `form` values (`yrt`, `coinsurance`, `modco`, `funds_withheld`) and a `block_or_flow` marker. This chapter adds the valuation record:
 
 ```sql
 CREATE TABLE reserve_valuations (          -- one valuation of one reserving group

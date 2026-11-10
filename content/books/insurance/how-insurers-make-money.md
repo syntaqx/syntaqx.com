@@ -87,7 +87,7 @@ pub fn earned(amount: i64, from: DateTime<Utc>, to: DateTime<Utc>, as_of: DateTi
 }
 ```
 
-Seconds are fine for a term measured in days, because terms start and end at the same clock time; the policy's own rule (12:01 a.m. local at the risk) decides the instants, and Quote, Bind & Issue owns it. Two cautions. Earned premium is never stored as a running balance: it is recomputed from entries for any as-of date, so a backdated endorsement or a reversal changes history correctly ([Recognition Schedules](/docs/money/accounting#recognition-schedules)). And the earning window belongs to the entry, not the policy, so an endorsement's premium earns only over the days it covers.
+Seconds are fine for a term measured in days, because terms start and end at the same clock time; the policy's own rule (12:01 a.m. local at the risk) decides the instants, and [Quote, Bind & Issue](/books/insurance/quote-bind-and-issue) owns it. Two cautions. Earned premium is never stored as a running balance: it is recomputed from entries for any as-of date, so a backdated endorsement or a reversal changes history correctly ([Recognition Schedules](/docs/money/accounting#recognition-schedules)). And the earning window belongs to the entry, not the policy, so an endorsement's premium earns only over the days it covers.
 
 ## The Ratios That Run the Business
 
@@ -105,7 +105,7 @@ GAAP filers compute differently. Progressive's ratios divide everything by earne
 Two adjustments every report needs explained:
 
 - **Catastrophes.** Underlying ratios remove them because they swing by billions a year; but cat losses are a cost of writing property, and a carrier that always reports ex-cat is describing a business it doesn't run.
-- **Prior-year development.** Losses incurred this year include re-estimates of every earlier accident year. NAIC reports one-year reserve development as a share of prior-year surplus: (1.8%) in 2025, favorable, a $20.0 billion one-year redundancy. Accident-year ratios (losses for accidents in the year, wherever they're booked) and calendar-year ratios (everything booked in the year) answer different questions, and Loss Reserving & Development builds both from the reserve history.
+- **Prior-year development.** Losses incurred this year include re-estimates of every earlier accident year. NAIC reports one-year reserve development as a share of prior-year surplus: (1.8%) in 2025, favorable, a $20.0 billion one-year redundancy. Accident-year ratios (losses for accidents in the year, wherever they're booked) and calendar-year ratios (everything booked in the year) answer different questions, and [Loss Reserving & Development](/books/insurance/loss-reserving) builds both from the reserve history.
 
 ### Ten Years of Results
 
@@ -136,17 +136,17 @@ For the system, the float is not an investment-team concept. It is the sum of th
 
 ## Surplus and Leverage
 
-**Policyholders' surplus** is statutory capital: admitted assets minus liabilities on the statutory balance sheet, which leaves out assets the regulator won't count toward paying claims (Statutory Accounting & the Annual Statement covers admitted and nonadmitted assets). The industry's surplus reached $1.27 trillion at the end of 2025, up 11.9%.
+**Policyholders' surplus** is statutory capital: admitted assets minus liabilities on the statutory balance sheet, which leaves out assets the regulator won't count toward paying claims ([Statutory Accounting & the Annual Statement](/books/insurance/statutory-accounting) covers admitted and nonadmitted assets). The industry's surplus reached $1.27 trillion at the end of 2025, up 11.9%.
 
 Surplus limits how much an insurer can write. The classic measure is **premium-to-surplus**, net premiums written over surplus. NAIC's "net writings leverage" for the industry was 77.3% in 2025 (976.8 / 1,266.1, about 0.77 to 1), near or below 80% for over fifteen years. Individual companies run far higher: Progressive reported $83.2 billion of net premiums written against $28.4 billion of statutory surplus, 2.9 to 1, described 3 to 1 as the general regulatory benchmark for P&C insurers, and noted that two states allow up to 3.5 to 1 for personal vehicle insurers while property business runs lower. NAIC also reports **reserve leverage**, loss and LAE reserves over surplus, at 81.5% for 2025.
 
-The arithmetic of growth follows. An insurer at 3 to 1 that wants to grow premium 20% needs 20% more surplus, from retained earnings, new capital, or reinsurance that cedes premium (and the surplus strain with it). A company that grows faster than its earnings uses quota share reinsurance, a fronting carrier or a capital provider instead, which is why [MGAs, Programs & Fronting](/books/insurance/mgas-programs-and-fronting) and Reinsurance Structures are part of the same economics. Regulators watch the ratios through IRIS and risk-based capital (Solvency & Capital).
+The arithmetic of growth follows. An insurer at 3 to 1 that wants to grow premium 20% needs 20% more surplus, from retained earnings, new capital, or reinsurance that cedes premium (and the surplus strain with it). A company that grows faster than its earnings uses quota share reinsurance, a fronting carrier or a capital provider instead, which is why [MGAs, Programs & Fronting](/books/insurance/mgas-programs-and-fronting) and [Reinsurance Structures](/books/insurance/reinsurance-structures) are part of the same economics. Regulators watch the ratios through IRIS and risk-based capital ([Solvency & Capital](/books/insurance/solvency-and-capital)).
 
 ## The Underwriting Cycle
 
 Underwriting results move in cycles, and NAIC's 2025 report describes a market splitting in two. In a **hard market** prices rise, capacity tightens and underwriting tightens after losses deplete surplus or reinsurers pull back; in a **soft market** competition and surplus push prices down until results deteriorate. NAIC quotes the Council of Insurance Agents & Brokers survey: commercial premiums rose an average of 1.9% in the fourth quarter of 2025, down from 5.4% a year earlier; commercial property premiums fell 0.7% in the fourth quarter; commercial auto rose 6.6%, its fifteenth straight year of increases. Property is softening on lower losses; casualty stays firm on social inflation and large verdicts.
 
-Personal lines run the same cycle through rate filings rather than negotiation, so they lag. After the 2022-2023 losses (combined ratios of 102.5% and 101.7%), NAIC says insurers took "aggressive rate increases" against inflation and catastrophe losses, and direct premiums grew roughly 8-10% a year for four years before slowing to 4.6% in 2025. A carrier's pricing team sees the cycle as filings: how much rate it can get approved, in which states, how fast (Filing Rates & Forms).
+Personal lines run the same cycle through rate filings rather than negotiation, so they lag. After the 2022-2023 losses (combined ratios of 102.5% and 101.7%), NAIC says insurers took "aggressive rate increases" against inflation and catastrophe losses, and direct premiums grew roughly 8-10% a year for four years before slowing to 4.6% in 2025. A carrier's pricing team sees the cycle as filings: how much rate it can get approved, in which states, how fast ([Filing Rates & Forms](/books/insurance/rate-and-form-filing)).
 
 ## An Excess Profits Law, Worked
 
@@ -218,7 +218,7 @@ Design notes:
 - **Incurred comes from history.** Losses incurred for a period are claim payments in the period plus the change in open reserves between its start and end, by cost type, from the `reserves` rows; prior-year development is the same computation restricted to claims whose `loss_at` falls before the period.
 - **Basis is a column, not a convention.** The same period has a statutory and a GAAP snapshot, and the expense denominator differs; storing both prevents a dashboard from mixing them.
 - **Closed periods stay closed.** A late reserve change or backdated endorsement after close is booked in the next open period, and the earlier snapshot is never recomputed in place ([Closed Periods Stay Closed](/docs/money/accounting#closed-periods-stay-closed)).
-- **Catastrophe losses are tagged at the claim.** The underlying ratio is only as good as the `cat_code` on claims (Catastrophe Events), and the prior-year split is only as good as the loss date.
+- **Catastrophe losses are tagged at the claim.** The underlying ratio is only as good as the `cat_code` on claims ([Catastrophe Events](/books/insurance/catastrophes)), and the prior-year split is only as good as the loss date.
 
 ## Auditing
 
