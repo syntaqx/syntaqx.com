@@ -150,13 +150,11 @@ A seller's marketplace metrics are two sets: the channel's, computed by the chan
 | --- | --- | --- |
 | **ODR, late shipment, cancel and valid tracking rates** | As each marketplace defines them, per `performance_standards` | Window, date basis and exclusions are the marketplace's |
 | **Featured Offer share** (time) | Hours the seller held the Featured Offer on a listing ÷ hours the listing was active, from `offer_observations` | The seller's own measure |
-| **Featured Offer percentage** (Amazon's) | Page views on which the seller's offer was featured ÷ page views of its listings, as Amazon's business reports compute it | Weighted by traffic, so it differs from the time share; described in third-party guides rather than Amazon's public pages |
+| **Featured Offer percentage** (Amazon's) | Page views on which the seller's offer was featured ÷ page views of its listings, as Amazon's business reports compute it | Weighted by traffic, so it differs from the time share; Amazon's [Sales and Traffic report schema](https://github.com/amzn/selling-partner-api-models/blob/main/schemas/reports/sellerSalesAndTrafficReport.json) defines its `buyBoxPercentage` as "the percentage of page views where the buy box (the add to shopping cart link) appeared on the page" |
 | **Net proceeds rate** | Marketplace settlement deposits for the period's orders ÷ their GMV | From `settlement_lines`; the real take after referral, fulfillment, ads and refunds ([Settlements and the money](/books/commerce/selling-on-amazon#settlements-and-the-money)) |
 | **Advertising cost of sales (ACoS)** | Ad spend ÷ ad-attributed sales, as the network reports | The network's claim; TACoS divides by all sales ([Retail Media & Marketplace Ads](/books/commerce/retail-media)) |
 | **Deduction rate** (wholesale) | Deductions taken ÷ invoiced amount, by partner and reason | Valid and invalid separated after dispute ([Deductions and Disputes](/books/commerce/wholesale-and-retail-distribution#deductions-and-disputes)) |
 | **Retail sell-through and weeks of supply** (wholesale) | From the partner's sales and stock reports | The retailer's data, loaded by week |
-
-<!-- source-gap: amazon-featured-offer-percentage | secondary | Amazon's definition of Featured Offer percentage in Business Reports (page-view weighted) | closes with: an Amazon Seller Central help page readable without a login | checked: 2026-11-01 -->
 
 A merchant running its own marketplace adds take rate, liquidity and seller concentration, whose definitions are User-Generated Platforms' [Marketplace Volume and Liquidity](/books/user-generated-platforms/operating-metrics#marketplace-volume-and-liquidity).
 
