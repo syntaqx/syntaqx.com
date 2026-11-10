@@ -9,7 +9,20 @@ tags = ["worker-classification", "contractors", "abc-test", "flsa", "employment-
 
 Whether a worker is an employee or an independent contractor isn't one question. It's a question asked separately by the IRS for income tax withholding and FICA, by the Department of Labor for minimum wage and overtime, by each state for unemployment insurance, wage law and workers' compensation, and by courts in each of those contexts, under tests that differ in their factors and their burden. The IRS weighs behavioral control, financial control and the relationship. The DOL asks whether the worker is economically dependent on the business, under a 2024 rule its own investigators no longer apply and a 2026 proposal that hasn't been finalized. California, Massachusetts and other states presume employment unless the business proves three things, one of which (the work is outside the usual course of the business) a platform whose product is the work can rarely prove. The same person can be a contractor for federal tax and an employee under state wage law.
 
-Classification is a legal determination for counsel, not the payroll system. What the system owns is the record: which test was applied to which worker, for which purpose and jurisdiction, on which facts and when; the consistency of treatment across similar workers, which is itself a legal test under Section 530; the date and mechanics of a conversion; and the cost, computed from the statute, when a classification is wrong. This chapter covers the IRS test and Form SS-8, Section 530 relief, the DOL test and its rulemaking status as of November 2026, ABC tests, the cost of misclassification with worked numbers under section 3509, the Voluntary Classification Settlement Program, and what a payroll system records. Gig platforms' version of the question (Proposition 22, the UK's *Aslam* case, the EU Platform Work Directive, minimum pay standards) is in the User-Generated Platforms volume's [Classification](/books/user-generated-platforms/gig-work-and-worker-law#classification); reporting payments to contractors is in [Contractors & 1099s](/books/workforce/contractors-and-1099s). This is a description of the rules for engineers, not legal advice.
+Classification is a legal determination for counsel, not the payroll system. What the system owns is the record: which test was applied to which worker, for which purpose and jurisdiction, on which facts and when; the consistency of treatment across similar workers, which is itself a legal test under Section 530; the date and mechanics of a conversion; and the cost, computed from the statute, when a classification is wrong. This chapter covers the platforms' screening and indemnity products, the IRS test and Form SS-8, Section 530 relief, the DOL test and its rulemaking status as of November 2026, ABC tests, the cost of misclassification with worked numbers under section 3509, the Voluntary Classification Settlement Program, and what a payroll system records. Gig platforms' version of the question (Proposition 22, the UK's *Aslam* case, the EU Platform Work Directive, minimum pay standards) is in the User-Generated Platforms volume's [Classification](/books/user-generated-platforms/gig-work-and-worker-law#classification); reporting payments to contractors is in [Contractors & 1099s](/books/workforce/contractors-and-1099s). This is a description of the rules for engineers, not legal advice.
+
+## How the Platforms Do It
+
+The contractor and EOR platforms sell classification as a product in two forms: a screening tool that scores the risk, and a contract that moves the risk to the provider. As of November 2026, from their public pages:
+
+| Provider | Product | What it claims |
+| --- | --- | --- |
+| **Oyster** | Contractor vs Full-Time Employee Analyzer (free) | "Answer a few questions to know your misclassification risk," returning a high, moderate or low risk |
+| **Remote** | Contractor Management Plus ($99 per contractor per month) | Classification guidance, with misclassification "coverage up to $100K per contractor and $1M aggregate" |
+| **Remote** | Contractor of Record (from $325 per contractor per month) | "Uncapped indemnity" for misclassification incidents "during the active Contractor of Record engagement period," subject to its service terms |
+| **Deel** | Contractor of Record ($325 per contractor per month) | "As your agent of record, we take on liability," and "Deel takes on all the liability and the indemnification for a contractor" |
+
+Two things follow for a builder. A screening tool's score is an input to an assessment, not a determination: it's evidence of what the business asked and when, and it should be stored with its version and the answers given. And an indemnity changes who pays when a classification is wrong, not whether it's wrong; the IRS, the DOL and a state still apply their own tests to the facts, so the contract and its coverage period belong on the assessment record beside the facts. The contractor of record arrangement itself is in [Contractor of Record](/books/workforce/employer-of-record#contractor-of-record).
 
 ## Which Test Applies
 
@@ -143,8 +156,10 @@ CREATE TABLE classification_assessments (  -- one per worker, test and decision
                         'undetermined')),
   decided_by          TEXT NOT NULL CHECK (decided_by IN ('counsel', 'hr_review', 'tool', 'agency',
                         'court')),
-  tool_version        TEXT,
+  tool_version        TEXT,                  -- a screening tool's version, with its answers in facts
   contract_document_id UUID REFERENCES documents (id),
+  indemnity_document_id UUID REFERENCES documents (id),  -- a COR or coverage contract, if any
+  indemnity_period    DATERANGE,             -- when that coverage applies
   assessed_on         DATE NOT NULL,
   supersedes_id       UUID REFERENCES classification_assessments (id)
 );
@@ -232,3 +247,12 @@ An IRS employment tax examination, a DOL investigation, a state audit or a lawsu
 - [IRS: Voluntary Classification Settlement Program](https://www.irs.gov/businesses/small-businesses-self-employed/voluntary-classification-settlement-program), eligibility, Form 8952 at least 120 days ahead, the 10% payment under 3509(a) and Announcement 2012-45
 - [DOL WHD: Field Assistance Bulletin 2025-1 (PDF)](https://www.dol.gov/sites/dolgov/files/WHD/fab/fab2025-1.pdf), enforcement under Fact Sheet 13 and the 2024 rule in private litigation
 - [DOL WHD: Misclassification rulemaking](https://www.dol.gov/agencies/whd/flsa/misclassification/rulemaking), the Department's rulemaking page
+
+**Vendor documentation**
+
+- [Oyster: Contractor vs Full-Time Employee Analyzer](https://www.oysterhr.com/global-employment-tools/contractor-conversion), a free misclassification risk screen
+- [Remote: Contractor Management](https://remote.com/contractor-management), Contractor Management Plus with classification guidance and misclassification coverage
+- [Remote: Contractor of Record](https://remote.com/global-hr/contractor-of-record), uncapped misclassification indemnity during the engagement
+- [Remote: Pricing](https://remote.com/pricing), Contractor Management Plus at $99 and Contractor of Record at $325
+- [Deel: Contractor of Record](https://www.deel.com/shield/), liability and indemnification for misclassification
+- [Deel: Pricing](https://www.deel.com/pricing), Contractor of Record at $325

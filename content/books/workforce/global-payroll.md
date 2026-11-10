@@ -116,7 +116,7 @@ These countries' payroll is mandatory, electronic and detailed: India withholds 
 
 EU directives bind employers through national law, so a payroll system meets them as each member state's transposition:
 
-- **Pay transparency.** Directive (EU) 2023/970 required transposition by June 7, 2026, with pay ranges for applicants, pay level information on request and gender pay gap reports from 2027 for employers with 250 or more workers; its payroll data needs (gross annual and hourly pay by worker) are worked through in [The EU Pay Transparency Directive](/books/workforce/pay-transparency-and-equity#the-eu-pay-transparency-directive).
+- **Pay transparency.** Directive (EU) 2023/970 required transposition by June 7, 2026, with pay ranges for applicants, pay level information on request and gender pay gap reports due by June 7, 2027 for employers with 150 or more workers (yearly from 250, every three years from 150 to 249) and from 2031 for those with 100 to 149; its payroll data needs (gross annual and hourly pay by worker) are worked through in [The EU Pay Transparency Directive](/books/workforce/pay-transparency-and-equity#the-eu-pay-transparency-directive).
 - **Adequate minimum wages.** On November 11, 2025, the Court of Justice (case C-19/23) confirmed "the validity of a large part" of Directive (EU) 2022/2041 but annulled the provision listing the criteria member states with statutory minimum wages must consider when setting them and the rule preventing indexed minimum wages from falling (Articles 5(2) and 5(3)). Minimum wages remain national rates, set and changed by each country, and belong in the same dated rate tables as US minimum wages ([Minimum Wage as Data](/books/workforce/minimum-wage-as-data)).
 - **Working conditions and posting.** EU law also sets what an employment contract's written terms must include and the pay rules for workers posted temporarily to another member state. <!-- source-gap: wf-eu-1152-posting | missing | Directive (EU) 2019/1152 written information requirements and the Posting of Workers Directive 96/71/EC as amended by 2018/957, as they bind payroll | closes with: the directives' texts on EUR-Lex, opened (empty responses and 429 on Nov 10, 2026) | checked: 2026-11-10 --> I couldn't open those directives' texts, so their specifics are left to the member states' rules in each country profile.
 
@@ -180,14 +180,15 @@ CREATE TABLE fx_conversions (              -- every currency change behind a pay
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   pay_run_id          UUID REFERENCES pay_runs (id),
   money_movement_id   UUID REFERENCES money_movements (id),
-  sell_currency       CHAR(3) NOT NULL,
   sell_amount         BIGINT NOT NULL,       -- minor units
-  buy_currency        CHAR(3) NOT NULL,
+  sell_currency       CHAR(3) NOT NULL,
   buy_amount          BIGINT NOT NULL,
-  rate                NUMERIC(18, 10) NOT NULL,
-  reference_rate      NUMERIC(18, 10),       -- a mid-market or published rate, for the margin
-  margin_bps          NUMERIC(8, 2),
-  provider            TEXT NOT NULL,
+  buy_currency        CHAR(3) NOT NULL,
+  executed_rate       NUMERIC(20, 10) NOT NULL,
+  mid_rate            NUMERIC(20, 10),       -- the reference rate before markup
+  markup_bps          INTEGER,
+  counterparty        TEXT NOT NULL,         -- the payroll provider, bank or FX provider
+  counterparty_ref    TEXT,
   quoted_at           TIMESTAMPTZ NOT NULL,
   executed_at         TIMESTAMPTZ
 );
@@ -200,7 +201,7 @@ ALTER TABLE money_movements
   ADD COLUMN currency       CHAR(3) NOT NULL DEFAULT 'USD';
 ```
 
-A partner-run country's pay run is created from the inputs, marked `calculating` while the partner works, and populated from the import: each local line mapped to a `pay_item_types` row and written as `pay_statement_lines` in the country's currency, with variances held for review before approval. Funding creates an `fx_conversions` row and the money movements in each currency. Year-to-date for a cumulative country is keyed by its tax year, read from the profile, not the calendar year.
+A partner-run country's pay run is created from the inputs, marked `calculating` while the partner works, and populated from the import: each local line mapped to a `pay_item_types` row and written as `pay_statement_lines` in the country's currency, with variances held for review before approval. Funding creates an `fx_conversions` row and the money movements in each currency. The columns follow the Payments volume's `fx_conversions` and `fx_quotes` ([How to Build It](/books/payments/cross-border-and-fx#how-to-build-it)), so where the payroll provider is itself the converting party, its payroll-side row is the same conversion as a Payments row with purpose `payout`, keyed to the pay run instead of a ledger transaction. Year-to-date for a cumulative country is keyed by its tax year, read from the profile, not the calendar year.
 
 Design notes:
 

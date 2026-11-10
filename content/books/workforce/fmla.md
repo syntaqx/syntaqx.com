@@ -9,7 +9,7 @@ tags = ["fmla", "leave", "hr", "compliance", "wage-and-hour", "leave-administrat
 
 The Family and Medical Leave Act gives an eligible employee up to 12 workweeks of unpaid, job-protected leave in a 12-month period for a serious health condition, the birth or placement of a child, care of a family member, or a qualifying military exigency, and up to 26 workweeks in a single 12-month period to care for a covered servicemember. The employer keeps group health coverage going on the same terms and restores the employee to the same or an equivalent job. None of that is money the payroll system pays, but nearly all of it is data the payroll and time systems already hold: whether the employee has 1,250 hours in the last 12 months is a query over time records, how much of the 12 weeks is left is a ledger in hours, and whether a notice went out within five business days is a timestamp compared with another timestamp.
 
-The law is mostly clocks. An employer that learns leave may qualify has five business days to say whether the employee is eligible, then five more business days after it has enough information to designate the leave; the employee has 15 calendar days to return a certification and seven to fix one that's incomplete; and a failure to give a required notice can itself be interference with FMLA rights. This chapter covers coverage and eligibility, the entitlement and the four leave year methods with worked numbers, the notices and their deadlines, certification, intermittent and reduced-schedule leave tracked in hours, military leave, the interplay with the ADA, paid leave and state programs, and recordkeeping. State paid leave programs are in [State Paid Family & Medical Leave](/books/workforce/state-paid-leave); accrued sick time and PTO are in [Sick Leave & PTO Engines](/books/workforce/sick-leave-and-pto). This is a description of the rules for engineers, not legal advice.
+The law is mostly clocks. An employer that learns leave may qualify has five business days to say whether the employee is eligible, then five more business days after it has enough information to designate the leave; the employee has 15 calendar days to return a certification and seven to fix one that's incomplete; and a failure to give a required notice can itself be interference with FMLA rights. This chapter covers coverage and eligibility, the entitlement and the four leave year methods with worked numbers, the notices and their deadlines, certification, intermittent and reduced-schedule leave tracked in hours, military leave, the interplay with the ADA, paid leave and state programs, health premiums during leave, and recordkeeping. State paid leave programs are in [State Paid Family & Medical Leave](/books/workforce/state-paid-leave); accrued sick time and PTO are in [Sick Leave & PTO Engines](/books/workforce/sick-leave-and-pto). This is a description of the rules for engineers, not legal advice.
 
 ## How the Platforms Do It
 
@@ -156,7 +156,7 @@ The notices are where most administrative liability sits, because "failure to fo
 | **Designation notice** | Within five business days after the employer has enough information to decide whether the leave qualifies (often, after the certification) | Whether the leave is designated FMLA leave, any fitness-for-duty requirement, and the amount of leave counted against the entitlement, in hours, days or weeks, if known (Form WH-382) |
 | **Amount of leave counted** | Where it isn't known at designation (unforeseeable intermittent leave), on request, no more than once in 30 days and only if leave was taken in that period | Hours, days or weeks charged |
 
-Oral notices of designation must be confirmed in writing by the following payday, or the subsequent payday if the next one is less than a week away (825.300(d)(6)). That rule ties an HR deadline to the pay schedule, which is a reason to compute it from `pay_periods` rather than type it.
+The notice of the amount of leave counted may be oral, but an oral one must be confirmed in writing "no later than the following payday," or the subsequent payday if the next one is less than a week away (825.300(d)(6)). That rule ties an HR deadline to the pay schedule, which is a reason to compute it from `pay_periods` rather than type it.
 
 ### Worked Numbers: One Case's Clocks
 
@@ -203,6 +203,17 @@ FMLA leave rarely runs alone. Three interactions decide what's counted and what'
 - **State leave laws.** Where an absence qualifies under both, "the leave used counts against the employee's entitlement under both laws," and nothing in the FMLA supersedes a state law providing greater rights (29 CFR 825.701). The regulation's own example is a state allowing 16 weeks over two years: an employee can take 16 weeks in one year under state law and 12 the next under the FMLA, but never 28 in one year. State paid leave programs (wage replacement funded by payroll contributions) usually run concurrently with FMLA leave and pay benefits from a state fund, not the payroll; [State Paid Family & Medical Leave](/books/workforce/state-paid-leave#benefit-coordination-and-job-protection) covers coordination.
 
 A pending federal change touches this chapter at the edge: the Department of Labor's February 27, 2026 proposed rule on employee or independent contractor status (91 FR 9932) would extend its test to the FMLA as well as the FLSA, which would change who counts toward the 50 employees. As of November 2026 it hasn't been finalized ([Worker Classification](/books/workforce/worker-classification#the-dol-economic-reality-test)).
+
+## Group Health Premiums During Leave
+
+The employer keeps group health coverage going during FMLA leave, and the employee keeps paying their share, which turns an HR obligation into a deduction problem (29 CFR 825.210):
+
+- **During paid leave,** "the employee's share of premiums must be paid by the method normally used during any paid leave," which is the ordinary payroll deduction on the substituted PTO or sick pay.
+- **During unpaid leave,** there's no paycheck to deduct from. The employer picks a method and gives advance written notice of it: payment due when the payroll deduction would have been, on the COBRA schedule, prepaid through a cafeteria plan at the employee's option, under the employer's existing unpaid leave rules (which can't require prepayment for FMLA leave), or another arrangement both agree to, such as larger deductions before a foreseeable leave. "No additional charge may be added to the employee's premium payment for administrative expenses."
+- **A late payment.** Unless a policy gives longer, the employer's obligation to maintain coverage can end when a payment is "more than 30 days late," after written notice mailed "at least 15 days before coverage is to cease" (825.212). An employer that keeps coverage going by paying the missed employee share may recover it from the employee.
+- **An employee who doesn't return.** The employer may recover its own share of premiums paid during unpaid FMLA leave, unless the employee doesn't return because of a continuing or new serious health condition or other circumstances beyond their control, and may do so "through deduction from any sums due to the employee," such as unpaid wages or vacation pay, within federal and state wage payment law (825.213).
+
+In the core model, the employee's share during unpaid leave is a `deduction_elections` row whose arrears rule decides what happens when no pay exists ([Arrears and Catch-Up](/books/workforce/deductions#arrears-and-catch-up)), the payment terms and any delinquency letter are `leave_notices` rows, and a recovery at separation is a deduction on the final pay statement checked against the state's final pay and deduction rules.
 
 ## Recordkeeping
 
@@ -262,7 +273,8 @@ CREATE TABLE leave_notices (               -- every notice given, with its clock
   leave_case_id       UUID NOT NULL REFERENCES leave_cases (id),
   kind                TEXT NOT NULL CHECK (kind IN ('eligibility', 'rights_responsibilities',
                         'designation', 'amount_counted', 'certification_deficiency',
-                        'oral_designation_confirmation', 'state_program')),
+                        'oral_amount_confirmation', 'premium_payment_terms',
+                        'premium_delinquency', 'state_program')),
   triggered_on        DATE NOT NULL,         -- request, knowledge or sufficient information
   due_on              DATE NOT NULL,         -- computed from the rule and the calendar
   business_calendar   TEXT NOT NULL,         -- which holidays counted
@@ -333,6 +345,7 @@ A DOL investigation or an interference claim asks:
 - **Track leave in the payroll's smallest increment** and as fractions of the employee's normal workweek.
 - **Generate notices on clocks** and alert before each five-business-day deadline.
 - **Link paid leave, state program benefits and ADA cases** to the FMLA case they run beside.
+- **Collect the employee's health premium share during unpaid leave** by a noticed method, with the 30-day grace period and 15-day letter as clocks.
 - **Keep medical certifications in a separate, access-controlled store.**
 
 ## References
@@ -344,7 +357,10 @@ A DOL investigation or an interference claim asks:
 - [29 CFR 825.200: Amount of leave](https://www.law.cornell.edu/cfr/text/29/825.200), the four leave year methods, 60 days' notice of a change, the most beneficial method by default and the military caregiver period
 - [29 CFR 825.205: Increments of FMLA leave for intermittent or reduced schedule leave](https://www.law.cornell.edu/cfr/text/29/825.205), the one-hour maximum increment, physical impossibility, workweek fractions, varying schedules and overtime
 - [29 CFR 825.207: Substitution of paid leave](https://www.law.cornell.edu/cfr/text/29/825.207), employee election and employer requirement, disability plans and workers' compensation
-- [29 CFR 825.300: Employer notice requirements](https://www.law.cornell.edu/cfr/text/29/825.300), the general, eligibility, rights and responsibilities and designation notices, the $216 posting penalty and interference
+- [29 CFR 825.210: Employee payment of group health benefit premiums](https://www.law.cornell.edu/cfr/text/29/825.210), payment by the paid leave method, the options during unpaid leave and no administrative surcharge
+- [29 CFR 825.212: Employee failure to pay health plan premium payments](https://www.law.cornell.edu/cfr/text/29/825.212), the 30-day grace period, 15 days' written notice and recovery of the employee share
+- [29 CFR 825.213: Employer recovery of benefit costs](https://www.law.cornell.edu/cfr/text/29/825.213), recovery of the employer's premiums when an employee doesn't return, the exceptions and deduction from sums due
+- [29 CFR 825.300: Employer notice requirements](https://www.law.cornell.edu/cfr/text/29/825.300), the general, eligibility, rights and responsibilities and designation notices, the $216 posting penalty, written confirmation of an oral amount-counted notice by the following payday, and interference
 - [29 CFR 825.305: Certification, general rule](https://www.law.cornell.edu/cfr/text/29/825.305), five business days to request, 15 calendar days to provide, seven to cure and annual recertification
 - [29 CFR 825.500: Recordkeeping requirements](https://www.law.cornell.edu/cfr/text/29/825.500), three-year retention, required records and confidential medical files
 - [29 CFR 825.701: Interaction with State laws](https://www.law.cornell.edu/cfr/text/29/825.701), concurrent counting and the 16-weeks-over-two-years example

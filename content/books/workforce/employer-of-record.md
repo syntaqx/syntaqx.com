@@ -18,11 +18,11 @@ As of November 2026, from each provider's public pages (country counts and owner
 
 | Provider | EOR price | Countries | Entities | Other products |
 | --- | --- | --- | --- | --- |
-| **Deel** | From $599 per month | EOR in 130+ of 150+ countries | "100+ owned entities worldwide" plus "a global network of local entities and partners" | Contractor management from $49; contractor of record $325; US PEO $125 |
-| **Globalization Partners (G-P)** | Not published | "180+ countries covered" | "200+ global partners" | An AI agent product |
+| **Deel** | From $599 per month | Contracts, terminations and local law handled "in 150+ countries" | "We own entities and payroll engine in 130+ countries" | Contractor management from $49; contractor of record $325; US PEO $125 |
+| **Globalization Partners (G-P)** | Not published | "180+ countries covered" | "200+ global partners" | G-P Gia, "AI-powered compliance intelligence" |
 | **Oyster** | "USD 699" a month, with unpriced annual discounts | EOR in 120+ countries; contractors in 180+ | No owned-entity claim on the pages I read | Contractors from USD 29 |
 | **Pebl (formerly Velocity Global)** | Not published | "185+ countries" | "90% of employees supported through Pebl-owned entities" | |
-| **Remote** | From $599 per employee per month on annual contracts; no setup or onboarding fee | EOR in "90+ countries" | "100% owned entities, no third parties" | Contractor management $29 and $99; contractor of record $325; global payroll $19; US PEO $99; equity administration $39 |
+| **Remote** | From $599 per employee per month on annual contracts; no setup or onboarding fee | EOR in "90+ countries" | "100% owned entities, no third parties" | Contractor management $29 and $99; contractor of record $325; global payroll $19; US PEO $99 |
 | **Rippling** | Not published | EOR in "115 countries" | Not stated | Global payroll "via Rippling entities" or "via your entities" |
 
 <!-- source-gap: wf-eor-papaya-multiplier | missing | Papaya Global and Multiplier EOR pricing, country counts and entity models | closes with: their public pricing or EOR pages, opened (papayaglobal.com 403 and multiplier HTTP 530 on Nov 10, 2026) | checked: 2026-11-10 --> Papaya Global's and Multiplier's pages weren't reachable when I checked, so they aren't in the table.
@@ -48,7 +48,7 @@ An EOR employs in a country either through its own subsidiary or through a partn
 - **Where the data goes.** Payroll and HR data passes to the partner, which is a processor or controller under local data protection law, with its own transfer mechanisms.
 - **Consistency.** Benefits, contract templates and response times vary by partner.
 
-Vendors' claims run from all owned (Remote) to mostly owned (Pebl, Deel's 100+ owned entities alongside partners) to partner networks (G-P's 200+ partners). For a buyer, the question per country is which entity will sign the contract, and for a builder, the answer is a row per country with the entity, its ownership and, where it's a partner, the partner firm.
+Vendors' claims run from all owned (Remote) to mostly owned (Pebl's 90%, Deel's owned entities in 130+ of the 150+ countries it covers) to partner networks (G-P's 200+ partners). For a buyer, the question per country is which entity will sign the contract, and for a builder, the answer is a row per country with the entity, its ownership and, where it's a partner, the partner firm.
 
 ### Germany and Labor Leasing
 
@@ -56,7 +56,7 @@ Some countries regulate employing a worker who works for someone else as labor l
 
 ## Contractor of Record
 
-A contractor of record (COR) sits between direct contracting and EOR: the provider contracts with the independent contractor, pays them and takes on the classification review and some of the misclassification risk, and the client pays the provider. Deel and Remote both list it at $325 per month as of November 2026, between their contractor management tools ($49 and $29 or $99) and their EOR ($599). The worker stays a contractor, so the local classification test still decides whether that's right; a COR doesn't make an employee into a contractor, and when the facts look like employment the answer is the EOR. Contractor management tools, by contrast, only pay and document a contractor the client engages directly, with the classification risk staying with the client ([Worker Classification](/books/workforce/worker-classification)).
+A contractor of record (COR) sits between direct contracting and EOR: the provider contracts with the independent contractor, pays them and takes on the classification review and some of the misclassification risk, and the client pays the provider. Deel and Remote both list it at $325 per month as of November 2026, between their contractor management tools ($49 and $29 or $99) and their EOR ($599). The risk transfer is a contract term, and the vendors word it differently: Deel's COR page says "Deel takes on all the liability and the indemnification for a contractor," while Remote offers "uncapped indemnity" for misclassification incidents "during the active Contractor of Record engagement period," subject to its service terms ([How the Platforms Do It](/books/workforce/worker-classification#how-the-platforms-do-it)). The worker stays a contractor, so the local classification test still decides whether that's right; a COR doesn't make an employee into a contractor, and when the facts look like employment the answer is the EOR. Contractor management tools, by contrast, only pay and document a contractor the client engages directly, with the classification risk staying with the client ([Worker Classification](/books/workforce/worker-classification)).
 
 ## Permanent Establishment Risk
 
@@ -73,7 +73,7 @@ An EOR employs the worker, but the worker works for the client, and the vendors 
 
 Benefits under an EOR are the country's statutory benefits (pension contributions, health insurance where it's employment-based, paid leave, sick pay, parental leave) plus whatever supplementary benefits the EOR offers or the client funds. The client's US benefit plans don't extend to the worker, so offering comparable benefits means funding local plans through the EOR, priced per country.
 
-Equity is harder because the EOR, not the client, is the employer. Remote sells equity administration at $39 per employee per month for EOR employees with equity, handling vesting, exercise and withholding at settlement, with Carta or Pulley; Deel says equity "really depends on the country" and that in the US, where Deel is the employer on paper, grants are NSOs only. The tax event at vest or exercise is employment income in the country, withheld through the EOR's payroll, which means the client's equity system must send the EOR each event, the fair market value and the currency in time for the pay period ([Allocating Wages by Day, Including Equity](/books/workforce/multi-state-and-remote-work#allocating-wages-by-day-including-equity) covers the US multi-state version).
+Equity is harder because the EOR, not the client, is the employer. Deel says whether an EOR employee can hold the client's equity "really depends on the country," and that in the US, where Deel is the employer on paper, companies can issue non-qualified stock options (NSOs). The tax event at vest or exercise is employment income in the country, withheld through the EOR's payroll, which means the client's equity system must send the EOR each event, the fair market value and the currency in time for the pay period ([Allocating Wages by Day, Including Equity](/books/workforce/multi-state-and-remote-work#allocating-wages-by-day-including-equity) covers the US multi-state version).
 
 ## Terminations Abroad
 
@@ -127,7 +127,8 @@ ALTER TABLE employers
   ALTER COLUMN deposit_schedule DROP NOT NULL,
   ALTER COLUMN deposit_schedule_year DROP NOT NULL,
   ADD CONSTRAINT us_employer_fields CHECK (country <> 'US' OR (ein IS NOT NULL
-    AND federal_return IS NOT NULL AND deposit_schedule IS NOT NULL));
+    AND federal_return IS NOT NULL AND deposit_schedule IS NOT NULL
+    AND deposit_schedule_year IS NOT NULL));
 
 CREATE TABLE country_partners (            -- in-country firms that employ or run payroll
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -226,8 +227,10 @@ A client's finance team, a tax authority or an acquirer's diligence asks:
 
 **Vendor documentation**
 
-- [Remote: Pricing](https://remote.com/pricing), EOR from $599, contractor products, contractor of record $325, global payroll, US PEO and equity at $39
+- [Remote: Pricing](https://remote.com/pricing), EOR from $599, contractor products, contractor of record $325, global payroll and US PEO
 - [Remote: Employer of Record](https://remote.com/employer-of-record), owned entities in 90+ countries, day-to-day management by the client and terminations led by Remote
+- [Remote: Contractor of Record](https://remote.com/global-hr/contractor-of-record), uncapped misclassification indemnity during the engagement and pricing
+- [Deel: Contractor of Record](https://www.deel.com/shield/), liability and indemnification for misclassification
 - [Deel: Pricing](https://www.deel.com/pricing), EOR from $599, contractors $49, contractor of record $325 and US PEO $125
 - [Deel: Employer of Record](https://www.deel.com/employer-of-record/), countries, owned entities and equity by country
 - [Deel: Using an employer of record to mitigate permanent establishment risk](https://www.deel.com/blog/using-an-employer-of-record-to-mitigate-permanent-establishment-risk/), legal and tax responsibilities, partners and when EOR doesn't suit
