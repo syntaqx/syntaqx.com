@@ -48,17 +48,22 @@ export function inpReport(
   };
 }
 
-/** Null when the load was good (2.5s or under). Fingerprinted by element. */
+/**
+ * Null unless the load was poor (over 4s). Speed Insights already judges the
+ * p75; a 2.5s cutoff filed every slow phone on a far network. Fingerprinted
+ * by route pattern, since every docs and book page shares the same first
+ * paragraph as its LCP element and would otherwise pile into one issue.
+ */
 export function lcpReport(
   metric: Pick<LCPMetricWithAttribution, "value" | "rating" | "attribution">,
   path: string,
   viewport: readonly [number, number],
 ): VitalsReport | null {
-  if (metric.rating === "good") return null;
+  if (metric.rating !== "poor") return null;
   const a = metric.attribution;
   const target = a.target || "(unknown)";
   return {
-    fingerprint: ["lcp", target],
+    fingerprint: ["lcp", "{{ transaction }}"],
     tags: { lcp_target: target.slice(0, 200), lcp_route: path },
     extra: {
       value: Math.round(metric.value),
