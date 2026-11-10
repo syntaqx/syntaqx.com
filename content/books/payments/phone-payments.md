@@ -160,5 +160,5 @@ Phone payment records are evidence in a PCI assessment, in an ACH dispute over a
 - [Payabli: IVR payments](https://docs.payabli.com/guides/pay-in-ivr-overview), the call tree on SharpenCX, keypad capture posted directly to Payabli, and Nacha requirements for ACH by IVR
 - [Payabli: Pay by SMS](https://docs.payabli.com/guides/pay-in-developer-invoices-pay-by-sms), the opt-in flow with the STOP keyword and links that expire after 3 days
 - [Kilpatrick: Wiretap laws in the United States](https://ktslaw.com/en/Insights/Alert/2024/7/Wiretap-Laws-in-the-United-States), one-party and all-party consent states
-- [Twilio: Shutdown of unregistered 10DLC messaging](https://support.twilio.com/hc/en-us/articles/14910496447771-Shutdown-of-Unregistered-10DLC-Messaging), carrier blocking of unregistered numbers since September 2023
+- [Twilio changelog: US A2P 10DLC is now a fully verified route](https://www.twilio.com/en-us/changelog/-u-s--a2p-10dlc--full-blocking-of-traffic-sent-from-unregistered), carrier blocking of unregistered numbers since September 2023
 - [Stripe: Checkout session expiration](https://docs.stripe.com/payments/checkout/managing-limited-inventory), payment sessions that expire between 30 minutes and 24 hours
