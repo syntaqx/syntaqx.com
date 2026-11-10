@@ -248,9 +248,9 @@ The audit record itself is in [Audit Trails](/docs/building-blocks/audit-trails)
 - [Finix: Payouts guide](https://docs.finix.com/guides/after-the-payment/payouts), next-day and same-day ACH payouts
 - [Moov: Card acceptance](https://moov.io/blog/product/card-acceptance/), registered payment facilitator and acquiring processor from July 2022
 - [Moov: Financial institution card funding and disbursement terms](https://moov.io/legal/platform-agreement/financial-institution-card-funding-and-disbursement-terms/), SouthState Bank, N.A. as acquirer and Veridian Credit Union for the concentration account; last updated December 17, 2025
-- [Moov: Payout fees](https://docs.moov.io/guides/money-movement/send-payments/payout-fees/index.md), standard and same-day ACH payouts
-- [Moov: Push to card](https://docs.moov.io/guides/money-movement/send-payments/push-to-card/index.md), payouts to debit cards
-- [Moov: Instant payments](https://docs.moov.io/guides/money-movement/send-payments/instant-payments/index.md), instant bank credit over RTP and FedNow
+- [Moov: Payout fees](https://docs.moov.io/guides/send-payments/payout-fees/), standard and same-day ACH payouts
+- [Moov: Push to card](https://docs.moov.io/guides/send-payments/push-to-card/), payouts to debit cards
+- [Moov: Instant payments](https://docs.moov.io/guides/send-payments/instant-payments/), instant bank credit over RTP and FedNow
 - [Moov: Fee plans](https://docs.moov.io/guides/fee-plans/plan-options/), fee plans configured by Moov and accepted by the account holder
 - [NMI](https://www.nmi.com/), "a leading global embedded payments enablement platform"
 - [NMI: Get sub-affiliate list](https://docs.nmi.com/reference/get-sub-affiliate-list), the partner, affiliate and sub-affiliate tree

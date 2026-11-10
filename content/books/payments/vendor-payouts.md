@@ -355,9 +355,9 @@ Payables records are evidence in a business email compromise investigation, a ve
 - [FBI: 2025 Internet Crime Report (PDF)](https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf), 24,768 business email compromise complaints and $3.05 billion in reported losses
 - [Lob: Tracking your mail](https://help.lob.com/print-and-mail/getting-data-and-results/tracking-your-mail), print-and-mail tracking events by Intelligent Mail barcode
 - [Marqeta: Supplier payments](https://www.marqeta.com/payment-solutions/supplier-payments), virtual cards for one-time and recurring payouts with controls by amount, merchant, category and time
-- [Moov: Push to card](https://docs.moov.io/guides/money-movement/send-payments/push-to-card/index.md), the $50,000 per-transfer limit, velocity limits and card eligibility for fast funds
-- [Moov: Instant payments](https://docs.moov.io/guides/money-movement/send-payments/instant-payments/index.md), instant bank credits over RTP and FedNow up to $100,000, final once sent
-- [Moov: Payout fees](https://docs.moov.io/guides/money-movement/send-payments/payout-fees/index.md), standard and same-day ACH payouts and which side pays the fee
+- [Moov: Push to card](https://docs.moov.io/guides/send-payments/push-to-card/), the $50,000 per-transfer limit, velocity limits and card eligibility for fast funds
+- [Moov: Instant payments](https://docs.moov.io/guides/send-payments/instant-payments/), instant bank credits over RTP and FedNow up to $100,000, final once sent
+- [Moov: Payout fees](https://docs.moov.io/guides/send-payments/payout-fees/), standard and same-day ACH payouts and which side pays the fee
 - [Nuvei: Payout solutions](https://www.nuvei.com/payout-solutions), ACH, RTP and FedNow, Visa Direct and Mastercard Send
 - [Payabli: Understanding payables](https://docs.payabli.com/guides/pay-out-payables-overview), managed payables and on-demand payouts compared, good funds and credit models, batch close times, check cancellation at 190 days, and virtual card, ACH and check economics
 - [Payabli: Understanding managed payables](https://docs.payabli.com/guides/pay-out-managed-payables-overview), the enablement call within 36 business hours, card first with ACH above a 1.2% vendor fee, ACH enrollment evidence, the check fallback, the 3:30 PM cutoff and two-day hold, and undeposited checks

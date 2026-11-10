@@ -20,12 +20,14 @@ Mail as each host's public pages describe it, as of October 2026:
 | Provider | Bundled with hosting | Paid mailbox product | Platform behind it | Resale | Limits stated |
 | --- | --- | --- | --- | --- | --- |
 | **Bluehost** | cPanel mail; Starter capped at 100 MB per address | Professional Email: 10 GB at $1.99/mo intro, $2.99 renewal; 50 GB and 100 GB tiers | "Powered by Titan" (MX at `mx1.titan.email`) | Points customers to Google Workspace as an alternative | |
-| **GoDaddy** | Not covered here | Professional Email, 1 GB to 100 GB tiers | "Powered by Titan" | Microsoft 365 from GoDaddy, 10 GB to 100 GB mailboxes | 500 SMTP relays per mailbox per day; 1,500 a day from webmail; 100 recipients per message |
+| **GoDaddy** | Not covered here | Professional Email, 1 GB to 100 GB tiers (GoDaddy's US plans page now lists only Microsoft 365, and no longer shows Titan tiers) | "Powered by Titan" | Microsoft 365 from GoDaddy, 10 GB to 100 GB mailboxes | 500 SMTP relays per mailbox per day; 1,500 a day from webmail; 100 recipients per message |
 | **Hostinger** | A 1-year free trial mailbox, 1 GB, 100 sends a day | Business Starter 5 GB from $0.39/mo on 48 months, renews $1.59; Premium 50 GB | Its own "Hostinger Email" (Titan plans still documented) | | Starter 1,000 a day, Premium 3,000 a day, 100 recipients |
 | **IONOS** | | IONOS Email from $1.10/mo, 2 GB, then $2 | Its own mail; Exchange as "Outlook & Office" | "Business Gmail" (Google Workspace) | |
 | **SiteGround** | Included on hosting plans | | Its own | | 400 emails an hour per site (800 on GoGeek and Cloud), 80 recipients, each recipient counted |
 | **DreamHost** | Three-month Professional Email trial on Web Hosting; unlimited on DreamPress, VPS and Dedicated | Professional Email, $1.99/mo per mailbox (or $1.67 yearly), 25 GB | Its own | | 100 recipients an hour per address over SMTP; 200 an hour per server for PHP and CGI on shared |
 | **Namecheap** | cPanel mail, 10 GB total on Shared Hosting | Private Email: 5 GB, 30 GB, 75 GB plans | Not stated on opened pages | | Private Email 500 an hour per mailbox; shared hosting 50 to 10,000 an hour per domain by plan |
+
+<!-- source-gap: godaddy-titan-tiers | missing | GoDaddy Professional Email (Titan) storage tiers, 1 GB to 100 GB | closes with: a live GoDaddy US page listing Titan plan storage | checked: 2026-11-09 -->
 
 What the table shows:
 
@@ -340,7 +342,7 @@ Notes on the sketch:
 - [Bluehost: email DNS and services](https://www.bluehost.com/help/article/bh-email-dns-email-services), Professional Email powered by Titan, MX records
 - [Bluehost: Professional Email](https://www.bluehost.com/help/article/bluehost-professional-email), plans, storage, intro and renewal prices
 - [Bluehost: mailbox quota](https://www.bluehost.com/help/article/email-accounts-change-the-mailbox-size-quota), 100 MB per address on Starter
-- [GoDaddy: compare Professional Email plans](https://www.godaddy.com/help/compare-professional-email-powered-by-titan-plans-42801), Titan, storage tiers, SMTP relays
+- [GoDaddy: business email plans (US)](https://www.godaddy.com/email/professional-business-email), Microsoft 365 plans only
 - [GoDaddy: Professional Email limitations](https://www.godaddy.com/help/professional-email-account-limitations-31970), daily limits, recipients, message size
 - [GoDaddy: Microsoft 365 storage](https://www.godaddy.com/help/what-is-the-storage-capacity-of-my-microsoft-365-email-plan-42189), mailbox sizes by plan
 - [Hostinger: email parameters and limits](https://www.hostinger.com/support/4625828-parameters-and-limits-of-hostinger-email/), storage and sending limits, free trial

@@ -25,7 +25,7 @@ Backups as each host's public pages describe them, as of October 2026:
 | **DreamHost** | Not stated | "An average of 2 weeks of website backups and 5 days of database backups" | | "Long-term backups are not included in any hosting plan" |
 | **Bluehost** | Weekly on the basic shared plans | Not stated | | Not stated |
 | **Namecheap** | "Once every 3-7 days depending on the account type" | | On request; "made for server restoration purposes only" | Shared accounts over 25 GB or 200,000 inodes are excluded |
-| **IONOS** | Daily, files and databases | 14 days | Self-serve, files restored into a separate folder | |
+| **IONOS** | Daily for files; automatic for MySQL and MariaDB databases | 14 days | Self-serve, files restored into a separate folder | |
 | **GoDaddy** | Daily, in its Website Backup product | | "Entire website or just a single file" | Sold as a product, with malware scanning |
 | **WP Engine** | Daily checkpoints | 30 days on the restore page; "no less than 30 days and no longer than 60 days" on the plans page | Self-serve, overwrites the environment | Offsite on Amazon S3 in the site's region |
 | **Kinsta** | Daily; six-hourly ($20/site/mo) and hourly ($100/site/mo) add-ons | 14, 20 or 30 days by plan; add-on backups 24 hours | Self-serve, to live or to staging | External backups to S3 or Google Cloud Storage, weekly or monthly, not restorable from the dashboard |
@@ -343,7 +343,7 @@ Notes on the sketch:
 - [Namecheap: inode limits](https://namecheap.com/support/knowledgebase/article.aspx/9331/29/how-to-check-the-number-of-inodes-in-your-hosting-account), limits by plan, backup exclusion over 200,000
 - [HostGator: inode limits](https://www.hostgator.com/help/article/inode-limits), 100k/250k, AUP
 - [IONOS: restoring files](https://www.ionos.com/help/hosting/backup-restore-files/restoring-deletedoverwritten-files-for-linux-web-hosting-packages/), daily, 14 days
-- [IONOS: restoring databases](https://www.ionos.com/help/hosting/mysql-datenbank-sichern-wiederherstellen/restoring-databases-from-an-automatic-backup/), daily, 14 days
+- [IONOS: restoring databases](https://www.ionos.com/help/hosting/backing-up-and-restoring-a-mysql-database/restoring-databases-from-an-automatic-backup/), automatic, 14 days
 - [GoDaddy: introducing Website Backup](https://www.godaddy.com/resources/au/stories/introducing-godaddys-automatic-set-and-forget-website-backup), daily, single-file restore, malware scanning
 - [WP Engine: plans](https://wpengine.com/plans/), retention wording
 - [WP Engine: restore](https://wpengine.com/support/restore/), daily checkpoints, 30 days, S3 in the same region, destructive restore
