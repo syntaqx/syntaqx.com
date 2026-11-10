@@ -79,7 +79,7 @@ export default function ResumePage() {
             {resume.skills.map((k) => (
               <div
                 key={k.label}
-                className="grid gap-1 border-b border-border py-3 sm:grid-cols-[10rem_1fr] sm:gap-6"
+                className="grid gap-1 border-b border-border py-3 last:border-b-0 sm:grid-cols-[10rem_1fr] sm:gap-6"
               >
                 <dt className="font-semibold text-foreground">{k.label}</dt>
                 <dd className="leading-relaxed text-subtle">{k.items}</dd>
@@ -115,7 +115,7 @@ export default function ResumePage() {
                 )}
               </li>
             ))}
-            <li className="border-b border-border py-6">
+            <li className="py-6">
               <h3 className="mb-3 text-lg font-semibold text-foreground">Earlier roles</h3>
               <ul className="space-y-1.5">
                 {resume.earlier.map((job) => (
@@ -145,7 +145,7 @@ export default function ResumePage() {
         <section className="mb-14">
           <h2 className="eyebrow mb-6">education</h2>
           <ul className="border-t border-border">
-            <li className="border-b border-border py-6">
+            <li className="py-6">
               <h3 className="text-lg font-semibold text-foreground">
                 {resume.education.selfTaught.title}
               </h3>

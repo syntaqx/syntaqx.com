@@ -196,7 +196,7 @@ export default async function PostPage({ params }: Props) {
             ].map(([k, v]) => (
               <div
                 key={k}
-                className="flex items-baseline justify-between gap-4 border-b border-border py-2.5"
+                className="flex items-baseline justify-between gap-4 border-b border-border py-2.5 last:border-b-0"
               >
                 <dt className="inst text-muted-foreground">{k}</dt>
                 <dd className="text-sm text-foreground">{v}</dd>
@@ -211,7 +211,7 @@ export default async function PostPage({ params }: Props) {
                 {post.tags.map((tag) => {
                   const slug = slugifyTag(tag);
                   return (
-                    <li key={slug} className="border-b border-border">
+                    <li key={slug} className="border-b border-border last:border-b-0">
                       <Link
                         href={`/tags/${slug}`}
                         className="flex items-baseline justify-between gap-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary"

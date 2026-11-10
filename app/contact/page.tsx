@@ -31,7 +31,7 @@ export default function ContactPage() {
           {contactChannels.map((c) => (
             <li
               key={c.href}
-              className="grid gap-2 border-b border-border py-5 sm:grid-cols-[10rem_1fr] sm:gap-6"
+              className="grid gap-2 border-b border-border py-5 last:border-b-0 sm:grid-cols-[10rem_1fr] sm:gap-6"
             >
               <a
                 href={c.href}

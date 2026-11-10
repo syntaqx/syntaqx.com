@@ -118,7 +118,7 @@ export default async function BookCover({ params }: Props) {
               {part.title}
             </h2>
           )}
-          <ol className="divide-y divide-border border-b border-border">
+          <ol className="divide-y divide-border">
             {part.docs.map((doc) => {
               const i = chapters.indexOf(doc);
               return (

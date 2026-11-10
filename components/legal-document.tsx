@@ -100,7 +100,7 @@ export function LegalDocument({
             ].map(([k, v]) => (
               <div
                 key={k}
-                className="flex items-baseline justify-between gap-4 border-b border-border py-2.5"
+                className="flex items-baseline justify-between gap-4 border-b border-border py-2.5 last:border-b-0"
               >
                 <dt className="inst text-muted-foreground">{k}</dt>
                 <dd className="text-sm text-foreground">{v}</dd>
@@ -111,7 +111,7 @@ export function LegalDocument({
             <p className="inst mb-1 text-muted-foreground">also</p>
             <Link
               href={other.href}
-              className="flex items-baseline justify-between gap-4 border-y border-border py-2.5 text-sm text-foreground transition-colors hover:text-primary"
+              className="flex items-baseline justify-between gap-4 border-t border-border py-2.5 text-sm text-foreground transition-colors hover:text-primary"
             >
               {other.title}
               <ArrowRight aria-hidden className="size-3.5 shrink-0 text-muted-foreground" />

@@ -190,7 +190,7 @@ export default function ProjectsPage() {
         <SectionHead label="open source" count={projects.length} />
         <ol className="border-t border-border">
           {projects.map((p, i) => (
-            <li key={p.title} className="border-b border-border">
+            <li key={p.title} className="border-b border-border last:border-b-0">
               <a
                 href={p.url}
                 target="_blank"
