@@ -3980,6 +3980,160 @@ const legal: SceneFn = (s) => {
   };
 };
 
+/**
+ * Insurance: a house and a car on their lot under one umbrella, rain falling
+ * on the lot and stopping on the canopy, and the policy beside them, its seal
+ * lit. On hover the canopy lifts off its pole.
+ */
+const policy: SceneFn = (s) => {
+  // the canopy: an octagon of panels from the apex down to the rim
+  const [cx, cy] = [4.92, 4.4];
+  const lift = s.spread * 1.2;
+  const [R, rimZ, apexZ] = [3.6, 4.3 + lift, 5.9 + lift];
+  const N = 8;
+  const rim = (i: number): V3 => {
+    const t = ((i % N) / N) * Math.PI * 2 + Math.PI / N;
+    return [cx + Math.cos(t) * R, cy + Math.sin(t) * R, rimZ];
+  };
+  const apex: V3 = [cx, cy, apexZ];
+  const panels = Array.from({ length: N }, (_, i) => {
+    const [a, b] = [rim(i), rim(i + 1)];
+    const mid = ((i + 0.5) / N) * Math.PI * 2 + Math.PI / N;
+    return { pts: [apex, a, b], depth: a[0] + a[1] + b[0] + b[1], mid };
+  }).sort((p, q) => p.depth - q.depth);
+  // where a drop stops: on the canopy if it's under it, else on the ground
+  const stopAt = (x: number, y: number) => {
+    const d = Math.hypot(x - cx, y - cy);
+    return d < R * 0.92 ? rimZ + (apexZ - rimZ) * (1 - d / R) : 0.02;
+  };
+  const drops: [number, number, number][] = [
+    // over the canopy
+    [3.4, 3.2, 0.1],
+    [5.4, 2.6, 0.55],
+    [6.6, 4.6, 0.3],
+    [3.6, 5.6, 0.8],
+    [5.0, 6.0, 0.45],
+    [4.4, 3.9, 0.7],
+    [6.2, 3.2, 0.95],
+    // on open ground
+    [0.6, 1.6, 0.2],
+    [8.8, 1.4, 0.6],
+    [9.2, 5.2, 0.35],
+    [0.8, 8.6, 0.9],
+    [6.2, 9.2, 0.15],
+    [2.8, 9.4, 0.65],
+    [9.4, 8.2, 0.4],
+  ];
+  const top = 9 + lift;
+  const rain = drops.map(([x, y, off]): Part => {
+    const ph = (s.t / 1.4 + off) % 1;
+    const stop = stopAt(x, y);
+    const z = top - (top - stop) * ease(ph);
+    return { kind: "line", a: [x, y, z + 0.55], b: [x, y, z], alpha: 0.35 + 0.4 * (1 - ph) };
+  });
+  // the house: walls, then the gable roof (ridge along y)
+  const [hx, hy, ha, hb, hh] = [2.4, 3.2, 2.4, 2.2, 1.5];
+  const hz = 0.2;
+  const ridge = 0.85;
+  const hm = hx + ha / 2;
+  const roof: Part[] = [
+    {
+      kind: "plane",
+      pts: [
+        [hx - 0.15, hy - 0.15, hz + hh],
+        [hx - 0.15, hy + hb + 0.15, hz + hh],
+        [hm, hy + hb + 0.15, hz + hh + ridge],
+        [hm, hy - 0.15, hz + hh + ridge],
+      ],
+      v: 0.3,
+    },
+    {
+      kind: "plane",
+      pts: [
+        [hm, hy - 0.15, hz + hh + ridge],
+        [hm, hy + hb + 0.15, hz + hh + ridge],
+        [hx + ha + 0.15, hy + hb + 0.15, hz + hh],
+        [hx + ha + 0.15, hy - 0.15, hz + hh],
+      ],
+      v: 0.22,
+    },
+    {
+      kind: "plane",
+      pts: [
+        [hx, hy + hb, hz + hh],
+        [hx + ha, hy + hb, hz + hh],
+        [hm, hy + hb, hz + hh + ridge],
+      ],
+      v: 0.4,
+    },
+  ];
+  // the policy: a sheet on the ground with its lines of terms and a seal
+  const [dx, dy] = [7.3, 6.6];
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // the lot, then the house and its door
+    { kind: "box", box: box(1.6, 2.4, 0, 4.8, 4.2, 0.2) },
+    { kind: "box", box: box(hx, hy, hz, ha, hb, hh) },
+    {
+      kind: "plane",
+      pts: [
+        [hm - 0.3, hy + hb + 0.01, hz],
+        [hm + 0.3, hy + hb + 0.01, hz],
+        [hm + 0.3, hy + hb + 0.01, hz + 0.9],
+        [hm - 0.3, hy + hb + 0.01, hz + 0.9],
+      ],
+      v: 0.04,
+    },
+    ...roof,
+    // the pole, between the house and the car, up to the canopy
+    { kind: "cyl", cx, cy, z: hz, r: 0.07, h: 4.3 - hz },
+    ...(lift > 0.05
+      ? [
+          {
+            kind: "line",
+            a: [cx, cy, 4.3],
+            b: [cx, cy, rimZ],
+            dashed: true,
+            alpha: 0.4,
+          } satisfies Part,
+        ]
+      : []),
+    // the car beside it: far wheels, body, cabin, near wheels
+    { kind: "cyl", cx: 5.2, cy: 4.0, z: hz, r: 0.2, h: 0.18 },
+    { kind: "cyl", cx: 5.2, cy: 5.6, z: hz, r: 0.2, h: 0.18 },
+    { kind: "box", box: box(5.1, 3.6, hz + 0.12, 0.9, 2.4, 0.5) },
+    { kind: "box", box: box(5.15, 4.3, hz + 0.62, 0.8, 1.1, 0.4) },
+    { kind: "cyl", cx: 5.9, cy: 4.0, z: hz, r: 0.2, h: 0.18 },
+    { kind: "cyl", cx: 5.9, cy: 5.6, z: hz, r: 0.2, h: 0.18 },
+    ...panels.map((p): Part => ({
+      kind: "plane",
+      pts: p.pts,
+      v: 0.14 + 0.12 * ((Math.cos(p.mid) + Math.sin(p.mid) + 1.42) / 2.84),
+    })),
+    { kind: "line", a: apex, b: [cx, cy, apexZ + 0.45], alpha: 0.9 },
+    {
+      kind: "plane",
+      pts: quad(dx, dy, 0.02, 2.2, 2.8),
+      v: 0.2,
+      rows: { lengths: [1.6, 1.1, 1.5, 0.9, 1.3], accentRow: 0 },
+    },
+    { kind: "cyl", cx: dx + 1.6, cy: dy + 2.2, z: 0.02, r: 0.32, h: 0.08, accent: true },
+    ...rain,
+  ];
+  return {
+    parts,
+    ext: [
+      [0, 10, 0],
+      [10, 0, 0],
+      [10, 10, 0],
+      [0, 0, 0],
+      [cx, cy, 8.8],
+      [cx + R, cy - R, rimZ],
+    ],
+    axes: ground(10),
+  };
+};
+
 export const scenes = {
   system,
   loop,
@@ -4011,6 +4165,7 @@ export const scenes = {
   board,
   library,
   legal,
+  policy,
 } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
@@ -4027,6 +4182,7 @@ export const BOOK_SCENES = [
   "market",
   "cloud",
   "board",
+  "policy",
 ] as const satisfies readonly SceneName[];
 export type BookSceneName = (typeof BOOK_SCENES)[number];
 

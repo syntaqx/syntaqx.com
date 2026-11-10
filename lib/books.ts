@@ -187,6 +187,18 @@ export const BOOKS: Book[] = [
       "It reads in thirteen parts, plus a glossary, from accounts, trading and clearing through wealth and advice, to wallets, crypto exchanges, stablecoins, DeFi and tokenization.",
     ],
   },
+  {
+    slug: "insurance",
+    type: "industry",
+    name: "Insurance",
+    cover: "policy",
+    summary:
+      "How insurance works in software, from the rate filed with a state and the agent who sells it to the policy, the claim, the reserve and the reinsurer behind it.",
+    intro: [
+      "An auto policy, a commercial liability program, a cyber policy from an MGA, a twenty-year term life policy and a protection plan sold at checkout look like different businesses, and underneath they run on the same promise: a premium collected now for a payment that may come later, priced on a rate filed with a state, sold by a licensed producer, changed only through dated transactions, earned day by day, and backed by reserves and capital a regulator watches. One policy lives in several systems at once (the rater, the policy system, billing, claims, the agency's system, the reinsurer's bordereau, the statutory statement), each answerable to fifty-six jurisdictions' rules on rates, forms, notices and claim deadlines. This book surveys how the industry does each piece, benchmarked across Progressive, State Farm, Travelers, Lemonade, Chubb, Kinsale, MetLife, Guidewire, Duck Creek, Socotra, Verisk and the others, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter. Health insurance stays in the Health Tech book.",
+      "It reads in thirteen parts, plus a glossary, from the business and its regulation through distribution, rating, policy administration and claims, to reinsurance, personal, commercial and life lines, workers' compensation, embedded insurance and service contracts, and the platform behind them.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
@@ -194,12 +206,6 @@ export const UPCOMING_BOOKS: UpcomingBook[] = [];
 
 /** Books I'm weighing but haven't committed to, shown as "Considering". */
 export const CONSIDERING_BOOKS: FutureBook[] = [
-  {
-    name: "Insurance",
-    type: "industry",
-    summary:
-      "Policies, premiums and claim reserves, rated and filed state by state, from carriers to embedded coverage.",
-  },
   {
     name: "Workforce",
     type: "industry",
