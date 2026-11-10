@@ -26,7 +26,7 @@ As of October 2026, from the vendors' and platforms' own pages:
 | **Shopify** | Fraud analysis and Fraud Control for merchants, "integrated card testing protection" on Shopify Payments, Shopify Protect on eligible Shop Pay orders, checkout bot protection on Plus | Bot and card testing checkouts excluded from abandoned checkout recovery |
 | **Stripe** | Radar's models and rules, plus card testing controls (rate limiters, models, automatic CAPTCHA) on its newer payment surfaces | Card testing controls separate from Radar's dispute protection |
 
-Riskified's guarantee terms (which chargeback reasons it covers) aren't on its public product pages, so its row names the products, not the coverage. <!-- source-gap: riskified-products | missing | which chargeback reason codes Riskified's Chargeback Guarantee covers (fraud only, or also non-fraud disputes) | closes with: Riskified's Chargeback Guarantee page or its documentation (riskified.com refuses automated fetches; the home page lists the products only) | checked: 2026-11-01 -->
+Riskified's annual report describes the guarantee as "assuming the cost of fraud associated with each order that we approve," paid as credits on future invoices; chargebacks "for which Riskified is not liable," including "fraud and non-fraud related chargeback abuse," go to Dispute Resolve, and refund and returns abuse to Policy Protect ([Riskified 20-F for 2025](https://www.sec.gov/Archives/edgar/data/1851112/000185111226000007/rskd-20251231.htm)). The filing doesn't list which reason codes count as eligible, so its row names the products, not the coverage.
 
 Three things the table shows:
 
@@ -286,6 +286,7 @@ Design notes:
 - [Stripe: Protect yourself from card testing](https://docs.stripe.com/disputes/prevention/card-testing), Stripe's controls and the mitigations it recommends
 - [Nike: Inside SNKRS, bot protection](https://www.nike.com/launch/t/inside-snkrs-bot-protection), the share of bot entries and bot calls stopped
 - [Signifyd: Chargeback protection](https://www.signifyd.com/solutions/chargeback-protection/), the guarantee against fraud and non-fraud chargebacks
+- [Riskified: Form 20-F for 2025](https://www.sec.gov/Archives/edgar/data/1851112/000185111226000007/rskd-20251231.htm), the Chargeback Guarantee's fraud liability and credits, Dispute Resolve and Policy Protect
 - [Riskified](https://www.riskified.com/), its products: Chargeback Guarantee, Account Secure, Policy Protect, Dispute Resolve and Adaptive Checkout
 - [Forter](https://www.forter.com/), its products and identity approach
 - [Forter: New year, new fraud solution (January 9, 2018)](https://www.forter.com/blog/new-year-new-fraud-solution/), the fraud chargeback guarantee

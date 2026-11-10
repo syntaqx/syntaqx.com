@@ -93,7 +93,7 @@ My rule: one attribute value per fact, with channel overrides only where the cha
 
 ## Images and Media
 
-Images are the content that converts and the content channels police hardest. As of October 2026 Google requires product images to be the product itself, without overlays, watermarks or borders, no larger than 64 megapixels or 16 MB, recommends 1,500 by 1,500 pixels, and has announced "new image size requirements of at least 500 x 500 pixels for all products beginning January 31, 2027." Marketplaces have their own main-image rules (Amazon's white-background main image is the best known), published behind seller logins. <!-- source-gap: amazon-image-requirements | missing | Amazon's main image requirements (background, fill, minimum size) | closes with: a public Amazon page stating product image requirements; Seller Central help page G1881 returns only a sign-in shell to fetchers | checked: 2026-11-01 -->
+Images are the content that converts and the content channels police hardest. As of October 2026 Google requires product images to be the product itself, without overlays, watermarks or borders, no larger than 64 megapixels or 16 MB, recommends 1,500 by 1,500 pixels, and has announced "new image size requirements of at least 500 x 500 pixels for all products beginning January 31, 2027." Marketplaces have their own main-image rules. Amazon's public seller guidance asks for "a white background (RGB color values: 255, 255, 255)," the product filling "85% or more of the frame," and images of "500 to 10,000 pixels on their longest side," preferring more than 1,000 pixels a side for zoom ([Sell on Amazon, December 2024](https://sell.amazon.com/blog/product-photos)); the binding policy sits in Seller Central help, behind a login.
 
 The media model that serves every channel:
 
@@ -309,6 +309,7 @@ Design notes:
 
 **Channels**
 
+- [Sell on Amazon: Tips for taking product photos (December 4, 2024)](https://sell.amazon.com/blog/product-photos), the white background, 85% fill, pixel range and formats
 - [Google Merchant Center: Product data specification](https://support.google.com/merchants/answer/7052112), required and conditional attributes and length limits
 - [Google Merchant Center: Google product category](https://support.google.com/merchants/answer/6324436), optional, with automatic assignment
 - [Google: Product taxonomy file](https://www.google.com/basepages/producttype/taxonomy-with-ids.en-US.txt), the 2021-09-21 version and its categories
