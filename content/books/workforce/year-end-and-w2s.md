@@ -166,7 +166,7 @@ Year-end is a sequence the system runs, with checks that stop the line:
 6. **File:** EFW2 to SSA, state and local W-2 files and reconciliations, Form 940, Q4 941s and state Q4 reports, all by their dates, most of them in the same two weeks.
 7. **Open the correction window:** employee questions arrive in February; corrections become W-2c with W-3c and, where taxes change, 941-X.
 
-The January rush is a capacity problem as much as a correctness one: every client's W-2s, Q4 returns and 940 are due in the same weeks, the first payroll of the new year runs on new rules, and corrections from December arrive at the same time. The platform architecture is in Payroll Platform Architecture; the tax design consequence is that everything in steps 1 and 4 runs continuously from October, not in January.
+The January rush is a capacity problem as much as a correctness one: every client's W-2s, Q4 returns and 940 are due in the same weeks, the first payroll of the new year runs on new rules, and corrections from December arrive at the same time. The platform architecture is in [Payroll Platform Architecture](/books/workforce/payroll-architecture); the tax design consequence is that everything in steps 1 and 4 runs continuously from October, not in January.
 
 ## How to Build It
 

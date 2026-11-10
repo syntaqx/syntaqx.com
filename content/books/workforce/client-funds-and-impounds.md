@@ -119,7 +119,7 @@ The control that matters is daily and simple to state: for each employer, cash c
 - **Timing:** a deposit initiated but not yet settled, or a client debit settled at the bank but not yet matched.
 - **Interest:** the pool's earnings are the provider's under its agreements, swept out of the trust on a schedule, never left mixed with obligations.
 
-A report that ties the trust's balance to the subledger every morning, with aged breaks, is what an auditor tests in a SOC 1 (Controls, Audits & SOC 1) and what would have shown a provider diverting impounds months before it collapsed ([When Payroll Providers Fail](/books/workforce/when-providers-fail)).
+A report that ties the trust's balance to the subledger every morning, with aged breaks, is what an auditor tests in a SOC 1 ([Controls, Audits & SOC 1](/books/workforce/controls-audits-and-soc1)) and what would have shown a provider diverting impounds months before it collapsed ([When Payroll Providers Fail](/books/workforce/when-providers-fail)).
 
 ## How to Build It
 

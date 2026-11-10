@@ -89,7 +89,7 @@ The public failures and the IRS guidance point to three disciplines, each of whi
 
 Two more follow from Cachet. **Know your concentration:** a provider should be able to name every bank and processor its money flows through and what it would do if each disappeared tomorrow. **Practice the fallback:** printing checks for a whole client base, or moving clients to wire funding, is a procedure that fails the first time it is tried under pressure.
 
-A provider's SOC 1 report is where an employer's auditor sees whether these controls exist and were tested (Controls, Audits & SOC 1).
+A provider's SOC 1 report is where an employer's auditor sees whether these controls exist and were tested ([Controls, Audits & SOC 1](/books/workforce/controls-audits-and-soc1)).
 
 ## How to Build It
 

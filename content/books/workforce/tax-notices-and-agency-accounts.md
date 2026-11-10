@@ -115,7 +115,7 @@ The employer is the taxpayer. A provider may sign and file returns, receive noti
 
 An employer that stops paying wages files a final return: on Form 941, the final return box on line 17 for the last quarter in which wages were paid, and "If you continue to pay wages or other compensation for periods following termination of your business, you must file returns for those periods." A final return also brings the W-2 deadline forward: the employer must furnish W-2s and file them with SSA "by the due date of your final return." State accounts close by request or final report, and an account left open keeps generating delinquency notices for missing zero returns. A seasonal employer is different: it keeps the account open and checks the seasonal box on line 18 of every 941 it files.
 
-Closing is also the event where a provider-to-provider or PEO transition goes wrong: the old provider closes "its" agency access, the new one hasn't linked yet, and the next notice goes nowhere. Changing Providers Mid-Year covers the handoff.
+Closing is also the event where a provider-to-provider or PEO transition goes wrong: the old provider closes "its" agency access, the new one hasn't linked yet, and the next notice goes nowhere. [Changing Providers Mid-Year](/books/workforce/changing-providers) covers the handoff.
 
 ## The Notice Inbox as a Workflow
 

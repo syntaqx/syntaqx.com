@@ -63,9 +63,9 @@ A gap like UKG's matters for the book's method: where a company publishes nothin
 
 **Employer of record.** Legal employment in countries where the client has no entity: Deel, Remote, Oyster, Papaya Global, Velocity Global, Globalization Partners and others, priced as a flat fee per worker per month. Employer of Record & Global Employment covers it.
 
-**Embedded payroll.** Payroll engines sold as APIs and components to vertical software: Check, Gusto Embedded, Zeal and others. The buyer is a software company that wants payroll revenue and stickiness without becoming a payroll company; the employer signs the payroll partner's authorizations inside the platform's product. Embedded Payroll covers it.
+**Embedded payroll.** Payroll engines sold as APIs and components to vertical software: Check, Gusto Embedded, Zeal and others. The buyer is a software company that wants payroll revenue and stickiness without becoming a payroll company; the employer signs the payroll partner's authorizations inside the platform's product. [Embedded Payroll](/books/workforce/embedded-payroll) covers it.
 
-Around these sit the layers other chapters cover: tax engines and filing services sold to anyone who runs payroll (ADP SmartCompliance, MasterTax, Symmetry, Vertex: Tax Engines & Filing Services), unified HR and payroll APIs that read from all of the above (Finch, Merge: Unified HR & Payroll APIs), and time, ATS, background check and benefits administration vendors that integrate with payroll.
+Around these sit the layers other chapters cover: tax engines and filing services sold to anyone who runs payroll (ADP SmartCompliance, MasterTax, Symmetry, Vertex: Tax Engines & Filing Services), unified HR and payroll APIs that read from all of the above (Finch, Merge: [Unified HR & Payroll APIs](/books/workforce/unified-hr-apis)), and time, ATS, background check and benefits administration vendors that integrate with payroll.
 
 ## Consolidation
 
@@ -82,7 +82,7 @@ The landscape's recent deals, dated from filings and the companies' releases:
 
 Two directions show in the table. The suites buy breadth (time, spend, recruiting, AI) so one contract covers more of the employee lifecycle, and private equity takes public HCM companies private. A third, private companies buying each other, is harder to date from primary sources. <!-- source-gap: wf-private-deals | missing | dates and terms of 2025-2026 acquisitions by private payroll and HR companies (Gusto, Rippling, Deel, isolved and others) | closes with: each acquirer's press release | checked: 2026-11-09 -->
 
-For a system, an acquisition is a data event, not a news item: a client's provider changes name and sometimes platform, contract terms carry over or don't, and integrations keyed to the old company's IDs need mapping. When a provider migrates acquired clients to its own platform, each client is a mid-year conversion with year-to-date to load (Changing Providers Mid-Year).
+For a system, an acquisition is a data event, not a news item: a client's provider changes name and sometimes platform, contract terms carry over or don't, and integrations keyed to the old company's IDs need mapping. When a provider migrates acquired clients to its own platform, each client is a mid-year conversion with year-to-date to load ([Changing Providers Mid-Year](/books/workforce/changing-providers)).
 
 ## What Gets Counted
 
@@ -94,7 +94,7 @@ Every headline number in the tables above has a definition, and comparisons fail
 - **Users.** Workday's "users under contract" are seats a customer licensed, not workers paid by Workday.
 - **Retention.** ADP reports Employer Services client revenue retention (92.1%) and estimates average client retention of about 13 years in Employer Services and about 6 in its PEO; Paychex reports payroll client retention of 82% to 83% of its beginning client base; Paycom reports annual revenue retention of 91% ("the percentage of revenues that we retain from our existing clients"); Paylocity says its annual revenue retention rate has been above 92% for three years; Insperity reports client retention of 83%. Client retention and revenue retention measure different things, and small business payroll loses clients that simply close.
 
-A system that tracks the market or reports its own metrics stores each figure with its definition, the period and the source, and treats a changed definition as a new series ([Definitions as Code, Restatements as Rows](/books/user-generated-platforms/operating-metrics#definitions-as-code-restatements-as-rows)). Payroll & HR Metrics covers the operating metrics.
+A system that tracks the market or reports its own metrics stores each figure with its definition, the period and the source, and treats a changed definition as a new series ([Definitions as Code, Restatements as Rows](/books/user-generated-platforms/operating-metrics#definitions-as-code-restatements-as-rows)). [Payroll & HR Metrics](/books/workforce/workforce-metrics) covers the operating metrics.
 
 ## The Buying Cycle
 
@@ -102,7 +102,7 @@ How employers buy differs by segment, and the cycle sets the dates the system ha
 
 - **Who decides.** In small business, the owner or the accountant, often in an afternoon. In the mid-market, HR and finance together, with demos, references and a security review. In enterprise, a selection project with consultants, followed by an implementation by a systems integrator that can take most of a year.
 - **Contracts.** Paychex's customer agreements "generally have no specified contract period" and can be terminated by either party on 30 days' notice; Paycom's clients can cancel "for any or no reason" on 30 days' notice; ADP sells some products on contracts of "typically two to seven years." Small business and mid-market payroll is month to month in practice, which makes retention the business.
-- **When.** A switch is cleanest at a calendar year boundary, when the old provider closes the year and files the W-2s and the new one starts with no year to date; next cleanest at a quarter boundary, when the old provider files the quarter's returns and the new one starts the next quarter. A mid-quarter start means two providers' data in one quarter's returns. Changing Providers Mid-Year covers the procedures.
+- **When.** A switch is cleanest at a calendar year boundary, when the old provider closes the year and files the W-2s and the new one starts with no year to date; next cleanest at a quarter boundary, when the old provider files the quarter's returns and the new one starts the next quarter. A mid-quarter start means two providers' data in one quarter's returns. [Changing Providers Mid-Year](/books/workforce/changing-providers) covers the procedures.
 - **What moves.** The employer's EIN, state accounts, deposit schedule and year-to-date totals stay the same: the employer is the same taxpayer. What changes is who is authorized to act for it: a new Form 8655 ends the prior reporting agent's authority "for tax periods beginning on or after" its effective date, while the prior agent keeps earlier periods (Rev. Proc. 2012-32, section 5.04), and each state's agent authorization changes the same way.
 
 ### Switching, Seen From the Provider Being Left
@@ -174,7 +174,7 @@ Design notes:
 - **Prior and next provider are facts about the company and the employer.** A conversion needs the prior provider to know what export to expect and who filed which quarters; churn analysis needs the next one. Both are captured at the moment they are known (the sales record, the suspension request) and never inferred later.
 - **Metrics keep their definitions.** A figure without its definition, period and source can't be compared or restated; `provider_metrics` makes the definition part of the row, and a self-reported number is labeled as one.
 - **Deals are dated rows.** A client acquired with a provider keeps `acquired_via_transaction_id`, so a migration cohort, a contract carried over from the acquired company and a change in support model are queries, not tribal knowledge.
-- **The employer's start with a provider is a period boundary.** `provider_started_on` is the first period the provider files for, which ties to the authorization ranges in Who Runs Payroll: Agents & Liability and the year-to-date loads in Changing Providers Mid-Year ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
+- **The employer's start with a provider is a period boundary.** `provider_started_on` is the first period the provider files for, which ties to the authorization ranges in Who Runs Payroll: Agents & Liability and the year-to-date loads in [Changing Providers Mid-Year](/books/workforce/changing-providers) ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
 
 ## Auditing
 
