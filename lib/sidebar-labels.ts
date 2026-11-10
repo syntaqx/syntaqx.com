@@ -17,6 +17,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Chat and Messaging": "Chat",
   "Clearing and Settlement": "Clearing",
   "Clients and Delivery": "Clients",
+  "Commercial and Specialty Lines": "Commercial",
   "Communications Platforms": "Communications",
   "Communities and Conversation": "Communities",
   "Creators and Money": "Creator Money",
@@ -62,6 +63,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Trading and Markets": "Trading",
   "Wealth and Advice": "Wealth",
   "Wholesale and B2B": "Wholesale",
+  "Workers' Compensation": "Workers' Comp",
 };
 
 /** The longest name that fits: about 160px of Michroma caps at the rail's size. */
