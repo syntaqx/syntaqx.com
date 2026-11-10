@@ -28,7 +28,7 @@ Two things stand out. **The address lookup is a product of its own.** Both engin
 ## States Without a Wage Income Tax
 
 As of 2026, Alaska, Florida, Nevada, New Hampshire, South Dakota, Tennessee, Texas and Wyoming "levy no individual income tax at all," and Washington "taxes capital gains income only," per the Tax Foundation's 2026 table. Employers in those states withhold no state income tax, but they still register for unemployment insurance, and some have other payroll taxes (state paid leave contributions, for instance, which the Leave part covers). The list is data: a state's status changes by statute, and the absence of a tax is a row (`income_withholding`, not applicable, effective from a date), not a missing row.
-<!-- source-gap: wf-no-tax-states | secondary | the list of states without a wage income tax for 2026 | closes with: each state revenue department's statement, or a primary compilation | checked: 2026-11-09 -->
+<!-- source-gap: wf-no-tax-states | secondary | the list of states without a wage income tax for 2026 | closes with: each state revenue department's statement, or a primary compilation (Texas, Florida, South Dakota and Alaska revenue pages opened Nov 10, 2026 don't state it; New Hampshire's and Tennessee's 403) | checked: 2026-11-10 -->
 
 ## State Withholding Methods
 

@@ -225,9 +225,9 @@ Four states add daily rules, each with its own definitions:
 | **California** (Labor Code 510(a)) | 1.5× for "Any work in excess of eight hours in one workday and any work in excess of 40 hours in any one workweek" and for "the first eight hours worked on the seventh day of work in any one workweek"; 2× for "Any work in excess of 12 hours in one day" and for "any work in excess of eight hours on any seventh day of a workweek" | Alternative workweek schedules adopted by employee vote change the daily threshold |
 | **Alaska** | "An employer may not employ an employee for a workweek longer than 40 hours or for more than eight hours in a day" without 1.5× | Doesn't apply to "Any employee of an employer who employs less than 4 employees in the regular course of business" |
 | **Nevada** (NRS 608.018) | For employees paid less than 1.5 times the minimum wage: 1.5× for "More than 40 hours in any scheduled week of work" or "More than 8 hours in any workday," unless by mutual agreement the employee works a scheduled 10 hours a day for 4 days | A workday is "a period of 24 consecutive hours which begins when the employee begins work" (NRS 608.0126); a long list of exemptions in 608.018(3) |
-| **Colorado** | Daily and weekly overtime under the COMPS Order | The daily threshold is in the order, below |
+| **Colorado** (COMPS Order #40, Rule 4.1.1) | 1.5× for work in excess of 40 hours per workweek, 12 hours per workday, or 12 consecutive hours "without regard to the start and end time of the workday" | Exemptions and variances in Rule 2; "Whichever of the three calculations ... results in the greater payment of wages shall apply" |
 
-Colorado's rule comes from its COMPS Order. <!-- source-gap: wf-colorado-comps-ot | missing | Colorado COMPS Order overtime rule (12 hours per workday or 12 consecutive hours, 40 per week) and current order number and effective date | closes with: the current COMPS Order text from CDLE (cdle.colorado.gov returned 403 on Nov 9-10, 2026) | checked: 2026-11-10 --> The current order's text wasn't reachable when this was written, so I don't state its daily threshold here; an engine should load it from the order in force.
+Colorado's rule comes from its COMPS Order, a regulation (7 CCR 1103-1) reissued by number: Order #40 was adopted December 8, 2025 and took effect February 1, 2026. Its 12-consecutive-hours test is the unusual one: a shift that crosses the workday boundary can trigger daily overtime even when neither workday exceeds 12 hours, meal periods may be subtracted from the consecutive hours only if they comply with the order's meal period rule (4.1.5), and paying it "will not alter the employee's established workday or workweek" (4.2). An engine should load the rule from the order in force, keyed by order number and effective date.
 
 ### Worked Numbers: A California Week
 
@@ -385,6 +385,7 @@ An overtime audit, whether DOL's, a state's or a class action's, reconstructs ea
 
 **Law and regulation**
 
+- [Colorado COMPS Order #40, 7 CCR 1103-1 (PDF)](https://www.sos.state.co.us/CCR/GenerateRulePdf.do?ruleVersionId=12406&fileName=7+CCR+1103-1), adopted December 8, 2025 and effective February 1, 2026: Rule 4.1.1's three overtime tests, 4.1.2's greater-payment rule, 4.1.5 meal periods and 4.2
 - [29 USC 207: Maximum hours](https://www.law.cornell.edu/uscode/text/29/207), overtime at one and one-half times the regular rate, the 7(e) exclusions, 7(g) rates for different kinds of work and 7(h) crediting
 - [29 CFR 778.105: Determining the workweek](https://www.law.cornell.edu/cfr/text/29/778.105), the fixed 168-hour workweek
 - [29 CFR 778.114: Fluctuating workweek method](https://www.law.cornell.edu/cfr/text/29/778.114), fixed salary for varying hours, half-time premium and the $600 example

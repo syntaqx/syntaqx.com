@@ -70,13 +70,16 @@ Final pay deadlines depend on the state, the separation type, and sometimes the 
 | State | Discharge or layoff | Quit with notice | Quit without notice | Source |
 | --- | --- | --- | --- | --- |
 | **California** | "immediately at the time of termination," including accrued vacation | With 72 hours' notice: "at the time of quitting" | "within 72 hours of quitting" | Labor Code 201, 202 (DLSE) |
+| **Illinois** | "in full at the time of separation, if possible," and no later than the next regularly scheduled payday, including earned vacation | Same | Same | IDOL wage payment FAQ |
+| **Massachusetts** | "in full on the day of his discharge" | "on the following regular pay day" | Same | G.L. c. 149, s. 148 |
+| **Minnesota** | "immediately due and payable"; the employer is in default if not paid within 24 hours after a written demand | Not later than the first regularly scheduled payday after the last day; if that payday is under five calendar days away, the second, but no more than 20 calendar days after | Same | Minn. Stat. 181.13, 181.14 |
 | **Nevada** | "due and payable immediately" | By the regular payday or within 7 days, "whichever is earlier" | Same | NRS 608.020, 608.030 |
 | **New York** | "not later than the regular pay day for the pay period during which the termination occurred" | Same | Same | Labor Law 191(3) |
 | **Oregon** | By the end of the first business day after termination | With at least 48 hours' notice (excluding weekends and holidays): immediately | Within five business days or by the next regular payday, whichever comes first | ORS 652.140 |
 | **Texas** | Not later than the sixth day after discharge | By the next regularly scheduled payday | Same | Labor Code 61.014 |
 | **Washington** | "at the end of the established pay period" | Same | Same | RCW 49.48.010 |
 
-California adds details that change the workflow: final pay by mail is allowed for a quitting employee who asks, and "The date of mailing will be considered the date of payment"; "The place of the final wage payment for employees who are terminated (or laid off) is the place of termination"; and seasonal workers in curing, canning or drying perishable fruit, fish or vegetables are paid within 72 hours of layoff. Oregon moves a weekend or holiday termination's deadline to the end of the first business day after. Gusto's note that some states require final wages within 24 hours reflects the same compression. <!-- source-gap: wf-final-pay-other-states | secondary | Final pay deadlines for states beyond CA, NV, NY, OR, TX and WA (for example Illinois, Massachusetts, Colorado, Minnesota) from primary sources | closes with: each state's statute or labor agency page (Illinois ilga.gov certificate error, mass.gov and CDLE 403 on Nov 9-10, 2026) | checked: 2026-11-10 --> I've only stated states whose statutes or agency pages I opened; vendor tables cover the rest but aren't sources.
+California adds details that change the workflow: final pay by mail is allowed for a quitting employee who asks, and "The date of mailing will be considered the date of payment"; "The place of the final wage payment for employees who are terminated (or laid off) is the place of termination"; and seasonal workers in curing, canning or drying perishable fruit, fish or vegetables are paid within 72 hours of layoff. Oregon moves a weekend or holiday termination's deadline to the end of the first business day after. Gusto's note that some states require final wages within 24 hours reflects the same compression. <!-- source-gap: wf-final-pay-other-states | secondary | Final pay deadlines for Colorado and the states the table doesn't name, from primary sources | closes with: Colorado's C.R.S. 8-4-109 text or a CDLE page (CDLE 403 on Nov 9-10, 2026), and each other state's statute or labor agency page | checked: 2026-11-10 --> I've only stated states whose statutes or agency pages I opened; Colorado's isn't among them, and vendor tables cover the rest but aren't sources.
 
 ## Waiting Time Penalties
 
@@ -258,6 +261,8 @@ Pay timing and statement audits ask:
 - [New York Labor Law 195: Notice and record-keeping requirements](https://www.nysenate.gov/legislation/laws/LAB/195), the wage notice, the statement with each payment and six-year records
 - [New York Labor Law 198: Costs, remedies](https://www.nysenate.gov/legislation/laws/LAB/198), liquidated damages, the lost-interest remedy for a first frequency violation, and notice and statement damages
 - [Oregon Revised Statutes chapter 652](https://www.oregonlegislature.gov/bills_laws/ors/ors652.html), 652.120 paydays, 652.140 final pay and 652.150 penalty wages and caps
+- [Massachusetts General Laws chapter 149, section 148](https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXI/Chapter149/Section148), pay on the day of discharge and on the following regular payday for an employee leaving
+- [Minnesota Statutes 181.13](https://www.revisor.mn.gov/statutes/cite/181.13) and [181.14](https://www.revisor.mn.gov/statutes/cite/181.14), discharge pay due immediately with the 24-hour demand default, and the resignation payday rule capped at 20 days
 - [Nevada Revised Statutes chapter 608](https://www.leg.state.nv.us/nrs/nrs-608.html), 608.020 and 608.030 final pay and 608.040 the 30-day penalty
 - [Texas Labor Code chapter 61](https://statutes.capitol.texas.gov/Docs/LA/htm/LA.61.htm), 61.011 payday frequency and 61.014 final pay
 - [RCW 49.48.010: Payment of wages due to employee ceasing work](https://app.leg.wa.gov/RCW/default.aspx?cite=49.48.010), final pay at the end of the pay period and limits on deductions
@@ -269,6 +274,7 @@ Pay timing and statement audits ask:
 - [DOL WHD: State payday requirements](https://www.dol.gov/agencies/whd/state/payday), frequencies by state, revised January 1, 2023
 - [California DLSE: Paydays, pay periods and final wages FAQ](https://www.dir.ca.gov/dlse/faq_paydays.htm), semimonthly due dates, final pay by separation type, waiting time penalties, mailing, place of payment and seasonal workers
 - [California DLSE: Vacation FAQ](https://www.dir.ca.gov/dlse/faq_vacation.htm), vacation as vested wages, no forfeiture, payout at the final rate and no recovery of advanced vacation
+- [Illinois Department of Labor: Wage Payment FAQ](https://labor.illinois.gov/faqs/wage-payment-faq.html), final compensation including earned vacation, at separation if possible and no later than the next regular payday
 - [California DLSE: Overtime FAQ](https://www.dir.ca.gov/dlse/faq_overtime.htm), overtime due by the next regular payday
 
 **Courts and enforcement**

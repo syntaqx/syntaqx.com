@@ -42,7 +42,15 @@ The laws I opened, as of November 2026:
 
 A blank cell means the page I opened didn't state the rule, not that the state has none. Michigan's 2025 amendment let small businesses delay accrual, frontloading and tracking until October 1, 2025. California adds uses beyond illness (preventive care, family members, certain acts of violence, and from 2025 jury duty and court appearances), bars requiring medical certification in general, and lets more generous local ordinances control. Washington's law exempts certain doctors, lawyers, dentists and executives and pays certain construction workers their balance at separation.
 
-<!-- source-gap: wf-sick-leave-50-state | missing | a primary 50-state and city list of paid sick leave laws with effective dates (including the Missouri repeal effective August 28, 2025, Nebraska's law effective October 1, 2025, Alaska's ballot measure, Illinois's Paid Leave for All Workers Act, New Jersey, Colorado, Oregon, Arizona, Massachusetts and city ordinances) | closes with: each state's labor agency page or statute, opened (Illinois 404, Michigan LEO and several others 403 on Nov 10, 2026; New Jersey's page returned no rule text) | checked: 2026-11-10 --> I haven't found a primary-source list of every state and city law, and several agency pages weren't reachable, so the table is five states I could verify rather than a national list. The design doesn't depend on the list being complete; it depends on every law being a row.
+A few more state laws I opened show how the set keeps moving:
+
+- **Colorado:** the Wage Protection Rules give the Healthy Families and Workplaces Act's regular rate as "one hour per 30 worked, up to a maximum of 48 per benefit year," with added hours on the declaration of a public health emergency.
+- **Illinois:** the Paid Leave for All Workers Act "went into effect on January 1, 2024," for employers of all sizes, at "at least 1 hour of paid time off for every 40 hours worked, up to 40 hours in a 12-month period"; Chicago and Cook County employees are covered by their own ordinances instead.
+- **Nebraska:** the voter-initiated law as amended by LB 415 starts paid sick time on October 1, 2025, accruing 1 hour per 30 worked after 80 hours of consecutive employment, up to 40 hours a year at a small business and 56 at other employers.
+- **Missouri:** the Revisor lists section 290.600, the first section of the voter-approved earned paid sick time law, as repealed by H.B. 567 effective August 28, 2025.
+- **Oregon:** at least 1 hour per 30 worked, up to 40 hours a year, paid at employers with 10 or more Oregon employees (six or more with a Portland location) and unpaid but protected below that.
+
+<!-- source-gap: wf-sick-leave-50-state | missing | a primary 50-state and city list of paid sick leave laws with effective dates, including Alaska's ballot measure, New Jersey, Arizona, Massachusetts and city ordinances | closes with: each state's labor agency page or statute, opened (Alaska's statute site 403 and its sick leave page 404, Arizona's ICA and mass.gov 403, and New Jersey's page returned no rule text on Nov 10, 2026) | checked: 2026-11-10 --> I didn't verify Alaska, New Jersey, Arizona, Massachusetts or any city ordinance, and I haven't found a primary-source list of every state and city law, so the table is five states and the list above five more rather than a national list. The design doesn't depend on the list being complete; it depends on every law being a row.
 
 ### The Rule Dimensions
 
@@ -122,7 +130,15 @@ An invented California employee accrues 4.0 hours of vacation per biweekly perio
 
 ## Payout at Separation
 
-Whether unused leave is paid at separation is the employer's policy unless a law says otherwise, and the laws in this chapter point both ways: California vacation and combined PTO must be paid; California and Washington sick leave generally needn't be, though both restore the balance on rehire within 12 months unless it was paid out; Washington pays certain construction workers' sick balances. <!-- source-gap: wf-pto-payout-by-state | missing | vacation and PTO payout at separation rules beyond California (for example Colorado, Illinois, Massachusetts, Montana, Nebraska, Louisiana) | closes with: each state's statute or labor agency guidance, opened | checked: 2026-11-10 --> Other states' vacation payout rules, several of which follow California in treating earned vacation as wages, weren't among the sources I opened, so they're left out here rather than stated from a vendor table.
+Whether unused leave is paid at separation is the employer's policy unless a law says otherwise, and the laws in this chapter point both ways: California vacation and combined PTO must be paid; California and Washington sick leave generally needn't be, though both restore the balance on rehire within 12 months unless it was paid out; Washington pays certain construction workers' sick balances. Five other states' rules I opened also treat earned vacation as owed at separation:
+
+- **Colorado:** the Wage Protection Rules (7 CCR 1103-7, Rule 2.17, effective February 1, 2026) quote the Wage Act's requirement to "pay upon separation from employment all vacation pay earned and determinable," define vacation pay as leave "regardless of its label" usable at the employee's discretion, and bar forfeiting any earned vacation while allowing a cap of a year's worth.
+- **Illinois:** the Department of Labor's wage payment FAQ lists "the monetary equivalent of earned vacations and earned holidays" in final compensation, due no later than the next regularly scheduled payday; the same FAQ says a separated employee isn't entitled to sick pay.
+- **Massachusetts:** General Laws chapter 149, section 148 counts "any holiday or vacation payments due an employee under an oral or written agreement" as wages, and a discharged employee is paid in full on the day of discharge.
+- **Nebraska:** section 48-1229 counts fringe benefits as wages and leaves paid leave out of the wages due at separation, except "earned but unused vacation leave," unless the parties specifically agreed otherwise.
+- **Louisiana:** R.S. 23:631 makes accrued, untaken vacation an amount due under the employer's stated policy, bars forfeiting vacation pay actually earned, and sets the deadline at the next regular payday or 15 days after discharge, whichever comes first.
+
+<!-- source-gap: wf-pto-payout-by-state | missing | vacation payout at separation rules for Montana and states beyond the six named here | closes with: Montana's statute or rule (ARM 24.16.1522 is cited in secondary sources), and each other state's statute or labor agency guidance, opened (Montana's rule site returned no text on Nov 10, 2026) | checked: 2026-11-10 --> I didn't verify Montana's rule, which secondary summaries describe as treating earned vacation as wages, or any other state's, so they're left out rather than stated from a vendor table.
 
 Two federal rules frame the payout. A payout of unused leave is excluded from the FLSA regular rate ([The Regular Rate](/books/workforce/overtime-and-the-regular-rate#the-regular-rate)), and for withholding it's wages, usually supplemental ([Supplemental Wages & Imputed Income](/books/workforce/supplemental-wages-and-imputed-income)). The ledger records the payout as a `payout` entry tied to the statement line that paid it, so a rehire within 12 months can tell a paid-out balance (not restored) from an unpaid one (restored).
 
@@ -286,12 +302,21 @@ A sick leave or vacation claim asks:
 
 **Law and regulation**
 
+- [Colorado Wage Protection Rules, 7 CCR 1103-7 (PDF)](https://www.sos.state.co.us/CCR/GenerateRulePdf.do?ruleVersionId=12405&fileName=7+CCR+1103-7), Rule 2.17: vacation pay at separation, its definition, no forfeiture and the one-year cap; Rule 3: HFWA accrual at 1 per 30 up to 48 hours
+- [Massachusetts General Laws chapter 149, section 148](https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXI/Chapter149/Section148), holiday and vacation payments as wages and pay on the day of discharge
+- [Nebraska Revised Statutes 48-1229](https://nebraskalegislature.gov/laws/statutes.php?statute=48-1229), wages including fringe benefits and earned but unused vacation at separation
+- [Louisiana Revised Statutes 23:631](https://www.legis.la.gov/Legis/Law.aspx?d=83945), the final pay deadline and accrued vacation as an amount due
+- [Nebraska Revised Statutes 48-3803](https://nebraskalegislature.gov/laws/statutes.php?statute=48-3803), accrual after 80 hours at 1 per 30, the 40-hour and 56-hour caps and the October 1, 2025 start
+- [Missouri Revised Statutes 290.600](https://revisor.mo.gov/main/OneSection.aspx?section=290.600), repealed by H.B. 567 effective August 28, 2025
 - [Michigan Compiled Laws 408.963: Earned sick time](https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-408-963), accrual at 1 per 30, the 72-hour and 40-hour use caps, carryover, frontloading, the 120-day wait and the small business delay to October 1, 2025
 
 **Agency guidance and forms**
 
 - [California Labor Commissioner: Paid Sick Leave FAQ](https://www.dir.ca.gov/dlse/Paid_Sick_Leave.htm), 40 hours or 5 days, accrual, caps, frontloading milestones, the 90-day wait, the 2-hour increment, pay, pay stub balances, rehire and local ordinances
 - [California Labor Commissioner: Vacation FAQ](https://www.dir.ca.gov/dlse/faq_vacation.htm), vacation as vested wages, no forfeiture, caps, payout at the final rate, combined PTO and no recovery of advanced vacation
+- [Illinois Department of Labor: Wage Payment FAQ](https://labor.illinois.gov/faqs/wage-payment-faq.html), earned vacation in final compensation, the next-payday deadline and no sick pay at separation
+- [Illinois Department of Labor: Paid Leave for All Workers Act FAQ](https://labor.illinois.gov/faqs/paidleavefaq), the January 1, 2024 start, 1 hour per 40 up to 40 hours, all employer sizes and the Chicago and Cook County carve-out
+- [Oregon BOLI: Sick time](https://www.oregon.gov/boli/workers/pages/sick-time.aspx), 1 hour per 30 up to 40 hours, paid at 10 or more employees (six with a Portland location)
 - [New York State: Paid Sick Leave](https://www.ny.gov/new-york-paid-sick-leave/new-york-paid-sick-leave), size tiers, 40 and 56 hours, accrual at 1 per 30 and frontloading
 - [Washington L&I: Paid Sick Leave](https://lni.wa.gov/workers-rights/leave/paid-sick-leave/), accrual at 1 per 40, the 40-hour carryover, the 90-day wait, exemptions, rehire and payout
 - [Minnesota DLI: Earned Sick and Safe Time](https://www.dli.mn.gov/sick-leave), accrual at 1 per 30, 48 hours a year, the base rate and statement display
