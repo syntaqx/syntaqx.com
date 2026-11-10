@@ -1,6 +1,6 @@
 +++
 title = "Identifier Conventions"
-description = "What identifiers are, why UUID v7 is my default (and why it used to be v4), when to choose integers, other UUID versions, ULIDs, Snowflake IDs, ObjectIds or short random strings, and what each reveals, costs and breaks."
+description = "What identifiers are, why UUID v7 is my default and v4 used to be, and when integers, other UUIDs, ULIDs, Snowflakes, ObjectIds or short codes fit better."
 category = "Fundamentals"
 order = 103
 tags = ["ids", "uuid", "ulid", "mongodb", "database"]
