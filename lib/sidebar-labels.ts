@@ -59,6 +59,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Subscriptions and Memberships": "Subscriptions",
   "Tenancy and Identity": "Tenancy",
   "The Stack, Bottom to Top": "The Stack",
+  "Time and Wage-Hour": "Wage-Hour",
   "Trading and Markets": "Trading",
   "Wealth and Advice": "Wealth",
   "Wholesale and B2B": "Wholesale",
