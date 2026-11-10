@@ -46,7 +46,13 @@ Sentry.init({
   // `pagehide` handler when the browser denies `localStorage` (private
   // mode, storage partitioning, extensions). It's third-party code on
   // a third-party event listener — we have no fix and no signal value.
-  ignoreErrors: [/Cannot read properties of null \(reading 'getItem'\)/],
+  // "Object Not Found Matching Id:N, MethodName:update" is a non-Error
+  // rejection thrown by email link scanners (Outlook Safe Links and similar
+  // headless CefSharp browsers) while they preview a link, not by this site.
+  ignoreErrors: [
+    /Cannot read properties of null \(reading 'getItem'\)/,
+    /Object Not Found Matching Id:\d+, MethodName:\w+/,
+  ],
   denyUrls: [/\/_next-live\/feedback\//],
 });
 
