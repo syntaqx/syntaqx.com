@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { getAllPosts, getNewestPostSlug } from "@/lib/posts";
+import { getDocBySlug } from "@/lib/docs";
 import { bio, socials } from "@/lib/constants";
 import { siteGraph } from "@/lib/schema";
 import { featuredTools } from "@/lib/tools";
@@ -31,9 +32,22 @@ const jsonLd = siteGraph({
   personDescription: bio[0].text,
 });
 
+/** Docs readers keep coming back to; the homepage is the most-linked page, so it links them. */
+const FEATURED_DOCS = [
+  "api-design/naming-conventions",
+  "requests/pagination",
+  "requests/error-responses",
+  "database/naming-conventions",
+];
+
 export default function Home() {
   const posts = getAllPosts();
   const newestSlug = getNewestPostSlug(posts);
+  const docs = FEATURED_DOCS.map((slug) => {
+    const doc = getDocBySlug(slug);
+    if (!doc) throw new Error(`Featured doc not found: ${slug}`);
+    return doc;
+  });
 
   return (
     <div>
@@ -101,6 +115,31 @@ export default function Home() {
         <Suspense fallback={<GitHubActivitySkeleton />}>
           <GitHubActivityAsync username="syntaqx" />
         </Suspense>
+      </section>
+
+      <section className="mb-20">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="eyebrow">docs</h2>
+          <Link
+            href="/docs"
+            className="inst flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary"
+          >
+            all docs <ArrowRight size={11} />
+          </Link>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {docs.map((doc) => (
+            <Link key={doc.slug} href={`/docs/${doc.slug}`} className="group flex flex-col">
+              <Card hover className="flex h-full flex-col">
+                <p className="inst mb-2 text-muted-foreground">{doc.category}</p>
+                <h3 className="mb-2 text-lg leading-none text-foreground transition-colors group-hover:text-primary">
+                  {doc.title}
+                </h3>
+                <p className="text-xs/relaxed text-muted-foreground">{doc.description}</p>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section className="mb-20">
