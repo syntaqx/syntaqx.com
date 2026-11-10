@@ -1,9 +1,11 @@
 "use client";
 
 import type { ComponentProps, ReactNode } from "react";
-import { FileText, Info, Trash2 } from "lucide-react";
+import { ExternalLink, FileText, Info, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { Button } from "@/registry/syntaqx/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/registry/syntaqx/ui/card";
 import { Checkbox } from "@/registry/syntaqx/ui/checkbox";
 import { Field, FieldLabel } from "@/registry/syntaqx/ui/field";
 import { InputGroupAddon } from "@/registry/syntaqx/ui/input-group";
@@ -140,6 +142,117 @@ export function OptionSelect<T extends string>({
         </SelectContent>
       </Select>
     </Field>
+  );
+}
+
+/**
+ * A titled box in a tool's main column: a bar with its icon, title and
+ * actions, its content, and an optional footer bar. `flush` drops the
+ * content's padding, for rows that draw their own edges or a <pre> that pads
+ * itself.
+ */
+export function ToolPanel({
+  icon,
+  title,
+  action,
+  footer,
+  flush = false,
+  className,
+  contentClassName,
+  children,
+}: {
+  icon?: ReactNode;
+  title: ReactNode;
+  action?: ReactNode;
+  footer?: ReactNode;
+  flush?: boolean;
+  className?: string;
+  contentClassName?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Card size="sm" className={cn("gap-0 py-0", className)}>
+      <CardHeader className="flex min-h-12 items-center justify-between gap-2 border-b py-2 [.border-b]:pb-2">
+        <CardTitle className="flex min-w-0 items-center gap-2 text-sm font-medium">
+          {/* Teal by inheritance, so an icon's own color (a failed check, say) wins. */}
+          {icon && <span className="flex shrink-0 text-primary [&>svg]:size-4">{icon}</span>}
+          {title}
+        </CardTitle>
+        {action && <div className="flex shrink-0 items-center gap-2">{action}</div>}
+      </CardHeader>
+      <CardContent className={cn(flush ? "gap-0 px-0" : "py-4", contentClassName)}>
+        {children}
+      </CardContent>
+      {footer && <CardFooter className="border-t py-3 [.border-t]:pt-3">{footer}</CardFooter>}
+    </Card>
+  );
+}
+
+/** A tool's right-hand column of notes, beside the tool on wide screens and under it on phones. */
+export function ToolAside({ className, ...props }: ComponentProps<"aside">) {
+  return <aside className={cn("flex shrink-0 flex-col gap-6 lg:w-96", className)} {...props} />;
+}
+
+/**
+ * A note in a ToolAside: an icon and a heading, then reading text. The
+ * heading is an h2 under the tool's h1, so the page's outline lists it.
+ */
+export function ToolCard({
+  icon,
+  title,
+  action,
+  className,
+  children,
+}: {
+  icon?: ReactNode;
+  title: ReactNode;
+  action?: ReactNode;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <Card size="sm" className={className}>
+      <CardHeader className="flex items-center justify-between gap-2">
+        {/* Classes on CardTitle, not the h2, so cn() resolves them against the title's own. */}
+        <CardTitle
+          asChild
+          className="flex items-center gap-2 text-lg leading-none tracking-wide group-data-[size=sm]/card:text-lg [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-primary"
+        >
+          <h2>
+            {icon}
+            {title}
+          </h2>
+        </CardTitle>
+        {action}
+      </CardHeader>
+      <CardContent className="leading-relaxed text-muted-foreground">{children}</CardContent>
+    </Card>
+  );
+}
+
+/** The links a tool builds on: site pages open in place, anything else in a new tab. */
+export function ReferencesCard({ links }: { links: readonly { href: string; label: string }[] }) {
+  return (
+    <ToolCard icon={<ExternalLink />} title="References">
+      <ul className="flex flex-col gap-2">
+        {links.map(({ href, label }) => {
+          const className = "text-foreground transition-colors hover:text-primary";
+          return (
+            <li key={href}>
+              {/^https?:/.test(href) ? (
+                <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+                  {label}
+                </a>
+              ) : (
+                <Link href={href} className={className}>
+                  {label}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </ToolCard>
   );
 }
 

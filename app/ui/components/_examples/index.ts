@@ -57,6 +57,8 @@ import FileDropDemo from "./file-drop-demo";
 import FileDropPanel from "./file-drop-panel";
 import TooltipDemo from "./tooltip-demo";
 import AlertDemo from "./alert-demo";
+import CardDemo from "./card-demo";
+import CardSmall from "./card-small";
 
 export interface Example {
   slug: string;
@@ -353,4 +355,20 @@ export const examples: Record<string, Example[]> = {
     },
   ],
   alert: [{ slug: "alert-demo", title: "Neutral and destructive", Component: AlertDemo }],
+  card: [
+    {
+      slug: "card-demo",
+      title: "Header, action and footer",
+      description:
+        "CardAction sits beside the title and description in the header grid. A `border-t` on the footer sets it off and pads it to match.",
+      Component: CardDemo,
+    },
+    {
+      slug: "card-small",
+      title: "Small, with a heading title",
+      description:
+        '`size="sm"` tightens the spacing for a sidebar. `asChild` makes the title an `h2`, so it shows up in the page\'s outline and screen readers can jump to it.',
+      Component: CardSmall,
+    },
+  ],
 };

@@ -2,8 +2,16 @@
 
 import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { Info, ExternalLink, RefreshCw } from "lucide-react";
-import { ClearButton, OptionCheckbox, Stat } from "@/components/tool-controls";
+import { Info, RefreshCw } from "lucide-react";
+import {
+  ClearButton,
+  OptionCheckbox,
+  ReferencesCard,
+  Stat,
+  ToolAside,
+  ToolCard,
+  ToolPanel,
+} from "@/components/tool-controls";
 import { cn } from "@/lib/cn";
 import { uuidv7 } from "@/lib/uuid";
 import { Button } from "@/registry/syntaqx/ui/button";
@@ -234,10 +242,10 @@ export default function UuidPage() {
         {/* Left: generator + inspector */}
         <div className="flex-1 min-w-0 flex flex-col gap-4">
           {/* Generator controls */}
-          <div className="border border-border bg-card">
-            <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-border">
-              <span className="text-sm font-medium">Generate</span>
-              <div className="flex items-center gap-2">
+          <ToolPanel
+            title="Generate"
+            action={
+              <>
                 <NumberInput
                   size="sm"
                   aria-label="How many"
@@ -252,11 +260,12 @@ export default function UuidPage() {
                   <RefreshCw />
                   Generate
                 </Button>
-              </div>
-            </div>
-
+              </>
+            }
+            contentClassName="flex-row flex-wrap items-center gap-3"
+          >
             {/* Type selector */}
-            <div className="px-4 py-3 flex flex-wrap items-center gap-3">
+            <>
               <ToggleGroup
                 spacing={0}
                 type="single"
@@ -293,18 +302,18 @@ export default function UuidPage() {
                   />
                 )}
               </div>
-            </div>
-          </div>
+            </>
+          </ToolPanel>
 
           {/* Output */}
-          <div className="border border-border bg-card">
-            <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-              <span className="text-sm font-medium">
-                {displayIds.length > 0
-                  ? `${displayIds.length} ${displayIds.length === 1 ? "ID" : "IDs"} generated`
-                  : "Output"}
-              </span>
-              <div className="flex items-center gap-1.5">
+          <ToolPanel
+            title={
+              displayIds.length > 0
+                ? `${displayIds.length} ${displayIds.length === 1 ? "ID" : "IDs"} generated`
+                : "Output"
+            }
+            action={
+              <>
                 <CopyButton
                   value={allText}
                   disabled={displayIds.length === 0}
@@ -312,9 +321,11 @@ export default function UuidPage() {
                   size="sm"
                 />
                 {displayIds.length > 0 && <ClearButton onClick={() => setGenerated([])} />}
-              </div>
-            </div>
-            <div className="px-3 py-2 min-h-24 max-h-80 overflow-y-auto">
+              </>
+            }
+            contentClassName="min-h-24 max-h-80 overflow-y-auto py-2"
+          >
+            <>
               {displayIds.length > 0 ? (
                 <div className="space-y-0.5">
                   {displayIds.map((id, i) => (
@@ -333,24 +344,25 @@ export default function UuidPage() {
                   Click Generate to create {ID_LABELS[idType]} identifiers
                 </p>
               )}
-            </div>
-          </div>
+            </>
+          </ToolPanel>
 
           {/* Inspector */}
-          <div className="border border-border bg-card">
-            <Field className="gap-0">
-              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
-                <FieldLabel>Inspect / Validate</FieldLabel>
-                <div className="flex items-center gap-1.5">
+          <Field className="gap-0">
+            <ToolPanel
+              title={<FieldLabel>Inspect / validate</FieldLabel>}
+              action={
+                <>
                   <PasteButton
                     variant="outline"
                     size="sm"
                     onPaste={(text) => setInspectInput(text)}
                   />
                   {inspectInput && <ClearButton onClick={() => setInspectInput("")} />}
-                </div>
-              </div>
-              <div className="px-4 py-3 space-y-3">
+                </>
+              }
+            >
+              <>
                 <Input
                   value={inspectInput}
                   onChange={(e) => setInspectInput(e.target.value)}
@@ -407,73 +419,42 @@ export default function UuidPage() {
                     )}
                   </div>
                 )}
-              </div>
-            </Field>
-          </div>
+              </>
+            </ToolPanel>
+          </Field>
         </div>
 
         {/* Right: info & references */}
-        <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-primary" />
-              About UUIDs & ULIDs
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
-              <p>
-                All IDs are generated client-side using the Web Crypto API for cryptographically
-                secure random values.
-              </p>
-              <p>
-                For a deeper look at UUID versions, ULID, auto-increment tradeoffs, and why UUID v7
-                is the recommended default, see the{" "}
-                <Link href="/docs/fundamentals/identifier-conventions" className="text-link">
-                  Identifier Conventions
-                </Link>{" "}
-                doc.
-              </p>
-            </div>
-          </div>
+        <ToolAside>
+          <ToolCard icon={<Info />} title="About UUIDs & ULIDs">
+            <p>
+              All IDs are generated client-side using the Web Crypto API for cryptographically
+              secure random values.
+            </p>
+            <p>
+              For a deeper look at UUID versions, ULID, auto-increment tradeoffs, and why UUID v7 is
+              the recommended default, see the{" "}
+              <Link href="/docs/fundamentals/identifier-conventions" className="text-link">
+                Identifier Conventions
+              </Link>{" "}
+              doc.
+            </p>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-primary" />
-              References
-            </h3>
-            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
-              <li>
-                <a
-                  href="https://datatracker.ietf.org/doc/html/rfc9562"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  RFC 9562 - UUIDs (replaces RFC 4122)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/ulid/spec"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  ULID Specification
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://en.wikipedia.org/wiki/Universally_unique_identifier"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  Wikipedia - UUID
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <ReferencesCard
+            links={[
+              {
+                href: "https://datatracker.ietf.org/doc/html/rfc9562",
+                label: "RFC 9562 - UUIDs (replaces RFC 4122)",
+              },
+              { href: "https://github.com/ulid/spec", label: "ULID Specification" },
+              {
+                href: "https://en.wikipedia.org/wiki/Universally_unique_identifier",
+                label: "Wikipedia - UUID",
+              },
+            ]}
+          />
+        </ToolAside>
       </div>
     </div>
   );

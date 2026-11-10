@@ -2,9 +2,18 @@
 
 import { useState, useCallback } from "react";
 import NextImage from "next/image";
-import { Upload, Download, Trash2, ImageIcon, Archive, CircleAlert } from "lucide-react";
+import {
+  Upload,
+  Download,
+  Trash2,
+  ImageIcon,
+  Archive,
+  CircleAlert,
+  Info,
+  Ruler,
+} from "lucide-react";
 import { zipSync } from "fflate";
-import { Stat } from "@/components/tool-controls";
+import { Stat, ToolAside, ToolCard, ToolPanel } from "@/components/tool-controls";
 import { cn } from "@/lib/cn";
 import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
 import { Button } from "@/registry/syntaqx/ui/button";
@@ -336,97 +345,79 @@ export default function FaviconPage() {
 
           {/* Previews */}
           {previews.length > 0 && (
-            <div className="rounded-md border bg-card">
-              <div className="border-b px-3 py-2">
-                <span className="text-sm font-medium">Preview</span>
-              </div>
-              <div className="flex flex-wrap gap-6 p-4">
-                {previews.map((p) => (
-                  <div key={p.size} className="flex flex-col items-center gap-2">
-                    <div
-                      className="flex items-center justify-center border bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px]"
+            <ToolPanel title="Preview" contentClassName="flex-row flex-wrap gap-6">
+              {previews.map((p) => (
+                <div key={p.size} className="flex flex-col items-center gap-2">
+                  <div
+                    className="flex items-center justify-center rounded-md border bg-[repeating-conic-gradient(var(--color-border)_0%_25%,transparent_0%_50%)] bg-size-[8px_8px]"
+                    style={{
+                      width: Math.max(p.size, 32) + 16,
+                      height: Math.max(p.size, 32) + 16,
+                    }}
+                  >
+                    <NextImage
+                      src={p.dataUrl}
+                      alt={`${p.size}x${p.size}`}
+                      width={p.size}
+                      height={p.size}
+                      unoptimized
                       style={{
-                        width: Math.max(p.size, 32) + 16,
-                        height: Math.max(p.size, 32) + 16,
+                        imageRendering: p.size <= 32 ? "pixelated" : "auto",
                       }}
-                    >
-                      <NextImage
-                        src={p.dataUrl}
-                        alt={`${p.size}x${p.size}`}
-                        width={p.size}
-                        height={p.size}
-                        unoptimized
-                        style={{
-                          imageRendering: p.size <= 32 ? "pixelated" : "auto",
-                        }}
-                      />
-                    </div>
-                    <Stat>
-                      {p.size}x{p.size}
-                    </Stat>
+                    />
                   </div>
-                ))}
-              </div>
-            </div>
+                  <Stat>
+                    {p.size}x{p.size}
+                  </Stat>
+                </div>
+              ))}
+            </ToolPanel>
           )}
         </div>
 
         {/* Right: sidebar */}
-        <div className="lg:w-64 shrink-0 flex flex-col gap-6">
+        <ToolAside>
           {/* Size toggles */}
-          <div className="border border-border bg-card">
-            <h3
-              id="favicon-sizes"
-              className="text-xs font-medium text-foreground px-4 py-3 border-b border-border"
+          <ToolCard icon={<Ruler />} title="Sizes (px)">
+            <ToggleGroup
+              type="multiple"
+              variant="outline"
+              size="sm"
+              spacing={1.5}
+              aria-label="Sizes in pixels"
+              value={sizes.map(String)}
+              onValueChange={(next) => changeSizes(next.map(Number))}
+              className="flex-wrap"
             >
-              Sizes (px)
-            </h3>
-            <div className="px-4 py-3">
-              <ToggleGroup
-                type="multiple"
-                variant="outline"
-                size="sm"
-                spacing={1.5}
-                aria-labelledby="favicon-sizes"
-                value={sizes.map(String)}
-                onValueChange={(next) => changeSizes(next.map(Number))}
-                className="flex-wrap"
-              >
-                {DEFAULT_SIZES.map((size) => (
-                  <ToggleGroupItem key={size} value={String(size)} className="tabular-nums">
-                    {size}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
-          </div>
+              {DEFAULT_SIZES.map((size) => (
+                <ToggleGroupItem key={size} value={String(size)} className="tabular-nums">
+                  {size}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </ToolCard>
 
           {/* About */}
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border">
-              About
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
-              <p>
-                ICO files bundle multiple icon sizes into a single file. Browsers pick the best
-                match for the context: 16px for tabs, 32px for bookmarks, larger for shortcuts and
-                app icons.
-              </p>
-              <p>
-                Common sizes: 16, 32, and 48 for browser favicons. 64 and above for desktop
-                shortcuts and high-DPI displays.
-              </p>
-              <p>
-                For best results, start with an SVG or a large PNG (512px+). Smaller sources may
-                look blurry when scaled up.
-              </p>
-              <p>
-                The generated ICO uses embedded PNG data, which is supported by all modern browsers
-                and Windows Vista+.
-              </p>
-            </div>
-          </div>
-        </div>
+          <ToolCard icon={<Info />} title="About">
+            <p>
+              ICO files bundle multiple icon sizes into a single file. Browsers pick the best match
+              for the context: 16px for tabs, 32px for bookmarks, larger for shortcuts and app
+              icons.
+            </p>
+            <p>
+              Common sizes: 16, 32, and 48 for browser favicons. 64 and above for desktop shortcuts
+              and high-DPI displays.
+            </p>
+            <p>
+              For best results, start with an SVG or a large PNG (512px+). Smaller sources may look
+              blurry when scaled up.
+            </p>
+            <p>
+              The generated ICO uses embedded PNG data, which is supported by all modern browsers
+              and Windows Vista+.
+            </p>
+          </ToolCard>
+        </ToolAside>
       </div>
     </div>
   );

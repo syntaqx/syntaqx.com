@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Upload, ImageIcon, Download, Info, ExternalLink } from "lucide-react";
+import { Upload, ImageIcon, Download, Info } from "lucide-react";
 import {
   ClearButton,
+  codeArea,
+  dropTarget,
   FileName,
   OptionCheckbox,
   PanelHeader,
+  ReferencesCard,
   Stat,
-  codeArea,
-  dropTarget,
+  ToolAside,
+  ToolCard,
 } from "@/components/tool-controls";
 import { cn } from "@/lib/cn";
 import { Button } from "@/registry/syntaqx/ui/button";
@@ -324,7 +327,7 @@ export default function ImageBase64Page() {
                       <img
                         src={encDataUri}
                         alt={encFileName ?? "preview"}
-                        className="max-h-64 max-w-full border bg-background object-contain"
+                        className="max-h-64 max-w-full rounded-md border bg-background object-contain"
                       />
                     </div>
                   ) : (
@@ -419,7 +422,7 @@ export default function ImageBase64Page() {
                     <img
                       src={decUrl}
                       alt="decoded"
-                      className="max-h-64 max-w-full border bg-background object-contain"
+                      className="max-h-64 max-w-full rounded-md border bg-background object-contain"
                     />
                   ) : (
                     <div className="flex flex-col items-center gap-2 text-center text-sm text-muted-foreground">
@@ -434,77 +437,48 @@ export default function ImageBase64Page() {
         </div>
 
         {/* Right: info & references */}
-        <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-primary" />
-              About data URIs
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
-              <p>
-                A data URI embeds a file directly into a URL using the form{" "}
-                <span className="text-foreground">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It
-                can be used anywhere a URL is accepted &mdash; including
-                <span className="text-foreground"> img src</span>, CSS{" "}
-                <span className="text-foreground">background-image</span>, and SVG.
-              </p>
-              <p>
-                Base64 encoding increases payload size by roughly{" "}
-                <span className="text-foreground">33%</span>. It is most useful for small,
-                inlineable assets like icons; large images are usually better served as separate
-                files.
-              </p>
-              <p>
-                This page accepts plain Base64, padded or unpadded, and both standard and URL-safe
-                alphabets. The format is auto-detected from the data when no MIME type is provided.
-              </p>
-              <p>
-                Files are processed locally with the{" "}
-                <span className="text-foreground">FileReader</span> and{" "}
-                <span className="text-foreground">Blob</span> APIs. Nothing is uploaded.
-              </p>
-            </div>
-          </div>
+        <ToolAside>
+          <ToolCard icon={<Info />} title="About data URIs">
+            <p>
+              A data URI embeds a file directly into a URL using the form{" "}
+              <span className="text-foreground">data:&lt;mime&gt;;base64,&lt;data&gt;</span>. It can
+              be used anywhere a URL is accepted &mdash; including
+              <span className="text-foreground"> img src</span>, CSS{" "}
+              <span className="text-foreground">background-image</span>, and SVG.
+            </p>
+            <p>
+              Base64 encoding increases payload size by roughly{" "}
+              <span className="text-foreground">33%</span>. It is most useful for small, inlineable
+              assets like icons; large images are usually better served as separate files.
+            </p>
+            <p>
+              This page accepts plain Base64, padded or unpadded, and both standard and URL-safe
+              alphabets. The format is auto-detected from the data when no MIME type is provided.
+            </p>
+            <p>
+              Files are processed locally with the{" "}
+              <span className="text-foreground">FileReader</span> and{" "}
+              <span className="text-foreground">Blob</span> APIs. Nothing is uploaded.
+            </p>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-primary" />
-              References
-            </h3>
-            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
-              <li>
-                <a
-                  href="https://datatracker.ietf.org/doc/html/rfc2397"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  RFC 2397 - The &quot;data&quot; URL scheme
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://datatracker.ietf.org/doc/html/rfc4648"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  RFC 4648 - Base Encodings
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  MDN - Data URLs
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <ReferencesCard
+            links={[
+              {
+                href: "https://datatracker.ietf.org/doc/html/rfc2397",
+                label: "RFC 2397 - The &quot;data&quot; URL scheme",
+              },
+              {
+                href: "https://datatracker.ietf.org/doc/html/rfc4648",
+                label: "RFC 4648 - Base Encodings",
+              },
+              {
+                href: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs",
+                label: "MDN - Data URLs",
+              },
+            ]}
+          />
+        </ToolAside>
       </div>
     </div>
   );

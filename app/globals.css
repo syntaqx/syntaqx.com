@@ -130,11 +130,13 @@
   --accent-foreground: var(--foreground);
   /* Field and outline edges: a step brighter than dividers, so they read as controls. */
   --input: var(--border-hover);
-  --ring: var(--primary);
-  /* shadcn's default; the site's own panels and slanted buttons stay square. */
-  /* Square corners everywhere on this site, shadcn components included: the
-     radius scale below is derived from this. Registry consumers keep their own. */
-  --radius: 0;
+  /* A control's focus ring: the brand teal stepped toward the muted text, so a
+     focused field is clearly marked without glowing. Keyboard outlines on
+     plain links and the like keep full --primary (see :focus-visible). */
+  --ring: color-mix(in oklab, var(--primary) 55%, var(--muted-foreground));
+  /* shadcn's default. Controls and panels round; slanted buttons and the
+     site's chrome (header, rails, rules) have no radius classes and stay square. */
+  --radius: 0.625rem;
 }
 
 @theme inline {
@@ -337,14 +339,18 @@ body:has([data-full-bleed]) {
 
 /*
  * Keyboard focus. `:focus-visible` only fires for keyboard/AT navigation,
- * not mouse clicks, so pointer users never see the ring.
+ * not mouse clicks, so pointer users never see the ring. It's in the base
+ * layer so a component's own focus style (`outline-none` plus a ring) wins;
+ * unlayered, it drew a second outline inside every focused field.
  */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-:focus:not(:focus-visible) {
-  outline: none;
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 /* The search field fills its row, so the row is the field: no ring inside it. */
 .search-input:focus-visible {
