@@ -36,7 +36,7 @@ Mt. Gox applied for civil rehabilitation in Tokyo on February 28, 2014, stating 
 
 ### Bitfinex, 2016
 
-The 2016 theft from Bitfinex is the case that showed stolen coins can be traced and recovered years later; its figures come from US court records I couldn't open on this pass, so I give none. <!-- source-gap: bitfinex-2016 | missing | Bitfinex 2016 theft amount, the 2022 seizure and the 2023 pleas and 2024 sentencing | closes with: DOJ press releases or the D.D.C. docket for United States v. Lichtenstein | checked: 2026-11-05 -->
+The 2016 theft from Bitfinex is the case that showed stolen coins can be traced and recovered years later; its figures come from US court records I couldn't open on this pass, so I give none. <!-- source-gap: bitfinex-2016 | missing | Bitfinex 2016 theft amount, the 2022 seizure and the 2023 pleas and 2024 sentencing | closes with: DOJ press releases or the D.D.C. docket for United States v. Lichtenstein | checked: 2026-11-10 -->
 
 ### Coincheck and the Japanese rules
 

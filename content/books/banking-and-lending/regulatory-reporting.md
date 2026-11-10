@@ -72,9 +72,9 @@ The design rules from [Fair Lending, HMDA & 1071](/books/banking-and-lending/fai
 - **The file is the record.** Store the exact file uploaded, its hash, each submission attempt and the platform's edit report, and sign-off by the officer who certified it. A resubmission after an exam finding is a new submission with its reason.
 - **The count is reconciled before upload.** Originations, denials, withdrawals and purchases on the register are tied to the LOS's own counts for the year by action taken; a gap is either an exclusion with a reason (a business-purpose loan not covered, a preapproval) or a missing row.
 
-**Section 1071** data for 2028 is due by June 1, 2029, "in the format prescribed by the Bureau" with a Filing Instructions Guide containing the technical instructions (12 CFR 1002.109). As of October 2026 the CFPB's page lists a 2025 guide, written for the 2023 rule, and no guide for the revised rule's data points yet; a lender building now should build the record from [Section 1071](/books/banking-and-lending/fair-lending#section-1071) and treat the file format as a mapping to write when the guide is published.
+**Section 1071** data for 2028 is due by June 1, 2029, "in the format prescribed by the Bureau" with a Filing Instructions Guide containing the technical instructions (12 CFR 1002.109). As of November 2026 the CFPB's page lists a 2025 guide, written for the 2023 rule, and no guide for the revised rule's data points yet; a lender building now should build the record from [Section 1071](/books/banking-and-lending/fair-lending#section-1071) and treat the file format as a mapping to write when the guide is published.
 
-<!-- source-gap: 1071-fig-revised-rule | status | Filing Instructions Guide and platform for the May 2026 revised 1071 rule | closes with: a CFPB FIG for small business lending data under the revised rule | checked: 2026-11-01 -->
+<!-- source-gap: 1071-fig-revised-rule | status | Filing Instructions Guide and platform for the May 2026 revised 1071 rule | closes with: a CFPB FIG for small business lending data under the revised rule | checked: 2026-11-10 -->
 
 ## CTR and SAR E-Filing
 
