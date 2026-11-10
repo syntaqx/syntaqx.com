@@ -55,8 +55,7 @@ The engineering lessons are specific:
 
 Commonwealth Bank of Australia is the case of a bank replacing its core twice, with very different shapes.
 
-The first replaced CBA's legacy core with SAP over several years. CBA announced the program on April 28, 2008, choosing SAP's banking software on its NetWeaver platform with Accenture supporting the implementation, at a forecast cost of about A$580 million over four years. Press reports later put its eventual cost at around A$1.1 billion after the scope was extended; I could not open a CBA source for that figure, so treat it as secondary.
-<!-- source-gap: cba-2008-core-cost | secondary | CBA's SAP core replacement grew from its A$580M forecast to about A$1.1B | closes with: a CBA annual report, results presentation or ASX release stating the final program cost | checked: 2026-11-01 -->
+The first replaced CBA's legacy core with SAP over several years. CBA announced the program on April 28, 2008, choosing SAP's banking software on its NetWeaver platform with Accenture supporting the implementation, at a forecast cost of about A$580 million over four years. By its 2011 half-year results (February 9, 2011), with 10 million retail deposit and transaction accounts migrated, CBA put the revised total cost at about A$1.1 billion, citing "additional functionality + complexity", and said the business case was unchanged because the extra cost was offset by a larger benefits profile; business deposits and transactions were scheduled for 2011, lending for 2012, and subsidiaries such as ASB and Bankwest for 2013 onward.
 
 The second is better documented by the bank itself. In a March 2026 case study, CBA described moving that SAP core, which it had put in "16 years ago", to the cloud with AWS, SAP, SAP Fioneer, Accenture and Red Hat. It set a cutover target of eight hours or less where comparable organizations had taken more than 30, and was "only fully offline for three hours". It planned three dress rehearsals and ran five, with 54 crews involved in testing, for a platform serving 16 million active customer accounts.
 
@@ -71,7 +70,7 @@ What carries over to any conversion:
 The largest US bank chose the progressive route for its domestic consumer bank and the greenfield route abroad.
 
 In the US, Chase is moving its consumer bank onto Thought Machine's Vault Core. Thought Machine described it in October 2022 as a multi-year program to deploy Vault Core across Consumer & Community Banking, serving "more than 66 million households in the United States", quoting the division's CIO on helping "modernize the core banking technology that powers a variety of products ... as we migrate to their cloud-native core banking platform at scale." JPMorgan also invested in Thought Machine's 2021 funding round.
-<!-- source-gap: jpm-core-migration-status | missing | JPMorgan Chase's progress migrating US consumer accounts to Vault Core after 2022 | closes with: a JPMorgan 10-K, investor day presentation or shareholder letter stating migration milestones | checked: 2026-11-01 -->
+<!-- source-gap: jpm-core-migration-status | missing | JPMorgan Chase's progress migrating US consumer accounts to Vault Core after 2022 | closes with: a JPMorgan 10-K, investor day presentation or shareholder letter stating migration milestones | checked: 2026-11-10 -->
 I found no public statement from JPMorgan, as of October 2026, of how far that migration has gone.
 
 In the UK, Chase didn't migrate anything: it built a new bank. 10x Banking's case study describes a cloud-native core on AWS, more than two years of build, and, in its own figures, over 2.5 million customers by February 2025. A greenfield bank avoids conversion entirely and pays for it later in a different way: when a parent eventually wants one platform, the conversion it skipped is still waiting.
@@ -293,6 +292,7 @@ A conversion is an examination topic before and after the weekend, and its recor
 - [Q2 Holdings: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1410384/000141038426000006/qtwo-20251231.htm), initial digital banking agreement terms averaging over five years
 - [Alkami Technology: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1529274/000152927426000009/alk-20251231.htm), average contract life of about 70 months
 - [Commonwealth Bank of Australia: Recent Developments as at May 12, 2008](https://www.commbank.com.au/about-us/shareholders/us-investors/docs/Recent_Developments_120508.pdf), the April 28, 2008 core modernization announcement, SAP and Accenture, and the A$580 million four-year forecast
+- [Commonwealth Bank: 2011 half year results analyst pack](https://www.commbank.com.au/content/dam/commbank/about-us/shareholders/pdfs/results/Commonwealth_Bank_2011_half_year_results_analyst_pack.pdf), February 9, 2011, the Core Banking Modernisation slide: 10 million accounts migrated, total cost now about A$1.1 billion, the business case unchanged, and the 2011 to 2013+ timetable
 
 **In practice**
 
