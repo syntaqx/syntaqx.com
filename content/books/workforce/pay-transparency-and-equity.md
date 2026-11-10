@@ -23,7 +23,7 @@ What pay equity and compensation vendors publish, and what ATS and HRIS vendors 
 | **Payscale** | Compensation data and software | "Analyze pay equity with auditable methodology" |
 | **Syndio** | Pay equity software | "the pay equity leader trusted by 350+ global enterprises," with "EU Pay Transparency Directive readiness built in: continuous pay gap reporting across jurisdictions" |
 
-<!-- source-gap: wf-pay-vendors | missing | public product documentation for Trusaic, Carta Total Compensation, Mercer and HCM suites' pay transparency features | closes with: public product or help pages describing range management and pay gap reporting | checked: 2026-11-09 -->
+<!-- source-gap: wf-pay-vendors | missing | public product documentation for Trusaic, Carta Total Compensation, Mercer and HCM suites' pay transparency features | closes with: public product or help pages describing range management and pay gap reporting | checked: 2026-11-10 -->
 
 The industry's split is between systems that hold the ranges (compensation planning and the job architecture in the HRIS), systems that publish them (the ATS and job boards), and systems that analyze outcomes (pay equity tools that read the HRIS's job, pay and demographic data). The data model below follows the same split.
 
@@ -83,13 +83,13 @@ For an ATS the ban is a property of the application form and the recruiter's too
 
 ## Pay Data Reporting
 
-Two states require annual pay data from larger employers, and both are built on federal EEO categories.
+Two states require annual pay data from larger employers, and both are built on federal EEO categories; a third, Illinois, requires a pay data certificate every two years.
 
 **California.** Under Government Code 12999, "private employers of 100 or more payroll employees and private client employers of 100 or more labor contractor employees" file pay data reports with the Civil Rights Department "on or before the second Wednesday of May of each year"; reports for reporting year 2025 were due May 13, 2026. Each establishment reports employee counts by "race/ethnicity, sex, job category, pay band, exemption status, and employment type," payroll employees and labor contractor employees go in separate reports ("Do not combine"), and employees "physically located in California... including by working remotely" are included. Failure to file can lead to a court order, costs and penalties.
 
 **Massachusetts.** Employers with "not less than 100 employees in the commonwealth" that are subject to federal EEO reports file a copy of them with the state "Annually, not later than February 1" (G.L. c. 149, s. 105E): the EEO-1 every year, and the EEO-3 and EEO-5 or EEO-4 in alternate years. Because the obligation is defined by the federal reports, a final EEOC rescission would change what Massachusetts receives, and the engine should key the Massachusetts filing to the federal form's status by year rather than assume it.
 
-<!-- source-gap: wf-pay-illinois-eprc | missing | Illinois Equal Pay Registration Certificate requirements, thresholds and filing cycle | closes with: the Illinois Department of Labor EPRC page | checked: 2026-11-09 -->
+**Illinois** runs a certificate rather than an annual report. The [Department of Labor's EPRC page](https://labor.illinois.gov/laws-rules/conmed/eprc.html) applies Section 11 of the Equal Pay Act to "any private employer who has 100 or more employees in the State of Illinois," who must certify "every two years after their first submission" with "a $150 fee": a compliance statement signed by an officer, counsel or authorized agent, and a list of all employees from the past calendar year with gender, race and ethnicity, county, start date and total wages "rounded to the nearest $100." IDOL assigns each business its submission deadline, and noncompliance can bring a "civil penalty or fine of up to $10,000."
 
 The pay band is the technical core of California's report: each employee is counted in a band by pay, within a job category, which means the report is computed from what was paid, not from rates in the HRIS: the core model's `accumulators` by worker and year, joined to the job category from the job catalog and to the employee's self-identification.
 
@@ -101,7 +101,7 @@ The EEO-1 requires "all private sector employers with 100 or more employees, and
 - **The proposal.** "Removal of Reporting Requirements" (91 FR 46332, published July 23, 2026) would rescind the EEO-1 through EEO-6 reports and the related recordkeeping and record preservation requirements in 29 CFR part 1602, which the EEOC calls "inconsistent with equal employment opportunity law and potentially unconstitutional." Comments closed August 24, 2026, after a public hearing noticed July 30.
 - **The status.** No final rule appears in the Federal Register's EEOC listing as of November 9, 2026, and the proposal itself says the Commission will include other part 1602 revisions in "the final rule issued at the conclusion of this rulemaking." The reporting requirement remains in the regulations until a final rule removes it.
 
-<!-- source-gap: wf-pay-eeo1-final | status | whether the EEOC finalizes the rescission of EEO-1 reporting and part 1602 recordkeeping | closes with: a final rule in the Federal Register or a 2025 collection notice on eeoc.gov | checked: 2026-11-09 -->
+<!-- source-gap: wf-pay-eeo1-final | status | whether the EEOC finalizes the rescission of EEO-1 reporting and part 1602 recordkeeping | closes with: a final rule in the Federal Register or a 2025 collection notice on eeoc.gov | checked: 2026-11-10 -->
 
 A system should keep the EEO-1's data model even if the federal report goes: California's and Massachusetts' reports use its job categories and demographic categories, pay equity analyses use the same groupings, and an employer's own records of the snapshot it filed for 2024 stay within their retention period. What changes is that the federal filing becomes a `filings` row the calendar stops generating once the rule's effective date passes.
 
