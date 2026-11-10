@@ -105,7 +105,7 @@ The rescind case is where most integrations break. An offer accepted, a hire eve
 When the HRIS and payroll are separate products, the integration is the most consequential thing either vendor builds. Three shapes exist:
 
 - **One product.** HCM suites run HR and payroll on one record. There is no integration to fail, only the effective-dating rules inside one database.
-- **Event or API sync.** The HRIS emits changes and the payroll system applies them, or payroll polls a change feed. HiBob's lifecycle webhooks fire on the effective date; Rippling's change feed is filtered by `applied_on` to catch future-dated changes; BambooHR's webhooks may batch several employees in one request. Unified HR APIs sit in this layer for many systems at once (Unified HR & Payroll APIs covers them).
+- **Event or API sync.** The HRIS emits changes and the payroll system applies them, or payroll polls a change feed. HiBob's lifecycle webhooks fire on the effective date; Rippling's change feed is filtered by `applied_on` to catch future-dated changes; BambooHR's webhooks may batch several employees in one request. Unified HR APIs sit in this layer for many systems at once ([Unified HR & Payroll APIs](/books/workforce/unified-hr-apis) covers them).
 - **File.** A scheduled export from the HRIS, a mapping step and an import into payroll, usually before each run. Still common between an enterprise HRIS and a separate payroll or a PEO.
 
 Whatever the shape, the same rules make it reliable:
@@ -235,7 +235,7 @@ The HRIS record is what an employer shows a wage-hour investigator, an EEOC char
 - **Every effective-dated value with both clocks.** What was true on each date and what the record said on each date, so a payroll that ran on bad data can be explained as well as corrected.
 - **Every change with its actor, source and reason,** including imports and integrations, in `audit_events`.
 - **Every change event and its delivery per consumer,** with acknowledgments and failures, so "did payroll get the termination before the run" is a query.
-- **Approvals.** Who approved each hire, pay change and termination, because segregation of duties over pay changes is a payroll control (Controls, Audits & SOC 1 covers them).
+- **Approvals.** Who approved each hire, pay change and termination, because segregation of duties over pay changes is a payroll control ([Controls, Audits & SOC 1](/books/workforce/controls-audits-and-soc1) covers them).
 - **Org structures as of each date,** so a headcount, an EEO-1 snapshot or a WARN count can be reproduced for a past date.
 
 The mechanics (append-only history, typed actors, tamper evidence) are in [Audit Trails](/docs/building-blocks/audit-trails).

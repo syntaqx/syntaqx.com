@@ -79,7 +79,7 @@ An unresolved failure blocks the employer's next payroll in both public APIs, an
 
 The other direction fails too: an employee's direct deposit comes back R02 or R03 because the account was closed or the number mistyped. The employer funded the payroll; one worker wasn't paid. Check's payroll becomes `partially_paid` and returns to `paid` once every item is resolved, and the resolution is one of two: retry to a new account the worker provides (credits "can be expected to settle within 1-2 banking days") or refund the employer the worker's net pay, setting the item's `payment_method` to `MANUAL`, so the employer pays the worker off-platform. Check won't refund a credit for a payroll that wasn't funded.
 
-The returned credit is money the provider holds for one worker, owed to that worker, and the system must not lose it: it is a liability to the employee (the core model's `payee_type = 'employee'`) until it is paid or refunded, and if neither happens it ages toward the state's unclaimed wage rules ([Direct Deposit, Pay Cards & Checks](/books/workforce/paying-employees#uncashed-paychecks-and-unclaimed-wages)). A new account supplied after a return is also the moment payroll fraud happens, so it goes through the same change controls as any bank account change (Payroll Fraud & Security).
+The returned credit is money the provider holds for one worker, owed to that worker, and the system must not lose it: it is a liability to the employee (the core model's `payee_type = 'employee'`) until it is paid or refunded, and if neither happens it ages toward the state's unclaimed wage rules ([Direct Deposit, Pay Cards & Checks](/books/workforce/paying-employees#uncashed-paychecks-and-unclaimed-wages)). A new account supplied after a return is also the moment payroll fraud happens, so it goes through the same change controls as any bank account change ([Payroll Fraud & Security](/books/workforce/payroll-fraud-and-security)).
 
 ## Recovery From the Employer
 
@@ -99,7 +99,7 @@ In direct payroll the provider does, after collection fails: the filings call it
 - **Gusto Embedded.** "If this collection is not fulfilled by the company, the liability is transferred to you (after 90 days)," and the partner must make sure the client resolves the issue and starts the re-debit within 90 days.
 - **Check.** Whether a failed collection or tax debit affects the company's good standing "depends on the partner's risk policy," which is to say the partner sets part of the risk appetite and carries its consequence.
 
-So the platform that resells payroll is a guarantor of its customers' payrolls, which changes how it should underwrite them: it chooses the funding speed limits it will allow (Gusto: "evaluate and decide the level of risk you would like to take on in a 24 hour period for a given client"), it watches its own recovery cases, and it reserves for the 90-day transfers. Embedded Payroll covers the partner side of the agreements.
+So the platform that resells payroll is a guarantor of its customers' payrolls, which changes how it should underwrite them: it chooses the funding speed limits it will allow (Gusto: "evaluate and decide the level of risk you would like to take on in a 24 hour period for a given client"), it watches its own recovery cases, and it reserves for the 90-day transfers. [Embedded Payroll](/books/workforce/embedded-payroll) covers the partner side of the agreements.
 
 ### Worked Numbers: The Chain of a Loss
 
@@ -123,7 +123,7 @@ Most failed debits are distress, not fraud. The controls in [Funding a Payroll](
 - **Payroll as a cash-out.** A legitimate-looking employer whose payroll goes mostly to new accounts at a few prepaid or fintech banks is laundering, not paying people; the provider's anti-money laundering monitoring applies.
 <!-- source-gap: wf-payroll-bustout | missing | Public cases of fake employers and bust-outs against payroll providers or embedded payroll platforms | closes with: a DOJ press release, court record or provider disclosure describing such a scheme against a payroll provider | checked: 2026-11-09 -->
 
-Direct deposit diversion (a criminal changing a real employee's account) is the other big payroll fraud, but it doesn't make a debit fail; Payroll Fraud & Security covers it.
+Direct deposit diversion (a criminal changing a real employee's account) is the other big payroll fraud, but it doesn't make a debit fail; [Payroll Fraud & Security](/books/workforce/payroll-fraud-and-security) covers it.
 
 ## How to Build It
 

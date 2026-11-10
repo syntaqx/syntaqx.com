@@ -158,7 +158,7 @@ An exit unwinds each layer, and each has its own clock:
 - **Unemployment.** In Minnesota the client's account comes back "immediately"; in Texas the client is "a new employer without a previous experience record" unless it qualifies otherwise, which can mean a different rate; in Washington the client's account never left.
 - **Benefits.** The client's participation in the master plan ends, and it needs its own plans in force on the exit date with enrollments loaded, or coverage lapses for every employee at once.
 - **Workers' compensation.** Coverage under the PEO's master policy ends with the contract, and the client needs its own policy bound for the same date.
-- **Records and year to date.** The new provider needs year-to-date wages, taxes and deductions by employee, split by the EIN they were reported under. Changing Providers Mid-Year covers loading them.
+- **Records and year to date.** The new provider needs year-to-date wages, taxes and deductions by employee, split by the EIN they were reported under. [Changing Providers Mid-Year](/books/workforce/changing-providers) covers loading them.
 
 My default for an exit is January 1 for the same reason: it avoids mid-year state account, wage base and benefits transitions.
 
