@@ -97,7 +97,7 @@ An EFW2 file is a sequence of fixed-length records: a submitter record, then per
 - **Codes J, K, L and P**, which had no EFW2 field, now each have one; TA, TP and TT are added to the list of money fields SSA doesn't maintain on the earnings record.
 
 The EFW2C records (RCE, RCW, RCO, RCU) changed to match.
-<!-- source-gap: wf-efw2-layout | secondary | EFW2 tax year 2026 record identifiers, record length and field positions (SSA's Publication 42-007 PDF refused automated reading; changes are from a vendor summary) | closes with: SSA Publication 42-007 (TY2026) read directly | checked: 2026-11-09 -->
+<!-- source-gap: wf-efw2-layout | secondary | EFW2 tax year 2026 record identifiers, record length and field positions (SSA's Publication 42-007 PDF refused automated reading, 403 again on Nov 10, 2026; changes are from a vendor summary) | closes with: SSA Publication 42-007 (TY2026) read directly | checked: 2026-11-10 -->
 
 A file a provider submits for thousands of employers carries one RE per employer, and SSA's processing errors come back per employer through BSO; the system needs the submission ID per RE so a resubmission covers only the employers that failed. AccuWage Online is SSA's tool for checking a file before submission.
 
