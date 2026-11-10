@@ -19,8 +19,8 @@
     "a11y": "node scripts/a11y.mjs",
     "gaps": "node scripts/source-gaps.mjs",
     "knowledge:index": "esbuild scripts/knowledge-index.mts --bundle --platform=node --format=esm --packages=external --outfile=.generated/knowledge-index.mjs --log-level=warning && node .generated/knowledge-index.mjs",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "node scripts/vitest.mjs run",
+    "test:watch": "node scripts/vitest.mjs",
     "resume:pdf": "esbuild scripts/resume-pdf.mts --bundle --platform=node --format=esm --packages=external --jsx=automatic --outfile=.private/resume-pdf.mjs --log-level=warning && node .private/resume-pdf.mjs",
     "registry": "shadcn build",
     "registry:upstream": "node scripts/registry-upstream.mjs"
