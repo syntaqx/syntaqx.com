@@ -9,7 +9,7 @@ tags = ["insurance", "reinsurance", "cessions", "credit-for-reinsurance", "colla
 
 A reinsurance contract is signed once a year; it is operated every day. Every policy transaction cedes a share of premium to the quota share. Every claim payment and reserve change cedes a share of loss, and a large one may reach the per risk treaty. Every catastrophe accumulates against a tower. Each quarter the cedent sends each reinsurer an account showing what it owes and is owed, and a bordereau of the business behind it, and then has to collect the money from dozens of companies in several countries, some of which dispute, pay late or fail. Meanwhile the regulator decides how much of all that the cedent may count on its balance sheet: credit for reinsurance depends on who the reinsurer is and what collateral it posts.
 
-This chapter covers the operation: calculating cessions from the policy and claims ledgers, reinsurance accounts and bordereaux, recoverables and how they're collected, credit for reinsurance and collateral under the NAIC models and the covered agreements, Schedule F, and the renewal cycle and brokers. The contract shapes are Reinsurance Structures; how the cedent's own MGA bordereaux arrive is MGAs, Programs & Fronting.
+This chapter covers the operation: calculating cessions from the policy and claims ledgers, reinsurance accounts and bordereaux, recoverables and how they're collected, credit for reinsurance and collateral under the NAIC models and the covered agreements, Schedule F, and the renewal cycle and brokers. The contract shapes are [Reinsurance Structures](/books/insurance/reinsurance-structures); how the cedent's own MGA bordereaux arrive is [MGAs, Programs & Fronting](/books/insurance/mgas-programs-and-fronting).
 
 ## How the Platforms Do It
 
@@ -39,7 +39,7 @@ Three properties make the calculation auditable:
 
 - **Every cession row cites its source row** (the premium entry, payment or reserve change) and the contract and layer.
 - **Excess of loss cessions are recomputed, not incremented.** When a reserve on one claim in an occurrence changes, the occurrence's total is recomputed and the layer's ceded amount is the new figure minus what was already ceded, so a late reclassification produces a correcting row instead of a drift.
-- **The inuring order is applied in sequence** (Reinsurance Structures), so a cat cession reads the quota share's and per risk's cessions for the same claims first.
+- **The inuring order is applied in sequence** ([Reinsurance Structures](/books/insurance/reinsurance-structures)), so a cat cession reads the quota share's and per risk's cessions for the same claims first.
 
 ## Accounts and Bordereaux
 
@@ -56,7 +56,7 @@ Split across the reinsurers on the treaty by their signed shares (a 25% reinsure
 
 Excess of loss contracts settle differently: a deposit premium at inception (often in installments), adjusted at the end of the period on the final subject premium, and **loss billings** with proof of loss once the retention is exceeded, plus reinstatement premium deducted from or billed with the recovery.
 
-Behind the account sits a **bordereau**: the policy and claim detail. A premium bordereau lists the policies ceded with their premium, dates and terms; a claims bordereau lists the claims with paid and outstanding by cost type. For a cedent ceding a fronted program, the reinsurer's bordereau is built from the MGA's bordereau the cedent received, and the rows have to keep their identity across both (MGAs, Programs & Fronting). Lloyd's DDM is the most standardized public example: its claims bordereau procedure has a contract administrator, a submitter, a one-time transformation questionnaire mapping the sender's columns to the standard's fields, assignment to contract sections and approval.
+Behind the account sits a **bordereau**: the policy and claim detail. A premium bordereau lists the policies ceded with their premium, dates and terms; a claims bordereau lists the claims with paid and outstanding by cost type. For a cedent ceding a fronted program, the reinsurer's bordereau is built from the MGA's bordereau the cedent received, and the rows have to keep their identity across both ([MGAs, Programs & Fronting](/books/insurance/mgas-programs-and-fronting)). Lloyd's DDM is the most standardized public example: its claims bordereau procedure has a contract administrator, a submitter, a one-time transformation questionnaire mapping the sender's columns to the standard's fields, assignment to contract sections and approval.
 
 ## Recoverables and Collections
 
@@ -68,7 +68,7 @@ Operations owns the collection:
 - **Disputes.** A reinsurer may dispute coverage (the loss falls outside the occurrence clause or the subject business), the amount, or the cedent's handling; most treaties send disputes to arbitration. Disputed amounts stay on the books, flagged, with the dispute's reference.
 - **Offsets.** Most treaties let balances owed in each direction be netted; the account shows the gross items and the net settlement.
 - **Commutation.** Cedent and reinsurer can settle all future obligations under a contract for a lump sum, after which the contract's status becomes `commuted` and no further cessions are calculated.
-- **Insolvent reinsurers.** A recoverable from a reinsurer in liquidation becomes a claim against its estate (When Insurers Fail), written down as the estate's likely distribution is known.
+- **Insolvent reinsurers.** A recoverable from a reinsurer in liquidation becomes a claim against its estate ([When Insurers Fail](/books/insurance/when-insurers-fail)), written down as the estate's likely distribution is known.
 
 ## Credit for Reinsurance
 
@@ -104,17 +104,17 @@ A worked check, mine: a cedent has $40,000,000 of recoverables (paid and unpaid)
 
 The statutory annual statement's **Schedule F** reports a P&C insurer's reinsurance by counterparty: premium ceded and assumed, recoverables on paid and unpaid losses and LAE, unearned premium, ceding commissions, collateral held, amounts overdue and in dispute, by reinsurer and by category (authorized, unauthorized, certified, reciprocal). From those it computes a **provision for reinsurance**, a statutory liability that reduces surplus for recoverables that are unsecured from unauthorized reinsurers, overdue or slow-paying, or under-collateralized for certified reinsurers. The exact factors are in the NAIC's Annual Statement Instructions, which I could not open in full; the data requirement is clear regardless: every recoverable by reinsurer, aged from its due date, with dispute status and collateral, as of each statement date.<!-- source-gap: schedule-f-provision-factors | missing | the Schedule F provision for reinsurance factors (overdue thresholds and percentages, slow-payer test, certified reinsurer collateral deficiency treatment) | closes with: the current NAIC P&C Annual Statement Instructions for Schedule F | checked: 2026-11-10 -->
 
-What this asks of the ledger is the same as Schedule P: figures by counterparty as of the statement date, frozen once filed, reconciling to the balance sheet (Statutory Accounting & the Annual Statement).
+What this asks of the ledger is the same as Schedule P: figures by counterparty as of the statement date, frozen once filed, reconciling to the balance sheet ([Statutory Accounting & the Annual Statement](/books/insurance/statutory-accounting)).
 
 ## Renewals and Brokers
 
-Treaties renew on a few industry dates, and the operations calendar runs around them: the market's rate indexes are read at the January 1, April 1 and June and July renewals, and June 1 is Florida's, matching the Florida Hurricane Catastrophe Fund's contract year of June 1 to May 31 (Universal's and HCI's 2026-2027 programs both incepted June 1, 2026). The cycle for each: exposure snapshot and model runs (Catastrophe Models & Their Regulators), a submission through the broker, quotes, the firm order terms, signed lines from each reinsurer, the contract wording, and loading the terms into the system before inception.
+Treaties renew on a few industry dates, and the operations calendar runs around them: the market's rate indexes are read at the January 1, April 1 and June and July renewals, and June 1 is Florida's, matching the Florida Hurricane Catastrophe Fund's contract year of June 1 to May 31 (Universal's and HCI's 2026-2027 programs both incepted June 1, 2026). The cycle for each: exposure snapshot and model runs ([Catastrophe Models & Their Regulators](/books/insurance/catastrophe-models)), a submission through the broker, quotes, the firm order terms, signed lines from each reinsurer, the contract wording, and loading the terms into the system before inception.
 
 Price moves across the cycle. Guy Carpenter's US property catastrophe rate-on-line index, as Artemis reports it, fell 6.2% at January 1, 2025 and 6.7% by mid-year 2025, then 12% at January 1, 2026, 14% after April 1 and 16% after the June and July 2026 renewals, the largest annual decline for the index since 2014, leaving it about 22% below the 2024 peak and still about 62% above the 2017 low.
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and Reinsurance Structures' `reinsurance_contracts`, `reinsurance_layers` and `reinsurance_participations`. This chapter defines `cessions` (named in the core model), `reinsurance_statements` (an account or billing), `reinsurance_receivables` (each amount due, aged), `reinsurer_credit_status` (a reinsurer's category and rating per state over time) and `reinsurance_collateral`.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and [Reinsurance Structures](/books/insurance/reinsurance-structures)' `reinsurance_contracts`, `reinsurance_layers` and `reinsurance_participations`. This chapter defines `cessions` (named in the core model), `reinsurance_statements` (an account or billing), `reinsurance_receivables` (each amount due, aged), `reinsurer_credit_status` (a reinsurer's category and rating per state over time) and `reinsurance_collateral`.
 
 ```sql
 CREATE TABLE cessions (                    -- the reinsurance side of a ledger row

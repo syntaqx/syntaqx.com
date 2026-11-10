@@ -18,7 +18,7 @@ As of November 2026, from public pages:
 | Who | Role | What they say publicly |
 | --- | --- | --- |
 | **ACORD** | Standards body | Publishes the standard certificate forms (ACORD 25 for liability, and ACORD 27, both addressed in New York's 2002 opinion), which Texas law and the NCOIL model treat as standard forms needing no insurer filing |
-| **Agency management systems** | Issuing | Agents and brokers issue most certificates from their AMS, filled from the policy data the carrier downloads (Comparative Raters & Agency Systems in the Distribution part covers downloads) |
+| **Agency management systems** | Issuing | Agents and brokers issue most certificates from their AMS, filled from the policy data the carrier downloads ([Comparative Raters & Agency Systems](/books/insurance/comparative-raters-and-agency-systems) in the Distribution part covers downloads) |
 | **ERGO NEXT and other small commercial sellers** | Self-service servicing | Online purchase and "24/7 access to purchasing and servicing" for GL, BOP and other small commercial policies, where proof of coverage is often the reason to buy |
 | **illumend (formerly myCOI)** | Tracking for certificate holders | Its AI "checks every line against your contract requirements" and reads additional insured, waiver of subrogation, primary and noncontributory and per-project aggregate endorsements; 45 million+ insurance documents managed |
 | **TrustLayer** | Tracking for certificate holders | Reads each COI, checks it against compliance profiles tied to contract requirements and "flags any gaps in coverage"; 400,000+ COIs a month |

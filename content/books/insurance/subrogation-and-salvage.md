@@ -10,7 +10,7 @@ tags = ["insurance", "claims", "subrogation", "salvage", "recoveries", "arbitrat
 
 Paying a claim is not always the end of the money. When someone else caused the loss, the insurer that paid steps into its insured's shoes and recovers from the party at fault, usually that party's insurer: subrogation. When the insurer paid for a total loss, it owns what's left, and sells it: salvage. When the insured owes a deductible the insurer advanced, or a reinsurer owes its share, or a payment went out twice, there is money to collect. Recoveries arrive months or years after the payment, sometimes after the claim closed, and they have to be credited to the same exposure, cost type and accident year the payment was charged to, shared with the insured where the law says so, and passed through to reinsurers that paid part of the loss. Auto insurers trade subrogation demands with each other at a volume measured in millions a year, which is why most of it runs through one inter-company arbitration system.
 
-This chapter covers subrogation rights and what defeats them, finding subrogation, demands and inter-company arbitration, deductible recovery with a worked comparative fault example, salvage with net proceeds, other recoveries, and recovery accounting. Total loss valuation and title are in [Auto Claims & Total Loss](/books/insurance/auto-claims-and-total-loss#salvage-and-title); reinsurance recoverables are in Reinsurance Operations.
+This chapter covers subrogation rights and what defeats them, finding subrogation, demands and inter-company arbitration, deductible recovery with a worked comparative fault example, salvage with net proceeds, other recoveries, and recovery accounting. Total loss valuation and title are in [Auto Claims & Total Loss](/books/insurance/auto-claims-and-total-loss#salvage-and-title); reinsurance recoverables are in [Reinsurance Operations](/books/insurance/reinsurance-operations).
 
 ## How the Platforms Do It
 
@@ -83,7 +83,7 @@ The net recovery is credited to the collision exposure's indemnity, so the expos
 ## Other Recoveries
 
 - **Deductible collection.** Commercial programs with large deductibles (workers' compensation and liability) have the insurer pay claims from the first dollar and bill the insured for the deductible; the receivable is a recovery against the exposure, secured by collateral.
-- **Reinsurance.** The ceded share of a paid loss is recovered from reinsurers under the contract (Reinsurance Operations); a subrogation or salvage recovery on a ceded loss is shared back with the reinsurer in the same proportion.
+- **Reinsurance.** The ceded share of a paid loss is recovered from reinsurers under the contract ([Reinsurance Operations](/books/insurance/reinsurance-operations)); a subrogation or salvage recovery on a ceded loss is shared back with the reinsurer in the same proportion.
 - **Overpayments and duplicates.** A duplicate payment, a payment after a fraud finding ([Fraud & SIU](/books/insurance/insurance-fraud)) or a payment a guaranty association or another insurer should have made, recovered from the payee.
 - **Contribution.** Another insurer that covers the same loss (overlapping policies) owes its share under the other-insurance clauses.
 
@@ -92,14 +92,14 @@ The net recovery is credited to the collision exposure's indemnity, so the expos
 A recovery is money in, against a prior payment, so it has to land where the payment was charged:
 
 - **Same exposure and cost type.** A salvage recovery reduces indemnity on the collision exposure; recovered defense costs reduce DCC. Reported and paid losses are net of recoveries in statutory reporting and loss triangles.
-- **Same accident year, current accounting date.** The recovery is booked in the period it is received, but it develops the accident year of the loss, which is how a 2026 recovery on a 2024 accident improves the 2024 year (Loss Reserving & Development).
+- **Same accident year, current accounting date.** The recovery is booked in the period it is received, but it develops the accident year of the loss, which is how a 2026 recovery on a 2024 accident improves the 2024 year ([Loss Reserving & Development](/books/insurance/loss-reserving)).
 - **Anticipated or actual.** The CAS reserving text notes some insurers set case reserves net of expected salvage and subrogation, while many track only actual recoveries; the system supports both with a separate anticipated recovery estimate, never by lowering the indemnity reserve silently.
 - **Shared parts are allocated.** The insured's deductible share, the reinsurer's share and any attorney fees are allocations of the recovery, each its own row, so the gross received ties to the bank deposit and the nets tie to the ledgers.
 - **Closed claims stay closed.** A recovery on a closed exposure posts without reopening the indemnity reserve; it may need a payment to the insured (the deductible share), which is a payment on the exposure with its own approval.
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `claims`, `exposures`, `claim_payments`, and `salvage_titles` (Auto Claims & Total Loss). This chapter defines `recoveries`, `recovery_allocations` and `subrogation_demands`.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `claims`, `exposures`, `claim_payments`, and `salvage_titles` ([Auto Claims & Total Loss](/books/insurance/auto-claims-and-total-loss)). This chapter defines `recoveries`, `recovery_allocations` and `subrogation_demands`.
 
 ```sql
 CREATE TABLE subrogation_demands (         -- outbound and inbound, per exposure

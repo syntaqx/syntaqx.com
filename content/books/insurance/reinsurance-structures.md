@@ -9,7 +9,7 @@ tags = ["insurance", "reinsurance", "excess-of-loss", "quota-share", "catastroph
 
 Reinsurance is insurance for insurers. A primary insurer that writes 200,000 Florida homes can't hold enough capital to pay a 1-in-100-year hurricane on its own, and a regional carrier that writes a $20 million warehouse can't let one fire take a year's profit; so each cedes part of its risk to reinsurers in exchange for part of its premium. The contracts are few and large: a typical property insurer has a handful of treaties renewed once a year, each a negotiated document with its own definitions of what a loss is, what counts toward the retention, what the reinsurer pays and when the cover restores after a loss. The arithmetic is simple when you know the terms and the order they apply in, and very expensive to get wrong.
 
-This chapter covers the shapes: treaty and facultative, the proportional forms (quota share and surplus share) and the non-proportional forms (per risk and catastrophe excess of loss, aggregate covers), layers and rates on line, reinstatements, ceding commissions and the order in which covers inure to each other, with one insurer's program worked from a single fire and a hurricane through every layer. How cessions are calculated and billed, recoverables collected and credit for reinsurance taken is Reinsurance Operations; cat bonds, sidecars and state funds are Cat Bonds, ILS & State Cat Funds.
+This chapter covers the shapes: treaty and facultative, the proportional forms (quota share and surplus share) and the non-proportional forms (per risk and catastrophe excess of loss, aggregate covers), layers and rates on line, reinstatements, ceding commissions and the order in which covers inure to each other, with one insurer's program worked from a single fire and a hurricane through every layer. How cessions are calculated and billed, recoverables collected and credit for reinsurance taken is [Reinsurance Operations](/books/insurance/reinsurance-operations); cat bonds, sidecars and state funds are [Cat Bonds, ILS & State Cat Funds](/books/insurance/alternative-capital).
 
 ## How the Platforms Do It
 
@@ -20,10 +20,10 @@ Public filings show the structures in use, as of November 2026:
 | **Universal Insurance Holdings** (Florida homeowners) | Cedent | 2026-2027 program effective June 1, 2026: first event retention of $45 million, an all-states first event tower to $2.623 billion, the mandatory Florida Hurricane Catastrophe Fund layer at the 90% election (about $1.390 billion for its main insurer), a captive layer of 100% of $66 million in excess of $45 million, a specific second event layer and a third and fourth event layer, and reinstatement premium protection on $1.098 billion of non-FHCF first event coverage |
 | **HCI Group** (Florida homeowners) | Cedent | Three towers for four insurers, June 1, 2026 to May 31, 2027: Tower 1 retention $10.0 million and up to $1.06 billion for a single Florida event; FHCF at the 45% election; full reinstatement premium protection on excess of loss treaties with paid reinstatements; about $381.2 million of net premium ceded to third parties |
 | **NFIP** (FEMA) | Cedent | Annual traditional reinsurance (2024: $619.5 million of risk transferred to 18 reinsurers for $121.1 million) plus multi-year cat bonds |
-| **Everest Group** | Reinsurer and cedent | About 72% of $17.7 billion of 2025 gross written premium from reinsurance; bought an adverse development cover on its own reserves (Loss Reserving & Development) |
+| **Everest Group** | Reinsurer and cedent | About 72% of $17.7 billion of 2025 gross written premium from reinsurance; bought an adverse development cover on its own reserves ([Loss Reserving & Development](/books/insurance/loss-reserving)) |
 | **RenaissanceRe** | Reinsurer | $11.74 billion of 2025 gross premiums written, $4.94 billion property and $6.80 billion casualty and specialty; three brokers (Aon 34.5%, Marsh McLennan 33.8%, Gallagher 13.0%) placed 81.3% |
 
-The broker concentration matters to the system: most treaty business is placed through a few reinsurance brokers who prepare the submission, run the models, circulate the terms and keep the signed lines, so the cedent's records have to match the broker's placement slip (Reinsurance Operations).
+The broker concentration matters to the system: most treaty business is placed through a few reinsurance brokers who prepare the submission, run the models, circulate the terms and keep the signed lines, so the cedent's records have to match the broker's placement slip ([Reinsurance Operations](/books/insurance/reinsurance-operations)).
 
 ## Treaty and Facultative
 
@@ -50,7 +50,7 @@ The share applies to premium and to every loss on that risk: an $800,000 fire on
 
 ### Ceding Commission
 
-The commission is a percentage of ceded premium. A **flat** commission is fixed. A **sliding scale** commission moves inversely with the ceded loss ratio between a minimum and a maximum; a worked scale, mine: provisional 32% at a 60% loss ratio, plus 0.5 point for each point the loss ratio falls below 60% (to a maximum of 37% at 50%), minus 0.5 point for each point above (to a minimum of 27% at 70%). The commission is paid provisionally and adjusted when the loss ratio is known, sometimes years later; a **profit commission** shares the reinsurer's margin back instead. Ceding commission is accounted against the cedent's acquisition expense, and its calculation reads the same ceded premium and ceded losses as the cessions (Reinsurance Operations).
+The commission is a percentage of ceded premium. A **flat** commission is fixed. A **sliding scale** commission moves inversely with the ceded loss ratio between a minimum and a maximum; a worked scale, mine: provisional 32% at a 60% loss ratio, plus 0.5 point for each point the loss ratio falls below 60% (to a maximum of 37% at 50%), minus 0.5 point for each point above (to a minimum of 27% at 70%). The commission is paid provisionally and adjusted when the loss ratio is known, sometimes years later; a **profit commission** shares the reinsurer's margin back instead. Ceding commission is accounted against the cedent's acquisition expense, and its calculation reads the same ceded premium and ceded losses as the cessions ([Reinsurance Operations](/books/insurance/reinsurance-operations)).
 
 ## Excess of Loss
 
@@ -61,7 +61,7 @@ In non-proportional (excess of loss, XoL) reinsurance the reinsurer pays losses 
 - **Aggregate XoL** (aggregate stop loss) responds when the total of losses over the period, or of losses each above a franchise, passes an aggregate retention. It protects against frequency: a year of many medium storms each under the cat retention.
 - **Per policy and clash covers** in casualty respond to one policy's or several policies' losses from one occurrence.
 
-A program **layers** XoL: separate contracts stacked one above the other, each with its own reinsurers, price and terms. Lower layers are hit more often and cost more per dollar of limit; higher layers are rarely hit and cost less, which is why rates on line fall as the layer rises. The modeled expected loss of each layer comes from the event loss table (Catastrophe Models & Their Regulators); the ROL over expected loss is the multiple the market charges.
+A program **layers** XoL: separate contracts stacked one above the other, each with its own reinsurers, price and terms. Lower layers are hit more often and cost more per dollar of limit; higher layers are rarely hit and cost less, which is why rates on line fall as the layer rises. The modeled expected loss of each layer comes from the event loss table ([Catastrophe Models & Their Regulators](/books/insurance/catastrophe-models)); the ROL over expected loss is the multiple the market charges.
 
 ### Reinstatements
 
@@ -159,7 +159,7 @@ Amounts are integer minor units ([Money & Amounts](/docs/money/amounts#integer-m
 
 ## A Florida Tower
 
-The Universal program shows how a real Florida tower combines the pieces. The state's Hurricane Catastrophe Fund is mandatory for residential property insurers (Cat Bonds, ILS & State Cat Funds), so private reinsurance is bought below it, alongside it and above it:
+The Universal program shows how a real Florida tower combines the pieces. The state's Hurricane Catastrophe Fund is mandatory for residential property insurers ([Cat Bonds, ILS & State Cat Funds](/books/insurance/alternative-capital)), so private reinsurance is bought below it, alongside it and above it:
 
 - **Retention:** $45 million for the first event, all states.
 - **Below the FHCF:** a captive layer (100% of $66 million xs $45 million), private layers, and specific second, third and fourth event covers with their own retentions ($86 million xs $25 million for the third and fourth events, a $20 million retention reduction).
@@ -172,7 +172,7 @@ The design question for each layer is the same as in the worked program: the pro
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `reinsurance_contracts` and `cessions` were named there. This chapter defines `reinsurance_contracts`, `reinsurance_layers` (a contract's layers, or its single share for proportional covers), `reinsurance_participations` (each reinsurer's signed line) and `reinsurance_inurings` (the order). `cessions` and statements are defined in Reinsurance Operations; `ils_instruments` in Cat Bonds, ILS & State Cat Funds references these contracts.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `reinsurance_contracts` and `cessions` were named there. This chapter defines `reinsurance_contracts`, `reinsurance_layers` (a contract's layers, or its single share for proportional covers), `reinsurance_participations` (each reinsurer's signed line) and `reinsurance_inurings` (the order). `cessions` and statements are defined in [Reinsurance Operations](/books/insurance/reinsurance-operations); `ils_instruments` in [Cat Bonds, ILS & State Cat Funds](/books/insurance/alternative-capital) references these contracts.
 
 ```sql
 CREATE TABLE reinsurance_contracts (
@@ -237,7 +237,7 @@ Participations on a layer sum to 100% less the cedent's co-participation; a chec
 
 - **Terms are data.** Attachment, limit, reinstatements, occurrence clause and commission slide are columns the cession engine reads, so a new treaty year is a new contract, not a code change ([Rules as Data](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **The inuring graph is explicit** and acyclic; the engine computes recoveries in its topological order.
-- **Reinsurers are insurers** in the core model's `insurers` table (with domicile and form), because credit for reinsurance and collateral depend on who they are (Reinsurance Operations).
+- **Reinsurers are insurers** in the core model's `insurers` table (with domicile and form), because credit for reinsurance and collateral depend on who they are ([Reinsurance Operations](/books/insurance/reinsurance-operations)).
 - **Layer usage is derived,** from cessions against the layer, never a stored remaining-limit balance someone decrements.
 
 ## Auditing

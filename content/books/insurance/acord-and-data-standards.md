@@ -150,7 +150,7 @@ Every carrier that speaks more than one standard converges on the same architect
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). Workers' comp EDI transactions are `edi_reports` (Workers' Comp Claims), agency downloads are `downloads` and `download_items` (Comparative Raters & Agency Systems), and statistical records are `stat_records` (Regulatory & Statistical Reporting). This chapter adds the general message log and the code mappings every adapter reads:
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model). Workers' comp EDI transactions are `edi_reports` ([Workers' Comp Claims](/books/insurance/workers-comp-claims)), agency downloads are `downloads` and `download_items` ([Comparative Raters & Agency Systems](/books/insurance/comparative-raters-and-agency-systems)), and statistical records are `stat_records` ([Regulatory & Statistical Reporting](/books/insurance/regulatory-and-statistical-reporting)). This chapter adds the general message log and the code mappings every adapter reads:
 
 ```sql
 CREATE TABLE acord_messages (              -- every standards message in or out, as exchanged

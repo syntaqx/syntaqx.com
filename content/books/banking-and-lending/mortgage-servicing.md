@@ -68,7 +68,7 @@ At the year's analysis, the county has raised the tax to $5,400 and the insurer 
 
 ## Force-Placed Insurance
 
-If the borrower's hazard insurance lapses, the servicer may buy coverage and charge for it, but only after notice: a first written notice at least 45 days before charging, a reminder at least 30 days after the first and at least 15 days before charging, and cancellation with a refund of overlapping premiums within 15 days of receiving evidence of coverage (12 CFR 1024.37). For an escrowed loan, the servicer's renewal of the borrower's own policy under 1024.17(k) isn't force-placed insurance at all, which is why the escrow disbursement schedule and the insurance tracking must read the same records.
+If the borrower's hazard insurance lapses, the servicer may buy coverage and charge for it, but only after notice: a first written notice at least 45 days before charging, a reminder at least 30 days after the first and at least 15 days before charging, and cancellation with a refund of overlapping premiums within 15 days of receiving evidence of coverage (12 CFR 1024.37). For an escrowed loan, the servicer's renewal of the borrower's own policy under 1024.17(k) isn't force-placed insurance at all, which is why the escrow disbursement schedule and the insurance tracking must read the same records. The insurer's side of the same relationship, the mortgagee's rights to notice and to claim payments, is in Insurance's [Mortgagees, Escrow and Lender Requirements](/books/insurance/homeowners-and-renters#mortgagees-escrow-and-lender-requirements).
 
 ## Periodic Statements
 

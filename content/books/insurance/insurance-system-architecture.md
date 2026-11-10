@@ -95,7 +95,7 @@ The feeds out of it:
 
 ### Worked Numbers: One Policy From Transaction to General Ledger
 
-The core model's example, extended with my rates: a six-month personal auto policy written for $900.00, effective March 1, 2026, a term of 184 days; a 12% agency commission; a 2% premium tax (rates vary by state; Regulatory & Statistical Reporting); a 20% quota share with a 30% ceding commission. Simplified GAAP-style postings; statutory differences (acquisition costs expensed at once rather than deferred) are in Statutory Accounting.
+The core model's example, extended with my rates: a six-month personal auto policy written for $900.00, effective March 1, 2026, a term of 184 days; a 12% agency commission; a 2% premium tax (rates vary by state; [Regulatory & Statistical Reporting](/books/insurance/regulatory-and-statistical-reporting)); a 20% quota share with a 30% ceding commission. Simplified GAAP-style postings; statutory differences (acquisition costs expensed at once rather than deferred) are in Statutory Accounting.
 
 | Date | Event | Debit | Credit | Amount |
 | --- | --- | --- | --- | --- |

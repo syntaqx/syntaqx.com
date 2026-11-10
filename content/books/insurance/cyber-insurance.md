@@ -9,7 +9,7 @@ tags = ["insurance", "cyber-insurance", "ransomware", "underwriting", "exclusion
 
 Cyber insurance pays for what an attack or a data breach costs a business: the forensic investigators and lawyers in the first days, notifying affected people, restoring systems and data, the income lost while systems are down, an extortion payment if one is made, and the claims and regulatory actions that follow. It is the youngest major commercial line and the one whose underwriting looks most like software: insurers scan an applicant's internet-facing systems before quoting, ask about specific controls (multi-factor authentication, backups, endpoint detection), sell security services alongside the policy, and run incident response through panels of vendors they've vetted. It is also the line where the insurer fears accumulation most, because one vulnerability or one state actor can hit thousands of insureds at once, which is why the war and state-backed attack exclusions were rewritten between 2021 and 2023.
 
-This chapter covers the market from the NAIC's data, the coverages, the exclusions, ransomware and the sanctions rules on paying it, incident response panels, and underwriting by scan and questionnaire. It extends `submissions` from Underwriting Rules, Referrals & Models with `security_assessments`, and claims from [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) with incident records. Data security rules that apply to insurers themselves (the NAIC Insurance Data Security Model Law, New York's Part 500) are in Data, AI & Privacy Rules in the Regulation part; this chapter is about insuring other people's cyber risk.
+This chapter covers the market from the NAIC's data, the coverages, the exclusions, ransomware and the sanctions rules on paying it, incident response panels, and underwriting by scan and questionnaire. It extends `submissions` from [Underwriting Rules, Referrals & Models](/books/insurance/underwriting) with `security_assessments`, and claims from [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) with incident records. Data security rules that apply to insurers themselves (the NAIC Insurance Data Security Model Law, New York's Part 500) are in [Data, AI & Privacy Rules](/books/insurance/data-ai-and-privacy-rules) in the Regulation part; this chapter is about insuring other people's cyber risk.
 
 ## How the Platforms Do It
 
@@ -89,7 +89,7 @@ Paying a ransom may violate US sanctions if the attacker is a sanctioned person 
 
 New York's Department of Financial Services went further in Insurance Circular Letter No. 2 (February 4, 2021), its Cyber Insurance Risk Framework, which "recommends against making ransom payments" and asks insurers writing cyber to adopt seven practices: a board-approved cyber insurance risk strategy, managing and eliminating silent cyber exposure, evaluating systemic risk, rigorously measuring each insured's risk, educating insureds and producers, obtaining cybersecurity expertise, and requiring notice to law enforcement in cyber policies.
 
-A ransom payment is therefore a claim payment with a gate in front of it: a sanctions screen of the threat actor and the wallet with the evidence kept, a check that law enforcement was notified (and when), the insured's consent, and the payment rail (usually a negotiator converting to cryptocurrency), each recorded. The general OFAC screen on claim payments is in Exposures, Reserves & Payments in the Claims part; this is the strictest case of it.
+A ransom payment is therefore a claim payment with a gate in front of it: a sanctions screen of the threat actor and the wallet with the evidence kept, a check that law enforcement was notified (and when), the insured's consent, and the payment rail (usually a negotiator converting to cryptocurrency), each recorded. The general OFAC screen on claim payments is in [Exposures, Reserves & Payments](/books/insurance/reserves-and-payments) in the Claims part; this is the strictest case of it.
 
 ## Silent Cyber
 
@@ -113,7 +113,7 @@ The scan is evidence at a point in time and is repeated: before quote, at bind (
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and the `submissions` table from Underwriting Rules, Referrals & Models: scans and questionnaires are assessments attached to a submission or an in-force policy, and findings are rows that can be bind conditions; claims gain an incident record and a ransom gate.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and the `submissions` table from [Underwriting Rules, Referrals & Models](/books/insurance/underwriting): scans and questionnaires are assessments attached to a submission or an in-force policy, and findings are rows that can be bind conditions; claims gain an incident record and a ransom gate.
 
 ```sql
 CREATE TABLE security_assessments (        -- one scan or questionnaire, at one time

@@ -10,7 +10,7 @@ tags = ["insurance", "cat-bonds", "insurance-linked-securities", "reinsurance", 
 
 The largest catastrophes are too big for the reinsurance industry's balance sheets alone, so the industry rents capital from investors who otherwise own bonds and equities. A pension fund that buys a catastrophe bond puts up the principal in a collateral account; if no hurricane exceeds the bond's trigger in three years, it gets the principal back plus a spread; if one does, the insurer keeps some or all of the principal to pay claims. A sidecar does the same for a slice of a reinsurer's book; collateralized reinsurance does it contract by contract. Investors like the risk because hurricanes don't correlate with stock markets; insurers like the capital because it is fully collateralized, so there is no credit risk on the recovery. Where even that capital won't go at a price the state accepts, governments step in: Florida runs a mandatory hurricane reinsurance fund, and the federal government shares terrorism losses above a deductible.
 
-This chapter covers catastrophe bonds and their triggers with worked payouts, sidecars and collateralized reinsurance, the third-party capital vehicles reinsurers manage, market size and pricing, the Florida Hurricane Catastrophe Fund with its retention arithmetic, and the Terrorism Risk Insurance Program. The traditional contract shapes are Reinsurance Structures; the NFIP's own flood program is Flood & the NFIP.
+This chapter covers catastrophe bonds and their triggers with worked payouts, sidecars and collateralized reinsurance, the third-party capital vehicles reinsurers manage, market size and pricing, the Florida Hurricane Catastrophe Fund with its retention arithmetic, and the Terrorism Risk Insurance Program. The traditional contract shapes are [Reinsurance Structures](/books/insurance/reinsurance-structures); the NFIP's own flood program is [Flood & the NFIP](/books/insurance/flood-and-the-nfip).
 
 ## How the Platforms Do It
 
@@ -34,7 +34,7 @@ A cat bond is reinsurance written as a security. The structure:
 3. The sponsor pays a **premium** that, with the collateral's return, funds the investors' **coupon** (a risk spread over the money market yield).
 4. If a qualifying event meets the **trigger**, the trust pays the sponsor and the notes' principal is reduced; otherwise principal is returned at maturity, a multi-year term (FEMA's placements run three years).
 
-Because the full limit sits in trust from day one, a cat bond has no reinsurer credit risk, which matters for credit for reinsurance (Reinsurance Operations): the collateral is the security. The tradeoff is the trigger.
+Because the full limit sits in trust from day one, a cat bond has no reinsurer credit risk, which matters for credit for reinsurance ([Reinsurance Operations](/books/insurance/reinsurance-operations)): the collateral is the security. The tradeoff is the trigger.
 
 ### Triggers
 
@@ -45,7 +45,7 @@ Because the full limit sits in trust from day one, a cat bond has no reinsurer c
 | **Parametric** | A measured physical parameter (wind speed at locations, earthquake magnitude and depth in a box) | Fastest; no loss adjustment | Most basis risk |
 | **Modeled loss** | A model run of the event's parameters against a fixed notional portfolio | Between index and parametric | Depends on the model and the reference portfolio |
 
-PCS's methodology paper names cat bonds and industry loss warranties as uses of its estimates, which is why the preliminary estimate (about 15 days after designation) and the 60-day resurveys set the timing of index-trigger settlements (Catastrophe Events). An **industry loss warranty** is the same idea as a reinsurance contract: the Federal Insurance Office describes ILWs as instruments that "allow an entity to gain coverage based on the total insured loss experienced by the entity's industry rather than the entity's own losses."
+PCS's methodology paper names cat bonds and industry loss warranties as uses of its estimates, which is why the preliminary estimate (about 15 days after designation) and the 60-day resurveys set the timing of index-trigger settlements ([Catastrophe Events](/books/insurance/catastrophes)). An **industry loss warranty** is the same idea as a reinsurance contract: the Federal Insurance Office describes ILWs as instruments that "allow an entity to gain coverage based on the total insured loss experienced by the entity's industry rather than the entity's own losses."
 
 ### Worked Payouts
 
@@ -100,7 +100,7 @@ Use 128-bit intermediates or scale the index to billions when principal is in ce
 
 **Collateralized reinsurance** is an ordinary reinsurance contract whose limit is fully funded in a trust by investors, usually through a segregated account of a transformer vehicle; the cedent sees a reinsurance contract, the investor sees a fund. RenRe's Upsilon RFO, a risk-bearing entity whose segregated accounts enter collateralized reinsurance arrangements, is one public example.
 
-A **sidecar** is a separate vehicle that takes a quota share of a reinsurer's or insurer's book for a period, funded by investors' equity and debt. FIO describes sidecars as entities created "to share risks with investors in exchange for a percentage of the insurer's premiums," usually fully collateralized, and reports their growth in P&C (to $16 to $18 billion in 2025, mostly property catastrophe, with casualty sidecars also increasing) and in life and annuity business (reserves ceded to sidecars or similar entities of $90.7 billion in 2025, up from $63.9 billion; Life Reserves, Capital & Private Equity covers the life side).
+A **sidecar** is a separate vehicle that takes a quota share of a reinsurer's or insurer's book for a period, funded by investors' equity and debt. FIO describes sidecars as entities created "to share risks with investors in exchange for a percentage of the insurer's premiums," usually fully collateralized, and reports their growth in P&C (to $16 to $18 billion in 2025, mostly property catastrophe, with casualty sidecars also increasing) and in life and annuity business (reserves ceded to sidecars or similar entities of $90.7 billion in 2025, up from $63.9 billion; [Life Reserves, Capital & Private Equity](/books/insurance/life-reserves-and-capital) covers the life side).
 
 **Managed vehicles** let a reinsurer write more than its own capital supports and earn fees on the rest. RenRe's filing shows the pattern: its underwriting manager writes for each vehicle, RenRe keeps an economic stake (from none in Vermeer to 50% in Top Layer), and it earns management fees from all of them and performance fees from DaVinci, Fontana and Upsilon, which "may be negative in a particular period" if large losses occur. For the system of the reinsurer, each vehicle is a separate insurer record with its own contracts and capital; for the cedent, the vehicle is a reinsurer on the slip like any other.
 
@@ -114,7 +114,7 @@ The figures differ by source and scope, as of their dates:
 - **Cyber:** a growing but small segment, with $450 million of cyber cat bonds in the fourth quarter of 2025 and cyber capacity of $1.24 billion at year-end, per FIO.
 - **Parametric insurance** more broadly: one estimate FIO cites puts the global parametric market at $16.2 billion in 2024.
 
-Third-party capital competes with traditional reinsurance on price, and the price is falling: Guy Carpenter's US property catastrophe rate-on-line index fell 16% through the June and July 2026 renewals, its largest annual decline since 2014 (Reinsurance Operations). Cat bond pricing is quoted as a spread against the modeled expected loss; the ratio of the two (the multiple) is the same comparison the worked layer in Catastrophe Models & Their Regulators makes.
+Third-party capital competes with traditional reinsurance on price, and the price is falling: Guy Carpenter's US property catastrophe rate-on-line index fell 16% through the June and July 2026 renewals, its largest annual decline since 2014 ([Reinsurance Operations](/books/insurance/reinsurance-operations)). Cat bond pricing is quoted as a spread against the modeled expected loss; the ratio of the two (the multiple) is the same comparison the worked layer in [Catastrophe Models & Their Regulators](/books/insurance/catastrophe-models) makes.
 
 ## The Florida Hurricane Catastrophe Fund
 
@@ -138,7 +138,7 @@ A worked reimbursement, mine: an insurer elected 90%, and its retention for the 
 | LAE add-on at 10% of reimbursed losses | $22.5M |
 | **FHCF reimbursement** | **$247.5M**, subject to the insurer's share of the fund's capacity |
 
-A second hurricane in the same year with $200 million of losses is the insurer's second largest event, so the full $150 million retention applies again: 90% × $50 million = $45 million plus $4.5 million, $49.5 million. A third event, if it is not among the two largest, carries a $50 million retention (one-third). The insurer's private towers are built around these numbers: Universal disclosed about $1.390 billion of FHCF coverage for its main insurer at 90%; HCI elected 45% (Reinsurance Structures). Florida's temporary layer below the FHCF retention, created after 2022, is covered in Stressed & Residual Markets.
+A second hurricane in the same year with $200 million of losses is the insurer's second largest event, so the full $150 million retention applies again: 90% × $50 million = $45 million plus $4.5 million, $49.5 million. A third event, if it is not among the two largest, carries a $50 million retention (one-third). The insurer's private towers are built around these numbers: Universal disclosed about $1.390 billion of FHCF coverage for its main insurer at 90%; HCI elected 45% ([Reinsurance Structures](/books/insurance/reinsurance-structures)). Florida's temporary layer below the FHCF retention, created after 2022, is covered in [Stressed & Residual Markets](/books/insurance/stressed-markets).
 
 ## The Terrorism Risk Insurance Program
 
@@ -167,7 +167,7 @@ The system consequences: covered-line direct earned premium by year has to be co
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and Reinsurance Structures: a cat bond, ILW, collateralized contract, sidecar quota share, FHCF reimbursement contract or TRIA participation is a `reinsurance_contracts` row (form `cat_xol`, `quota_share` or `state_fund_reimbursement`) with layers and participations. This chapter adds `ils_instruments` (the securities side of a cat bond or ILW), `ils_trigger_observations` (the index or parameter values that decide a payout) and `state_fund_terms` (each year's statutory retention and election).
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and [Reinsurance Structures](/books/insurance/reinsurance-structures): a cat bond, ILW, collateralized contract, sidecar quota share, FHCF reimbursement contract or TRIA participation is a `reinsurance_contracts` row (form `cat_xol`, `quota_share` or `state_fund_reimbursement`) with layers and participations. This chapter adds `ils_instruments` (the securities side of a cat bond or ILW), `ils_trigger_observations` (the index or parameter values that decide a payout) and `state_fund_terms` (each year's statutory retention and election).
 
 ```sql
 CREATE TABLE ils_instruments (             -- a cat bond class, ILW or collateralized deal

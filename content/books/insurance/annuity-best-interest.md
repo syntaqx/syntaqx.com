@@ -114,7 +114,7 @@ Two failure modes matter. **A check sent to the owner** breaks the exchange: the
 
 ## How to Build It
 
-The sale extends the core model's `submissions` (the application, defined in [Underwriting Rules, Referrals & Models](/books/insurance/underwriting#how-to-build-it)) and `parties`; disclosures given to the consumer reuse `compensation_disclosures` from [Agents, Brokers & Channels](/books/insurance/agents-brokers-and-channels#how-to-build-it); producer license, appointment and training checks use `producer_licenses`, `appointments` and the licensing chapter's continuing education records. This chapter adds the suitability record and the replacement record:
+The sale extends the core model's `submissions` (the application, defined in [Underwriting Rules, Referrals & Models](/books/insurance/underwriting#how-to-build-it)) and `parties`; disclosures given to the consumer reuse `compensation_disclosures` from [Agents, Brokers & Channels](/books/insurance/agents-brokers-and-channels#how-to-build-it); producer license, appointment and training checks use `producer_licenses`, `appointments` and the continuing education records (`ce_records`) of [Producer Licensing & Appointments](/books/insurance/producer-licensing#how-to-build-it). This chapter adds the suitability record and the replacement record:
 
 ```sql
 CREATE TABLE suitability_records (         -- the best-interest file for one recommendation
@@ -155,7 +155,7 @@ CREATE TABLE replacements (                -- one existing contract being replac
   notice_signed_at   TIMESTAMPTZ,           -- Appendix A
   existing_notified_due DATE NOT NULL,      -- five business days from application
   existing_notified_at TIMESTAMPTZ,
-  values_letter_at   TIMESTAMPTZ,           -- existing insurer's letter, if we are it
+  values_letter_at   TIMESTAMPTZ,           -- existing insurer's letter, if this insurer is it
   conservation       TEXT CHECK (conservation IN ('none', 'attempted', 'retained')),
   transfer_channel   TEXT CHECK (transfer_channel IN ('dtcc_asset_transfer', 'paper')),
   transfer_requested_at TIMESTAMPTZ,

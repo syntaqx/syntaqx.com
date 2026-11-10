@@ -9,7 +9,7 @@ tags = ["insurance", "pet-insurance", "travel-insurance", "limited-lines", "naic
 
 Pet and travel insurance are small lines with outsized software problems. Both are sold mostly online, often by someone other than the insurer (a pet insurance brand on another company's paper, an airline or booking site offering trip protection at checkout); both are priced for high volume and low premium; and both were regulated for years by general property and casualty rules that fit them badly. The NAIC answered with two model acts: the Travel Insurance Model Act (#632) in 2018, which licenses the travel retailers that sell coverage at checkout and bans pre-checked boxes, and the Pet Insurance Model Act (#633) in 2022, which standardizes the definitions of preexisting conditions and waiting periods that pet claims turn on and separates wellness plans from insurance. As of November 2026 each has been adopted, in whole or in part, by a growing list of states.
 
-This chapter covers pet insurance (the market, the model act's definitions, disclosures, waiting periods and wellness rules, with a claim worked) and travel insurance (what it covers, the model act's licensing of limited lines producers and travel retailers, premium tax, travel protection plans and sales practices). The general mechanics of selling insurance inside another product's checkout (licensing models, revenue share, the API) are in Embedded Insurance.
+This chapter covers pet insurance (the market, the model act's definitions, disclosures, waiting periods and wellness rules, with a claim worked) and travel insurance (what it covers, the model act's licensing of limited lines producers and travel retailers, premium tax, travel protection plans and sales practices). The general mechanics of selling insurance inside another product's checkout (licensing models, revenue share, the API) are in [Embedded Insurance](/books/insurance/embedded-insurance).
 
 ## How the Platforms Do It
 
@@ -101,7 +101,7 @@ The model act reads as a specification for a booking site's checkout:
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `risks` (kind `other` with pet or trip attributes), `coverages`, `producers` and `producer_licenses` (an LLTIP is a producer with a limited line of authority; Producer Licensing & Appointments), `claims` and `exposures`. The core model's extended-by table lists no new tables for this chapter; the deltas below are the condition and offer records the model acts require, kept small.
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model): `risks` (kind `other` with pet or trip attributes), `coverages`, `producers` and `producer_licenses` (an LLTIP is a producer with a limited line of authority; [Producer Licensing & Appointments](/books/insurance/producer-licensing)), `claims` and `exposures`. The core model's extended-by table lists no new tables for this chapter; the deltas below are the condition and offer records the model acts require, kept small.
 
 ```sql
 CREATE TABLE pet_conditions (              -- a pet's condition history across terms
@@ -137,7 +137,7 @@ CREATE TABLE travel_plan_components (      -- one price, three regulatory treatm
 );
 ```
 
-The offer itself (presented terms, opt-in selection, disclosures shown) is an `offer_presentations` record defined in Embedded Insurance. Design choices that matter:
+The offer itself (presented terms, opt-in selection, disclosures shown) is an `offer_presentations` record defined in [Embedded Insurance](/books/insurance/embedded-insurance). Design choices that matter:
 
 - **Condition onset is a fact separate from treatment,** recorded with its evidence, because waiting periods and preexisting exclusions turn on it.
 - **A covered condition stays covered** on renewal; the system reads `first_covered_term_id` rather than re-deciding.

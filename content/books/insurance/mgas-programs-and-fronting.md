@@ -72,7 +72,7 @@ Delegation comes in degrees, and the contract states which:
 - **Underwriting authority (MGA, program administrator).** The agent also prices within the filed rating plan, selects risks, issues policies and endorsements, collects premium and sometimes settles claims or hires a third-party administrator to. A program administrator does this for a defined program: a class of business, a set of states, a product.
 - **Claims authority.** Separate from underwriting: a settlement limit per claim, a list of what must be referred, and often a TPA in between.
 
-Every term in a binding authority is a rule the system can check before a policy binds: is the risk class in the program's list, the state in its territory, the limit at or below the maximum, the policy period within the maximum, the premium inside the year's volume cap, the form set the approved one. The underwriting guideline items in Model 225 are a minimum schema. A program is a product (Filing Rates & Forms covers the filing; the fronting carrier files the rates and forms in its own name), and the binding authority is the permission to sell it, issued to a producer for a period. Here is the check, run at bind:
+Every term in a binding authority is a rule the system can check before a policy binds: is the risk class in the program's list, the state in its territory, the limit at or below the maximum, the policy period within the maximum, the premium inside the year's volume cap, the form set the approved one. The underwriting guideline items in Model 225 are a minimum schema. A program is a product ([Filing Rates & Forms](/books/insurance/rate-and-form-filing) covers the filing; the fronting carrier files the rates and forms in its own name), and the binding authority is the permission to sell it, issued to a producer for a period. Here is the check, run at bind:
 
 ```go tab="Go"
 type Authority struct {
@@ -151,13 +151,13 @@ pub fn check(a: &Authority, b: &Bind, written_this_year: i64) -> Vec<&'static st
 }
 ```
 
-A non-empty result isn't necessarily a decline: it is a referral to the carrier's underwriter, recorded with the reason, which is how Underwriting Rules, Referrals & Models treats every rule outside authority. The check runs where the MGA binds, in the MGA's system, and again where the carrier ingests the bordereau, because the carrier is liable for what was bound in its name whether or not the MGA checked.
+A non-empty result isn't necessarily a decline: it is a referral to the carrier's underwriter, recorded with the reason, which is how [Underwriting Rules, Referrals & Models](/books/insurance/underwriting) treats every rule outside authority. The check runs where the MGA binds, in the MGA's system, and again where the carrier ingests the bordereau, because the carrier is liable for what was bound in its name whether or not the MGA checked.
 
 ## Fronting and Hybrid Fronting
 
 A **fronting carrier** issues policies for a program it doesn't intend to keep: the MGA underwrites, the fronting carrier's licenses, filings and rating sit on the policy, and most or all of the risk is ceded to reinsurers or other capacity providers, for a fee. Markel's 10-K defines fronting as business "written on behalf of a general agent or capacity provider that is then ceded" to a capacity provider "in exchange for ceding fees," and reports $1.9 billion of fronting premiums in 2025; it also notes Hagerty's business "transitioned from being an underwriting product to a fronting arrangement" effective January 1, 2026, the same customer and product with the risk moved off Markel's net. A **hybrid fronting** carrier keeps a meaningful share of the risk, so its interests align with the reinsurers'; Accelerant's insurers historically targeted ceding 90% and keeping about 10%.
 
-The fronting carrier can't cede its liability: its policyholders' claims are against it, and if a reinsurer fails to pay, it pays. Its protection is the quality of its reinsurers and the collateral they post, which is why Conning's commentary describes the market as a test of "platform quality rather than simply capacity and growth," and why collateral, credit for reinsurance and recoverables are the subject of Reinsurance Operations.
+The fronting carrier can't cede its liability: its policyholders' claims are against it, and if a reinsurer fails to pay, it pays. Its protection is the quality of its reinsurers and the collateral they post, which is why Conning's commentary describes the market as a test of "platform quality rather than simply capacity and growth," and why collateral, credit for reinsurance and recoverables are the subject of [Reinsurance Operations](/books/insurance/reinsurance-operations).
 
 A program's money, worked per $100.00 of gross premium (my illustrative terms: a 25% MGA commission, a 5% fronting fee on ceded premium, a 90% quota share to reinsurers who reimburse their share of the commission and the fee through a ceding commission):
 
@@ -179,13 +179,13 @@ Losses split the same way: on a $40.00 loss, reinsurers owe $36.00 and the carri
 Behind a fronting carrier sits a stack of capacity, and the system has to know every layer:
 
 - **Rated reinsurers** on quota share and excess of loss treaties for the program, each with a share.
-- **Collateralized capital**: reinsurers without a rating or US authorization, insurance-linked securities funds and sidecars that post collateral in trust so the fronting carrier can take credit (Cat Bonds, ILS & State Cat Funds).
+- **Collateralized capital**: reinsurers without a rating or US authorization, insurance-linked securities funds and sidecars that post collateral in trust so the fronting carrier can take credit ([Cat Bonds, ILS & State Cat Funds](/books/insurance/alternative-capital)).
 - **Captives and cells** owned by the MGA or its parent: Hippo reports a captive taking a share of the risk written through its MGAs, and Accelerant's filing names Cayman reinsurance vehicles alongside 77 third-party reinsurers ([Captives and Protected Cells](/books/insurance/who-carries-the-risk#captives-and-protected-cells)).
 - **Risk capital marketplaces**: Accelerant describes connecting "selected specialty insurance underwriters" (sellers) with risk capital partners (buyers), paid by a volume-based fee.
 
 ### The Capacity Stack
 
-One program's capacity, as data, is a list of contracts with shares and attachment points, effective for a period, which `reinsurance_contracts` in Reinsurance Structures defines. For a fronted program, three questions matter at every renewal: does the stack cover 100% of what the fronting carrier doesn't keep, is each participant's collateral at or above what its share requires, and does the binding authority's period line up with the capacity's period. A binding authority that runs past the reinsurance it depends on is the classic failure: policies bound in month thirteen of a twelve-month treaty, with nobody behind them but the fronting carrier.
+One program's capacity, as data, is a list of contracts with shares and attachment points, effective for a period, which `reinsurance_contracts` in [Reinsurance Structures](/books/insurance/reinsurance-structures) defines. For a fronted program, three questions matter at every renewal: does the stack cover 100% of what the fronting carrier doesn't keep, is each participant's collateral at or above what its share requires, and does the binding authority's period line up with the capacity's period. A binding authority that runs past the reinsurance it depends on is the classic failure: policies bound in month thirteen of a twelve-month treaty, with nobody behind them but the fronting carrier.
 
 ## The MGA-Plus-Carrier Pattern
 

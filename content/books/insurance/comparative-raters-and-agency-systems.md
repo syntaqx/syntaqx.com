@@ -10,7 +10,7 @@ tags = ["insurance", "distribution", "integrations", "agency-management", "ratin
 
 An independent agent's day runs on two systems the carrier doesn't own. The **comparative rater** takes a customer's details once and returns prices from many carriers side by side, then hands the chosen quote to that carrier to bind. The **agency management system** (AMS) is the agency's book: clients, policies, activities, commissions and the premium trust account, kept current by **downloads** of policy, claim, commission and document data from every carrier the agency represents. Between them run the integrations a carrier has to support to be sold at all: rating requests from raters, a bridge into its own quoting portal, prefill from data vendors, and a nightly or real-time feed back to the agency.
 
-A carrier that wants independent agents to sell its products competes inside these systems, and a carrier's integration quality shows up as quote volume. An agency evaluates carriers through them, and a broker or MGA builds on them. This chapter surveys the vendors as of November 2026, then covers how comparative rating and bridging work, prefill, downloads (Ivans and ACORD AL3), the AMS, and the quote and bind APIs that are replacing portal bridges. It extends `quotes` and `producers` from [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) with `rater_requests` and `downloads`; how a carrier computes the price behind each response is How a Rate Is Built.
+A carrier that wants independent agents to sell its products competes inside these systems, and a carrier's integration quality shows up as quote volume. An agency evaluates carriers through them, and a broker or MGA builds on them. This chapter surveys the vendors as of November 2026, then covers how comparative rating and bridging work, prefill, downloads (Ivans and ACORD AL3), the AMS, and the quote and bind APIs that are replacing portal bridges. It extends `quotes` and `producers` from [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) with `rater_requests` and `downloads`; how a carrier computes the price behind each response is [How a Rate Is Built](/books/insurance/how-a-rate-is-built).
 
 ## How the Platforms Do It
 
@@ -48,7 +48,7 @@ Commercial lines are different enough to need their own tools. Small commercial 
 
 ## Prefill
 
-Prefill fills the rater's form from data vendors so the agent doesn't type, and so the carrier rates on verified facts. EZLynx lists LexisNexis, Fenris, MSB and Google Maps as prefill sources for drivers, vehicles and building data. Every prefill call is a data pull with rules of its own: driver and vehicle data drawn from consumer reporting agencies needs a permissible purpose under the FCRA, building data comes under the vendor's license, and what was prefilled versus entered matters if the application later turns out wrong. Consumer Reports & Third-Party Data owns the law; for the integration, store each prefill call with its vendor, request, response and which fields the agent then changed, so the quote's inputs carry their provenance.
+Prefill fills the rater's form from data vendors so the agent doesn't type, and so the carrier rates on verified facts. EZLynx lists LexisNexis, Fenris, MSB and Google Maps as prefill sources for drivers, vehicles and building data. Every prefill call is a data pull with rules of its own: driver and vehicle data drawn from consumer reporting agencies needs a permissible purpose under the FCRA, building data comes under the vendor's license, and what was prefilled versus entered matters if the application later turns out wrong. [Consumer Reports & Third-Party Data](/books/insurance/consumer-reports-and-third-party-data) owns the law; for the integration, store each prefill call with its vendor, request, response and which fields the agent then changed, so the quote's inputs carry their provenance.
 
 ## Downloads
 
@@ -63,13 +63,13 @@ Once a policy is bound, the agency needs it in its own system, and so do every e
 
 Ivans says the data lands "directly into your management system," and offers Ivans Exchange, "a complimentary online tool," for agencies to track their download connections. Its developer portal exposes the same content as APIs: an Ivans Download API for eDocs, commission statements and policy download, translation APIs (commission, policy, claims and eDoc), an Exchange API in JSON, and a Bookroll API.
 
-The format most of this traffic was built on is ACORD's AL3, a batch standard for policy and commission data that carriers generate and agency systems parse; ACORD's own pages describing AL3 couldn't be opened for this chapter, so I describe it only at that level. <!-- source-gap: acord-al3 | missing | ACORD AL3 as a one-way batch format still carrying much download traffic; its record structure | closes with: an ACORD standards page or published AL3 specification excerpt (acord.org returned 403) | checked: 2026-11-09 --> ACORD & Data Standards covers ACORD's XML and newer standards.
+The format most of this traffic was built on is ACORD's AL3, a batch standard for policy and commission data that carriers generate and agency systems parse; ACORD's own pages describing AL3 couldn't be opened for this chapter, so I describe it only at that level. <!-- source-gap: acord-al3 | missing | ACORD AL3 as a one-way batch format still carrying much download traffic; its record structure | closes with: an ACORD standards page or published AL3 specification excerpt (acord.org returned 403) | checked: 2026-11-09 --> [ACORD & Data Standards](/books/insurance/acord-and-data-standards) covers ACORD's XML and newer standards.
 
 What a carrier has to get right in its downloads:
 
 - **Every transaction, in order, once.** A download is a stream of policy transactions with their effective and processed dates; an endorsement sent twice or a cancellation sent before the endorsement it follows breaks the agency's copy. Send stable transaction identifiers, so the agency side can be idempotent.
 - **The agency's identifiers.** The producer code the carrier knows the agency by, and the policy number as the agency recorded it at bind (which may be a quote number until issuance).
-- **Out-of-sequence changes as replays.** When a backdated endorsement changes later transactions (Endorsements, Renewals & the Policy Transaction Model), the download must carry the reversal and replay, not only the new state, or the agency's commissions and the carrier's DBCS disagree.
+- **Out-of-sequence changes as replays.** When a backdated endorsement changes later transactions ([Endorsements, Renewals & the Policy Transaction Model](/books/insurance/endorsements-and-renewals)), the download must carry the reversal and replay, not only the new state, or the agency's commissions and the carrier's DBCS disagree.
 
 A **book roll** (moving an agency's block of policies from one carrier to another at renewal) is the download problem in reverse: the agency sends its book to the new carrier to be quoted and rewritten. Travelers lists book rolls among its production incentives, and Ivans offers a Bookroll API.
 
@@ -90,9 +90,9 @@ Portal bridges are giving way to APIs that let a rater, an AMS or a partner's ow
 
 | Call | What it does | What the carrier must store |
 | --- | --- | --- |
-| **Appetite** | Will we write this class, state and size at all | The appetite rules version that answered |
+| **Appetite** | Will the carrier write this class, state and size at all | The appetite rules version that answered |
 | **Quote** | Rate a submission; return premium, coverages, eligibility messages and an expiry | The submission, the quote, the product version and the full rating worksheet |
-| **Refer** | Hand a quote outside authority to an underwriter | The referral with its reason (Underwriting Rules, Referrals & Models) |
+| **Refer** | Hand a quote outside authority to an underwriter | The referral with its reason ([Underwriting Rules, Referrals & Models](/books/insurance/underwriting)) |
 | **Bind** | Accept a quote, take payment details, bind coverage at a stated effective time | The binder, the producer's license and appointment check, the payment, an idempotency key |
 | **Issue and documents** | Return the policy number, declarations and ID cards | Documents as rendered, with delivery proof |
 | **Service** | Endorse, cancel, renew | Policy transactions, like any other channel |

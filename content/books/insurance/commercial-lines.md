@@ -83,7 +83,7 @@ The smallest accounts (sole proprietors, contractors, professional services, ret
 
 Personal lines premium is the filed algorithm's output. Commercial premium above the smallest accounts is the filed algorithm's output modified by plans the insurer has also filed:
 
-1. **Manual premium.** Exposure times the filed rate (loss cost times the insurer's loss cost multiplier, as How a Rate Is Built in the Rating part describes) for each class, coverage and location, with increased limits factors and deductible credits.
+1. **Manual premium.** Exposure times the filed rate (loss cost times the insurer's loss cost multiplier, as [How a Rate Is Built](/books/insurance/how-a-rate-is-built) in the Rating part describes) for each class, coverage and location, with increased limits factors and deductible credits.
 2. **Experience rating.** For accounts large enough to have credible history, a filed plan compares the insured's own losses to the losses expected for its classes and size, and produces a debit or credit. Workers' compensation's bureau plan is mandatory and computed by the bureau ([The Experience Mod](/books/insurance/rating-workers-comp#the-experience-mod)); for GL and auto, the insurer applies the experience rating plan in its filing.
 3. **Schedule rating.** A filed table of characteristics (management, premises condition, employee selection and training, safety programs, equipment, classification peculiarities) with a maximum credit or debit for each and an overall cap. The underwriter picks values. My rule is that the system records each value with its written justification, because a credit with no recorded basis can't be shown to come from the filed plan rather than from a negotiation.
 4. **Other modifications.** Package modification factors when coverages are combined, expense modifications for larger accounts, IRPM (individual risk premium modification) in some lines and states, and, for the largest accounts, loss-rated or composite rating.
@@ -158,7 +158,7 @@ CREATE TABLE loss_runs (                   -- produced for an insured, or receiv
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   direction          TEXT NOT NULL CHECK (direction IN ('issued', 'received')),
   insured_party_id   UUID NOT NULL REFERENCES parties (id),
-  policy_id          UUID REFERENCES policies (id),  -- ours, when issued
+  policy_id          UUID REFERENCES policies (id),  -- this insurer's, when it issued it
   prior_carrier      TEXT,                  -- when received
   submission_id      UUID,                  -- submissions (Underwriting), when received
   terms_from         DATE NOT NULL,
@@ -174,8 +174,8 @@ CREATE TABLE loss_runs (                   -- produced for an insured, or receiv
 CREATE TABLE loss_run_claims (             -- extracted or generated lines, normalized
   loss_run_id        UUID NOT NULL REFERENCES loss_runs (id),
   line_no            INT NOT NULL,
-  claim_ref          TEXT NOT NULL,         -- our claim number or the carrier's
-  claim_id           UUID REFERENCES claims (id),  -- ours, when issued
+  claim_ref          TEXT NOT NULL,         -- this insurer's claim number or the prior carrier's
+  claim_id           UUID REFERENCES claims (id),  -- this insurer's, when it issued it
   policy_term_from   DATE NOT NULL,
   loss_date          DATE NOT NULL,
   coverage_code      TEXT NOT NULL,
