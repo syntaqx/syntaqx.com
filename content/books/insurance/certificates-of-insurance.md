@@ -87,7 +87,7 @@ Two state laws, as examples:
 
 **Texas Insurance Code chapter 1811**, in effect since September 1, 2011, makes the form a filing matter: an insurer or agent "may not issue a certificate of insurance" unless the form was filed and approved under section 1811.101 or is a standard form; nobody may "execute, issue, or require the issuance" of a certificate for Texas risks on an unapproved form (1811.052). Standard forms from ACORD, AAIS and ISO are "deemed approved on the date the form is filed with the department" (1811.103). Nobody may require a certificate "that contains any false or misleading information concerning the policy" (1811.054), and "A certificate of insurance may not alter the terms and conditions of the notice required by a policy" (1811.155).
 
-I couldn't confirm a current list of which states have enacted the NCOIL model or their own versions. <!-- source-gap: coi-state-laws | missing | which states have enacted certificate of insurance laws (NCOIL model or their own) and when | closes with: NCOIL's adoption list or a state-by-state compilation opened | checked: 2026-11-09 -->
+I couldn't confirm a current list of which states have enacted the NCOIL model or their own versions. <!-- source-gap: coi-state-laws | missing | which states have enacted certificate of insurance laws (NCOIL model or their own) and when | closes with: NCOIL's adoption list or a state-by-state compilation opened | checked: 2026-11-10 -->
 
 ## Issuing Certificates
 

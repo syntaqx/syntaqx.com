@@ -48,14 +48,15 @@ The notice periods, each from the state's statute or the bureau form, as of Nove
 | **Florida** | Other P&C and workers' comp | 10 days | 20 days in the first 60 days; otherwise at least 45 days | At least 45 days |
 | **Texas** | Personal auto, homeowners, dwelling | Effective no earlier than the 10th day after mailing | Same 10th day; 60 days for a personal auto anniversary cancellation | Renew on request unless notice mailed by the 60th day before expiration |
 | **California** | Auto | At least 10 days | At least 20 days | At least 30 days (renewal offer at least 20) |
-| **California** | Residential property | Not verified for this chapter | Not verified for this chapter | At least 75 days for policies expiring on or after July 1, 2020 (renewal offer at least 45) |
+| **California** | Residential property | At least 10 calendar days (also for fraud) | At least 20 calendar days | At least 75 days for policies expiring on or after July 1, 2020 (renewal offer at least 45) |
 | **California** | Commercial (675.5 policies) | At least 10 days (also for fraud) | At least 30 days | Not covered here |
-| **New York** | Personal auto and personal lines | Payment within 15 days after mailing is timely | Specific reasons in the first 60 days; listed grounds after | 45 to 60 days before the end of the period |
+| **New York** | Personal auto | 15 days; payment within 15 days after mailing is timely | At least 20 days after mailing; specific reasons in the first 60 days, listed grounds after | 45 to 60 days before the end of the period (at least 20 days for other than a natural person's non-business vehicle) |
+| **New York** | Other personal lines | Payment within 15 days after mailing is timely | Specific reasons in the first 60 days; listed grounds after | 45 to 60 days before the end of the period |
 | **New York** | Commercial | 15 days after mailing (after the first 60 days), stating the amount due | 20 days in the first 60 days; 15 days after, on listed grounds | 60 to 120 days (30 for excess and jumbo risks) |
 | **North Carolina** | Personal auto: liability, medical payments, UM/UIM | At least 15 days | 60 days | At least 60 days |
 | **North Carolina** | Personal auto: other coverages | At least 10 days | At least 10 days | At least 10 days |
 
-Gaps worth stating: New York's personal auto and personal lines cancellation notice days are not in 3425 (which sets grounds, reasons, the 15-day payment window and proof); they come from the Vehicle and Traffic Law and the department's regulations, which I have not opened. California's residential cancellation notice days were not in the code sections opened for this chapter.<!-- source-gap: ny-ca-cancel-days | missing | New York personal auto and personal lines cancellation notice days (VTL 313, 11 NYCRR) and California residential property cancellation notice days (Ins. Code 677 or 678.1) | closes with: the statute or regulation text for each | checked: 2026-11-09 -->
+New York's personal lines cancellation notice days are not in 3425 (which sets grounds, reasons, the 15-day payment window and proof). For auto they come from the Vehicle and Traffic Law: cancellation takes effect at least 20 days after mailing, with 15 days enough for nonpayment, and the insurer files the termination with the motor vehicle commissioner within 30 days after it takes effect ([N.Y. VTL 313](https://www.nysenate.gov/legislation/laws/VAT/313)). For homeowners and other personal lines the days come from the department's regulations, which I have not opened.<!-- source-gap: ny-ca-cancel-days | missing | New York homeowners and other non-auto personal lines cancellation notice days (11 NYCRR) | closes with: the regulation text | checked: 2026-11-10 -->
 
 ## A Notice-Date Calculation Across States
 
@@ -271,11 +272,13 @@ Design choices:
 - [Tex. Ins. Code 651.161](https://texas.public.law/statutes/tex._ins._code_section_651.161), third-party notices by the 2nd business day after a finance company's cancellation
 - [N.Y. Ins. Law 3425](https://www.nysenate.gov/legislation/laws/ISC/3425), personal lines cancellation grounds, required policy periods, the 15-day payment window, 45 to 60 day nonrenewal notices, the 2% territory cap, proof of mailing and agent copies
 - [N.Y. Ins. Law 3426](https://www.nysenate.gov/legislation/laws/ISC/3426), commercial cancellation in and after the first 60 days, nonpayment notices with the amount due, and 60 to 120 day nonrenewal notices
+- [N.Y. Vehicle and Traffic Law 313](https://www.nysenate.gov/legislation/laws/VAT/313), auto cancellation 20 days after mailing (15 for nonpayment), nonrenewal notice periods and the 30-day termination filing
 - [N.Y. Banking Law 576](https://www.nysenate.gov/legislation/laws/BNK/576), pro rata return of gross unearned premium to the finance agency within 60 days and the 10% or $60 minimum earned premium
 - [Cal. Ins. Code 661 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-661/), auto cancellation grounds
 - [Cal. Ins. Code 662 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-662/), auto cancellation notice of 20 days, 10 for nonpayment, to the named insured, lienholder or additional interest
 - [Cal. Ins. Code 663 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-663/), auto nonrenewal notice of 30 days
 - [Cal. Ins. Code 676 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-676/), residential cancellation grounds after 60 days
+- [Cal. Ins. Code 677.4](https://california.public.law/codes/insurance_code_section_677.4), residential (675 policy) cancellation notice of 20 calendar days, 10 for nonpayment or fraud
 - [Cal. Ins. Code 677.2 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-677-2/), commercial cancellation notice of 30 days, 10 for nonpayment or fraud, and mailing rules
 - [Cal. Ins. Code 678 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-678/), residential nonrenewal of 75 days and renewal offers of 45 days
 - [Cal. Ins. Code 673 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-673/), pro rata return on financed policy cancellations and 15-day reinstatement replies

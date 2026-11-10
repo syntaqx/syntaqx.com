@@ -54,7 +54,7 @@ The insurer may not issue a recommended annuity unless there is a reasonable bas
 
 ## Adoption and State Variations
 
-The 2020 revision is the most widely adopted best-interest standard in insurance. NAIC's implementation map for the 2020 revisions shows status as of February 1, 2026, and its state page for #275 (Summer 2025) lists each state's citations under model adoption, previous version and related activity; New York appears under its own regulation rather than the model. <!-- source-gap: naic-275-count | secondary | exact count of states adopting the 2020 revision of Model 275 as of Feb 1, 2026 (map colors not machine-readable) | closes with: an NAIC text listing or chart of adopting jurisdictions | checked: 2026-11-10 --> The map is a picture, and I couldn't extract a reliable count from it, so the chapter gives the status date without the number.
+The 2020 revision is the most widely adopted best-interest standard in insurance. NAIC's implementation map for the 2020 revisions shows status as of February 1, 2026, and its state page for #275 (Summer 2025) lists each state's citations under model adoption, previous version and related activity; New York appears under its own regulation rather than the model. The map is a picture, but the NAIC's topic page, last updated February 10, 2025, states the count in text: "To date, 48 states have adopted the model revisions" ([NAIC: Annuity Suitability & Best Interest Standard](https://content.naic.org/insurance-topics/annuity-suitability-and-best-interest-standard)).
 
 Two state versions show what varies:
 
@@ -77,8 +77,8 @@ Annuities funded with retirement money (an IRA rollover, a 401(k) distribution) 
 - **April 2024.** The DOL finalized the Retirement Security Rule, expanding the definition (including one-time rollover recommendations) and amending the prohibited transaction exemptions insurance agents rely on, to take effect in September 2024.
 - **July 2024.** Two federal district courts in Texas stayed it: the Northern District of Texas nationwide, in *American Council of Life Insurers v. DOL*, and the Eastern District of Texas, more narrowly, a day earlier, in *Federation of Americans for Consumer Choice v. DOL*.
 - **September 2025.** The DOL announced plans to replace the rule through its regulatory agenda.
-- **November 28, 2025.** The Fifth Circuit granted the DOL's unopposed motion to withdraw its defense of the rule on appeal.
-- **By March 2026.** The Fifth Circuit issued an order vacating the 2024 rule and its related exemptions, and the DOL removed the rule from the Code of Federal Regulations; the 1975 definition continues to apply, and the DOL said it has no current plans to regulate the investment activities of securities brokers and insurance agents (Haynes Boone, March 26, 2026). <!-- source-gap: dol-vacatur-date | secondary | exact date of the Fifth Circuit vacatur order and of the DOL's removal of the 2024 rule from the CFR | closes with: the Fifth Circuit order or the Federal Register removal notice | checked: 2026-11-10 -->
+- **November 28, 2025.** The Fifth Circuit dismissed the consolidated appeal after the DOL stopped defending the rule.
+- **March 2026.** The two district courts entered final judgments vacating the 2024 rule and its amendments to PTE 2020-02 (the Eastern District of Texas on March 12, the Northern District on March 17), and on March 20 the DOL published a notice of court vacatur that removes the 2024 rule from the Code of Federal Regulations and restores the five-part test at 29 CFR 2510.3-21, effective April 20, 2026 ([Federal Register: Retirement Security Rule: Notice of Court Vacatur, 91 FR 13503, March 20, 2026](https://www.govinfo.gov/content/pkg/FR-2026-03-20/html/2026-05492.htm)). The 1975 definition continues to apply, and the DOL is reported to have no current plans to regulate the investment activities of securities brokers and insurance agents (Haynes Boone, March 26, 2026).
 
 For a system built in 2026, the practical rule is that the state best-interest regulation (and Reg BI for registered products) governs the sale, and the 1975 test governs whether a particular advice relationship makes the producer an ERISA fiduciary. The history is worth keeping in the rules table anyway: the 2016 and 2024 rules were each written, contested and vacated within a few years, and a fourth attempt would land in the same place in the workflow.
 
@@ -241,6 +241,7 @@ Market conduct examiners test annuity sales by sample, and each file has to answ
 
 - [17 CFR 240.15l-1](https://www.law.cornell.edu/cfr/text/17/240.15l-1), Regulation Best Interest: the general obligation, the disclosure, care, conflict of interest and compliance obligations, and the definition of retail customer
 - [Federal Register: Regulation Best Interest: The Broker-Dealer Standard of Conduct, July 12, 2019](https://www.federalregister.gov/api/v1/documents/2019-12164.json), the publication and the September 10, 2019 effective date
+- [Federal Register: Retirement Security Rule: Notice of Court Vacatur, 91 FR 13503, March 20, 2026](https://www.govinfo.gov/content/pkg/FR-2026-03-20/html/2026-05492.htm), the Fifth Circuit's November 28, 2025 dismissal, the March 2026 final judgments vacating the 2024 rule, its removal from the CFR and the April 20, 2026 effective date
 - [26 USC 1035](https://www.law.cornell.edu/uscode/text/26/1035), the tax-free exchanges and the reference to section 1031(d) for basis
 - [Fla. Stat. 627.4554](http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&URL=0600-0699/0627/Sections/0627.4554.html), Florida's best-interest statute: duties, training, five-year records, no private cause of action and the senior surrender charge limits
 - [11 NYCRR 224.0](https://www.law.cornell.edu/regulations/new-york/11-NYCRR-224.0), New York Regulation 187's purpose and best-interest standard for life insurance and annuities
@@ -267,5 +268,5 @@ Market conduct examiners test annuity sales by sample, and each file has to answ
 
 **In practice**
 
-- [Haynes Boone: DOL Retirement Security fiduciary rule vacated, March 26, 2026](https://www.haynesboone.com/news/blogs/dol-retirement-security-fiduciary-rule-vacated), the Fifth Circuit vacatur, removal from the CFR, the continuing 1975 definition and the DOL's statement on brokers and insurance agents
+- [Haynes Boone: DOL Retirement Security fiduciary rule vacated, March 26, 2026](https://www.haynesboone.com/news/blogs/dol-retirement-security-fiduciary-rule-vacated), the vacatur, removal from the CFR, the continuing 1975 definition and the DOL's statement on brokers and insurance agents
 - [PLANADVISER: Federal appeal of DOL fiduciary rule ends in circuit court, December 1, 2025](https://www.planadviser.com/federal-appeal-of-dol-fiduciary-rule-ends-in-circuit-court/), the July 2024 Texas stays, the November 28, 2025 order and the DOL's replacement plans
