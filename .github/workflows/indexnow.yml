@@ -57,6 +57,7 @@ jobs:
       - name: Submit
         env:
           INDEXNOW_KEY: ${{ vars.INDEXNOW_KEY }}
+          GH_TOKEN: ${{ github.token }}
           COMMIT: ${{ github.event.deployment.sha }}
           ALL: ${{ inputs.all && '1' || '' }}
           DRY_RUN: ${{ inputs.dry_run && '1' || '' }}

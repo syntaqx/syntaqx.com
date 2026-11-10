@@ -9,7 +9,7 @@
 // didn't move. Without a previous manifest (the first run, or one expired),
 // and with --all, it submits every URL. --dry-run prints what it would submit
 // and sends nothing. --commit <sha> waits until production serves that
-// commit before hashing.
+// commit, or a later one containing it, before hashing.
 //
 // The key is INDEXNOW_KEY, and it must be served at /<key>.txt (public/), or
 // the engines reject the submission. https://www.indexnow.org/documentation
@@ -41,12 +41,29 @@ const previous =
     ? JSON.parse(readFileSync(previousPath, "utf8"))
     : undefined;
 
-// A deploy reports success as production switches over: wait until it serves this commit.
+// A deploy reports success as production switches over: wait until it serves this
+// commit, or a later one that contains it. Merges seconds apart deploy past each
+// other, and the later deploy carries this one's changes; the hashes below compare
+// against the previous manifest either way.
 const commit = option("--commit");
+const contains = async (served) => {
+  const res = await fetch(
+    `https://api.github.com/repos/syntaqx/syntaqx.com/compare/${commit}...${served}`,
+    { headers: process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {} },
+  );
+  return res.ok && (await res.json()).status === "ahead";
+};
 if (commit) {
   for (let attempt = 1; ; attempt++) {
     const home = await fetch(`https://${HOST}/`, { cache: "no-store" }).then((r) => r.text());
-    if (home.includes(`/commit/${commit}`)) break;
+    const served = home.match(/\/commit\/([0-9a-f]{40})/)?.[1];
+    if (served === commit) break;
+    if (served && (await contains(served))) {
+      console.log(
+        `indexnow: production serves ${served.slice(0, 7)}, which includes ${commit.slice(0, 7)}`,
+      );
+      break;
+    }
     if (attempt === 12) fail(`production isn't serving ${commit.slice(0, 7)} after 2 minutes`);
     await new Promise((resolve) => setTimeout(resolve, 10_000));
   }
