@@ -90,7 +90,7 @@ Two limits keep a customer on the hook. Liability shifts only for worksite emplo
 
 **Administrative services only (ASO)** is a PEO vendor's product without co-employment: the provider runs payroll, HR administration and often benefits enrollment, while the client stays the only employer, files under its own EIN and buys its own plans. For tax purposes an ASO provider is a PSP or a reporting agent, and TriNet, for one, reports about 39,700 ASO users separately from its 323,200 worksite employees at the end of 2025.
 
-**An employer of record** is the legal employer under its own registrations, with the client directing the work. Abroad it is the only way to employ someone without an entity; in the US the same structure is a PEO or staffing arrangement and falls into one of the rows above. Employer of Record & Global Employment covers it.
+**An employer of record** is the legal employer under its own registrations, with the client directing the work. Abroad it is the only way to employ someone without an entity; in the US the same structure is a PEO or staffing arrangement and falls into one of the rows above. [Employer of Record & Global Employment](/books/workforce/employer-of-record) covers it.
 
 ## Who Stays Liable, Worked
 
