@@ -18,7 +18,7 @@ How enrollment reaches carriers, from public pages and documentation, as of Nove
 
 | Platform | Connection method | What it states | Notes |
 | --- | --- | --- | --- |
-| **Noyo** | API to carriers that support it, EDI feeds to those that don't | "REST-based with OpenAPI 3.0," "One integration; many carriers"; "Feeds are how Noyo manages connections with carriers that require EDI file transmissions" | Connection tiers (Premier, Advanced, Standard); "Most changes for Sync carriers are completed in seconds"; carrier testing can take up to six weeks |
+| **Noyo** | API to carriers that support it, EDI feeds to those that don't | "REST-based with OpenAPI 3.0," "One integration; many carriers"; "Feeds are how Noyo manages connections with carriers that require EDI file transmissions" | Connection tiers (Premier, Advanced, Standard); "Most changes for Sync carriers are completed in seconds"; file testing "typically takes up to 6 weeks with a responsive carrier" |
 | **Employee Navigator** | Broker-distributed benefits administration with carrier and payroll integrations | "connects 195,000+ employers, 7,000+ brokers, and 600+ partners" | Owns Ease |
 | **Benefitfocus (Voya)** | Benefits administration platform, "open-architecture and product-agnostic, enrolling and administering benefits from a variety of third-party carriers" | About 12.2 million employees on the platform at December 31, 2025 (Voya's 10-K) | Part of Voya's Employee Benefits segment |
 | **Paycom** | Inside the HCM suite | "Benefits to Carrier tool automates secure communication with your plan providers" | Payroll and enrollment on one record |
@@ -111,7 +111,7 @@ A file connection is a small project per carrier, and often per group at that ca
 1. **Requirements.** The carrier's companion guide, its group and plan identifiers, which coverage lines it takes, its cadence and full file rules, transmission (SFTP, a clearinghouse, the carrier's portal) and encryption.
 2. **Mapping.** Employer plans to carrier plan codes, tiers to coverage levels, employee classes to the carrier's billing divisions, and identifiers (the carrier's member ID once it exists, the SSN or an employer ID before).
 3. **Authorization.** The carrier confirms the group may be connected; Noyo describes querying "the carrier's system directly for authorization" for its most integrated carriers.
-4. **Test files.** Files from real enrollment data go to the carrier's test environment; the carrier reports errors; the mapping is corrected; repeat. Noyo says testing can take up to six weeks, and "The connection is only marked completed after the carrier has officially approved the file."
+4. **Test files.** Files from real enrollment data go to the carrier's test environment; the carrier reports errors; the mapping is corrected; repeat. Noyo says testing "typically takes up to 6 weeks with a responsive carrier," and "The connection is only marked completed after the carrier has officially approved the file."
 5. **Initial load and comparison.** The first production file is usually a full file compared against what the carrier already has, with differences worked by hand before change files start.
 6. **Production and monitoring.** Scheduled change files, periodic full files, acknowledgment tracking, and an alert when a scheduled file didn't go or an acknowledgment didn't come back.
 
@@ -119,7 +119,7 @@ During testing, changes still happen. The platform has to queue them and either 
 
 ## API Carriers and Connection Networks
 
-An API connection turns the 834's daily cycle into a request and a response. Noyo's model shows the shape: a group with its carrier connections and plan mapping, members with point-in-time **snapshots** of the family's coverage, and member requests for events such as a new hire enrollment or a termination; a member change moves through `processing` to `completed`, can be `canceled`, or is `replaced` when "We received a newer snapshot for this family." For carriers without an API, the same platform generates EDI **feeds** and records each **feed run** as "a single, specific instance that the feed has generated and transmitted a file to the carrier."
+An API connection turns the 834's daily cycle into a request and a response. Noyo's model shows the shape: a group with its carrier connections and plan mapping, members with point-in-time **snapshots** of the family's coverage, and member requests for events such as a new hire enrollment or a termination; a member change moves from `submitted` through `processing` to `completed`, can be `canceled`, or is `replaced` when "We received a newer snapshot for this family." For carriers without an API, the same platform generates EDI **feeds** and records each **feed run** as "a single, specific instance that the feed has generated and transmitted a file to the carrier."
 
 What changes for the employer side, and what doesn't:
 
@@ -216,7 +216,7 @@ CREATE TABLE carrier_invoice_reconciliations (  -- per employee, plan and covera
   carrier_connection_id UUID NOT NULL REFERENCES carrier_connections (id),
   invoice_ref         TEXT NOT NULL,
   coverage_month      DATE NOT NULL,         -- the first of the month billed
-  worker_id           UUID REFERENCES workers (id),   -- null for a carrier line we can't match
+  worker_id           UUID REFERENCES workers (id),   -- null for an unmatched carrier line
   benefit_plan_id     UUID NOT NULL REFERENCES benefit_plans (id),
   expected_amount     BIGINT NOT NULL,       -- cents, from benefit_enrollments and benefit_rates
   collected_amount    BIGINT NOT NULL,       -- employee deductions plus employer memo lines

@@ -19,16 +19,16 @@ The landscape, from vendors' own pages and filings, as of November 2026:
 | Vendor | Position | What it publishes | Channel |
 | --- | --- | --- | --- |
 | **Benefitfocus (Voya)** | Enterprise benefits administration, "open-architecture and product-agnostic, enrolling and administering benefits from a variety of third-party carriers" | Voya completed the acquisition on January 24, 2023, "for a total purchase consideration of $595 million"; its Benefitplace platform had about 12.2 million employees at December 31, 2025, reported in Voya's Employee Benefits segment | Employers and health plans |
-| **Businessolver** | Benefitsolver, bringing "benefits administration, employee guidance, compliance, communications, and reporting together" | No counts on its public page when I checked | Employers |
+| **Businessolver** | Its Benefitsolver platform, with the company describing "benefits administration, employee guidance, compliance, communications, and reporting together" in one place | No counts on its public page when I checked | Employers |
 | **Employee Navigator** | Broker-distributed benefits administration | "connects 195,000+ employers, 7,000+ brokers, and 600+ partners" | Brokers |
-| **Ease** | Small group benefits administration for brokers; "Ease is now owned by Employee Navigator!" | "2,300+ agencies," "85,000+ employer groups," "3.4 million+ employees" | Brokers |
+| **Ease** | Small group benefits administration for brokers; "Ease is now owned by Employee Navigator!" (Employee Navigator's press page dates the acquisition announcement April 4, 2023) | "2,300+ agencies," "85,000+ employer groups," "3.4 million+ employees" | Brokers |
 | **Selerix** | Benefits administration and enrollment | "14 m Employees Enrolled," "1000 + Integrations," "26 k+ Companies Served," "19 b In Premium" | Brokers ("Partner with Selerix to offer your clients a better way to manage benefits") |
 | **PlanSource** | Benefits administration | No counts or ownership on its public page | Employers and brokers |
 | **HCM suites (ADP, Paycom, Rippling and others)** | Benefits inside payroll and HR | ADP: "Automatic payroll deductions and carrier integrations"; Paycom: Benefits to Carrier; Rippling: "our in-house brokerage, or your third-party broker" | Direct, with the suite |
 | **Noyo** | Carrier connection network, "the leading benefits data platform" | API to carriers, EDI feeds where carriers need files | Sold to benefits platforms |
 | **Jellyvision (ALEX)** | Decision support that "Helps employees understand and make confident choices about their benefits" | "Thousands of companies trust ALEX" | Employers and platforms |
 
-bswift, also a long-standing enterprise platform, blocked automated access to its site, so I state nothing about its ownership or scale. <!-- source-gap: wf-bswift | missing | bswift's ownership, scale and positioning | closes with: bswift's own about page or a parent company's filing, opened | checked: 2026-11-10 --> The counts above are the vendors' own marketing figures, measured differently (employers connected, groups, employees enrolled, lives), and aren't comparable to each other.
+bswift, also a long-standing enterprise platform, blocked automated access to its site. Francisco Partners announced on October 3, 2022 that it had signed a definitive agreement to acquire bswift from CVS Health, expected to close in the fourth quarter of 2022; I couldn't open a source confirming the close or bswift's current ownership and scale. <!-- source-gap: wf-bswift | status | bswift's current ownership (the 2022 Francisco Partners agreement's close) and scale | closes with: bswift's own about page or a Francisco Partners or CVS Health filing or release confirming the close, opened | checked: 2026-11-10 --> The counts above are the vendors' own marketing figures, measured differently (employers connected, groups, employees enrolled, lives), and aren't comparable to each other.
 
 The pattern: **every platform is a rules engine over the same few records** (plans and rates for a year, eligibility rules, enrollments with effective dates, life events) **with three outputs** (carriers, payroll, compliance). The differences are the channel, the depth of each module, and how many carrier and payroll connections they maintain.
 
@@ -40,7 +40,7 @@ Broker compensation (carrier commissions and fees) shapes which carriers a broke
 
 ## Carrier APIs
 
-A platform with thousands of employers on hundreds of carriers maintains thousands of file connections, each tested over weeks (Carrier Connections & the 834 covers the stages). Connection networks exist to collapse that: Noyo's pitch is "One integration; many carriers," with carrier APIs where they exist, EDI feeds generated for carriers that "require EDI file transmissions," and testing that "can take up to six weeks" when a file is involved. Benefitfocus describes itself as product-agnostic across "a variety of third-party carriers." The buy-or-build question for a platform is the same as for payroll tax filing: the network's breadth against one more dependency on the critical path of open enrollment.
+A platform with thousands of employers on hundreds of carriers maintains thousands of file connections, each tested over weeks (Carrier Connections & the 834 covers the stages). Connection networks exist to collapse that: Noyo's pitch is "One integration; many carriers," with carrier APIs where they exist, EDI feeds generated for carriers that "require EDI file transmissions," and file testing that "typically takes up to 6 weeks with a responsive carrier." Benefitfocus describes itself as product-agnostic across "a variety of third-party carriers." The buy-or-build question for a platform is the same as for payroll tax filing: the network's breadth against one more dependency on the critical path of open enrollment.
 
 ## The Data Model: Plans, Rates and Eligibility
 
@@ -53,8 +53,8 @@ The platform's core is configuration, effective-dated by plan year, and most of 
 | Rate basis | Used for | Worked with my own numbers |
 | --- | --- | --- |
 | **Composite tier rates** | Large group medical, dental, vision | Employee only $700.00, family $1,900.00 a month |
-| **Per-member age rating** | Individual and small group medical under the ACA: ages 21 and over may vary at most 3:1, tobacco at most 1.5:1, and family premiums sum per member counting only "the three oldest covered children under 21" (45 CFR 147.102) | An employee 45 ($600.00), spouse 43 ($560.00) and four children at $300.00 each: $600.00 + $560.00 + 3 × $300.00 = $2,060.00 a month; the fourth child is free |
-| **Average enrollee premium** | Small groups that bill a composite from per-member rates; it "cannot change during the plan year" | The group's total per-member premium divided by enrollees, applied as a flat rate |
+| **Per-member age rating** | Individual and small group medical under the ACA: ages 21 and over may vary at most 3:1, tobacco at most 1.5:1, and family premiums sum per member, where "the premiums for no more than the three oldest covered children must be taken into account" for children under 21 (45 CFR 147.102) | An employee 45 ($600.00), spouse 43 ($560.00) and four children at $300.00 each: $600.00 + $560.00 + 3 × $300.00 = $2,060.00 a month; the fourth child is free |
+| **Average enrollee premium** | Small groups that bill a composite from per-member rates; it "does not vary during the plan year" | The group's total per-member premium divided by enrollees, applied as a flat rate |
 | **Per $1,000 of volume, by age band** | Supplemental life | $0.20 per $1,000 a month at ages 40 to 44: $150,000 costs $30.00 |
 | **Per $100 of covered payroll** | Long-term disability | $0.40 per $100 of a $6,000.00 monthly salary: $24.00 a month |
 | **Flat per enrollee** | Accident, hospital indemnity, some voluntary products | $12.00 a month per covered person |
@@ -205,7 +205,9 @@ A benefits platform's records are what an employer, broker, carrier or regulator
 **Vendor documentation**
 
 - [Benefitfocus](https://www.benefitfocus.com/), a Voya business
-- [Businessolver](https://www.businessolver.com/), Benefitsolver's scope
+- [Businessolver](https://www.businessolver.com/), Benefitsolver and the scope Businessolver describes
+- [Employee Navigator: Press](https://www.employeenavigator.com/press), the April 4, 2023 announcement of the Ease acquisition
+- [Francisco Partners: Francisco Partners to Acquire bswift from CVS Health (October 3, 2022)](https://www.franciscopartners.com/media/francisco-partners-to-acquire-bswift-from-cvs-health), the definitive agreement and expected close
 - [Employee Navigator](https://www.employeenavigator.com/), employers, brokers and partners connected
 - [Ease: About](https://www.ease.com/about/), ownership by Employee Navigator, agencies, employer groups and employees
 - [Selerix](https://www.selerix.com/), employees enrolled, integrations, companies and premium, and the broker partnership

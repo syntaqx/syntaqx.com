@@ -18,7 +18,7 @@ ACA tracking and reporting is a module in most HCM suites, because the inputs (h
 
 | Platform | What it states | Notes |
 | --- | --- | --- |
-| **Paycom** | An ACA dashboard with "measurement period details," alerts for "closing measurement periods" and when the company nears applicable large employer status; "automatically populating necessary forms," mailing a "physical 1095-C," and filing "Forms 1094-B and -C" with the IRS and state filings in certain jurisdictions | Measurement, forms and filing in one module |
+| **Paycom** | An ACA dashboard with "measurement period details," alerts for "closing measurement periods" and when the organization "nears applicable large employer status"; forms it will "automatically populate," mailing a "physical 1095-C," and filing "Forms 1094-B and -C" with the IRS and state filings in certain jurisdictions | Measurement, forms and filing in one module |
 | **Rippling** | "tracking employee hours for insurance eligibility," an Eligibility Report projecting eligibility for any measurement period, generating and filing the 1094-C "on your behalf," and 1095-Cs delivered through the employee profile | Hours from its own payroll |
 
 The pattern: **the vendor computes monthly status from payroll hours and the benefits record, and the employer still owns the inputs** (the measurement method elected, the offer made, the safe harbor chosen) and the liability. A provider can fill in a 1095-C; it can't make an unaffordable offer affordable.
@@ -70,7 +70,7 @@ An offer avoids the second penalty for an employee only if the coverage provides
 | --- | --- | --- |
 | **Form W-2** | Annual required contribution at most 9.96% of the employee's box 1 wages for the year, prorated for months offered | Box 1 of $30,000: at most $2,988.00 a year, $249.00 a month |
 | **Rate of pay** | At most 9.96% of 130 × the lower of the hourly rate at the start of the coverage period and the lowest rate in the month; for salaried employees, monthly salary, unless it was reduced | $18.00 an hour: 130 × $18.00 = $2,340.00, at most $233.06 a month |
-| **Federal poverty line** | At most 9.96% of the single-person poverty guideline ÷ 12 | 2026 guideline $15,960 for the 48 states and DC: $1,330.00 a month, at most $132.47 |
+| **Federal poverty line** | At most 9.96% of the single-person poverty guideline ÷ 12, using a guideline "in effect within six months before the first day of the plan year" (54.4980H-1(a)(19)) | Calendar 2026 plan year: the 2025 guideline of $15,650 for the 48 states and DC (the 2026 guideline, $15,960, was published January 15, 2026, after the plan year began): $1,304.17 a month, at most $129.89 |
 
 The choice is a design decision with consequences. The W-2 safe harbor uses box 1, which pre-tax deductions reduce, so an employee who defers heavily to a 401(k) can make an offer unaffordable after the fact, and it can only be confirmed after year end. Rate of pay is known in advance but fails for an hourly employee whose rate drops. The poverty line safe harbor is the most conservative and the only one that is certain for every employee, which is why employers that want a single contribution for everyone price the lowest-cost plan below it. A safe harbor protects the employer from the (b) penalty "even if" the coverage isn't affordable under the employee's actual household income.
 
@@ -141,7 +141,7 @@ With `annualA = 334000` and `annualB = 501000`, the first scenario is 170 × 334
 
 ## Forms 1094-C and 1095-C
 
-An ALE files one **Form 1094-C** (the transmittal, with ALE member information and monthly counts) and a **Form 1095-C** for each full-time employee, and for any employee enrolled in its self-insured plan. For the 2025 forms, the instructions say an ALE "must furnish a Form 1095-C to each of its full-time employees by March 2, 2026" and file with the IRS by "March 2, 2026, or March 31, 2026, if filing electronically"; anyone filing "10 or more information returns during the year" must file electronically. The 2026 instructions weren't published when I checked; the deadlines follow the same January 31 rule with its automatic 30-day extension for furnishing (Notice 2025-15).
+An ALE files one **Form 1094-C** (the transmittal, with ALE member information and monthly counts) and a **Form 1095-C** for each full-time employee, and for any employee enrolled in its self-insured plan. For the 2025 forms, the instructions say an ALE "must furnish a Form 1095-C to each of its full-time employees by March 2, 2026" and file with the IRS by "March 2, 2026, or March 31, 2026, if filing electronically"; anyone filing "10 or more information returns during the year" must file electronically. States with their own individual coverage mandates collect copies too, which is why Paycom says it "completes filings in applicable U.S. states and districts"; I couldn't open a state page listing which states require the 1095-C and by when, so the state filing calendar belongs in configuration. <!-- source-gap: wf-state-1095c-filing | missing | which states and districts (for example California, the District of Columbia, Massachusetts, New Jersey and Rhode Island) require employers to file 1095-C or similar coverage reports, and their due dates | closes with: each state tax agency's coverage reporting page, opened | checked: 2026-11-10 --> The 2026 instructions weren't published when I checked; the deadlines follow the same January 31 rule with its automatic 30-day extension for furnishing in Treas. Reg. 301.6056-1(g)(1), which Notice 2025-15 restates.
 
 **1094-C Part III** reports, per month, a "Minimum Essential Coverage Offer Indicator," the "Section 4980H Full-Time Employee Count for ALE Member," the "Total Employee Count for ALE Member" and an "Aggregated Group Indicator," so the IRS can compute the (a) penalty from the form alone. A box for the "98% Offer Method" lets an employer that offered affordable coverage to at least 98% of employees skip the full-time count.
 
@@ -158,7 +158,8 @@ An ALE files one **Form 1094-C** (the transmittal, with ALE member information a
 | `1G` | Self-insured coverage for someone not full-time in any month (whole year or not at all) |
 | `1H` | "No offer of coverage" |
 | `1J`, `1K` | Conditional offers of spousal coverage |
-| `1L` to `1U` | Individual coverage HRA offers, by who is covered and whether affordability used the employee's residence ZIP code or the primary employment site ZIP code (HSAs, FSAs & HRAs covers ICHRAs) |
+| `1L` to `1Q`, `1T`, `1U` | Affordable individual coverage HRA offers, by who is covered and whether affordability used the employee's residence ZIP code or the primary employment site ZIP code (HSAs, FSAs & HRAs covers ICHRAs) |
+| `1R`, `1S` | An individual coverage HRA that is "NOT affordable," and one "offered to an individual who was not a full-time employee" |
 
 **Line 15** is the employee required contribution: "the employee share of the monthly cost for the lowest-cost, self-only, minimum essential coverage providing minimum value," whatever the employee actually enrolled in, entered as "0.00," not blank, if free.
 
@@ -267,7 +268,7 @@ CREATE TABLE esrp_assessments (            -- a Letter 226-J and its life
   proposed_amount     BIGINT NOT NULL,
   respond_by          DATE NOT NULL,         -- at least 90 days from the letter's date
   employees_listed    INT NOT NULL,          -- from Form 14765
-  our_exposure        BIGINT,                -- recomputed from form_1095c_lines and results
+  recomputed_exposure BIGINT,                -- recomputed from form_1095c_lines and results
   response_document_id UUID REFERENCES documents (id),
   determination_notice_id UUID REFERENCES notices (id),   -- the Letter 227
   final_amount        BIGINT,
@@ -328,7 +329,7 @@ The ACA record is audited by the IRS through Letter 226-J, by employees disputin
 **Law and regulation**
 
 - [26 USC 4980H](https://www.law.cornell.edu/uscode/text/26/4980H), the (a) and (b) payments, the ALE definition, the seasonal exception, the 30-employee reduction, full-time equivalents, the 30-hour definition, indexing and the 90-day response in (d)
-- [26 CFR 54.4980H-1](https://www.law.cornell.edu/cfr/text/26/54.4980H-1), hour of service, full-time employee and the 130-hour monthly equivalent, full-time equivalent, seasonal worker
+- [26 CFR 54.4980H-1](https://www.law.cornell.edu/cfr/text/26/54.4980H-1), hour of service, full-time employee and the 130-hour monthly equivalent, full-time equivalent, seasonal worker, and the federal poverty line in effect within six months before the plan year
 - [26 CFR 54.4980H-2](https://www.law.cornell.edu/cfr/text/26/54.4980H-2), ALE determination: monthly counts, the 120-hour cap, rounding, the seasonal exception, new employers, aggregation
 - [26 CFR 54.4980H-3](https://www.law.cornell.edu/cfr/text/26/54.4980H-3), the monthly and look-back measurement methods, administrative and stability periods, new employees and rehires
 - [26 CFR 54.4980H-4](https://www.law.cornell.edu/cfr/text/26/54.4980H-4), the offer to all but 5 percent (or five) of full-time employees
@@ -344,7 +345,8 @@ The ACA record is audited by the IRS through Letter 226-J, by employees disputin
 - [IRS: Instructions for Forms 1094-C and 1095-C (2025)](https://www.irs.gov/instructions/i109495c), furnishing and filing dates, the electronic filing threshold, the alternative manner, Part III columns, the 98% Offer Method, line 14, 15 and 16 codes, and dates of birth for covered individuals
 - [IRS: Questions and answers on employer shared responsibility provisions](https://www.irs.gov/affordable-care-act/employers/questions-and-answers-on-employer-shared-responsibility-provisions-under-the-affordable-care-act), how the payments are computed, the reduction among ALE members, the 2023 amounts and Letter 226-J's basis
 - [IRS: Understanding your Letter 226-J](https://www.irs.gov/individuals/understanding-your-letter-226-j), the letter, Forms 14764 and 14765, and Letter 227
-- [HHS ASPE: Poverty guidelines](https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines), the 2026 guideline of $15,960 for one person in the 48 contiguous states and DC
+- [HHS ASPE: Poverty guidelines](https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines), the 2026 guideline of $15,960 for one person in the 48 contiguous states and DC, published January 15, 2026
+- [HHS ASPE: Prior HHS poverty guidelines and Federal Register references](https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/prior-hhs-poverty-guidelines-federal-register-references), the 2025 guideline of $15,650 for one person, published January 17, 2025
 
 **Vendor documentation**
 
