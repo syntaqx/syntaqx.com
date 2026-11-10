@@ -845,7 +845,17 @@ export default function SecretsPage() {
         </div>
 
         <ToolAside>
-          <ToolCard icon={<Info />} title="How it works">
+          <ToolCard
+            icon={<Info />}
+            title="How it works"
+            footer={
+              <p>
+                Up to {byteSize(MAX_PLAINTEXT_BYTES)} per secret, text or file. There&apos;s no
+                uptime guarantee, but there doesn&apos;t need to be a security one: the server never
+                has what it would take to read your secret.
+              </p>
+            }
+          >
             <ol className="flex list-decimal flex-col gap-2.5 pl-4">
               <li>
                 Your browser makes a random 256-bit key and encrypts the secret with{" "}
@@ -866,11 +876,6 @@ export default function SecretsPage() {
                 here. A wrong key is turned away and the secret survives.
               </li>
             </ol>
-            <p className="border-t pt-3">
-              Up to {byteSize(MAX_PLAINTEXT_BYTES)} per secret, text or file. There&apos;s no uptime
-              guarantee, but there doesn&apos;t need to be a security one: the server never has what
-              it would take to read your secret.
-            </p>
           </ToolCard>
 
           <ToolCard icon={<Terminal />} title="From a script">

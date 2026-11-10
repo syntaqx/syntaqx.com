@@ -194,25 +194,29 @@ export function ToolAside({ className, ...props }: ComponentProps<"aside">) {
 }
 
 /**
- * A note in a ToolAside: an icon and a heading, then reading text. The
- * heading is an h2 under the tool's h1, so the page's outline lists it.
+ * A note in a ToolAside: an icon and a heading over a full-width rule, then
+ * reading text, and an optional footer under another rule (shadcn's
+ * `border-b` header and `border-t` footer). The heading is an h2 under the
+ * tool's h1, so the page's outline lists it.
  */
 export function ToolCard({
   icon,
   title,
   action,
+  footer,
   className,
   children,
 }: {
   icon?: ReactNode;
   title: ReactNode;
   action?: ReactNode;
+  footer?: ReactNode;
   className?: string;
   children: ReactNode;
 }) {
   return (
     <Card size="sm" className={className}>
-      <CardHeader className="flex items-center justify-between gap-2">
+      <CardHeader className="flex min-h-7 items-center justify-between gap-2 border-b">
         {/* Classes on CardTitle, not the h2, so cn() resolves them against the title's own. */}
         <CardTitle
           asChild
@@ -226,6 +230,11 @@ export function ToolCard({
         {action}
       </CardHeader>
       <CardContent className="leading-relaxed text-muted-foreground">{children}</CardContent>
+      {footer && (
+        <CardFooter className="block border-t leading-relaxed text-muted-foreground">
+          {footer}
+        </CardFooter>
+      )}
     </Card>
   );
 }

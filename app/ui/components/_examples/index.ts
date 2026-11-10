@@ -365,9 +365,9 @@ export const examples: Record<string, Example[]> = {
     },
     {
       slug: "card-small",
-      title: "Small, with a heading title",
+      title: "Small, with ruled header and footer",
       description:
-        '`size="sm"` tightens the spacing for a sidebar. `asChild` makes the title an `h2`, so it shows up in the page\'s outline and screen readers can jump to it.',
+        '`size="sm"` tightens the spacing for a sidebar. A `border-b` on the header and a `border-t` on the footer run edge to edge, since the card pads its sections, not itself. `asChild` makes the title an `h2`, so it shows up in the page\'s outline.',
       Component: CardSmall,
     },
   ],

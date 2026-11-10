@@ -1,12 +1,12 @@
 import { Info } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/syntaqx/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/registry/syntaqx/ui/card";
 
 export default function CardSmall() {
   return (
     <Card size="sm" className="w-full max-w-xs">
-      <CardHeader>
-        <CardTitle asChild>
-          <h2 className="flex items-center gap-2">
+      <CardHeader className="border-b">
+        <CardTitle asChild className="flex items-center gap-2">
+          <h2>
             <Info className="size-4 text-primary" />
             How it works
           </h2>
@@ -19,6 +19,7 @@ export default function CardSmall() {
           <li>The server deletes it the moment it&apos;s read.</li>
         </ol>
       </CardContent>
+      <CardFooter className="border-t text-muted-foreground">Up to 64 KB per secret.</CardFooter>
     </Card>
   );
 }
