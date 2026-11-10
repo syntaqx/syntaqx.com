@@ -57,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const posts = allPosts.map((post) => ({
     url: `${baseUrl}/posts/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.updated ?? post.date),
   }));
 
   // Per-tag archive pages are noindex (thin content — see app/tags/[tag]),

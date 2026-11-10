@@ -14,6 +14,8 @@ export interface PostData {
   slug: string;
   title: string;
   date: string;
+  /** `updated = "YYYY-MM-DD"`: when the post was last substantially revised. */
+  updated?: string;
   description?: string;
   tags?: string[];
   categories?: string[];
@@ -167,6 +169,7 @@ function getPostByFileName(fileName: string): PostData {
     slug,
     title: (data.title as string) ?? slug,
     date,
+    updated: (data.updated as string) || undefined,
     description: (data.description as string) ?? "",
     tags: (data.tags as string[]) ?? [],
     categories: (data.categories as string[]) ?? [],

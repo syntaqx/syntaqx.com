@@ -1,10 +1,15 @@
 +++
 date = "2024-07-02"
-title = "GitHub Actions & Secret Inputs"
-description = "An exploration and a working solution for passing secret input values into GitHub Actions manual, self-service workflows, without leaking them in the logs."
+updated = "2026-11-07"
+title = "Passing Secrets to Manual GitHub Actions Workflows"
+description = "workflow_dispatch has no secret input type, and add-mask runs too late to hide one. A one-time link gets a secret into the workflow, masked, without leaking it."
 images = ["/img/open-graph/github-actions-secret-inputs.png"]
 tags = ["GitHub Actions", "DevOps", "Developer Experience"]
 +++
+
+The short version: a manually triggered (`workflow_dispatch`) workflow can't take a secret as an input. GitHub only allows `boolean`, `choice`, `number`, `environment` and `string` [input types][], and anything you type is in the logs before `::add-mask::` can hide it. My fix is to pass a one-time link instead of the value: the workflow fetches the secret, masks it, then uses it, and the link is dead by the time anyone reads the log.
+
+[input types]: https://docs.github.com/actions/reference/workflows-and-actions/workflow-syntax#onworkflow_dispatchinputsinput_idtype
 
 I've been using GitHub Actions as my primary CI & CD tool for a while now, and I've been very happy with it. It's easy to use, reasonably flexible with the way actions are created, and has a massive marketplace which makes things all too easy to get what I need.
 
