@@ -20,11 +20,11 @@ As of October 2026, the carriers and payment providers set the practical limits,
 | --- | --- | --- | --- |
 | **USPS** | Nonmailable: "All spirituous, vinous, malted, fermented, or other intoxicating liquors of any kind" (18 U.S.C. 1716(f)), "including those obtained under a prescription or as a collector's item" | Cigarettes, smokeless tobacco and vapes nonmailable except narrow exceptions (18 U.S.C. 1716E, Publication 52 §472) | Handguns and other concealable firearms nonmailable except to listed officials and between licensed dealers (18 U.S.C. 1715) |
 | **FedEx** | Only approved shippers under an agreement; "Individuals (consumers) cannot ship alcohol via FedEx"; adult signature (21+, ID) required; wine licensee-to-consumer only to states in its guide, beer and spirits licensee-to-licensee | Not in the sources here | Not in the sources here |
-| **UPS** | Licensed shippers under a UPS alcohol agreement; adult signature required for wine and spirits; approved destination states listed in the agreement | Not in the sources here | Not in the sources here |
+| **UPS** | "Only as a contractual service and only from Shippers who are licensed"; an approved UPS agreement for wine, beer or spirits; Adult Signature Required and a special alcohol label on every package | Licensed shippers only, under a UPS tobacco agreement; no cigarettes or little cigars to consumers; no vaping products anywhere in the US network | Only from government agencies and licensed importers, manufacturers, dealers or collectors, under a UPS firearms agreement |
 | **Stripe** | Prohibited only in India and Thailand; restricted in Indonesia and Canada | Restricted: "sold in accordance with applicable law"; in the US only FDA-authorized products | Firearms, regulated parts and weapons like stun guns and pepper spray need approval; illegal weapons prohibited |
 | **Shopify** | Per the merchant's law and Shopify Payments' supported categories | Same | Same; unsupported categories must use a third-party processor |
 
-<!-- source-gap: ups-alcohol-program | secondary | UPS's alcohol shipping agreement, adult-signature requirement and approved states (described from UPS help-page snippets; the pages returned 403 to retrieval) | closes with: the UPS alcohol and wine shipping pages opened directly | checked: 2026-11-01 -->
+UPS's row comes from its 2024 Tariff/Terms and Conditions of Service ([UPS, effective December 26, 2023](https://www.ups.com/assets/resources/webcontent/en_US/terms-service-us.pdf)); the terms don't list the destination states UPS accepts alcohol to, and I couldn't read the 2026 edition. <!-- source-gap: ups-alcohol-program | missing | UPS's approved destination states for alcohol and any change in the 2026 terms | closes with: UPS's alcohol shipping pages or the 2026 Tariff/Terms PDF opened directly (ups.com returns Access Denied and assets.ups.com an empty body to fetchers) | checked: 2026-11-10 -->
 
 Three patterns:
 
@@ -259,6 +259,7 @@ Design notes:
 - [27 CFR 4.61 (Cornell LII)](https://www.law.cornell.edu/cfr/text/27/4.61), the definition of a wine advertisement
 - [18 U.S.C. 1716 (Cornell LII)](https://www.law.cornell.edu/uscode/text/18/1716), intoxicating liquors nonmailable in subsection (f)
 - [USPS Publication 52, §424: Intoxicating liquors](https://pe.usps.com/text/pub52/pub52c4_008.htm), alcohol nonmailable including by prescription or as a collectible
+- [UPS: 2024 Tariff/Terms and Conditions of Service](https://www.ups.com/assets/resources/webcontent/en_US/terms-service-us.pdf), sections 3.4 (alcohol), 3.7 (firearms) and 3.17 (tobacco and vaping)
 - [FedEx: Shipping alcohol](https://www.fedex.com/en-us/shipping/alcohol.html), approved shippers, no consumer shipping, adult signature and licensee rules
 
 **Tobacco and vapes**

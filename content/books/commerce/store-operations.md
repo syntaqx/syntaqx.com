@@ -79,7 +79,7 @@ Cash also carries legal weight beyond the store's own controls: some cities and 
 
 ## Shrink and Loss Prevention
 
-**Shrink** is the difference between the inventory the records say a store should have and what is there. The National Retail Federation's 2023 National Retail Security Survey put the average shrink rate at 1.6% of sales in fiscal 2022, up from 1.4% in 2021, and estimated it at $112.1 billion in losses. Loss prevention divides shrink by source: external theft (shoplifting and organized theft), internal theft by employees, process and paperwork errors, and vendor error or fraud. The survey's estimate of each source's share is in its full report, not on the page cited here, so no split is given. <!-- source-gap: nrf-shrink-split | missing | the NRF National Retail Security Survey's share of shrink by source (external theft, internal theft, process error, other) and any NRF figure newer than fiscal 2022 | closes with: the NRSS 2023 report PDF's sources-of-shrink chart (the PDF behind the page's Download Report button is image-only and unreadable to fetching; needs reading page by page), or a later NRF report | checked: 2026-11-01 -->
+**Shrink** is the difference between the inventory the records say a store should have and what is there. The National Retail Federation's 2023 National Retail Security Survey put the average shrink rate at 1.6% of sales in fiscal 2022, up from 1.4% in 2021, and estimated it at $112.1 billion in losses. Loss prevention divides shrink by source: external theft (shoplifting and organized theft), internal theft by employees, process and paperwork errors, and vendor error or fraud. NRF's release on the survey says "internal and external theft accounted for nearly two-thirds (65%) of retailers' shrink" ([NRF](https://nrf.com/media-center/press-releases/shrink-accounted-over-112-billion-industry-losses-2022-according-nrf)); the split between the two and the other sources is only in the full report, which I couldn't read. <!-- source-gap: nrf-shrink-split | missing | the NRF National Retail Security Survey's share of shrink by each source (external theft, internal theft, process error, other) | closes with: the NRSS 2023 report PDF's sources-of-shrink chart (the PDF behind the page's Download Report button is image-only and unreadable to fetching; needs reading page by page) | checked: 2026-11-10 --> There is no newer NRF rate: NRF stopped publishing an industry shrink figure after that survey because "reporting an average annual inventory shrink percentage was no longer an accurate benchmark for retailers" ([NRF, August 2025](https://nrf.com/blog/the-misperception-of-shrink-and-its-impact-on-organized-retail-crime)).
 
 Each source leaves a different trail in the data:
 
@@ -304,6 +304,8 @@ Design notes:
 **Research**
 
 - [NRF: National Retail Security Survey 2023](https://nrf.com/research/national-retail-security-survey-2023), shrink at 1.6% of sales in fiscal 2022, up from 1.4%, and $112.1 billion
+- [NRF: Shrink accounted for over $112 billion in 2022](https://nrf.com/media-center/press-releases/shrink-accounted-over-112-billion-industry-losses-2022-according-nrf), theft's 65% share of shrink
+- [NRF: The misperception of shrink (August 19, 2025)](https://nrf.com/blog/the-misperception-of-shrink-and-its-impact-on-organized-retail-crime), why NRF stopped publishing an average shrink rate
 
 **Law**
 
