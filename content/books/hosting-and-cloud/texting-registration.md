@@ -341,4 +341,4 @@ Notes on the sketch:
 **In practice**
 
 - [Zoho: Changes to 10DLC TCR pricing and new authentication requirements](https://help.zoho.com/portal/en/community/topic/attention-changes-to-10dlc-tcr-pricing-and-new-authentication-requirements), the August 2025 fee change and Authentication+ 2.0 (reseller notice)
-- [Twilio: Shutdown of unregistered 10DLC messaging](https://support.twilio.com/hc/en-us/articles/14910496447771-Shutdown-of-Unregistered-10DLC-Messaging), Twilio's platform block from September 2023
+- [Twilio changelog: US A2P 10DLC is now a fully verified route](https://www.twilio.com/en-us/changelog/-u-s--a2p-10dlc--full-blocking-of-traffic-sent-from-unregistered), Twilio's platform block from September 2023
