@@ -18,7 +18,7 @@ export function PostList({ posts, newestSlug = null }: PostListProps) {
   return (
     <ol className="border-t border-border">
       {posts.map((post) => (
-        <li key={post.slug} className="border-b border-border">
+        <li key={post.slug} className="border-b border-border last:border-b-0">
           <Link href={`/posts/${post.slug}`} className="post-row group">
             <time dateTime={post.date} className="inst text-muted-foreground tabular-nums">
               {format(postDay(post.date), "yyyy.MM.dd")}

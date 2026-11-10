@@ -123,7 +123,7 @@ function Results({ response }: { response: SearchResponse }) {
       ) : (
         <ol className="border-t border-border">
           {results.map((r) => (
-            <li key={r.url} className="border-b border-border py-4">
+            <li key={r.url} className="border-b border-border py-4 last:border-b-0">
               <div className="mb-1 flex flex-wrap items-center gap-2">
                 <span
                   className={cn(

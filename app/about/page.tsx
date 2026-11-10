@@ -110,7 +110,7 @@ export default function AboutPage() {
                   <dd className="leading-snug font-semibold text-foreground">{item.value}</dd>
                 </div>
               ))}
-              <div className="grid grid-cols-[6rem_1fr] gap-4 border-b border-border py-3">
+              <div className="grid grid-cols-[6rem_1fr] gap-4 py-3">
                 <dt className="inst pt-1.5 text-muted-foreground">resume</dt>
                 <dd>
                   <Link
