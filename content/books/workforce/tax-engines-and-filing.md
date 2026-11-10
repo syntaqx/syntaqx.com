@@ -134,7 +134,7 @@ The layer's core loop each quarter is: lock the period's statement lines, build 
 **State returns and wage reports.** States accept withholding returns, SUI wage reports and annual reconciliations through their online accounts and bulk upload formats, many derived from the EFW2 layout for W-2 data and from a shared record format for quarterly wage reports, each with state-specific fields. A filing service maintains a format per state per form per year, which is much of what the vendors above sell.
 <!-- source-gap: wf-state-bulk-formats | missing | the bulk upload formats states accept for SUI quarterly wage reports and withholding reconciliations (record layouts, shared standards such as ICESA, and which states use them) | closes with: state employer e-file specifications for the largest payroll states | checked: 2026-11-09 -->
 
-**Information returns (IRIS).** Forms 1099 move to the IRS's Information Returns Intake System, which replaces FIRE starting with tax year 2026 filings; Contractors & 1099s covers it.
+**Information returns (IRIS).** Forms 1099 move to the IRS's Information Returns Intake System, which replaces FIRE starting with tax year 2026 filings; [Contractors & 1099s](/books/workforce/contractors-and-1099s) covers it.
 
 ## Rejects and Resubmission
 

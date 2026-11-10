@@ -61,7 +61,7 @@ A gap like UKG's matters for the book's method: where a company publishes nothin
 
 **PEO.** Co-employment for small and mid-sized businesses: ADP TotalSource, Insperity, TriNet, Justworks, Paychex PEO and about 500 others (NAPEO counts 502 PEOs and about 233,000 client businesses). The buyer wants benefits and HR expertise more than software, and the price is a markup or a per-employee fee over the full employment cost. [PEOs & Co-Employment](/books/workforce/peos-and-co-employment) covers it.
 
-**Employer of record.** Legal employment in countries where the client has no entity: Deel, Remote, Oyster, Papaya Global, Velocity Global, Globalization Partners and others, priced as a flat fee per worker per month. Employer of Record & Global Employment covers it.
+**Employer of record.** Legal employment in countries where the client has no entity: Deel, Remote, Oyster, Papaya Global, Velocity Global, Globalization Partners and others, priced as a flat fee per worker per month. [Employer of Record & Global Employment](/books/workforce/employer-of-record) covers it.
 
 **Embedded payroll.** Payroll engines sold as APIs and components to vertical software: Check, Gusto Embedded, Zeal and others. The buyer is a software company that wants payroll revenue and stickiness without becoming a payroll company; the employer signs the payroll partner's authorizations inside the platform's product. [Embedded Payroll](/books/workforce/embedded-payroll) covers it.
 

@@ -148,7 +148,7 @@ The restart costs the employer side $3,441.00 for this one employee, and the emp
 | **Unemployment account** | By state | The client's | Local |
 | **Typical price** | A markup or PEPM over the full employment cost | PEPM for software and service | A flat monthly fee per worker |
 
-ASO is the PEO's software and service without co-employment; TriNet reports its ASO users separately. An EOR is a single employer in a country where the client has no entity, and Employer of Record & Global Employment covers it; Deel and others also sell a US PEO alongside their EOR, priced per employee per month.
+ASO is the PEO's software and service without co-employment; TriNet reports its ASO users separately. An EOR is a single employer in a country where the client has no entity, and [Employer of Record & Global Employment](/books/workforce/employer-of-record) covers it; Deel and others also sell a US PEO alongside their EOR, priced per employee per month.
 
 ## Leaving a PEO
 

@@ -10,7 +10,7 @@ tags = ["payroll", "payroll-tax", "form-w2", "year-end", "efw2", "wage-reporting
 
 The W-2 is the one payroll document everyone sees: the employee files a return with it, the Social Security Administration posts their earnings record from it, the IRS compares it with four quarterly returns, and every state and city with an income tax wants its own copy. It is also the one document a payroll system produces for every worker at once, in the same few weeks, against a deadline that doesn't move: for tax year 2026, Copy A to SSA and the employee copies are both due **February 1, 2027** (January 31 is a Sunday). Every error made during the year surfaces in January, when a box that doesn't reconcile can no longer be fixed with a next-payroll adjustment.
 
-This chapter covers the W-2 box by box with the 2026 changes, the W-3 transmittal, SSA's EFW2 file format and Business Services Online, reconciling the W-2s to the 941s, state W-2 filing and annual reconciliations, local annual returns, electronic delivery and its consent rules, corrections on W-2c and W-3c, the information return penalty tiers, and the year-end close as a checklist the system runs rather than a list a person remembers. The tips and overtime reporting fields new for 2026 are worked in Tips & the 2025 Tax Law; imputed income behind box 12 code C in Supplemental Wages & Imputed Income; contractor 1099s in Contractors & 1099s.
+This chapter covers the W-2 box by box with the 2026 changes, the W-3 transmittal, SSA's EFW2 file format and Business Services Online, reconciling the W-2s to the 941s, state W-2 filing and annual reconciliations, local annual returns, electronic delivery and its consent rules, corrections on W-2c and W-3c, the information return penalty tiers, and the year-end close as a checklist the system runs rather than a list a person remembers. The tips and overtime reporting fields new for 2026 are worked in Tips & the 2025 Tax Law; imputed income behind box 12 code C in Supplemental Wages & Imputed Income; contractor 1099s in [Contractors & 1099s](/books/workforce/contractors-and-1099s).
 
 ## How the Platforms Do It
 
@@ -55,7 +55,7 @@ The 2026 W-2 boxes and what feeds each, from the General Instructions for Forms 
 - **The wage reporting threshold** rose from $600 to $2,000 for wages paid after 2025 when no income tax, Social Security or Medicare tax was withheld, adjusted for inflation after 2026.
 - **Box 14 split** into 14a (Other) and 14b (Treasury Tipped Occupation Codes), and box 9 shrank.
 - **New box 12 codes** TP, TT and TA, for the qualified tips and qualified overtime deductions and for Trump account contributions (employer contributions starting July 4, 2026, up to $2,500 a year).
-- **State paid family and medical leave:** employee contributions and employer voluntary payments under state PFML programs must be included as wages (Rev. Rul. 2025-4 and Notice 2026-6); State Paid Family & Medical Leave covers the programs.
+- **State paid family and medical leave:** employee contributions and employer voluntary payments under state PFML programs must be included as wages (Rev. Rul. 2025-4 and Notice 2026-6); [State Paid Family & Medical Leave](/books/workforce/state-paid-leave) covers the programs.
 - **Penalties** increased for returns due after December 31, 2026, and a new Form 15397 requests an extension to furnish employee copies.
 
 ### Worked Numbers: One Employee's W-2

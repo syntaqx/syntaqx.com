@@ -20,6 +20,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Commercial and Specialty Lines": "Commercial",
   "Communications Platforms": "Communications",
   "Communities and Conversation": "Communities",
+  "Contractors and Global": "Contractors",
   "Creators and Money": "Creator Money",
   "Customers and Billing": "Billing",
   "Decentralized Finance": "DeFi",
