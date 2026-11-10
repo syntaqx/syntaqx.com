@@ -77,7 +77,7 @@ claims := map[string]any{
 	"iss": clientID,
 	"sub": clientID,
 	"aud": tokenURL,
-	"jti": uuid.NewString(),
+	"jti": uuid.New().String(), // standard library uuid, Go 1.27+
 	"exp": time.Now().Add(4 * time.Minute).Unix(),
 }
 assertion, err := signer.SignJWT(claims, keyID) // the private key behind your registered JWKS

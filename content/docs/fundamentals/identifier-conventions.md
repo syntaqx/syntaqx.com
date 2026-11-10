@@ -46,18 +46,28 @@ CREATE TABLE posts (
 );
 ```
 
-PostgreSQL 18 generates v7 natively with `uuidv7()`. On older versions, generate it in the application: a timestamp in the first 48 bits, random bytes for the rest, then the version and variant bits.
+PostgreSQL 18 generates v7 natively with `uuidv7()`. On older versions, generate it in the application. Go has it in the standard library since 1.27 ([`uuid`](https://pkg.go.dev/uuid), no third-party package), and its `NewV7` returns IDs that sort in increasing order unless the system clock moves backwards, which covers the within-a-millisecond case above:
+
+```go tab="Go"
+id := uuid.NewV7() // standard library, Go 1.27+
+id.String()        // 01932c6c-7616-7590-a8db-cb4b0e4d1c8a
+```
+
+```rust tab="Rust"
+let id = Uuid::now_v7(); // uuid crate, "v7" feature
+id.to_string()           // 01932c6c-7616-7590-a8db-cb4b0e4d1c8a
+```
 
 ## UUID v4: Pure Randomness
 
-122 random bits, nothing else. Use v4 when the ID must reveal nothing, including when it was made. The cost is index locality: on a large, write-heavy table, random inserts mean more page splits, cache misses and write amplification.
+122 random bits, nothing else (`uuid.NewV4()` in Go's standard library; `uuid.New()` is currently the same thing). Use v4 when the ID must reveal nothing, including when it was made. The cost is index locality: on a large, write-heavy table, random inserts mean more page splits, cache misses and write amplification.
 
 ## UUID v5: Derived From a Name
 
 A [v5](https://datatracker.ietf.org/doc/html/rfc9562#section-5.5) UUID is a hash of a namespace and a name. The same input always produces the same ID, and that's the point:
 
 ```go tab="Go"
-uuid.NewSHA1(uuid.NameSpaceURL, []byte("https://example.com/users/42")) // github.com/google/uuid
+uuid.NewSHA1(uuid.NameSpaceURL, []byte("https://example.com/users/42")) // github.com/google/uuid; the standard library has no v5
 // always 38fcaf6d-63bc-5c9f-8a4f-de8cf4e651ed
 ```
 
