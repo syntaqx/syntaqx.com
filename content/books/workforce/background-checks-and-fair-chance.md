@@ -23,7 +23,7 @@ What background screening providers publish about their APIs and workflows, as o
 
 Checkr's docs also warn that it "does not guarantee the delivery of events in the order in which they are generated," which applies to every consumer of screening webhooks: order by the report's own timestamps and states, never by arrival.
 
-<!-- source-gap: wf-bgc-cra-docs | missing | public API and adverse action workflow documentation for First Advantage, HireRight, Sterling and other large CRAs | closes with: a public developer or help page from each describing objects, waiting periods and monitoring | checked: 2026-11-09 -->
+<!-- source-gap: wf-bgc-cra-docs | missing | public API and adverse action workflow documentation for First Advantage, HireRight, Sterling and other large CRAs | closes with: a public developer or help page from each describing objects, waiting periods and monitoring | checked: 2026-11-10 -->
 
 The shape that matters is Checkr's: the CRA produces a report; the employer, not the CRA, decides; and the adverse action process is a scheduled two-step workflow whose timing the employer's jurisdiction sets. Every CRA integration needs the same three things from the employer's side: a record of the disclosure and authorization before the order, the decision and its reasons after the report, and the two notices with their dates.
 

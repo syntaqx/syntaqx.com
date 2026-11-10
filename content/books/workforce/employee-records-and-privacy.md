@@ -60,7 +60,7 @@ The federal floor, with the event each clock starts from:
 
 States add their own: California's personnel records three years after termination and job title and wage rate history for employment plus three years ([Salary Range Posting Laws](/books/workforce/pay-transparency-and-equity#salary-range-posting-laws)), California's four years for employment records including automated-decision data ([Candidate Data Retention](/books/workforce/recruiting-and-hiring#candidate-data-retention)), Massachusetts' three years after termination, and many more. The EEOC's July 2026 proposal would remove part 1602's recordkeeping and preservation rules along with the EEO-1; until a final rule takes effect, 1602.14 applies.
 
-<!-- source-gap: wf-rec-state-retention | missing | a primary-source table of state payroll and personnel record retention periods beyond California, Massachusetts and Oregon | closes with: each state labor agency's recordkeeping rule | checked: 2026-11-09 -->
+<!-- source-gap: wf-rec-state-retention | missing | a primary-source table of state payroll and personnel record retention periods beyond California, Massachusetts and Oregon | closes with: each state labor agency's recordkeeping rule | checked: 2026-11-10 -->
 
 ### Worked Numbers: One Employee's Purge Dates
 
