@@ -66,9 +66,14 @@ describe("lcpReport", () => {
     expect(lcpReport(lcp(1200, "good"), "/books", [1440, 900])).toBeNull();
   });
 
-  it("names the element and splits the time", () => {
+  it("stays quiet for a load that only needs improvement", () => {
+    expect(lcpReport(lcp(3300, "needs-improvement"), "/books", [1440, 900])).toBeNull();
+  });
+
+  it("groups by route, names the element and splits the time", () => {
     const r = lcpReport(lcp(7240, "poor"), "/books", [1440, 900])!;
-    expect(r.fingerprint).toEqual(["lcp", "main>article>h1"]);
+    expect(r.fingerprint).toEqual(["lcp", "{{ transaction }}"]);
+    expect(r.tags.lcp_target).toBe("main>article>h1");
     expect(r.tags.lcp_route).toBe("/books");
     expect(r.extra).toMatchObject({ elementRenderDelay: 6900, resource: null });
   });

@@ -66,7 +66,7 @@ if (production) {
   });
   onLCP((metric) => {
     const report = lcpReport(metric, routes[0].path, [innerWidth, innerHeight]);
-    if (report) Sentry.captureMessage("Largest paint above 2.5s", { level: "warning", ...report });
+    if (report) Sentry.captureMessage("Largest paint above 4s", { level: "warning", ...report });
   });
 }
 
