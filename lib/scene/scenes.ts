@@ -3548,6 +3548,166 @@ const market: SceneFn = (s) => {
 };
 
 /**
+ * Workforce: a punch clock beside a pay stub. Its hand sweeps, a time card
+ * drops into the slot, and hours run down a cable into the stub, where the
+ * net pay prints a line at a time. Out the back, the stub pays the agency,
+ * the plan and the bank. On hover the stub separates into its layers:
+ * gross, then what's withheld, then net.
+ */
+const paystub: SceneFn = (s) => {
+  // the clock: a tall case with a round face on its front
+  const [x0, y0, a, b, h] = [0.9, 1.2, 2.4, 1.8, 3.4];
+  const y1 = y0 + b;
+  const [fx, fz, r] = [x0 + a / 2, 2.25, 0.78];
+  const ring = (rad: number, n = 36): V3[] =>
+    Array.from({ length: n }, (_, i): V3 => {
+      const t = (i / n) * Math.PI * 2;
+      return [fx + Math.cos(t) * rad, y1 + 0.02, fz + Math.sin(t) * rad];
+    });
+  const hand = (len: number, ang: number, accent = false): Part => ({
+    kind: "line",
+    a: [fx, y1 + 0.03, fz],
+    b: [fx + Math.sin(ang) * len, y1 + 0.03, fz + Math.cos(ang) * len],
+    alpha: 0.9,
+    accent,
+  });
+  const ticks = Array.from({ length: 12 }, (_, i): Part => {
+    const t = (i / 12) * Math.PI * 2;
+    const [c, sn] = [Math.sin(t), Math.cos(t)];
+    return {
+      kind: "line",
+      a: [fx + c * r * 0.82, y1 + 0.03, fz + sn * r * 0.82],
+      b: [fx + c * r * 0.95, y1 + 0.03, fz + sn * r * 0.95],
+      alpha: 0.6,
+    };
+  });
+  // a time card drops into the slot on top once a cycle
+  const T = 3.2;
+  const ph = (s.t % T) / T;
+  const fall = ease(Math.min(1, ph / 0.4));
+  const [cw, ch] = [1.2, 1.5];
+  const cz = h + 0.15 - ch + (1 - fall) * (ch + 0.9);
+  const shown = Math.max(0, cz + ch - Math.max(cz, h));
+  // the stub: three sheets, gross under withheld under net
+  const [sx, sy, sa, sb] = [4.4, 4.4, 4.6, 4.2];
+  const gap = 0.12 + s.spread * 0.85;
+  const sheet = (i: number) => 0.25 + i * gap;
+  const net = [5.4, 3.6, 4.6, 2.4];
+  const printed = Math.floor(s.t * 0.55) % (net.length + 2);
+  const done = Math.min(net.length, printed);
+  // where the money goes: an agency, a plan, the employee's bank
+  const payees: [number, number, number, boolean][] = [
+    [5.0, 0.9, 1.6, false],
+    [6.7, 1.3, 1.1, false],
+    [8.4, 1.7, 0.7, true],
+  ];
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // payees behind the stub, each wired from its back edge
+    ...payees.flatMap(([x, y, ph2, accent], i): Part[] => [
+      {
+        kind: "cable",
+        pts: [
+          [sx + 0.9 + i * 1.4, sy, 0.02],
+          [sx + 0.9 + i * 1.4, y + 0.9, 0.02],
+          [x + 0.45, y + 0.9, 0.02],
+        ],
+        speed: 0.6,
+        ...(accent ? { accent: true } : {}),
+      },
+      accent
+        ? { kind: "cyl", cx: x + 0.45, cy: y + 0.45, z: 0, r: 0.45, h: ph2, accent: true }
+        : { kind: "box", box: box(x, y, 0, 0.9, 0.9, ph2), small: true },
+    ]),
+    // the clock's base, then its case and face
+    { kind: "box", box: box(x0 - 0.2, y0 - 0.2, 0, a + 0.4, b + 0.4, 0.2) },
+    { kind: "box", box: box(x0, y0, 0.2, a, b, h - 0.2), slots: true },
+    { kind: "plane", pts: ring(r), v: 0.28 },
+    ...ticks,
+    hand(r * 0.5, s.t * 0.08),
+    hand(r * 0.78, s.t * 0.9, true),
+    { kind: "plane", pts: ring(r * 0.09, 12), v: 0.45 },
+    ...(shown > 0.02
+      ? [
+          {
+            kind: "box",
+            box: box(fx - cw / 2, y0 + b / 2 - 0.05, Math.max(cz, h), cw, 0.1, shown),
+            accent: fall < 1,
+            soft: true,
+          } satisfies Part,
+        ]
+      : []),
+    // hours run from the clock into the stub
+    {
+      kind: "cable",
+      pts: [
+        [fx, y1 + 0.2, 0.02],
+        [fx, sy + 1.6, 0.02],
+        [sx, sy + 1.6, 0.02],
+      ],
+      speed: 0.5,
+    },
+    // the stub's tray, then gross, withheld and net
+    { kind: "box", box: box(sx - 0.2, sy - 0.2, 0, sa + 0.4, sb + 0.4, 0.2) },
+    {
+      kind: "plane",
+      pts: quad(sx, sy, sheet(0), sa, sb),
+      v: 0.12,
+      rows: { lengths: [6, 4.2, 5.2, 3] },
+    },
+    ...(s.spread > 0.05
+      ? [0, 1].flatMap((i): Part[] =>
+          [
+            [sx, sy],
+            [sx + sa, sy + sb],
+          ].map(([x, y]): Part => ({
+            kind: "line",
+            a: [x, y, sheet(i)],
+            b: [x, y, sheet(i + 1)],
+            dashed: true,
+            alpha: 0.4,
+          })),
+        )
+      : []),
+    {
+      kind: "plane",
+      pts: quad(sx, sy, sheet(1), sa, sb),
+      v: 0.18,
+      rows: { lengths: [3.2, 4.6, 2.8, 3.8] },
+    },
+    {
+      kind: "plane",
+      pts: quad(sx, sy, sheet(2), sa, sb),
+      v: 0.24,
+      rows: {
+        lengths: net.slice(0, done),
+        ...(printed > net.length ? { accentRow: net.length - 1 } : {}),
+      },
+    },
+    // the tear line between the stub and the check
+    {
+      kind: "line",
+      a: [sx, sy + 1.05, sheet(2)],
+      b: [sx + sa, sy + 1.05, sheet(2)],
+      dashed: true,
+      alpha: 0.7,
+    },
+  ];
+  return {
+    parts,
+    ext: [
+      [0, 10, 0],
+      [10, 0, 0],
+      [10, 10, 0],
+      [0, 0, 0],
+      [fx, y0, h + 1.2],
+      [sx + sa, sy, 0.25 + 2 * 0.97],
+    ],
+    axes: ground(10),
+  };
+};
+
+/**
  * Hosting & Cloud: racks of real servers under a cloud, wired out to the
  * websites they serve. One site at a time deploys, rising into place lit.
  * On hover the cloud lifts off the servers it's made of.
@@ -4161,6 +4321,7 @@ export const scenes = {
   basket,
   bank,
   market,
+  paystub,
   cloud,
   board,
   library,
@@ -4183,6 +4344,7 @@ export const BOOK_SCENES = [
   "cloud",
   "board",
   "policy",
+  "paystub",
 ] as const satisfies readonly SceneName[];
 export type BookSceneName = (typeof BOOK_SCENES)[number];
 

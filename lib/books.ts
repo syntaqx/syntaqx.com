@@ -199,6 +199,18 @@ export const BOOKS: Book[] = [
       "It reads in thirteen parts, plus a glossary, from the business and its regulation through distribution, rating, policy administration and claims, to reinsurance, personal, commercial and life lines, workers' compensation, embedded insurance and service contracts, and the platform behind them.",
     ],
   },
+  {
+    slug: "workforce",
+    type: "industry",
+    name: "Workforce",
+    cover: "paystub",
+    summary:
+      "How payroll and HR run in software, from gross-to-net and payroll tax at every level to garnishments, wage-hour law, benefits, contractors and global pay.",
+    intro: [
+      "A paycheck looks like one number, and underneath it is a calculation and a set of promises. Hours, rates and elections become gross pay; gross pay becomes federal, state and local taxes, benefit deductions and garnishments, each with its own taxable wage base; and what's left moves to the employee's bank on a date the law fixes, while every amount withheld becomes a liability owed to an agency, a carrier, a plan or a court on its own deadline. A payroll provider, a PEO, an employer of record and an embedded payroll API are all keeping those promises for someone else's employees, out of money they collected first. This book surveys how the industry does each piece, benchmarked across ADP, Paychex, Paycom, Paylocity, Dayforce, Workday, Gusto, Rippling, Deel, TriNet, Check and the others, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in ten parts, plus a glossary: the business, gross to net, payroll tax, moving the money (funding, client funds, direct deposit, child support and garnishments), time and wage-hour law, hiring and HR records, leave, benefits administration, contractors and global payroll, and running the platform.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
@@ -206,12 +218,6 @@ export const UPCOMING_BOOKS: UpcomingBook[] = [];
 
 /** Books I'm weighing but haven't committed to, shown as "Considering". */
 export const CONSIDERING_BOOKS: FutureBook[] = [
-  {
-    name: "Workforce",
-    type: "industry",
-    summary:
-      "Gross-to-net payroll, tax by state and locality, garnishments, benefits enrollment and wage-hour law.",
-  },
   {
     name: "Logistics & Supply Chain",
     type: "industry",
