@@ -88,6 +88,10 @@ uuid.uuid5(uuid.NAMESPACE_URL, "https://example.com/users/42")
 
 Don't use v5 where a user can guess the input. Anyone who knows the namespace and the name can compute the ID, so it's no access control, and it can leak the input it was derived from.
 
+Go left v3 and v5 out of its standard library on purpose. The [design notes](https://github.com/golang/go/issues/62026#issuecomment-4209523935) call MD5 and SHA-1 "cryptographically broken" and expect new users to reach for v8 instead. That weakness is about deliberate collisions: it matters when an attacker chooses the names and two names landing on one ID would hurt. A fixture or an import key isn't that case, and v5 is still the one name-based version every language computes the same way, so I keep it there. Between the two old ones, [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562#section-5.3) says to use v5 over v3 where possible.
+
+When the names do come from untrusted input, the RFC puts name-based IDs on SHA-256 or newer [in the v8 space](https://datatracker.ietf.org/doc/html/rfc9562#appendix-B.2). The catch is that v8's layout is [left to the implementation](https://datatracker.ietf.org/doc/html/rfc9562#section-5.8), so two libraries won't derive the same ID from the same name. Use it only when every system that derives IDs runs your code.
+
 ## v1, v6 and ULID
 
 - **v1** embeds a timestamp and a node ID (historically the MAC address) in an order that doesn't sort. Don't create new ones.
