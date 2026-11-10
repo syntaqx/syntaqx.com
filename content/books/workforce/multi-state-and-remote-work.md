@@ -34,7 +34,7 @@ States tax their residents on all income and nonresidents on income from sources
 - **No double withholding by default.** Without an agreement or a rule saying otherwise, an employer doesn't withhold the full amount for both states.
 
 The resident state's credit is what makes this work: a resident who paid tax to a work state claims a credit on the resident return, usually limited to the resident state's tax on the same income. Wisconsin's guidance shows the limitation and its exceptions: the cap of the credit at the Wisconsin tax on the income taxed by the other state "does not apply to income that is taxed by Minnesota, Illinois, Iowa, or Michigan." The credit is the employee's to claim; the employer's job is to withhold in a pattern that doesn't leave the employee with a large balance due in the resident state.
-<!-- source-gap: wf-resident-credit-withholding | missing | the states that require an employer to withhold the resident-state excess when the work state's tax is lower | closes with: each resident state's employer withholding guide | checked: 2026-11-09 -->
+<!-- source-gap: wf-resident-credit-withholding | missing | the states that require an employer to withhold the resident-state excess when the work state's tax is lower | closes with: each resident state's employer withholding guide | checked: 2026-11-10 -->
 
 ## Reciprocity Agreements
 
@@ -44,7 +44,7 @@ A reciprocity agreement between two states says each will not tax the other's re
 - **Wisconsin** has reciprocity with Illinois, Indiana, Kentucky and Michigan. Minnesota "isn't a reciprocity state" with Wisconsin.
 
 Other agreements in the Midwest and Mid-Atlantic follow the same shape, each with its own certificate, and the list changes when a state ends an agreement.
-<!-- source-gap: wf-reciprocity-list | missing | the complete list of state reciprocity agreements for 2026 and each state's exemption certificate | closes with: each state revenue department's reciprocity page (Illinois, Indiana, Kentucky, Maryland, Michigan, Minnesota, Montana, North Dakota, Ohio, Pennsylvania, Virginia, West Virginia, Wisconsin, DC) | checked: 2026-11-09 -->
+<!-- source-gap: wf-reciprocity-list | missing | the complete list of state reciprocity agreements for 2026 and each state's exemption certificate | closes with: each state revenue department's reciprocity page (Illinois, Indiana, Kentucky, Maryland, Michigan, Minnesota, Montana, North Dakota, Ohio, Pennsylvania, Virginia, West Virginia, Wisconsin, DC) | checked: 2026-11-10 -->
 
 Three implementation consequences:
 
@@ -62,8 +62,13 @@ New York sources a nonresident employee's wages by days: the New York portion is
 
 TSB-M-06(5)I sets the test for a bona fide employer office at home: it must meet "a) the primary factor, or b) at least 4 of the secondary factors and 3 of the other factors." The primary factor is that the home office "contains or is near specialized facilities" the work requires. The six secondary factors include that the home office is a requirement or condition of employment, that the employer has a bona fide business purpose for it, that the employee performs core duties there, meets clients there regularly, has no designated office space at the employer, and is reimbursed for home office expenses. The ten other factors include a separate business phone line and listing, an exclusive business area, records or inventory kept there, signage, advertising, business insurance, a home office deduction and that "The employee is not an officer of the company." The memo also applies the rule to Yonkers nonresidents.
 
-Other states have similar rules, and some apply them only to residents of states that have one.
-<!-- source-gap: wf-convenience-states | missing | which states besides New York apply a convenience-of-the-employer rule in 2026 (for example Connecticut's retaliatory rule, Delaware, Nebraska, Pennsylvania, New Jersey) | closes with: each state's statute or revenue guidance | checked: 2026-11-09 -->
+Other states have similar rules, and some apply them only to residents of states that have one:
+
+- **Connecticut** includes in a nonresident's Connecticut income "income from days worked outside this state for such person's convenience," but only "if such person's state of domicile uses a similar test" (Conn. Gen. Stat. 12-711(b)(2)(C)).
+- **New Jersey** enacted the same retaliatory shape in P.L.2023, c.125 (July 21, 2023), "retroactive to January 1, 2023." Its Division of Taxation says "The new law only applies to nonresident employees working for a New Jersey employer" who live in states with a similar test, "such as Delaware, Nebraska, and New York," that "this list may change accordingly," that it doesn't apply to Pennsylvania residents because of the reciprocal agreement, and that it excuses remote work "due to the necessity of the employer."
+- **Pennsylvania's** regulation allows days worked outside the state only for services "which, of necessity, obligate the employe" to out-of-state duties "in the service of his employer" (61 Pa. Code 109.8).
+
+So the rule set is a pair of jurisdictions again: the work state's test, and for Connecticut and New Jersey, whether the employee's home state has one. I didn't open Delaware's or Nebraska's own text, so their rules here rest on New Jersey's characterization. <!-- source-gap: wf-convenience-states | secondary | Delaware's and Nebraska's convenience-of-the-employer rules, from their own statute or guidance | closes with: Delaware Division of Revenue and Nebraska Department of Revenue guidance or statute text, opened | checked: 2026-11-10 -->
 
 ### Worked Numbers: Telecommuting Days Under the Convenience Rule
 
@@ -85,8 +90,8 @@ A traveling employee who works a few days in a state technically earns wages sou
 
 - **Indiana.** If the employer has "a time and attendance system where employees are required to record the employee's out-of-state work location on a contemporaneous basis" and uses it to allocate pay, it need not withhold Indiana state and county tax for an employee "reasonably expected to work in Indiana for 30 days or less" in the year. If the employee then works more than 30 days, the employer must "withhold the tax that otherwise would have been withheld for the first 30 days" and on everything after; it may increase withholding in any reasonable way to catch up, reporting the catch-up in the month withheld. Days worked in Indiana for a previous employer count toward the 30. An employee can also file Form WH-4AFF, relieving the employer until the employee passes 30 days. Professional athletes, entertainers and public figures are excluded.
 - **Ohio municipalities.** The 20-day occasional entrant rule of ORC 718.011 works the same way at the city level: no withholding for a municipality where the employee works 20 or fewer days in the year unless it is their principal place of work.
-- **Other states** set their own thresholds, and a federal Mobile Workforce State Income Tax Simplification Act, which would set a uniform 30-day threshold, has been introduced in several Congresses.
-<!-- source-gap: wf-mobile-thresholds | missing | each state's 2026 nonresident withholding threshold in days or dollars, and the current bill number and status of the Mobile Workforce State Income Tax Simplification Act | closes with: each state's withholding guide and congress.gov | checked: 2026-11-09 -->
+- **Other states** set their own thresholds. A federal Mobile Workforce State Income Tax Simplification Act has been introduced in several Congresses; in the 119th it is S. 1443, introduced April 10, 2025, which would let a state tax a nonresident's wages only for work there "for more than 30 days" and ties withholding and reporting to the same test. I couldn't open congress.gov for its current status.
+<!-- source-gap: wf-mobile-thresholds | missing | each state's 2026 nonresident withholding threshold in days or dollars, and the status of S. 1443 (119th Congress) | closes with: each state's withholding guide and the congress.gov actions page for S. 1443 | checked: 2026-11-10 -->
 
 ### Worked Numbers: Crossing Indiana's 30 Days
 
@@ -109,7 +114,14 @@ State unemployment insurance doesn't split wages by days the way income tax does
 ## Allocating Wages by Day, Including Equity
 
 Day-based allocation (New York's formula is the model) needs a day ledger: for each working day, where the employee worked and whether the day counts as a working day and as worked in the state. Pay that is earned over a period longer than a pay period, chiefly stock compensation and some bonuses, needs the ledger over its earning period, not the payday. Equity is the common case: restricted stock that vests after four years was earned over the four years, and a state that sources it by the workdays in the state over the grant-to-vest period taxes a share of it even if the employee left the state years before vesting. The payroll system records the taxable event in the vest year and needs the employee's work-state history back to the grant date to allocate it.
-<!-- source-gap: wf-equity-allocation | missing | New York's and California's allocation rules for stock options and restricted stock earned across states | closes with: New York's regulation or TSB on equity allocation and California FTB Publication 1004 | checked: 2026-11-09 -->
+
+New York writes the periods down (20 NYCRR 132.24). The New York share is a fraction whose numerator is "the number of days worked within New York State for the grantor" during the allocation period and whose denominator is "the number of days worked both within and without New York State" in it. The period depends on the instrument:
+
+- **Statutory options, nonstatutory options without a readily ascertainable fair market value, and stock appreciation rights:** "the period of time from the date of grant to the date on which all service-related conditions" for exercise are satisfied.
+- **Nonstatutory options with a readily ascertainable fair market value, and restricted stock with a section 83(b) election:** "the same period of time that applies to regular, non-stock-based remuneration from the grantor."
+- **Restricted stock without an 83(b) election:** from "the date that the stock was received" to the earliest of substantial vesting, the end of services or sale.
+
+California's rules are in FTB Publication 1004, which I couldn't open (ftb.ca.gov refused automated access), so they aren't stated here. <!-- source-gap: wf-equity-allocation | missing | California's allocation rules for stock options and restricted stock earned across states | closes with: California FTB Publication 1004, opened | checked: 2026-11-10 -->
 
 ### Worked Numbers: Allocating a Vest
 
@@ -225,11 +237,17 @@ Nonresident audits are day-count audits: a state asks for the days worked in it 
 
 - [New York State: TSB-M-06(5)I, Application of the convenience of the employer test to telecommuters and others (May 15, 2006)](https://www.tax.ny.gov/pdf/memos/income/m06_5i.pdf), the 20 NYCRR 132.18(a) day allocation, normal work days at home, and the bona fide employer office factors
 - [Ohio Revised Code 718.011](https://codes.ohio.gov/ohio-revised-code/section-718.011), the twenty-day municipal threshold and principal place of work
+- [20 NYCRR 132.24](https://www.law.cornell.edu/regulations/new-york/20-NYCRR-132.24), New York's allocation periods and workday fraction for stock options, SARs and restricted stock
+- [Connecticut General Statutes 12-711](https://www.cga.ct.gov/current/pub/chap_229.htm#sec_12-711), subsection (b)(2)(C): convenience days for nonresidents whose home state uses a similar test
+- [61 Pa. Code 109.8](https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/061/chapter109/s109.8.html), out-of-state days allowed only when duties of necessity require them
+- [S. 1443, Mobile Workforce State Income Tax Simplification Act of 2025 (introduced)](https://www.govinfo.gov/content/pkg/BILLS-119s1443is/html/BILLS-119s1443is.htm), the 30-day threshold and the withholding tie
 
 **Agency guidance and forms**
 
 - [New York State: Nonresident and part-year resident FAQs](https://www.tax.ny.gov/pit/file/nonresident-faqs.htm), telecommuting days as New York days unless a bona fide employer office exists
 - [New Jersey Division of Taxation: Reciprocal agreement with Pennsylvania](https://www.nj.gov/treasury/taxation/njit25.shtml), Pennsylvania residents working in New Jersey, NJ-165 and REV-419EX
+- [New Jersey Division of Taxation: Convenience of the employer rule](https://nj.gov/treasury/taxation/conveniencerule.shtml), P.L.2023, c.125, enacted July 21, 2023 and retroactive to January 1, 2023
+- [New Jersey Division of Taxation: Convenience of the employer rule FAQ](https://nj.gov/treasury/taxation/conveniencerulefaq.shtml), the retaliatory rule, the trigger states, the Pennsylvania exclusion and the necessity exception (updated October 30, 2025)
 - [Wisconsin Department of Revenue: Working in another state](https://www.revenue.wi.gov/Pages/FAQS/pcs-work.aspx), reciprocity with Illinois, Indiana, Kentucky and Michigan, wages only, and the credit limitation exceptions
 - [Indiana Department of Revenue: Departmental Notice 1](https://www.in.gov/dor/files/dn01.pdf), the 30-day rule, contemporaneous time systems, catch-up withholding, WH-4AFF and county rules by January 1
 - [U.S. Department of Labor: Comparison of State UI Laws 2023, Coverage](https://oui.doleta.gov/unemploy/pdf/uilawcompar/2023/coverage.pdf), localization of work for multi-state workers

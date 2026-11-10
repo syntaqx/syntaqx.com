@@ -101,7 +101,7 @@ A **coverage tier** is how many people the election covers and is the unit most 
 
 The biweekly column is the annual cost over 26 periods ($140.00 × 12 ÷ 26 = $64.615, rounded to $64.62, with the last period absorbing the difference). The alternative many employers use is deducting the semimonthly amount on 24 of 26 biweekly checks and skipping the two months with a third check, which keeps each month's deduction equal to the month's premium. Both are policy; the engine needs the policy as data, because it changes what a mid-year life event and a termination owe.
 
-**Whether the employee pays pre-tax.** Premiums under the cafeteria plan reduce income tax, Social Security, Medicare and FUTA wages; the taxability is per pay item type ([Section 125 Cafeteria Plans](/books/workforce/deductions#section-125-cafeteria-plans)). Domestic partner coverage is the common exception: a domestic partner who isn't the employee's tax dependent makes the employer's share of that coverage taxable income and the employee's share after-tax, a split I couldn't source to a current IRS page and treat as a plan and tax counsel setting. <!-- source-gap: wf-domestic-partner-imputed | missing | employer contribution toward a non-dependent domestic partner's health coverage is taxable income to the employee and the employee share is after-tax | closes with: an IRS publication or ruling page stating the treatment, opened | checked: 2026-11-10 -->
+**Whether the employee pays pre-tax.** Premiums under the cafeteria plan reduce income tax, Social Security, Medicare and FUTA wages; the taxability is per pay item type ([Section 125 Cafeteria Plans](/books/workforce/deductions#section-125-cafeteria-plans)). Domestic partner coverage is the common exception. Publication 15-B's rule is that "Any fringe benefit you provide is taxable and must be included in the recipient's pay unless the law specifically excludes it," the accident and health exclusion reaches employees, "their spouses, their dependents, and their children (under age 27 at the end of the tax year)," and a registered domestic partnership or civil union isn't a marriage for federal tax purposes. So the employer's share of coverage for a partner who is neither a spouse nor a tax dependent is taxable income to the employee. That plans take the employee's share for the partner after-tax follows from the same exclusion, but the IRS pages I opened don't say it in those words, so I treat it as a plan and tax counsel setting. <!-- source-gap: wf-domestic-partner-imputed | missing | the employee's own share of premium for a non-dependent domestic partner's health coverage can't be paid pre-tax through a cafeteria plan | closes with: an IRS publication, regulation or ruling stating the treatment of the employee share, opened | checked: 2026-11-10 -->
 
 ## From Election to Deduction
 
@@ -302,6 +302,10 @@ Enrollment is audited by carriers (premium and eligibility audits), plan auditor
 - [29 CFR 2590.715-2714](https://www.law.cornell.edu/cfr/text/29/2590.715-2714), dependent coverage of children to age 26 and the conditions a plan can't impose
 - [29 USC 1169](https://www.law.cornell.edu/uscode/text/29/1169), qualified medical child support orders and the National Medical Support Notice
 - [45 CFR 147.102](https://www.law.cornell.edu/cfr/text/45/147.102), fair health insurance premiums: rating factors, per-member family rating with the three-oldest-children rule, and the small group average premium option
+
+**Agency guidance and forms**
+
+- [IRS: Publication 15-B](https://www.irs.gov/publications/p15b), fringe benefits taxable unless excluded, the accident and health exclusion's reach, and registered domestic partners not treated as married
 
 **Vendor documentation**
 
