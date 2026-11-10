@@ -27,7 +27,7 @@ Mail as each host's public pages describe it, as of October 2026:
 | **DreamHost** | Three-month Professional Email trial on Web Hosting; unlimited on DreamPress, VPS and Dedicated | Professional Email, $1.99/mo per mailbox (or $1.67 yearly), 25 GB | Its own | | 100 recipients an hour per address over SMTP; 200 an hour per server for PHP and CGI on shared |
 | **Namecheap** | cPanel mail, 10 GB total on Shared Hosting | Private Email: 5 GB, 30 GB, 75 GB plans | Not stated on opened pages | | Private Email 500 an hour per mailbox; shared hosting 50 to 10,000 an hour per domain by plan |
 
-<!-- source-gap: godaddy-titan-tiers | missing | GoDaddy Professional Email (Titan) storage tiers, 1 GB to 100 GB | closes with: a live GoDaddy US page listing Titan plan storage | checked: 2026-11-09 -->
+<!-- source-gap: godaddy-titan-tiers | missing | GoDaddy Professional Email (Titan) storage tiers, 1 GB to 100 GB | closes with: a live GoDaddy US page listing Titan plan storage | checked: 2026-11-10 -->
 
 What the table shows:
 

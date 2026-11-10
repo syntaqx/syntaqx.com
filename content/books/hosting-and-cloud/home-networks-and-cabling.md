@@ -105,13 +105,11 @@ Past 10G, and between rooms at 10G, glass and twinax beat copper on power, heat 
 
 | Generation | IEEE | Bands | Widest channel | What matters at home |
 | --- | --- | --- | --- | --- |
-| Wi-Fi 4 | 802.11n | 2.4, 5 GHz | Not covered here | MIMO; the floor for anything still connected |
-| Wi-Fi 5 | 802.11ac | 5 GHz | Not covered here | The installed base of older laptops and TVs |
+| Wi-Fi 4 | 802.11n | 2.4, 5 GHz | 40 MHz | MIMO; the floor for anything still connected |
+| Wi-Fi 5 | 802.11ac | 5 GHz | 160 MHz (80 MHz on wave 1) | The installed base of older laptops and TVs |
 | Wi-Fi 6 | 802.11ax | 2.4, 5 GHz | 160 MHz | OFDMA: many small clients sharing airtime |
 | Wi-Fi 6E | 802.11ax | adds 6 GHz | 160 MHz | 14 more 80 MHz and 7 more 160 MHz channels, free of legacy clients |
 | Wi-Fi 7 | 802.11be | 2.4, 5, 6 GHz | 320 MHz (6 GHz only) | Multi-Link Operation across bands; 4K QAM, about 20% over 1024 QAM |
-
-<!-- source-gap: wifi-4-5-channel-widths | missing | widest channel widths for Wi-Fi 4 and 5 | closes with: the IEEE 802.11n/ac amendment pages or a vendor design guide | checked: 2026-11-01 -->
 
 The 6 GHz band is the reason to buy 6E or 7: in the US, FCC 20-51 lets low-power indoor access points use the whole 5.925 to 7.125 GHz band without an automated frequency coordination system (standard-power and outdoor use need one, in U-NII-5 and U-NII-7). The cost is range: 6 GHz is absorbed by walls faster than 5 GHz, so it rewards more access points, not stronger ones.
 
@@ -125,7 +123,7 @@ The 6 GHz band is the reason to buy 6E or 7: in the US, FCC 20-51 lets low-power
 
 **Powerline** adapters (HomePlug AV2, G.hn) carry Ethernet over the electrical wiring. They are the last resort before mesh; their throughput depends on the circuit, and I have no vendor-neutral measurement to cite.
 
-<!-- source-gap: powerline-throughput | missing | measured powerline (HomePlug AV2, G.hn) throughput and latency in homes | closes with: an independent lab test or the HomePlug/HomeGrid specifications | checked: 2026-11-01 -->
+<!-- source-gap: powerline-throughput | missing | measured powerline (HomePlug AV2, G.hn) throughput and latency in homes | closes with: an independent lab test or the HomePlug/HomeGrid specifications | checked: 2026-11-10 -->
 
 ## ISP Handoffs
 
@@ -432,6 +430,7 @@ Alert on `probe_success` falling below 99% over five minutes and on the 95th per
 
 **Wi-Fi, coax and spectrum**
 
+- [Intel: Different Wi-Fi Protocols and Data Rates](https://www.intel.com/content/www/us/en/support/articles/000005725/wireless/legacy-intel-wireless-products.html), channel widths of 20 and 40 MHz for 802.11n and up to 160 MHz for 802.11ac (80 MHz on wave 1)
 - [Wi-Fi Alliance: Wi-Fi 6 and generational names](https://www.wi-fi.org/news-events/newsroom/wi-fi-alliance-introduces-wi-fi-6), 3 October 2018
 - [Wi-Fi Alliance: Wi-Fi 6E](https://www.wi-fi.org/news-events/newsroom/wi-fi-alliance-brings-wi-fi-6-into-6-ghz), 3 January 2020, additional 80 and 160 MHz channels
 - [Wi-Fi Alliance: Wi-Fi CERTIFIED 7](https://www.wi-fi.org/news-events/newsroom/wi-fi-alliance-introduces-wi-fi-certified-7), 8 January 2024, 320 MHz, MLO, 4K QAM
