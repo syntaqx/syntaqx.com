@@ -879,8 +879,8 @@ export default function SecretsPage() {
               aria-label="Create a secret with curl"
               className="overflow-x-auto rounded-md border bg-background px-3 py-2 font-mono text-xs text-foreground"
             >
-              {`curl -s https://api.syntaqx.com/secrets \
-  -H 'Content-Type: application/json' \
+              {`curl -s https://api.syntaqx.com/secrets \\
+  -H 'Content-Type: application/json' \\
   -d '{"secret":"hunter2","ttl":600}'`}
             </pre>
             <p>
