@@ -21,7 +21,7 @@ As of November 2026, what public filings and vendor pages say about replacements
 | **Guidewire** (10-K for fiscal 2026) | Implementation and testing "typically lasts six to 24 months or longer and unexpected implementation delays and difficulties can occur"; missed expectations have led to "monetary credits"; a stated risk is its ability to "migrate existing term license customers to cloud-based offerings on a subscription basis" |
 | **Sapiens** (20-F for 2024) | "Our solutions are delivered over periods of time ranging from several months to a few years" |
 | **Duck Creek** (10-K for fiscal 2022) | Missed implementation estimates risk "costly disputes with, and ultimately loss of, customers" |
-| **Equisoft** | Leads with "350+" data migrations for its life and annuity clients |
+| **Equisoft** | Leads with "350+" data migrations and front-end tool implementations |
 | **DXC Technology** | Sells both heritage life platforms (Cyberlife, Ingenium, Integral) and their cloud versions, plus business process services for life and wealth |
 | **Atlantic American** (10-K for 2025) | Material weaknesses including failure to "resolve differences among third-party enrollment data, the policy administration system and the general ledger" |
 
@@ -89,7 +89,7 @@ My numbers. A twelve-month policy written on the old system for $1,200.00, effec
 | **Option A: run off.** Old ledger keeps the policy's premium and earns it to Sept 1; the new system's conversion transaction carries $0 written premium | Earns the remaining $604.93 | $0 | $1,200.00 |
 | **Option B: transfer unearned.** Old ledger books a conversion-out entry of −$604.93; the new ledger books a conversion-in entry of +$604.93 earning from March 1 to September 1 | $595.07 | $604.93 | $1,200.00 |
 
-Option B puts all future earning, endorsements and cancellations on one system, which is why big bang conversions usually take it. It also creates the trap: the conversion entries are not written premium. They must be excluded from the State Page's direct written premium, from premium tax, from statistical plan premium and from commissions, or the policy is reported, taxed and paid twice. So the transfer is its own entry kind, carried through every report as a conversion, and reconciled to zero across the two ledgers.
+Option B puts all future earning, endorsements and cancellations on one system, which is why big bang conversions usually take it. It also creates the trap: the conversion entries are not written premium. They must be excluded from the State Page's direct written premium, from premium tax, from statistical plan premium and from commissions, or the policy is reported, taxed and paid twice. So the transfer is its own entry kind, carried through every report as a conversion, and reconciled to zero across the two ledgers. Earning is the one place the entries must count: each carries the earning window from the conversion time to the term's end, and the core model's earned premium query reads `kind IN ('premium', 'conversion_transfer')`, so the old ledger's −$604.93 stops its earning on March 1 and the new ledger's +$604.93 starts it. A query left at `kind = 'premium'` would have the old system earn the full $1,200.00 and the new system earn nothing.
 
 ```go tab="Go"
 // TransferUnearned splits a term's premium at a conversion time: what the old
@@ -114,7 +114,7 @@ pub fn transfer_unearned(premium: i64, start: DateTime<Utc>, end: DateTime<Utc>,
 }
 ```
 
-For $120,000 cents from September 1, 2026 to September 1, 2027, converting March 1, 2027: earned 59,507, moved 60,493, matching the table. Computing the earned part by the hour rather than the day matters only when the conversion time isn't midnight at the risk's 12:01 a.m. boundary, which is a reason to convert at a term-day boundary.
+For $120,000 cents from September 1, 2026 to September 1, 2027, converting March 1, 2027, all at midnight UTC: earned 59,507, moved 60,493, matching the table. Pass times in the risk's local zone and the November daylight saving change adds an hour to the elapsed time (59,521 earned), which is one more reason to compute on term days. Computing the earned part by the hour rather than the day matters only when the conversion time isn't midnight at the risk's 12:01 a.m. boundary, which is a reason to convert at a term-day boundary.
 
 ## Migrating Open Claims
 
@@ -152,14 +152,14 @@ The options, each visible in public vendor offerings:
 
 - **Keep the legacy system and modernize around it.** Wrap it with APIs, move it to new infrastructure, and convert nothing. DXC's product list, with heritage platforms alongside "cloud evolution" versions of the same names, describes this path.
 - **Outsource the block's administration** to a firm that runs the legacy platform as a service (DXC's business process services for life and wealth is one).
-- **Convert block by block** onto a modern platform, the work Equisoft's "350+" migrations represent.
+- **Convert block by block** onto a modern platform, the work behind Equisoft's "350+" data migrations and front-end implementations.
 - **Transfer the block** by reinsurance or sale to a company that specializes in closed blocks, which moves the administration problem with the risk ([Life Reserves, Capital & Private Equity](/books/insurance/life-reserves-and-capital)).
 
 For P&C the long tail is claims, not policies: a workers' comp or liability claim open for twenty years outlives several claims systems, and each conversion has to carry its full payment and reserve history.
 
 ## How to Build It
 
-These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and the system-of-record columns in [Core Platforms](/books/insurance/core-platforms#how-to-build-it). A converted policy gets a `policy_transactions` row of a new kind, `conversion`, and conversion premium transfers get a new `premium_entries` kind so every report can exclude them:
+These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model) and the system-of-record columns in [Core Platforms](/books/insurance/core-platforms#how-to-build-it). A converted policy gets a `policy_transactions` row of a new kind, `conversion` (a system conversion; a life term conversion is a different event, recorded as `life_event = 'conversion'` in [In-Force Administration](/books/insurance/in-force-administration#how-to-build-it)), and conversion premium transfers get a new `premium_entries` kind so every report can exclude them:
 
 ```sql
 ALTER TABLE policy_transactions DROP CONSTRAINT policy_transactions_kind_check;
@@ -205,7 +205,7 @@ CREATE TABLE conversion_mappings (         -- the crosswalk: every source record
 Design choices that matter:
 
 - **Every converted row has a crosswalk entry** to its source, so a claim adjuster, an examiner or a court can see where a record came from and what it looked like there.
-- **Conversion entries are their own kinds,** excluded from written premium, premium tax, statistical plans and commissions, and reconciled to zero across both ledgers.
+- **Conversion entries are their own kinds,** excluded from written premium, premium tax, statistical plans and commissions, included in earning, and reconciled to zero across both ledgers.
 - **Side effects are off by constraint,** and a batch is accepted only when its counts and totals reconcile.
 - **System of record per policy and claim,** dated, so that during a rollover each record knows which system governs it ([Core Platforms](/books/insurance/core-platforms#how-to-build-it)).
 - **Pending legal clocks are converted as tasks** with their original rule and due date, never recomputed from the conversion date.

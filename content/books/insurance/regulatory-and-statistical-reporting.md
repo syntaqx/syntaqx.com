@@ -31,7 +31,7 @@ Every row is built from the same records: premium entries by transaction, covera
 
 ## Statistical Plans and Agents
 
-States require P&C insurers to report premium and loss data under a statistical plan to a statistical agent the state designates, and advisory organizations and regulators build loss costs, rate reviews and market reports from the pooled data. Verisk's 10-K describes the scale: it is a statistical agent in all 50 states, Puerto Rico and DC; in 2025 "P&C insurers sent us approximately 3.6 billion detailed individual records of insurance transactions"; its database holds over 38.9 billion statistical records; and the same business provides "policy language, prospective loss costs, policy writing and rating rules" and processes about 2,000 regulatory filings a year ([Advisory Loss Costs and the Multiplier](/books/insurance/rate-and-form-filing#advisory-loss-costs-and-the-multiplier)). NISS publishes five plans (Auto Volume I, Auto Volume II, Commercial Lines, Homeowners and Other Than Auto) and reports issuing 8,884 annual compliance reports.
+States require P&C insurers to report premium and loss data under a statistical plan to a statistical agent the state designates, and advisory organizations and regulators build loss costs, rate reviews and market reports from the pooled data. Verisk's 10-K describes the scale: it is a statistical agent in all 50 states, Puerto Rico and DC; in 2025 "P&C insurers sent us approximately 3.6 billion detailed individual records of insurance transactions"; its database holds over 38.9 billion statistical records; and the same business provides "policy language, prospective loss costs, policy writing and rating rules" and processes about 2,000 regulatory filings a year ([Advisory Loss Costs and the Multiplier](/books/insurance/rate-and-form-filing#advisory-loss-costs-and-the-multiplier)). NISS publishes five plans (Auto Volume I, Auto Volume II, Commercial Lines, Homeowners and Other Than Auto) and reports 8,884 annual compliance reports processed for its members.
 
 A statistical record differs from an accounting entry in four ways:
 
@@ -60,9 +60,9 @@ A data call is a regulator's request for data the routine reports don't contain.
 
 **The Market Conduct Annual Statement.** The MCAS is "a uniform system of collecting market-related information to help states monitor the market conduct of companies," collecting claims and underwriting data on 13 lines (private passenger auto, homeowners, life, annuity, long-term care, health, lender-placed, disability income, private flood, other health, pet, short-term limited duration health and travel), with 51 participating jurisdictions as of the 2024 data year ([The Market Conduct Annual Statement](/books/insurance/market-conduct#the-market-conduct-annual-statement)). For data year 2025, submissions were due April 30, 2026 for all lines except health, other health and short-term limited duration (May 31, 2026), with scorecards posted July 1 and August 1, 2026.
 
-Each line has its own data call and definitions document. The homeowners call for 2025 (version 2025.0.3, reporting period January 1 to December 31, 2025, "Filing Deadline: April 30, 2026") asks for interrogatories (MGAs and TPAs used, digital claim settlement vendors, any block sold or moved), claims closed with and without payment by days-to-close band (0 to 30 days through more than 365), policies in force by form, direct premium written, company-initiated nonrenewals, cancellations by reason and timing (nonpayment, insured request, and company-initiated at under 60 days, 60 to 90 days and over 90 days in force), complaints and lawsuits. The definitions decide the counts: "if a policy cancels for non-pay three times," each cancellation is counted.
+Each line has its own data call and definitions document. The homeowners call for 2025 (version 2025.0.3, reporting period January 1 to December 31, 2025, "Filing Deadline: April 30, 2026") asks for interrogatories (MGAs and TPAs used, digital claim settlement vendors, any block sold or moved), claims closed with and without payment by days-to-close band (0 to 30 days through more than 365), policies in force by form, direct premium written, company-initiated nonrenewals, cancellations by reason and timing (nonpayment or nonsufficient funds, insured request, and company-initiated cancellations whose notice was mailed within the first 59 days, 60 to 90 days, or more than 90 days after the policy's original inception date, not its renewal date), complaints and lawsuits. The definitions decide the counts: cancellations count when their effective date falls in the reporting year, rewrites without a lapse are excluded, and "if a policy cancels for non-pay three times in a policy period, and is reinstated each time," each cancellation is counted.
 
-**Federal data calls.** Treasury's Federal Insurance Office runs an annual data call for the Terrorism Risk Insurance Program, and its 2026 call added a cyber-hybrid terrorism modeled-loss scenario; the program's 2026 insurance marketplace aggregate retention amount was set at $58,673,180,666 (FIO annual report, September 2026).
+**Federal data calls.** Treasury's Federal Insurance Office runs an annual data call for the Terrorism Risk Insurance Program, and its 2026 call added a cyber-hybrid terrorism modeled-loss scenario; the program's 2026 insurance marketplace aggregate retention amount, announced in a Federal Register notice on December 18, 2025, is $58,673,180,666 (FIO annual report, September 2026). The 2026 call collected data for calendar year 2025 from every insurer participating in TRIP, subject to reporting exemptions.
 
 **Ad hoc calls.** After a catastrophe, during a market crisis or for a study, a regulator may ask for counts or records in a template of its own. These arrive with a deadline and a spreadsheet, and the insurer's ability to answer in days rather than months depends on whether the definitions can be expressed as queries over the core tables.
 
@@ -74,10 +74,10 @@ My policy. A homeowners policy effective February 1, 2025 is cancelled for nonpa
 | --- | --- | --- |
 | Cancellations for nonpayment | Each cancellation counted, including repeats | 2 |
 | Cancellations at the insured's request | | 1 |
-| Company-initiated cancellations by days in force | Under 60, 60 to 90, over 90 days | 0 in each band (nonpayment and insured request are their own categories in this call) |
+| Company-initiated cancellations by notice timing | Notice mailed within 59, 60 to 90, or over 90 days after original inception | 0 in each band on my reading: the call lists nonpayment and insured request as their own categories and bands the company-initiated ones; a carrier that reads nonpayment as company-initiated would band the April notice by its mailing date, not the cancellation date |
 | Policies in force at year end | | 0 |
 
-The policy's `policy_transactions` already hold every fact the call needs: kind (cancellation, reinstatement), reason (nonpayment, insured request), effective date and the term's start, so the counts are a versioned query. A reporting extract that kept only each policy's final status would report one cancellation, not three.
+The policy's `policy_transactions` and `notices` already hold every fact the call needs: kind (cancellation, reinstatement), reason (nonpayment, insured request), effective date, the policy's original inception and the date each cancellation notice was mailed, so the counts are a versioned query. A reporting extract that kept only each policy's final status would report one cancellation, not three.
 
 ## Annual Statement Production
 
@@ -237,4 +237,4 @@ Design choices that matter:
 
 **Standards**
 
-- [NISS](https://www.niss-stat.org/), its five statistical plans and annual compliance reports
+- [NISS](https://www.niss-stat.org/), its five statistical plans and annual compliance reports processed

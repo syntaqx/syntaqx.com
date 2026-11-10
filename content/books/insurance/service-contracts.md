@@ -20,7 +20,7 @@ As of November 2026, from each company's filings or its own pages:
 | --- | --- | --- |
 | **Allstate Protection Plans** | Provider of consumer protection plans | "Consumer protection plans and related technical support for mobile phones, consumer electronics and major appliances," sold through retailers and mobile operators in store and online, in the US and Canada, with services in Europe and Asia (Allstate 10-K for 2025) |
 | **Assurant** | Underwriter and administrator | Extended service contracts provide "coverage for repairing or replacing these consumer goods" after the manufacturer's warranty; they "may be regulated by regulatory bodies other than departments of insurance and may be subject to consumer protection laws" (10-K for 2025) |
-| **Asurion** | Device protection and repair | Tech care for phones, smart home and appliances, partners including Verizon and AT&T, 700+ uBreakiFix stores; its about page doesn't say which products are insurance and which are service contracts |
+| **Asurion** | Device protection and repair | Protection, repair, installation and support for phones, smart home devices and household appliances; partners including Verizon, AT&T and Samsung; "700+ locations"; its about page doesn't say which products are insurance and which are service contracts |
 | **Extend** | Merchant-facing protection plans | Plans mapped to a merchant's products, contracts created on fulfillment, refunds and claims by API ([The API Shape](/books/insurance/embedded-insurance#the-api-shape)) |
 | **frontdoor** | Home warranty provider | About 2.1 million active home warranties at December 31, 2025; regulated "in certain states" by insurance regulators, with a captive insurer for its Texas claims (10-K for 2025; Home Warranties & Product Protection) |
 
@@ -74,7 +74,7 @@ The NAIC model's core is Section 3C: a provider obligated on service contracts m
 | **2. Reserve plus deposit** | Funded reserve of at least 40% of gross consideration received, less claims paid, on in-force contracts; plus a deposit of at least 5% of the same, minimum $25,000 (surety bond, eligible securities, cash or letter of credit) | 40% reserve; 5% deposit, minimum $50,000 | 40% reserve; deposit generally at least $250,000; dealers selling only on their own vehicles $25,000, $50,000 or $75,000 by prior-year Texas service contract revenue; residential service contract providers at least $25,000 |
 | **3. Net worth** | $100 million net worth, shown by a 10-K or audited statements; a parent's statements require the parent's guarantee | $100 million, standalone or consolidated, with parent guarantee; meet option 1 or 2 within 45 days of a shortfall | $100 million, own or parent's, with parent guarantee |
 
-Florida regulates consumer product service contracts as **service warranties** under its own scheme (Fla. Stat. ch. 634, Part III), licensed by the Office of Insurance Regulation, with an unearned premium model instead of the 40% reserve: an unearned premium reserve of at least 25% of gross written premium on contracts in force plus a deposit equal to 10% of that premium; gross written premium in force may not exceed seven times net assets (higher with $2.5 million of net assets and full contractual liability insurance from an insurer with at least $100 million of surplus rated "A" or higher); no reserve if contractual liability insurance covers 100% of claim exposure; and a $100 million net worth exemption with net assets of at least $750,000 kept (634.406).
+Florida regulates consumer product service contracts as **service warranties** under its own scheme (Fla. Stat. ch. 634, Part III), licensed by the Office of Insurance Regulation, with an unearned premium model instead of the 40% reserve: an unearned premium reserve of at least 25% of gross written premium on contracts in force plus a deposit equal to 10% of that premium; gross written premium in force may not exceed seven times net assets (higher for a company also licensed under Part I with $2.5 million of net assets and contractual liability insurance covering 100% of claims from an insurer with at least $100 million of surplus rated "A" or higher by A.M. Best, or with $750,000 of net assets under the conditions of subsection (6)); no reserve if contractual liability insurance covers 100% of claim exposure; and a $100 million net worth exemption, own or a parent's, with $750,000 of net assets kept when the parent's is used (634.406).
 
 ### Worked Numbers: One Provider, Four Rulebooks
 
@@ -181,13 +181,6 @@ Commerce's [Warranties](/books/commerce/online-consumer-protection#warranties) c
 These are deltas against [The Core Data Model](/books/insurance/insurance-business#the-core-data-model), which says service contracts use `policies`: a service contract is a `policies` row with a legal form that says it isn't insurance, its covered product is a `risks` row of kind `covered_product`, its price is `premium_entries` (kind `premium` holds the provider fee; the reimbursement insurer's premium is a separate entry on the provider's reimbursement policy), and claims are `claims` and `exposures` as for any policy. The holder, seller and administrator are `party_roles`. The reimbursement policy is an ordinary `policies` row issued by an `insurers` row to the provider. This chapter adds the obligor and administrator and the security snapshot:
 
 ```sql
-ALTER TABLE policies
-  ADD COLUMN legal_form        TEXT NOT NULL DEFAULT 'insurance'
-                               CHECK (legal_form IN ('insurance', 'service_contract',
-                                 'home_warranty', 'vsc', 'debt_cancellation')),
-  ADD COLUMN obligor_id        UUID,        -- obligors, for non-insurance forms
-  ADD COLUMN backing_policy_id UUID REFERENCES policies (id);  -- the reimbursement policy
-
 CREATE TABLE obligors (                    -- the provider contractually obligated to perform
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   party_id           UUID NOT NULL REFERENCES parties (id),
@@ -195,6 +188,13 @@ CREATE TABLE obligors (                    -- the provider contractually obligat
                        'third_party', 'insurer_affiliate')),
   parent_guarantor_id UUID REFERENCES parties (id)   -- net worth via parent, with guarantee
 );
+
+ALTER TABLE policies
+  ADD COLUMN legal_form        TEXT NOT NULL DEFAULT 'insurance'
+                               CHECK (legal_form IN ('insurance', 'service_contract',
+                                 'home_warranty', 'vsc', 'debt_cancellation')),
+  ADD COLUMN obligor_id        UUID REFERENCES obligors (id),  -- for non-insurance forms
+  ADD COLUMN backing_policy_id UUID REFERENCES policies (id);  -- the reimbursement policy
 
 CREATE TABLE obligor_authorities (         -- licensed or registered, per state, with its security basis
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -289,5 +289,5 @@ Design choices that matter:
 
 **Vendor documentation**
 
-- [Asurion: About](https://www.asurion.com/about/), products, partners and stores
+- [Asurion: About](https://www.asurion.com/about/), products, partners and locations
 - [Extend: API reference](https://docs.extend.com/), plan mapping, contracts and refunds

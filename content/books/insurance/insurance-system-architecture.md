@@ -53,9 +53,9 @@ Three queries every part of the system must be able to answer, and the columns t
 
 | Question | Read |
 | --- | --- |
-| What was covered on the loss date, as we knew it when we paid? | `policy_versions` where `effective` contains the loss time and `recorded` contains the payment time |
+| What was covered on the loss date, as known when the claim was paid? | `policy_versions` where `effective` contains the loss time and `recorded` contains the payment time |
 | What was written premium for March, as booked? | `premium_entries` with `accounting_date` in March |
-| What would March have looked like with everything we know now? | The same entries grouped by the transaction's `effective_at`, which is the actuarial and statistical view, not the accounting one |
+| What would March have looked like with everything known now? | The same entries grouped by the transaction's `effective_at`, which is the actuarial and statistical view, not the accounting one |
 
 The third question is why statistical reporting, loss triangles and accounting can disagree on the same month and all be right ([Regulatory & Statistical Reporting](/books/insurance/regulatory-and-statistical-reporting)).
 

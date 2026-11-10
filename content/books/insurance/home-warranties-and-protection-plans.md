@@ -8,7 +8,7 @@ part = "Embedded Insurance and Service Contracts"
 tags = ["insurance", "home-warranties", "protection-plans", "service-contracts", "claims", "field-service"]
 +++
 
-Home warranties and consumer protection plans are service contracts run at industrial scale. A home warranty promises to repair or replace a home's systems and appliances (the furnace, the water heater, the dishwasher) for an annual price and a service fee per visit; a protection plan does the same for a phone, a television or a refrigerator. The contracts are simple; the operation behind them is not. frontdoor, the largest home warranty company, handles about 3.8 million service requests a year through about 17,000 contractor firms; Assurant runs about 1,150 repair and partner locations; Asurion runs more than 700 repair stores. The claim is not a check but a dispatch: a technician, a diagnosis, a part, a repair or a replacement, and the decision in the middle about which.
+Home warranties and consumer protection plans are service contracts run at industrial scale. A home warranty promises to repair or replace a home's systems and appliances (the furnace, the water heater, the dishwasher) for an annual price and a service fee per visit; a protection plan does the same for a phone, a television or a refrigerator. The contracts are simple; the operation behind them is not. frontdoor, the largest home warranty company, handles about 3.8 million service requests a year through about 17,000 contractor firms; Assurant runs about 1,150 repair and partner locations; Asurion cites more than 700 locations. The claim is not a check but a dispatch: a technician, a diagnosis, a part, a repair or a replacement, and the decision in the middle about which.
 
 This chapter covers how states license home warranty companies (Florida, California and Texas worked), consumer product protection plans at scale and their economics, claims as repair-or-replace logistics, how the revenue is recognized against seasonal claims, and FTC enforcement. The general service contract regime (the obligor, administrator and reimbursement insurer, the NAIC model and refunds) is in [Service Contracts & Warranties](/books/insurance/service-contracts); a field service company's own repair warranties and the equipment warranties on what it installs are in Field Operations' [Warranties and Guarantees](/books/field-operations/service-agreements#warranties-and-guarantees).
 
@@ -20,14 +20,14 @@ As of November 2026, from 10-Ks and company pages:
 | --- | --- | --- |
 | **Allstate Protection Plans** | Protection plans and tech support for phones, consumer electronics and major appliances | Sold through retailers and mobile operators, in store and online; Allstate's Protection Services segment holds 81.6% of Allstate's policies in force on 5.0% of its revenue (10-K for 2025) |
 | **Assurant** | Mobile device protection, extended service contracts for electronics and appliances | Connected Living $5,378.7 million of 2025 revenue; Global Lifestyle's mix is 53.0% mobile device solutions and 34.4% extended service contracts for electronics and appliances; about 1,150 repair and partner locations (10-K for 2025) |
-| **Asurion** | Device protection, repair and tech care | Partners including Verizon and AT&T, 18,000+ people, 700+ uBreakiFix stores |
+| **Asurion** | Device protection, repair and tech care | Partners including Verizon, AT&T and Samsung; "Over 18,000 people"; "700+ locations" (its about page) |
 | **frontdoor** (American Home Shield, HSA, OneGuard, Landmark, 2-10 HBW) | Home warranties and new home builder warranties | About 2.1 million active home warranties at December 31, 2025; 2025 revenue $2,093 million (2024: $1,843 million); about 3.8 million service requests a year; coverage of up to 29 home systems and appliances, plus optional pool, spa and pump coverage; about 17,000 independent contractor firms, including about 4,200 preferred contractors who completed about 84% of service requests |
 
 The figures tell the story of the business. Allstate's protection plans are four-fifths of its policy count and a twentieth of its revenue: high volume, low price per contract. frontdoor's customers average almost two claims a year, so the claim is the product experience, and a contractor network is its core asset. Assurant and Asurion own repair capacity because the cost of a claim is mostly the cost of the repair logistics.
 
 ## Home Warranty Licensing
 
-States regulate home warranties in three ways: as a separate licensed business under the insurance department, as a service contract under a non-insurance regulator, or not specifically. frontdoor's 10-K describes the patchwork from the regulated side: in certain states, "both our home warranty business and the new home builder warranty business are regulated by applicable state insurance regulatory authorities," naming the California Department of Insurance, the Florida Office of Insurance Regulation and the Texas Department of Insurance, with other bodies such as the Virginia Department of Agriculture and Consumer Services and the Texas Department of Licensing and Regulation; and it provides "insurance for our home warranty claims in Texas via our wholly-owned captive insurance company."
+States regulate home warranties in three ways: as a separate licensed business under the insurance department, as a service contract under a non-insurance regulator, or not specifically. frontdoor's 10-K describes the patchwork from the regulated side: in certain states, "both our home warranty business and the new home builder warranty business are regulated by applicable state insurance regulatory authorities," naming the California Department of Insurance, the District of Columbia Department of Insurance, Securities & Banking, the Florida Office of Insurance Regulation and the Texas Department of Insurance, with other bodies that may also regulate them such as the Virginia Department of Agriculture and Consumer Services and the Texas Department of Licensing and Regulation; and it provides "insurance for our home warranty claims in Texas via our wholly-owned captive insurance company."
 
 **Florida (ch. 634, Part II).** A **home warranty** is "any contract or agreement whereby a person undertakes to indemnify the warranty holder" against the cost of repairing or replacing a home's structural components or appliances; a **home warranty association** is any organization "other than an authorized insurer, issuing home warranties" (634.301). The part doesn't prohibit a builder's or an appliance maker's usual performance guarantee if "no identifiable charge is made for such guarantee," never allows indemnification for consequential damages, and doesn't apply to a service warranty association's contract covering only systems and appliances (no structural components), which is regulated under Part III instead. The financial rules (634.3077):
 
@@ -48,7 +48,7 @@ A protection plan on a phone or an appliance is a service contract (or, where it
 
 What scale changes for the system:
 
-- **The partner's catalog is the risk schedule.** Every SKU maps to a plan, a price band and a coverage schedule; Extend calls this "Automated Warranty Mapping." A product with no mapping gets no offer; a product mapped to the wrong band is mispriced on every sale.
+- **The partner's catalog is the risk schedule.** Every SKU maps to a plan, a price band and a coverage schedule; Extend's documentation has a guide on keeping products "mapped appropriately with Extend Protection Plans" so offers can display. A product with no mapping gets no offer; a product mapped to the wrong band is mispriced on every sale.
 - **Coverage starts after the manufacturer's warranty for breakdown,** and immediately for accidental damage where the plan covers it, so each contract has two coverage clocks.
 - **Mobile plans run monthly.** Device protection billed on a carrier's monthly bill behaves like a subscription: coverage continues while paid, lapses on nonpayment, and the claim checks the payment status on the loss date.
 - **Fulfillment is replacement inventory.** A covered phone is often replaced, not repaired; the claim is an order for a refurbished or new device, with a deductible or service fee collected first and the damaged device returned (and often refurbished and resold, a salvage stream like an auto total loss).
@@ -76,8 +76,8 @@ My contract terms and numbers. A home warranty priced at $600 a year, a $125 ser
 | --- | --- | --- | --- |
 | Repair: replace the failed capacitor and contactor | $380 | $125 service fee | Covered; done on the first visit |
 | Repair: replace the compressor | $1,850 parts and labor | $125 | Covered, under the $2,000 limit; needs a part and a second visit |
-| Replace the condenser unit | $5,800 | $125 + $3,800 over the limit (my terms cap the company at $2,000) | The company pays $2,000; code-required upgrades are excluded |
-| Cash in lieu of the compressor repair | $1,400 offered | $125 already paid | Contracts that allow it pay less than the contractor's repair cost because the company doesn't pay the contractor's margin; the holder may take the cash and replace the unit |
+| Replace the condenser unit ($5,800 installed) | $2,000, the limit | $125 + $3,800 over the limit | Code-required upgrades are excluded under my terms |
+| Cash in lieu of the compressor repair | $1,400 offered | $125 already paid | My terms set cash below the $1,850 repair cost; the holder may take the cash and put it toward a new unit |
 
 On the first branch the year's contract is still profitable ($600 + $125 against $380); on the second it isn't ($725 against $1,850); and the holder's choice on the last two decides whether a ten-year-old system is replaced at all. The decision rule, the limit and the cash-in-lieu formula are contract terms, so they are versioned with the contract form and stored on the authorization.
 
@@ -192,5 +192,5 @@ Design choices that matter:
 
 **Vendor documentation**
 
-- [Asurion: About](https://www.asurion.com/about/), partners, people and repair stores
+- [Asurion: About](https://www.asurion.com/about/), partners, people and locations
 - [Extend: API reference](https://docs.extend.com/), automated warranty mapping, service orders and claim webhooks

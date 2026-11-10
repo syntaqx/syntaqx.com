@@ -44,7 +44,7 @@ GAP's two forms carry the same economic promise. As insurance, an insurer pays t
 - contractual liability insurance covering 100% of claim exposure from an insurer or qualifying risk retention group with at least $15 million of surplus, which must pay the holder's claims if the company doesn't, and which can't be cancelled or nonrenewed without 90 days' written notice to the office; or
 - for a company with at least $10 million of net assets and audited GAAP statements, either of the above for designated blocks of new agreements.
 
-A motor vehicle manufacturer qualifies with lighter requirements (management competence and information requests, no fingerprints except for officers and directors). Florida's form rules (634.121) are some of the most specific anywhere, and they double as a list of fields:
+A motor vehicle manufacturer licensed as a service agreement company "need comply only with subsections (2) and (10)" of the section, so the net assets, reserve and insurance options above don't bind it. Florida's form rules (634.121) are some of the most specific anywhere, and they double as a list of fields:
 
 - **Free cancellation for 60 days.** "Any service agreement is cancelable by the purchaser within 60 days after purchase," with a refund of the full gross premium less claims paid, and an administrative fee of up to 5% of the gross premium.
 - **Limited company cancellation after 60 days:** only for material misrepresentation or fraud at sale, failure to maintain the vehicle as the manufacturer prescribes, an odometer tampered with or disabled and not repaired, or nonpayment (with notice by certified mail).
