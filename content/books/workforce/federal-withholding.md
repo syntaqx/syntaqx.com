@@ -102,7 +102,7 @@ The worksheet's 1b is the number of pay periods: semiannually 2, quarterly 4, mo
 - **No regular payroll period.** Pub 15 says to "withhold the tax as if you paid wages for a daily or miscellaneous payroll period," counting the days (including Sundays and holidays) in the period the payment covers, and for payments not tied to a period (a commission paid on completing a sale), counting back to the latest of the last wage payment in the year, the start of employment that year, or January 1.
 - **A period shorter than a week.** If an employee paid for less than a week signs a statement under penalties of perjury that they aren't working for another employer that week, the employer may withhold on a weekly period; if that changes, the employee must say so within 10 days and the employer moves to the daily or miscellaneous period.
 
-The period count belongs to the pay schedule, not the employee, and a bonus on an off-cycle run is withheld either at the supplemental flat rate or aggregated with a regular period's wages, never annualized with a period count invented for the run (Supplemental Wages & Imputed Income covers the aggregate procedure).
+The period count belongs to the pay schedule, not the employee, and a bonus on an off-cycle run is withheld either at the supplemental flat rate or aggregated with a regular period's wages, never annualized with a period count invented for the run ([Supplemental Wages & Imputed Income](/books/workforce/supplemental-wages-and-imputed-income) covers the aggregate procedure).
 
 ## Exempt Claims and Renewal
 
@@ -141,7 +141,7 @@ In data a lock-in letter is a constraint over tax elections, not an election: th
 
 ## State Forms in Brief
 
-Most states with an income tax have their own certificate and their own formula, and a federal W-4 doesn't substitute for them unless the state says so. California is the common example: employees complete both, the W-4 for federal tax and Form DE 4 for California personal income tax, and without a properly completed DE 4 the employer withholds "as if the employee were single with zero withholding allowances." The state formulas, supplemental rates and local taxes are in State & Local Payroll Taxes in the Payroll Tax part; in this model a state certificate is another `tax_elections` row for the state jurisdiction, with `allowances` and whatever fields the state uses in its own columns.
+Most states with an income tax have their own certificate and their own formula, and a federal W-4 doesn't substitute for them unless the state says so. California is the common example: employees complete both, the W-4 for federal tax and Form DE 4 for California personal income tax, and without a properly completed DE 4 the employer withholds "as if the employee were single with zero withholding allowances." The state formulas, supplemental rates and local taxes are in [State & Local Payroll Taxes](/books/workforce/state-and-local-tax) in the Payroll Tax part; in this model a state certificate is another `tax_elections` row for the state jurisdiction, with `allowances` and whatever fields the state uses in its own columns.
 
 ## A Withholding Function
 

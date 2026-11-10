@@ -86,7 +86,7 @@ The Streamlined Sales and Use Tax Agreement is the states' attempt at uniformity
 
 ## Tax Engines and Filing
 
-The engine call is part of checkout and every later change to the order: quote while the shopper edits, commit when the order is placed, adjust on refunds and edits, void on cancellation ([Tax Is a Quote Until the Invoice Finalizes](/docs/money/sales-tax#tax-is-a-quote-until-the-invoice-finalizes); [Tax Engines](/docs/money/sales-tax#tax-engines)). The commerce specifics:
+The engine call is part of checkout and every later change to the order: quote while the shopper edits, commit when the order is placed, adjust on refunds and edits, void on cancellation ([Tax Is a Quote Until the Invoice Finalizes](/docs/money/sales-tax#tax-is-a-quote-until-the-invoice-finalizes); [Tax Engines](/docs/money/sales-tax#tax-engines)). Payroll tax engines split the same way between calculation and filing ([The Calculation Layer](/books/workforce/tax-engines-and-filing#the-calculation-layer)). The commerce specifics:
 
 - **Send lines, addresses and the item's category.** Ship-from location and ship-to address (or the pickup store), each line's category and amount, each charge (shipping, handling, gift wrap) as its own line, the customer's exemption, and the channel; tax comes back per line and per jurisdiction.
 - **Commit with the order's ID and the checkout's version,** so the committed calculation matches the total the shopper authorized, and a retried commit is idempotent.

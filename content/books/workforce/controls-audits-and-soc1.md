@@ -10,7 +10,7 @@ tags = ["payroll", "soc-1", "internal-controls", "audits", "dol", "recordkeeping
 
 Payroll is audited from more directions than almost any other business process, and each auditor asks a different question of the same records. The employer's financial statement auditor asks whether payroll expense and payroll liabilities are fairly stated, and because a payroll provider computed them, it relies on the provider's SOC 1 report. The Department of Labor's Wage and Hour Division asks whether workers were paid the minimum wage and overtime they were owed. The IRS asks whether the wages on the 941s match the W-2s and the books, and whether every worker paid as a contractor really was one. The state unemployment agency asks whether every wage it should have taxed was reported. A workers' compensation carrier asks how much payroll fell in each class code. A payroll platform is built to answer all of them from one set of rows, and to show that the controls around those rows worked.
 
-This chapter covers what a payroll SOC 1 examination is for and what it covers, complementary user entity controls and subservice organizations, internal controls over payroll on the employer's side, the DOL Wage and Hour investigation, the IRS employment tax examination, state UI tax audits, and the records each asks for, with the retention clocks worked. The SOC 2 counterpart for security is in the playbook's [SOC 2](/docs/compliance/soc-2); the fraud the controls are meant to stop is Payroll Fraud & Security, the next chapter; how long each HR record is kept is in [Employee Records, Privacy & Retention](/books/workforce/employee-records-and-privacy#retention-schedules-by-record).
+This chapter covers what a payroll SOC 1 examination is for and what it covers, complementary user entity controls and subservice organizations, internal controls over payroll on the employer's side, the DOL Wage and Hour investigation, the IRS employment tax examination, state UI tax audits, and the records each asks for, with the retention clocks worked. The SOC 2 counterpart for security is in the playbook's [SOC 2](/docs/compliance/soc-2); the fraud the controls are meant to stop is [Payroll Fraud & Security](/books/workforce/payroll-fraud-and-security), the next chapter; how long each HR record is kept is in [Employee Records, Privacy & Retention](/books/workforce/employee-records-and-privacy#retention-schedules-by-record).
 
 ## How the Platforms Do It
 
@@ -73,7 +73,7 @@ On the employer's side, internal control over payroll is a short list of control
 - **Change logs.** Every change to rates, elections, bank accounts and deductions in `audit_events`, with actor and reason, and a per-run report of what changed since the last run.
 - **Variance review.** A register compared to the previous period and the trailing average, by total and by worker, with thresholds that force a look.
 - **Reconciliations.** Payroll to the general ledger, funds debited to the bank statement, liabilities to deposits, 941s to W-2s each year ([Reconciling W-2s to the 941s](/books/workforce/year-end-and-w2s#reconciling-w-2s-to-the-941s)).
-- **Master file reviews.** Periodically, every active worker confirmed by a manager, which is the control that finds ghost employees (Payroll Fraud & Security).
+- **Master file reviews.** Periodically, every active worker confirmed by a manager, which is the control that finds ghost employees ([Payroll Fraud & Security](/books/workforce/payroll-fraud-and-security)).
 
 ### Worked Numbers: A Variance Review
 

@@ -201,7 +201,7 @@ CREATE TABLE qualified_overtime_amounts (   -- the FLSA premium per workweek, fo
 );
 ```
 
-The W-2 build reads them: box 12 TP is the year's sum of `tip_reports` cash and charged tips taxed in the year; box 14b is the distinct `tipped_occupation_code` values of the jobs those tips were reported under, two at most, with `000` forced when any job's code is nonqualifying; box 12 TT is the sum of `qualified_amount` for workweeks whose premium was paid in the year; box 8 comes from `tip_allocations.per_worker`. Year-End, W-2s & Wage Reporting in the Payroll Tax part owns the rest of the W-2.
+The W-2 build reads them: box 12 TP is the year's sum of `tip_reports` cash and charged tips taxed in the year; box 14b is the distinct `tipped_occupation_code` values of the jobs those tips were reported under, two at most, with `000` forced when any job's code is nonqualifying; box 12 TT is the sum of `qualified_amount` for workweeks whose premium was paid in the year; box 8 comes from `tip_allocations.per_worker`. [Year-End, W-2s & Wage Reporting](/books/workforce/year-end-and-w2s) in the Payroll Tax part owns the rest of the W-2.
 
 Design notes:
 

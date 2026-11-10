@@ -79,7 +79,7 @@ The posting needs a good-faith range (California's and Washington's definitions)
 
 A salary history ban stops the employer from asking what a candidate earned before, and usually from relying on it if volunteered. Among the primary sources above: California's employer "cannot, orally or in writing, personally or through an agent, seek salary history information"; Colorado's law prohibits "asking about an applicant's pay history"; Maryland's employer may not "seek the wage history for an applicant"; Nevada's may not "Seek the wage or salary history of an applicant"; and Connecticut bans asking about "a prospective employee's wage and salary history." The EU Directive does the same: "An employer shall not ask applicants about their pay history" (Art. 5(2)).
 
-For an ATS the ban is a property of the application form and the recruiter's tools: no pay history question in the form for covered applicants, a "desired pay" question instead where allowed, and no field in the candidate record that a recruiter can fill with a previous salary. Recruiting, ATS & AI in Hiring's `applications.applicant_jurisdiction_id` is what selects the form.
+For an ATS the ban is a property of the application form and the recruiter's tools: no pay history question in the form for covered applicants, a "desired pay" question instead where allowed, and no field in the candidate record that a recruiter can fill with a previous salary. [Recruiting, ATS & AI in Hiring](/books/workforce/recruiting-and-hiring)'s `applications.applicant_jurisdiction_id` is what selects the form.
 
 ## Pay Data Reporting
 

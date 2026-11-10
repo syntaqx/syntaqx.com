@@ -57,7 +57,7 @@ A gap like UKG's matters for the book's method: where a company publishes nothin
 
 **Mid-market.** Single-database suites for employers from dozens to a few thousand employees: Paycom, Paylocity, Paycor (now Paychex), ADP Workforce Now, isolved, UKG Ready and others, priced per employee per month with a base and modules. The buyer is HR or finance, the sale involves demos and an implementation project, and the product is payroll plus time, benefits administration, onboarding, performance and learning on one record.
 
-**Enterprise HCM.** Global suites for large employers: Workday, Dayforce, Oracle HCM, SAP SuccessFactors, UKG Pro and ADP's enterprise products. Payroll is one module, often run natively in the largest countries and through partners in the rest: Workday introduced Workday GO Global Payroll in fiscal 2026 with ADP, Remote and Strada as global payroll partners. Sales cycles are long, implementations run through systems integrators, and the HCM is the record of truth that payroll, identity and benefits read from. The HRIS as Record of Truth covers that role.
+**Enterprise HCM.** Global suites for large employers: Workday, Dayforce, Oracle HCM, SAP SuccessFactors, UKG Pro and ADP's enterprise products. Payroll is one module, often run natively in the largest countries and through partners in the rest: Workday introduced Workday GO Global Payroll in fiscal 2026 with ADP, Remote and Strada as global payroll partners. Sales cycles are long, implementations run through systems integrators, and the HCM is the record of truth that payroll, identity and benefits read from. [The HRIS as Record of Truth](/books/workforce/hris-record-of-truth) covers that role.
 
 **PEO.** Co-employment for small and mid-sized businesses: ADP TotalSource, Insperity, TriNet, Justworks, Paychex PEO and about 500 others (NAPEO counts 502 PEOs and about 233,000 client businesses). The buyer wants benefits and HR expertise more than software, and the price is a markup or a per-employee fee over the full employment cost. [PEOs & Co-Employment](/books/workforce/peos-and-co-employment) covers it.
 
@@ -65,7 +65,7 @@ A gap like UKG's matters for the book's method: where a company publishes nothin
 
 **Embedded payroll.** Payroll engines sold as APIs and components to vertical software: Check, Gusto Embedded, Zeal and others. The buyer is a software company that wants payroll revenue and stickiness without becoming a payroll company; the employer signs the payroll partner's authorizations inside the platform's product. [Embedded Payroll](/books/workforce/embedded-payroll) covers it.
 
-Around these sit the layers other chapters cover: tax engines and filing services sold to anyone who runs payroll (ADP SmartCompliance, MasterTax, Symmetry, Vertex: Tax Engines & Filing Services), unified HR and payroll APIs that read from all of the above (Finch, Merge: [Unified HR & Payroll APIs](/books/workforce/unified-hr-apis)), and time, ATS, background check and benefits administration vendors that integrate with payroll.
+Around these sit the layers other chapters cover: tax engines and filing services sold to anyone who runs payroll (ADP SmartCompliance, MasterTax, Symmetry, Vertex: [Tax Engines & Filing Services](/books/workforce/tax-engines-and-filing)), unified HR and payroll APIs that read from all of the above (Finch, Merge: [Unified HR & Payroll APIs](/books/workforce/unified-hr-apis)), and time, ATS, background check and benefits administration vendors that integrate with payroll.
 
 ## Consolidation
 
@@ -174,7 +174,7 @@ Design notes:
 - **Prior and next provider are facts about the company and the employer.** A conversion needs the prior provider to know what export to expect and who filed which quarters; churn analysis needs the next one. Both are captured at the moment they are known (the sales record, the suspension request) and never inferred later.
 - **Metrics keep their definitions.** A figure without its definition, period and source can't be compared or restated; `provider_metrics` makes the definition part of the row, and a self-reported number is labeled as one.
 - **Deals are dated rows.** A client acquired with a provider keeps `acquired_via_transaction_id`, so a migration cohort, a contract carried over from the acquired company and a change in support model are queries, not tribal knowledge.
-- **The employer's start with a provider is a period boundary.** `provider_started_on` is the first period the provider files for, which ties to the authorization ranges in Who Runs Payroll: Agents & Liability and the year-to-date loads in [Changing Providers Mid-Year](/books/workforce/changing-providers) ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
+- **The employer's start with a provider is a period boundary.** `provider_started_on` is the first period the provider files for, which ties to the authorization ranges in [Who Runs Payroll: Agents & Liability](/books/workforce/who-runs-payroll) and the year-to-date loads in [Changing Providers Mid-Year](/books/workforce/changing-providers) ([Effective-Dated Rows](/docs/database/temporal-data#effective-dated-rows)).
 
 ## Auditing
 

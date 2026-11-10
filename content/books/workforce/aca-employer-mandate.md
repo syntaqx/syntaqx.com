@@ -10,7 +10,7 @@ tags = ["benefits", "aca", "4980h", "form-1095-c", "affordability", "measurement
 
 The Affordable Care Act's employer mandate is not a requirement to offer coverage. It is a tax that applies when an employer large enough to be covered doesn't offer coverage, or offers coverage that is too expensive or too thin, and one of its full-time employees buys subsidized coverage on an exchange instead. Section 4980H calls the tax an assessable payment, the IRS calls it the employer shared responsibility payment, and the employer learns it owes one years later, from a letter that compares its own Forms 1094-C and 1095-C with the premium tax credits its employees claimed. Everything the employer can do to avoid the payment, and everything it must report, is computed month by month from hours, offers and the employee's share of the cheapest plan.
 
-So the mandate is a payroll and timekeeping problem wearing a benefits label. Whether an employer is covered depends on last year's monthly headcount of full-time employees and full-time equivalents built from hours of service; whether an employee is full-time depends on hours measured monthly or over a look-back period of up to 12 months; whether an offer was affordable depends on the employee's required contribution against 9.96% of household income for 2026, which employers test with safe harbors built on W-2 wages, the rate of pay or the poverty line; and the penalty for each month is a formula with 2026 amounts of $3,340 and $5,010 a year. This chapter covers applicable large employer status, full-time determination and the look-back measurement method, affordability safe harbors, the two penalties worked, Forms 1094-C and 1095-C and their codes, the 2024 reporting laws, and Letter 226-J. Enrollment itself is in Enrollment & Life Events; the hours come from [The Workweek & the Time Record](/books/workforce/time-and-attendance).
+So the mandate is a payroll and timekeeping problem wearing a benefits label. Whether an employer is covered depends on last year's monthly headcount of full-time employees and full-time equivalents built from hours of service; whether an employee is full-time depends on hours measured monthly or over a look-back period of up to 12 months; whether an offer was affordable depends on the employee's required contribution against 9.96% of household income for 2026, which employers test with safe harbors built on W-2 wages, the rate of pay or the poverty line; and the penalty for each month is a formula with 2026 amounts of $3,340 and $5,010 a year. This chapter covers applicable large employer status, full-time determination and the look-back measurement method, affordability safe harbors, the two penalties worked, Forms 1094-C and 1095-C and their codes, the 2024 reporting laws, and Letter 226-J. Enrollment itself is in [Enrollment & Life Events](/books/workforce/enrollment-and-life-events); the hours come from [The Workweek & the Time Record](/books/workforce/time-and-attendance).
 
 ## How the Platforms Do It
 
@@ -158,7 +158,7 @@ An ALE files one **Form 1094-C** (the transmittal, with ALE member information a
 | `1G` | Self-insured coverage for someone not full-time in any month (whole year or not at all) |
 | `1H` | "No offer of coverage" |
 | `1J`, `1K` | Conditional offers of spousal coverage |
-| `1L` to `1Q`, `1T`, `1U` | Affordable individual coverage HRA offers, by who is covered and whether affordability used the employee's residence ZIP code or the primary employment site ZIP code (HSAs, FSAs & HRAs covers ICHRAs) |
+| `1L` to `1Q`, `1T`, `1U` | Affordable individual coverage HRA offers, by who is covered and whether affordability used the employee's residence ZIP code or the primary employment site ZIP code ([HSAs, FSAs & HRAs](/books/workforce/hsa-fsa-and-hras) covers ICHRAs) |
 | `1R`, `1S` | An individual coverage HRA that is "NOT affordable," and one "offered to an individual who was not a full-time employee" |
 
 **Line 15** is the employee required contribution: "the employee share of the monthly cost for the lowest-cost, self-only, minimum essential coverage providing minimum value," whatever the employee actually enrolled in, entered as "0.00," not blank, if free.
@@ -191,7 +191,7 @@ What the employer needs to answer one, years after the fact:
 
 - **The month-by-month record for each listed employee:** hours of service and status by month, the measurement method and periods, the offer and its date, the enrollment or waiver, the required contribution and the safe harbor used.
 - **The 1095-C as filed and any corrections,** with the inputs it was derived from.
-- **Proof of offer,** which is the enrollment platform's record of what was presented and when, including waivers (Enrollment & Life Events).
+- **Proof of offer,** which is the enrollment platform's record of what was presented and when, including waivers ([Enrollment & Life Events](/books/workforce/enrollment-and-life-events)).
 
 Because the IRS starts from the codes, a wrong code produces a proposal for an employee who was in fact covered: a `1H` that should have been `1E` with `2C`, or a missing `2D` for a month inside an initial measurement period. Deriving the codes from records, rather than typing them, is the defense that is built before the letter arrives.
 

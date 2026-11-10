@@ -38,7 +38,7 @@ Each income-tax state publishes its own method, usually a formula and a table, k
 
 **Flat-rate states** apply a single rate to wages after an exemption or deduction allowance. Illinois has taxed "4.95 percent of net income" since July 1, 2017. North Carolina's rate "For Taxable Years after 2025" is 3.99%, down from 4.25% for 2025, with "Additional rate changes" possible from 2027 under triggers in session law 2023-134. Indiana's state rate for 2026 is 2.95%. A flat state is simpler arithmetic, not simpler data: the exemption allowances, the effective dates of each rate cut and the county taxes on top are still tables.
 
-**Supplemental rates.** Most states set a flat supplemental rate or an aggregate method for bonuses and commissions, some with a different rate for stock options, mirroring the federal choice Supplemental Wages & Imputed Income covers. Each is a `tax_rates` row for the state's supplemental tax type, effective-dated; the engine's job is to pick the method the state allows for the employer's choice.
+**Supplemental rates.** Most states set a flat supplemental rate or an aggregate method for bonuses and commissions, some with a different rate for stock options, mirroring the federal choice [Supplemental Wages & Imputed Income](/books/workforce/supplemental-wages-and-imputed-income) covers. Each is a `tax_rates` row for the state's supplemental tax type, effective-dated; the engine's job is to pick the method the state allows for the employer's choice.
 <!-- source-gap: wf-state-supplemental | missing | state supplemental withholding rates for 2026 (for example California's rates for bonuses and stock options) | closes with: each state's employer guide (California DE 44, New York NYS-50-T, and others) | checked: 2026-11-09 -->
 
 ### Worked Numbers: Indiana State and County Withholding
@@ -81,8 +81,7 @@ Local taxes are where the jurisdiction lookup earns its keep. The systems differ
 **Missouri cities.** St. Louis's "one percent earnings tax" applies to city residents wherever they work and to nonresidents working in the city; employer withholding is reported quarterly (January 31, April 30, July 31 and October 31). Kansas City levies a similar earnings tax.
 <!-- source-gap: wf-kc-earnings-tax | missing | Kansas City earnings tax rate and employer withholding rules | closes with: City of Kansas City Revenue Division employer page | checked: 2026-11-09 -->
 
-**Oregon transit taxes.** Oregon's statewide transit tax is "one-tenth of 1 percent or .001," withheld from "Wages of Oregon residents (regardless of where the work is performed)" and "Wages of nonresidents who perform services in Oregon." Separately, TriMet's transit tax is "0.8237% of the wages paid by an employer" in its district, "paid by employers," and Lane Transit District has its own employer tax. The statewide tax is an employee line; TriMet's is an employer line on the same wages.
-<!-- source-gap: wf-lane-transit | missing | Lane Transit District's 2026 employer payroll tax rate | closes with: Oregon Department of Revenue Lane transit tax page | checked: 2026-11-09 -->
+**Oregon transit taxes.** Oregon's statewide transit tax is "one-tenth of 1 percent or .001," withheld from "Wages of Oregon residents (regardless of where the work is performed)" and "Wages of nonresidents who perform services in Oregon." Separately, TriMet's transit tax is "0.8237% of the wages paid by an employer" in its district, "paid by employers," and Lane Transit District's rate "is 0.80% of the wages paid by an employer" for services performed within its boundary (LTD, as of November 2026). The statewide tax is an employee line; TriMet's is an employer line on the same wages.
 
 **Kentucky.** Kentucky cities and counties levy occupational license taxes on wages earned within them, administered locally, so an employer with Kentucky worksites registers with each taxing district.
 <!-- source-gap: wf-ky-olt | missing | Kentucky occupational license tax rates and administration (for example Louisville Metro's rate) | closes with: Kentucky Department of Revenue or the taxing districts' employer pages | checked: 2026-11-09 -->
@@ -256,6 +255,7 @@ State and local agencies audit by matching what was withheld for their residents
 - [City of St. Louis: Earnings tax](https://www.stlouis-mo.gov/government/departments/collector/earnings-tax/index.cfm), the one percent earnings tax and quarterly employer due dates
 - [Oregon Department of Revenue: Statewide transit tax](https://www.oregon.gov/dor/programs/businesses/Pages/Statewide-Transit-Tax.aspx), 0.1% on residents' and nonresidents' Oregon wages
 - [TriMet: Transit tax information](https://trimet.org/taxinfo/), the 0.8237% employer rate
+- [Lane Transit District: Payroll and self-employment tax information](https://www.ltd.org/about/transit-tax/), the 0.80% employer rate on wages for services within the district
 
 **Vendor documentation**
 

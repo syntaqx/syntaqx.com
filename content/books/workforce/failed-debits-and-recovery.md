@@ -69,7 +69,7 @@ A retry plan per return code, held as data, keeps operations from improvising: R
 
 ## Blocked Payrolls
 
-An unresolved failure blocks the employer's next payroll in both public APIs, and Check also takes a late wire-funded payroll out of good standing until "the wire arrives or the payroll is fully voided." The block raises its own wage-law problem: the employees are owed their next paycheck on the employer's regular payday whatever the employer owes the provider, so a block that runs past the next check date means the employer has to pay its people another way (from its own account, by check) and state late-pay penalties are the employer's. Pay Frequency, Pay Statements & Final Pay covers payday laws. Three rules make blocks survivable:
+An unresolved failure blocks the employer's next payroll in both public APIs, and Check also takes a late wire-funded payroll out of good standing until "the wire arrives or the payroll is fully voided." The block raises its own wage-law problem: the employees are owed their next paycheck on the employer's regular payday whatever the employer owes the provider, so a block that runs past the next check date means the employer has to pay its people another way (from its own account, by check) and state late-pay penalties are the employer's. [Pay Frequency, Pay Statements & Final Pay](/books/workforce/pay-frequency-statements-and-final-pay) covers payday laws. Three rules make blocks survivable:
 
 - **Block approval, not calculation.** The employer can prepare and preview the next run; only approval waits on the case.
 - **Say how to unblock in the block.** The amount owed, the wire instructions and the deadline that saves the next check date, on the screen where the employer meets the block.

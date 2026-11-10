@@ -31,7 +31,7 @@ Three patterns run through the table:
 
 - **Most of the industry files under the client's EIN.** Payroll software, HCM suites, filing services and embedded APIs all prepare, sign or e-file returns that name the employer. They change who does the work, not whose return it is, and the IRS says of all of them: "You remain responsible if the third party fails to perform any required action."
 - **Only aggregate filers change the taxpayer on the return.** A Section 3504 agent, a designated payer and a CPEO file one return under their own EIN for many clients and allocate it on Schedule R. Their deposit schedule is computed from their own totals, and the liability rules differ by which of the three they are.
-- **Certification is the only path that moves liability away from the client.** A CPEO is "generally solely liable" for worksite employees' wages; every other arrangement leaves the employer liable alone or jointly. That is the product a CPEO sells, and why the IRS demands a bond, audited financials and quarterly attestations for it (PEOs & Co-Employment covers the requirements).
+- **Certification is the only path that moves liability away from the client.** A CPEO is "generally solely liable" for worksite employees' wages; every other arrangement leaves the employer liable alone or jointly. That is the product a CPEO sells, and why the IRS demands a bond, audited financials and quarterly attestations for it ([PEOs & Co-Employment](/books/workforce/peos-and-co-employment) covers the requirements).
 
 ## The IRS's Five Arrangements
 
@@ -103,7 +103,7 @@ Liability isn't abstract when a provider fails; it decides who gets the bill. Ta
 | Section 3504 agent or designated payer | The agent or payer and the client, jointly | The IRS can collect from either |
 | CPEO, worksite employees | The CPEO | The customer is generally not liable for those wages |
 
-The failure-to-deposit penalty alone on $40,000 paid more than 15 days late is 10%, $4,000, before interest, and 15% for amounts still unpaid more than 10 days after the first notice (Pub 15's tiers, cited in [The Life of a Payroll Tax Dollar](/books/workforce/workforce-business#the-life-of-a-payroll-tax-dollar)). The trust fund recovery penalty "is 100% of the unpaid trust fund tax": the withheld income tax and the employee half of FICA, not the employer half. If $14,000 of the $40,000 is employer FICA, the penalty that can follow the client's officers is on the other $26,000. When Payroll Providers Fail covers what happens next.
+The failure-to-deposit penalty alone on $40,000 paid more than 15 days late is 10%, $4,000, before interest, and 15% for amounts still unpaid more than 10 days after the first notice (Pub 15's tiers, cited in [The Life of a Payroll Tax Dollar](/books/workforce/workforce-business#the-life-of-a-payroll-tax-dollar)). The trust fund recovery penalty "is 100% of the unpaid trust fund tax": the withheld income tax and the employee half of FICA, not the employer half. If $14,000 of the $40,000 is employer FICA, the penalty that can follow the client's officers is on the other $26,000. [When Payroll Providers Fail](/books/workforce/when-providers-fail) covers what happens next.
 
 ## Deposit Schedules for Aggregate Filers, Worked
 
@@ -125,7 +125,7 @@ Filing and depositing are one kind of authority; seeing the account and talking 
 - **Form 2848, power of attorney,** authorizes a representative to represent the taxpayer before the IRS, which is what answering a penalty notice or requesting abatement on the client's behalf requires.
 - **Form 8655** carries its own disclosure authority: duplicate notices and the information needed for penalty relief, for the forms and periods it covers.
 
-A provider's notice team works through the 8655 for the forms it files and needs an 8821 or 2848 for anything else (a prior provider's quarters, an income tax question, a period before the contract). Each authorization has its own forms, periods and expiry, and a notice for a period no authorization covers is one the provider has to route back to the client. Tax Notices, Amendments & Agency Accounts covers the notice workflow.
+A provider's notice team works through the 8655 for the forms it files and needs an 8821 or 2848 for anything else (a prior provider's quarters, an income tax question, a period before the contract). Each authorization has its own forms, periods and expiry, and a notice for a period no authorization covers is one the provider has to route back to the client. [Tax Notices, Amendments & Agency Accounts](/books/workforce/tax-notices-and-agency-accounts) covers the notice workflow.
 
 ## The Employer's Own EFTPS
 
@@ -133,7 +133,7 @@ Every arrangement in which deposits go under the employer's EIN shares a weaknes
 
 EFTPS enrollment validates the business with the IRS and mails a PIN "via U.S. Mail in five to seven business days"; payments must be scheduled "by 8 p.m. ET the day before the due date" to be timely. The provider, as a reporting agent, deposits through its own EFTPS batch access under the client's EIN (Rev. Proc. 2012-32 requires EFTPS for agents), so the employer's enrollment is a second, independent window onto the same account. Rev. Proc. 2012-32's quarterly disclosure statement exists to tell the client so.
 
-A provider that takes this seriously builds the employer's verification into onboarding: prompt the employer to enroll, record that it did, and show each deposit's EFT acknowledgment number in the client's own portal so the employer can match it against EFTPS. When Payroll Providers Fail covers why the check matters.
+A provider that takes this seriously builds the employer's verification into onboarding: prompt the employer to enroll, record that it did, and show each deposit's EFT acknowledgment number in the client's own portal so the employer can match it against EFTPS. [When Payroll Providers Fail](/books/workforce/when-providers-fail) covers why the check matters.
 
 ## State Equivalents
 
@@ -143,7 +143,7 @@ States run their own authorization schemes for withholding, unemployment and pai
 - **Payroll reporting agent.** A Payroll Reporting Agent prepares and files returns under each employer's account. Instead of a POA per client, the agent keeps a Memorandum of Understanding: Certification of Payroll Agent (DE 972) on file, "renewable every two years," registers with the Payroll Reporting Agent Registration Form (DE 973B), keeps each client's POA itself, and each month submits a list of clients to add and delete, with name, payroll tax account number and mailing address, by mail or electronically through the Federal State Employment Tax (FSET) program.
 - **Counseling service agent.** A separate role for agents who respond to unemployment insurance claims (DE 231CSA), which a provider that only files returns doesn't hold.
 
-California's structure (an agent registration, a periodic client list, authority per employer account) mirrors the IRS's Agent's List, and most states that accept bulk filing ask for something similar. The state account itself (registration, the account number, rate notices) is State & Local Payroll Taxes' subject, and PEOs & Co-Employment covers how states treat a PEO's unemployment account.
+California's structure (an agent registration, a periodic client list, authority per employer account) mirrors the IRS's Agent's List, and most states that accept bulk filing ask for something similar. The state account itself (registration, the account number, rate notices) is [State & Local Payroll Taxes](/books/workforce/state-and-local-tax)' subject, and [PEOs & Co-Employment](/books/workforce/peos-and-co-employment) covers how states treat a PEO's unemployment account.
 
 ## How to Build It
 
@@ -222,7 +222,7 @@ Design notes:
 - **Block filing without authority.** A 941 whose `filing_authority` row has no authorization can't be signed by the provider; the pay run can still compute and deposit under an arrangement that allows it, but the return goes to the client for signature or waits for the 8655 to be accepted.
 - **Copy the arrangement onto the record.** Each filing and remittance stores the EIN it went under and the arrangement in force, because the employer row's current `filing_arrangement` will change and the old returns won't ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Aggregate returns are parents.** A CPEO's or 3504 agent's 941 is one filing under its own EIN, and each client's Schedule R allocation is a child filing pointing at it, so a client's quarter has one answer to "what was reported for us" whichever arrangement it was in.
-- **Deposit schedules follow the filer.** The schedule determination for an aggregate filer runs over the aggregate's lookback totals; a client's own determination runs over the periods it filed itself. Deposits, Returns & the Tax Calendar owns the determination table; this chapter only says which EIN's history it reads.
+- **Deposit schedules follow the filer.** The schedule determination for an aggregate filer runs over the aggregate's lookback totals; a client's own determination runs over the periods it filed itself. [Deposits, Returns & the Tax Calendar](/books/workforce/deposits-and-returns#the-deposit-schedule) owns the determination table; this chapter only says which EIN's history it reads.
 - **Authorizations are documents with lifecycles.** A signed 8655 is a `documents` row with its form revision, and the authorization's state (drafted, signed, submitted, accepted, superseded) drives onboarding: a company can't go live for tax filing until its federal authorization is accepted and its state agent listings are submitted ([Workflows](/docs/building-blocks/workflows)).
 
 ## Auditing
