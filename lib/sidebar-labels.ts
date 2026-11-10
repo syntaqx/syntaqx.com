@@ -12,6 +12,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Abuse, Trust and the Law": "Abuse and Law",
   "Accounts and Positions": "Accounts",
   "Backend and Live Services": "Live Services",
+  "Benefits Administration": "Benefits",
   "Catalog and Pricing": "Catalog",
   "Chains and Wallets": "Chains",
   "Chat and Messaging": "Chat",
