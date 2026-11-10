@@ -27,6 +27,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Docs, Wikis and Files": "Docs and Files",
   "Fair Play and Safety": "Fair Play",
   "Funding and Licensing": "Funding",
+  "Hiring and HR Records": "HR Records",
   "How Games Get Made": "Making Games",
   "How the Work Flows": "How Work Flows",
   "Infrastructure as Code": "Infra as Code",
