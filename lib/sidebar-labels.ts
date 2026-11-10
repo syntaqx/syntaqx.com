@@ -33,6 +33,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Infrastructure as Code": "Infra as Code",
   "Institutional Crypto": "Institutional",
   "Law Firms and Professional Services": "Law Firms",
+  "Life and Annuities": "Life",
   "Market Rules and Compliance": "Compliance",
   "Marketing and Customers": "Marketing",
   "Meetings and Voice": "Meetings",
