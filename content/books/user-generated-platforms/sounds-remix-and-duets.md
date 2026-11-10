@@ -128,7 +128,7 @@ A remix graph is a set of edges from a child post to its parent, each with a sha
 
 The parent can be deleted by its author, removed by the platform, made private, have reuse turned off, or be trimmed or blurred. The platforms disagree on what that does to children:
 
-<!-- source-gap: tiktok-duet-parent-deleted | missing | what happens to a TikTok Duet when the original is deleted | closes with: a TikTok support page documenting it | checked: 2026-11-01 -->
+<!-- source-gap: tiktok-duet-parent-deleted | missing | what happens to a TikTok Duet when the original is deleted | closes with: a TikTok support page documenting it | checked: 2026-11-10 -->
 
 | Event | TikTok | Instagram | YouTube Shorts |
 | --- | --- | --- | --- |
@@ -206,9 +206,7 @@ License terms show up as product limits, and the help pages are where to read th
 - **Surfaces.** A license for short videos isn't a license for live streams or recordings of them ([Music in Streams](/books/user-generated-platforms/copyright#music-in-streams)), nor for ads.
 - **Promotion and commerce.** UMG's 2024 deal names e-commerce and promotion alongside remuneration, so a licensor's catalog can carry permissions for a shopping surface that another's doesn't.
 
-Lyrics are a separate display surface of the composition. I treat lyric display as its own surface in a license scope, off unless a deal grants it, rather than assuming the music license covers showing the words.
-
-<!-- source-gap: lyrics-licensing | missing | how platforms license lyric display (stated as my rule) | closes with: a platform, publisher or lyrics-licensor page describing lyric deals | checked: 2026-11-01 -->
+Lyrics are a separate display surface of the composition. Spotify says its lyrics feature "can vary over time, between markets, and across devices depending on the agreements we have in place with our rights holders," and that lyrics "may not be available on all songs." I treat lyric display as its own surface in a license scope, off unless a deal grants it, rather than assuming the music license covers showing the words.
 
 The general rule I take from this: **every feature that touches music checks a scope, not a flag.** The scope is (sound, territory, account kind, surface, duration, time), and it's answered by the deals behind the sound's rights, at creation and again at playback.
 
@@ -561,6 +559,7 @@ Notes on the sketch:
 - [TikTok Support: A sound I added to TikTok was removed](https://www.tiktok.com/support/faq_detail?id=7636670084748122644), muting of every video using a removed sound, appeals, muted during review, restore on approval, per-video replacement
 - [TikTok Support: A sound was removed from my video](https://www.tiktok.com/support/faq_detail?id=7636670084748155412), reasons shown under View details, no notification to non-originators, Change sound
 - [TikTok Support: Credit a video](https://www.tiktok.com/support/faq_detail?id=7581820703155001912), mentions of up to three videos, notification of credited creators
+- [Spotify Support: Lyrics](https://support.spotify.com/us/article/lyrics/), availability varying by market and device with the agreements in place with rights holders, and lyrics not available on all songs
 - [TikTok Newsroom: Feature highlight, new layouts for Duet](https://newsroom.tiktok.com/feature-highlight-new-layouts-for-duet?lang=en), four layouts, side swapping, caption credit with a link (30 September 2020)
 - [TikTok Newsroom: New on TikTok, introducing Stitch](https://newsroom.tiktok.com/new-on-tiktok-introducing-stitch?lang=en), up to five seconds, caption credit with a link, account and per-upload controls (3 September 2020)
 - [TikTok for Business: Explore royalty-free music in our Commercial Music Library](https://ads.tiktok.com/business/en-US/blog/audio-library-royalty-free-music), more than 600,000 pre-cleared tracks, region filter, general library not cleared for brands

@@ -75,7 +75,7 @@ Directive (EU) 2024/2831 of October 23, 2024, on improving working conditions in
 - **Declaration of platform work (Article 16).** Platforms declare work performed by platform workers to the authorities of the member state where it's performed.
 
 The facts that trigger the presumption are left to national law. Spain already had one: its 2021 Ley Rider (Real Decreto-ley 9/2021, later Ley 12/2021) presumes that delivery through digital platforms that exercise control directly, indirectly or implicitly through algorithmic management is employment, and gives works councils the right to be told the parameters, rules and instructions behind the algorithms that affect working conditions. As of October 2026, transposition of the directive elsewhere is in progress (Ireland, for one, consulted publicly in 2025); I haven't found a reliable public tracker of national status, so check each market's law before launch.
-<!-- source-gap: pwd-transposition-status | missing | member state transposition status of Directive (EU) 2024/2831 | closes with: the EUR-Lex national transposition (NIM) page for CELEX 32024L2831 listing notified measures, which it doesn't yet (the ALL page has no transposition tab), or a member state's enacted law per market | checked: 2026-11-01 -->
+<!-- source-gap: pwd-transposition-status | missing | member state transposition status of Directive (EU) 2024/2831 | closes with: the EUR-Lex national transposition (NIM) page for CELEX 32024L2831 listing notified measures, which it doesn't yet (the ALL page has no transposition tab), or a member state's enacted law per market | checked: 2026-11-10 -->
 
 ## Controls Are Evidence
 
