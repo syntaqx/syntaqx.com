@@ -2,6 +2,17 @@
 
 Personal site for [Chase Pierce](https://www.syntaqx.com), built with [Next.js](https://nextjs.org), [Tailwind CSS](https://tailwindcss.com), and deployed on [Vercel](https://vercel.com).
 
+## Writing
+
+- [API design principles](https://www.syntaqx.com/docs/api-design/principles)
+- [API naming conventions](https://www.syntaqx.com/docs/api-design/naming-conventions)
+- [Pagination](https://www.syntaqx.com/docs/requests/pagination)
+- [Error responses](https://www.syntaqx.com/docs/requests/error-responses)
+- [Idempotency](https://www.syntaqx.com/docs/requests/idempotency)
+- [Database naming conventions](https://www.syntaqx.com/docs/database/naming-conventions)
+- [Passing secrets to manual GitHub Actions workflows](https://www.syntaqx.com/posts/github-actions-secret-inputs)
+- [Industry books](https://www.syntaqx.com/books)
+
 ## Stack
 
 - **Framework**: Next.js 16 (App Router)
