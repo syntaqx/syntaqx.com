@@ -1,17 +1,20 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Upload, Info, ExternalLink, Play, CircleAlert } from "lucide-react";
+import { Upload, Info, Play, CircleAlert } from "lucide-react";
 import {
   ClearButton,
+  codeArea,
+  dropTarget,
   FileName,
   OptionCheckbox,
   OptionSelect,
   PanelFooter,
   PanelHeader,
+  ReferencesCard,
   Stat,
-  codeArea,
-  dropTarget,
+  ToolAside,
+  ToolCard,
 } from "@/components/tool-controls";
 import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
 import { Button } from "@/registry/syntaqx/ui/button";
@@ -440,79 +443,45 @@ export default function JsToolPage() {
         </div>
 
         {/* Right: info */}
-        <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-primary" />
-              About this tool
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
-              <p>
-                <span className="text-foreground">Beautify</span> uses{" "}
-                <span className="text-foreground">Prettier</span> to reformat source with consistent
-                indentation, quoting, and line breaks. Choose the{" "}
-                <span className="text-foreground">JSON</span> parser for strict JSON input.
-              </p>
-              <p>
-                <span className="text-foreground">Minify</span> uses{" "}
-                <span className="text-foreground">Terser</span> to compress and mangle JavaScript.
-                Output is functionally equivalent but significantly smaller. Mangling can break code
-                that introspects
-                <span className="text-foreground"> Function.name</span> or relies on exact
-                identifier names.
-              </p>
-              <p>
-                <span className="text-foreground">Obfuscate</span> uses{" "}
-                <span className="text-foreground">javascript-obfuscator</span> to make code harder
-                to read. This is not encryption and can be reversed with effort. Higher presets add
-                significant runtime overhead.
-              </p>
-              <p>
-                All three libraries run entirely in your browser. Source code never leaves your
-                machine.
-              </p>
-            </div>
-          </div>
+        <ToolAside>
+          <ToolCard icon={<Info />} title="About this tool">
+            <p>
+              <span className="text-foreground">Beautify</span> uses{" "}
+              <span className="text-foreground">Prettier</span> to reformat source with consistent
+              indentation, quoting, and line breaks. Choose the{" "}
+              <span className="text-foreground">JSON</span> parser for strict JSON input.
+            </p>
+            <p>
+              <span className="text-foreground">Minify</span> uses{" "}
+              <span className="text-foreground">Terser</span> to compress and mangle JavaScript.
+              Output is functionally equivalent but significantly smaller. Mangling can break code
+              that introspects
+              <span className="text-foreground"> Function.name</span> or relies on exact identifier
+              names.
+            </p>
+            <p>
+              <span className="text-foreground">Obfuscate</span> uses{" "}
+              <span className="text-foreground">javascript-obfuscator</span> to make code harder to
+              read. This is not encryption and can be reversed with effort. Higher presets add
+              significant runtime overhead.
+            </p>
+            <p>
+              All three libraries run entirely in your browser. Source code never leaves your
+              machine.
+            </p>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-primary" />
-              References
-            </h3>
-            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
-              <li>
-                <a
-                  href="https://prettier.io/docs/options"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  Prettier - Options
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://terser.org/docs/options/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  Terser - Options
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/javascript-obfuscator/javascript-obfuscator"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  javascript-obfuscator
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <ReferencesCard
+            links={[
+              { href: "https://prettier.io/docs/options", label: "Prettier - Options" },
+              { href: "https://terser.org/docs/options/", label: "Terser - Options" },
+              {
+                href: "https://github.com/javascript-obfuscator/javascript-obfuscator",
+                label: "javascript-obfuscator",
+              },
+            ]}
+          />
+        </ToolAside>
       </div>
     </div>
   );

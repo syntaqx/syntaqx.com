@@ -1,17 +1,20 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Upload, Info, ExternalLink } from "lucide-react";
+import { Upload, Info } from "lucide-react";
 import {
   ClearButton,
+  codeArea,
+  dropTarget,
   FileName,
   OptionCheckbox,
   OptionSelect,
   PanelFooter,
   PanelHeader,
+  ReferencesCard,
   Stat,
-  codeArea,
-  dropTarget,
+  ToolAside,
+  ToolCard,
 } from "@/components/tool-controls";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Field, FieldError, FieldLabel } from "@/registry/syntaqx/ui/field";
@@ -265,96 +268,56 @@ export default function Base64Page() {
         </div>
 
         {/* Right: info & references */}
-        <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          {/* Info */}
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-primary" />
-              About Base64
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
-              <p>
-                Base64 is an encoding scheme that converts binary data into ASCII text using a
-                64-character alphabet: <span className="text-foreground">A-Z</span>,{" "}
-                <span className="text-foreground">a-z</span>,{" "}
-                <span className="text-foreground">0-9</span>,{" "}
-                <span className="text-foreground">+</span>, and{" "}
-                <span className="text-foreground">/</span>, with{" "}
-                <span className="text-foreground">=</span> for padding.
-              </p>
-              <p>
-                Every 3 bytes of input produce 4 characters of output, increasing size by roughly
-                33%.
-              </p>
-              <p>
-                <span className="text-foreground">Common uses:</span> email attachments (MIME), data
-                URIs, JSON Web Tokens (JWTs), embedding images in CSS/HTML, and transmitting binary
-                data through text-only protocols.
-              </p>
-              <p>
-                A URL-safe variant replaces <span className="text-foreground">+</span> and{" "}
-                <span className="text-foreground">/</span> with{" "}
-                <span className="text-foreground">-</span> and{" "}
-                <span className="text-foreground">_</span> to avoid conflicts in URLs and filenames
-                (RFC 4648 &sect;5).
-              </p>
-              <p>
-                Base64 is <span className="text-foreground">not encryption</span>. It provides no
-                security. Anyone can decode it.
-              </p>
-            </div>
-          </div>
+        <ToolAside>
+          <ToolCard icon={<Info />} title="About Base64">
+            <p>
+              Base64 is an encoding scheme that converts binary data into ASCII text using a
+              64-character alphabet: <span className="text-foreground">A-Z</span>,{" "}
+              <span className="text-foreground">a-z</span>,{" "}
+              <span className="text-foreground">0-9</span>,{" "}
+              <span className="text-foreground">+</span>, and{" "}
+              <span className="text-foreground">/</span>, with{" "}
+              <span className="text-foreground">=</span> for padding.
+            </p>
+            <p>
+              Every 3 bytes of input produce 4 characters of output, increasing size by roughly 33%.
+            </p>
+            <p>
+              <span className="text-foreground">Common uses:</span> email attachments (MIME), data
+              URIs, JSON Web Tokens (JWTs), embedding images in CSS/HTML, and transmitting binary
+              data through text-only protocols.
+            </p>
+            <p>
+              A URL-safe variant replaces <span className="text-foreground">+</span> and{" "}
+              <span className="text-foreground">/</span> with{" "}
+              <span className="text-foreground">-</span> and{" "}
+              <span className="text-foreground">_</span> to avoid conflicts in URLs and filenames
+              (RFC 4648 &sect;5).
+            </p>
+            <p>
+              Base64 is <span className="text-foreground">not encryption</span>. It provides no
+              security. Anyone can decode it.
+            </p>
+          </ToolCard>
 
-          {/* References */}
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-primary" />
-              References
-            </h3>
-            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
-              <li>
-                <a
-                  href="https://datatracker.ietf.org/doc/html/rfc4648"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  RFC 4648 - Base Encodings
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://datatracker.ietf.org/doc/html/rfc2045#section-6.8"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  RFC 2045 &sect;6.8 - MIME Base64
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://developer.mozilla.org/en-US/docs/Glossary/Base64"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  MDN - Base64 glossary
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://en.wikipedia.org/wiki/Base64"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  Wikipedia - Base64
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <ReferencesCard
+            links={[
+              {
+                href: "https://datatracker.ietf.org/doc/html/rfc4648",
+                label: "RFC 4648 - Base Encodings",
+              },
+              {
+                href: "https://datatracker.ietf.org/doc/html/rfc2045#section-6.8",
+                label: "RFC 2045 &sect;6.8 - MIME Base64",
+              },
+              {
+                href: "https://developer.mozilla.org/en-US/docs/Glossary/Base64",
+                label: "MDN - Base64 glossary",
+              },
+              { href: "https://en.wikipedia.org/wiki/Base64", label: "Wikipedia - Base64" },
+            ]}
+          />
+        </ToolAside>
       </div>
     </div>
   );

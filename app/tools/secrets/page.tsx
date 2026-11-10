@@ -7,7 +7,6 @@ import {
   CircleAlert,
   Clock,
   Download,
-  ExternalLink,
   Eye,
   EyeOff,
   FileText,
@@ -28,7 +27,11 @@ import {
   OptionSelect,
   PanelFooter,
   PanelHeader,
+  ReferencesCard,
   Stat,
+  ToolAside,
+  ToolCard,
+  ToolPanel,
   codeArea,
 } from "@/components/tool-controls";
 import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
@@ -160,29 +163,6 @@ function byteSize(bytes: number): string {
 
 // --- Pieces ---------------------------------------------------------------------
 
-function Panel({
-  title,
-  icon,
-  children,
-  footer,
-}: {
-  title: ReactNode;
-  icon: ReactNode;
-  children: ReactNode;
-  footer?: ReactNode;
-}) {
-  return (
-    <div className="border border-border bg-card">
-      <div className="flex items-center gap-1.5 border-b border-border px-3 py-2 text-sm font-medium">
-        <span className="text-primary">{icon}</span>
-        {title}
-      </div>
-      <div className="p-3">{children}</div>
-      {footer && <div className="border-t border-border px-3 py-2">{footer}</div>}
-    </div>
-  );
-}
-
 /** A read-only value with a copy button, selected whole on focus. */
 function CopyField({ label, value }: { label: string; value: string }) {
   return (
@@ -306,11 +286,11 @@ function LinkReady({ created, onNew }: { created: Created; onNew: () => void }) 
 
   return (
     <div className="flex flex-col gap-4">
-      <Panel
+      <ToolPanel
         icon={<Check size={12} />}
         title="Link ready"
         footer={
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex w-full flex-wrap items-center justify-between gap-2">
             {footer}
             <div className="flex items-center gap-2">
               {status === "waiting" && (
@@ -341,7 +321,7 @@ function LinkReady({ created, onNew }: { created: Created; onNew: () => void }) 
                 so the server could read it. Opened in a browser, it lands on this page and waits
                 for a click, so a chat app&apos;s link preview won&apos;t burn it.
               </Note>
-              <pre className="overflow-x-auto border border-border bg-background px-3 py-2 font-mono text-xs text-foreground">
+              <pre className="overflow-x-auto rounded-md border bg-background px-3 py-2 font-mono text-xs text-foreground">
                 {`curl -s ${created.link} | jq -r .secret`}
               </pre>
             </div>
@@ -354,7 +334,7 @@ function LinkReady({ created, onNew }: { created: Created; onNew: () => void }) 
             </Note>
           )}
         </div>
-      </Panel>
+      </ToolPanel>
     </div>
   );
 }
@@ -690,41 +670,41 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
 
   if (state.status === "checking") {
     return (
-      <Panel icon={<KeyRound size={12} />} title="Checking the link">
+      <ToolPanel icon={<KeyRound size={12} />} title="Checking the link">
         <Skeleton className="h-16" />
-      </Panel>
+      </ToolPanel>
     );
   }
 
   if (state.status === "gone") {
     return (
-      <Panel icon={<Flame size={12} />} title="This secret is gone" footer={another}>
+      <ToolPanel icon={<Flame size={12} />} title="This secret is gone" footer={another}>
         <p className="text-sm text-foreground">
           It was already viewed, or it expired before anyone opened it. Secrets here work once, so
           if you didn&apos;t open it yourself, let the sender know: someone else may have.
         </p>
-      </Panel>
+      </ToolPanel>
     );
   }
 
   if (state.status === "error") {
     return (
-      <Panel icon={<Info size={12} />} title="Something went wrong" footer={another}>
+      <ToolPanel icon={<Info size={12} />} title="Something went wrong" footer={another}>
         <p role="alert" className="text-sm text-destructive">
           {state.message}
         </p>
-      </Panel>
+      </ToolPanel>
     );
   }
 
   if (state.status === "revealed") {
     const revealed = state.secret;
     return (
-      <Panel
+      <ToolPanel
         icon={<Eye size={12} />}
         title={revealed.kind === "file" ? "Your file" : "Your secret"}
         footer={
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex w-full flex-wrap items-center justify-between gap-2">
             <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Flame size={12} className="text-primary" />
               Deleted from the server.{" "}
@@ -764,7 +744,7 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
             </div>
             <pre
               className={cn(
-                "max-h-96 overflow-auto whitespace-pre-wrap break-all rounded-md border border-border bg-background px-3 py-2 font-mono text-sm text-foreground transition-[filter]",
+                "max-h-96 overflow-auto whitespace-pre-wrap break-all rounded-md border bg-background px-3 py-2 font-mono text-sm text-foreground transition-[filter]",
                 shown ? "" : "blur-sm select-none",
               )}
             >
@@ -772,14 +752,14 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
             </pre>
           </>
         )}
-      </Panel>
+      </ToolPanel>
     );
   }
 
   const keyError = state.status === "ready" ? state.keyError : undefined;
 
   return (
-    <Panel
+    <ToolPanel
       icon={<Lock size={12} />}
       title="Someone shared a secret with you"
       footer={
@@ -824,7 +804,7 @@ function RevealSecret({ link, onDone }: { link: SecretLink; onDone: () => void }
           </Button>
         </div>
       </div>
-    </Panel>
+    </ToolPanel>
   );
 }
 
@@ -864,13 +844,19 @@ export default function SecretsPage() {
           )}
         </div>
 
-        <div className="flex shrink-0 flex-col gap-6 lg:w-80">
-          <div className="border border-border bg-card">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-foreground">
-              <Info size={12} className="text-primary" />
-              How it works
-            </h3>
-            <ol className="list-decimal space-y-2.5 py-3 pr-4 pl-8 text-[13px] leading-relaxed lg:text-[11px] text-muted-foreground">
+        <ToolAside>
+          <ToolCard
+            icon={<Info />}
+            title="How it works"
+            footer={
+              <p>
+                Up to {byteSize(MAX_PLAINTEXT_BYTES)} per secret, text or file. There&apos;s no
+                uptime guarantee, but there doesn&apos;t need to be a security one: the server never
+                has what it would take to read your secret.
+              </p>
+            }
+          >
+            <ol className="flex list-decimal flex-col gap-2.5 pl-4">
               <li>
                 Your browser makes a random 256-bit key and encrypts the secret with{" "}
                 <span className="text-foreground">AES-256-GCM</span>.
@@ -890,75 +876,43 @@ export default function SecretsPage() {
                 here. A wrong key is turned away and the secret survives.
               </li>
             </ol>
-            <p className="border-t border-border px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] text-muted-foreground">
-              Up to {byteSize(MAX_PLAINTEXT_BYTES)} per secret, text or file. There&apos;s no uptime
-              guarantee, but there doesn&apos;t need to be a security one: the server never has what
-              it would take to read your secret.
-            </p>
-          </div>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-foreground">
-              <Terminal size={12} className="text-primary" />
-              From a script
-            </h3>
-            <div className="space-y-2 px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] text-muted-foreground">
-              <pre
-                tabIndex={0}
-                aria-label="Create a secret with curl"
-                className="overflow-x-auto border border-border bg-background px-2 py-1.5 font-mono text-[10px] text-foreground"
-              >
-                {`curl -s https://api.syntaqx.com/secrets \\
+          <ToolCard icon={<Terminal />} title="From a script">
+            <pre
+              tabIndex={0}
+              aria-label="Create a secret with curl"
+              className="overflow-x-auto rounded-md border bg-background px-3 py-2 font-mono text-xs text-foreground"
+            >
+              {`curl -s https://api.syntaqx.com/secrets \\
   -H 'Content-Type: application/json' \\
   -d '{"secret":"hunter2","ttl":600}'`}
-              </pre>
-              <p>
-                Returns a <span className="text-foreground">url</span> that hands the secret back
-                once. That&apos;s what &quot;For scripts&quot; makes too. To encrypt locally
-                instead, see the{" "}
-                <Link href="/posts/github-actions-secret-inputs" className="text-link">
-                  post
-                </Link>
-                .
-              </p>
-            </div>
-          </div>
+            </pre>
+            <p>
+              Returns a <span className="text-foreground">url</span> that hands the secret back
+              once. That&apos;s what &quot;For scripts&quot; makes too. To encrypt locally instead,
+              see the{" "}
+              <Link href="/posts/github-actions-secret-inputs" className="text-link">
+                post
+              </Link>
+              .
+            </p>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="flex items-center gap-1.5 border-b border-border px-4 py-3 text-xs font-medium text-foreground">
-              <ExternalLink size={12} className="text-primary" />
-              References
-            </h3>
-            <ul className="space-y-2 px-4 py-3 text-[13px] leading-relaxed lg:text-[11px]">
-              <li>
-                <Link
-                  href="/posts/github-actions-secret-inputs"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  GitHub Actions &amp; Secret Inputs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/docs/api"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  API reference: /secrets
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  MDN: AES-GCM in the Web Crypto API
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <ReferencesCard
+            links={[
+              {
+                href: "/posts/github-actions-secret-inputs",
+                label: "GitHub Actions & Secret Inputs",
+              },
+              { href: "/docs/api", label: "API reference: /secrets" },
+              {
+                href: "https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#aes-gcm",
+                label: "MDN: AES-GCM in the Web Crypto API",
+              },
+            ]}
+          />
+        </ToolAside>
       </div>
     </div>
   );

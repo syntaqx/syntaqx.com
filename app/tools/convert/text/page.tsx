@@ -1,8 +1,15 @@
 "use client";
 
 import { useState, useCallback, type KeyboardEvent } from "react";
-import { Info, ExternalLink, Trash2, Settings2 } from "lucide-react";
-import { OptionSelect, PanelHeader, Stat } from "@/components/tool-controls";
+import { Info, Trash2, Settings2 } from "lucide-react";
+import {
+  OptionSelect,
+  PanelHeader,
+  ReferencesCard,
+  Stat,
+  ToolAside,
+  ToolCard,
+} from "@/components/tool-controls";
 import { Button } from "@/registry/syntaqx/ui/button";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
 import { Field, FieldError, FieldLabel } from "@/registry/syntaqx/ui/field";
@@ -552,14 +559,11 @@ export default function ConvertPage() {
         </div>
 
         {/* Right: info sidebar */}
-        <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          {/* Format toggles */}
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Settings2 size={12} className="text-primary" />
-                Formats
-              </span>
+        <ToolAside>
+          <ToolCard
+            icon={<Settings2 />}
+            title="Formats"
+            action={
               <Button
                 variant="ghost"
                 size="xs"
@@ -573,8 +577,9 @@ export default function ConvertPage() {
               >
                 {enabled.length === FORMATS.length ? "Reset" : "All"}
               </Button>
-            </h3>
-            <div className="px-4 py-3 space-y-3">
+            }
+          >
+            <div className="flex flex-col gap-3">
               {CATEGORIES.map((cat) => {
                 const formats = FORMATS.filter((f) => f.category === cat.id);
                 const ids = formats.map((f) => f.id);
@@ -611,121 +616,69 @@ export default function ConvertPage() {
                 );
               })}
             </div>
-          </div>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-primary" />
-              About
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
-              <p>
-                <span className="text-foreground">JSON</span> (JavaScript Object Notation) is the
-                most common data interchange format on the web. Strict syntax: double-quoted keys,
-                no comments, no trailing commas. JSONC (JSON with Comments) relaxes some of these
-                rules but isn&apos;t widely supported outside of editors and tooling configs.
-              </p>
-              <p>
-                <span className="text-foreground">YAML</span> (YAML Ain&apos;t Markup Language) is a
-                human-readable format popular in configuration files. Indentation-based, supports
-                comments and multi-line strings.
-              </p>
-              <p>
-                <span className="text-foreground">TOON</span> (Token-Oriented Object Notation) is a
-                compact format designed for LLM prompts. Combines YAML-like indentation with
-                CSV-style tabular arrays for 20-40% fewer tokens than JSON.
-              </p>
-              <p>
-                <span className="text-foreground">TOML</span> (Tom&apos;s Obvious Minimal Language)
-                is designed for config files. Explicit typing, clean table syntax, and native
-                datetime support.
-              </p>
-              <p>
-                <span className="text-foreground">XML</span> (Extensible Markup Language) is a
-                verbose but universal format used in configs, APIs, and document interchange.
-                Supports attributes, namespaces, and schemas.
-              </p>
-              <p>
-                <span className="text-foreground">ENV</span> (dotenv) is a flat key=value format
-                used for environment variables. Natively flat with string values, though some tools
-                support variable expansion and prefixed key conventions for grouping.
-              </p>
-              <p>
-                <span className="text-foreground">CSV</span> (Comma-Separated Values) is a tabular
-                format. Works best with flat objects or arrays of uniform objects. Nesting can be
-                emulated with dot-notation column names, but isn&apos;t part of the spec.
-              </p>
-              <p>
-                <span className="text-foreground">Query String</span> is the key=value format from
-                URLs ({`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket
-                nesting ({`user[name]=x`}) in many frameworks.
-              </p>
-              <p>
-                Each format has tradeoffs. Some conversions may be lossy, e.g. TOML can&apos;t
-                represent heterogeneous arrays and flat formats can&apos;t represent nesting.
-              </p>
-            </div>
-          </div>
+          <ToolCard icon={<Info />} title="About">
+            <p>
+              <span className="text-foreground">JSON</span> (JavaScript Object Notation) is the most
+              common data interchange format on the web. Strict syntax: double-quoted keys, no
+              comments, no trailing commas. JSONC (JSON with Comments) relaxes some of these rules
+              but isn&apos;t widely supported outside of editors and tooling configs.
+            </p>
+            <p>
+              <span className="text-foreground">YAML</span> (YAML Ain&apos;t Markup Language) is a
+              human-readable format popular in configuration files. Indentation-based, supports
+              comments and multi-line strings.
+            </p>
+            <p>
+              <span className="text-foreground">TOON</span> (Token-Oriented Object Notation) is a
+              compact format designed for LLM prompts. Combines YAML-like indentation with CSV-style
+              tabular arrays for 20-40% fewer tokens than JSON.
+            </p>
+            <p>
+              <span className="text-foreground">TOML</span> (Tom&apos;s Obvious Minimal Language) is
+              designed for config files. Explicit typing, clean table syntax, and native datetime
+              support.
+            </p>
+            <p>
+              <span className="text-foreground">XML</span> (Extensible Markup Language) is a verbose
+              but universal format used in configs, APIs, and document interchange. Supports
+              attributes, namespaces, and schemas.
+            </p>
+            <p>
+              <span className="text-foreground">ENV</span> (dotenv) is a flat key=value format used
+              for environment variables. Natively flat with string values, though some tools support
+              variable expansion and prefixed key conventions for grouping.
+            </p>
+            <p>
+              <span className="text-foreground">CSV</span> (Comma-Separated Values) is a tabular
+              format. Works best with flat objects or arrays of uniform objects. Nesting can be
+              emulated with dot-notation column names, but isn&apos;t part of the spec.
+            </p>
+            <p>
+              <span className="text-foreground">Query String</span> is the key=value format from
+              URLs ({`?a=1&b=2`}). Supports array notation ({`key[]=1&key[]=2`}) and dot/bracket
+              nesting ({`user[name]=x`}) in many frameworks.
+            </p>
+            <p>
+              Each format has tradeoffs. Some conversions may be lossy, e.g. TOML can&apos;t
+              represent heterogeneous arrays and flat formats can&apos;t represent nesting.
+            </p>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-primary" />
-              References
-            </h3>
-            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
-              <li>
-                <a
-                  href="https://www.json.org/json-en.html"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  json.org - JSON specification
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://yaml.org/spec/1.2.2/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  YAML 1.2 specification
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://toonformat.dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  toonformat.dev - TOON specification
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://toml.io/en/v1.0.0"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  TOML v1.0.0 specification
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://datatracker.ietf.org/doc/html/rfc8259"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  RFC 8259 - JSON (IETF)
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <ReferencesCard
+            links={[
+              { href: "https://www.json.org/json-en.html", label: "json.org - JSON specification" },
+              { href: "https://yaml.org/spec/1.2.2/", label: "YAML 1.2 specification" },
+              { href: "https://toonformat.dev", label: "toonformat.dev - TOON specification" },
+              { href: "https://toml.io/en/v1.0.0", label: "TOML v1.0.0 specification" },
+              {
+                href: "https://datatracker.ietf.org/doc/html/rfc8259",
+                label: "RFC 8259 - JSON (IETF)",
+              },
+            ]}
+          />
+        </ToolAside>
       </div>
     </div>
   );

@@ -530,6 +530,26 @@
         }
       ],
       "categories": ["feedback"]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "shadcn's Card: a header, content and footer in one rounded panel, in two sizes, with a title that can be a real heading.",
+      "dependencies": ["radix-ui"],
+      "files": [
+        {
+          "path": "registry/syntaqx/ui/card.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "categories": ["data"],
+      "meta": {
+        "shadcn": "card",
+        "changes": [
+          "`asChild` on CardTitle, so the title can be a heading (`<CardTitle asChild><h2>`) and the page's outline includes it."
+        ]
+      }
     }
   ]
 }

@@ -1,17 +1,20 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect, type ClipboardEvent } from "react";
-import { Upload, Info, ExternalLink, CircleAlert } from "lucide-react";
+import { Upload, Info, CircleAlert } from "lucide-react";
 import {
   ClearButton,
+  codeArea,
+  dropTarget,
   FileName,
   OptionCheckbox,
   OptionSelect,
   PanelFooter,
   PanelHeader,
+  ReferencesCard,
   Stat,
-  codeArea,
-  dropTarget,
+  ToolAside,
+  ToolCard,
 } from "@/components/tool-controls";
 import { Alert, AlertDescription } from "@/registry/syntaqx/ui/alert";
 import { CopyButton } from "@/registry/syntaqx/ui/copy-button";
@@ -492,12 +495,9 @@ export default function MarkdownToolPage() {
         </div>
 
         {/* Right: info & stats */}
-        <div className="lg:w-80 shrink-0 flex flex-col gap-6">
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border">
-              Stats
-            </h3>
-            <dl className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed grid grid-cols-2 gap-y-1.5">
+        <ToolAside>
+          <ToolCard title="Stats">
+            <dl className="grid grid-cols-2 gap-y-1.5">
               <dt>Characters</dt>
               <dd className="text-right tabular-nums text-foreground">
                 {stats.chars.toLocaleString()}
@@ -511,77 +511,42 @@ export default function MarkdownToolPage() {
               <dt>Reading time</dt>
               <dd className="text-right tabular-nums text-foreground">{stats.reading}</dd>
             </dl>
-          </div>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <Info size={12} className="text-primary" />
-              About
-            </h3>
-            <div className="px-4 py-3 text-[11px] text-muted-foreground leading-relaxed space-y-2.5">
-              <p>
-                <span className="text-foreground">HTML to Markdown</span> accepts raw HTML you type
-                or paste. It also intercepts the <span className="text-foreground">text/html</span>{" "}
-                entry from your clipboard, so copying from a styled source (a web page, a Google
-                Doc, Notion) preserves headings, links, lists, and tables. Pasting plain text just
-                keeps it as text.
-              </p>
-              <p>
-                <span className="text-foreground">Markdown to HTML</span> and{" "}
-                <span className="text-foreground">Preview</span> use{" "}
-                <span className="text-foreground">remark</span> with GFM extensions (tables, task
-                lists, strikethrough). Output is passed through{" "}
-                <span className="text-foreground">rehype-sanitize</span> before rendering, so script
-                tags, event handlers, and <span className="text-foreground">javascript:</span> URLs
-                are stripped.
-              </p>
-              <p>
-                If you paste the converted Markdown or HTML into a downstream system that renders it
-                for other users, sanitize it again there. The sanitizer here only protects this
-                page.
-              </p>
-            </div>
-          </div>
+          <ToolCard icon={<Info />} title="About">
+            <p>
+              <span className="text-foreground">HTML to Markdown</span> accepts raw HTML you type or
+              paste. It also intercepts the <span className="text-foreground">text/html</span> entry
+              from your clipboard, so copying from a styled source (a web page, a Google Doc,
+              Notion) preserves headings, links, lists, and tables. Pasting plain text just keeps it
+              as text.
+            </p>
+            <p>
+              <span className="text-foreground">Markdown to HTML</span> and{" "}
+              <span className="text-foreground">Preview</span> use{" "}
+              <span className="text-foreground">remark</span> with GFM extensions (tables, task
+              lists, strikethrough). Output is passed through{" "}
+              <span className="text-foreground">rehype-sanitize</span> before rendering, so script
+              tags, event handlers, and <span className="text-foreground">javascript:</span> URLs
+              are stripped.
+            </p>
+            <p>
+              If you paste the converted Markdown or HTML into a downstream system that renders it
+              for other users, sanitize it again there. The sanitizer here only protects this page.
+            </p>
+          </ToolCard>
 
-          <div className="border border-border bg-card">
-            <h3 className="text-xs font-medium text-foreground px-4 py-3 border-b border-border flex items-center gap-1.5">
-              <ExternalLink size={12} className="text-primary" />
-              References
-            </h3>
-            <ul className="px-4 py-3 text-[13px] leading-relaxed lg:text-[11px] space-y-2">
-              <li>
-                <a
-                  href="https://github.com/mixmark-io/turndown"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  Turndown - HTML to Markdown
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/remarkjs/remark"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  remark - Markdown processor
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.github.com/gfm/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-foreground hover:text-primary transition-colors"
-                >
-                  GitHub Flavored Markdown spec
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+          <ReferencesCard
+            links={[
+              {
+                href: "https://github.com/mixmark-io/turndown",
+                label: "Turndown - HTML to Markdown",
+              },
+              { href: "https://github.com/remarkjs/remark", label: "remark - Markdown processor" },
+              { href: "https://github.github.com/gfm/", label: "GitHub Flavored Markdown spec" },
+            ]}
+          />
+        </ToolAside>
       </div>
     </div>
   );
