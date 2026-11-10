@@ -26,6 +26,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Decentralized Finance": "DeFi",
   "Design and Visual Collaboration": "Design",
   "Docs, Wikis and Files": "Docs and Files",
+  "Embedded Insurance and Service Contracts": "Embedded",
   "Fair Play and Safety": "Fair Play",
   "Funding and Licensing": "Funding",
   "Hiring and HR Records": "HR Records",
