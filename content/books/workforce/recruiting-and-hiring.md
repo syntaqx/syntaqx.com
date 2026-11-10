@@ -26,9 +26,9 @@ What ATS vendors publish about their objects, hiring hand-offs and candidate dat
 | **Workable** | Jobs, candidates, offers, employees, with scopes such as `r_jobs`, `r_candidates` and `r_offers` | A subscriptions API with candidate and employee events | Offers "Accessible only with user tokens" |
 | **Workday Recruiting** | A Recruiting web service alongside Staffing and Human_Resources in Workday's service list | Hire inside the same HCM record | Not public at operation level |
 
-Greenhouse's Harvest documentation said that "The Harvest v1/v2 API is deprecated and will be removed on August 31, 2026," pointing integrators to Harvest v3; an integration built against v1 or v2 should be treated as retired.
+Greenhouse's Harvest documentation still says, as of November 2026, that "The Harvest v1/v2 API is deprecated and will be removed on August 31, 2026," pointing integrators to Harvest v3; I found no notice confirming the removal took place, and an integration built against v1 or v2 should be treated as retired.
 
-<!-- source-gap: wf-ats-greenhouse-v2-removal | status | whether Greenhouse removed Harvest v1/v2 on August 31, 2026 | closes with: a Greenhouse changelog or doc page after the date confirming removal | checked: 2026-11-09 -->
+<!-- source-gap: wf-ats-greenhouse-v2-removal | status | whether Greenhouse removed Harvest v1/v2 on August 31, 2026 | closes with: a Greenhouse changelog or doc page after the date confirming removal | checked: 2026-11-10 -->
 
 The pattern across vendors is consistent: a person (candidate) is separate from each attempt (application or opportunity), demographic self-identification is a separate object with separate permissions, and the hire is an explicit event that requires the offer and its approvals to be complete. The core model inherits all three.
 
@@ -48,7 +48,7 @@ An offer is a versioned document with approvals: the job, start date, pay rate o
 
 The hire is the hand-off. Greenhouse won't mark an application hired until "all approvals for the job and offer must have occurred"; Ashby, Greenhouse and Lever each emit a hire webhook; and the HRIS takes it from there as a hire event ([Joiner, Mover and Leaver Events](/books/workforce/hris-record-of-truth#joiner-mover-and-leaver-events)). What crosses is the person, the job, the start date and the pay from the accepted offer, mapped to the HRIS's job codes and the payroll's earning codes. What should not cross automatically is the candidate's demographic self-identification (which belongs in the HR system's own EEO record under its own access rules, if it is kept at all) and the background check report (which stays in the check's own record).
 
-Two edge cases need explicit handling. A rescinded offer after a hire event has already reached payroll and identity is a rescind, not a termination (the HRIS chapter covers why). And a conditional offer, which fair chance laws require before any conviction history inquiry, means the background check runs after the offer and can end it, so the offer, the check and the adverse action process are one workflow (the next chapter covers the sequence).
+Two edge cases need explicit handling. A rescinded offer after a hire event has already reached payroll and identity is a rescind, not a termination ([Joiner, Mover and Leaver Events](/books/workforce/hris-record-of-truth#joiner-mover-and-leaver-events) in [The HRIS as Record of Truth](/books/workforce/hris-record-of-truth) covers why). And a conditional offer, which fair chance laws require before any conviction history inquiry, means the background check runs after the offer and can end it, so the offer, the check and the adverse action process are one workflow (the next chapter covers the sequence).
 
 ## EEO Self-Identification
 
@@ -69,7 +69,7 @@ What changed in 2025 and 2026, as of November 2026:
 
 <!-- source-gap: wf-ats-vevraa-selfid | missing | whether the 2026 VEVRAA final rule kept the invitation to self-identify as a protected veteran | closes with: the regulatory text of 41 CFR 60-300.42 after September 21, 2026 | checked: 2026-11-09 -->
 
-The Pay Transparency chapter covers EEO-1 as a report. For the ATS, the consequence is design, not deletion: collection is configurable by employer, jurisdiction and form version with effective dates, because which questions are asked, of whom, changed three times in two years and may change again when the EEO-1 rule is finalized. Lever's own note that disability information is "only allowed for US contractors" is the kind of rule that now needs a date on it.
+[Pay Transparency, Pay Equity & EEO-1](/books/workforce/pay-transparency-and-equity#eeo-1-component-1) covers EEO-1 as a report. For the ATS, the consequence is design, not deletion: collection is configurable by employer, jurisdiction and form version with effective dates, because which questions are asked, of whom, changed three times in two years and may change again when the EEO-1 rule is finalized. Lever's own note that disability information is "only allowed for US contractors" is the kind of rule that now needs a date on it.
 
 ## AI in Hiring
 
@@ -113,7 +113,7 @@ Candidate data has two kinds of clock: how long the law requires it be kept, and
 | **CCPA and CPRA** | Personal information of California residents, which "includes California residents that are employees or job applicants" | Retained only as long as reasonably necessary; deletion on request subject to exceptions such as to "Comply with a legal obligation" |
 | **GDPR** (EU and UK candidates) | All personal data of candidates | Limited to the purpose; Lever and SmartRecruiters expose consent and expiry for it |
 
-The EEOC's proposed rescission would also remove the part 1602 recordkeeping rules; until a final rule says so, 1602.14 applies. Employee Records, Privacy & Retention covers the schedule as a system. For an ATS the practical rule is that every candidate, application and AI tool output gets a retention date computed from the strictest rule that applies to the jurisdiction and the employer, a hold stops the clock when a charge or suit is filed, and expiry means anonymization of the person while keeping the counts: Greenhouse's anonymize endpoint takes a list of fields, and Lever keeps "Non-personal metadata" on an anonymized record "for accurate reporting purposes," which is what an adverse impact analysis still needs a year later.
+The EEOC's proposed rescission would also remove the part 1602 recordkeeping rules; until a final rule says so, 1602.14 applies. [Employee Records, Privacy & Retention](/books/workforce/employee-records-and-privacy) covers the schedule as a system. For an ATS the practical rule is that every candidate, application and AI tool output gets a retention date computed from the strictest rule that applies to the jurisdiction and the employer, a hold stops the clock when a charge or suit is filed, and expiry means anonymization of the person while keeping the counts: Greenhouse's anonymize endpoint takes a list of fields, and Lever keeps "Non-personal metadata" on an anonymized record "for accurate reporting purposes," which is what an adverse impact analysis still needs a year later.
 
 ## How to Build It
 

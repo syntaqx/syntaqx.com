@@ -71,7 +71,7 @@ The enterprise view of provisioning starts in HR, not in the identity provider. 
 - **Movers.** A transfer changes department, manager and groups, so access granted by the old groups has to go when the new groups arrive. The product receives this as group membership PATCHes; nothing in SCIM tells it that two changes are one transfer, so a grant removed before its replacement is added produces a short outage, and the reverse produces a short overgrant.
 - **Leavers.** Effective dates, contingent workers handled differently from employees, and what "terminated" means at midnight in which time zone. The product's job is to make `active: false` take effect everywhere at once: sessions, API tokens, OAuth grants, scheduled automations running as the person, and seat counts.
 
-My default for the target side: treat every SCIM deactivation as an incident-grade revocation (sessions and tokens killed within minutes), run the content handover as a separate, slower workflow that an admin can review, and never require the identity provider to send a hard delete for anything other than erasing the person's personal data.
+My default for the target side: treat every SCIM deactivation as an incident-grade revocation (sessions and tokens killed within minutes), run the content handover as a separate, slower workflow that an admin can review, and never require the identity provider to send a hard delete for anything other than erasing the person's personal data. The HR side, the events and their effective dates as the HRIS emits them, is in the Workforce volume's [Joiner, Mover and Leaver Events](/books/workforce/hris-record-of-truth#joiner-mover-and-leaver-events).
 
 ## Deactivation Versus Deletion
 

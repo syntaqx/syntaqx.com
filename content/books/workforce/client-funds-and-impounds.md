@@ -31,7 +31,7 @@ Three patterns stand out. **The big providers own a trust bank.** ADP and Paycom
 
 The structure answers one question: if the provider failed, whose money would it be? A grantor trust holding client funds, with a regulated trust bank as sole trustee, says it is the clients' and their payees', held for them, not the provider's to lend or pledge. ADP and Paycom both use that structure, and Paycom's trust bank is chartered and supervised by the OCC. Providers without a trust bank hold funds in custodial or "for the benefit of" accounts at a commercial bank, titled for the clients, the shape Paylocity describes as "consolidated accounts on behalf of our clients" and the shape every embedded payroll API and small provider uses. Payments' [Treasury](/books/payments/treasury#fbo-accounts-and-pass-through-insurance) chapter covers what FBO titling does and doesn't do for deposit insurance, and the daily records it requires.
 
-What the structure doesn't change: the employer still owes its taxes. The IRS says "The employer is ultimately responsible for the deposit and payment of federal tax liabilities" even when a provider holds the money ([Who Runs Payroll: Agents & Liability](/books/workforce/who-runs-payroll#who-stays-liable-worked)). A trust protects the money from the provider's creditors; it doesn't protect the employer from a provider that never deposits it, which is When Payroll Providers Fail's subject.
+What the structure doesn't change: the employer still owes its taxes. The IRS says "The employer is ultimately responsible for the deposit and payment of federal tax liabilities" even when a provider holds the money ([Who Runs Payroll: Agents & Liability](/books/workforce/who-runs-payroll#who-stays-liable-worked)). A trust protects the money from the provider's creditors; it doesn't protect the employer from a provider that never deposits it, which is [When Payroll Providers Fail](/books/workforce/when-providers-fail)'s subject.
 
 ## What Is Impounded, and for How Long
 
@@ -47,7 +47,7 @@ To **impound** is to collect a payee's amount from the employer ahead of its due
 | Child support | With the debit, when the provider remits | The state disbursement unit, within 7 business days of payday | About 1 to 2 weeks |
 | 401(k) deferrals, when the provider remits | With the debit | On the DOL timing rule for participant contributions | Days |
 
-The federal and support dates are in [Deposits, Returns & the Tax Calendar](/books/workforce/deposits-and-returns#when-deposits-are-due) and [Child Support Withholding](/books/workforce/child-support-withholding#remitting-to-the-state-disbursement-unit); 401(k) Deferrals & Remittance covers the plan timing. ADP describes the principle as "generally impounding the client's funds by the time we pay such client's obligation." The long tails (monthly depositors, FUTA, SUI) are where the balance comes from: a dollar of net pay is held for days, a dollar of quarterly unemployment tax for months.
+The federal and support dates are in [Deposits, Returns & the Tax Calendar](/books/workforce/deposits-and-returns#when-deposits-are-due) and [Child Support Withholding](/books/workforce/child-support-withholding#remitting-to-the-state-disbursement-unit); [401(k) Deferrals & Remittance](/books/workforce/retirement-plan-deferrals) covers the plan timing. ADP describes the principle as "generally impounding the client's funds by the time we pay such client's obligation." The long tails (monthly depositors, FUTA, SUI) are where the balance comes from: a dollar of net pay is held for days, a dollar of quarterly unemployment tax for months.
 
 ### Worked Numbers: One Employer's Impound
 
@@ -210,7 +210,7 @@ Design notes:
 - **Provider funding is its own column.** A shortfall fronted for one employer is a receivable from that employer on the provider's books, so it never hides inside another employer's position.
 - **Policy at purchase is data.** Every holding records which version of the investment policy it passed and how; a policy change doesn't rewrite old holdings ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 - **Forecast from liabilities.** The borrowing plan reads `liabilities.due_on`, which the deposit and remittance rules computed, so treasury and payroll share one calendar.
-- **Sweep earnings on a schedule.** Interest is the provider's revenue under its agreements; sweeping it out daily or monthly keeps the pool equal to obligations, and How Payroll Providers Make Money's accruals book it ([Cash Is Not Revenue](/docs/money/accounting#cash-is-not-revenue)).
+- **Sweep earnings on a schedule.** Interest is the provider's revenue under its agreements; sweeping it out daily or monthly keeps the pool equal to obligations, and [How Payroll Providers Make Money](/books/workforce/revenue-models)'s accruals book it ([Cash Is Not Revenue](/docs/money/accounting#cash-is-not-revenue)).
 
 ## Auditing
 

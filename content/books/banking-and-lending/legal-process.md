@@ -78,7 +78,7 @@ Separately, the IRS can take up to 15 percent of certain federal payments at the
 
 ## State Garnishments and Restraints
 
-State law decides how a judgment creditor reaches a bank account, what is exempt, which bank office must be served and what the bank may charge. Two examples show the range.
+State law decides how a judgment creditor reaches a bank account, what is exempt, which bank office must be served and what the bank may charge (the same judgments reach wages through the employer, under state rules in [Creditor Garnishments by State](/books/workforce/garnishments-and-levies#creditor-garnishments-by-state)). Two examples show the range.
 
 **New York.** A restraining notice served on a bank (CPLR 5222) restrains the debtor's property, but a bank that holds "twice the amount due on the judgment" is free as to the rest. Exempt money stays out of reach: when exempt payments were directly deposited within the 45 days before service, CPLR 5205(l) protects them up to a set amount, and separately a restraining notice doesn't reach an amount tied to 240 times the federal minimum hourly wage (CPLR 5222(i)). The Department of Financial Services adjusts the 5205(l) amount and the restraint provisions tied to it every three years; it has been **$3,425 since April 1, 2024**, and the next adjustment is scheduled for April 1, 2027. A bank that restrains funds it shouldn't "shall charge no fee to the judgment debtor... regardless of any terms of agreement."
 
@@ -90,7 +90,7 @@ State law decides how a judgment creditor reaches a bank account, what is exempt
 
 Federal law requires every state's child support program to run a **financial institution data match** with banks each calendar quarter, identifying parents with past-due support who hold accounts, and requires banks to "encumber or surrender, as the case may be, assets" when the agency serves a lien or levy (42 USC 666(a)(17)). The bank may be paid a reasonable fee, not more than its actual costs, and is shielded from liability for disclosing records, freezing or surrendering funds under the program; a separate provision bars liability under any federal or state law for disclosing records to a state child support agency (42 USC 669a). A child support order that carries the Notice of Right to Garnish Federal Benefits skips the Part 212 review.
 
-For a bank, the data match is a quarterly file exchange, and the lien that follows is an ordinary legal process case with the agency's rules for holding periods and notices.
+For a bank, the data match is a quarterly file exchange, and the lien that follows is an ordinary legal process case with the agency's rules for holding periods and notices. The employer's side, the income withholding order against wages, is in the Workforce volume's [Child Support Withholding](/books/workforce/child-support-withholding).
 
 ## Records: Subpoenas and the Right to Financial Privacy Act
 

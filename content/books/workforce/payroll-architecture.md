@@ -354,7 +354,7 @@ A SOC 1 auditor, a DOL investigator and an IRS examiner each test a different la
 
 - **Reproducibility.** Any paid statement, recomputed from its snapshot, matches; replay results are kept as evidence that the engine is pure.
 - **Rule provenance.** Every rule version with its source, approver and publication time, and which runs read it.
-- **Change management.** Engine and rule releases with their test results and approvals, which is the SOC 1 change management control (Controls, Audits & SOC 1).
+- **Change management.** Engine and rule releases with their test results and approvals, which is the SOC 1 change management control ([Controls, Audits & SOC 1](/books/workforce/controls-audits-and-soc1)).
 - **Schedule integrity.** Every obligation, its deadline, when it ran and its result; late items with their owner and resolution.
 - **Export trail.** Every GL batch with its mapping version and acknowledgment, so the employer's books tie to the pay runs.
 

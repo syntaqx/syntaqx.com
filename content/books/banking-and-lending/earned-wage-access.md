@@ -107,7 +107,7 @@ The integration is the product. Three ways in, from most to least direct:
 - **Payroll-account connection by the worker.** A D2C provider connects to the worker's payroll account with the worker's consent, reads earnings and sets up a deduction or split deposit, the arrangement the CFPB describes as directing part of the paycheck to an account held for the worker's benefit and used only to repay the provider.
 - **Bank transaction data.** The provider reads deposits through an aggregator ([Open Banking in the US](/books/banking-and-lending/open-banking#how-the-platforms-do-it)) and estimates earnings. This is the estimate the opinion excludes from Covered EWA.
 
-The payroll calendar matters as much as the data. An advance taken after the pay run closes can't be recovered from that payroll, so the access window per employer closes at the processor's cutoff, and a worker paid on a card or into a neobank account is still paid on the employer's schedule, which the program has to hold as a calendar per employer, not a global rule.
+The payroll calendar matters as much as the data. An advance taken after the pay run closes can't be recovered from that payroll, so the access window per employer closes at the processor's cutoff, and a worker paid on a card or into a neobank account is still paid on the employer's schedule, which the program has to hold as a calendar per employer, not a global rule. On the payroll side, the repayment deduction takes its place in the employer's [Deduction Ordering](/books/workforce/deductions#deduction-ordering), and the hooks a payroll provider offers are in [Instant and Early Pay](/books/workforce/paying-employees#instant-and-early-pay).
 
 ## How to Build It
 

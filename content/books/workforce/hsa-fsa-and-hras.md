@@ -202,7 +202,7 @@ Design notes:
 - **Carryover or grace, never both,** enforced by a constraint, and carryover amounts held by the administrator, not added to the new year's salary reduction limit.
 - **Notices are rows with due dates,** 90 days before the plan year for QSEHRAs and ICHRAs, generated and kept as sent ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)).
 - **Classes are effective-dated and checked,** with the minimum class size computed from the employer's headcount at the start of the plan year, and the ICHRA offer written to the ACA monthly results for the 1095-C.
-- **Contribution files equal remittances.** Each pay run's HSA and FSA contributions are liabilities to the custodian or administrator with a remittance and a file per account holder, the same shape as the recordkeeper file in 401(k) Deferrals & Remittance.
+- **Contribution files equal remittances.** Each pay run's HSA and FSA contributions are liabilities to the custodian or administrator with a remittance and a file per account holder, the same shape as the recordkeeper file in [401(k) Deferrals & Remittance](/books/workforce/retirement-plan-deferrals).
 
 ## Auditing
 

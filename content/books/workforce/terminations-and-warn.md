@@ -10,7 +10,7 @@ tags = ["terminations", "offboarding", "warn-act", "severance", "unemployment", 
 
 A termination is one event in the HRIS and a dozen obligations everywhere else. Final pay is due on a state's deadline, sometimes the same day. Accrued vacation may be wages that must be paid out. Health coverage ends on a date the plan sets, and the employer has 30 days to tell the plan so COBRA can start. Accounts, sessions and tokens must be revoked, and the person's files handed to someone else. A garnishment issuer may need to hear that the employee is gone. The I-9 retention clock starts. If the employee files for unemployment, the state agency will ask the employer why they left, with a short deadline and a charge to the employer's unemployment account at stake. And if the termination is one of many at a site, federal and state WARN laws may have required 60 or 90 days of written notice to the employees, the state and the local government, with back pay for every day short.
 
-The engineering lesson is that a separation is a workflow, not a status. It has an effective date, a last day worked, a reason, and a fan-out of tasks with their own owners and deadlines, and some of those tasks (WARN counts, severance releases) depend on other separations, past and planned. This chapter covers the separation workflow, WARN and state mini-WARN counting, severance and release payments in payroll, unemployment claims and responses, and rehire. Final pay timing by state is in Pay Frequency, Pay Statements & Final Pay; COBRA's clocks are in COBRA & State Continuation; identity revocation is in Workplace & Collaboration's [Joiner, Mover, Leaver](/books/workplace-and-collaboration/provisioning-and-scim#joiner-mover-leaver).
+The engineering lesson is that a separation is a workflow, not a status. It has an effective date, a last day worked, a reason, and a fan-out of tasks with their own owners and deadlines, and some of those tasks (WARN counts, severance releases) depend on other separations, past and planned. This chapter covers the separation workflow, WARN and state mini-WARN counting, severance and release payments in payroll, unemployment claims and responses, and rehire. Final pay timing by state is in [Pay Frequency, Pay Statements & Final Pay](/books/workforce/pay-frequency-statements-and-final-pay); COBRA's clocks are in [COBRA & State Continuation](/books/workforce/cobra); identity revocation is in Workplace & Collaboration's [Joiner, Mover, Leaver](/books/workplace-and-collaboration/provisioning-and-scim#joiner-mover-leaver).
 
 ## How the Platforms Do It
 
@@ -22,7 +22,7 @@ What HRIS vendors and the unemployment system publish about separations, as of N
 | **Rippling** | An `employee.terminated` partner webhook, and changes whose `effective_on` may be in the future while `applied_on` is when they were saved |
 | **UI SIDES** | A system run with the U.S. Department of Labor to "streamline the processing of unemployment insurance (UI) claims," used by "employers, third-party administrators (TPAs), and professional employer organizations (PEOs)," with six exchanges for the steps of a claim |
 
-Two timing models again (see [How the Platforms Do It](/books/workforce/hris-record-of-truth#how-the-platforms-do-it) in the HRIS chapter): HiBob announces a termination when it takes effect, Rippling exposes it when it is recorded. Offboarding needs both: payroll has to plan final pay from the moment a termination is entered, and identity has to revoke access at the effective moment, not before. On the agency side, SIDES is how employers and their third-party administrators answer state unemployment requests electronically instead of by mail.
+Two timing models again (see [How the Platforms Do It](/books/workforce/hris-record-of-truth#how-the-platforms-do-it) in [The HRIS as Record of Truth](/books/workforce/hris-record-of-truth)): HiBob announces a termination when it takes effect, Rippling exposes it when it is recorded. Offboarding needs both: payroll has to plan final pay from the moment a termination is entered, and identity has to revoke access at the effective moment, not before. On the agency side, SIDES is how employers and their third-party administrators answer state unemployment requests electronically instead of by mail.
 
 ## The Separation Workflow
 
@@ -41,10 +41,10 @@ The fan-out, with who owns each task and what sets its deadline:
 | **PTO payout** | Payroll | State law and policy; California treats accrued vacation as wages due at separation |
 | **Deductions from final pay** | Payroll | State wage deduction rules and the employee's written authorizations |
 | **Benefit end dates** | Benefits | The plan (end of the termination month is common) |
-| **COBRA notice to the plan** | Employer | 30 days from the qualifying event, which the plan follows with an election notice within 14 days |
+| **COBRA notice to the plan** | Employer | 30 days from the qualifying event, which the plan follows with an election notice within 14 days ([The Notices and Their Clocks](/books/workforce/cobra#the-notices-and-their-clocks)) |
 | **Access revocation** | IT and identity | The effective moment; minutes, not days |
 | **Content and device handover** | Manager and IT | Policy |
-| **Garnishment issuers** | Payroll | The order's terms (Child Support Withholding and Garnishments & Levies cover what each requires) |
+| **Garnishment issuers** | Payroll | The order's terms ([Child Support Withholding](/books/workforce/child-support-withholding) and [Garnishments & Levies](/books/workforce/garnishments-and-levies) cover what each requires) |
 | **Unemployment notices to the employee** | HR | State law in some states |
 | **Separation agreement and release** | HR and legal | OWBPA's 21 or 45 days plus 7 to revoke, where age claims are released |
 | **I-9 retention** | HR | Recompute: the later of hire + 3 years and termination + 1 year |
@@ -150,13 +150,13 @@ Some states also require the employer to give a separating employee a written no
 A former employee who returns is a rehire: a new `employments` row on the same `workers` row, so the year's Social Security wage base and year-to-date totals continue ([The Employee Record](/books/workforce/hris-record-of-truth#the-employee-record)). Four things depend on the gap:
 
 - **New hire reporting.** A returning employee is "newly hired" if they were separated "for at least 60 consecutive days" (42 USC 653a); a shorter gap needs no report.
-- **I-9.** A new I-9 or Supplement B, under the conditions in Onboarding: I-9, E-Verify & New Hire Reporting.
+- **I-9.** A new I-9 or Supplement B, under the conditions in [Onboarding: I-9, E-Verify & New Hire Reporting](/books/workforce/onboarding-i9-and-new-hires).
 - **Rehire eligibility.** A flag set at separation, with a reason, and checked by the ATS when the person applies again; it should never be a free-text note.
 - **Benefits and service.** Plan rules on bridging service, waiting periods and break-in-service, read from `original_hire_date` and the employment history.
 
 ## How to Build It
 
-These are deltas against [the core data model](/books/workforce/workforce-business#the-core-data-model). `employments` already carries `termination_date` and `termination_reason`, and The HRIS as Record of Truth added `last_day_worked` and `rehire_eligible`; this chapter adds the separation record and its tasks, WARN events, severance agreements and unemployment claims.
+These are deltas against [the core data model](/books/workforce/workforce-business#the-core-data-model). `employments` already carries `termination_date` and `termination_reason`, and [The HRIS as Record of Truth](/books/workforce/hris-record-of-truth) added `last_day_worked` and `rehire_eligible`; this chapter adds the separation record and its tasks, WARN events, severance agreements and unemployment claims.
 
 ```sql
 CREATE TABLE separations (                 -- one per terminated employment
@@ -281,7 +281,7 @@ Design notes:
 
 ## Auditing
 
-Separations are reviewed in wage claims, WARN suits, discrimination charges, unemployment hearings and benefit audits. Keep:
+Separations are reviewed in wage claims, WARN suits, discrimination charges, unemployment hearings and benefit audits. Wrongful termination and discrimination claims are also what employment practices liability insurance answers, and the Insurance volume's [Professional & Management Liability](/books/insurance/professional-and-management-liability) covers the policy and its claims-made dates; the defense reads the same records. Keep:
 
 - **Each separation's facts:** termination date, last day worked, reason, notice date, who decided and the documentation.
 - **Every fan-out task** with its deadline, rule and evidence, especially final pay statements against their deadlines.

@@ -33,7 +33,7 @@ Three patterns:
 
 A payer learns who it covers from enrollment, not from claims:
 
-- **Employer groups** send the X12 834 benefit enrollment file (or a spreadsheet, for small groups) with adds, changes and terminations; premium payments arrive as an 820 or a bank transfer.
+- **Employer groups** send the X12 834 benefit enrollment file (or a spreadsheet, for small groups) with adds, changes and terminations; premium payments arrive as an 820 or a bank transfer. The employer's side of the file is the Workforce volume's [Carrier Connections & the 834](/books/workforce/carrier-connections).
 - **Marketplace issuers** receive 834s from the exchange.
 - **Medicare Advantage and Part D plans** enroll members and reconcile monthly with CMS, which pays a capitated amount per member adjusted for risk.
 - **Medicaid managed care plans** receive the state's enrollment file and capitation. That is most of Medicaid: CMS counts 67.9 million of about 87 million Medicaid enrollees in comprehensive MCOs as of July 1, 2024, and over 73 million (84.8%) in some form of managed care.
