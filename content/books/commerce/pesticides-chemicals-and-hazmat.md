@@ -36,9 +36,7 @@ As of October 2026, from public pages:
 | **EPA** | The Pesticide Product Label System (PPLS) for looking up registrations and labels; the minimum-risk exemption and its enforcement |
 | **Stripe** | Prohibits "Pesticides requiring application by a certified professional" and "Toxic, flammable, combustible, or radioactive materials" |
 | **USPS** | Hazardous materials by mail only within Publication 52's packaging instructions, including lithium batteries; hazmat packages need their own service codes since 2023 |
-| **Amazon** | A seller policy for pesticides, behind Seller Central's login; its terms weren't retrievable for this chapter |
-
-<!-- source-gap: amazon-pesticide-policy | missing | Amazon's seller policy for pesticides and pesticide devices (EPA registration number, 25(b) disclosures, state restrictions) | closes with: the public text of Amazon's pesticide policy page | checked: 2026-11-01 -->
+| **Amazon** | A Pesticides and Pesticide Devices policy behind Seller Central's login; its [2020 seller announcement](https://sellercentral.amazon.com/seller-forums/discussions/t/1a3229278a4d3401b392f1611d2f4311) requires a Pesticide Marking attribute on each listing with an EPA registration number and/or EPA establishment number, or a certification that the product is exempt, plus approval to sell, and says pesticides must also follow applicable state and local laws |
 
 Three patterns:
 

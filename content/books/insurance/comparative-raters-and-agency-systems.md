@@ -63,7 +63,7 @@ Once a policy is bound, the agency needs it in its own system, and so do every e
 
 Ivans says the data lands "directly into your management system," and offers Ivans Exchange, "a complimentary online tool," for agencies to track their download connections. Its developer portal exposes the same content as APIs: an Ivans Download API for eDocs, commission statements and policy download, translation APIs (commission, policy, claims and eDoc), an Exchange API in JSON, and a Bookroll API.
 
-The format most of this traffic was built on is ACORD's AL3, a batch standard for policy and commission data that carriers generate and agency systems parse; ACORD's own pages describing AL3 couldn't be opened for this chapter, so I describe it only at that level. <!-- source-gap: acord-al3 | missing | ACORD AL3 as a one-way batch format still carrying much download traffic; its record structure | closes with: an ACORD standards page or published AL3 specification excerpt (acord.org returned 403) | checked: 2026-11-10 --> [ACORD & Data Standards](/books/insurance/acord-and-data-standards) covers ACORD's XML and newer standards.
+The format most of this traffic was built on is ACORD's AL3, a batch standard for policy and commission data that carriers generate and agency systems parse; ACORD's own pages describing AL3 couldn't be opened for this chapter. IBM's integration documentation describes its record structure: each group "has a header consisting of a one-digit number, three letters, plus a three-digit total length count," and "the data within the headers is fixed length" ([IBM Integration Bus: ACORD AL3 messages](https://www.ibm.com/support/knowledgecenter/en/SSMKHH_9.0.0/com.ibm.etools.mft.doc/ad09530_.htm)). <!-- source-gap: acord-al3 | missing | ACORD AL3 as a one-way batch format from carriers to agency systems still carrying much download traffic | closes with: an ACORD standards page or published AL3 specification excerpt (acord.org returned 403) | checked: 2026-11-10 --> [ACORD & Data Standards](/books/insurance/acord-and-data-standards) covers ACORD's XML and newer standards.
 
 What a carrier has to get right in its downloads:
 
@@ -216,6 +216,7 @@ Design notes:
 
 **Vendor documentation**
 
+- [IBM Integration Bus: ACORD AL3 messages](https://www.ibm.com/support/knowledgecenter/en/SSMKHH_9.0.0/com.ibm.etools.mft.doc/ad09530_.htm), the AL3 group header and fixed-length structure
 - [EZLynx: Rating Engine](https://www.ezlynx.com/products/rating-engine/), one entry for real-time quotes from 330+ carriers in 48 states, bridging to bind, and prefill from LexisNexis, Fenris, MSB and Google Maps
 - [Applied Systems](https://www1.appliedsystems.com/en-us/), Applied Epic, EZLynx, Ivans and the "9 of the top 10" brokerages claim
 - [Tarmika (Applied Epic commercial quoting)](https://www.tarmika.com/), multi-carrier commercial quoting by line and the direct appointment requirement
