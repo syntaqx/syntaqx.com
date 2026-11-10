@@ -1,15 +1,72 @@
 +++
 title = "Identifier Conventions"
-description = "UUID v7 as the default key, when integers, v4, v5 or ULIDs are the better choice, and what each format reveals, costs, and breaks when you get it wrong."
+description = "What identifiers are, why UUID v7 is my default and v4 used to be, and when integers, other UUIDs, ULIDs, Snowflakes, ObjectIds or short codes fit better."
 category = "Fundamentals"
 order = 103
-tags = ["ids", "uuid", "ulid", "database"]
+tags = ["ids", "uuid", "ulid", "mongodb", "database"]
 aliases = ["identifier-conventions"]
 +++
 
-An identifier ends up everywhere: foreign keys, URLs, logs, caches, webhook payloads, other companies' databases. Changing its format later means migrating all of them, so it's one of the few decisions worth getting right on day one.
+An identifier is the value a system uses to point at one record and only that one: the `id` on a row, the last segment of `/invoices/…`, the reference in a webhook payload. Once it's issued, it spreads into foreign keys, URLs, logs, caches and other companies' databases, so changing its format later means migrating all of them. It's one of the few decisions worth getting right on day one.
 
-My default is **UUID v7**. Four questions decide the format, and v7 answers them best for most data: who generates the ID (one database, or anyone without coordinating), what it reveals (row counts, growth, creation time), how it indexes (random keys scatter inserts across a B-tree, ordered keys append), and who reads it (support tickets, URLs, other systems).
+Identifiers come from three places:
+
+- **Natural keys** already exist in the world: an email address, a SKU, an ISBN.
+- **Sequences** are handed out by a single counter, usually the database: 1, 2, 3.
+- **Generated IDs** are created by any program on its own, from randomness, a clock, a name, or a mix: UUIDs, ULIDs, Snowflake IDs, MongoDB ObjectIds.
+
+Records almost always get a sequential or generated key, and natural keys stay on the row as data.
+
+## What I Choose
+
+My default is **UUID v7**: a 128-bit ID that starts with a millisecond timestamp and ends with random bits. Four questions decide an identifier format, and v7 answers them best for most data:
+
+- **Who generates it?** Anyone. Services, clients and batch jobs create IDs without asking a database, so a client knows an object's ID before the insert, and two systems never collide.
+- **What does it reveal?** When it was created, which is usually in the response as `created_at` anyway. It doesn't reveal how many rows exist or how fast they grow.
+- **How does it index?** Well. New IDs sort after old ones, so inserts append to the end of the index instead of landing at random.
+- **Who reads it?** Everything. It's a standard UUID, so databases store it in a native 16-byte type and every language, driver and log tool already parses it.
+
+### Why It Used to Be v4
+
+For most of the time UUIDs have existed, my default was v4. [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122) (July 2005) defined versions 1 through 5. Of the ones that don't need a name to hash, v1 embedded the generating machine's MAC address and a timestamp laid out so it doesn't sort, which left v4: random bits, revealing nothing, and available everywhere. PostgreSQL made that easy in version 13, which [added `gen_random_uuid()`](https://www.postgresql.org/docs/release/13.0/) to core; before that, UUID generation needed the `uuid-ossp` or `pgcrypto` extension.
+
+The cost of v4 was always the index. [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562#section-2.1) says it plainly: versions that aren't time-ordered, "such as UUIDv4", have poor database-index locality. Teams that felt it built their own time-ordered formats outside the standard, and the RFC counts 16 of them, among them ULID, Twitter's Snowflake, Segment's KSUID and MongoDB's ObjectId. Each fixed the ordering, but each came with its own size, encoding and libraries.
+
+RFC 9562 (May 2024) folded that idea into the UUID layout as v7, and that's what moved my default. v7 keeps everything v4 gave me (generated anywhere, the same 16-byte type, the same columns and drivers) and fixes the index. Native support followed: [PostgreSQL 18](https://www.postgresql.org/docs/release/18.0/) (released September 25, 2025) generates it with `uuidv7()`, and Go 1.27 has it in the standard library. v4 is still my choice for one case: when the ID must not reveal when it was created.
+
+Switching an existing table is cheap. v4 and v7 are both UUIDs, so the column takes either without a migration. Rows created before the switch just don't sort by time: paging by `id` still returns every row exactly once, but the old ones come back in random order, not creation order.
+
+## Choosing Something Else
+
+v7 is where I start. These are the reasons I move off it:
+
+- **The key never leaves one database, and size matters.** Use an integer sequence: 8 bytes, fastest to index, and nothing outside the database ever sees it.
+- **Creation time must stay private.** Use v4.
+- **The same input must always produce the same ID.** Use v5, or a name-based v8 when the names come from untrusted input.
+- **The ID must fit in a 64-bit integer.** Use a Snowflake-style ID, if you can assign every generator a machine ID.
+- **The database is MongoDB.** Keep its ObjectId for `_id`, unless other systems need to share the ID, in which case store a UUID.
+- **People type it, or it goes in a short link.** Add a short random string in its own column, and keep the v7 as the key.
+- **People read it in logs and support tickets.** Prefix the public form with the type, as Stripe does with `cus_` and `ch_`.
+- **A natural key exists.** Keep it in a unique column, not as the primary key.
+
+| Format | Size | Generated by | Reveals | Index locality | Use it for |
+| ------ | ---- | ------------ | ------- | -------------- | ---------- |
+| Integer | 8 bytes | One database | Count and rate | Excellent | Internal-only keys, warehouses |
+| UUID v7 | 16 bytes | Anyone | Creation time (ms) | Good | **The default** |
+| UUID v4 | 16 bytes | Anyone | Nothing | Poor at scale | IDs where timing is sensitive |
+| UUID v5 | 16 bytes | Anyone, from a name | The name, if guessable | Poor | Tests, imports, shared identity |
+| UUID v8 (name-based) | 16 bytes | Your own code, from a name | The name, if guessable | Poor | Name-based IDs from untrusted input |
+| ULID | 16 bytes, 26 characters | Anyone | Creation time (ms) | Good | When the 26-character string matters |
+| Snowflake | 8 bytes | Generators with assigned machine IDs | Creation time, machine | Good | IDs that must fit 64 bits |
+| KSUID | 20 bytes, 27 characters | Anyone | Creation time | Good | Systems already built on it |
+| MongoDB ObjectId | 12 bytes | Drivers | Creation time (s) | Good | MongoDB `_id` |
+| Short random string | 21 characters (Nano ID) | Anyone | Nothing | Poor | Short links and typed codes, beside the key |
+
+The rest of this page covers each option in detail.
+
+## Natural Keys
+
+A natural key is a value the record already has: an email address, a SKU, a government-issued number. It's tempting as a primary key because it's already unique, but it isn't stable. People change email addresses, products get re-numbered, and a typo fixed later becomes a cascade through every foreign key that copied it. Keep natural keys in unique columns, so they still prevent duplicates and match imports ([Imports and Exports](/docs/building-blocks/imports-and-exports)), and point everything else at a key that never changes.
 
 ## Auto-Increment Integers
 
@@ -31,7 +88,7 @@ A UUID (universally unique identifier) is a 128-bit value that any program can g
               version: 7
 ```
 
-The first digit of the third group is the **version**, and it names the recipe that made the ID, not a release. v7 isn't an upgrade of v4, and v8 isn't the newest and best; they're different recipes for different jobs, all defined in [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562), which replaced the original RFC 4122 in 2024:
+The first digit of the third group is the **version**, and it names the recipe that made the ID, not a release. v7 isn't an upgrade of v4, and v8 isn't the newest and best; they're different recipes for different jobs, all defined in [RFC 9562](https://datatracker.ietf.org/doc/html/rfc9562), which replaced RFC 4122 in 2024:
 
 | Version | Recipe | Where it stands |
 | ------- | ------ | --------------- |
@@ -44,9 +101,9 @@ The first digit of the third group is the **version**, and it names the recipe t
 | v7 | Unix timestamp, then random | Current, my default |
 | v8 | A layout you define | Custom schemes |
 
-Three ideas cover almost every need: **time-ordered** (v7), **random** (v4) and **derived from a name** (v5). The rest of this page is about choosing among them.
+Three ideas cover almost every need: **time-ordered** (v7), **random** (v4) and **derived from a name** (v5).
 
-## UUID v7: The Default
+## UUID v7
 
 A [UUID v7](https://datatracker.ietf.org/doc/html/rfc9562#section-5.7) puts the time first: a 48-bit Unix timestamp in milliseconds, then the version and variant, then 74 random bits. Because the time leads, v7 IDs sort in the order they were made.
 
@@ -84,7 +141,7 @@ let id = Uuid::now_v7(); // uuid crate, "v7" feature
 id.to_string()           // 01932c6c-7616-7590-a8db-cb4b0e4d1c8a
 ```
 
-## UUID v4: Pure Randomness
+## UUID v4
 
 Everything except the version and variant is random: 122 bits, nothing else.
 
@@ -104,7 +161,7 @@ In a browser or Node, [`crypto.randomUUID()`](https://developer.mozilla.org/en-U
 
 Random isn't secret. RFC 9562 says not to assume any UUID is [hard to guess](https://datatracker.ietf.org/doc/html/rfc9562#section-8), and never to let possession of one grant access. A v4 in a URL still needs an authorization check behind it.
 
-## UUID v5: Derived From a Name
+## UUID v5
 
 Every version above makes a new ID each time you call it. A [v5](https://datatracker.ietf.org/doc/html/rfc9562#section-5.5) UUID is computed instead: hash a **namespace** and a **name** with SHA-1, keep the first 128 bits, and set the version and variant. The same namespace and name always produce the same ID, on any machine, in any language.
 
@@ -167,22 +224,40 @@ A broken hash only matters here when an attacker chooses the names and two names
 
 When the names do come from untrusted input, RFC 9562 puts name-based IDs on SHA-256 or newer [in the v8 space](https://datatracker.ietf.org/doc/html/rfc9562#appendix-B.2). v8 is the custom version: the RFC fixes only the version and variant bits and leaves the other 122 to you, so its [uniqueness "MUST NOT be assumed"](https://datatracker.ietf.org/doc/html/rfc9562#section-5.8) and two libraries won't derive the same ID from the same name. Even the RFC's own SHA-256 example comes with a note that it hasn't been rigorously tested and that implementers should design their own. Use v8 only when every system that derives these IDs runs your code.
 
-## v1, v6 and ULID
+### v1 and v6
 
 - **v1** embeds a timestamp and a node ID (historically the MAC address) in an order that doesn't sort. Don't create new ones.
-- **v6** is v1 reordered to sort by time. It exists for systems migrating from v1; the RFC says everything else should use v7.
-- **[ULID](https://github.com/ulid/spec)** is v7's idea in a different encoding: 26 characters of Crockford Base32, case-insensitive, no dashes. It's nicer in a URL, but most databases have a native 16-byte UUID type and no ULID type, so ULIDs usually end up stored as strings, larger and slower. Prefer v7 unless the string form genuinely matters.
+- **v6** is v1 reordered to sort by time. It exists for systems migrating from v1; the RFC says everything else [should use v7](https://datatracker.ietf.org/doc/html/rfc9562#section-5.6).
 
-## Choosing
+## Other Time-Ordered Formats
 
-| Format | Generated by | Reveals | Index locality | Use it for |
-| ------ | ------------ | ------- | -------------- | ---------- |
-| Integer | One database | Count and rate | Excellent | Internal-only keys, warehouses |
-| UUID v7 | Anyone | Creation time | Good | **The default** |
-| UUID v4 | Anyone | Nothing | Poor at scale | IDs where timing is sensitive |
-| UUID v5 | Anyone, from a name | The name, if guessable | Poor | Tests, imports, shared identity |
-| UUID v8 (name-based) | Your own code, from a name | The name, if guessable | Poor | Name-based IDs from untrusted input |
-| ULID | Anyone | Creation time | Good | When the 26-character string matters |
+These are the formats that solved v4's index problem before v7 existed. They all put time first so new IDs sort last; they differ in size and encoding.
+
+- **[ULID](https://github.com/ulid/spec)** is v7's idea in a different encoding: a 48-bit millisecond timestamp and 80 random bits, written as 26 characters of Crockford Base32, case-insensitive, no dashes. It's nicer in a URL, but most databases have a native 16-byte UUID type and no ULID type, so ULIDs usually end up stored as strings, larger and slower. Prefer v7 unless the string form genuinely matters.
+- **[Snowflake](https://github.com/twitter-archive/snowflake/tree/snowflake-2010)**, Twitter's format, fits in 64 bits: a 41-bit millisecond timestamp from a custom epoch, a 10-bit machine ID and a 12-bit per-machine sequence. Fitting a `BIGINT` is its whole advantage, and the machine ID is its cost: every generator needs a unique one assigned, which is exactly the coordination UUIDs avoid. Choose it only when the ID has to be a 64-bit integer.
+- **[KSUID](https://github.com/segmentio/ksuid)**, from Segment, is 20 bytes: a 32-bit timestamp from a 2014 epoch and 128 random bits, written as 27 base62 characters. It's larger than a UUID and has no native column type. I keep it where a system already uses it and don't start new ones on it.
+
+## MongoDB ObjectId
+
+MongoDB's default `_id` is an [ObjectId](https://www.mongodb.com/docs/manual/reference/bson-types/#objectid): 12 bytes, made of a 4-byte timestamp in seconds, a 5-byte random value generated once per client process, and a 3-byte counter. If an inserted document has no `_id`, the driver generates one.
+
+- **It's time-ordered, roughly.** The timestamp comes first, so ObjectIds sort approximately by creation time. MongoDB's documentation is explicit that the order isn't exact: IDs from the same second have no guaranteed order, and different clients' clocks disagree.
+- **It reveals creation time to the second.** `ObjectId.getTimestamp()` reads it back, and so can anyone who sees the ID.
+- **It's MongoDB's format.** Other databases and languages don't have a native type for it, so it travels as a 24-character hex string.
+
+Inside MongoDB I keep ObjectId for `_id`. It's generated anywhere, indexes well and every driver supports it. When the ID has to be shared with systems outside MongoDB, I store a UUID instead: MongoDB has a binary [UUID subtype](https://www.mongodb.com/docs/manual/reference/bson-types/#binary-data), and the application generates a v7 for it. MongoDB's own [`UUID()`](https://www.mongodb.com/docs/manual/reference/method/UUID/) helper generates v4 by default, so don't rely on it when you want time order.
+
+## Short Random Strings
+
+Sometimes the ID is for a person to type or share: a short link, an invite code, a code read over the phone. A 36-character UUID is too long for that. [Nano ID](https://github.com/ai/nanoid) is the common answer: 21 URL-safe characters (`A-Za-z0-9_-`) carrying about 126 random bits, close to v4's 122.
+
+Treat these as a second, public column, not the key. Generate them randomly, put a unique constraint on them, and keep the v7 as the primary key that everything joins on. A shorter code than 21 characters is fine for things like invite codes, but fewer random bits make collisions and guessing more likely, so check for collisions on insert and rate-limit lookups.
+
+## Prefixed Public IDs
+
+A prefix makes an ID say what it points at. Stripe's customers have IDs like [`cus_NffrFeUfNV2Hib`](https://docs.stripe.com/api/customers/object) and its charges like [`ch_3MmlLrLkdIwHu7ix0snN0B15`](https://docs.stripe.com/api/charges/object), so a stray ID in a log line or a support ticket is identifiable at a glance, and passing a charge ID where a customer ID belongs fails visibly.
+
+The prefix belongs to the public form, not the storage. Store the UUID in a `UUID` column and add the prefix (and any shorter encoding) when the ID leaves the API, stripping and checking it on the way back in. That keeps the database type native and the prefix free to change.
 
 ## Conventions
 
@@ -195,7 +270,8 @@ When the names do come from untrusted input, RFC 9562 puts name-based IDs on SHA
 
 **Specifications**
 
-- [RFC 9562: Universally Unique IDentifiers (UUIDs)](https://datatracker.ietf.org/doc/html/rfc9562), every version, v7 monotonicity methods, and security considerations
+- [RFC 9562: Universally Unique IDentifiers (UUIDs)](https://datatracker.ietf.org/doc/html/rfc9562), every version, the motivation for v6 through v8, v7 monotonicity methods, and security considerations
+- [RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace](https://datatracker.ietf.org/doc/html/rfc4122), the original 2005 specification of versions 1 through 5
 - [ULID specification](https://github.com/ulid/spec), the format, Crockford Base32 encoding and sort order
 
 **Reference**
@@ -204,6 +280,14 @@ When the names do come from untrusted input, RFC 9562 puts name-based IDs on SHA
 - [Go proposal #62026](https://github.com/golang/go/issues/62026), the design discussion, including why v3, v5 and v8 were left out
 - [PostgreSQL: UUID Functions](https://www.postgresql.org/docs/current/functions-uuid.html), `uuidv7()` and `uuid_extract_timestamp()`
 - [PostgreSQL: UUID Type](https://www.postgresql.org/docs/current/datatype-uuid.html), native storage as 16 bytes
+- [PostgreSQL 13 release notes](https://www.postgresql.org/docs/release/13.0/), `gen_random_uuid()` in core
+- [PostgreSQL 18 release notes](https://www.postgresql.org/docs/release/18.0/), `uuidv7()`
+- [MongoDB: BSON Types](https://www.mongodb.com/docs/manual/reference/bson-types/), ObjectId layout and ordering, and the binary UUID subtype
+- [MongoDB: UUID()](https://www.mongodb.com/docs/manual/reference/method/UUID/), generating UUIDs in `mongosh`
+- [Snowflake (2010 release)](https://github.com/twitter-archive/snowflake/tree/snowflake-2010), Twitter's 64-bit ID layout
+- [KSUID](https://github.com/segmentio/ksuid), Segment's 20-byte format
+- [Nano ID](https://github.com/ai/nanoid), short URL-safe random IDs
+- [Stripe API: Customer object](https://docs.stripe.com/api/customers/object), prefixed object IDs
 - [MDN: Crypto.randomUUID()](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID), generating v4 UUIDs in the browser and Node
 - [MDN: UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID), a short primer
 
