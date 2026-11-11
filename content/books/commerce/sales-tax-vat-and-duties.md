@@ -194,8 +194,7 @@ ALTER TABLE order_charges
   ADD COLUMN remitter           TEXT,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT order_charges_remitter_check
-    CHECK (remitter IN ('merchant', 'marketplace',
-        'merchant_of_record', 'carrier', 'none')) NOT VALID;
+    CHECK (remitter IN ('merchant', 'marketplace', 'merchant_of_record', 'carrier', 'none')) NOT VALID;
 
 -- Sales by destination state over the trailing 12 months, for threshold monitoring.
 SELECT f.dropoff ->> 'subdivision' AS state,

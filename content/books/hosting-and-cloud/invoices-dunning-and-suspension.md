@@ -197,8 +197,7 @@ ALTER TABLE invoices
   ADD CONSTRAINT invoices_invoice_kind_check
     CHECK (invoice_kind IN ('cycle', 'partial', 'prepaid_term', 'final', 'adjustment')) NOT VALID,
   ADD CONSTRAINT invoices_collection_method_check
-    CHECK (collection_method IN ('charge_automatically',
-        'send_invoice', 'billed_by_parent')) NOT VALID;
+    CHECK (collection_method IN ('charge_automatically', 'send_invoice', 'billed_by_parent')) NOT VALID;
 
 -- Unique without blocking writes: build the index concurrently, then attach it.
 CREATE UNIQUE INDEX CONCURRENTLY invoices_one_per_run ON invoices (account_id, invoice_run_id);
@@ -274,7 +273,6 @@ ALTER TABLE account_holds
   ADD COLUMN retrieval_until   TIMESTAMPTZ,  -- read-only access for export ends
   ADD COLUMN delete_data_after TIMESTAMPTZ,  -- earliest deletion; never before retrieval_until
   ADD COLUMN last_notice_at    TIMESTAMPTZ,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT account_holds_clock_order CHECK (delete_data_after IS NULL
     OR retrieval_until IS NULL OR delete_data_after >= retrieval_until) NOT VALID;
 ```

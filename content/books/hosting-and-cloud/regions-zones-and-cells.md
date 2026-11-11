@@ -284,7 +284,6 @@ ALTER TABLE quotas                       -- zonal quotas: the core table's zone_
   ADD COLUMN quota_type TEXT NOT NULL DEFAULT 'allocation',
   ADD COLUMN adjustable BOOLEAN NOT NULL DEFAULT TRUE,     -- false: a system limit
   ADD COLUMN quota_request_id UUID REFERENCES quota_requests (id),  -- the request it granted
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT quotas_quota_type_check
     CHECK (quota_type IN ('allocation', 'rate', 'concurrent')) NOT VALID;
 -- The core exclusion constraint includes zone_id, so a zonal row doesn't collide with its

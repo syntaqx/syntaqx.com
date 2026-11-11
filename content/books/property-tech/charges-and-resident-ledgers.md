@@ -176,15 +176,13 @@ ALTER TABLE charges
   ADD COLUMN proration_method      TEXT,
   ADD COLUMN lease_concession_id   UUID REFERENCES lease_concessions (id),  -- concession credits
   ADD COLUMN reason                TEXT,                           -- required for one-offs and reversals
-  ADD COLUMN posted_by             UUID REFERENCES users (id),           -- staff, or the run's
+  ADD COLUMN posted_by             UUID REFERENCES users (id),           -- staff, or the run's service user
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT charges_posted_by_not_null NOT NULL posted_by NOT VALID,
   ADD CONSTRAINT charges_ledger_party_check
     CHECK (ledger_party IN ('resident', 'subsidy', 'third_party')) NOT VALID,
   ADD CONSTRAINT charges_proration_method_check
-    CHECK (proration_method IN ('actual_days_month',
-        'thirty_day_month', 'actual_days_year')) NOT VALID;
-                                                                   -- service user
+    CHECK (proration_method IN ('actual_days_month', 'thirty_day_month', 'actual_days_year')) NOT VALID;
 
 CREATE TABLE charge_posting_runs (       -- one row per property per run
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -231,7 +231,6 @@ ALTER TABLE wallets ADD COLUMN holds TEXT NOT NULL DEFAULT 'customer',
 
 -- Every account's products are checked against its verified residence, not its IP.
 ALTER TABLE accounts ADD COLUMN residence_jurisdiction TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_residence_jurisdiction_not_null NOT NULL residence_jurisdiction NOT VALID;
 ```
 

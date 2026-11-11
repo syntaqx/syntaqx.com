@@ -187,7 +187,6 @@ ALTER TABLE virtual_machines
 ALTER TABLE container_services
   ADD COLUMN isolation TEXT,
   ADD COLUMN sandbox_runtime TEXT,       -- 'runc', 'runsc', 'kata-fc', 'firecracker'
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT container_services_shared_kernel_check
     CHECK (isolation <> 'os_container' OR capacity_mode = 'customer_nodes') NOT VALID,
   ADD CONSTRAINT container_services_isolation_not_null NOT NULL isolation NOT VALID,

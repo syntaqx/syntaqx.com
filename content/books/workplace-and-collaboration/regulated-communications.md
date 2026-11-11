@@ -146,8 +146,7 @@ ALTER TABLE members
   ADD COLUMN recording_policy  TEXT NOT NULL DEFAULT 'none',
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT members_regulatory_role_check
-    CHECK (regulatory_role IN ('registered_person', 'supervisor',
-        'principal', 'trader', 'none')) NOT VALID,
+    CHECK (regulatory_role IN ('registered_person', 'supervisor', 'principal', 'trader', 'none')) NOT VALID,
   ADD CONSTRAINT members_recording_policy_check
     CHECK (recording_policy IN ('none', 'record_calls', 'record_calls_and_meetings')) NOT VALID;
 

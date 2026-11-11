@@ -131,7 +131,6 @@ ALTER TABLE payouts ADD COLUMN direction TEXT NOT NULL DEFAULT 'credit',  -- 'de
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payouts_direction_check CHECK (direction IN ('credit', 'debit')) NOT VALID;
 ALTER TABLE payouts ADD COLUMN rail TEXT,               -- 'ach', 'rtp', 'fednow', 'push_to_card', ...
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payouts_rail_not_null NOT NULL rail NOT VALID;
 ALTER TABLE payouts ADD COLUMN attempt SMALLINT NOT NULL DEFAULT 1;
 ALTER TABLE payouts ADD COLUMN return_code TEXT;        -- raw, e.g. 'R02'
@@ -151,10 +150,8 @@ CREATE TABLE merchant_bank_accounts (         -- where each kind of money lands
 );
 
 ALTER TABLE payouts ADD COLUMN bank_account_id UUID REFERENCES merchant_bank_accounts (id),
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payouts_bank_account_id_not_null NOT NULL bank_account_id NOT VALID;
 ALTER TABLE payouts ADD COLUMN usage TEXT,           -- which usage the account was chosen for
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payouts_usage_not_null NOT NULL usage NOT VALID;
 
 CREATE TABLE payout_items (                  -- what each payout pays

@@ -351,7 +351,6 @@ CREATE TABLE bonus_allocations (           -- 778.209: a bonus apportioned back 
 ALTER TABLE pay_statement_lines
   ADD COLUMN regular_rate_calculation_id UUID REFERENCES regular_rate_calculations (id),
   ADD COLUMN overtime_tier TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT pay_statement_lines_overtime_tier_check
     CHECK (overtime_tier IN ('ot_1_5', 'ot_2_0', 'premium_only')) NOT VALID;
 ```

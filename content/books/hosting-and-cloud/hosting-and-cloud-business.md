@@ -588,16 +588,13 @@ ALTER TABLE invoice_lines
   ADD COLUMN subscription_id UUID REFERENCES subscriptions (id),
   ADD COLUMN resource_id     UUID REFERENCES resources (id),
   ADD COLUMN service_period  TSTZRANGE,  -- what the line pays for
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT invoice_lines_line_kind_check
-    CHECK (line_kind IN ('charge',
-        'usage', 'pass_through', 'credit', 'commitment_shortfall',
+    CHECK (line_kind IN ('charge', 'usage', 'pass_through', 'credit', 'commitment_shortfall',
         'adjustment', 'tax')) NOT VALID;
 
 -- Abuse: the UGP abuse desks tables, pointed at resources instead of hosted_resources.
 ALTER TABLE moderation_cases
   DROP CONSTRAINT moderation_cases_subject_type_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT moderation_cases_subject_type_check CHECK (subject_type IN ('account',
     'resource', 'resource_identifier')) NOT VALID;
 ALTER TABLE abuse_mitigations
@@ -732,6 +729,12 @@ Each later chapter extends a defined part of this spine. Table names here are th
 | 2215 [Repatriation](/books/hosting-and-cloud/repatriation) | No tables; cost comparison over `rated_usage` |
 
 What goes wrong most often is building for one product and bolting on the rest: a host whose billing knows only plans and can't rate a gigabyte, a cloud whose resources can't carry a renewal, a registrar whose domains live outside the resource model and so outside the abuse desk, a CPaaS whose carrier fees are folded into its own price. My rule: decide the shape of accounts, resources, subscriptions and usage together, even if you launch with one product.
+
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Managed WordPress adds to `sites`:
+
+```sql
+ALTER TABLE sites VALIDATE CONSTRAINT sites_application_check;
+```
 
 ## Auditing
 

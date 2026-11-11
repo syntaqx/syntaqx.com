@@ -145,7 +145,6 @@ CREATE TABLE pharmacies (
 );
 
 ALTER TABLE medication_requests
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD FOREIGN KEY (pharmacy_id) REFERENCES pharmacies (id) NOT VALID;
 
 CREATE TABLE erx_messages (              -- every SCRIPT message in or out, as sent

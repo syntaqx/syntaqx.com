@@ -203,7 +203,6 @@ CREATE TABLE ytd_loads (
   approved_at         TIMESTAMPTZ
 );
 
--- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE pay_runs ADD FOREIGN KEY (ytd_load_id) REFERENCES ytd_loads (id) NOT VALID;
 
 -- A period computed on both systems, compared worker by worker.

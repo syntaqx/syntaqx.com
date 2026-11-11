@@ -126,9 +126,8 @@ ALTER TABLE pay_runs
   ADD COLUMN apply_recurring_deductions BOOLEAN NOT NULL DEFAULT TRUE,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT pay_runs_off_cycle_reason_check
-    CHECK (off_cycle_reason IN ('bonus', 'termination', 'new_hire',
-        'underpayment', 'retro', 'reimbursement', 'manual_check',
-        'tax_reconciliation', 'other')) NOT VALID,
+    CHECK (off_cycle_reason IN ('bonus', 'termination', 'new_hire', 'underpayment', 'retro',
+        'reimbursement', 'manual_check', 'tax_reconciliation', 'other')) NOT VALID,
   ADD CONSTRAINT pay_runs_withholding_mode_check
     CHECK (withholding_mode IN ('supplemental', 'regular_period')) NOT VALID;
 
@@ -136,7 +135,6 @@ ALTER TABLE pay_statements
   ADD COLUMN correction_kind    TEXT,
   ADD COLUMN original_quarter   DATE,      -- the quarter start the corrected wages were reported in
   ADD COLUMN discovered_on      DATE,      -- the date the error was found, for 941-X
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT pay_statements_correction_kind_check
     CHECK (correction_kind IN ('void', 'adjustment', 'retro', 'overpayment_reversal')) NOT VALID;
 

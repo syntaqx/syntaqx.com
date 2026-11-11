@@ -207,7 +207,6 @@ ALTER TABLE subscription_lines
   ADD COLUMN kind          TEXT NOT NULL DEFAULT 'recurring',
   ADD COLUMN selection     JSONB,        -- build-a-box contents, read at cutoff
   ADD COLUMN applies_cycle INT,          -- one-time add-on: the cycle it rides on
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT subscription_lines_kind_check
     CHECK (kind IN ('recurring', 'one_time', 'box_selection')) NOT VALID;
 

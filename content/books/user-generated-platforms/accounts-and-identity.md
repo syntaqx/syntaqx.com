@@ -199,10 +199,8 @@ CREATE TABLE badges (                    -- what's shown, and which verification
 
 ALTER TABLE penalties
   ADD COLUMN role TEXT,              -- null: the whole account
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT penalties_role_check
-    CHECK (role IN ('member', 'creator', 'host', 'seller', 'guest',
-        'buyer', 'moderator')) NOT VALID;
+    CHECK (role IN ('member', 'creator', 'host', 'seller', 'guest', 'buyer', 'moderator')) NOT VALID;
 
 CREATE TABLE deletion_requests (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

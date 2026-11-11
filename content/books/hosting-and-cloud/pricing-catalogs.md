@@ -125,8 +125,8 @@ The chapter fixes the shape of `price_versions.tiers`, adds tier modes, packages
 ```sql
 ALTER TABLE price_versions
   ADD COLUMN tier_mode     TEXT NOT NULL DEFAULT 'flat',
-  ADD COLUMN tier_scope    TEXT,   -- whose cumulative quantity
-  ADD COLUMN package_size  NUMERIC, -- 'package': e.g. 100 MB blocks
+  ADD COLUMN tier_scope    TEXT,                             -- whose cumulative quantity
+  ADD COLUMN package_size  NUMERIC,                          -- 'package': e.g. 100 MB blocks
   ADD COLUMN cap_amount    NUMERIC(24,6),                    -- per resource per cap_period
   ADD COLUMN cap_period    TEXT,
   ADD COLUMN price_change_notice_id UUID,                    -- the notice that introduced it
@@ -204,7 +204,6 @@ CREATE TABLE price_change_notices (      -- one announced change and its obligat
 );
 
 ALTER TABLE price_versions
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT price_versions_notice_fkey FOREIGN KEY (price_change_notice_id)
     REFERENCES price_change_notices (id) NOT VALID;
 

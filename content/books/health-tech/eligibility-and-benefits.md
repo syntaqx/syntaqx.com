@@ -160,8 +160,7 @@ ALTER TABLE coverages                    -- priority, relationship, card_documen
 
 ALTER TABLE plans
   ADD COLUMN benefit_year_start  DATE,              -- calendar year or a plan year
-  ADD COLUMN cob_method          TEXT,    -- how a secondary computes what's left
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD COLUMN cob_method          TEXT,              -- how a secondary computes what's left
   ADD CONSTRAINT plans_cob_method_check
     CHECK (cob_method IN ('standard', 'non_duplication', 'carve_out')) NOT VALID;
 

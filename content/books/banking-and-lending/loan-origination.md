@@ -134,8 +134,8 @@ ALTER TABLE applications
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT applications_stage_check
     CHECK (stage IN ('prequalification', 'application', 'processing', 'underwriting',
-        'conditional_approval', 'clear_to_close', 'closing', 'funded', 'post_closing',
-        'withdrawn', 'declined', 'incomplete_closed')) NOT VALID;
+        'conditional_approval', 'clear_to_close', 'closing', 'funded', 'post_closing', 'withdrawn',
+        'declined', 'incomplete_closed')) NOT VALID;
 
 CREATE TABLE application_parties (           -- each person or business on the application
   application_id      UUID NOT NULL REFERENCES applications (id),

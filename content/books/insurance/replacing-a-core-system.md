@@ -166,13 +166,12 @@ ALTER TABLE policy_transactions DROP CONSTRAINT policy_transactions_kind_check;
 -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE policy_transactions ADD CONSTRAINT policy_transactions_kind_check
   CHECK (kind IN ('new_business', 'endorsement', 'cancellation', 'reinstatement', 'renewal',
-    'nonrenewal', 'audit', 'rewrite', 'reversal', 'conversion')) NOT VALID;
+      'nonrenewal', 'audit', 'rewrite', 'reversal', 'conversion')) NOT VALID;
 
 ALTER TABLE premium_entries DROP CONSTRAINT premium_entries_kind_check;
--- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE premium_entries ADD CONSTRAINT premium_entries_kind_check
   CHECK (kind IN ('premium', 'premium_tax', 'sl_tax', 'stamping_fee', 'policy_fee',
-    'installment_fee', 'surcharge', 'assessment', 'conversion_transfer')) NOT VALID;
+      'installment_fee', 'surcharge', 'assessment', 'conversion_transfer')) NOT VALID;
 
 CREATE TABLE conversion_batches (          -- one load of one population into the new system
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

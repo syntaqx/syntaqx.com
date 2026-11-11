@@ -206,16 +206,17 @@ ALTER TABLE ledger_accounts
   ADD COLUMN side            TEXT,
   ADD COLUMN bank_account_id UUID REFERENCES bank_accounts (id),
   ADD COLUMN processor       TEXT,
-  DROP CONSTRAINT ledger_accounts_merchant_id_name_currency_key,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT ledger_accounts_side_not_null NOT NULL side NOT VALID,
   ADD CONSTRAINT ledger_accounts_side_check
     CHECK (side IN ('asset', 'liability', 'income', 'expense')) NOT VALID;
 
--- Unique without blocking writes: build the index concurrently, then attach it.
+-- The wider key without blocking writes: build its index concurrently, then swap the
+-- constraint in one statement, so the old key holds until the new one does.
 CREATE UNIQUE INDEX CONCURRENTLY ledger_accounts_dims_key
   ON ledger_accounts (name, merchant_id, bank_account_id, processor, currency) NULLS NOT DISTINCT;
 ALTER TABLE ledger_accounts
+  DROP CONSTRAINT ledger_accounts_merchant_id_name_currency_key,
   ADD CONSTRAINT ledger_accounts_dims_key UNIQUE USING INDEX ledger_accounts_dims_key;
 
 -- The third date, and corrections linked to what they correct.
@@ -224,7 +225,6 @@ ALTER TABLE ledger_transactions
   ADD COLUMN created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),  -- when the ledger recorded it
   ADD COLUMN period       DATE,                                -- accounting period it posts into
   ADD COLUMN corrects_id  UUID REFERENCES ledger_transactions (id),
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT ledger_transactions_period_not_null NOT NULL period NOT VALID;
 
 CREATE TABLE external_files (

@@ -167,8 +167,8 @@ ALTER TABLE properties
   ADD COLUMN segment TEXT,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT properties_segment_check
-    CHECK (segment IN ('conventional', 'student', 'senior', 'military',
-        'affordable', 'build_to_rent')) NOT VALID;
+    CHECK (segment IN ('conventional', 'student', 'senior', 'military', 'affordable',
+        'build_to_rent')) NOT VALID;
 
 CREATE TABLE bed_types (                 -- what a by-the-bed property sells before beds are chosen
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -230,7 +230,6 @@ ALTER TABLE leases
   ADD COLUMN bed_id           UUID,     -- the bed a by-the-bed lease rents, once assigned
   ADD COLUMN liability        TEXT NOT NULL DEFAULT 'joint_and_several',
   ADD COLUMN academic_term_id UUID REFERENCES academic_terms (id),
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT leases_bed_in_unit FOREIGN KEY (bed_id, unit_id) REFERENCES beds (id, unit_id) NOT VALID,
   ADD CONSTRAINT leases_bed_is_individual CHECK (bed_id IS NULL OR liability = 'individual') NOT VALID,
   ADD CONSTRAINT leases_bed_needs_unit CHECK (bed_id IS NULL OR unit_id IS NOT NULL) NOT VALID,
@@ -247,7 +246,6 @@ ALTER TABLE leases
 -- (guaranty_limit_amount) and renewal coverage are The Lease's lease_members columns.
 ALTER TABLE lease_members
   ADD COLUMN guarantees_person_id UUID REFERENCES people (id),  -- null: the whole lease
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT lease_members_guarantees_person CHECK (
     role = 'guarantor' OR guarantees_person_id IS NULL) NOT VALID;
 

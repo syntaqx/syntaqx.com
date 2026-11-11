@@ -51,8 +51,7 @@ ALTER TABLE entitlements
   ADD CONSTRAINT entitlements_source_check
     CHECK (source IN ('purchase', 'platform', 'reward', 'grant', 'subscription')) NOT VALID,
   ADD CONSTRAINT entitlements_revoke_reason_check
-    CHECK (revoke_reason IN ('refund', 'chargeback', 'fraud',
-        'grant_error', 'support', 'merge')) NOT VALID;
+    CHECK (revoke_reason IN ('refund', 'chargeback', 'fraud', 'grant_error', 'support', 'merge')) NOT VALID;
 
 -- Unique without blocking writes: build the index concurrently, then attach it.
 CREATE UNIQUE INDEX CONCURRENTLY entitlements_grant_once
@@ -93,7 +92,6 @@ ALTER TABLE item_instances
   ADD COLUMN tradable_after TIMESTAMPTZ,
   ADD COLUMN destroyed_at   TIMESTAMPTZ,
   ADD COLUMN destroy_reason TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT item_instances_destroy_complete
     CHECK ((destroyed_at IS NULL) = (destroy_reason IS NULL)) NOT VALID,
   ADD CONSTRAINT item_instances_source_not_null NOT NULL source NOT VALID,
@@ -148,17 +146,16 @@ CREATE TABLE currency_ledger_transactions (
 
 -- Unique without blocking writes: build the index concurrently, then attach it.
 CREATE UNIQUE INDEX CONCURRENTLY wallets_id_currency ON wallets (id, currency);
-ALTER TABLE wallets  -- lets entries pin the currency
-  ADD CONSTRAINT wallets_id_currency UNIQUE USING INDEX wallets_id_currency;
+ALTER TABLE wallets
+  ADD CONSTRAINT wallets_id_currency UNIQUE USING INDEX wallets_id_currency;  -- lets entries pin the currency
 
 ALTER TABLE currency_ledger_entries
   ADD COLUMN transaction_id UUID REFERENCES currency_ledger_transactions (id),
   ADD COLUMN wallet_id      UUID,
   ADD COLUMN currency       TEXT,                -- 'GEMS'
-  ADD COLUMN delta_amount   BIGINT,           -- signed, whole units
+  ADD COLUMN delta_amount   BIGINT,              -- signed, whole units
   ADD COLUMN ledger_account TEXT,
   ADD COLUMN funding        TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT currency_ledger_entries_wallet
     FOREIGN KEY (wallet_id, currency) REFERENCES wallets (id, currency) NOT VALID,
   ADD CONSTRAINT currency_ledger_entries_transaction_id_not_null NOT NULL transaction_id NOT VALID,

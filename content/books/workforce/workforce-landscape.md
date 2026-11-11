@@ -164,8 +164,8 @@ ALTER TABLE companies
   ADD COLUMN churn_reason             TEXT,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT companies_segment_check
-    CHECK (segment IN ('small_business', 'mid_market',
-        'enterprise', 'peo_client', 'eor_client', 'embedded')) NOT VALID;
+    CHECK (segment IN ('small_business', 'mid_market', 'enterprise', 'peo_client', 'eor_client',
+        'embedded')) NOT VALID;
 
 ALTER TABLE employers
   ADD COLUMN prior_provider_id        UUID REFERENCES provider_profiles (id),

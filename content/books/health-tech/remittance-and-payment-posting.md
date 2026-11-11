@@ -149,8 +149,7 @@ ALTER TABLE remittances                  -- trace_number, payment_method, paymen
   ADD COLUMN status          TEXT NOT NULL DEFAULT 'received',
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT remittances_status_check
-    CHECK (status IN ('received',
-        'unbalanced', 'duplicate', 'posting', 'posted', 'exceptions')) NOT VALID;
+    CHECK (status IN ('received', 'unbalanced', 'duplicate', 'posting', 'posted', 'exceptions')) NOT VALID;
 
 ALTER TABLE remittance_lines             -- amounts, adjustments, remarks and claim status are core
   ADD COLUMN patient_control_number TEXT,            -- CLP01, how the claim was matched
@@ -160,7 +159,6 @@ ALTER TABLE remittance_lines             -- amounts, adjustments, remarks and cl
   ADD COLUMN units           NUMERIC(8,2),
   ADD COLUMN crossed_over_to TEXT,                   -- the payer Medicare forwarded the claim to
   ADD COLUMN posting_status  TEXT NOT NULL DEFAULT 'pending',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT remittance_lines_patient_control_number_not_null NOT NULL patient_control_number NOT VALID,
   ADD CONSTRAINT remittance_lines_procedure_code_not_null NOT NULL procedure_code NOT VALID,
   ADD CONSTRAINT remittance_lines_posting_status_check

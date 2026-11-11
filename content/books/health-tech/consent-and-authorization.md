@@ -119,8 +119,7 @@ ALTER TABLE consents
   ADD CONSTRAINT authorization_expires CHECK (kind NOT IN ('hipaa_authorization', 'sud_part2',
     'sud_counseling_notes') OR expires_at IS NOT NULL OR expires_on_event IS NOT NULL) NOT VALID,
   ADD CONSTRAINT consents_signer_capacity_check
-    CHECK (signer_capacity IN ('self',
-        'parent', 'guardian', 'health_care_agent', 'executor',
+    CHECK (signer_capacity IN ('self', 'parent', 'guardian', 'health_care_agent', 'executor',
         'client_owner', 'guarantor', 'other_legal')) NOT VALID;
 
 CREATE TABLE personal_representatives (  -- who may act for a patient, how far, on what evidence

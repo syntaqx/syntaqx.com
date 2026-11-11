@@ -155,9 +155,8 @@ ALTER TABLE ledger_accounts
   ADD COLUMN trust_role    TEXT,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT ledger_accounts_trust_role_check
-    CHECK (trust_role IN ('trust_cash', 'client_funds', 'third_party_funds',
-        'firm_cushion', 'unidentified', 'unclaimed', 'operating_cash',
-        'fees_receivable', 'fee_income')) NOT VALID;
+    CHECK (trust_role IN ('trust_cash', 'client_funds', 'third_party_funds', 'firm_cushion',
+        'unidentified', 'unclaimed', 'operating_cash', 'fees_receivable', 'fee_income')) NOT VALID;
 
 ALTER TABLE bank_accounts
   ADD COLUMN workspace_id     UUID REFERENCES workspaces (id),
@@ -165,7 +164,6 @@ ALTER TABLE bank_accounts
   ADD COLUMN jurisdiction     TEXT,                  -- ISO 3166-2 whose rules govern it
   ADD COLUMN overdraft_reporting_authorized BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN registered_at    DATE,                  -- e.g. California CTAPP registration
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT bank_accounts_trust_type_check
     CHECK (trust_type IN ('iolta', 'client_interest_bearing', 'operating')) NOT VALID;
 

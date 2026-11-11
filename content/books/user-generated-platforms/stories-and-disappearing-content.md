@@ -396,7 +396,6 @@ CREATE TABLE expiration_purge_steps (    -- proof of purge, copy by copy
 
 ALTER TABLE legal_holds
   DROP CONSTRAINT legal_holds_reason_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT legal_holds_reason_check CHECK (reason IN ('claim_window', 'open_dispute',
     'cybertipline_preservation', 'preservation_request', 'litigation',
     'regulatory_retention', 'tax', 'report_evidence')) NOT VALID;  -- a user report under review

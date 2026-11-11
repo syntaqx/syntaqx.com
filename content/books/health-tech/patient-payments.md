@@ -167,8 +167,7 @@ The core `payments` table already records who paid (`guarantor_id`), the source,
 ALTER TABLE payments
   ADD COLUMN location_id        UUID REFERENCES locations (id),
   ADD COLUMN channel            TEXT,
-  ADD COLUMN card_funding       TEXT,
-                                         -- from the BIN, for the surcharge rule
+  ADD COLUMN card_funding       TEXT,    -- from the BIN, for the surcharge rule
   ADD COLUMN surcharge_amount   BIGINT NOT NULL DEFAULT 0,  -- credit only; never on hsa_fsa_card
   ADD COLUMN processor_fee      BIGINT,  -- the practice's expense, never a patient adjustment
   ADD COLUMN estimate_ref       UUID,    -- the estimate a pre-adjudication payment was taken against
@@ -181,8 +180,8 @@ ALTER TABLE payments
   ADD COLUMN pms_payment_ref    TEXT,    -- the PMS's own ID once posted
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payments_channel_check
-    CHECK (channel IN ('front_desk', 'terminal', 'text_to_pay',
-        'portal', 'card_on_file', 'payment_plan', 'phone', 'mail')) NOT VALID,
+    CHECK (channel IN ('front_desk', 'terminal', 'text_to_pay', 'portal', 'card_on_file',
+        'payment_plan', 'phone', 'mail')) NOT VALID,
   ADD CONSTRAINT payments_card_funding_check
     CHECK (card_funding IN ('credit', 'debit', 'prepaid')) NOT VALID,
   ADD CONSTRAINT payments_pms_allocation_check

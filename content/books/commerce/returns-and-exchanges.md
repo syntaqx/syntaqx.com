@@ -195,8 +195,7 @@ ALTER TABLE returns
   ADD COLUMN resolution     TEXT,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT returns_requested_via_check
-    CHECK (requested_via IN ('portal', 'support', 'store',
-        'marketplace', 'withdrawal_notice')) NOT VALID,
+    CHECK (requested_via IN ('portal', 'support', 'store', 'marketplace', 'withdrawal_notice')) NOT VALID,
   ADD CONSTRAINT returns_resolution_check
     CHECK (resolution IN ('refund', 'store_credit', 'exchange', 'keep_item', 'rejected')) NOT VALID;
 

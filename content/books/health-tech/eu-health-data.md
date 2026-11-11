@@ -123,8 +123,7 @@ ALTER TABLE consents
   ADD COLUMN ehds_scope           TEXT,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT consents_ehds_scope_check
-    CHECK (ehds_scope IN ('restriction', 'cross_border_opt_out',
-        'secondary_use_opt_out')) NOT VALID;
+    CHECK (ehds_scope IN ('restriction', 'cross_border_opt_out', 'secondary_use_opt_out')) NOT VALID;
 
 CREATE TABLE ehds_access_requests (      -- a patient's or an access body's request against the record
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

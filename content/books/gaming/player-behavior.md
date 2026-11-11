@@ -242,7 +242,6 @@ ALTER TABLE reports
   ALTER COLUMN reporter_profile_id DROP NOT NULL,          -- a notice from someone who isn't a player
   ADD COLUMN is_illegal_content_notice BOOLEAN NOT NULL DEFAULT FALSE,  -- DSA Article 16
   ADD COLUMN notifier_contact          TEXT,              -- name and email from a web notice
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT reports_has_reporter
     CHECK (reporter_profile_id IS NOT NULL OR notifier_contact IS NOT NULL) NOT VALID;
 
@@ -253,7 +252,6 @@ ALTER TABLE moderation_decisions
   ADD COLUMN prompted_by_notice BOOLEAN,
   ADD COLUMN statement_sent_at  TIMESTAMPTZ,                -- the Article 17 statement reached the player
   ADD COLUMN transparency_db_id TEXT,                       -- set once submitted under Article 24(5)
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT moderation_decisions_ground_check
     CHECK (ground IN ('illegal_content', 'terms')) NOT VALID;
 ```

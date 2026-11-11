@@ -248,7 +248,6 @@ ALTER TABLE moderation_decisions
   ADD COLUMN statement_sent_at  TIMESTAMPTZ,
   ADD COLUMN transparency_db_id TEXT,    -- the Commission database's id for the statement
   ADD COLUMN transparency_db_submitted_at TIMESTAMPTZ,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT moderation_decisions_legal_ground_check
     CHECK (legal_ground IN ('illegal_content', 'terms_of_service')) NOT VALID;
 

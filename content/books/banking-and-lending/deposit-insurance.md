@@ -134,7 +134,6 @@ ALTER TABLE account_parties
   ADD COLUMN signature_evidence      TEXT,
   ADD COLUMN beneficiary_eligible    BOOLEAN,        -- natural person or IRC charity or nonprofit
   ADD COLUMN beneficiary_contingent  BOOLEAN NOT NULL DEFAULT FALSE,  -- takes only if another dies: not counted
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT account_parties_signature_evidence_check
     CHECK (signature_evidence IN ('signed', 'esigned', 'access_or_use', 'exempt')) NOT VALID;
 

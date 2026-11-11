@@ -170,8 +170,7 @@ ALTER TABLE documents
   ADD COLUMN purged_at      TIMESTAMPTZ,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT documents_storage_class_check
-    CHECK (storage_class IN
-        ('personnel', 'medical', 'i9', 'payroll', 'background', 'eeo')) NOT VALID;
+    CHECK (storage_class IN ('personnel', 'medical', 'i9', 'payroll', 'background', 'eeo')) NOT VALID;
 
 CREATE TABLE personnel_file_requests (     -- state access rights
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

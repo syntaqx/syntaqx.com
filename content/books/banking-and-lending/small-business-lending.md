@@ -162,7 +162,6 @@ ALTER TABLE accounts DROP CONSTRAINT accounts_account_kind_check,
 
 -- Adds 'mca_reconciliation', keeping the core kinds and Sanctions Screening's.
 ALTER TABLE cases DROP CONSTRAINT cases_kind_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT cases_kind_check CHECK (kind IN ('reg_e_error', 'reg_cc_claim',
     'billing_error', 'fraud_claim', 'credit_report_dispute', 'legal_process', 'complaint',
     'aml_investigation', 'hardship', 'sanctions_review',

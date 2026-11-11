@@ -120,11 +120,10 @@ CREATE INDEX CONCURRENTLY ON account_links (account_b_id);
 
 ALTER TABLE quotas
   ADD COLUMN risk_reason TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT quotas_risk_reason CHECK ((source = 'risk') = (risk_reason IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT quotas_risk_reason_check
-    CHECK (risk_reason IN ('new_account', 'unverified_payment',
-        'linked_to_abuse', 'credential_exposure')) NOT VALID;
+    CHECK (risk_reason IN ('new_account', 'unverified_payment', 'linked_to_abuse',
+        'credential_exposure')) NOT VALID;
 ```
 
 A fresh account's limits are risk rows that expire as trust builds:

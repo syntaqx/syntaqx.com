@@ -212,8 +212,7 @@ ALTER TABLE visits
   ADD CONSTRAINT visits_booked_via_not_null NOT NULL booked_via NOT VALID,
   ADD CONSTRAINT visits_idempotency_key_not_null NOT NULL idempotency_key NOT VALID,
   ADD CONSTRAINT visits_booked_via_check
-    CHECK (booked_via IN ('portal', 'csr',
-        'ai_agent', 'lead_source', 'technician', 'office',
+    CHECK (booked_via IN ('portal', 'csr', 'ai_agent', 'lead_source', 'technician', 'office',
         'system')) NOT VALID;
 
 -- Unique without blocking writes: build the index concurrently, then attach it.

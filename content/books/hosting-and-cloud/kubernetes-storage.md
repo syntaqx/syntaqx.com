@@ -197,9 +197,8 @@ ALTER TABLE volume_attachments
   ADD CONSTRAINT volume_attachments_cluster_requested
     CHECK (cluster_id IS NULL OR requested_at IS NOT NULL) NOT VALID,
   ADD CONSTRAINT volume_attachments_detach_reason_check
-    CHECK (detach_reason IN ('pod_moved', 'node_drained',
-        'node_deleted', 'force_detach_timeout', 'cluster_deleted',
-        'manual')) NOT VALID;
+    CHECK (detach_reason IN ('pod_moved', 'node_drained', 'node_deleted', 'force_detach_timeout',
+        'cluster_deleted', 'manual')) NOT VALID;
 
 ALTER TABLE snapshots                    -- Storage: Block, File & Object's side table
   ADD COLUMN source_claim_id UUID REFERENCES persistent_volume_claims (id),

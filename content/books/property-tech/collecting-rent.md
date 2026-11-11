@@ -126,11 +126,11 @@ ALTER TABLE payments
   ADD COLUMN collection_arrangement_id UUID,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payments_rent_channel_check
-    CHECK (rent_channel IN ('portal', 'autopay', 'text_to_pay',
-        'cash_network', 'lockbox', 'check_scan', 'office', 'third_party')) NOT VALID,
+    CHECK (rent_channel IN ('portal', 'autopay', 'text_to_pay', 'cash_network', 'lockbox',
+        'check_scan', 'office', 'third_party')) NOT VALID,
   ADD CONSTRAINT payments_payer_kind_check
-    CHECK (payer_kind IN ('resident',
-        'guarantor', 'agency', 'flexible_rent_provider', 'other_third_party')) NOT VALID;
+    CHECK (payer_kind IN ('resident', 'guarantor', 'agency', 'flexible_rent_provider',
+        'other_third_party')) NOT VALID;
 
 CREATE TABLE lease_payment_acceptance (  -- what a lease may pay with, and why
   id           UUID PRIMARY KEY DEFAULT uuidv7(),

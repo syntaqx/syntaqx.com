@@ -184,10 +184,9 @@ ALTER TABLE transactions
 -- Holds: a target amount and what is currently secured, disputes as a reason, and who acted.
 ALTER TABLE holds
   DROP CONSTRAINT holds_reason_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT holds_reason_check CHECK (reason IN ('card_authorization', 'deposit_availability',
     'legal_process', 'fraud', 'collateral', 'dispute', 'manual',
-    'provisional_insurance')) NOT VALID,                     -- keeps When Banks Fail's 12 CFR 360.9 hold
+    'provisional_insurance')) NOT VALID,           -- keeps When Banks Fail's 12 CFR 360.9 hold
   ADD COLUMN secured_amount    BIGINT,             -- what it reduces available balance by now; amount is the target
   ADD COLUMN release_condition TEXT,               -- for blocks with no expires_at
   ADD COLUMN placed_by         TEXT,
@@ -200,7 +199,6 @@ ALTER TABLE holds
 ALTER TABLE balance_snapshots
   ADD COLUMN float_amount BIGINT,                  -- deposited items not yet collected
   ADD COLUMN holds_amount BIGINT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT balance_snapshots_float_amount_not_null NOT NULL float_amount NOT VALID,
   ADD CONSTRAINT balance_snapshots_holds_amount_not_null NOT NULL holds_amount NOT VALID;
 

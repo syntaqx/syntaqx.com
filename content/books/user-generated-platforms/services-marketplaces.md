@@ -234,7 +234,6 @@ ALTER TABLE bookings                     -- frozen per booking under the network
   ADD COLUMN booking_model TEXT NOT NULL DEFAULT 'marketplace',
   ADD COLUMN attribution   TEXT,
   ADD COLUMN network_fee   BIGINT,       -- billed on completion, from the plan in force
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT bookings_attribution_check
     CHECK (attribution IN ('network', 'direct', 'partner_surface')) NOT VALID;
 

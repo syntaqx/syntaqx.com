@@ -58,7 +58,7 @@ The sales and booking apps should therefore record, on every sale, the facts the
 ALTER TABLE agreements
   ADD COLUMN sold_via                 TEXT,
   ADD COLUMN sold_by_staff_member_id  UUID REFERENCES staff_members (id),  -- null for self-serve web
-  ADD COLUMN signed_via               TEXT,  -- set at signing
+  ADD COLUMN signed_via               TEXT,         -- set at signing
   ADD COLUMN sale_location_kind       TEXT,
   ADD COLUMN contact_initiated_by     TEXT,
   ADD COLUMN emergency_waiver_document_id UUID,     -- the handwritten statement, if any

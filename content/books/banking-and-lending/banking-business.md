@@ -619,6 +619,12 @@ Three decisions keep the map one model rather than several:
 - **One case table for every clock.** Reg E errors, credit report disputes, levies, complaints and AML investigations differ in their rules, not their shape: a notice, a deadline, work, an outcome. Each chapter adds its own detail table keyed by `cases.id` rather than a parallel queue.
 - **One disclosure table for every notice.** Account disclosures, change-in-terms notices, adverse action notices, TILA and TRID forms and privacy notices are all `disclosures` rows, so "show me everything this customer was told" is one query.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check AP, Bill Pay & Procurement adds to `receipts`:
+
+```sql
+ALTER TABLE receipts VALIDATE CONSTRAINT receipts_kind_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones examiners, auditors, the FDIC, investors and courts ask about later:

@@ -403,6 +403,12 @@ Design decisions behind it:
 
 What goes wrong most often is building for one model and bolting on the next: a route system can't quote an install, and a repair system can't generate a year of visits. My rule: decide the shape of all five models early, even if you build one.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check One-Time Services & Upsells adds to `agreements`:
+
+```sql
+ALTER TABLE agreements VALIDATE CONSTRAINT agreements_kind_check;
+```
+
 ## Auditing
 
 The business decisions in this chapter are the ones disputed later:

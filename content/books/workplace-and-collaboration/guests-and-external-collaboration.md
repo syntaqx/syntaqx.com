@@ -136,7 +136,6 @@ CREATE UNIQUE INDEX container_one_host
 
 ALTER TABLE items
   ADD COLUMN author_organization_id UUID REFERENCES organizations (id),           -- set at write, never changed
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT items_author_organization_id_not_null NOT NULL author_organization_id NOT VALID;
 ```
 

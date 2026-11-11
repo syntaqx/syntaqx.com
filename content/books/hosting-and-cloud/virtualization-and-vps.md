@@ -141,8 +141,8 @@ ALTER TABLE virtual_machines
   ADD CONSTRAINT virtual_machines_vcpus_not_null NOT NULL vcpus NOT VALID,
   ADD CONSTRAINT virtual_machines_memory_mib_not_null NOT NULL memory_mib NOT VALID,
   ADD CONSTRAINT virtual_machines_hypervisor_check
-    CHECK (hypervisor IN ('kvm', 'xen', 'esxi', 'hyper_v', 'openvz', 'virtuozzo', 'lxc',
-        'nitro', 'firecracker', 'none')) NOT VALID,
+    CHECK (hypervisor IN ('kvm', 'xen', 'esxi', 'hyper_v', 'openvz', 'virtuozzo', 'lxc', 'nitro',
+        'firecracker', 'none')) NOT VALID,
   ADD CONSTRAINT virtual_machines_cpu_model_check
     CHECK (cpu_model IN ('dedicated', 'shared', 'burstable', 'shared_core')) NOT VALID,
   ADD CONSTRAINT virtual_machines_credit_mode_check

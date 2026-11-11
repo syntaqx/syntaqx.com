@@ -211,7 +211,6 @@ CREATE TABLE chain_finality_rules (        -- how this platform decides "final",
 -- chapter adds dropped and replaced, the sender and nonce, and the fee detail.
 ALTER TABLE onchain_transactions
   DROP CONSTRAINT onchain_transactions_status_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT onchain_transactions_status_check CHECK (status IN ('pending', 'confirmed',
     'finalized', 'reorged', 'failed', 'dropped', 'replaced')) NOT VALID,
   ADD COLUMN from_address      TEXT,             -- account chains: the signing address

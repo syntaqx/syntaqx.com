@@ -154,30 +154,26 @@ The abuse case model is the UGP one, pointed at resources by the foundation ([Th
 ```sql
 -- Which reports are DNS Abuse under RAA 3.18.1, and how they reached the registrar.
 ALTER TABLE reports
-  ADD COLUMN dns_abuse_type      TEXT,
-                                 -- null: not DNS Abuse; handled under the agreement's terms
+  ADD COLUMN dns_abuse_type      TEXT,   -- null: not DNS Abuse; handled under the agreement's terms
   ADD COLUMN reported_domain_id  UUID REFERENCES domains (resource_id),  -- resolved at intake
   ADD COLUMN sponsor_role        TEXT,
   ADD COLUMN referred_by         TEXT,
   ADD COLUMN icann_complaint_ref TEXT,   -- Compliance's ticket, when the report came that way
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT reports_dns_abuse_has_domain
-    CHECK (dns_abuse_type IS NULL OR reported_domain_id IS NOT NULL
-           OR sponsor_role IN ('other_registrar', 'unregistered')) NOT VALID,
+    CHECK (dns_abuse_type IS NULL OR reported_domain_id IS NOT NULL OR sponsor_role IN ('other_registrar',
+        'unregistered')) NOT VALID,
   ADD CONSTRAINT reports_dns_abuse_type_check
-    CHECK (dns_abuse_type IN ('phishing', 'malware',
-        'botnet', 'pharming', 'spam_delivery')) NOT VALID,
+    CHECK (dns_abuse_type IN ('phishing', 'malware', 'botnet', 'pharming', 'spam_delivery')) NOT VALID,
   ADD CONSTRAINT reports_sponsor_role_check
     CHECK (sponsor_role IN ('registrar', 'reseller', 'other_registrar', 'unregistered')) NOT VALID,
   ADD CONSTRAINT reports_referred_by_check
-    CHECK (referred_by IN ('reporter', 'registry',
-        'icann_compliance', 'reporting_service',
+    CHECK (referred_by IN ('reporter', 'registry', 'icann_compliance', 'reporting_service',
         'internal_monitoring')) NOT VALID;
 
 -- What the registrar or registry did, on what evidence, through which EPP command.
 ALTER TABLE abuse_mitigations
   DROP CONSTRAINT abuse_mitigations_action_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT abuse_mitigations_action_check CHECK (action IN ('file_quarantined',
     'path_blocked', 'site_suspended', 'capability_disabled', 'account_suspended',
     'account_terminated', 'client_hold', 'server_hold', 'transfer_lock', 'update_lock',
@@ -206,13 +202,11 @@ ALTER TABLE abuse_mitigations
   ADD CONSTRAINT abuse_mitigations_acting_party_check
     CHECK (acting_party IN ('host', 'proxy', 'registrar', 'reseller', 'registry')) NOT VALID,
   ADD CONSTRAINT abuse_mitigations_determination_check
-    CHECK (determination IN ('malicious_registration',
-        'compromised', 'not_dns_abuse', 'not_actionable')) NOT VALID,
+    CHECK (determination IN ('malicious_registration', 'compromised', 'not_dns_abuse',
+        'not_actionable')) NOT VALID,
   ADD CONSTRAINT abuse_mitigations_association_basis_check
-    CHECK (association_basis <@ ARRAY['same_account',
-        'same_registrant', 'same_order', 'shared_nameservers',
-        'naming_pattern', 'payment_instrument',
-        'external_report']::TEXT[]) NOT VALID;
+    CHECK (association_basis <@ ARRAY['same_account', 'same_registrant', 'same_order',
+        'shared_nameservers', 'naming_pattern', 'payment_instrument', 'external_report']::TEXT[]) NOT VALID;
 
 -- The evidence pack for one ICANN investigation: receipt, evidence, action, timing.
 CREATE VIEW dns_abuse_evidence AS

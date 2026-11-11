@@ -140,13 +140,10 @@ ALTER TABLE media_assets
   ADD CONSTRAINT media_assets_rejected_reason
     CHECK ((state = 'rejected') = (rejected_reason IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT media_assets_purpose_check
-    CHECK (purpose IN
-        ('post_media', 'avatar', 'banner', 'message_attachment',
-        'listing_photo', 'video', 'verification_document')) NOT VALID,
+    CHECK (purpose IN ('post_media', 'avatar', 'banner', 'message_attachment', 'listing_photo',
+        'video', 'verification_document')) NOT VALID,
   ADD CONSTRAINT media_assets_source_check
-    CHECK (source IN ('direct',
-        'resumable', 'url_import', 'api', 'federation',
-        'live_recording')) NOT VALID;
+    CHECK (source IN ('direct', 'resumable', 'url_import', 'api', 'federation', 'live_recording')) NOT VALID;
 
 CREATE TABLE upload_sessions (           -- one grant to send bytes for one asset
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

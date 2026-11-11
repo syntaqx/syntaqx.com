@@ -324,6 +324,12 @@ CREATE TABLE ledger_entries (
 
 The accounts are the [chart of accounts](/docs/money/payment-states#a-chart-of-accounts) the playbook names, and the sum-to-zero rule is enforced by a deferred constraint trigger, not trusted to application code. What's deliberately missing is anything a chapter owns: onboarding requirements, stored-credential agreements, risk decisions, settlement files, bank accounts and routing rules all arrive as deltas in their chapters.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Payments Architecture at Scale adds to `ledger_accounts`:
+
+```sql
+ALTER TABLE ledger_accounts VALIDATE CONSTRAINT ledger_accounts_shard_check;
+```
+
 ## What This Means for the System You Build
 
 - **Keep payments and attempts apart,** with refunds, disputes and payouts as their own records and the ledger as the only source of balances.

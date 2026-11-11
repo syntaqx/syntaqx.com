@@ -442,6 +442,12 @@ Each later chapter extends a defined part of this spine:
 
 What goes wrong most often is building for apartments and bolting on everything else: a model with residents hanging off units can't hold a guarantor, a by-the-bed lease, a storage unit rented with no apartment, or an association owner who pays assessments and signs no lease. My rule: decide the shape of every property type early, even if you build one.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Senior Living adds to `units`:
+
+```sql
+ALTER TABLE units VALIDATE CONSTRAINT units_resident_capacity_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones owners, residents, auditors and courts ask about later:

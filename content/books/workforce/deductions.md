@@ -137,9 +137,8 @@ ALTER TABLE deduction_codes
   ADD COLUMN compensation_item_types TEXT[],    -- plan compensation: which pay item types count
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT deduction_codes_authorization_kind_check
-    CHECK (authorization_kind IN ('cafeteria_election',
-        'plan_election', 'dues_assignment', 'written_consent',
-        'court_order', 'none')) NOT VALID;
+    CHECK (authorization_kind IN ('cafeteria_election', 'plan_election', 'dues_assignment',
+        'written_consent', 'court_order', 'none')) NOT VALID;
 
 ALTER TABLE deduction_elections
   ADD COLUMN roth_catch_up_required BOOLEAN NOT NULL DEFAULT FALSE,  -- from prior-year FICA wages

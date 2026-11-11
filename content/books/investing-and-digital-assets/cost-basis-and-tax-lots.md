@@ -168,12 +168,10 @@ ALTER TABLE tax_lots
   ADD COLUMN asset_event_id UUID REFERENCES asset_events (id),
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT tax_lots_origin_check
-    CHECK (origin IN ('purchase',
-        'transfer_in', 'gift', 'inheritance', 'corporate_action', 'reinvestment', 'airdrop',
-        'fork', 'income')) NOT VALID,
+    CHECK (origin IN ('purchase', 'transfer_in', 'gift', 'inheritance', 'corporate_action',
+        'reinvestment', 'airdrop', 'fork', 'income')) NOT VALID,
   ADD CONSTRAINT tax_lots_basis_status_check
-    CHECK (basis_status IN ('final',
-        'provisional', 'pending_statement', 'customer_provided')) NOT VALID;
+    CHECK (basis_status IN ('final', 'provisional', 'pending_statement', 'customer_provided')) NOT VALID;
 
 ALTER TABLE lot_closings
   ADD COLUMN term TEXT NOT NULL DEFAULT 'short',
@@ -181,7 +179,6 @@ ALTER TABLE lot_closings
   ADD COLUMN disallowed_loss BIGINT NOT NULL DEFAULT 0,        -- 1099-B box 1g, 1099-DA box 1i
   ADD COLUMN lot_relief_election_id UUID,                      -- which instruction chose the lot; standing orders close as 'specific_id'
   ADD COLUMN restated_by UUID REFERENCES lot_closings (id),   -- a replay's replacement row
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT lot_closings_term_check CHECK (term IN ('short', 'long')) NOT VALID;
 
 CREATE TABLE lot_relief_elections (           -- default methods and standing orders, versioned

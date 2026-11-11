@@ -488,6 +488,12 @@ Three decisions keep the map one model rather than several:
 - **One concept, one table, reused.** Every piece of content is an `items` row with a kind table beside it, so a hold, a retention run, a DLP match, a search document and an AI citation all point at `items.id` (or `item_versions.id` for a specific revision). Every permission is a `grants` row or derives from container membership, so search, AI retrieval and exports trim by the same check: deny grants serve both [Permissions & Sharing](/books/workplace-and-collaboration/permissions-and-sharing)'s exclusions and the law firm's ethical walls, AI retrieval reads the same audiences search does (`access_index` for native content, `search_document_principals` for connected sources), `calendar_resources` is the one bookable-resource record for calendars and rooms, and `admin_policies` holds every per-scope setting, including the feature switches a compliance profile checks.
 - **Organizations own policy; workspaces own content.** Retention policies, holds, admin roles, keys and audit live on the organization with an optional workspace or container scope, so an enterprise sets one policy for fifty workspaces and a small customer never notices the difference.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Apps & Marketplaces adds to `apps`:
+
+```sql
+ALTER TABLE apps VALIDATE CONSTRAINT apps_hosting_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones customers, auditors, courts and regulators ask about later:

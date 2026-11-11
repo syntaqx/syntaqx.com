@@ -139,7 +139,6 @@ ALTER TABLE loans
   ADD CONSTRAINT loans_prepayment_policy_check
     CHECK (prepayment_policy IN ('shorten_term', 'reamortize', 'borrower_choice')) NOT VALID;
 
--- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE loans ADD CONSTRAINT rule_of_78s_term
   CHECK (rebate_method IS DISTINCT FROM 'rule_of_78s' OR term_months <= 61) NOT VALID;  -- 15 U.S.C. 1615
 

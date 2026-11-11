@@ -197,7 +197,6 @@ ALTER TABLE items
   ADD COLUMN dimensions_mm  INT[3],          -- length, width, height of the each
   ADD COLUMN net_quantity   NUMERIC(12, 3),  -- as declared on the label
   ADD COLUMN net_unit       TEXT,            -- 'g', 'ml', 'count', 'oz', 'fl_oz'
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT items_lifecycle_check
     CHECK (lifecycle IN ('draft', 'preorder', 'active', 'sell_down', 'archived')) NOT VALID;
 

@@ -105,8 +105,8 @@ ALTER TABLE documents
     CHECK (format IN ('ccda', 'cda_unstructured', 'pdf', 'image',
         'fhir_bundle', 'text', 'dicom_sr')) NOT VALID,
   ADD CONSTRAINT documents_received_via_check
-    CHECK (received_via IN ('created_here', 'direct', 'network_query',
-        'fax', 'scan', 'patient_upload', 'api', 'hl7v2')) NOT VALID,
+    CHECK (received_via IN ('created_here', 'direct', 'network_query', 'fax', 'scan',
+        'patient_upload', 'api', 'hl7v2')) NOT VALID,
   ADD CONSTRAINT documents_filing_status_check
     CHECK (filing_status IN ('unfiled', 'filed', 'misfiled_moved', 'rejected')) NOT VALID;
 

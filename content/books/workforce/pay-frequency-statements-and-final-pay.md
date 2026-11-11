@@ -185,7 +185,6 @@ ALTER TABLE employments
   ADD COLUMN separation_effective_at TIMESTAMPTZ,
   ADD COLUMN notice_given_at        TIMESTAMPTZ,   -- the employee's notice of quitting
   ADD COLUMN pay_by_mail_requested  BOOLEAN NOT NULL DEFAULT FALSE,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT employments_separation_type_check
     CHECK (separation_type IN ('discharge', 'layoff',
         'quit', 'mutual', 'death', 'end_of_assignment')) NOT VALID;

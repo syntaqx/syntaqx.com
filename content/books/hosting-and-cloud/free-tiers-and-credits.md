@@ -208,12 +208,10 @@ ALTER TABLE credit_grants
   ADD CONSTRAINT credit_grants_void_check
     CHECK ((voided_at IS NULL) = (voided_reason IS NULL)) NOT VALID,
   ADD CONSTRAINT credit_grants_voided_reason_check
-    CHECK (voided_reason IN ('fraud', 'misuse', 'sold',
-        'duplicate_account', 'program_terms')) NOT VALID;
+    CHECK (voided_reason IN ('fraud', 'misuse', 'sold', 'duplicate_account', 'program_terms')) NOT VALID;
 
 ALTER TABLE invoice_lines
   ADD COLUMN credit_grant_id UUID REFERENCES credit_grants (id),  -- set on line_kind 'credit'
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT invoice_lines_credit_grant_check
     CHECK ((line_kind = 'credit') = (credit_grant_id IS NOT NULL)) NOT VALID;
 

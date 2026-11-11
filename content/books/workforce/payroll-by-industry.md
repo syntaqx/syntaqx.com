@@ -116,7 +116,6 @@ ALTER TABLE job_assignments
   ADD COLUMN overtime_rule_set  TEXT NOT NULL DEFAULT 'flsa_40',
   ADD COLUMN cba_classification TEXT,                -- the agreement's job class and step
   ADD COLUMN project_ref        TEXT,                -- a covered project, for certified payroll
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT job_assignments_overtime_rule_set_check
     CHECK (overtime_rule_set IN ('flsa_40', 'flsa_7j_8_80', 'state_daily', 'cba')) NOT VALID;
 

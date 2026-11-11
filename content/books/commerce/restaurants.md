@@ -158,7 +158,6 @@ ALTER TABLE order_lines
 
 ALTER TABLE order_charges
   DROP CONSTRAINT order_charges_kind_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT order_charges_kind_check CHECK (kind IN ('shipping_fee', 'delivery_fee',
     'service_fee', 'small_order_fee', 'regulatory_fee', 'tax', 'duty', 'tip', 'discount',
     'commission', 'referral_fee', 'fulfillment_fee', 'processing_fee', 'allowance',

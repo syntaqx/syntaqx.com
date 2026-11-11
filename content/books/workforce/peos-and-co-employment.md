@@ -238,7 +238,6 @@ ALTER TABLE benefit_plans
 ALTER TABLE tax_registrations
   ADD COLUMN reporting_model     TEXT NOT NULL DEFAULT 'own',
   ADD COLUMN client_employer_id  UUID REFERENCES employers (id),  -- whose account it is
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT tax_registrations_reporting_model_check
     CHECK (reporting_model IN ('own', 'peo_account', 'client_account_by_peo',
         'client_account_assigned')) NOT VALID;

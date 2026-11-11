@@ -154,8 +154,8 @@ ALTER TABLE venues
   ADD COLUMN speed_bump_micros  INT,                             -- e.g. an exchange's fixed delay
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT venues_registration_check
-    CHECK (registration IN ('exchange_6a', 'nms_stock_ats',
-        'ats', 'broker_dealer', 'finra_facility', 'foreign', 'crypto')) NOT VALID;
+    CHECK (registration IN ('exchange_6a', 'nms_stock_ats', 'ats', 'broker_dealer',
+        'finra_facility', 'foreign', 'crypto')) NOT VALID;
 
 CREATE TABLE venue_sessions (              -- when a venue trades what, by date
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -801,6 +801,12 @@ Three decisions keep the map one model rather than several:
 - **One concept, one table, reused.** A texting consent, a HIPAA authorization, a telehealth consent and a proxy grant are all `consents` rows with a `kind`, and the chapters that own each add columns or a child table, not a parallel consent store. A conversion's crosswalk from old IDs to new is `patient_identifiers` and `external_refs` with the old system as the issuer. An AI agent's booking is an `appointments` row with `source = 'ai_agent'`, audited like any other actor.
 - **Financial records reach the patient through the guarantor.** Statements, payments and ledger entries carry the `guarantor_id`; `patient_id` on a ledger entry says whose care it was for. A family's balance is one query over the guarantor; a patient's share of it is a filter, and a vet client's three pets roll up the same way.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Claims adds to `claims`:
+
+```sql
+ALTER TABLE claims VALIDATE CONSTRAINT claims_purpose_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones patients, payers, regulators, auditors and courts ask about later:
