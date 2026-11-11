@@ -99,7 +99,7 @@ Use a larger exit fence than entry fence. A truck parked on the boundary of a si
 ### Fence Size and Shape
 
 - **Not smaller than the accuracy.** Android recommends a minimum radius of 100 to 150 meters for best results, and says to assume Wi-Fi location accuracy is about 50 meters unless indoor location is available; in rural areas without Wi-Fi it can be several hundred meters or more. A 20-meter fence around a house in that environment fires at random.
-- **Shape per site.** A house needs a small circle; a hospital campus, a farm, an apartment complex or a distribution center needs a polygon. Store the fence on the location, and let staff correct it when it's wrong.
+- **Shape per site.** A house needs a small circle; a hospital campus, a farm, an apartment complex or a distribution center needs a polygon. Store the fence on the location (a center and radius, or a polygon exchanged as GeoJSON; see [Coordinates & Geometry](/docs/fundamentals/coordinates-and-geometry)), and let staff correct it when it's wrong.
 - **On-device fences are scarce.** iOS prevents any single app from monitoring more than 20 conditions at once; Android allows 100 geofences per app per device user. Register on the device only the next few sites on today's route, and evaluate everything else server-side from uploaded positions.
 - **Latency is minutes, not seconds.** Android reports typical geofence alert latency under 2 minutes, about 2 to 3 minutes when background limits apply, and up to 6 minutes for a device that has been stationary. Design arrival logic, and customer messages, for that.
 

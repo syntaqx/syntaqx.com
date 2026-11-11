@@ -47,7 +47,7 @@ What you do with the verdict depends on the job. Google's [validation logic guid
 
 A geocode is a coordinate plus a statement of how good it is, and the second part matters as much as the first. Google's [Geocoding API](https://developers.google.com/maps/documentation/geocoding/requests-geocoding) reports `location_type` as `ROOFTOP`, `RANGE_INTERPOLATED` (an estimate between two known points), `GEOMETRIC_CENTER` (the center of a street or region) or `APPROXIMATE`, plus `partial_match` when only part of the address matched. Smarty reports `precision` from `Zip5` through `Street` to `Rooftop`. The US Census Bureau runs a free [Census Geocoder](https://geocoding.geo.census.gov/geocoder/) for US addresses, including batches.
 
-Store the precision beside the point and gate uses on it. A ZIP-level point is fine for a regional sales report and wrong for a delivery route, a flood-zone lookup or a tax boundary test. When precision is low and the location matters, get a better one from a person: the customer drops a pin, a courier or field worker confirms it on the first trip, and that pin becomes the location you route to.
+Store the precision beside the point and gate uses on it (the coordinate itself, its order and how to store it are in [Coordinates & Geometry](/docs/fundamentals/coordinates-and-geometry)). A ZIP-level point is fine for a regional sales report and wrong for a delivery route, a flood-zone lookup or a tax boundary test. When precision is low and the location matters, get a better one from a person: the customer drops a pin, a courier or field worker confirms it on the first trip, and that pin becomes the location you route to.
 
 ## What You May Store
 
