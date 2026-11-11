@@ -270,7 +270,7 @@ CREATE TABLE account_health_events (     -- metrics, notices, enforcement and ap
                         'appeal_decided', 'reinstated')),
   metric              TEXT,              -- 'odr', 'lsr', 'cancel_rate', 'vtr', 'otdr', 'ahr'
   value_bp            INT,               -- basis points for a rate; the score for AHR
-  window              TSTZRANGE,         -- the period the marketplace measured
+  measured_window     TSTZRANGE,         -- the period the marketplace measured
   policy_ref          TEXT,              -- the policy or rule cited
   affected_refs       TEXT[] NOT NULL DEFAULT '{}',  -- ASINs, order IDs
   document_id         UUID REFERENCES documents (id),  -- the notice or plan of action

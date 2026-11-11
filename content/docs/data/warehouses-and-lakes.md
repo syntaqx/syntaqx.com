@@ -76,7 +76,7 @@ The three formats solve the same problem with different emphases.
 
 **Apache Iceberg** is defined by a written specification for "a large, slow-changing collection of files." Its goals include serializable isolation ("reads will be isolated from concurrent writes and always use a committed snapshot"), planning a scan in O(1) remote calls, and full schema and partition evolution ([Apache Iceberg: Table spec](https://iceberg.apache.org/spec/)). Every commit writes a new metadata file pointing at a tree of manifest lists and manifests, and "an atomic swap of one table metadata file for another provides the basis for serializable isolation." Columns are tracked by field ID, so renames and reorders don't break old files. Partitioning is derived from transforms on columns (hidden partitioning), so queries filter on `occurred_at` and the engine prunes. Format version 2 added row-level deletes through delete files; version 3 adds deletion vectors, row lineage and new types such as `variant` and `geography`.
 
-```sql
+```sql dialect="Spark"
 CREATE TABLE lake.analytics.match_events (
   id           STRING,
   match_id     STRING,

@@ -40,7 +40,7 @@ ClickHouse is the system I reach for first: open source, fast at both ingestion 
 - **MergeTree tables.** Each insert writes a new sorted part, and "insert operations create table parts which are merged by a background process with other table parts." Partitions (usually by month or day) bound merges and let old data be dropped cheaply. TTL rules expire rows or move them to cheaper disks, evaluated "during background merges, and not at insert time."
 - **Materialized views are insert triggers.** A view "is just a trigger that runs a query on blocks of data as they're inserted into a table" and writes the result into a target table, often a `SummingMergeTree` or `AggregatingMergeTree` that folds partial results together during merges ([ClickHouse: Incremental materialized views](https://clickhouse.com/docs/materialized-view/incremental-materialized-view)). This is how a raw event table feeds a minute-level rollup with no batch job.
 
-```sql
+```sql dialect="ClickHouse"
 CREATE TABLE match_events (
   id           UUID,
   tenant_id    UUID,

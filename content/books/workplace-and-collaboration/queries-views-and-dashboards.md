@@ -53,7 +53,7 @@ Basic search, the builder most users see, "can't represent queries using `OR`, `
 
 WIQL is the closest any work tracker comes to SQL, and its limits are the most precisely published. A query has five parts:
 
-```sql
+```sql dialect="WIQL"
 SELECT [System.Id], [System.Title], [System.State]
 FROM workitems
 WHERE [System.TeamProject] = @project

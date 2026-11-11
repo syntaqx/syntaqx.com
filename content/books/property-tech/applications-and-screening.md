@@ -372,7 +372,7 @@ CREATE TABLE screening_decisions (       -- append-only; appeals supersede
   supersedes_id     UUID REFERENCES screening_decisions (id),
   decided_at        TIMESTAMPTZ NOT NULL,
   CHECK (outcome <> 'deny' OR cardinality(reason_codes) > 0),
-  CHECK (outcome <> 'conditional' OR jsonb_array_length(conditions) > 0),
+  CHECK (outcome <> 'conditional' OR jsonb_array_length(conditions) > 0)
   -- an override_reason is required when a human user changed the system's outcome;
   -- enforced in the decision service, which can see users.actor_type
 );

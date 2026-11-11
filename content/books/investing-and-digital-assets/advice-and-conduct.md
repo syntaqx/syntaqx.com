@@ -194,7 +194,7 @@ CREATE TABLE best_interest_reviews (         -- supervisory review, sampled or r
   account_id          UUID REFERENCES accounts (id),        -- for a series (quantitative) review
   review_kind         TEXT NOT NULL CHECK (review_kind IN ('care', 'series', 'rollover',
                         'conflict', 'complaint')),
-  window              DATERANGE,               -- for a series: turnover, cost-to-equity
+  review_window       DATERANGE,               -- for a series: turnover, cost-to-equity
   metrics             JSONB,                   -- turnover ratio, cost-to-equity, concentration
   outcome             TEXT NOT NULL CHECK (outcome IN ('no_issue', 'remediated', 'escalated')),
   reviewer_id         UUID NOT NULL,

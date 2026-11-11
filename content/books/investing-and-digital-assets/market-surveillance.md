@@ -137,7 +137,7 @@ CREATE TABLE surveillance_alerts (
   account_id           UUID REFERENCES accounts (id),
   party_id             UUID REFERENCES parties (id),       -- a person across accounts
   instrument_id        UUID NOT NULL REFERENCES instruments (id),
-  window               TSTZRANGE NOT NULL,                 -- the activity it covers
+  activity_window      TSTZRANGE NOT NULL,                 -- the activity it covers
   features             JSONB NOT NULL,                     -- the computed values, as the model saw them
   score                NUMERIC(6, 3),
   status               TEXT NOT NULL CHECK (status IN ('open', 'in_review', 'escalated',

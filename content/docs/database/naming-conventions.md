@@ -70,7 +70,7 @@ The rules behind the table:
 
 Use `TEXT` with a `CHECK` constraint, with lowercase snake_case values that match the API:
 
-```sql
+```sql fragment
 status TEXT NOT NULL CHECK (status IN ('pending', 'authorized', 'captured', 'settled', 'failed', 'voided'))
 ```
 
