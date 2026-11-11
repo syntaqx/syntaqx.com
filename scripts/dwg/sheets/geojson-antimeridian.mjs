@@ -31,7 +31,13 @@ export default function draw() {
 
   s.comment("One ring from 165 to -165: drawn the long way round");
   s.path(rect(X(-165), X(165), rows[1]), "obj phantom");
-  s.text(W / 2, rows[1] + rowH / 2 + 4, "one ring, not cut: drawn across the rest of the world", "sl", "middle");
+  s.text(
+    W / 2,
+    rows[1] + rowH / 2 + 4,
+    "one ring, not cut: drawn across the rest of the world",
+    "sl",
+    "middle",
+  );
 
   s.comment("Longitude scale");
   const ay = rows[1] + rowH + 22;

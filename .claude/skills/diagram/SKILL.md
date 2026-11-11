@@ -456,4 +456,4 @@ diagram avoids it. Keep each to one or two lines: what went wrong, the rule.
   them before drawing paths by hand.
 - 2026-11-10: Runs of spaces inside one label collapse to a single space in
   SVG text, so `"[...]   west > east"` ran together; separate parts with
-  ` · ` or place them as two texts.
+  `·` or place them as two texts.

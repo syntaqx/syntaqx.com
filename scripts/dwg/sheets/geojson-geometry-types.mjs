@@ -17,10 +17,15 @@ export default function draw() {
   const x2 = (W - (3 * cw + 2 * gap)) / 2;
   const cell = (row, i) => ({ x: (row ? x2 : x1) + i * (cw + gap), y: rowY[row] });
 
-  const dot = (x, y) =>
-    s.path(`M${x - 2.2},${y}a2.2,2.2 0 1,0 4.4,0a2.2,2.2 0 1,0 -4.4,0`, "dot");
+  const dot = (x, y) => s.path(`M${x - 2.2},${y}a2.2,2.2 0 1,0 4.4,0a2.2,2.2 0 1,0 -4.4,0`, "dot");
   const ring = (pts) => `M${pts.map(([x, y]) => `${x},${y}`).join("L")}Z`;
-  const rect = (x, y, w, h) => ring([[x, y], [x + w, y], [x + w, y + h], [x, y + h]]);
+  const rect = (x, y, w, h) =>
+    ring([
+      [x, y],
+      [x + w, y],
+      [x + w, y + h],
+      [x, y + h],
+    ]);
   const line = (pts) => {
     s.wire(pts, { arrow: "none" });
     pts.forEach(([x, y]) => dot(x, y));
