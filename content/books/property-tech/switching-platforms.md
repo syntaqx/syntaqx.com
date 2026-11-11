@@ -158,9 +158,10 @@ This chapter extends `tenants` and `portfolios` from [The Core Data Model](/book
 ```sql
 ALTER TABLE external_ids
   DROP CONSTRAINT external_ids_record_type_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT external_ids_record_type_check CHECK (record_type IN ('property', 'building',
     'unit', 'parcel', 'lease', 'person', 'household', 'vendor', 'legal_entity', 'gl_account',
-    'charge_code', 'work_order'));
+    'charge_code', 'work_order')) NOT VALID;
 
 CREATE TABLE migration_runs (            -- one cohort's load
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

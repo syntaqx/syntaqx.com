@@ -190,13 +190,19 @@ CREATE TABLE invoice_runs (              -- one batch: a seller, a kind, a perio
 
 ALTER TABLE invoices
   ADD COLUMN invoice_run_id    UUID REFERENCES invoice_runs (id),
-  ADD COLUMN invoice_kind      TEXT NOT NULL DEFAULT 'cycle' CHECK (invoice_kind IN ('cycle',
-                                 'partial', 'prepaid_term', 'final', 'adjustment')),
-  ADD COLUMN collection_method TEXT NOT NULL DEFAULT 'charge_automatically'
-                                 CHECK (collection_method IN ('charge_automatically',
-                                 'send_invoice', 'billed_by_parent')),
+  ADD COLUMN invoice_kind      TEXT NOT NULL DEFAULT 'cycle',
+  ADD COLUMN collection_method TEXT NOT NULL DEFAULT 'charge_automatically',
   ADD COLUMN late_interest_monthly NUMERIC(6,4),   -- 0.0150 under the contract version
-  ADD CONSTRAINT invoices_one_per_run UNIQUE (account_id, invoice_run_id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT invoices_invoice_kind_check
+    CHECK (invoice_kind IN ('cycle', 'partial', 'prepaid_term', 'final', 'adjustment')) NOT VALID,
+  ADD CONSTRAINT invoices_collection_method_check
+    CHECK (collection_method IN ('charge_automatically',
+        'send_invoice', 'billed_by_parent')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY invoices_one_per_run ON invoices (account_id, invoice_run_id);
+ALTER TABLE invoices ADD CONSTRAINT invoices_one_per_run UNIQUE USING INDEX invoices_one_per_run;
 
 ALTER TABLE invoice_lines                 -- usage lines need fractional unit prices
   ADD COLUMN usage_quantity   NUMERIC,              -- billable units, after the allowance
@@ -268,8 +274,9 @@ ALTER TABLE account_holds
   ADD COLUMN retrieval_until   TIMESTAMPTZ,  -- read-only access for export ends
   ADD COLUMN delete_data_after TIMESTAMPTZ,  -- earliest deletion; never before retrieval_until
   ADD COLUMN last_notice_at    TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT account_holds_clock_order CHECK (delete_data_after IS NULL
-    OR retrieval_until IS NULL OR delete_data_after >= retrieval_until);
+    OR retrieval_until IS NULL OR delete_data_after >= retrieval_until) NOT VALID;
 ```
 
 A cycle run drafts one invoice per account with unbilled rated usage in the period, then builds usage lines from `rated_usage` at step 6 of the pipeline. Steps 3 to 5 (allowances, commitments, credits) have already run: `rated_usage.amount` is the unrounded charge for the quantity beyond `included_quantity`, commitment benefits are in [Commitments, Discounts & Marketplaces](/books/hosting-and-cloud/commitments-and-marketplaces#how-to-build-it)' `commitment_drawdowns`, and credits are drawn from `credit_grants` here.

@@ -317,7 +317,8 @@ ALTER TABLE messages
   ADD COLUMN pricing_category TEXT,            -- the category in force at delivery
   ADD COLUMN window_id UUID REFERENCES service_windows (id),     -- the window it was sent in
   ADD COLUMN fallback_of_id UUID REFERENCES messages (id),       -- the attempt it replaces
-  ADD CONSTRAINT messages_peer_check CHECK (num_nonnulls(peer_e164, peer_ref) >= 1);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT messages_peer_check CHECK (num_nonnulls(peer_e164, peer_ref) >= 1) NOT VALID;
 ```
 
 The send path for an app channel, in order: resolve the sender identity and refuse if a `channel_enforcements` row blocks it now; for a free-form message, find a `service_windows` row containing now for the sender and peer, else fail with a stable "window closed, template required" code; for a template, require `status = 'approved'`; check the recipient's consent for this channel in the customer's ledger; take tokens from the number's per-second bucket and count the recipient against the portfolio's unique-recipient limit; send; and on the delivered receipt, emit the usage event with the category in force, the market and the window, which rates the platform's SKU and, when `owner_billed_party = 'platform'`, the owner's pass-through SKU.

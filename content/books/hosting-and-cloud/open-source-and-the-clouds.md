@@ -157,10 +157,13 @@ The chapter adds license fields to `products` and an effective-dated `product_li
 ```sql
 ALTER TABLE products
   ADD COLUMN upstream_project    TEXT,     -- 'valkey', 'postgresql', 'opentofu'; null: the provider's own code
-  ADD COLUMN upstream_relation   TEXT CHECK (upstream_relation IN ('runs_upstream',
-                                   'runs_fork', 'compatible_reimplementation',
-                                   'licensed_from_owner', 'own_engine')),
-  ADD COLUMN upstream_steward    TEXT;     -- 'linux_foundation', 'cncf', 'asf', a company
+  ADD COLUMN upstream_relation   TEXT,
+  ADD COLUMN upstream_steward    TEXT,     -- 'linux_foundation', 'cncf', 'asf', a company
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT products_upstream_relation_check
+    CHECK (upstream_relation IN ('runs_upstream',
+        'runs_fork', 'compatible_reimplementation',
+        'licensed_from_owner', 'own_engine')) NOT VALID;
 
 CREATE TABLE product_licenses (          -- the license of each upstream version range, over time
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

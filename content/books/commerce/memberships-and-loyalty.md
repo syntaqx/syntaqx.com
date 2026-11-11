@@ -118,8 +118,10 @@ ALTER TABLE membership_plans
   ADD COLUMN tier_rank        SMALLINT,          -- Gold Star 1, Executive 2
   ADD COLUMN reward_rule      JSONB,             -- {"percent": 2, "annual_max": 125000}
   ADD COLUMN household_cards  SMALLINT NOT NULL DEFAULT 0,
-  ADD COLUMN refund_policy    TEXT NOT NULL DEFAULT 'none' CHECK (refund_policy IN ('none',
-                                'pro_rata', 'full_any_time', 'full_within_days'));
+  ADD COLUMN refund_policy    TEXT NOT NULL DEFAULT 'none',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT membership_plans_refund_policy_check
+    CHECK (refund_policy IN ('none', 'pro_rata', 'full_any_time', 'full_within_days')) NOT VALID;
 
 ALTER TABLE memberships
   ADD COLUMN merchant_id      UUID REFERENCES merchants (id),

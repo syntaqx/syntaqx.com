@@ -156,15 +156,17 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 ```sql
 -- An MCA or a factoring facility is a purchase, not a loan: same account table, its own kind
 ALTER TABLE accounts DROP CONSTRAINT accounts_account_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_account_kind_check
-    CHECK (account_kind IN ('deposit', 'loan', 'line', 'purchase'));
+    CHECK (account_kind IN ('deposit', 'loan', 'line', 'purchase')) NOT VALID;
 
 -- Adds 'mca_reconciliation', keeping the core kinds and Sanctions Screening's.
 ALTER TABLE cases DROP CONSTRAINT cases_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT cases_kind_check CHECK (kind IN ('reg_e_error', 'reg_cc_claim',
     'billing_error', 'fraud_claim', 'credit_report_dispute', 'legal_process', 'complaint',
     'aml_investigation', 'hardship', 'sanctions_review',
-    'mca_reconciliation'));
+    'mca_reconciliation')) NOT VALID;
 
 CREATE TABLE receivable_purchases (          -- MCA and RBF terms; one per purchase account
   account_id          UUID PRIMARY KEY REFERENCES accounts (id),

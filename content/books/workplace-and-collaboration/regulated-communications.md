@@ -142,10 +142,14 @@ A vendor that wants regulated firms as customers builds the capture feed, the co
 
 ```sql
 ALTER TABLE members
-  ADD COLUMN regulatory_role   TEXT CHECK (regulatory_role IN ('registered_person', 'supervisor',
-                                 'principal', 'trader', 'none')),
-  ADD COLUMN recording_policy  TEXT NOT NULL DEFAULT 'none' CHECK (recording_policy IN ('none',
-                                 'record_calls', 'record_calls_and_meetings'));
+  ADD COLUMN regulatory_role   TEXT,
+  ADD COLUMN recording_policy  TEXT NOT NULL DEFAULT 'none',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT members_regulatory_role_check
+    CHECK (regulatory_role IN ('registered_person', 'supervisor',
+        'principal', 'trader', 'none')) NOT VALID,
+  ADD CONSTRAINT members_recording_policy_check
+    CHECK (recording_policy IN ('none', 'record_calls', 'record_calls_and_meetings')) NOT VALID;
 
 CREATE TABLE archive_connections (       -- an archiver's authorized feed from one workspace
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

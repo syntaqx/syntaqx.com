@@ -114,31 +114,36 @@ The [core data model](/books/workplace-and-collaboration/workplace-business#the-
 ALTER TABLE containers
   ADD COLUMN parent_container_id UUID REFERENCES containers (id),   -- folders in folders, pages in pages
   ADD COLUMN restricted          BOOLEAN NOT NULL DEFAULT FALSE,     -- narrows inherited access
-  ADD COLUMN external_sharing    TEXT NOT NULL DEFAULT 'inherit'
-    CHECK (external_sharing IN ('inherit', 'blocked', 'allowed'));
+  ADD COLUMN external_sharing    TEXT NOT NULL DEFAULT 'inherit',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT containers_external_sharing_check
+    CHECK (external_sharing IN ('inherit', 'blocked', 'allowed')) NOT VALID;
 
 ALTER TABLE items
   ADD COLUMN restricted BOOLEAN NOT NULL DEFAULT FALSE;              -- page-level restriction
 
 ALTER TABLE grants                       -- core has workspace_id, granted_by and expires_at
-  ADD COLUMN effect       TEXT NOT NULL DEFAULT 'allow' CHECK (effect IN ('allow', 'deny')),
+  ADD COLUMN effect       TEXT NOT NULL DEFAULT 'allow',
   ADD COLUMN can_reshare  BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN acl_revision BIGINT,                                    -- the revision that wrote it
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT grants_role_check CHECK (role IN ('owner', 'full_access', 'editor',
-    'content_editor', 'creator', 'commenter', 'viewer')),
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT grants_acl_revision_not_null NOT NULL acl_revision NOT VALID;
+    'content_editor', 'creator', 'commenter', 'viewer')) NOT VALID,
+  ADD CONSTRAINT grants_acl_revision_not_null NOT NULL acl_revision NOT VALID,
+  ADD CONSTRAINT grants_effect_check CHECK (effect IN ('allow', 'deny')) NOT VALID;
 
 ALTER TABLE share_links                  -- core has audience, created_by and expires_at
   DROP CONSTRAINT share_links_audience_check,
-  ADD CONSTRAINT share_links_audience_check CHECK (audience IN ('organization', 'workspace', 'anyone')),
-  ADD COLUMN role         TEXT NOT NULL DEFAULT 'viewer' CHECK (role IN ('viewer', 'commenter', 'editor')),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT share_links_audience_check CHECK (audience IN ('organization', 'workspace', 'anyone')) NOT VALID,
+  ADD COLUMN role         TEXT NOT NULL DEFAULT 'viewer',
   ADD COLUMN resource_key TEXT,                   -- secret part of the URL; rotated to kill old links
   ADD COLUMN disabled_at  TIMESTAMPTZ,
-  ADD COLUMN disabled_reason TEXT CHECK (disabled_reason IN ('owner', 'admin_policy', 'expired',
-    'creator_offboarded')),
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT share_links_resource_key_not_null NOT NULL resource_key NOT VALID;
+  ADD COLUMN disabled_reason TEXT,
+  ADD CONSTRAINT share_links_resource_key_not_null NOT NULL resource_key NOT VALID,
+  ADD CONSTRAINT share_links_role_check CHECK (role IN ('viewer', 'commenter', 'editor')) NOT VALID,
+  ADD CONSTRAINT share_links_disabled_reason_check
+    CHECK (disabled_reason IN ('owner', 'admin_policy', 'expired', 'creator_offboarded')) NOT VALID;
 
 CREATE TABLE acl_revisions (              -- one monotonic counter per workspace: the consistency token
   workspace_id UUID PRIMARY KEY REFERENCES workspaces (id),

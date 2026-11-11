@@ -201,10 +201,12 @@ ALTER TABLE regions
                                          -- 'commercial', 'government', 'sovereign_eu', 'china'
 
 ALTER TABLE zones                        -- zones.id is the physical ID ('use1-az4'), never an alias
-  ADD COLUMN zone_type TEXT NOT NULL DEFAULT 'availability_zone'
-    CHECK (zone_type IN ('availability_zone', 'local_zone', 'edge_zone', 'single_site')),
+  ADD COLUMN zone_type TEXT NOT NULL DEFAULT 'availability_zone',
   ADD COLUMN parent_zone_id TEXT REFERENCES zones (id),     -- a local zone's parent zone
-  ADD CONSTRAINT zones_local_parent CHECK ((zone_type = 'local_zone') = (parent_zone_id IS NOT NULL));
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT zones_local_parent CHECK ((zone_type = 'local_zone') = (parent_zone_id IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT zones_zone_type_check
+    CHECK (zone_type IN ('availability_zone', 'local_zone', 'edge_zone', 'single_site')) NOT VALID;
 
 CREATE TABLE zone_facilities (           -- which buildings make up a zone, over time
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -279,10 +281,12 @@ CREATE TABLE quota_requests (            -- every increase asked for, and what w
 );
 
 ALTER TABLE quotas                       -- zonal quotas: the core table's zone_id
-  ADD COLUMN quota_type TEXT NOT NULL DEFAULT 'allocation'
-    CHECK (quota_type IN ('allocation', 'rate', 'concurrent')),
+  ADD COLUMN quota_type TEXT NOT NULL DEFAULT 'allocation',
   ADD COLUMN adjustable BOOLEAN NOT NULL DEFAULT TRUE,     -- false: a system limit
-  ADD COLUMN quota_request_id UUID REFERENCES quota_requests (id);  -- the request it granted
+  ADD COLUMN quota_request_id UUID REFERENCES quota_requests (id),  -- the request it granted
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT quotas_quota_type_check
+    CHECK (quota_type IN ('allocation', 'rate', 'concurrent')) NOT VALID;
 -- The core exclusion constraint includes zone_id, so a zonal row doesn't collide with its
 -- region's.
 

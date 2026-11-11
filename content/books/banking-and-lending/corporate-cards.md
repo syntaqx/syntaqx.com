@@ -141,10 +141,11 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 
 ```sql
 ALTER TABLE credit_limit_changes DROP CONSTRAINT credit_limit_changes_reason_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT credit_limit_changes_reason_check CHECK (reason IN ('origination',
     'consumer_request', 'proactive', 'risk_decrease', 'delinquency', 'restore',
     'property_value_decline', 'financial_circumstances',   -- from Mortgages (HELOCs)
-    'cash_recalculation'));
+    'cash_recalculation')) NOT VALID;
 
 CREATE TABLE corporate_card_terms (          -- the business terms on a charge line
   account_id          UUID PRIMARY KEY REFERENCES credit_lines (account_id),

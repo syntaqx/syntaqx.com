@@ -141,9 +141,11 @@ CREATE TABLE key_bindings (                  -- which data a key protects; the u
 );
 
 ALTER TABLE containers
-  ADD COLUMN encryption_mode TEXT NOT NULL DEFAULT 'provider'
-    CHECK (encryption_mode IN ('provider', 'customer_key', 'client_side', 'end_to_end')),
-  ADD COLUMN disabled_features TEXT[] NOT NULL DEFAULT '{}';  -- computed from mode: 'search', 'dlp', 'ediscovery_search', 'ai', 'recording'
+  ADD COLUMN encryption_mode TEXT NOT NULL DEFAULT 'provider',
+  ADD COLUMN disabled_features TEXT[] NOT NULL DEFAULT '{}',  -- computed from mode: 'search', 'dlp', 'ediscovery_search', 'ai', 'recording'
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT containers_encryption_mode_check
+    CHECK (encryption_mode IN ('provider', 'customer_key', 'client_side', 'end_to_end')) NOT VALID;
 
 ALTER TABLE item_versions
   ADD COLUMN key_binding_id UUID REFERENCES key_bindings (id),

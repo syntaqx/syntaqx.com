@@ -373,7 +373,8 @@ ALTER TABLE payments
   ADD COLUMN lease_id        UUID REFERENCES leases (id),
   ADD COLUMN payer_person_id UUID REFERENCES people (id),
   ADD COLUMN posted_on       DATE,     -- business date in the property's zone; null until posted
-  ADD CONSTRAINT payments_posted_on_lease CHECK (posted_on IS NULL OR lease_id IS NOT NULL);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payments_posted_on_lease CHECK (posted_on IS NULL OR lease_id IS NOT NULL) NOT VALID;
 
 CREATE TABLE payment_applications (      -- what each payment paid for
   id         UUID PRIMARY KEY DEFAULT uuidv7(),

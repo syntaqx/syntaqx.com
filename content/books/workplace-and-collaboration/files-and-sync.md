@@ -177,9 +177,11 @@ ALTER TABLE item_versions
   ADD COLUMN content_hash BYTEA,           -- hash of the whole file for dedup and integrity
   ADD COLUMN created_by_device TEXT,
   ADD COLUMN conflict_of_version_id UUID REFERENCES item_versions (id),  -- kept both
-  ADD COLUMN trim_state TEXT NOT NULL DEFAULT 'kept'
-    CHECK (trim_state IN ('kept', 'expiry_stamped', 'trimmed')),
-  ADD COLUMN expires_at TIMESTAMPTZ;       -- stamped instead of deleted while held
+  ADD COLUMN trim_state TEXT NOT NULL DEFAULT 'kept',
+  ADD COLUMN expires_at TIMESTAMPTZ,       -- stamped instead of deleted while held
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT item_versions_trim_state_check
+    CHECK (trim_state IN ('kept', 'expiry_stamped', 'trimmed')) NOT VALID;
 
 CREATE TABLE file_journal (                -- append-only change log clients follow
   container_id     UUID NOT NULL REFERENCES containers (id),

@@ -188,12 +188,14 @@ CREATE INDEX domain_disputes_open ON domain_disputes (respond_due_at, hold_until
 
 ALTER TABLE domain_locks
   ADD COLUMN dispute_id UUID REFERENCES domain_disputes (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT domain_locks_dispute_kinds
-    CHECK ((kind IN ('udrp', 'urs', 'court_order', 'tdrp')) = (dispute_id IS NOT NULL));
+    CHECK ((kind IN ('udrp', 'urs', 'court_order', 'tdrp')) = (dispute_id IS NOT NULL)) NOT VALID;
 
 ALTER TABLE domain_transfers
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT domain_transfers_reversed_by_dispute
-    FOREIGN KEY (reversed_by_dispute_id) REFERENCES domain_disputes (id);
+    FOREIGN KEY (reversed_by_dispute_id) REFERENCES domain_disputes (id) NOT VALID;
 ```
 
 Notes on the sketch:

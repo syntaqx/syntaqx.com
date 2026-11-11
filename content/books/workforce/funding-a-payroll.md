@@ -189,8 +189,11 @@ ALTER TABLE pay_runs
   ADD COLUMN cash_components      JSONB,      -- {"net_pay":..., "taxes":..., "garnishments":...}
   ADD COLUMN funding_profile_id   UUID REFERENCES funding_profiles (id),
   ADD COLUMN debit_on             DATE,       -- computed from check_date, speed and bank_holidays
-  ADD COLUMN funding_status       TEXT CHECK (funding_status IN ('not_required', 'pending',
-                                    'in_flight', 'funded', 'failed', 'waived'));
+  ADD COLUMN funding_status       TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT pay_runs_funding_status_check
+    CHECK (funding_status IN ('not_required', 'pending',
+        'in_flight', 'funded', 'failed', 'waived')) NOT VALID;
 
 -- Exposure now: debits paid against but still inside the return window.
 SELECT r.employer_id,

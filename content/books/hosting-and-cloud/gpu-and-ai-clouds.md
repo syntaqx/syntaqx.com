@@ -264,20 +264,24 @@ CREATE TABLE gpu_capacity_pools (        -- what can be promised: one instance t
 -- table's dates; reserved_during is derived from them for the overlap check.
 ALTER TABLE capacity_reservations
   ADD COLUMN pool_id          UUID REFERENCES gpu_capacity_pools (id),  -- null: not a GPU pool
-  ADD COLUMN shape            TEXT CHECK (shape IN ('capacity_reservation', 'block',
-                                'calendar', 'queued', 'contract')),
+  ADD COLUMN shape            TEXT,
   ADD COLUMN commitment_id    UUID REFERENCES commitments (id),  -- kind = 'resource'
   ADD COLUMN price_version_id UUID REFERENCES price_versions (id), -- the price at purchase
   ADD COLUMN purchased_at     TIMESTAMPTZ,
   ADD COLUMN partition_key    TEXT,       -- fabric tenant isolation, e.g. an InfiniBand P-Key
-  ADD COLUMN end_action       TEXT CHECK (end_action IN ('terminate', 'convert_on_demand')),
+  ADD COLUMN end_action       TEXT,
   ADD COLUMN reserved_during  TSTZRANGE GENERATED ALWAYS AS
                                 (tstzrange(starts_at, committed_until)) STORED,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT capacity_reservations_gpu_pool
     CHECK (pool_id IS NULL OR (shape IS NOT NULL AND price_version_id IS NOT NULL
-                               AND purchased_at IS NOT NULL AND end_action IS NOT NULL)),
+                               AND purchased_at IS NOT NULL AND end_action IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT capacity_reservations_contract_commitment
-    CHECK ((shape = 'contract') = (commitment_id IS NOT NULL));
+    CHECK ((shape = 'contract') = (commitment_id IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT capacity_reservations_shape_check
+    CHECK (shape IN ('capacity_reservation', 'block', 'calendar', 'queued', 'contract')) NOT VALID,
+  ADD CONSTRAINT capacity_reservations_end_action_check
+    CHECK (end_action IN ('terminate', 'convert_on_demand')) NOT VALID;
 -- The states 'queued' and 'undelivered' are in that table's state list.
 -- quantity counts instances (units of gpus_per_unit GPUs) for a GPU pool.
 

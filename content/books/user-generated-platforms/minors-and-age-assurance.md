@@ -146,8 +146,9 @@ The chapter adopts `age_signals` and `parental_consents` from [Children's Privac
 
 ```sql
 ALTER TABLE accounts                     -- age_band from Accounts, Identity & Standing
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_age_band_check CHECK (age_band IN ('under_13', '13_15', '16_17',
-    'adult', 'unknown'));                -- a cache of effective_band(); 'unknown' gates as youngest
+    'adult', 'unknown')) NOT VALID;                -- a cache of effective_band(); 'unknown' gates as youngest
 
 CREATE TABLE age_checks (                -- one attempt to establish age, from prompt to result
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

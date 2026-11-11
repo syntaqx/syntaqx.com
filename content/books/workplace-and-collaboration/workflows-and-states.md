@@ -127,7 +127,8 @@ CREATE TABLE work_item_statuses (
 );
 
 ALTER TABLE work_items
-  ADD CONSTRAINT work_items_status_fk FOREIGN KEY (status_id) REFERENCES work_item_statuses (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT work_items_status_fk FOREIGN KEY (status_id) REFERENCES work_item_statuses (id) NOT VALID,
   ADD COLUMN resolution TEXT,              -- null while unresolved
   ADD COLUMN resolved_at TIMESTAMPTZ,
   ADD COLUMN workflow_version_id UUID;     -- the version the item is moving under

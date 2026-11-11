@@ -175,8 +175,10 @@ CREATE TABLE safeguarding_assessments (    -- the SAB 122 / ASC 450-20 judgment,
   CHECK (loss_likelihood <> 'remote' OR liability_cents = 0)
 );
 
-ALTER TABLE journal_lines ADD COLUMN gaap_treatment TEXT
-  CHECK (gaap_treatment IN ('on_balance_sheet', 'off_balance_sheet', 'revenue', 'liability'));
+ALTER TABLE journal_lines ADD COLUMN gaap_treatment TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT journal_lines_gaap_treatment_check
+    CHECK (gaap_treatment IN ('on_balance_sheet', 'off_balance_sheet', 'revenue', 'liability')) NOT VALID;
 ```
 
 The period-end close for crypto then runs in a fixed order: freeze the ledger at the cut, take `fair_value_measurements` for every instrument the entity holds for itself, compute the fair value change against the prior measurement per lot and post it (with the deferred tax entry from the lot engine's tax basis), aggregate customer holdings by instrument at the same prices for the disclosure, and record the safeguarding assessment with its evidence. The `scope` column is set per instrument when it's listed and reviewed when its terms change, because a token's classification decides which model measures it, and SharpLink's two kinds of staked ether show how easily one economic position splits across both.

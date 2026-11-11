@@ -245,17 +245,21 @@ CREATE TABLE payout_release_rules (
 
 ALTER TABLE balance_holds
   DROP CONSTRAINT balance_holds_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT balance_holds_kind_check CHECK (kind IN ('hold', 'rolling_reserve',
     'fixed_reserve', 'first_payout_delay', 'trigger_wait', 'risk_review', 'claim_window',
-    'tax_info_missing', 'enforcement', 'program_suspension')),
+    'tax_info_missing', 'enforcement', 'program_suspension')) NOT VALID,
   ADD COLUMN moderation_case_id UUID REFERENCES moderation_cases (id),
   ADD COLUMN enrollment_id      UUID REFERENCES program_enrollments (id);
 
 ALTER TABLE merchants
-  ADD COLUMN payout_status TEXT NOT NULL DEFAULT 'not_ready' CHECK (payout_status IN
-    ('not_ready', 'ready', 'paused', 'closed')),  -- derived from requirements, stored for speed
-  ADD COLUMN payout_schedule TEXT CHECK (payout_schedule IN ('daily', 'weekly', 'biweekly',
-    'monthly', 'on_demand'));
+  ADD COLUMN payout_status TEXT NOT NULL DEFAULT 'not_ready',  -- derived from requirements, stored for speed
+  ADD COLUMN payout_schedule TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT merchants_payout_status_check
+    CHECK (payout_status IN ('not_ready', 'ready', 'paused', 'closed')) NOT VALID,
+  ADD CONSTRAINT merchants_payout_schedule_check
+    CHECK (payout_schedule IN ('daily', 'weekly', 'biweekly', 'monthly', 'on_demand')) NOT VALID;
 ```
 
 What can be paid is a query: earnings past their release rule's trigger and offset, less unreleased holds, less withholding computed from the tax profile in force when each earning accrued:

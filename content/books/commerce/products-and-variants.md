@@ -184,19 +184,22 @@ Options as data, identifiers as rows, pack sizes and digital deliveries, extendi
 ```sql
 ALTER TABLE products
   DROP CONSTRAINT products_status_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT products_status_check CHECK (status IN ('draft', 'active', 'unlisted',
-    'archived')),
+    'archived')) NOT VALID,
   ADD COLUMN published_at TIMESTAMPTZ;        -- when it first went active
 
 ALTER TABLE items
-  ADD COLUMN lifecycle      TEXT NOT NULL DEFAULT 'active' CHECK (lifecycle IN ('draft',
-                              'preorder', 'active', 'sell_down', 'archived')),
+  ADD COLUMN lifecycle      TEXT NOT NULL DEFAULT 'active',
   ADD COLUMN available_from TIMESTAMPTZ,      -- launch or pre-order release date
   ADD COLUMN replaced_by_id UUID REFERENCES items (id),  -- the new GTIN after a change
   ADD COLUMN weight_grams   INT,
   ADD COLUMN dimensions_mm  INT[3],          -- length, width, height of the each
   ADD COLUMN net_quantity   NUMERIC(12, 3),  -- as declared on the label
-  ADD COLUMN net_unit       TEXT;            -- 'g', 'ml', 'count', 'oz', 'fl_oz'
+  ADD COLUMN net_unit       TEXT,            -- 'g', 'ml', 'count', 'oz', 'fl_oz'
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT items_lifecycle_check
+    CHECK (lifecycle IN ('draft', 'preorder', 'active', 'sell_down', 'archived')) NOT VALID;
 
 CREATE TABLE product_options (               -- "Fit", "Finish"; at most a few per product
   id          UUID PRIMARY KEY DEFAULT uuidv7(),

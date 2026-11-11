@@ -152,16 +152,22 @@ ALTER TABLE ledger_accounts
   ADD COLUMN client_id     UUID REFERENCES clients (id),
   ADD COLUMN matter_id     UUID REFERENCES matters (container_id),
   ADD COLUMN third_party_id UUID REFERENCES parties (id),       -- lienholders, escrow parties
-  ADD COLUMN trust_role    TEXT CHECK (trust_role IN ('trust_cash', 'client_funds', 'third_party_funds',
-                             'firm_cushion', 'unidentified', 'unclaimed', 'operating_cash',
-                             'fees_receivable', 'fee_income'));
+  ADD COLUMN trust_role    TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT ledger_accounts_trust_role_check
+    CHECK (trust_role IN ('trust_cash', 'client_funds', 'third_party_funds',
+        'firm_cushion', 'unidentified', 'unclaimed', 'operating_cash',
+        'fees_receivable', 'fee_income')) NOT VALID;
 
 ALTER TABLE bank_accounts
   ADD COLUMN workspace_id     UUID REFERENCES workspaces (id),
-  ADD COLUMN trust_type       TEXT CHECK (trust_type IN ('iolta', 'client_interest_bearing', 'operating')),
+  ADD COLUMN trust_type       TEXT,
   ADD COLUMN jurisdiction     TEXT,                  -- ISO 3166-2 whose rules govern it
   ADD COLUMN overdraft_reporting_authorized BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN registered_at    DATE;                  -- e.g. California CTAPP registration
+  ADD COLUMN registered_at    DATE,                  -- e.g. California CTAPP registration
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT bank_accounts_trust_type_check
+    CHECK (trust_type IN ('iolta', 'client_interest_bearing', 'operating')) NOT VALID;
 
 CREATE TABLE trust_rules (                           -- per jurisdiction, dated
   jurisdiction       TEXT NOT NULL,

@@ -180,14 +180,16 @@ CREATE TABLE meters (                    -- what usage_events.meter may name
 );
 
 ALTER TABLE usage_events
-  ADD CONSTRAINT usage_events_meter_fkey FOREIGN KEY (meter) REFERENCES meters (code),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT usage_events_meter_fkey FOREIGN KEY (meter) REFERENCES meters (code) NOT VALID,
   ADD COLUMN correction_id UUID;         -- the usage_corrections row, for a correcting event
 
 ALTER TABLE accounts
   ADD COLUMN price_book TEXT NOT NULL DEFAULT 'list';  -- the book this account rates at
 
 ALTER TABLE skus
-  ADD CONSTRAINT skus_meter_fkey FOREIGN KEY (meter) REFERENCES meters (code),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT skus_meter_fkey FOREIGN KEY (meter) REFERENCES meters (code) NOT VALID,
   ADD COLUMN dimension_match JSONB NOT NULL DEFAULT '{}',  -- {"os": "windows"}, {"carrier": "verizon"}
   ADD COLUMN match_priority  SMALLINT NOT NULL DEFAULT 0;  -- most specific match wins
 
@@ -208,8 +210,9 @@ CREATE TABLE rating_runs (               -- one execution of the rater over a sc
 );
 
 ALTER TABLE rated_usage
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT rated_usage_rating_run_fkey FOREIGN KEY (rating_run_id)
-    REFERENCES rating_runs (id);
+    REFERENCES rating_runs (id) NOT VALID;
 
 CREATE TABLE usage_corrections (         -- why a set of events was restated
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -228,13 +231,14 @@ CREATE TABLE usage_corrections (         -- why a set of events was restated
 );
 
 ALTER TABLE usage_events
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT usage_events_correction_fkey FOREIGN KEY (correction_id)
-    REFERENCES usage_corrections (id),
+    REFERENCES usage_corrections (id) NOT VALID,
   ADD CONSTRAINT usage_events_correction_pair CHECK ((corrects_id IS NULL) =
-    (correction_id IS NULL));
+    (correction_id IS NULL)) NOT VALID;
 
-CREATE INDEX usage_events_rating ON usage_events (account_id, meter, lower(occurred_during));
-CREATE INDEX usage_events_corrects ON usage_events (corrects_id) WHERE corrects_id IS NOT NULL;
+CREATE INDEX CONCURRENTLY usage_events_rating ON usage_events (account_id, meter, lower(occurred_during));
+CREATE INDEX CONCURRENTLY usage_events_corrects ON usage_events (corrects_id) WHERE corrects_id IS NOT NULL;
 ```
 
 Rating one hour of a duration meter, with per-session minimums and increments, the most specific SKU and the price version in effect at the usage time. `$1` is the run, `$2` the hour:

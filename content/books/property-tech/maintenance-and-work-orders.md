@@ -239,8 +239,7 @@ CREATE TABLE inspection_findings (
 
 ALTER TABLE work_orders
   ADD COLUMN category              TEXT,              -- 'plumbing', 'hvac', 'appliance', 'electrical'
-  ADD COLUMN request_channel       TEXT CHECK (request_channel IN ('portal', 'app', 'sms',
-                                     'phone', 'email', 'in_person', 'device')),
+  ADD COLUMN request_channel       TEXT,
   ADD COLUMN reported_at           TIMESTAMPTZ,       -- starts statutory clocks
   ADD COLUMN respond_by            TIMESTAMPTZ,       -- computed, stored with the rule that set it
   ADD COLUMN complete_by           TIMESTAMPTZ,
@@ -250,10 +249,15 @@ ALTER TABLE work_orders
   ADD COLUMN asset_id              UUID REFERENCES property_assets (id),
   ADD COLUMN pm_schedule_id        UUID REFERENCES pm_schedules (id),
   ADD COLUMN inspection_finding_id UUID REFERENCES inspection_findings (id),
-  ADD COLUMN owner_approval_status TEXT CHECK (owner_approval_status IN ('not_required',
-                                     'pending', 'approved', 'declined')),
+  ADD COLUMN owner_approval_status TEXT,
   ADD COLUMN reported_text         TEXT,              -- the resident's words, untranslated
-  ADD COLUMN reported_language     TEXT;              -- BCP 47
+  ADD COLUMN reported_language     TEXT,              -- BCP 47
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT work_orders_request_channel_check
+    CHECK (request_channel IN ('portal', 'app', 'sms',
+        'phone', 'email', 'in_person', 'device')) NOT VALID,
+  ADD CONSTRAINT work_orders_owner_approval_status_check
+    CHECK (owner_approval_status IN ('not_required', 'pending', 'approved', 'declined')) NOT VALID;
 
 CREATE TABLE entry_notices (             -- one per planned entry into an occupied unit
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

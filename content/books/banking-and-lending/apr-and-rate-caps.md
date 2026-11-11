@@ -182,10 +182,13 @@ CREATE TABLE apr_computations (              -- every APR computed for an offer 
 );
 
 ALTER TABLE loans
-  ADD COLUMN rate_authority     TEXT CHECK (rate_authority IN ('nba_85', 'fdia_27', 'hola',
-                                  'fcua', 'state_license', 'state_usury')),
+  ADD COLUMN rate_authority     TEXT,
   ADD COLUMN rate_home_state    CHAR(2),       -- the exporting bank's state, if exported
-  ADD COLUMN borrower_state     CHAR(2);       -- at consummation: what opt-outs and caps read
+  ADD COLUMN borrower_state     CHAR(2),       -- at consummation: what opt-outs and caps read
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT loans_rate_authority_check
+    CHECK (rate_authority IN ('nba_85', 'fdia_27', 'hola',
+        'fcua', 'state_license', 'state_usury')) NOT VALID;
 
 CREATE TABLE covered_borrower_checks (       -- the MLA lookup before every offer
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -168,12 +168,14 @@ CREATE TABLE inbound_messages (              -- everything external systems send
 -- local_id are the source row. Each version is a row; publishing a new one sets unlinked_at
 -- on the previous, so the open-row index still holds one current version per resource.
 ALTER TABLE fhir_resource_versions
-  ADD COLUMN direction        TEXT NOT NULL DEFAULT 'mirrored'
-    CHECK (direction IN ('mirrored', 'published')),
+  ADD COLUMN direction        TEXT NOT NULL DEFAULT 'mirrored',
   ADD COLUMN content_sha256   BYTEA,          -- published: a new version only when the rendering changes
   ADD COLUMN mapping_version  TEXT,           -- published: the facade code that rendered it
-  ADD COLUMN deleted          BOOLEAN NOT NULL DEFAULT FALSE;
-CREATE INDEX fhir_resource_versions_since
+  ADD COLUMN deleted          BOOLEAN NOT NULL DEFAULT FALSE,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT fhir_resource_versions_direction_check
+    CHECK (direction IN ('mirrored', 'published')) NOT VALID;
+CREATE INDEX CONCURRENTLY fhir_resource_versions_since
   ON fhir_resource_versions (organization_id, resource_type, remote_updated_at)
   WHERE direction = 'published';
 
@@ -193,7 +195,7 @@ CREATE TABLE sensitivity_labels (            -- record-level labels beyond ordin
 -- reports), action and purpose; reads add the labels they saw.
 ALTER TABLE audit_events
   ADD COLUMN labels_seen     TEXT[];          -- sensitivity labels on what was read
-CREATE INDEX audit_events_by_patient ON audit_events (organization_id, patient_id, occurred_at);
+CREATE INDEX CONCURRENTLY audit_events_by_patient ON audit_events (organization_id, patient_id, occurred_at);
 ```
 
 The outbound check, for any path that sends a record outside the tenant's clinical users:

@@ -116,16 +116,20 @@ The core `medication_requests` row already holds the prescriber's role, RxNorm a
 
 ```sql
 ALTER TABLE medication_requests
-  ADD COLUMN dea_schedule         TEXT CHECK (dea_schedule IN ('II', 'III', 'IV', 'V')),
+  ADD COLUMN dea_schedule         TEXT,
   ADD COLUMN quantity_unit        TEXT,
   ADD COLUMN days_supply          INT,
   ADD COLUMN substitution_allowed BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN pharmacy_id          UUID,          -- pharmacies, below
-  ADD COLUMN transmission         TEXT NOT NULL DEFAULT 'electronic' CHECK (transmission IN
-                                    ('electronic', 'print', 'fax', 'phone')),
+  ADD COLUMN transmission         TEXT NOT NULL DEFAULT 'electronic',
   ADD COLUMN status_reason        TEXT,          -- why cancelled, changed or not sent
   ADD COLUMN external_ref         TEXT,          -- the embedded vendor's prescription ID
-  ADD COLUMN prescribing_rule_evaluation_id UUID;  -- DEA telemedicine and state rules applied
+  ADD COLUMN prescribing_rule_evaluation_id UUID,  -- DEA telemedicine and state rules applied
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT medication_requests_dea_schedule_check
+    CHECK (dea_schedule IN ('II', 'III', 'IV', 'V')) NOT VALID,
+  ADD CONSTRAINT medication_requests_transmission_check
+    CHECK (transmission IN ('electronic', 'print', 'fax', 'phone')) NOT VALID;
 
 CREATE TABLE pharmacies (
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -141,7 +145,8 @@ CREATE TABLE pharmacies (
 );
 
 ALTER TABLE medication_requests
-  ADD FOREIGN KEY (pharmacy_id) REFERENCES pharmacies (id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD FOREIGN KEY (pharmacy_id) REFERENCES pharmacies (id) NOT VALID;
 
 CREATE TABLE erx_messages (              -- every SCRIPT message in or out, as sent
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),

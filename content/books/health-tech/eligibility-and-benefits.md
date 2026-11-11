@@ -153,13 +153,17 @@ ALTER TABLE coverages                    -- priority, relationship, card_documen
   ADD COLUMN priority_confirmed_at TIMESTAMPTZ,      -- when the order was last confirmed with the patient
   ADD COLUMN card_back_document_id UUID REFERENCES documents (id),
   ADD COLUMN last_check_id         UUID,             -- eligibility_checks, below
-  ADD COLUMN last_status           TEXT CHECK (last_status IN ('active', 'inactive', 'unknown',
-                                     'rejected'));
+  ADD COLUMN last_status           TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT coverages_last_status_check
+    CHECK (last_status IN ('active', 'inactive', 'unknown', 'rejected')) NOT VALID;
 
 ALTER TABLE plans
   ADD COLUMN benefit_year_start  DATE,              -- calendar year or a plan year
-  ADD COLUMN cob_method          TEXT CHECK (cob_method IN ('standard', 'non_duplication',
-                                  'carve_out'));    -- how a secondary computes what's left
+  ADD COLUMN cob_method          TEXT,    -- how a secondary computes what's left
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT plans_cob_method_check
+    CHECK (cob_method IN ('standard', 'non_duplication', 'carve_out')) NOT VALID;
 
 CREATE TABLE eligibility_checks (
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

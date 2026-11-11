@@ -133,10 +133,11 @@ Banking & Lending's `account_security_events` records the takeover sequence; thi
 ```sql
 ALTER TABLE account_security_events
   DROP CONSTRAINT account_security_events_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT account_security_events_kind_check CHECK (kind IN ('login', 'login_failed',
     'device_enrolled', 'password_reset', 'phone_changed', 'email_changed', 'address_changed',
     'mfa_changed', 'payee_added', 'limit_changed', 'alerts_disabled',
-    'withdrawal_address_added', 'bank_link_added', 'api_key_created'));
+    'withdrawal_address_added', 'bank_link_added', 'api_key_created')) NOT VALID;
 
 CREATE TABLE device_bindings (             -- a device the customer proved, and how
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

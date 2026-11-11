@@ -124,15 +124,19 @@ These are deltas against [the core data model](/books/banking-and-lending/bankin
 
 ```sql
 ALTER TABLE institutions
-  ADD COLUMN insurer TEXT CHECK (insurer IN ('fdic', 'ncusif', 'none')),           -- 'none': trust banks
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT institutions_insurer_not_null NOT NULL insurer NOT VALID;
+  ADD COLUMN insurer TEXT,           -- 'none': trust banks
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT institutions_insurer_not_null NOT NULL insurer NOT VALID,
+  ADD CONSTRAINT institutions_insurer_check CHECK (insurer IN ('fdic', 'ncusif', 'none')) NOT VALID;
 
 ALTER TABLE account_parties
   ADD COLUMN withdrawal_rights_equal BOOLEAN,       -- joint test, 330.9
-  ADD COLUMN signature_evidence      TEXT CHECK (signature_evidence IN ('signed', 'esigned', 'access_or_use', 'exempt')),
+  ADD COLUMN signature_evidence      TEXT,
   ADD COLUMN beneficiary_eligible    BOOLEAN,        -- natural person or IRC charity or nonprofit
-  ADD COLUMN beneficiary_contingent  BOOLEAN NOT NULL DEFAULT FALSE;  -- takes only if another dies: not counted
+  ADD COLUMN beneficiary_contingent  BOOLEAN NOT NULL DEFAULT FALSE,  -- takes only if another dies: not counted
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT account_parties_signature_evidence_check
+    CHECK (signature_evidence IN ('signed', 'esigned', 'access_or_use', 'exempt')) NOT VALID;
 
 CREATE TABLE insurance_determinations (     -- one run: daily estimate or failure-date determination
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

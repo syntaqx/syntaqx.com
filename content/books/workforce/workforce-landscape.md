@@ -157,12 +157,15 @@ CREATE TABLE provider_transactions (       -- acquisitions, take-privates, merge
 );
 
 ALTER TABLE companies
-  ADD COLUMN segment                  TEXT CHECK (segment IN ('small_business', 'mid_market',
-                                        'enterprise', 'peo_client', 'eor_client', 'embedded')),
+  ADD COLUMN segment                  TEXT,
   ADD COLUMN prior_provider_id        UUID REFERENCES provider_profiles (id),
   ADD COLUMN acquired_via_transaction_id UUID REFERENCES provider_transactions (id),
   ADD COLUMN churned_to_provider_id   UUID REFERENCES provider_profiles (id),
-  ADD COLUMN churn_reason             TEXT;
+  ADD COLUMN churn_reason             TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT companies_segment_check
+    CHECK (segment IN ('small_business', 'mid_market',
+        'enterprise', 'peo_client', 'eor_client', 'embedded')) NOT VALID;
 
 ALTER TABLE employers
   ADD COLUMN prior_provider_id        UUID REFERENCES provider_profiles (id),

@@ -117,14 +117,18 @@ A capture plan is the order's payment schedule against its authorizations: the p
 
 ```sql
 ALTER TABLE order_payments
-  ADD COLUMN method          TEXT NOT NULL DEFAULT 'card' CHECK (method IN ('card', 'wallet',
-                               'paypal', 'bnpl', 'bank', 'gift_card', 'store_credit')),
+  ADD COLUMN method          TEXT NOT NULL DEFAULT 'card',
   ADD COLUMN parent_id       UUID REFERENCES order_payments (id),  -- a capture's or refund's authorization
   ADD COLUMN fulfillment_id  UUID REFERENCES fulfillments (id),    -- the shipment a capture paid for
   ADD COLUMN capture_before  TIMESTAMPTZ,   -- on authorizations: the shorter of network and processor
   ADD COLUMN is_final        BOOLEAN NOT NULL DEFAULT FALSE,       -- final capture releases the rest
-  ADD COLUMN status          TEXT NOT NULL DEFAULT 'succeeded' CHECK (status IN ('pending',
-                               'succeeded', 'failed', 'expired', 'voided'));
+  ADD COLUMN status          TEXT NOT NULL DEFAULT 'succeeded',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT order_payments_method_check
+    CHECK (method IN ('card', 'wallet',
+        'paypal', 'bnpl', 'bank', 'gift_card', 'store_credit')) NOT VALID,
+  ADD CONSTRAINT order_payments_status_check
+    CHECK (status IN ('pending', 'succeeded', 'failed', 'expired', 'voided')) NOT VALID;
 
 CREATE TABLE capture_plans (             -- how and when an order's money is taken
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

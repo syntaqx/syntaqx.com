@@ -53,9 +53,14 @@ ALTER TABLE game_servers
   ADD COLUMN host_name TEXT,
   ADD COLUMN address INET,
   ADD COLUMN port INTEGER,
-  ADD COLUMN allocation_key TEXT UNIQUE,   -- the match id the allocation was for, so a retry gets the same server
+  ADD COLUMN allocation_key TEXT,          -- the match id the allocation was for, so a retry gets the same server
   ADD COLUMN ready_at TIMESTAMPTZ,
   ADD COLUMN exit_reason TEXT;             -- 'match_complete', 'crash', 'unhealthy', 'drained'
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY game_servers_allocation_key_key ON game_servers (allocation_key);
+ALTER TABLE game_servers
+  ADD CONSTRAINT game_servers_allocation_key_key UNIQUE USING INDEX game_servers_allocation_key_key;
 ```
 
 The core table's `status` (ready, allocated, draining, shut_down) and its `allocated_at` and `shut_down_at` already cover the states that matter to the record; starting, reserved and unhealthy are the orchestrator's business. The orchestrator is the source of truth for live state; this table is the record of what happened, written from its events, which is what support needs when a player asks why their match ended ([Player Support](/books/gaming/player-support)) and what reliability reporting is built from.

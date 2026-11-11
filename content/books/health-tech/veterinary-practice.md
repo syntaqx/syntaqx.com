@@ -114,8 +114,11 @@ The core model already gives an animal patient its `kind = 'animal'`, species, b
 
 ```sql
 ALTER TABLE patients
-  ADD COLUMN reproductive     TEXT CHECK (reproductive IN ('intact', 'neutered', 'spayed', 'unknown')),
-  ADD COLUMN is_group         BOOLEAN NOT NULL DEFAULT FALSE;  -- a herd, flock or barn
+  ADD COLUMN reproductive     TEXT,
+  ADD COLUMN is_group         BOOLEAN NOT NULL DEFAULT FALSE,  -- a herd, flock or barn
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT patients_reproductive_check
+    CHECK (reproductive IN ('intact', 'neutered', 'spayed', 'unknown')) NOT VALID;
 
 CREATE TABLE patient_owners (               -- people and organizations with a role on an animal
   organization_id   UUID NOT NULL REFERENCES organizations (id),
@@ -149,8 +152,11 @@ ALTER TABLE medication_requests
   ADD COLUMN vcpr_check       JSONB,          -- the check's result at prescribing time
   ADD COLUMN extralabel       BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN compounded       BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN dispensed_by     TEXT CHECK (dispensed_by IN ('clinic', 'clinic_online_store',
-                                'outside_pharmacy', 'written_released'));
+  ADD COLUMN dispensed_by     TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT medication_requests_dispensed_by_check
+    CHECK (dispensed_by IN ('clinic', 'clinic_online_store',
+        'outside_pharmacy', 'written_released')) NOT VALID;
 
 CREATE TABLE pharmacy_authorization_requests (  -- an outside pharmacy asking to fill
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

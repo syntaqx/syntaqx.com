@@ -139,12 +139,17 @@ The chapter's additions to the core model, as columns on existing tables and new
 
 ```sql
 ALTER TABLE accounts
-  ADD COLUMN did                TEXT UNIQUE,  -- AT Protocol or other DID, when the account has one
+  ADD COLUMN did                TEXT,         -- AT Protocol or other DID, when the account has one
   ADD COLUMN locked_reason      TEXT,         -- required while status = 'locked'
   ADD COLUMN age_band           TEXT NOT NULL DEFAULT 'unknown',  -- cache; Minors chapter owns it
   ADD COLUMN closure_requested_at TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_locked_reason
-    CHECK ((status = 'locked') = (locked_reason IS NOT NULL));
+    CHECK ((status = 'locked') = (locked_reason IS NOT NULL)) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY accounts_did_key ON accounts (did);
+ALTER TABLE accounts ADD CONSTRAINT accounts_did_key UNIQUE USING INDEX accounts_did_key;
 
 CREATE TABLE account_handles (           -- every handle an account has held
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -193,8 +198,11 @@ CREATE TABLE badges (                    -- what's shown, and which verification
 );
 
 ALTER TABLE penalties
-  ADD COLUMN role TEXT CHECK (role IN ('member', 'creator', 'host', 'seller', 'guest',
-    'buyer', 'moderator'));              -- null: the whole account
+  ADD COLUMN role TEXT,              -- null: the whole account
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT penalties_role_check
+    CHECK (role IN ('member', 'creator', 'host', 'seller', 'guest',
+        'buyer', 'moderator')) NOT VALID;
 
 CREATE TABLE deletion_requests (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

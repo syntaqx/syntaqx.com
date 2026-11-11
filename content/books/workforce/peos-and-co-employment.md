@@ -230,14 +230,18 @@ CREATE TABLE master_plan_participations (  -- a client in the PEO's plans
 ALTER TABLE benefit_plans
   ADD COLUMN sponsor_employer_id UUID REFERENCES employers (id),   -- the PEO for a master plan
   ADD COLUMN is_mewa             BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN funding             TEXT CHECK (funding IN ('fully_insured', 'self_funded',
-                                   'level_funded'));
+  ADD COLUMN funding             TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT benefit_plans_funding_check
+    CHECK (funding IN ('fully_insured', 'self_funded', 'level_funded')) NOT VALID;
 
 ALTER TABLE tax_registrations
-  ADD COLUMN reporting_model     TEXT NOT NULL DEFAULT 'own'
+  ADD COLUMN reporting_model     TEXT NOT NULL DEFAULT 'own',
+  ADD COLUMN client_employer_id  UUID REFERENCES employers (id),  -- whose account it is
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT tax_registrations_reporting_model_check
     CHECK (reporting_model IN ('own', 'peo_account', 'client_account_by_peo',
-      'client_account_assigned')),
-  ADD COLUMN client_employer_id  UUID REFERENCES employers (id);  -- whose account it is
+        'client_account_assigned')) NOT VALID;
 ```
 
 Design notes:

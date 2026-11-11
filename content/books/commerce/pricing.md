@@ -143,9 +143,11 @@ ALTER TABLE price_lists
   ADD COLUMN parent_id       UUID REFERENCES price_lists (id),  -- a derived list's source
   ADD COLUMN adjustment_bps  INT,          -- e.g. -5000 for 50% of parent; null: fixed only
   ADD COLUMN rounding_rule   TEXT,         -- 'up_to_0.05', 'up_to_whole', per currency table
-  ADD COLUMN tier_mode       TEXT NOT NULL DEFAULT 'all_units' CHECK (tier_mode IN
-                               ('all_units', 'incremental')),
-  ADD COLUMN confidential    BOOLEAN NOT NULL DEFAULT FALSE;  -- never cached publicly or fed
+  ADD COLUMN tier_mode       TEXT NOT NULL DEFAULT 'all_units',
+  ADD COLUMN confidential    BOOLEAN NOT NULL DEFAULT FALSE,  -- never cached publicly or fed
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT price_lists_tier_mode_check
+    CHECK (tier_mode IN ('all_units', 'incremental')) NOT VALID;
 
 ALTER TABLE price_list_items
   ADD COLUMN reference_price      BIGINT,  -- the lawful "was" price, computed, never typed

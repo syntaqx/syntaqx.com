@@ -226,8 +226,11 @@ CREATE TABLE catalog_imports (           -- retailer files and their semantics
 );
 
 ALTER TABLE location_items
-  ADD COLUMN found_probability REAL CHECK (found_probability BETWEEN 0 AND 1),
-  ADD COLUMN predicted_at      TIMESTAMPTZ;
+  ADD COLUMN found_probability REAL,
+  ADD COLUMN predicted_at      TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT location_items_found_probability_check
+    CHECK (found_probability BETWEEN 0 AND 1) NOT VALID;
 
 CREATE TABLE substitution_preferences (  -- set per line before shopping
   order_line_id      UUID PRIMARY KEY REFERENCES order_lines (id),

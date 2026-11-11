@@ -184,8 +184,10 @@ The chapter's additions to the core model, as columns on existing tables and new
 
 ```sql
 ALTER TABLE communities                  -- live channels: kind = 'channel'
-  ADD COLUMN incoming_raids TEXT NOT NULL DEFAULT 'everyone'
-    CHECK (incoming_raids IN ('everyone', 'followed', 'allowlist', 'nobody'));
+  ADD COLUMN incoming_raids TEXT NOT NULL DEFAULT 'everyone',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT communities_incoming_raids_check
+    CHECK (incoming_raids IN ('everyone', 'followed', 'allowlist', 'nobody')) NOT VALID;
 
 CREATE TABLE chat_settings (             -- a channel's chat modes over time
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),

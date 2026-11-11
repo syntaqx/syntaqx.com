@@ -120,8 +120,11 @@ CREATE TABLE processing_records (        -- GDPR Article 30 record, one per purp
 
 ALTER TABLE consents
   ADD COLUMN processing_record_id UUID REFERENCES processing_records (id),  -- which purpose it covers
-  ADD COLUMN ehds_scope           TEXT CHECK (ehds_scope IN ('restriction', 'cross_border_opt_out',
-                                    'secondary_use_opt_out'));
+  ADD COLUMN ehds_scope           TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT consents_ehds_scope_check
+    CHECK (ehds_scope IN ('restriction', 'cross_border_opt_out',
+        'secondary_use_opt_out')) NOT VALID;
 
 CREATE TABLE ehds_access_requests (      -- a patient's or an access body's request against the record
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

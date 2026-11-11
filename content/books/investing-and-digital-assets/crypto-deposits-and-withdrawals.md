@@ -319,9 +319,11 @@ These are deltas against the core data model in [The Investing & Digital Assets 
 ```sql
 -- How the address type affects sweeping and recovery.
 ALTER TABLE addresses
-  ADD COLUMN address_kind TEXT NOT NULL DEFAULT 'utxo_hd'
-    CHECK (address_kind IN ('utxo_hd', 'eoa', 'contract', 'shared_with_tag')),
-  ADD COLUMN deployed     BOOLEAN NOT NULL DEFAULT TRUE;  -- FALSE: a counterfactual contract not yet deployed
+  ADD COLUMN address_kind TEXT NOT NULL DEFAULT 'utxo_hd',
+  ADD COLUMN deployed     BOOLEAN NOT NULL DEFAULT TRUE,  -- FALSE: a counterfactual contract not yet deployed
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT addresses_address_kind_check
+    CHECK (address_kind IN ('utxo_hd', 'eoa', 'contract', 'shared_with_tag')) NOT VALID;
 
 CREATE TABLE confirmation_policies (
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),

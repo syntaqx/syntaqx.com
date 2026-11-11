@@ -239,8 +239,10 @@ The chapter adds a tenancy mode to [Kubernetes Architecture](/books/hosting-and-
 
 ```sql
 ALTER TABLE clusters                     -- Kubernetes Architecture's side table
-  ADD COLUMN tenancy_mode TEXT NOT NULL DEFAULT 'single_tenant'
-    CHECK (tenancy_mode IN ('single_tenant', 'multi_team', 'multi_customer'));
+  ADD COLUMN tenancy_mode TEXT NOT NULL DEFAULT 'single_tenant',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT clusters_tenancy_mode_check
+    CHECK (tenancy_mode IN ('single_tenant', 'multi_team', 'multi_customer')) NOT VALID;
 
 CREATE TABLE cluster_tenants (           -- who holds which slice of a shared cluster, when
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),

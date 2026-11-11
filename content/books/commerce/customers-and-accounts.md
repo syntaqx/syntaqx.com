@@ -128,7 +128,7 @@ ALTER TABLE customers
   ADD COLUMN merged_into       UUID REFERENCES customers (id),
   ADD COLUMN redacted_at       TIMESTAMPTZ;  -- personal fields erased for a privacy request
 
-CREATE UNIQUE INDEX customers_merchant_email
+CREATE UNIQUE INDEX CONCURRENTLY customers_merchant_email
   ON customers (merchant_id, email)
   WHERE email IS NOT NULL AND merged_into IS NULL AND redacted_at IS NULL;
 

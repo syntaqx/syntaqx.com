@@ -124,19 +124,24 @@ The chapter fixes the shape of `price_versions.tiers`, adds tier modes, packages
 
 ```sql
 ALTER TABLE price_versions
-  ADD COLUMN tier_mode     TEXT NOT NULL DEFAULT 'flat' CHECK (tier_mode IN ('flat',
-                             'graduated', 'volume', 'package')),
-  ADD COLUMN tier_scope    TEXT CHECK (tier_scope IN ('account', 'billing_account',
-                             'organization', 'resource')),   -- whose cumulative quantity
-  ADD COLUMN package_size  NUMERIC CHECK (package_size > 0), -- 'package': e.g. 100 MB blocks
+  ADD COLUMN tier_mode     TEXT NOT NULL DEFAULT 'flat',
+  ADD COLUMN tier_scope    TEXT,   -- whose cumulative quantity
+  ADD COLUMN package_size  NUMERIC, -- 'package': e.g. 100 MB blocks
   ADD COLUMN cap_amount    NUMERIC(24,6),                    -- per resource per cap_period
-  ADD COLUMN cap_period    TEXT CHECK (cap_period IN ('month')),
+  ADD COLUMN cap_period    TEXT,
   ADD COLUMN price_change_notice_id UUID,                    -- the notice that introduced it
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT price_versions_tiers_shape CHECK (
     (tier_mode IN ('flat', 'package')) = (tiers IS NULL)
     AND (tier_mode <> 'package' OR package_size IS NOT NULL)
     AND (tier_mode IN ('graduated', 'volume')) = (tier_scope IS NOT NULL)
-    AND ((cap_amount IS NULL) = (cap_period IS NULL)));
+    AND ((cap_amount IS NULL) = (cap_period IS NULL))) NOT VALID,
+  ADD CONSTRAINT price_versions_tier_mode_check
+    CHECK (tier_mode IN ('flat', 'graduated', 'volume', 'package')) NOT VALID,
+  ADD CONSTRAINT price_versions_tier_scope_check
+    CHECK (tier_scope IN ('account', 'billing_account', 'organization', 'resource')) NOT VALID,
+  ADD CONSTRAINT price_versions_package_size_check CHECK (package_size > 0) NOT VALID,
+  ADD CONSTRAINT price_versions_cap_period_check CHECK (cap_period IN ('month')) NOT VALID;
 -- tiers, when set, is an array ordered by bound, the last band open-ended:
 --   [{"up_to": 13000000, "unit_price": "0"}, {"up_to": 100000000, "unit_price": "0.00008"},
 --    {"up_to": 2500000000, "unit_price": "0.00005"}, {"up_to": null, "unit_price": "0.00002"}]
@@ -199,8 +204,9 @@ CREATE TABLE price_change_notices (      -- one announced change and its obligat
 );
 
 ALTER TABLE price_versions
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT price_versions_notice_fkey FOREIGN KEY (price_change_notice_id)
-    REFERENCES price_change_notices (id);
+    REFERENCES price_change_notices (id) NOT VALID;
 
 CREATE TABLE price_change_recipients (   -- who was told, how, and when
   notice_id     UUID NOT NULL REFERENCES price_change_notices (id),

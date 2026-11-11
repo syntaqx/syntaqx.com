@@ -167,9 +167,13 @@ ALTER TABLE policy_transactions
   ADD COLUMN base_version_id UUID REFERENCES policy_versions (id),  -- the version it started from
   ADD COLUMN aggregate_id    UUID REFERENCES policy_transactions (id), -- the replay it belongs to
   ADD COLUMN reapplies_id    UUID REFERENCES policy_transactions (id), -- the original it reapplies
-  ADD COLUMN rate_basis      TEXT CHECK (rate_basis IN ('inception', 'current')),
-  ADD COLUMN status          TEXT NOT NULL DEFAULT 'bound' CHECK (status IN ('draft', 'quoted',
-                               'bound', 'withdrawn', 'preempted'));
+  ADD COLUMN rate_basis      TEXT,
+  ADD COLUMN status          TEXT NOT NULL DEFAULT 'bound',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT policy_transactions_rate_basis_check
+    CHECK (rate_basis IN ('inception', 'current')) NOT VALID,
+  ADD CONSTRAINT policy_transactions_status_check
+    CHECK (status IN ('draft', 'quoted', 'bound', 'withdrawn', 'preempted')) NOT VALID;
 
 CREATE TABLE transaction_conflicts (       -- field conflicts found during a replay
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

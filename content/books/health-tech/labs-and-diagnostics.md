@@ -115,10 +115,13 @@ ALTER TABLE orders
   ADD COLUMN placer_number      TEXT,          -- our order number
   ADD COLUMN filler_number      TEXT,          -- the performer's accession or order number
   ADD COLUMN compendium_version TEXT,          -- the lab catalog version the order was built from
-  ADD COLUMN bill_to            TEXT CHECK (bill_to IN ('payer', 'practice', 'patient')),
-  ADD COLUMN ordered_via        TEXT CHECK (ordered_via IN ('interface', 'network',
-                                  'lab_portal', 'paper', 'consumer')),
-  ADD COLUMN status_detail      TEXT;          -- imaging: scheduled, arrived, performed, read
+  ADD COLUMN bill_to            TEXT,
+  ADD COLUMN ordered_via        TEXT,
+  ADD COLUMN status_detail      TEXT,          -- imaging: scheduled, arrived, performed, read
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT orders_bill_to_check CHECK (bill_to IN ('payer', 'practice', 'patient')) NOT VALID,
+  ADD CONSTRAINT orders_ordered_via_check
+    CHECK (ordered_via IN ('interface', 'network', 'lab_portal', 'paper', 'consumer')) NOT VALID;
 
 CREATE TABLE clia_certificates (         -- what a location may test in-house
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -168,9 +171,12 @@ ALTER TABLE observations
   ADD COLUMN diagnostic_report_id UUID REFERENCES diagnostic_reports (id),
   ADD COLUMN local_code       TEXT,       -- the lab's own code, always kept beside LOINC
   ADD COLUMN reference_range  TEXT,       -- from the performing lab
-  ADD COLUMN interpretation   TEXT CHECK (interpretation IN ('normal', 'low', 'high',
-                                'critical_low', 'critical_high', 'abnormal')),
-  ADD COLUMN supersedes_id    UUID REFERENCES observations (id);  -- a correction points back
+  ADD COLUMN interpretation   TEXT,
+  ADD COLUMN supersedes_id    UUID REFERENCES observations (id),  -- a correction points back
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT observations_interpretation_check
+    CHECK (interpretation IN ('normal', 'low', 'high',
+        'critical_low', 'critical_high', 'abnormal')) NOT VALID;
 
 CREATE TABLE critical_value_events (
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

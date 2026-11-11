@@ -164,8 +164,9 @@ CREATE TABLE school_certifications (         -- what the school confirmed, befor
 );
 
 ALTER TABLE loan_disbursements DROP CONSTRAINT loan_disbursements_kind_check;
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE loan_disbursements ADD CONSTRAINT loan_disbursements_kind_check
-  CHECK (kind IN ('to_borrower', 'to_creditor', 'fee_withheld', 'refinance_payoff', 'to_school'));
+  CHECK (kind IN ('to_borrower', 'to_creditor', 'fee_withheld', 'refinance_payoff', 'to_school')) NOT VALID;
 
 CREATE TABLE income_certifications (
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),

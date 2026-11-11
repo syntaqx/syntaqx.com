@@ -106,8 +106,10 @@ ALTER TABLE projects
   ADD COLUMN lead_team_id     UUID REFERENCES groups (id),
   ADD COLUMN start_on         DATE,
   ADD COLUMN target_on        DATE,
-  ADD COLUMN target_precision TEXT CHECK (target_precision IN ('day', 'month', 'quarter',
-                                'half_year', 'year'));
+  ADD COLUMN target_precision TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT projects_target_precision_check
+    CHECK (target_precision IN ('day', 'month', 'quarter', 'half_year', 'year')) NOT VALID;
 
 CREATE TABLE portfolios (
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

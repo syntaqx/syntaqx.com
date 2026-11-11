@@ -180,12 +180,12 @@ ALTER TABLE payment_methods
   ADD COLUMN charging_processor TEXT,
   ADD COLUMN charging_since     TIMESTAMPTZ,
   ADD COLUMN cohort             TEXT,          -- migration cohort, null once settled
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payment_methods_charging_processor_not_null NOT NULL charging_processor NOT VALID,
   ADD CONSTRAINT payment_methods_charging_since_not_null NOT NULL charging_since NOT VALID;
 
 -- Retry attempts belong to the card, across processors
-CREATE INDEX payment_attempts_payment_method_id_requested_at_idx
+CREATE INDEX CONCURRENTLY payment_attempts_payment_method_id_requested_at_idx
   ON payment_attempts (payment_method_id, requested_at);
 ```
 

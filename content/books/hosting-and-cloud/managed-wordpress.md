@@ -175,33 +175,45 @@ The chapter adds WordPress columns to the `sites` side table on `resources` rows
 
 ```sql
 ALTER TABLE sites                        -- side table: resources.kind = 'site'
-  ADD COLUMN application        TEXT CHECK (application IN ('wordpress')),  -- null: not a
+  ADD COLUMN application        TEXT,  -- null: not a
                                                       -- managed application
-  ADD COLUMN environment        TEXT CHECK (environment IN ('production', 'staging',
-                                  'development')),
+  ADD COLUMN environment        TEXT,
   ADD COLUMN staging_parent_id  UUID REFERENCES sites (resource_id),  -- the production site
-  ADD COLUMN isolation          TEXT CHECK (isolation IN ('shared', 'isolated')),
-  ADD COLUMN visit_meter        TEXT CHECK (visit_meter IN ('unique_ip_utc_day', 'bandwidth',
-                                  'pages_served', 'none')),     -- the plan's unit, published
-  ADD COLUMN cache_layer        TEXT CHECK (cache_layer IN ('none', 'page', 'edge_full_page')),
+  ADD COLUMN isolation          TEXT,
+  ADD COLUMN visit_meter        TEXT,     -- the plan's unit, published
+  ADD COLUMN cache_layer        TEXT,
   ADD COLUMN page_cache_ttl     INTERVAL,                       -- e.g. 10 minutes
-  ADD COLUMN object_cache       TEXT CHECK (object_cache IN ('none', 'redis', 'memcached')),
-  ADD COLUMN auto_update_policy TEXT CHECK (auto_update_policy IN ('core_minor', 'core_all',
-                                  'core_and_plugins', 'managed_with_rollback', 'off')),
-  ADD COLUMN plugin_source      TEXT CHECK (plugin_source IN ('wordpress_org', 'host_mirror',
-                                  'composer', 'vendor')),       -- where updates come from
+  ADD COLUMN object_cache       TEXT,
+  ADD COLUMN auto_update_policy TEXT,
+  ADD COLUMN plugin_source      TEXT,       -- where updates come from
   ADD COLUMN system_cron        BOOLEAN,              -- DISABLE_WP_CRON plus a scheduler
   ADD COLUMN wp_version         TEXT,                 -- observed, from the last scan
   ADD COLUMN php_version        TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT sites_wordpress_fields CHECK (application IS DISTINCT FROM 'wordpress' OR (
     environment IS NOT NULL AND isolation IS NOT NULL AND visit_meter IS NOT NULL
     AND cache_layer IS NOT NULL AND object_cache IS NOT NULL
     AND auto_update_policy IS NOT NULL AND plugin_source IS NOT NULL
-    AND system_cron IS NOT NULL AND php_version IS NOT NULL)),
+    AND system_cron IS NOT NULL AND php_version IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT sites_staging_parent CHECK (environment IS NULL
-    OR (environment = 'production') = (staging_parent_id IS NULL)),
+    OR (environment = 'production') = (staging_parent_id IS NULL)) NOT VALID,
   ADD CONSTRAINT sites_page_cache_ttl CHECK (cache_layer IS NULL
-    OR (cache_layer = 'none') = (page_cache_ttl IS NULL));
+    OR (cache_layer = 'none') = (page_cache_ttl IS NULL)) NOT VALID,
+  ADD CONSTRAINT sites_application_check CHECK (application IN ('wordpress')) NOT VALID,
+  ADD CONSTRAINT sites_environment_check
+    CHECK (environment IN ('production', 'staging', 'development')) NOT VALID,
+  ADD CONSTRAINT sites_isolation_check CHECK (isolation IN ('shared', 'isolated')) NOT VALID,
+  ADD CONSTRAINT sites_visit_meter_check
+    CHECK (visit_meter IN ('unique_ip_utc_day', 'bandwidth', 'pages_served', 'none')) NOT VALID,
+  ADD CONSTRAINT sites_cache_layer_check
+    CHECK (cache_layer IN ('none', 'page', 'edge_full_page')) NOT VALID,
+  ADD CONSTRAINT sites_object_cache_check
+    CHECK (object_cache IN ('none', 'redis', 'memcached')) NOT VALID,
+  ADD CONSTRAINT sites_auto_update_policy_check
+    CHECK (auto_update_policy IN ('core_minor', 'core_all',
+        'core_and_plugins', 'managed_with_rollback', 'off')) NOT VALID,
+  ADD CONSTRAINT sites_plugin_source_check
+    CHECK (plugin_source IN ('wordpress_org', 'host_mirror', 'composer', 'vendor')) NOT VALID;
 ```
 
 Visits are ordinary usage events: one per site per UTC day, produced by the log pipeline after bot classification, keyed so a replay is a no-op, and corrected by a new event that references the old one when the classifier is rerun:

@@ -212,9 +212,10 @@ The chapter widens `verifications` once more, adds providers, capacity, care sub
 -- Supply Onboarding's widening, plus the two kinds this chapter adds.
 ALTER TABLE verifications
   DROP CONSTRAINT verifications_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT verifications_kind_check CHECK (kind IN ('identity', 'notability',
     'organization', 'phone', 'email', 'payment_instrument', 'driver_license', 'business',
-    'tax_id', 'bank_account', 'background_check', 'facility_license'));
+    'tax_id', 'bank_account', 'background_check', 'facility_license')) NOT VALID;
 
 CREATE TABLE service_providers (         -- the supply side of a services listing
   account_id       UUID PRIMARY KEY REFERENCES accounts (id),
@@ -231,8 +232,11 @@ CREATE TABLE service_providers (         -- the supply side of a services listin
 
 ALTER TABLE bookings                     -- frozen per booking under the network model
   ADD COLUMN booking_model TEXT NOT NULL DEFAULT 'marketplace',
-  ADD COLUMN attribution   TEXT CHECK (attribution IN ('network', 'direct', 'partner_surface')),
-  ADD COLUMN network_fee   BIGINT;       -- billed on completion, from the plan in force
+  ADD COLUMN attribution   TEXT,
+  ADD COLUMN network_fee   BIGINT,       -- billed on completion, from the plan in force
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT bookings_attribution_check
+    CHECK (attribution IN ('network', 'direct', 'partner_surface')) NOT VALID;
 
 CREATE TABLE capacity_counters (         -- pooled inventory: pets a night, runs, slots
   provider_id   UUID NOT NULL REFERENCES service_providers (account_id),
@@ -248,6 +252,7 @@ ALTER TABLE bookings
   ADD COLUMN exclusive BOOLEAN NOT NULL DEFAULT TRUE;  -- false when capacity_counters decide
 ALTER TABLE bookings                     -- Postgres's default name for the core exclusion
   DROP CONSTRAINT bookings_listing_id_service_period_excl,
+  -- EXCLUDE has no concurrent build: add it while the table is small, or in a maintenance window.
   ADD CONSTRAINT bookings_listing_period_excl EXCLUDE USING GIST
     (listing_id WITH =, service_period WITH &&)
     WHERE (status IN ('confirmed', 'in_progress') AND exclusive);

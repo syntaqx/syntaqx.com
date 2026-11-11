@@ -365,9 +365,14 @@ ALTER TABLE store_transactions
   DROP COLUMN offer_id,
   ADD COLUMN product_id UUID REFERENCES products (id),
   ADD COLUMN product_price_id UUID REFERENCES product_prices (id),  -- the price shown
-  ADD CONSTRAINT store_transactions_store_xid_key UNIQUE (store, store_transaction_xid),
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT store_transactions_product_id_not_null NOT NULL product_id NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY store_transactions_store_xid_key
+  ON store_transactions (store, store_transaction_xid);
+ALTER TABLE store_transactions
+  ADD CONSTRAINT store_transactions_store_xid_key UNIQUE USING INDEX store_transactions_store_xid_key;
 ```
 
 Resolving the terms for a payment is a lookup by program, tier, country and channel at the moment the money was earned, falling back from the most specific row:

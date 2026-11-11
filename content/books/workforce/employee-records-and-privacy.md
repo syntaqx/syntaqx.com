@@ -165,10 +165,13 @@ CREATE TABLE document_holds (              -- which documents a hold covers
 
 ALTER TABLE documents
   ADD COLUMN record_type    TEXT,            -- joins retention_schedules
-  ADD COLUMN storage_class  TEXT NOT NULL DEFAULT 'personnel' CHECK (storage_class IN
-                              ('personnel', 'medical', 'i9', 'payroll', 'background', 'eeo')),
+  ADD COLUMN storage_class  TEXT NOT NULL DEFAULT 'personnel',
   ADD COLUMN retention_basis JSONB,          -- each rule's date, so the max can be explained
-  ADD COLUMN purged_at      TIMESTAMPTZ;
+  ADD COLUMN purged_at      TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT documents_storage_class_check
+    CHECK (storage_class IN
+        ('personnel', 'medical', 'i9', 'payroll', 'background', 'eeo')) NOT VALID;
 
 CREATE TABLE personnel_file_requests (     -- state access rights
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

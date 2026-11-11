@@ -139,10 +139,13 @@ CREATE TABLE design_branches (
 
 -- Checkpoints are item_versions rows; design files add why each exists.
 ALTER TABLE item_versions
-  ADD COLUMN checkpoint_kind TEXT CHECK (checkpoint_kind IN
-    ('autosave', 'named', 'disconnect', 'restore', 'pre_merge', 'publish')),
+  ADD COLUMN checkpoint_kind TEXT,
   ADD COLUMN snapshot_uri    TEXT,          -- design files: the snapshot at this checkpoint
-  ADD COLUMN head_seq        BIGINT;
+  ADD COLUMN head_seq        BIGINT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT item_versions_checkpoint_kind_check
+    CHECK (checkpoint_kind IN
+        ('autosave', 'named', 'disconnect', 'restore', 'pre_merge', 'publish')) NOT VALID;
 
 -- The live session: which server process owns the open document.
 CREATE TABLE design_sessions (

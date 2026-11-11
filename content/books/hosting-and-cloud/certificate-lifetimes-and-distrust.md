@@ -209,8 +209,9 @@ CREATE TABLE ca_migrations (             -- moving customers from one CA to anot
 );
 
 ALTER TABLE certificate_orders
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT certificate_orders_ca_migration_fk
-  FOREIGN KEY (ca_migration_id) REFERENCES ca_migrations (id);
+  FOREIGN KEY (ca_migration_id) REFERENCES ca_migrations (id) NOT VALID;
 ```
 
 The inventory in step 2 of the playbook, classified per program, is one recursive query over the CA certificate tree and the stored SCTs:

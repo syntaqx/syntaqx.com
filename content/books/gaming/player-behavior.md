@@ -52,11 +52,16 @@ The core model's `reports` table in [The Games Business](/books/gaming/games-bus
 ```sql
 ALTER TABLE reports
   ADD COLUMN match_id             UUID REFERENCES matches (id),  -- null for profile and UGC reports
-  ADD COLUMN channel              TEXT CHECK (channel IN ('text_chat', 'voice', 'gameplay', 'name', 'ugc')),
-  ADD COLUMN reported_during      TEXT CHECK (reported_during IN ('in_match', 'post_match', 'profile')),
+  ADD COLUMN channel              TEXT,
+  ADD COLUMN reported_during      TEXT,
   ADD COLUMN match_offset_ms      INTEGER,
   ADD COLUMN reporter_is_teammate BOOLEAN,
-  ADD COLUMN reporter_is_premade  BOOLEAN;
+  ADD COLUMN reporter_is_premade  BOOLEAN,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT reports_channel_check
+    CHECK (channel IN ('text_chat', 'voice', 'gameplay', 'name', 'ugc')) NOT VALID,
+  ADD CONSTRAINT reports_reported_during_check
+    CHECK (reported_during IN ('in_match', 'post_match', 'profile')) NOT VALID;
 ```
 
 The `category` stays the policy category (harassment, hate speech, griefing) and `channel` says where it happened, so a voice harassment report and a text one share a rule but take different evidence paths. The labels players see map onto the pair: "verbal abuse" is harassment on `text_chat`, "voice comms abuse" harassment on `voice`, "AFK" and "intentional feeding" griefing on `gameplay`, "offensive name" `inappropriate_name` on `name`, and "cheating" is routed to anti-cheat as a signal rather than kept as a behavior report. The label is presentation and can change by game and locale; the category is policy. `match_offset_ms` pins the report to a point in the match, so the evidence fetch can pull the telemetry and chat around it. A platform that runs moderation for several games or studios scopes every row by `game_id` and tenant, as [Multi-Tenancy](/docs/architecture/multi-tenancy) describes.
@@ -237,16 +242,20 @@ ALTER TABLE reports
   ALTER COLUMN reporter_profile_id DROP NOT NULL,          -- a notice from someone who isn't a player
   ADD COLUMN is_illegal_content_notice BOOLEAN NOT NULL DEFAULT FALSE,  -- DSA Article 16
   ADD COLUMN notifier_contact          TEXT,              -- name and email from a web notice
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT reports_has_reporter
-    CHECK (reporter_profile_id IS NOT NULL OR notifier_contact IS NOT NULL);
+    CHECK (reporter_profile_id IS NOT NULL OR notifier_contact IS NOT NULL) NOT VALID;
 
 ALTER TABLE moderation_decisions
-  ADD COLUMN ground             TEXT CHECK (ground IN ('illegal_content', 'terms')),
+  ADD COLUMN ground             TEXT,
   ADD COLUMN ground_reference   TEXT,                       -- the law, or the terms clause, relied on
   ADD COLUMN territorial_scope  TEXT[] NOT NULL DEFAULT '{}',  -- country codes; empty: everywhere
   ADD COLUMN prompted_by_notice BOOLEAN,
   ADD COLUMN statement_sent_at  TIMESTAMPTZ,                -- the Article 17 statement reached the player
-  ADD COLUMN transparency_db_id TEXT;                       -- set once submitted under Article 24(5)
+  ADD COLUMN transparency_db_id TEXT,                       -- set once submitted under Article 24(5)
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT moderation_decisions_ground_check
+    CHECK (ground IN ('illegal_content', 'terms')) NOT VALID;
 ```
 
 A decision with a penalty and no `statement_sent_at` is a defect to alert on, and on a platform feature so is one still without a `transparency_db_id` after the submission batch has run. Appeals already work as the playbook describes them, a new decision that reviews the old one, so Article 20's "reverse its decision" is a `reversed` outcome that revokes the penalty.

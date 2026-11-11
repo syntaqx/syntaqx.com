@@ -110,8 +110,15 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 
 ```sql
 ALTER TABLE loans
-  ADD COLUMN mers_min          CHAR(18) UNIQUE,     -- the 18-digit Mortgage Identification Number
-  ADD COLUMN mers_role         TEXT CHECK (mers_role IN ('nominee', 'assignee', 'none'));
+  ADD COLUMN mers_min          CHAR(18),            -- the 18-digit Mortgage Identification Number
+  ADD COLUMN mers_role         TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT loans_mers_role_check
+    CHECK (mers_role IN ('nominee', 'assignee', 'none')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY loans_mers_min_key ON loans (mers_min);
+ALTER TABLE loans ADD CONSTRAINT loans_mers_min_key UNIQUE USING INDEX loans_mers_min_key;
 
 CREATE TABLE closings (
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),

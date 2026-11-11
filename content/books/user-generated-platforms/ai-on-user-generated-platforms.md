@@ -108,12 +108,15 @@ The chapter adds AI labels on content items and extends three tables other chapt
 
 ```sql
 ALTER TABLE content_items
-  ADD COLUMN ai_label        TEXT NOT NULL DEFAULT 'none' CHECK (ai_label IN ('none',
-                               'declared', 'detected', 'provenance', 'reviewed')),
-  ADD COLUMN ai_label_prominence TEXT CHECK (ai_label_prominence IN ('menu', 'description',
-                               'on_media')),     -- where the label shows, by risk
+  ADD COLUMN ai_label        TEXT NOT NULL DEFAULT 'none',
+  ADD COLUMN ai_label_prominence TEXT,     -- where the label shows, by risk
   ADD COLUMN ai_declared_at  TIMESTAMPTZ,        -- the uploader's answer
-  ADD COLUMN ai_label_decision_id UUID REFERENCES moderation_decisions (id);  -- detected or reviewed
+  ADD COLUMN ai_label_decision_id UUID REFERENCES moderation_decisions (id),  -- detected or reviewed
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT content_items_ai_label_check
+    CHECK (ai_label IN ('none', 'declared', 'detected', 'provenance', 'reviewed')) NOT VALID,
+  ADD CONSTRAINT content_items_ai_label_prominence_check
+    CHECK (ai_label_prominence IN ('menu', 'description', 'on_media')) NOT VALID;
 
 -- media_provenance (C2PA state, signer, claim generator, IPTC source type) belongs to
 -- Images at Scale; this chapter adds the soft binding and whether variants carry it.

@@ -155,11 +155,14 @@ These are deltas against [the core data model](/books/banking-and-lending/bankin
 -- Deposit attributes on a product version. Values are product decisions;
 -- the CHECKs encode the rules that aren't.
 ALTER TABLE products
-  ADD COLUMN reg_d_kind          TEXT CHECK (reg_d_kind IN ('transaction', 'savings', 'time')),
+  ADD COLUMN reg_d_kind          TEXT,
   ADD COLUMN consumer_purpose    BOOLEAN NOT NULL DEFAULT TRUE,     -- Reg DD applies
   ADD COLUMN withdrawal_limit    JSONB,      -- e.g. {"count": 6, "per": "statement_cycle", "excess": "fee"}; null = none
   ADD COLUMN interest_bearing    BOOLEAN NOT NULL DEFAULT TRUE,
-  ADD COLUMN earnings_credit     BOOLEAN NOT NULL DEFAULT FALSE;    -- business analysis accounts
+  ADD COLUMN earnings_credit     BOOLEAN NOT NULL DEFAULT FALSE,    -- business analysis accounts
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT products_reg_d_kind_check
+    CHECK (reg_d_kind IN ('transaction', 'savings', 'time')) NOT VALID;
 
 CREATE TABLE time_deposit_terms (            -- one per time-deposit product version
   product_id          UUID PRIMARY KEY REFERENCES products (id),

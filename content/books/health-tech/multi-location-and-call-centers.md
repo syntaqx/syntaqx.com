@@ -153,12 +153,19 @@ CREATE TABLE location_payer_networks (       -- in network where, for the locati
 );
 
 ALTER TABLE phone_numbers                    -- Phones for Practices' table: what each number means
-  ADD COLUMN number_kind    TEXT CHECK (number_kind IN ('location', 'brand', 'campaign', 'central')),
+  ADD COLUMN number_kind    TEXT,
   ADD COLUMN brand_group_id UUID REFERENCES location_groups (id),
   ADD COLUMN campaign       TEXT,
-  ADD COLUMN first_answer   TEXT CHECK (first_answer IN ('location', 'center', 'ai_agent')),
+  ADD COLUMN first_answer   TEXT,
   ADD COLUMN greeting_as    TEXT,            -- the name callers hear
-  ADD COLUMN booking_scope  TEXT CHECK (booking_scope IN ('location', 'brand', 'network', 'group'));
+  ADD COLUMN booking_scope  TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT phone_numbers_number_kind_check
+    CHECK (number_kind IN ('location', 'brand', 'campaign', 'central')) NOT VALID,
+  ADD CONSTRAINT phone_numbers_first_answer_check
+    CHECK (first_answer IN ('location', 'center', 'ai_agent')) NOT VALID,
+  ADD CONSTRAINT phone_numbers_booking_scope_check
+    CHECK (booking_scope IN ('location', 'brand', 'network', 'group')) NOT VALID;
 
 CREATE TABLE staff_assignments (             -- a role at a node, covering its subtree
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -198,7 +205,10 @@ ALTER TABLE conversations                    -- Two-Way Texting & Messaging's ta
 
 ALTER TABLE communications
   ADD COLUMN handled_by_user UUID,
-  ADD COLUMN handled_from    TEXT CHECK (handled_from IN ('location', 'center', 'ai_agent'));
+  ADD COLUMN handled_from    TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT communications_handled_from_check
+    CHECK (handled_from IN ('location', 'center', 'ai_agent')) NOT VALID;
 
 CREATE TABLE conversation_transfers (
   organization_id UUID NOT NULL REFERENCES organizations (id),

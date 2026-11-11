@@ -381,8 +381,10 @@ CREATE TABLE subscriptions (             -- the playbook's subscription, with te
 -- subscription_periods and renewal_consents are the playbook's tables, unchanged; a
 -- period records pricing_phase so an intro term and a renewal term are distinguishable:
 ALTER TABLE subscription_periods
-  ADD COLUMN pricing_phase TEXT NOT NULL DEFAULT 'standard'
-    CHECK (pricing_phase IN ('intro', 'renewal', 'standard'));
+  ADD COLUMN pricing_phase TEXT NOT NULL DEFAULT 'standard',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT subscription_periods_pricing_phase_check
+    CHECK (pricing_phase IN ('intro', 'renewal', 'standard')) NOT VALID;
 
 -- Resources -----------------------------------------------------------------
 
@@ -581,19 +583,23 @@ ALTER TABLE invoices
   ADD COLUMN billing_period TSTZRANGE;   -- the usage month; prepaid terms ride on lines
 
 ALTER TABLE invoice_lines
-  ADD COLUMN line_kind       TEXT NOT NULL DEFAULT 'charge' CHECK (line_kind IN ('charge',
-                               'usage', 'pass_through', 'credit', 'commitment_shortfall',
-                               'adjustment', 'tax')),
+  ADD COLUMN line_kind       TEXT NOT NULL DEFAULT 'charge',
   ADD COLUMN sku_id          UUID REFERENCES skus (id),
   ADD COLUMN subscription_id UUID REFERENCES subscriptions (id),
   ADD COLUMN resource_id     UUID REFERENCES resources (id),
-  ADD COLUMN service_period  TSTZRANGE;  -- what the line pays for
+  ADD COLUMN service_period  TSTZRANGE,  -- what the line pays for
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT invoice_lines_line_kind_check
+    CHECK (line_kind IN ('charge',
+        'usage', 'pass_through', 'credit', 'commitment_shortfall',
+        'adjustment', 'tax')) NOT VALID;
 
 -- Abuse: the UGP abuse desks tables, pointed at resources instead of hosted_resources.
 ALTER TABLE moderation_cases
   DROP CONSTRAINT moderation_cases_subject_type_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT moderation_cases_subject_type_check CHECK (subject_type IN ('account',
-    'resource', 'resource_identifier'));
+    'resource', 'resource_identifier')) NOT VALID;
 ALTER TABLE abuse_mitigations
   RENAME COLUMN hosted_resource_id TO resource_id;  -- references resources (id)
 ```

@@ -213,8 +213,9 @@ CREATE TABLE capital_projects (
 );
 
 ALTER TABLE unit_status_periods
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT unit_status_periods_project_fk
-  FOREIGN KEY (capital_project_id) REFERENCES capital_projects (id);
+  FOREIGN KEY (capital_project_id) REFERENCES capital_projects (id) NOT VALID;
 
 CREATE TABLE project_budget_lines (
   id          UUID PRIMARY KEY DEFAULT uuidv7(),

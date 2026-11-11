@@ -165,7 +165,7 @@ ALTER TABLE claim_payments
   ADD COLUMN tax_form          TEXT,               -- '1099-MISC-10', '1099-MISC-6', '1099-NEC-1a'
   ADD COLUMN tax_payee_party_id UUID REFERENCES parties (id),
   ADD COLUMN approval_id       UUID REFERENCES payment_approvals (id),
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT claim_payments_coverage_code_not_null NOT NULL coverage_code NOT VALID,
   ADD CONSTRAINT claim_payments_payee_line_not_null NOT NULL payee_line NOT VALID;
 ```

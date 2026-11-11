@@ -143,11 +143,14 @@ CREATE TABLE debit_mandates (
 
 ALTER TABLE payments
   ADD COLUMN mandate_id        UUID REFERENCES debit_mandates (id),
-  ADD COLUMN sequence_type     TEXT CHECK (sequence_type IN ('first', 'recurrent', 'one_off', 'final')),
+  ADD COLUMN sequence_type     TEXT,
   ADD COLUMN end_to_end_id     TEXT,         -- the provider's ID, echoed on every R-message
   ADD COLUMN refundable_until  DATE,         -- 8 weeks (Core), NULL for B2B, 13 months if unauthorized
   ADD COLUMN interchange_fee   BIGINT,       -- per transaction, for the Article 12 information
-  ADD COLUMN scheme_fee        BIGINT;
+  ADD COLUMN scheme_fee        BIGINT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payments_sequence_type_check
+    CHECK (sequence_type IN ('first', 'recurrent', 'one_off', 'final')) NOT VALID;
 
 -- Every name check, sent or answered.
 CREATE TABLE payee_checks (

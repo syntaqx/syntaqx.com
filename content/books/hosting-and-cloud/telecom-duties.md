@@ -130,8 +130,9 @@ CREATE TABLE emergency_addresses (       -- a validated location for 911
 );
 
 ALTER TABLE phone_numbers
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT phone_numbers_emergency_address_fk
-    FOREIGN KEY (emergency_address_id) REFERENCES emergency_addresses (id);
+    FOREIGN KEY (emergency_address_id) REFERENCES emergency_addresses (id) NOT VALID;
 
 CREATE TABLE mlts_sites (                -- Kari's Law settings per hosted phone system site
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -187,9 +188,11 @@ CREATE TABLE regulatory_fee_rates (      -- percentages and per-line amounts, ef
 );
 
 ALTER TABLE accounts
-  ADD COLUMN interstate_method TEXT CHECK (interstate_method IN ('safe_harbor',
-    'traffic_study', 'actual')),        -- how this provider splits VoIP revenue
-  ADD COLUMN usf_exempt_ref    TEXT;     -- a customer's reseller or exemption certificate
+  ADD COLUMN interstate_method TEXT,        -- how this provider splits VoIP revenue
+  ADD COLUMN usf_exempt_ref    TEXT,     -- a customer's reseller or exemption certificate
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT accounts_interstate_method_check
+    CHECK (interstate_method IN ('safe_harbor', 'traffic_study', 'actual')) NOT VALID;
 ```
 
 Notes on the sketch:

@@ -144,9 +144,12 @@ ALTER TABLE documents
   ADD COLUMN transaction_set   TEXT,         -- '850', '856', 'DESADV'
   ADD COLUMN interchange_id    UUID,         -- edi_interchanges, below
   ADD COLUMN st_control        TEXT,         -- transaction set control number
-  ADD COLUMN business_status   TEXT CHECK (business_status IN ('pending', 'accepted',
-                                 'accepted_with_changes', 'rejected')),  -- from 855 or 824
-  ADD COLUMN parsed            JSONB;        -- the canonical parsed form
+  ADD COLUMN business_status   TEXT,  -- from 855 or 824
+  ADD COLUMN parsed            JSONB,        -- the canonical parsed form
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT documents_business_status_check
+    CHECK (business_status IN ('pending', 'accepted',
+        'accepted_with_changes', 'rejected')) NOT VALID;
 
 CREATE TABLE edi_partner_maps (          -- how one partner wants one document, versioned
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

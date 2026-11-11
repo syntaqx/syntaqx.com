@@ -115,11 +115,14 @@ In-force administration extends the core model's `policy_transactions` and [Life
 
 ```sql
 ALTER TABLE policy_transactions
-  ADD COLUMN life_event TEXT CHECK (life_event IN ('premium', 'grace_start', 'lapse',
-    'nonforfeiture', 'reinstatement', 'loan', 'loan_repayment', 'withdrawal',
-    'face_change', 'option_change', 'rider_change', 'conversion', 'beneficiary_change',
-    'owner_change', 'assignment', 'surrender', 'death', 'producer_of_record_change')),
-  ADD COLUMN source_message_ref TEXT;      -- ACORD TransRefGUID, DTCC id, form scan id
+  ADD COLUMN life_event TEXT,
+  ADD COLUMN source_message_ref TEXT,      -- ACORD TransRefGUID, DTCC id, form scan id
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT policy_transactions_life_event_check
+    CHECK (life_event IN ('premium', 'grace_start', 'lapse',
+        'nonforfeiture', 'reinstatement', 'loan', 'loan_repayment', 'withdrawal',
+        'face_change', 'option_change', 'rider_change', 'conversion', 'beneficiary_change',
+        'owner_change', 'assignment', 'surrender', 'death', 'producer_of_record_change')) NOT VALID;
 
 CREATE TABLE policy_loans (                -- each loan and its interest terms
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -96,8 +96,9 @@ ALTER TABLE data_authorizations
   ADD COLUMN aspsp_sca_at         TIMESTAMPTZ,    -- last SCA at the bank, as reported back
   ADD COLUMN aspsp_sca_due_at     TIMESTAMPTZ,    -- EU: aspsp_sca_at + 180 days
   ADD COLUMN reconfirm_due_at     TIMESTAMPTZ,    -- UK: last confirmation + 90 days
-  ADD CONSTRAINT uk_reconfirm CHECK (regime <> 'uk_ais' OR reconfirm_due_at IS NOT NULL),
-  ADD CONSTRAINT eu_sca_clock CHECK (regime <> 'eu_ais' OR aspsp_sca_due_at IS NOT NULL);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT uk_reconfirm CHECK (regime <> 'uk_ais' OR reconfirm_due_at IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT eu_sca_clock CHECK (regime <> 'eu_ais' OR aspsp_sca_due_at IS NOT NULL) NOT VALID;
 
 CREATE TABLE consent_reconfirmations (       -- UK Article 36(6): the AISP's 90-day duty
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),

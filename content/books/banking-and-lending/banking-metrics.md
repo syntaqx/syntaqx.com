@@ -214,8 +214,10 @@ A month-end delinquency rate needs nonaccrual status as of that date, not as it 
 
 ```sql
 ALTER TABLE delinquency_snapshots
-  ADD COLUMN accrual_status TEXT NOT NULL DEFAULT 'accrual'
-    CHECK (accrual_status IN ('accrual', 'nonaccrual'));  -- copied from loans each business date
+  ADD COLUMN accrual_status TEXT NOT NULL DEFAULT 'accrual',  -- copied from loans each business date
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT delinquency_snapshots_accrual_status_check
+    CHECK (accrual_status IN ('accrual', 'nonaccrual')) NOT VALID;
 ```
 
 Delinquency rate (30+ or nonaccrual, the Federal Reserve's definition) for one month end, by product:

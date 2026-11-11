@@ -153,10 +153,12 @@ CREATE TABLE bridge_routes (                -- approved paths for moving an asse
 );
 
 ALTER TABLE asset_networks
-  ADD COLUMN provenance TEXT NOT NULL DEFAULT 'native_issuer' CHECK (provenance IN
-    ('native_issuer', 'canonical_bridge', 'third_party_bridge')),
+  ADD COLUMN provenance TEXT NOT NULL DEFAULT 'native_issuer',
   ADD COLUMN bridge_route_id UUID REFERENCES bridge_routes (id),  -- how its backing got here
-  ADD CONSTRAINT bridged_has_route CHECK ((provenance = 'native_issuer') = (bridge_route_id IS NULL));
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT bridged_has_route CHECK ((provenance = 'native_issuer') = (bridge_route_id IS NULL)) NOT VALID,
+  ADD CONSTRAINT asset_networks_provenance_check
+    CHECK (provenance IN ('native_issuer', 'canonical_bridge', 'third_party_bridge')) NOT VALID;
 
 CREATE TABLE l2_withdrawals (               -- the platform's canonical exits from a rollup
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

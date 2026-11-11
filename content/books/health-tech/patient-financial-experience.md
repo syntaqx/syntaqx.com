@@ -155,7 +155,7 @@ ALTER TABLE patient_statements           -- guarantor, balance_due, delivery, do
   ADD COLUMN pending_insurance BIGINT NOT NULL DEFAULT 0,  -- shown, not billed
   ADD COLUMN entry_ids         UUID[],                     -- the ledger entries that make the balance
   ADD COLUMN sent_at           TIMESTAMPTZ,
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT patient_statements_sequence_not_null NOT NULL sequence NOT VALID,
   ADD CONSTRAINT patient_statements_entry_ids_not_null NOT NULL entry_ids NOT VALID;
 

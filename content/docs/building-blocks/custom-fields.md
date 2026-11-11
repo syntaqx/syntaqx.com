@@ -88,7 +88,7 @@ Custom fields that can't be filtered get used once. Postgres gives you two tools
 
 ```sql
 -- One GIN index answers containment queries on any custom field.
-CREATE INDEX customers_custom_fields_idx
+CREATE INDEX CONCURRENTLY customers_custom_fields_idx
   ON customers USING GIN (custom_fields jsonb_path_ops);
 
 -- Finds customers whose segment is 'commercial'.
@@ -96,7 +96,7 @@ SELECT id FROM customers
 WHERE tenant_id = $1 AND custom_fields @> '{"segment": "commercial"}';
 
 -- A heavily used field gets its own typed expression index.
-CREATE INDEX customers_custom_contract_value_idx
+CREATE INDEX CONCURRENTLY customers_custom_contract_value_idx
   ON customers (tenant_id, ((custom_fields ->> 'contract_value')::numeric));
 ```
 

@@ -118,8 +118,10 @@ These are deltas against `programs` and `accounts` in [The Core Data Model](/boo
 
 ```sql
 ALTER TABLE programs
-  ADD COLUMN model TEXT NOT NULL DEFAULT 'program_manager'
-    CHECK (model IN ('program_manager', 'own_charter', 'affiliate_bank'));  -- affiliate: an ILC the parent owns
+  ADD COLUMN model TEXT NOT NULL DEFAULT 'program_manager',  -- affiliate: an ILC the parent owns
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT programs_model_check
+    CHECK (model IN ('program_manager', 'own_charter', 'affiliate_bank')) NOT VALID;
 
 -- Regulation II status of each issuing institution, tested at each year end.
 CREATE TABLE institution_asset_tests (

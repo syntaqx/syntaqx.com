@@ -159,20 +159,26 @@ This extends the core model in [The Field Operations Business](/books/field-oper
 
 ```sql
 ALTER TABLE agreements
-  ADD COLUMN kind                  TEXT NOT NULL DEFAULT 'recurring'
-    CHECK (kind IN ('recurring', 'one_time')),
+  ADD COLUMN kind                  TEXT NOT NULL DEFAULT 'recurring',
   ADD COLUMN source_opportunity_id UUID,             -- FK added below
-  ADD CONSTRAINT agreements_id_kind_key UNIQUE (id, kind),
   -- 'fulfilled' is in the core status CHECK; only one-time agreements may use it
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT agreements_fulfilled_kind_check
-    CHECK (status <> 'fulfilled' OR kind = 'one_time');
+    CHECK (status <> 'fulfilled' OR kind = 'one_time') NOT VALID,
+  ADD CONSTRAINT agreements_kind_check CHECK (kind IN ('recurring', 'one_time')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY agreements_id_kind_key ON agreements (id, kind);
+ALTER TABLE agreements
+  ADD CONSTRAINT agreements_id_kind_key UNIQUE USING INDEX agreements_id_kind_key;
 
 -- Only a recurring agreement can own a recurrence
 ALTER TABLE recurrences
-  ADD COLUMN agreement_kind TEXT NOT NULL DEFAULT 'recurring'
-    CHECK (agreement_kind = 'recurring'),
+  ADD COLUMN agreement_kind TEXT NOT NULL DEFAULT 'recurring',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT recurrences_agreement_kind_fkey
-    FOREIGN KEY (agreement_id, agreement_kind) REFERENCES agreements (id, kind);
+    FOREIGN KEY (agreement_id, agreement_kind) REFERENCES agreements (id, kind) NOT VALID,
+  ADD CONSTRAINT recurrences_agreement_kind_check CHECK (agreement_kind = 'recurring') NOT VALID;
 
 CREATE TABLE agreement_authorizations (             -- what the packet authorizes, queryable
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -218,8 +224,9 @@ CREATE TABLE opportunities (
 );
 
 ALTER TABLE agreements
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT agreements_source_opportunity_fkey
-    FOREIGN KEY (source_opportunity_id) REFERENCES opportunities (id);
+    FOREIGN KEY (source_opportunity_id) REFERENCES opportunities (id) NOT VALID;
 
 ALTER TABLE agreement_terms                         -- an amendment is a terms version
   ADD COLUMN source_estimate_id    UUID REFERENCES estimates (id),
@@ -230,7 +237,7 @@ ALTER TABLE agreement_terms                         -- an amendment is a terms v
 ALTER TABLE invoice_lines                           -- a conversion credit names what it credits
   ADD COLUMN credited_invoice_id   UUID REFERENCES invoices (id);
 
-CREATE UNIQUE INDEX invoice_lines_credited_invoice_once
+CREATE UNIQUE INDEX CONCURRENTLY invoice_lines_credited_invoice_once
   ON invoice_lines (credited_invoice_id) WHERE credited_invoice_id IS NOT NULL;
 ```
 

@@ -280,8 +280,9 @@ CREATE INDEX legal_notices_open_by_due
 
 ALTER TABLE moderation_cases
   ADD COLUMN legal_notice_id UUID REFERENCES legal_notices (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT moderation_cases_legal_request_has_notice
-    CHECK (source <> 'legal_request' OR legal_notice_id IS NOT NULL);
+    CHECK (source <> 'legal_request' OR legal_notice_id IS NOT NULL) NOT VALID;
 ```
 
 Notes on the sketch:

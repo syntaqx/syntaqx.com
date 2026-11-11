@@ -119,13 +119,18 @@ Money in is a row in the Payments volume's `payments` table, already extended wi
 
 ```sql
 ALTER TABLE payments
-  ADD COLUMN rent_channel TEXT CHECK (rent_channel IN ('portal', 'autopay', 'text_to_pay',
-               'cash_network', 'lockbox', 'check_scan', 'office', 'third_party')),
+  ADD COLUMN rent_channel TEXT,
                -- payments.channel already holds the card channel; this is how rent arrived
-  ADD COLUMN payer_kind   TEXT NOT NULL DEFAULT 'resident' CHECK (payer_kind IN ('resident',
-               'guarantor', 'agency', 'flexible_rent_provider', 'other_third_party')),
+  ADD COLUMN payer_kind   TEXT NOT NULL DEFAULT 'resident',
   ADD COLUMN acceptance_id UUID,         -- the lease_payment_acceptance row checked
-  ADD COLUMN collection_arrangement_id UUID;
+  ADD COLUMN collection_arrangement_id UUID,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payments_rent_channel_check
+    CHECK (rent_channel IN ('portal', 'autopay', 'text_to_pay',
+        'cash_network', 'lockbox', 'check_scan', 'office', 'third_party')) NOT VALID,
+  ADD CONSTRAINT payments_payer_kind_check
+    CHECK (payer_kind IN ('resident',
+        'guarantor', 'agency', 'flexible_rent_provider', 'other_third_party')) NOT VALID;
 
 CREATE TABLE lease_payment_acceptance (  -- what a lease may pay with, and why
   id           UUID PRIMARY KEY DEFAULT uuidv7(),

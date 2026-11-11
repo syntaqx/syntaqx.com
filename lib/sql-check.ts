@@ -302,12 +302,23 @@ export async function checkSql(root = process.cwd()): Promise<SqlCheck> {
       }
     };
 
+    // A book's statements are sorted by kind, so one can arrive before what it needs (an
+    // ALTER ... USING INDEX before its CREATE INDEX). A book's failures get a second try
+    // after everything else has run; a page runs once, top to bottom, as a reader would.
+    const deferred: Statement[] = [];
+    let deferring = isBook;
+
     /** Runs a statement and records the outcome against the line it's written on. */
     async function check(s: Statement, depth = 0) {
-      result.checked++;
       try {
         await run(s, depth);
+        result.checked++;
       } catch (e) {
+        if (deferring && !(e instanceof Unverifiable)) {
+          deferred.push(s);
+          return;
+        }
+        result.checked++;
         const err = e as { code?: string; message: string };
         const table = createdTable(s);
         if (table) outside.add(table); // what uses it can't be checked either
@@ -317,6 +328,9 @@ export async function checkSql(root = process.cwd()): Promise<SqlCheck> {
     }
 
     for (const s of ordered) if (!done.has(s)) await check(s);
+    deferring = false;
+    deferred.sort((a, b) => statements.indexOf(a) - statements.indexOf(b)); // reading order
+    for (const s of deferred) await check(s);
   }
   await pg.close();
   return result;

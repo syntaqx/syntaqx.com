@@ -230,7 +230,8 @@ ALTER TABLE asset_provenance
 ALTER TABLE match_participants                     -- a bot fills a slot: no profile, a bot key
   ALTER COLUMN player_profile_id DROP NOT NULL,
   ADD COLUMN bot_key TEXT,                         -- behavior and difficulty, versioned with the build
-  ADD CHECK ((player_profile_id IS NULL) <> (bot_key IS NULL));
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CHECK ((player_profile_id IS NULL) <> (bot_key IS NULL)) NOT VALID;
 ```
 
 Ratings, reports and metrics join on `player_profile_id`, so a bot drops out of them without a filter anyone can forget; a match's bot count is a query on `bot_key`.

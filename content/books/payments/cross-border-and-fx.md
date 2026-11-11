@@ -174,7 +174,7 @@ ALTER TABLE merchant_accounts
   ADD COLUMN legal_entity          TEXT,
   ADD COLUMN acquirer              TEXT,            -- the licensed acquirer behind the processor
   ADD COLUMN settlement_currencies TEXT[],
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT merchant_accounts_legal_entity_not_null NOT NULL legal_entity NOT VALID,
   ADD CONSTRAINT merchant_accounts_acquirer_not_null NOT NULL acquirer NOT VALID,
   ADD CONSTRAINT merchant_accounts_settlement_currencies_not_null NOT NULL settlement_currencies NOT VALID;
@@ -200,11 +200,12 @@ ALTER TABLE payments
   ADD COLUMN merchant_outlet_country  TEXT,          -- merchant_accounts.country of the account used
   ADD COLUMN is_cross_border          BOOLEAN GENERATED ALWAYS AS
                                         (issuer_country IS DISTINCT FROM merchant_outlet_country) STORED,
-  ADD COLUMN pricing_mode             TEXT NOT NULL DEFAULT 'domestic'
-                                        CHECK (pricing_mode IN ('domestic', 'mcp', 'provider_fx', 'dcc')),
+  ADD COLUMN pricing_mode             TEXT NOT NULL DEFAULT 'domestic',
   ADD COLUMN fx_quote_id              UUID REFERENCES fx_quotes (id),
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT payments_merchant_outlet_country_not_null NOT NULL merchant_outlet_country NOT VALID;
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payments_merchant_outlet_country_not_null NOT NULL merchant_outlet_country NOT VALID,
+  ADD CONSTRAINT payments_pricing_mode_check
+    CHECK (pricing_mode IN ('domestic', 'mcp', 'provider_fx', 'dcc')) NOT VALID;
 
 -- Each conversion actually executed, linked to the ledger's two legs.
 CREATE TABLE fx_conversions (
@@ -249,11 +250,14 @@ ALTER TABLE payouts
   ADD COLUMN funding_currency CHAR(3),
   ADD COLUMN fx_conversion_id UUID REFERENCES fx_conversions (id),
   -- rail (from Payouts & Settlement) gains 'sepa_ct', 'faster_payments', 'swift'
-  ADD COLUMN charge_bearer    TEXT CHECK (charge_bearer IN ('OUR', 'SHA', 'BEN')),
-  ADD COLUMN screening_status TEXT NOT NULL DEFAULT 'pending'
-                                CHECK (screening_status IN ('pending', 'clear', 'review', 'blocked')),
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT payouts_funding_currency_not_null NOT NULL funding_currency NOT VALID;
+  ADD COLUMN charge_bearer    TEXT,
+  ADD COLUMN screening_status TEXT NOT NULL DEFAULT 'pending',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payouts_funding_currency_not_null NOT NULL funding_currency NOT VALID,
+  ADD CONSTRAINT payouts_charge_bearer_check
+    CHECK (charge_bearer IN ('OUR', 'SHA', 'BEN')) NOT VALID,
+  ADD CONSTRAINT payouts_screening_status_check
+    CHECK (screening_status IN ('pending', 'clear', 'review', 'blocked')) NOT VALID;
 ```
 
 How it runs:

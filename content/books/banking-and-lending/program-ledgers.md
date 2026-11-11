@@ -160,10 +160,13 @@ These are deltas against `programs`, `accounts`, `journal_lines` and `balance_sn
 
 ```sql
 ALTER TABLE programs
-  ADD COLUMN account_structure TEXT NOT NULL DEFAULT 'individual_accounts'
-    CHECK (account_structure IN ('individual_accounts', 'omnibus_fbo')),
-  ADD COLUMN ledger_of_record  TEXT NOT NULL DEFAULT 'bank_core'
-    CHECK (ledger_of_record IN ('bank_core', 'program', 'middleware'));
+  ADD COLUMN account_structure TEXT NOT NULL DEFAULT 'individual_accounts',
+  ADD COLUMN ledger_of_record  TEXT NOT NULL DEFAULT 'bank_core',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT programs_account_structure_check
+    CHECK (account_structure IN ('individual_accounts', 'omnibus_fbo')) NOT VALID,
+  ADD CONSTRAINT programs_ledger_of_record_check
+    CHECK (ledger_of_record IN ('bank_core', 'program', 'middleware')) NOT VALID;
 
 ALTER TABLE accounts                       -- a sub-account is a beneficial interest in one omnibus account
   ADD COLUMN omnibus_account_id UUID REFERENCES accounts (id);

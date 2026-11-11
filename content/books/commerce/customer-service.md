@@ -176,7 +176,8 @@ CREATE TABLE tickets (                   -- a support conversation, mirrored fro
 );
 
 ALTER TABLE order_issues
-  ADD CONSTRAINT order_issues_ticket_fk FOREIGN KEY (ticket_id) REFERENCES tickets (id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT order_issues_ticket_fk FOREIGN KEY (ticket_id) REFERENCES tickets (id) NOT VALID;
 
 CREATE TABLE ticket_messages (           -- what was said, by whom, including the AI
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

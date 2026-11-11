@@ -189,8 +189,10 @@ CREATE TABLE item_customs (              -- what customs needs to know about an 
 
 ALTER TABLE orders
   ADD COLUMN market_id   UUID REFERENCES markets (id),
-  ADD COLUMN incoterm    TEXT CHECK (incoterm IN ('DAP', 'DDP')),
-  ADD COLUMN landed_cost_ref TEXT;      -- the duty and tax quote shown at checkout, guaranteed or not
+  ADD COLUMN incoterm    TEXT,
+  ADD COLUMN landed_cost_ref TEXT,      -- the duty and tax quote shown at checkout, guaranteed or not
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT orders_incoterm_check CHECK (incoterm IN ('DAP', 'DDP')) NOT VALID;
 
 CREATE TABLE customs_declarations (      -- the data filed for one shipment crossing a border
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -108,13 +108,17 @@ ALTER TABLE employers
   ADD COLUMN common_paymaster_group_id UUID;                     -- related corporations as one
 
 ALTER TABLE workers
-  ADD COLUMN visa_category      TEXT CHECK (visa_category IN ('h2a', 'other'));  -- H-2A: no FICA/FUTA
+  ADD COLUMN visa_category      TEXT,  -- H-2A: no FICA/FUTA
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT workers_visa_category_check CHECK (visa_category IN ('h2a', 'other')) NOT VALID;
 
 ALTER TABLE job_assignments
-  ADD COLUMN overtime_rule_set  TEXT NOT NULL DEFAULT 'flsa_40'
-    CHECK (overtime_rule_set IN ('flsa_40', 'flsa_7j_8_80', 'state_daily', 'cba')),
+  ADD COLUMN overtime_rule_set  TEXT NOT NULL DEFAULT 'flsa_40',
   ADD COLUMN cba_classification TEXT,                -- the agreement's job class and step
-  ADD COLUMN project_ref        TEXT;                -- a covered project, for certified payroll
+  ADD COLUMN project_ref        TEXT,                -- a covered project, for certified payroll
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT job_assignments_overtime_rule_set_check
+    CHECK (overtime_rule_set IN ('flsa_40', 'flsa_7j_8_80', 'state_daily', 'cba')) NOT VALID;
 
 CREATE TABLE certified_payroll_reports (     -- one project, one week, one contractor
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -167,8 +167,10 @@ ALTER TABLE purchase_orders
   ADD COLUMN sent_at          TIMESTAMPTZ,
   ADD COLUMN acknowledged_at  TIMESTAMPTZ,
   ADD COLUMN promised_at      DATE,      -- the supplier's date, from the acknowledgment
-  ADD COLUMN source           TEXT NOT NULL DEFAULT 'manual' CHECK (source IN ('manual',
-                                'reorder_rule', 'forecast', 'customer_order'));
+  ADD COLUMN source           TEXT NOT NULL DEFAULT 'manual',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT purchase_orders_source_check
+    CHECK (source IN ('manual', 'reorder_rule', 'forecast', 'customer_order')) NOT VALID;
 
 ALTER TABLE purchase_order_lines
   ADD COLUMN supplier_item_id     UUID REFERENCES supplier_items (id),

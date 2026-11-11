@@ -136,10 +136,12 @@ CREATE TABLE attestation_scopes (        -- which product in which region an att
 ALTER TABLE regions
   ADD COLUMN operating_entity    TEXT,     -- the legal entity that runs the region
   ADD COLUMN operator_residency  TEXT,     -- 'eu_residents_only', 'any'
-  ADD COLUMN key_control         TEXT CHECK (key_control IN ('provider', 'customer_managed',
-                                   'external_hsm')),
+  ADD COLUMN key_control         TEXT,
   ADD COLUMN disconnected_ops    INTERVAL, -- how long it can run cut off, if designed to
-  ADD COLUMN sovereign_partition TEXT;     -- 'aws_european_sovereign_cloud', a partner cloud
+  ADD COLUMN sovereign_partition TEXT,     -- 'aws_european_sovereign_cloud', a partner cloud
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT regions_key_control_check
+    CHECK (key_control IN ('provider', 'customer_managed', 'external_hsm')) NOT VALID;
 ```
 
 The question every customer's auditor asks, answered as a query: is this product in this region covered by an in-force report for my audit period, and what must I do?

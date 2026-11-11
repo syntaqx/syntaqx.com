@@ -143,8 +143,10 @@ The core model has orders with `fulfillment_type = 'dine_in'`, items and modifie
 ALTER TABLE items
   ADD COLUMN kitchen_name       TEXT,      -- short name for the ticket
   ADD COLUMN default_course     TEXT,      -- 'drinks', 'starters', 'mains', 'dessert'
-  ADD COLUMN prep_seconds       INT CHECK (prep_seconds >= 0),
-  ADD COLUMN allergens          TEXT[] NOT NULL DEFAULT '{}';
+  ADD COLUMN prep_seconds       INT,
+  ADD COLUMN allergens          TEXT[] NOT NULL DEFAULT '{}',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT items_prep_seconds_check CHECK (prep_seconds >= 0) NOT VALID;
 
 ALTER TABLE order_lines
   ADD COLUMN seat               SMALLINT,  -- null: shared by the table
@@ -156,18 +158,20 @@ ALTER TABLE order_lines
 
 ALTER TABLE order_charges
   DROP CONSTRAINT order_charges_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT order_charges_kind_check CHECK (kind IN ('shipping_fee', 'delivery_fee',
     'service_fee', 'small_order_fee', 'regulatory_fee', 'tax', 'duty', 'tip', 'discount',
     'commission', 'referral_fee', 'fulfillment_fee', 'processing_fee', 'allowance',
-    'chargeback_deduction', 'advertising_fee', 'service_charge')),  -- adds 'service_charge'
+    'chargeback_deduction', 'advertising_fee', 'service_charge')) NOT VALID,  -- adds 'service_charge'
   DROP CONSTRAINT order_charges_payee_check,
   ADD CONSTRAINT order_charges_payee_check CHECK (payee IN ('merchant', 'platform',
-    'courier', 'authority', 'customer', 'staff')),   -- 'staff': a server's tip
+    'courier', 'authority', 'customer', 'staff')) NOT VALID,   -- 'staff': a server's tip
   ADD COLUMN check_id           UUID,      -- checks, below; null: the whole order
   ADD COLUMN recipient_staff_id UUID,      -- a tip entered for one server
   ADD COLUMN distributed_to_staff BOOLEAN, -- for 'service_charge': wages if distributed
-  ADD COLUMN tip_base           TEXT CHECK (tip_base IN ('pre_tax', 'post_tax',
-                                  'pre_discount'));
+  ADD COLUMN tip_base           TEXT,
+  ADD CONSTRAINT order_charges_tip_base_check
+    CHECK (tip_base IN ('pre_tax', 'post_tax', 'pre_discount')) NOT VALID;
 
 CREATE TABLE dining_tables (             -- the floor plan
   id           UUID PRIMARY KEY DEFAULT uuidv7(),

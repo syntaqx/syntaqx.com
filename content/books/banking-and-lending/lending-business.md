@@ -158,12 +158,13 @@ CREATE TABLE loan_pricing (                  -- one row per offer accepted: the 
 );
 
 ALTER TABLE loans
-  ADD COLUMN measurement_basis TEXT NOT NULL DEFAULT 'amortized_cost'
-    CHECK (measurement_basis IN ('amortized_cost', 'fair_value', 'held_for_sale')),
+  ADD COLUMN measurement_basis TEXT NOT NULL DEFAULT 'amortized_cost',
   ADD COLUMN basis_elected_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   ADD COLUMN vintage           DATE,           -- first of the origination month
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT loans_vintage_not_null NOT NULL vintage NOT VALID;
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT loans_vintage_not_null NOT NULL vintage NOT VALID,
+  ADD CONSTRAINT loans_measurement_basis_check
+    CHECK (measurement_basis IN ('amortized_cost', 'fair_value', 'held_for_sale')) NOT VALID;
 
 CREATE TABLE loan_economics_monthly (        -- derived, rebuilt from the ledger; never edited
   account_id         UUID NOT NULL REFERENCES accounts (id),

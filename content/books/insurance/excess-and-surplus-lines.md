@@ -199,16 +199,19 @@ These are deltas against [The Core Data Model](/books/insurance/insurance-busine
 ```sql
 ALTER TABLE sl_placements
   ADD COLUMN insurer_authority_id UUID REFERENCES insurer_authorities (id),  -- eligibility used
-  ADD COLUMN placement_basis   TEXT NOT NULL DEFAULT 'diligent_search'
-    CHECK (placement_basis IN ('diligent_search', 'export_list', 'exempt_commercial_purchaser',
-      'excess_of_admitted')),
+  ADD COLUMN placement_basis   TEXT NOT NULL DEFAULT 'diligent_search',
   ADD COLUMN risk_allocation   JSONB,       -- {"US-IL": 0.40, "US-FL": 0.35, "US-TX": 0.25}
   ADD COLUMN disclosure_doc_id UUID,        -- the signed surplus lines disclosure
-  ADD COLUMN filing_status     TEXT NOT NULL DEFAULT 'pending'
-    CHECK (filing_status IN ('pending', 'filed', 'accepted', 'rejected', 'corrected')),
+  ADD COLUMN filing_status     TEXT NOT NULL DEFAULT 'pending',
   ADD COLUMN filing_due_at     TIMESTAMPTZ,  -- from the home state's rule
   ADD COLUMN rejection_reason  TEXT,
-  ADD COLUMN remittance_period TEXT;        -- '2026-Q3' for quarterly remitters
+  ADD COLUMN remittance_period TEXT,        -- '2026-Q3' for quarterly remitters
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT sl_placements_placement_basis_check
+    CHECK (placement_basis IN ('diligent_search', 'export_list', 'exempt_commercial_purchaser',
+        'excess_of_admitted')) NOT VALID,
+  ADD CONSTRAINT sl_placements_filing_status_check
+    CHECK (filing_status IN ('pending', 'filed', 'accepted', 'rejected', 'corrected')) NOT VALID;
 
 CREATE TABLE diligent_searches (           -- the proof the admitted market declined
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

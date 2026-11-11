@@ -113,11 +113,12 @@ ALTER TABLE registries                   -- the registry's clock, per TLD
   ADD COLUMN dns_interrupt_after_days  SMALLINT NOT NULL DEFAULT 5,
   ADD COLUMN standard_renewal_days     SMALLINT NOT NULL DEFAULT 30,
   ADD COLUMN registrar_delete_after_days SMALLINT NOT NULL DEFAULT 35,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT registries_delete_inside_grace CHECK (auto_renew_grace_days IS NULL
-    OR registrar_delete_after_days < auto_renew_grace_days),
+    OR registrar_delete_after_days < auto_renew_grace_days) NOT VALID,
   ADD CONSTRAINT registries_interrupt_before_delete CHECK (
     registrar_delete_after_days - dns_interrupt_after_days >= 8
-    OR dns_interrupt_after_days = 0);    -- ERRP 2.2.3: the last eight renewable days
+    OR dns_interrupt_after_days = 0) NOT VALID;    -- ERRP 2.2.3: the last eight renewable days
 
 CREATE TABLE domain_lifecycle_events (   -- what happened to a name, in order
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

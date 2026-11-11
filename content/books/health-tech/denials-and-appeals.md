@@ -216,10 +216,12 @@ CREATE TABLE overpayment_investigations (
 );
 
 ALTER TABLE fee_schedules                -- The Practice Business's payer fee schedules (kind 'ppo', 'medicare'...)
-  ADD COLUMN method       TEXT NOT NULL DEFAULT 'fixed' CHECK (method IN ('fixed',
-                            'percent_of_medicare', 'case_rate')),
+  ADD COLUMN method       TEXT NOT NULL DEFAULT 'fixed',
   ADD COLUMN percent      NUMERIC(6,4),            -- for percent_of_medicare
-  ADD COLUMN source_doc_id UUID REFERENCES documents (id);  -- the contract or published schedule
+  ADD COLUMN source_doc_id UUID REFERENCES documents (id),  -- the contract or published schedule
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT fee_schedules_method_check
+    CHECK (method IN ('fixed', 'percent_of_medicare', 'case_rate')) NOT VALID;
 ```
 
 Underpayments are a query over posted lines and the payer fee schedule in effect on the date of service:

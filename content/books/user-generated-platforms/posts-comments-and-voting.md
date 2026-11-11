@@ -157,8 +157,7 @@ The chapter's additions to the core model:
 CREATE EXTENSION IF NOT EXISTS ltree;
 
 ALTER TABLE content_items
-  ADD COLUMN format          TEXT CHECK (format IN ('text', 'link', 'image', 'gallery',
-                               'video', 'poll', 'repost', 'quote')),
+  ADD COLUMN format          TEXT,
   ADD COLUMN link_url        TEXT,
   ADD COLUMN reposted_item_id UUID REFERENCES content_items (id),  -- repost, quote, crosspost
   ADD COLUMN thread_path     LTREE,      -- root.child.grandchild, for subtree reads
@@ -166,14 +165,20 @@ ALTER TABLE content_items
   ADD COLUMN locked_at       TIMESTAMPTZ,
   ADD COLUMN pinned_at       TIMESTAMPTZ,
   ADD COLUMN archived_at     TIMESTAMPTZ,
-  ADD COLUMN removed_by      TEXT CHECK (removed_by IN ('moderator', 'platform', 'automod')),
-  ADD CONSTRAINT content_items_link CHECK (format <> 'link' OR link_url IS NOT NULL),
+  ADD COLUMN removed_by      TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT content_items_link CHECK (format <> 'link' OR link_url IS NOT NULL) NOT VALID,
   ADD CONSTRAINT content_items_repost
-    CHECK (format NOT IN ('repost', 'quote') OR reposted_item_id IS NOT NULL),
+    CHECK (format NOT IN ('repost', 'quote') OR reposted_item_id IS NOT NULL) NOT VALID,
   ADD CONSTRAINT content_items_removed_by
-    CHECK ((state = 'removed') = (removed_by IS NOT NULL));
+    CHECK ((state = 'removed') = (removed_by IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT content_items_format_check
+    CHECK (format IN ('text', 'link', 'image', 'gallery',
+        'video', 'poll', 'repost', 'quote')) NOT VALID,
+  ADD CONSTRAINT content_items_removed_by_check
+    CHECK (removed_by IN ('moderator', 'platform', 'automod')) NOT VALID;
 
-CREATE INDEX content_items_thread ON content_items USING GIST (thread_path);
+CREATE INDEX CONCURRENTLY content_items_thread ON content_items USING GIST (thread_path);
 
 CREATE TABLE votes (                     -- one current vote per account per item
   content_item_id UUID NOT NULL REFERENCES content_items (id),

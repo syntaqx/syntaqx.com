@@ -132,9 +132,11 @@ The vendor side of assurance is bookkeeping of scope: which program covers which
 
 ```sql
 ALTER TABLE workspaces
-  ADD COLUMN cloud_environment  TEXT NOT NULL DEFAULT 'commercial' CHECK (cloud_environment IN
-                                  ('commercial', 'gov_moderate', 'gov_high', 'gov_dod')),
-  ADD COLUMN compliance_profile TEXT[] NOT NULL DEFAULT '{}';  -- 'hipaa', 'fedramp', 'cjis', 'finra'
+  ADD COLUMN cloud_environment  TEXT NOT NULL DEFAULT 'commercial',
+  ADD COLUMN compliance_profile TEXT[] NOT NULL DEFAULT '{}',  -- 'hipaa', 'fedramp', 'cjis', 'finra'
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT workspaces_cloud_environment_check
+    CHECK (cloud_environment IN ('commercial', 'gov_moderate', 'gov_high', 'gov_dod')) NOT VALID;
 
 CREATE TABLE assurance_attestations (    -- a report, certificate, authorization or agreement the vendor holds
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -94,10 +94,13 @@ The [core data model](/books/workplace-and-collaboration/workplace-business#the-
 
 ```sql
 ALTER TABLE members                        -- core already has invited_by
-  ADD COLUMN guest_scope       TEXT CHECK (guest_scope IN ('single_container', 'multi_container')),
+  ADD COLUMN guest_scope       TEXT,
   ADD COLUMN guest_expires_at  TIMESTAMPTZ,              -- automatic deactivation date
   ADD COLUMN home_organization_id UUID REFERENCES organizations (id),  -- the guest's employer, if known
-  ADD CONSTRAINT members_guest_scope CHECK ((kind = 'guest') = (guest_scope IS NOT NULL));
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT members_guest_scope CHECK ((kind = 'guest') = (guest_scope IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT members_guest_scope_check
+    CHECK (guest_scope IN ('single_container', 'multi_container')) NOT VALID;
 
 CREATE TABLE organization_trusts (        -- one row per direction per pair of organizations
   id                    UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -133,7 +136,7 @@ CREATE UNIQUE INDEX container_one_host
 
 ALTER TABLE items
   ADD COLUMN author_organization_id UUID REFERENCES organizations (id),           -- set at write, never changed
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT items_author_organization_id_not_null NOT NULL author_organization_id NOT VALID;
 ```
 

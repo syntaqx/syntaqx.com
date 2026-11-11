@@ -184,10 +184,11 @@ ALTER TABLE media_assets
   ADD COLUMN blob_id UUID REFERENCES media_blobs (id);  -- shared by exact duplicates
 
 ALTER TABLE media_variants
-  ADD COLUMN tier             TEXT NOT NULL DEFAULT 'hot'
-                                CHECK (tier IN ('hot', 'warm')),
+  ADD COLUMN tier             TEXT NOT NULL DEFAULT 'hot',
   ADD COLUMN last_accessed_at TIMESTAMPTZ,
-  ADD COLUMN deleted_at       TIMESTAMPTZ;  -- dropped as unused; rebuilt on demand
+  ADD COLUMN deleted_at       TIMESTAMPTZ,  -- dropped as unused; rebuilt on demand
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT media_variants_tier_check CHECK (tier IN ('hot', 'warm')) NOT VALID;
 
 CREATE TABLE media_near_matches (        -- perceptual near-duplicates; leads, not verdicts
   asset_a_id  UUID NOT NULL REFERENCES media_assets (id),

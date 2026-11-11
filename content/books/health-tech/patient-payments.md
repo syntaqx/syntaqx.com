@@ -166,9 +166,8 @@ The core `payments` table already records who paid (`guarantor_id`), the source,
 ```sql
 ALTER TABLE payments
   ADD COLUMN location_id        UUID REFERENCES locations (id),
-  ADD COLUMN channel            TEXT CHECK (channel IN ('front_desk', 'terminal', 'text_to_pay',
-                                  'portal', 'card_on_file', 'payment_plan', 'phone', 'mail')),
-  ADD COLUMN card_funding       TEXT CHECK (card_funding IN ('credit', 'debit', 'prepaid')),
+  ADD COLUMN channel            TEXT,
+  ADD COLUMN card_funding       TEXT,
                                          -- from the BIN, for the surcharge rule
   ADD COLUMN surcharge_amount   BIGINT NOT NULL DEFAULT 0,  -- credit only; never on hsa_fsa_card
   ADD COLUMN processor_fee      BIGINT,  -- the practice's expense, never a patient adjustment
@@ -176,12 +175,20 @@ ALTER TABLE payments
   ADD COLUMN payment_method_id  UUID,    -- payment_methods, below, for a stored card
   ADD COLUMN payment_plan_id    UUID,    -- payment_plans, from Patient Statements, Estimates & Collections
   ADD COLUMN reverses_id        UUID REFERENCES payments (id),  -- refund or chargeback of an earlier one
-  ADD COLUMN pms_allocation     TEXT CHECK (pms_allocation IN ('pms_fifo', 'explicit')),
+  ADD COLUMN pms_allocation     TEXT,
   ADD COLUMN pms_applied_to     JSONB,   -- procedures or plan named, when explicit
   ADD COLUMN writeback_request_id UUID,  -- writeback_requests, from Integrating with PMSs
-  ADD COLUMN pms_payment_ref    TEXT;    -- the PMS's own ID once posted
+  ADD COLUMN pms_payment_ref    TEXT,    -- the PMS's own ID once posted
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payments_channel_check
+    CHECK (channel IN ('front_desk', 'terminal', 'text_to_pay',
+        'portal', 'card_on_file', 'payment_plan', 'phone', 'mail')) NOT VALID,
+  ADD CONSTRAINT payments_card_funding_check
+    CHECK (card_funding IN ('credit', 'debit', 'prepaid')) NOT VALID,
+  ADD CONSTRAINT payments_pms_allocation_check
+    CHECK (pms_allocation IN ('pms_fifo', 'explicit')) NOT VALID;
 
-CREATE UNIQUE INDEX payments_processor_ref_uq ON payments (organization_id, processor_ref)
+CREATE UNIQUE INDEX CONCURRENTLY payments_processor_ref_uq ON payments (organization_id, processor_ref)
   WHERE processor_ref IS NOT NULL;      -- the posting key: one PMS payment per processor payment
 
 CREATE TABLE payment_methods (            -- a card or bank account on file, per guarantor

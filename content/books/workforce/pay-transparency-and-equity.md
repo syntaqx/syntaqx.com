@@ -165,7 +165,8 @@ CREATE TABLE pay_ranges (                  -- the range for a job, by geography,
   EXCLUDE USING GIST (company_id WITH =, job_code WITH =, geo_zone WITH =, valid_during WITH &&)
 );
 
-ALTER TABLE requisitions ADD FOREIGN KEY (pay_range_id) REFERENCES pay_ranges (id);
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+ALTER TABLE requisitions ADD FOREIGN KEY (pay_range_id) REFERENCES pay_ranges (id) NOT VALID;
 
 CREATE TABLE pay_transparency_rules (      -- the rules table above, as data
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

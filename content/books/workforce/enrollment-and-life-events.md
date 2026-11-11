@@ -122,11 +122,14 @@ These are deltas against [the core data model](/books/workforce/workforce-busine
 ALTER TABLE benefit_plans
   ADD COLUMN cafeteria_plan_document_id UUID REFERENCES documents (id),  -- what makes it pre-tax
   ADD COLUMN waiting_period_rule TEXT,     -- 'first_of_month_after_60_days', 'date_of_hire', ...
-  ADD COLUMN deduction_period_rule TEXT NOT NULL DEFAULT 'period_end_in_coverage'
-               CHECK (deduction_period_rule IN ('period_end_in_coverage', 'check_date_in_coverage',
-                 'coverage_month', 'prepay_prior_month')),
-  ADD COLUMN biweekly_policy TEXT NOT NULL DEFAULT 'annualize_26'
-               CHECK (biweekly_policy IN ('annualize_26', 'deduct_24_of_26'));
+  ADD COLUMN deduction_period_rule TEXT NOT NULL DEFAULT 'period_end_in_coverage',
+  ADD COLUMN biweekly_policy TEXT NOT NULL DEFAULT 'annualize_26',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT benefit_plans_deduction_period_rule_check
+    CHECK (deduction_period_rule IN ('period_end_in_coverage', 'check_date_in_coverage',
+        'coverage_month', 'prepay_prior_month')) NOT VALID,
+  ADD CONSTRAINT benefit_plans_biweekly_policy_check
+    CHECK (biweekly_policy IN ('annualize_26', 'deduct_24_of_26')) NOT VALID;
 
 ALTER TABLE benefit_enrollments
   ADD COLUMN elected_amount     BIGINT,     -- cents of coverage elected (life, disability)
@@ -134,8 +137,10 @@ ALTER TABLE benefit_enrollments
   ADD COLUMN benefit_rate_id    UUID,       -- benefit_rates, the cost the deduction came from
   ADD COLUMN elected_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   ADD COLUMN enrollment_window_id UUID,     -- enrollment_windows
-  ADD COLUMN status             TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('pending',
-                                  'active', 'pending_eoi', 'terminated', 'canceled'));
+  ADD COLUMN status             TEXT NOT NULL DEFAULT 'active',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT benefit_enrollments_status_check
+    CHECK (status IN ('pending', 'active', 'pending_eoi', 'terminated', 'canceled')) NOT VALID;
 
 ALTER TABLE life_events
   ADD COLUMN rule_ref           TEXT,       -- '29 CFR 2590.701-6(b)', '26 CFR 1.125-4(c)', plan rule
@@ -160,7 +165,8 @@ CREATE TABLE enrollment_windows (          -- open enrollment, new hire and life
 );
 
 ALTER TABLE benefit_enrollments
-  ADD FOREIGN KEY (enrollment_window_id) REFERENCES enrollment_windows (id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD FOREIGN KEY (enrollment_window_id) REFERENCES enrollment_windows (id) NOT VALID;
 
 CREATE TABLE eoi_requests (                -- the amount over guaranteed issue, pending the carrier
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -215,7 +221,8 @@ CREATE TABLE benefit_rates (               -- what a tier costs, and who pays it
 );
 
 ALTER TABLE benefit_enrollments
-  ADD FOREIGN KEY (benefit_rate_id) REFERENCES benefit_rates (id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD FOREIGN KEY (benefit_rate_id) REFERENCES benefit_rates (id) NOT VALID;
 ```
 
 The coverage date rule for a special enrollment is short enough to keep in code, with the rule reference stored on the life event:

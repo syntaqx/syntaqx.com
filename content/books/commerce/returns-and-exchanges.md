@@ -186,16 +186,23 @@ ALTER TABLE orders ADD COLUMN return_policy_id UUID REFERENCES return_policies (
 ALTER TABLE returns
   ADD COLUMN rma_number     TEXT,         -- what the warehouse scans
   ADD COLUMN policy_id      UUID REFERENCES return_policies (id),
-  ADD COLUMN requested_via  TEXT CHECK (requested_via IN ('portal', 'support', 'store',
-                              'marketplace', 'withdrawal_notice')),
+  ADD COLUMN requested_via  TEXT,
   ADD COLUMN return_by      TIMESTAMPTZ,  -- computed from the policy or the law
   ADD COLUMN refund_due_by  TIMESTAMPTZ,  -- e.g. 14 days from an EU withdrawal notice
   ADD COLUMN drop_off_ref   TEXT,         -- the network's scan or QR code reference
   ADD COLUMN shipment_id    UUID REFERENCES shipments (id),  -- the return label
   ADD COLUMN risk_decision_id UUID,       -- the scoring decision, per the playbook
-  ADD COLUMN resolution     TEXT CHECK (resolution IN ('refund', 'store_credit', 'exchange',
-                              'keep_item', 'rejected')),
-  ADD CONSTRAINT returns_rma_unique UNIQUE (rma_number);
+  ADD COLUMN resolution     TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT returns_requested_via_check
+    CHECK (requested_via IN ('portal', 'support', 'store',
+        'marketplace', 'withdrawal_notice')) NOT VALID,
+  ADD CONSTRAINT returns_resolution_check
+    CHECK (resolution IN ('refund', 'store_credit', 'exchange', 'keep_item', 'rejected')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY returns_rma_unique ON returns (rma_number);
+ALTER TABLE returns ADD CONSTRAINT returns_rma_unique UNIQUE USING INDEX returns_rma_unique;
 
 CREATE TABLE return_inspections (        -- what actually came back
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

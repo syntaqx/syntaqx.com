@@ -232,9 +232,10 @@ ALTER TABLE credit_lines                     -- home equity lines on the credit 
   ADD COLUMN lifetime_cap_bps INT;
 
 ALTER TABLE credit_limit_changes DROP CONSTRAINT credit_limit_changes_reason_check;
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE credit_limit_changes ADD CONSTRAINT credit_limit_changes_reason_check
   CHECK (reason IN ('origination', 'consumer_request', 'proactive', 'risk_decrease',
-    'delinquency', 'restore', 'property_value_decline', 'financial_circumstances'));
+    'delinquency', 'restore', 'property_value_decline', 'financial_circumstances')) NOT VALID;
 
 CREATE TABLE rescission_periods (            -- 1026.15 and 1026.23, one per rescindable transaction
   account_id           UUID PRIMARY KEY REFERENCES accounts (id),

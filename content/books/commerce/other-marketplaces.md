@@ -152,16 +152,21 @@ Every marketplace is a `sales_channels` row; the seller's account on it is a `co
 
 ```sql
 ALTER TABLE sales_channels DROP CONSTRAINT sales_channels_kind_check;
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE sales_channels ADD CONSTRAINT sales_channels_kind_check CHECK (kind IN
-  ('marketplace', 'first_party', 'pos', 'phone', 'kiosk', 'wholesale', 'drop_ship'));
+  ('marketplace', 'first_party', 'pos', 'phone', 'kiosk', 'wholesale', 'drop_ship')) NOT VALID;
 ALTER TABLE sales_channels
-  ADD COLUMN merchant_of_record TEXT NOT NULL DEFAULT 'marketplace' CHECK (merchant_of_record
-               IN ('merchant', 'marketplace', 'retailer')),  -- Wayfair is 'retailer'
-  ADD COLUMN price_set_by       TEXT NOT NULL DEFAULT 'merchant' CHECK (price_set_by IN
-               ('merchant', 'channel')),                      -- Temu managed, Wayfair, 1P
-  ADD COLUMN access             TEXT NOT NULL DEFAULT 'open' CHECK (access IN ('open',
-               'approval', 'invitation')),
-  ADD COLUMN payout_rule        JSONB NOT NULL DEFAULT '{}';  -- e.g. {"from": "delivery", "days": 7}
+  ADD COLUMN merchant_of_record TEXT NOT NULL DEFAULT 'marketplace',  -- Wayfair is 'retailer'
+  ADD COLUMN price_set_by       TEXT NOT NULL DEFAULT 'merchant',                      -- Temu managed, Wayfair, 1P
+  ADD COLUMN access             TEXT NOT NULL DEFAULT 'open',
+  ADD COLUMN payout_rule        JSONB NOT NULL DEFAULT '{}',  -- e.g. {"from": "delivery", "days": 7}
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT sales_channels_merchant_of_record_check
+    CHECK (merchant_of_record IN ('merchant', 'marketplace', 'retailer')) NOT VALID,
+  ADD CONSTRAINT sales_channels_price_set_by_check
+    CHECK (price_set_by IN ('merchant', 'channel')) NOT VALID,
+  ADD CONSTRAINT sales_channels_access_check
+    CHECK (access IN ('open', 'approval', 'invitation')) NOT VALID;
 
 CREATE TABLE marketplace_fee_schedules (  -- every fee a channel charges, versioned
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

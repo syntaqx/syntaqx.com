@@ -148,11 +148,14 @@ These are deltas against [The Core Data Model](/books/investing-and-digital-asse
 
 ```sql
 ALTER TABLE venues
-  ADD COLUMN registration       TEXT CHECK (registration IN ('exchange_6a', 'nms_stock_ats',
-                                 'ats', 'broker_dealer', 'finra_facility', 'foreign', 'crypto')),
+  ADD COLUMN registration       TEXT,
   ADD COLUMN displays_protected BOOLEAN NOT NULL DEFAULT FALSE,  -- quotes can be protected quotations
   ADD COLUMN form_ats_n_ref     TEXT,                            -- the effective filing, for ATSs
-  ADD COLUMN speed_bump_micros  INT;                             -- e.g. an exchange's fixed delay
+  ADD COLUMN speed_bump_micros  INT,                             -- e.g. an exchange's fixed delay
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT venues_registration_check
+    CHECK (registration IN ('exchange_6a', 'nms_stock_ats',
+        'ats', 'broker_dealer', 'finra_facility', 'foreign', 'crypto')) NOT VALID;
 
 CREATE TABLE venue_sessions (              -- when a venue trades what, by date
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

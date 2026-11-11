@@ -113,11 +113,13 @@ The chapter's additions to the core model:
 
 ```sql
 ALTER TABLE communities
-  ADD COLUMN join_policy    TEXT NOT NULL DEFAULT 'open'
-                              CHECK (join_policy IN ('open', 'request', 'invite')),
+  ADD COLUMN join_policy    TEXT NOT NULL DEFAULT 'open',
   ADD COLUMN join_gates     JSONB NOT NULL DEFAULT '{}',  -- {"min_account_age_days": 7,
                                                            --  "verified_email": true, ...}
-  ADD COLUMN default_role_id UUID REFERENCES roles (id);  -- the everyone role
+  ADD COLUMN default_role_id UUID REFERENCES roles (id),  -- the everyone role
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT communities_join_policy_check
+    CHECK (join_policy IN ('open', 'request', 'invite')) NOT VALID;
 
 ALTER TABLE memberships
   ADD COLUMN nickname      TEXT,

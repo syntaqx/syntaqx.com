@@ -125,14 +125,11 @@ The chapter's additions to the core model, as columns on `media_assets` and two 
 ```sql
 ALTER TABLE media_assets
   DROP CONSTRAINT media_assets_state_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT media_assets_state_check CHECK (state IN ('uploading', 'scanning',
-    'processing', 'ready', 'rejected', 'quarantined', 'removed', 'purged')),
-  ADD COLUMN purpose           TEXT NOT NULL DEFAULT 'post_media' CHECK (purpose IN
-                                 ('post_media', 'avatar', 'banner', 'message_attachment',
-                                  'listing_photo', 'video', 'verification_document')),
-  ADD COLUMN source            TEXT NOT NULL DEFAULT 'direct' CHECK (source IN ('direct',
-                                 'resumable', 'url_import', 'api', 'federation',
-                                 'live_recording')),
+    'processing', 'ready', 'rejected', 'quarantined', 'removed', 'purged')) NOT VALID,
+  ADD COLUMN purpose           TEXT NOT NULL DEFAULT 'post_media',
+  ADD COLUMN source            TEXT NOT NULL DEFAULT 'direct',
   ADD COLUMN declared_type     TEXT,     -- what the client said; a hint, never trusted
   ADD COLUMN detected_type     TEXT,     -- from decoding the bytes, e.g. 'image/heic'
   ADD COLUMN original_filename TEXT,     -- display only; never a storage key; personal data
@@ -141,7 +138,15 @@ ALTER TABLE media_assets
   ADD COLUMN uploaded_at       TIMESTAMPTZ,  -- bytes confirmed in storage
   ADD COLUMN scanned_at        TIMESTAMPTZ,  -- every blocking scan passed
   ADD CONSTRAINT media_assets_rejected_reason
-    CHECK ((state = 'rejected') = (rejected_reason IS NOT NULL));
+    CHECK ((state = 'rejected') = (rejected_reason IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT media_assets_purpose_check
+    CHECK (purpose IN
+        ('post_media', 'avatar', 'banner', 'message_attachment',
+        'listing_photo', 'video', 'verification_document')) NOT VALID,
+  ADD CONSTRAINT media_assets_source_check
+    CHECK (source IN ('direct',
+        'resumable', 'url_import', 'api', 'federation',
+        'live_recording')) NOT VALID;
 
 CREATE TABLE upload_sessions (           -- one grant to send bytes for one asset
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
