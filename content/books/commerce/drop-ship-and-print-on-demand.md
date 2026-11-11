@@ -131,10 +131,13 @@ ALTER TABLE fulfillments
   ADD COLUMN supplier_ref      TEXT,     -- the supplier's order number
   -- accepted_at, the supplier's acceptance, is Warehouses, 3PLs & Fulfillment Networks' column
   ADD COLUMN ship_by           TIMESTAMPTZ,  -- from the route's days, checked against the promise
-  ADD COLUMN packing_slip      TEXT CHECK (packing_slip IN ('seller', 'retailer', 'none')),
+  ADD COLUMN packing_slip      TEXT,
   ADD COLUMN carrier_account   TEXT,     -- a retailer's account for DSV orders
   ADD COLUMN supplier_cost     BIGINT,   -- what the supplier will invoice
-  ADD COLUMN supplier_invoice  UUID REFERENCES documents (id);
+  ADD COLUMN supplier_invoice  UUID REFERENCES documents (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT fulfillments_packing_slip_check
+    CHECK (packing_slip IN ('seller', 'retailer', 'none')) NOT VALID;
 
 CREATE TABLE print_files (               -- a design at one placement, versioned
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

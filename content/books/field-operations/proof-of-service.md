@@ -209,8 +209,11 @@ CREATE TABLE visit_evidence (
 
 ALTER TABLE visits
   ADD COLUMN evidence_rules_applied JSONB,  -- the resolved rules, snapshotted at completion
-  ADD COLUMN completion_source      TEXT CHECK (completion_source IN ('field', 'office')),
-  ADD COLUMN sealed_at              TIMESTAMPTZ;
+  ADD COLUMN completion_source      TEXT,
+  ADD COLUMN sealed_at              TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT visits_completion_source_check
+    CHECK (completion_source IN ('field', 'office')) NOT VALID;
 
 CREATE TABLE service_reports (
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

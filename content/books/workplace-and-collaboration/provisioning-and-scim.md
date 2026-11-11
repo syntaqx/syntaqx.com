@@ -120,13 +120,25 @@ ALTER TABLE members
   ADD COLUMN employee_number TEXT,                  -- Enterprise User extension
   ADD COLUMN manager_member_id UUID REFERENCES members (id),
   ADD COLUMN scim_etag       TEXT,                  -- version for If-Match
-  ADD COLUMN deactivation_source TEXT CHECK (deactivation_source IN ('admin', 'scim', 'hr',
-    'inactivity', 'self')),
-  ADD CONSTRAINT members_external_id_unique UNIQUE (directory_connection_id, external_id);
+  ADD COLUMN deactivation_source TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT members_deactivation_source_check
+    CHECK (deactivation_source IN ('admin', 'scim', 'hr', 'inactivity', 'self')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY members_external_id_unique
+  ON members (directory_connection_id, external_id);
+ALTER TABLE members
+  ADD CONSTRAINT members_external_id_unique UNIQUE USING INDEX members_external_id_unique;
 
 ALTER TABLE groups
-  ADD COLUMN directory_connection_id UUID REFERENCES directory_connections (id),
-  ADD CONSTRAINT groups_external_id_unique UNIQUE (directory_connection_id, external_id);
+  ADD COLUMN directory_connection_id UUID REFERENCES directory_connections (id);
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY groups_external_id_unique
+  ON groups (directory_connection_id, external_id);
+ALTER TABLE groups
+  ADD CONSTRAINT groups_external_id_unique UNIQUE USING INDEX groups_external_id_unique;
 
 CREATE TABLE scim_operations (            -- every request the identity provider sent, as received
   id                      UUID PRIMARY KEY DEFAULT uuidv7(),

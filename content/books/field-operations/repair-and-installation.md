@@ -245,10 +245,12 @@ ALTER TABLE work_orders
   ADD COLUMN customer_po             TEXT,
   ADD COLUMN nte_amount              BIGINT,     -- minor units
   ADD COLUMN currency                TEXT,
-  ADD COLUMN callback_cause          TEXT CHECK (callback_cause IN ('workmanship',
-                                       'diagnosis_wrong', 'equipment_failure')),
+  ADD COLUMN callback_cause          TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT work_orders_callback_cause_on_callbacks
-    CHECK (callback_cause IS NULL OR source = 'callback');
+    CHECK (callback_cause IS NULL OR source = 'callback') NOT VALID,
+  ADD CONSTRAINT work_orders_callback_cause_check
+    CHECK (callback_cause IN ('workmanship', 'diagnosis_wrong', 'equipment_failure')) NOT VALID;
 
 CREATE TABLE work_order_parts (
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

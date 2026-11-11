@@ -133,7 +133,7 @@ The core model already has pickup and shipping as fulfillment kinds and stores a
 
 ```sql
 ALTER TABLE fulfillments
-  ADD COLUMN handoff         TEXT CHECK (handoff IN ('counter', 'curbside', 'locker')),
+  ADD COLUMN handoff         TEXT,
   ADD COLUMN pickup_slot_id  UUID,                  -- pickup_slots, below
   ADD COLUMN pickup_code     TEXT,                  -- shown to the customer; hashed if it's a secret
   ADD COLUMN staged_at       TEXT,                  -- shelf or locker position
@@ -143,7 +143,10 @@ ALTER TABLE fulfillments
   ADD COLUMN handed_over_at  TIMESTAMPTZ,
   ADD COLUMN handed_over_by  TEXT,
   ADD COLUMN hold_until      TIMESTAMPTZ,           -- abandonment deadline
-  ADD COLUMN origin_channel_location_id UUID REFERENCES locations (id);  -- endless aisle: the store that sold it
+  ADD COLUMN origin_channel_location_id UUID REFERENCES locations (id),  -- endless aisle: the store that sold it
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT fulfillments_handoff_check
+    CHECK (handoff IN ('counter', 'curbside', 'locker')) NOT VALID;
 
 CREATE TABLE store_fulfillment_capacity (  -- what a store can pick, by day and hour
   location_id    UUID NOT NULL REFERENCES locations (id),

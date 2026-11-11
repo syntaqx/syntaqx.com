@@ -124,11 +124,13 @@ CREATE TABLE fee_rules (                 -- caps and disclosure rules by jurisdi
 );
 
 ALTER TABLE order_charges
-  ADD COLUMN charge_class TEXT CHECK (charge_class IN ('mandatory', 'optional', 'government',
-    'contingent')),
+  ADD COLUMN charge_class TEXT,
   ADD COLUMN fee_class    TEXT,          -- merchant-side class the cap rules use
   ADD COLUMN base_amount  BIGINT,        -- what a percentage was applied to
-  ADD COLUMN fee_rule_id  UUID REFERENCES fee_rules (id);  -- the cap that clipped it, if any
+  ADD COLUMN fee_rule_id  UUID REFERENCES fee_rules (id),  -- the cap that clipped it, if any
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT order_charges_charge_class_check
+    CHECK (charge_class IN ('mandatory', 'optional', 'government', 'contingent')) NOT VALID;
 
 CREATE TABLE price_displays (            -- what the customer saw, at each step
   id           UUID PRIMARY KEY DEFAULT uuidv7(),

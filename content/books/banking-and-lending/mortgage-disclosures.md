@@ -116,11 +116,14 @@ ALTER TABLE applications                     -- trid_application_at comes from L
   ADD COLUMN consummation_at      TIMESTAMPTZ;   -- scheduled, then actual
 
 ALTER TABLE disclosures
-  ADD COLUMN form_kind            TEXT CHECK (form_kind IN ('loan_estimate', 'closing_disclosure')),
+  ADD COLUMN form_kind            TEXT,
   ADD COLUMN revision             SMALLINT,      -- 0 for the initial form
   ADD COLUMN revision_reason_id   UUID,          -- changed_circumstances, below
   ADD COLUMN presumed_received_at DATE,          -- the mailbox rule, specific business days
-  ADD COLUMN received_evidence_at TIMESTAMPTZ;   -- earlier receipt, if evidenced
+  ADD COLUMN received_evidence_at TIMESTAMPTZ,   -- earlier receipt, if evidenced
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT disclosures_form_kind_check
+    CHECK (form_kind IN ('loan_estimate', 'closing_disclosure')) NOT VALID;
 
 CREATE TABLE legal_public_holidays (         -- 5 U.S.C. 6103(a), for the specific definition
   holiday_date          DATE PRIMARY KEY,

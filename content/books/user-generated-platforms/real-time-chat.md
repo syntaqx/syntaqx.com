@@ -130,13 +130,14 @@ The chapter's additions. The SQL sketch shows the relational shape; at scale the
 ALTER TABLE channels
   ALTER COLUMN community_id DROP NOT NULL,          -- DMs and group DMs have none
   DROP CONSTRAINT channels_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT channels_kind_check CHECK (kind IN ('category', 'text', 'forum',
-    'announcement', 'voice', 'stage', 'thread', 'dm', 'group_dm')),
+    'announcement', 'voice', 'stage', 'thread', 'dm', 'group_dm')) NOT VALID,
   ADD COLUMN parent_message_id BIGINT,              -- the message a thread hangs off
   ADD COLUMN owner_account_id UUID REFERENCES accounts (id),  -- group DM owner
   ADD COLUMN retention_days    INT,                 -- owner's served-retention setting
   ADD CONSTRAINT channels_dm_scope
-    CHECK ((kind IN ('dm', 'group_dm')) = (community_id IS NULL));
+    CHECK ((kind IN ('dm', 'group_dm')) = (community_id IS NULL)) NOT VALID;
 
 CREATE TABLE channel_recipients (        -- who is in a DM or group DM
   channel_id  UUID NOT NULL REFERENCES channels (id),

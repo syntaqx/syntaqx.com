@@ -316,10 +316,13 @@ CREATE TABLE hedges (                           -- principal flow offset on a ve
 -- can be card-funded, and says what happens when funds are short
 ALTER TABLE recurring_plans
   ADD COLUMN next_run_at     TIMESTAMPTZ,
-  ADD COLUMN on_insufficient TEXT CHECK (on_insufficient IN ('skip', 'retry_once', 'pause')),
+  ADD COLUMN on_insufficient TEXT,
   DROP CONSTRAINT recurring_plans_funding_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT recurring_plans_funding_check
-    CHECK (funding IN ('buying_power', 'bank', 'dividend', 'card'));
+    CHECK (funding IN ('buying_power', 'bank', 'dividend', 'card')) NOT VALID,
+  ADD CONSTRAINT recurring_plans_on_insufficient_check
+    CHECK (on_insufficient IN ('skip', 'retry_once', 'pause')) NOT VALID;
 
 CREATE TABLE recurring_runs (
   plan_id        UUID NOT NULL REFERENCES recurring_plans (id),

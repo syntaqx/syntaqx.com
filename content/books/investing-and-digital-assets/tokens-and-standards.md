@@ -158,8 +158,9 @@ The core `asset_networks` row already holds the contract address, token standard
 
 ```sql
 ALTER TABLE asset_networks
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT token_standard_known CHECK (token_standard IN ('native', 'erc20', 'erc721',
-    'erc1155', 'spl', 'spl_token_2022', 'other')),
+    'erc1155', 'spl', 'spl_token_2022', 'other')) NOT VALID,
   ADD COLUMN decimals_verified_against TEXT;   -- issuer document checked at listing
 
 CREATE TABLE token_contracts (             -- the program behind a token network

@@ -178,7 +178,8 @@ ALTER TABLE domains
   ADD COLUMN reseller_account_id  UUID REFERENCES accounts (id),  -- kind = 'reseller'
   ADD COLUMN price_tier           TEXT NOT NULL DEFAULT 'standard',
   ADD COLUMN renewal_price_disclosed BIGINT,     -- a premium renewal the registrant agreed to
-  ADD CONSTRAINT domains_tld_fk FOREIGN KEY (tld) REFERENCES registries (tld);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT domains_tld_fk FOREIGN KEY (tld) REFERENCES registries (tld) NOT VALID;
 
 -- The pass-through SKUs: one per TLD for the registry, one for ICANN.
 INSERT INTO skus (product_id, code, meter, unit, charge_kind, pass_through)

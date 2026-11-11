@@ -160,9 +160,11 @@ ALTER TABLE raw_punches
   ADD COLUMN photo_document_id   UUID REFERENCES documents (id),
   ADD COLUMN biometric_match     NUMERIC(4, 3),   -- the matcher's score, if any
   ADD COLUMN geofence_id         UUID REFERENCES geofences (id),
-  ADD COLUMN geofence_result     TEXT CHECK (geofence_result IN ('inside', 'outside',
-                                   'unknown')),
-  ADD COLUMN location_accuracy_m INT;
+  ADD COLUMN geofence_result     TEXT,
+  ADD COLUMN location_accuracy_m INT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT raw_punches_geofence_result_check
+    CHECK (geofence_result IN ('inside', 'outside', 'unknown')) NOT VALID;
 
 CREATE TABLE biometric_consents (          -- the written release, per method and vendor
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

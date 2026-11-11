@@ -190,8 +190,9 @@ CREATE TABLE reserve_reports (               -- the monthly report, its exam and
   cfo_certified_at     TIMESTAMPTZ,
   UNIQUE (legal_entity_id, instrument_id, issuer_regime_id, as_of)
 );
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE redemption_requests ADD FOREIGN KEY (redemption_policy_id)
-  REFERENCES redemption_policies (id);
+  REFERENCES redemption_policies (id) NOT VALID;
 ```
 
 Design notes:

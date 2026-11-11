@@ -190,11 +190,13 @@ CREATE TABLE obligors (                    -- the provider contractually obligat
 );
 
 ALTER TABLE policies
-  ADD COLUMN legal_form        TEXT NOT NULL DEFAULT 'insurance'
-                               CHECK (legal_form IN ('insurance', 'service_contract',
-                                 'home_warranty', 'vsc', 'debt_cancellation')),
+  ADD COLUMN legal_form        TEXT NOT NULL DEFAULT 'insurance',
   ADD COLUMN obligor_id        UUID REFERENCES obligors (id),  -- for non-insurance forms
-  ADD COLUMN backing_policy_id UUID REFERENCES policies (id);  -- the reimbursement policy
+  ADD COLUMN backing_policy_id UUID REFERENCES policies (id),  -- the reimbursement policy
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT policies_legal_form_check
+    CHECK (legal_form IN ('insurance', 'service_contract',
+        'home_warranty', 'vsc', 'debt_cancellation')) NOT VALID;
 
 CREATE TABLE obligor_authorities (         -- licensed or registered, per state, with its security basis
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

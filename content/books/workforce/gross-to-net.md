@@ -152,10 +152,11 @@ These are deltas against [the core data model](/books/workforce/workforce-busine
 
 ```sql
 ALTER TABLE pay_item_types
-  ADD COLUMN pipeline_step     SMALLINT NOT NULL DEFAULT 1   -- 1 earnings ... 7 distributions
-    CHECK (pipeline_step BETWEEN 1 AND 7),
+  ADD COLUMN pipeline_step     SMALLINT NOT NULL DEFAULT 1,  -- 1 earnings ... 7 distributions
   ADD COLUMN pays_cash         BOOLEAN NOT NULL DEFAULT TRUE, -- false for imputed lines and cash tips held
-  ADD COLUMN w2_box12_code     TEXT;                          -- 'C', 'D', 'W', 'TP', 'TT', 'TA', ...
+  ADD COLUMN w2_box12_code     TEXT,                          -- 'C', 'D', 'W', 'TP', 'TT', 'TA', ...
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT pay_item_types_pipeline_step_check CHECK (pipeline_step BETWEEN 1 AND 7) NOT VALID;
 
 ALTER TABLE taxability_rules
   ADD COLUMN annual_limit      BIGINT,              -- exempt only up to this, e.g. dependent care

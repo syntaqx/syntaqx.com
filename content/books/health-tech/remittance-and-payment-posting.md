@@ -146,8 +146,11 @@ The core `remittances` row is one payer payment (trace number, method, amount, t
 ```sql
 ALTER TABLE remittances                  -- trace_number, payment_method, payment_amount, paid_on core
   ADD COLUMN edi_txn_id      UUID REFERENCES edi_transactions (id),  -- the raw 835 as exchanged
-  ADD COLUMN status          TEXT NOT NULL DEFAULT 'received' CHECK (status IN ('received',
-                               'unbalanced', 'duplicate', 'posting', 'posted', 'exceptions'));
+  ADD COLUMN status          TEXT NOT NULL DEFAULT 'received',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT remittances_status_check
+    CHECK (status IN ('received',
+        'unbalanced', 'duplicate', 'posting', 'posted', 'exceptions')) NOT VALID;
 
 ALTER TABLE remittance_lines             -- amounts, adjustments, remarks and claim status are core
   ADD COLUMN patient_control_number TEXT,            -- CLP01, how the claim was matched
@@ -156,11 +159,12 @@ ALTER TABLE remittance_lines             -- amounts, adjustments, remarks and cl
   ADD COLUMN modifiers       TEXT[] NOT NULL DEFAULT '{}',
   ADD COLUMN units           NUMERIC(8,2),
   ADD COLUMN crossed_over_to TEXT,                   -- the payer Medicare forwarded the claim to
-  ADD COLUMN posting_status  TEXT NOT NULL DEFAULT 'pending' CHECK (posting_status IN ('pending',
-                               'auto_posted', 'manual_posted', 'exception')),
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD COLUMN posting_status  TEXT NOT NULL DEFAULT 'pending',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT remittance_lines_patient_control_number_not_null NOT NULL patient_control_number NOT VALID,
-  ADD CONSTRAINT remittance_lines_procedure_code_not_null NOT NULL procedure_code NOT VALID;
+  ADD CONSTRAINT remittance_lines_procedure_code_not_null NOT NULL procedure_code NOT VALID,
+  ADD CONSTRAINT remittance_lines_posting_status_check
+    CHECK (posting_status IN ('pending', 'auto_posted', 'manual_posted', 'exception')) NOT VALID;
 
 CREATE TABLE provider_adjustments (      -- PLB: not tied to a claim in this ERA
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

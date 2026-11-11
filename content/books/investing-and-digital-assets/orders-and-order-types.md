@@ -119,14 +119,12 @@ These are deltas against [The Core Data Model](/books/investing-and-digital-asse
 
 ```sql
 ALTER TABLE orders
-  ADD COLUMN session_eligibility TEXT NOT NULL DEFAULT 'regular'
-    CHECK (session_eligibility IN ('regular', 'extended', 'overnight', 'all', 'continuous')),
+  ADD COLUMN session_eligibility TEXT NOT NULL DEFAULT 'regular',
   ADD COLUMN not_held           BOOLEAN NOT NULL DEFAULT FALSE,  -- discretion over price and time
-  ADD COLUMN order_class        TEXT NOT NULL DEFAULT 'simple'
-    CHECK (order_class IN ('simple', 'bracket', 'oco', 'oto', 'multi_leg')),
+  ADD COLUMN order_class        TEXT NOT NULL DEFAULT 'simple',
   ADD COLUMN parent_order_id    UUID REFERENCES orders (id),     -- group or parent of a child order
   ADD COLUMN trail_amount       NUMERIC(38, 18),                 -- trailing stops: price or percent
-  ADD COLUMN trail_unit         TEXT CHECK (trail_unit IN ('price', 'percent')),
+  ADD COLUMN trail_unit         TEXT,
   ADD COLUMN high_water_mark    NUMERIC(38, 18),                 -- persisted, never recomputed
   ADD COLUMN expires_at         TIMESTAMPTZ,                     -- gtd, or a gtc age limit
   ADD COLUMN nbb_at_receipt     NUMERIC(38, 18),                 -- the quote the order was classified on
@@ -134,9 +132,15 @@ ALTER TABLE orders
   ADD COLUMN marketable_at_receipt BOOLEAN,
   ADD COLUMN cum_quantity       NUMERIC(78, 0) NOT NULL DEFAULT 0,  -- from executions, checked against venue
   DROP CONSTRAINT orders_status_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT orders_status_check CHECK (status IN ('new', 'accepted', 'routed',
     'partially_filled', 'filled', 'cancel_pending', 'replace_pending', 'canceled', 'replaced',
-    'rejected', 'expired'));
+    'rejected', 'expired')) NOT VALID,
+  ADD CONSTRAINT orders_session_eligibility_check
+    CHECK (session_eligibility IN ('regular', 'extended', 'overnight', 'all', 'continuous')) NOT VALID,
+  ADD CONSTRAINT orders_order_class_check
+    CHECK (order_class IN ('simple', 'bracket', 'oco', 'oto', 'multi_leg')) NOT VALID,
+  ADD CONSTRAINT orders_trail_unit_check CHECK (trail_unit IN ('price', 'percent')) NOT VALID;
 
 CREATE TABLE order_legs (                  -- the legs of a multi-leg or grouped order
   order_id            UUID NOT NULL REFERENCES orders (id),

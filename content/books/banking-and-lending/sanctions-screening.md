@@ -171,10 +171,11 @@ These are deltas against [the core data model](/books/banking-and-lending/bankin
 ```sql
 -- Sanctions reviews are cases with their own clock: adds 'sanctions_review' to the core kinds.
 ALTER TABLE cases DROP CONSTRAINT cases_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT cases_kind_check CHECK (kind IN ('reg_e_error', 'reg_cc_claim',
     'billing_error', 'fraud_claim', 'credit_report_dispute', 'legal_process', 'complaint',
     'aml_investigation', 'hardship',
-    'sanctions_review'));
+    'sanctions_review')) NOT VALID;
 
 -- Every list version as loaded, with its completeness check.
 CREATE TABLE sanctions_list_versions (

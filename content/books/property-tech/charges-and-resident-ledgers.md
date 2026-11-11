@@ -169,18 +169,21 @@ ALTER TABLE charge_codes
   ADD COLUMN tax_code             TEXT;                            -- null: not taxable
 
 ALTER TABLE charges
-  ADD COLUMN ledger_party          TEXT NOT NULL DEFAULT 'resident'
-               CHECK (ledger_party IN ('resident', 'subsidy', 'third_party')),
+  ADD COLUMN ledger_party          TEXT NOT NULL DEFAULT 'resident',
   ADD COLUMN responsible_person_id UUID REFERENCES people (id),    -- individually billed leases
   ADD COLUMN posting_run_id        UUID,                           -- null for one-off charges
   ADD COLUMN work_order_id         UUID REFERENCES work_orders (id),
-  ADD COLUMN proration_method      TEXT CHECK (proration_method IN ('actual_days_month',
-                                     'thirty_day_month', 'actual_days_year')),
+  ADD COLUMN proration_method      TEXT,
   ADD COLUMN lease_concession_id   UUID REFERENCES lease_concessions (id),  -- concession credits
   ADD COLUMN reason                TEXT,                           -- required for one-offs and reversals
   ADD COLUMN posted_by             UUID REFERENCES users (id),           -- staff, or the run's
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT charges_posted_by_not_null NOT NULL posted_by NOT VALID;
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT charges_posted_by_not_null NOT NULL posted_by NOT VALID,
+  ADD CONSTRAINT charges_ledger_party_check
+    CHECK (ledger_party IN ('resident', 'subsidy', 'third_party')) NOT VALID,
+  ADD CONSTRAINT charges_proration_method_check
+    CHECK (proration_method IN ('actual_days_month',
+        'thirty_day_month', 'actual_days_year')) NOT VALID;
                                                                    -- service user
 
 CREATE TABLE charge_posting_runs (       -- one row per property per run

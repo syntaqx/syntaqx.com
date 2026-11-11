@@ -60,6 +60,9 @@ Some DDL takes an `ACCESS EXCLUSIVE` lock that blocks every read and write on th
 | ------ | ------------- |
 | Add an index | `CREATE INDEX CONCURRENTLY` (slower, and can't run in a transaction, but doesn't block writes) |
 | Add a foreign key | `ADD CONSTRAINT ... NOT VALID`, then `VALIDATE CONSTRAINT` separately |
+| Add a `CHECK` | The same: `ADD CONSTRAINT ... CHECK (...) NOT VALID`, then validate. A `CHECK` written inline on a new column scans the whole table too; an inline `REFERENCES` on a new column doesn't, because every value is null |
+| Add a unique constraint | `CREATE UNIQUE INDEX CONCURRENTLY`, then `ADD CONSTRAINT ... UNIQUE USING INDEX`, which attaches the finished index. To widen a key, build the new index first and swap the constraint in one `ALTER`, so the old key holds until the new one does |
+| Add an exclusion constraint | No safe form: `NOT VALID` covers only foreign keys, `CHECK` and not-null, and `USING INDEX` only unique and primary keys. Add it while the table is small, or in a maintenance window |
 | Add `NOT NULL` | Add a `CHECK (col IS NOT NULL) NOT VALID`, validate it, then `SET NOT NULL`, which skips the table scan once a valid check proves there are no nulls. Postgres 18 can also add the `NOT NULL` constraint itself as `NOT VALID`: `ADD CONSTRAINT t_c_not_null NOT NULL c NOT VALID`, then `VALIDATE CONSTRAINT` after the backfill |
 | Add a column with a default | Safe on Postgres 11+ when the default is non-volatile: it's stored as metadata, not written to every row |
 | Change a column's type | Usually rewrites the table. Use expand and contract with a new column |
@@ -83,7 +86,7 @@ On ledger and payment tables the bar is higher. Backfills never modify existing 
 **Reference**
 
 - [PostgreSQL: CREATE INDEX](https://www.postgresql.org/docs/current/sql-createindex.html), building indexes `CONCURRENTLY`
-- [PostgreSQL: ALTER TABLE](https://www.postgresql.org/docs/current/sql-altertable.html), `NOT VALID`, `VALIDATE CONSTRAINT`, skipped scans for `SET NOT NULL`, and non-volatile defaults
+- [PostgreSQL: ALTER TABLE](https://www.postgresql.org/docs/current/sql-altertable.html), `NOT VALID` and which constraints allow it, `VALIDATE CONSTRAINT`, `UNIQUE USING INDEX`, skipped scans for `SET NOT NULL`, and non-volatile defaults
 - [PostgreSQL: Explicit locking](https://www.postgresql.org/docs/current/explicit-locking.html), which DDL takes which lock
 - [PostgreSQL: Client connection defaults](https://www.postgresql.org/docs/current/runtime-config-client.html), `lock_timeout`
 

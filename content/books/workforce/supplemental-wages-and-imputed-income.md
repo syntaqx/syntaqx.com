@@ -138,13 +138,19 @@ ALTER TABLE pay_item_types
 
 ALTER TABLE earning_codes
   ADD COLUMN supplemental_override BOOLEAN,         -- null: inherit from pay_item_types.supplemental
-  ADD COLUMN default_supplemental_method TEXT CHECK (default_supplemental_method IN
-                                ('flat', 'aggregate_current', 'aggregate_prior', 'regular'));
+  ADD COLUMN default_supplemental_method TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT earning_codes_default_supplemental_method_check
+    CHECK (default_supplemental_method IN
+        ('flat', 'aggregate_current', 'aggregate_prior', 'regular')) NOT VALID;
 
 ALTER TABLE pay_statement_lines
-  ADD COLUMN supplemental_method TEXT CHECK (supplemental_method IN ('flat', 'aggregate_current',
-                                'aggregate_prior', 'mandatory_37', 'regular')),
-  ADD COLUMN aggregated_with_statement_id UUID REFERENCES pay_statements (id);  -- aggregate base
+  ADD COLUMN supplemental_method TEXT,
+  ADD COLUMN aggregated_with_statement_id UUID REFERENCES pay_statements (id),  -- aggregate base
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT pay_statement_lines_supplemental_method_check
+    CHECK (supplemental_method IN ('flat', 'aggregate_current',
+        'aggregate_prior', 'mandatory_37', 'regular')) NOT VALID;
 
 CREATE TABLE supplemental_groups (            -- employers under common control, for the $1M rule
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -148,10 +148,11 @@ CREATE TABLE attributed_sales (          -- the network's claim, never the order
 );
 
 ALTER TABLE order_charges DROP CONSTRAINT order_charges_kind_check;
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE order_charges ADD CONSTRAINT order_charges_kind_check CHECK (kind IN (
   'shipping_fee', 'delivery_fee', 'service_fee', 'small_order_fee', 'regulatory_fee', 'tax',
   'duty', 'tip', 'discount', 'commission', 'referral_fee', 'fulfillment_fee', 'processing_fee',
-  'allowance', 'chargeback_deduction', 'advertising_fee'));  -- cost-per-sale ads, per order
+  'allowance', 'chargeback_deduction', 'advertising_fee')) NOT VALID;  -- cost-per-sale ads, per order
 ```
 
 The daily rollup feeds `acquisition_spend`, and the measure the business trusts compares spend to the order book rather than to the networks' claims:

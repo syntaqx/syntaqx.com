@@ -278,10 +278,17 @@ CREATE TABLE workflow_steps (
 
 -- Hot accounts split into shards; the shard is one more dimension.
 ALTER TABLE ledger_accounts
-  ADD COLUMN shard SMALLINT NOT NULL DEFAULT 0 CHECK (shard >= 0),
+  ADD COLUMN shard SMALLINT NOT NULL DEFAULT 0,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT ledger_accounts_shard_check CHECK (shard >= 0) NOT VALID;
+
+-- The wider key without blocking writes: build its index concurrently, then swap the
+-- constraint in one statement, so the old key holds until the new one does.
+CREATE UNIQUE INDEX CONCURRENTLY ledger_accounts_dims_shard_key ON ledger_accounts
+  (name, merchant_id, bank_account_id, processor, currency, shard) NULLS NOT DISTINCT;
+ALTER TABLE ledger_accounts
   DROP CONSTRAINT ledger_accounts_dims_key,
-  ADD CONSTRAINT ledger_accounts_dims_key
-    UNIQUE NULLS NOT DISTINCT (name, merchant_id, bank_account_id, processor, currency, shard);
+  ADD CONSTRAINT ledger_accounts_dims_key UNIQUE USING INDEX ledger_accounts_dims_shard_key;
 
 -- Balances derived from snapshots plus later entries; a snapshot is checked before
 -- the partitions it summarizes are detached.

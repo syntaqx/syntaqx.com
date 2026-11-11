@@ -113,11 +113,12 @@ These are deltas against [the core data model](/books/workforce/workforce-busine
 ```sql
 ALTER TABLE tax_jurisdictions
   DROP CONSTRAINT tax_jurisdictions_level_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT tax_jurisdictions_level_check CHECK (level IN ('country', 'federal', 'state',
-    'county', 'city', 'school_district', 'transit_district', 'other_local')),
+    'county', 'city', 'school_district', 'transit_district', 'other_local')) NOT VALID,
   DROP CONSTRAINT tax_jurisdictions_code_scheme_check,
   ADD CONSTRAINT tax_jurisdictions_code_scheme_check CHECK (code_scheme IN ('iso_3166_1',
-    'iso_3166_2', 'fips', 'gnis', 'psd', 'vendor'));
+    'iso_3166_2', 'fips', 'gnis', 'psd', 'vendor')) NOT VALID;
 
 ALTER TABLE employers
   ADD COLUMN country               CHAR(2) NOT NULL DEFAULT 'US',   -- ISO 3166-1 alpha-2
@@ -126,9 +127,10 @@ ALTER TABLE employers
   ALTER COLUMN federal_return DROP NOT NULL,
   ALTER COLUMN deposit_schedule DROP NOT NULL,
   ALTER COLUMN deposit_schedule_year DROP NOT NULL,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT us_employer_fields CHECK (country <> 'US' OR (ein IS NOT NULL
     AND federal_return IS NOT NULL AND deposit_schedule IS NOT NULL
-    AND deposit_schedule_year IS NOT NULL));
+    AND deposit_schedule_year IS NOT NULL)) NOT VALID;
 
 CREATE TABLE country_partners (            -- in-country firms that employ or run payroll
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

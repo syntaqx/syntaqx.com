@@ -128,10 +128,12 @@ The chapter's additions to the core model and to [Live Streaming: Ingest & Trans
 
 ```sql
 ALTER TABLE streams
-  ADD COLUMN latency_mode TEXT NOT NULL DEFAULT 'low'
-    CHECK (latency_mode IN ('standard', 'reduced', 'low', 'real_time')),
+  ADD COLUMN latency_mode TEXT NOT NULL DEFAULT 'low',
   ADD COLUMN dvr_enabled  BOOLEAN NOT NULL DEFAULT TRUE,
-  ADD COLUMN record       BOOLEAN NOT NULL DEFAULT TRUE;   -- the creator's choice
+  ADD COLUMN record       BOOLEAN NOT NULL DEFAULT TRUE,   -- the creator's choice
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT streams_latency_mode_check
+    CHECK (latency_mode IN ('standard', 'reduced', 'low', 'real_time')) NOT VALID;
 
 CREATE TABLE vod_retention_rules (       -- a media_retention_rules row (target 'vod'),
                                          -- specialized for recordings and edits

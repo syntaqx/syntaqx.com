@@ -248,8 +248,10 @@ CREATE INDEX cancellation_requests_subscription_idx ON cancellation_requests (su
 -- Consumer or business decides which rules apply here and which tax treatment applies
 -- in Tax on Hosting & Cloud; it is a recorded determination, not inferred from a name:
 ALTER TABLE accounts
-  ADD COLUMN customer_type TEXT NOT NULL DEFAULT 'consumer'
-    CHECK (customer_type IN ('consumer', 'business'));
+  ADD COLUMN customer_type TEXT NOT NULL DEFAULT 'consumer',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT accounts_customer_type_check
+    CHECK (customer_type IN ('consumer', 'business')) NOT VALID;
 
 -- Plan versions carry the renewal term, not just the renewal price:
 ALTER TABLE plan_versions

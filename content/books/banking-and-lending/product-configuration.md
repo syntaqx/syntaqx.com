@@ -133,13 +133,13 @@ These tables extend `products`, `accounts`, `fee_assessments` and `disclosures` 
 ```sql
 -- Typed terms on each version; products.terms keeps the rest, validated per category.
 ALTER TABLE products
-  ADD COLUMN rate_source      TEXT CHECK (rate_source IN ('fixed', 'index_spread', 'discretionary')),
+  ADD COLUMN rate_source      TEXT,
   ADD COLUMN index_name       TEXT,
   ADD COLUMN spread           NUMERIC(9, 6),
-  ADD COLUMN tier_method      TEXT CHECK (tier_method IN ('whole_balance', 'marginal')),
-  ADD COLUMN balance_method   TEXT CHECK (balance_method IN ('daily', 'average_daily')),
+  ADD COLUMN tier_method      TEXT,
+  ADD COLUMN balance_method   TEXT,
   ADD COLUMN day_count        TEXT,              -- 'actual_365', 'actual_360', ...
-  ADD COLUMN compounding      TEXT CHECK (compounding IN ('none', 'daily', 'at_crediting')),
+  ADD COLUMN compounding      TEXT,
   ADD COLUMN crediting        TEXT,              -- 'monthly', 'quarterly', 'at_maturity', ...
   ADD COLUMN rounding_rule    TEXT,
   ADD COLUMN minimum_to_earn  BIGINT,
@@ -150,10 +150,18 @@ ALTER TABLE products
   ADD COLUMN dormancy_days    INTEGER,
   ADD COLUMN created_by       UUID,
   ADD COLUMN approved_by      UUID,
-  ADD CONSTRAINT products_two_people CHECK (approved_by <> created_by),
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT products_two_people CHECK (approved_by <> created_by) NOT VALID,
   ADD CONSTRAINT products_created_by_not_null NOT NULL created_by NOT VALID,
-  ADD CONSTRAINT products_approved_by_not_null NOT NULL approved_by NOT VALID;
+  ADD CONSTRAINT products_approved_by_not_null NOT NULL approved_by NOT VALID,
+  ADD CONSTRAINT products_rate_source_check
+    CHECK (rate_source IN ('fixed', 'index_spread', 'discretionary')) NOT VALID,
+  ADD CONSTRAINT products_tier_method_check
+    CHECK (tier_method IN ('whole_balance', 'marginal')) NOT VALID,
+  ADD CONSTRAINT products_balance_method_check
+    CHECK (balance_method IN ('daily', 'average_daily')) NOT VALID,
+  ADD CONSTRAINT products_compounding_check
+    CHECK (compounding IN ('none', 'daily', 'at_crediting')) NOT VALID;
 
 CREATE TABLE product_rate_tiers (
   product_id     UUID NOT NULL REFERENCES products (id),

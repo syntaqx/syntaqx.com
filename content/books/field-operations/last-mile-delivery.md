@@ -169,17 +169,22 @@ This extends the core model in [The Field Operations Business](/books/field-oper
 ALTER TABLE work_orders
   ADD COLUMN shipper_account_id   UUID REFERENCES accounts (id),  -- who ordered and pays; null when the property's payer does
   ADD COLUMN external_ref         TEXT,                            -- the shipper's order number
-  ADD COLUMN attendance           TEXT NOT NULL DEFAULT 'required'
-                                    CHECK (attendance IN ('required', 'preferred', 'not_required')),
-  ADD COLUMN signature_rule       TEXT NOT NULL DEFAULT 'none'
-                                    CHECK (signature_rule IN ('none', 'indirect', 'direct', 'adult')),
+  ADD COLUMN attendance           TEXT NOT NULL DEFAULT 'required',
+  ADD COLUMN signature_rule       TEXT NOT NULL DEFAULT 'none',
   ADD COLUMN min_recipient_age    INTEGER,
   ADD COLUMN max_attempts         INTEGER,
-  ADD COLUMN undeliverable_action TEXT CHECK (undeliverable_action IN ('retry', 'hold_at_pickup_point',
-                                    'return_to_depot', 'return_to_shipper', 'dispose')),
+  ADD COLUMN undeliverable_action TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT work_orders_attendance_check_rules
     CHECK (attendance = 'required' OR (signature_rule IN ('none', 'indirect')
-                                       AND min_recipient_age IS NULL));
+                                       AND min_recipient_age IS NULL)) NOT VALID,
+  ADD CONSTRAINT work_orders_attendance_check
+    CHECK (attendance IN ('required', 'preferred', 'not_required')) NOT VALID,
+  ADD CONSTRAINT work_orders_signature_rule_check
+    CHECK (signature_rule IN ('none', 'indirect', 'direct', 'adult')) NOT VALID,
+  ADD CONSTRAINT work_orders_undeliverable_action_check
+    CHECK (undeliverable_action IN ('retry', 'hold_at_pickup_point',
+        'return_to_depot', 'return_to_shipper', 'dispose')) NOT VALID;
 
 CREATE TABLE work_order_items (                -- packages and goods lines
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -217,11 +222,14 @@ CREATE TABLE delivery_instructions (           -- standing (property) or one-off
 
 ALTER TABLE visits
   ADD COLUMN attempt_number     INTEGER NOT NULL DEFAULT 1,
-  ADD COLUMN handoff            TEXT CHECK (handoff IN ('to_recipient', 'to_third_party', 'safe_place',
-                                  'mailbox', 'locker', 'garage')),  -- required when a delivery completes
+  ADD COLUMN handoff            TEXT,  -- required when a delivery completes
   ADD COLUMN external_carrier   TEXT,             -- set when an on-demand network performs the visit
   ADD COLUMN external_ref       TEXT,
-  ADD COLUMN depends_on_visit_id UUID REFERENCES visits (id);  -- the pickup a delivery waits for
+  ADD COLUMN depends_on_visit_id UUID REFERENCES visits (id),  -- the pickup a delivery waits for
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT visits_handoff_check
+    CHECK (handoff IN ('to_recipient', 'to_third_party', 'safe_place',
+        'mailbox', 'locker', 'garage')) NOT VALID;
 -- address_not_found, id_check_failed and item_damaged are already in the core
 -- visits.status_reason catalog (The Field Operations Business)
 

@@ -111,9 +111,11 @@ Unit economics are computed from the subscription history in [the core data mode
 
 ```sql
 ALTER TABLE organizations
-  ADD COLUMN acquisition_channel TEXT CHECK (acquisition_channel IN ('self_serve', 'sales',
-    'partner', 'marketplace')),           -- how the first paid seat was sold
-  ADD COLUMN first_paid_at TIMESTAMPTZ;
+  ADD COLUMN acquisition_channel TEXT,           -- how the first paid seat was sold
+  ADD COLUMN first_paid_at TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT organizations_acquisition_channel_check
+    CHECK (acquisition_channel IN ('self_serve', 'sales', 'partner', 'marketplace')) NOT VALID;
 
 CREATE TABLE arr_snapshots (             -- recurring revenue per organization, month end
   organization_id  UUID NOT NULL REFERENCES organizations (id),

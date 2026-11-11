@@ -131,8 +131,10 @@ The core `integrations` table holds a practice's connection to an external syste
 
 ```sql
 ALTER TABLE integrations                 -- system_kind = 'clearinghouse'
-  ADD COLUMN clearinghouse_role TEXT CHECK (clearinghouse_role IN ('primary', 'secondary',
-                                  'dental', 'standby'));
+  ADD COLUMN clearinghouse_role TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT integrations_clearinghouse_role_check
+    CHECK (clearinghouse_role IN ('primary', 'secondary', 'dental', 'standby')) NOT VALID;
 
 CREATE TABLE payer_connections (              -- how a transaction reaches a payer through one clearinghouse
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

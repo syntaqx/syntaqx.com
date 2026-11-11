@@ -225,11 +225,13 @@ CREATE TABLE ledger_wallet_proofs (
 );
 
 -- Corporate treasury wallets are kept apart from customer wallets.
-ALTER TABLE wallets ADD COLUMN holds TEXT NOT NULL DEFAULT 'customer' CHECK (holds IN ('customer', 'corporate'));
+ALTER TABLE wallets ADD COLUMN holds TEXT NOT NULL DEFAULT 'customer',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT wallets_holds_check CHECK (holds IN ('customer', 'corporate')) NOT VALID;
 
 -- Every account's products are checked against its verified residence, not its IP.
 ALTER TABLE accounts ADD COLUMN residence_jurisdiction TEXT,
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_residence_jurisdiction_not_null NOT NULL residence_jurisdiction NOT VALID;
 ```
 

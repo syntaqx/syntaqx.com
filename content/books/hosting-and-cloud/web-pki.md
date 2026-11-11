@@ -220,12 +220,20 @@ CREATE TABLE ca_certificates (           -- roots, intermediates and cross-signs
 ALTER TABLE certificates                 -- the core side table, kind = 'certificate'
   ADD COLUMN ca_id               UUID REFERENCES certificate_authorities (id),
   ADD COLUMN issuer_cert_id      UUID REFERENCES ca_certificates (id),  -- the intermediate
-  ADD COLUMN source              TEXT NOT NULL DEFAULT 'issued'
-                                   CHECK (source IN ('issued', 'imported')),
-  ADD COLUMN validation_level    TEXT NOT NULL DEFAULT 'dv'
-                                   CHECK (validation_level IN ('dv', 'ov', 'ev')),
+  ADD COLUMN source              TEXT NOT NULL DEFAULT 'issued',
+  ADD COLUMN validation_level    TEXT NOT NULL DEFAULT 'dv',
   ADD COLUMN authority_key_id    BYTEA,      -- with serial, the certificate's ARI identifier
-  ADD COLUMN sha256_fingerprint  BYTEA UNIQUE;
+  ADD COLUMN sha256_fingerprint  BYTEA,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT certificates_source_check CHECK (source IN ('issued', 'imported')) NOT VALID,
+  ADD CONSTRAINT certificates_validation_level_check
+    CHECK (validation_level IN ('dv', 'ov', 'ev')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY certificates_sha256_fingerprint_key
+  ON certificates (sha256_fingerprint);
+ALTER TABLE certificates
+  ADD CONSTRAINT certificates_sha256_fingerprint_key UNIQUE USING INDEX certificates_sha256_fingerprint_key;
 
 CREATE TABLE certificate_names (         -- what a certificate covers; not a held identifier
   certificate_id  UUID NOT NULL REFERENCES certificates (resource_id),

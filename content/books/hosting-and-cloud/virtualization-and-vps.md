@@ -123,26 +123,30 @@ The chapter adds hypervisor, CPU-model, credit and host columns to `virtual_mach
 
 ```sql
 ALTER TABLE virtual_machines
-  ADD COLUMN hypervisor       TEXT NOT NULL DEFAULT 'kvm'
-    CHECK (hypervisor IN ('kvm', 'xen', 'esxi', 'hyper_v', 'openvz', 'virtuozzo', 'lxc',
-                          'nitro', 'firecracker', 'none')),  -- 'none': a bare-metal instance
+  ADD COLUMN hypervisor       TEXT NOT NULL DEFAULT 'kvm',  -- 'none': a bare-metal instance
   ADD COLUMN host_asset_id    UUID REFERENCES hardware_assets (id),  -- current host; host_ref
                                                                     -- stays as the opaque label
   ADD COLUMN vcpus            SMALLINT,
   ADD COLUMN memory_mib       INT,
-  ADD COLUMN cpu_model        TEXT NOT NULL DEFAULT 'dedicated'
-    CHECK (cpu_model IN ('dedicated', 'shared', 'burstable', 'shared_core')),
+  ADD COLUMN cpu_model        TEXT NOT NULL DEFAULT 'dedicated',
   ADD COLUMN baseline_pct     NUMERIC(5,2),         -- per vCPU, for burstable
   ADD COLUMN credits_per_hour NUMERIC(8,2),         -- earn rate, from the instance type
   ADD COLUMN credit_cap       NUMERIC(10,2),        -- accrual limit
-  ADD COLUMN credit_mode      TEXT CHECK (credit_mode IN ('standard', 'unlimited')),
+  ADD COLUMN credit_mode      TEXT,
   ADD COLUMN memory_overcommit BOOLEAN NOT NULL DEFAULT FALSE,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT vm_credit_fields CHECK (CASE WHEN cpu_model = 'burstable'
     THEN num_nulls(baseline_pct, credits_per_hour, credit_cap, credit_mode) = 0
-    ELSE num_nonnulls(baseline_pct, credits_per_hour, credit_cap, credit_mode) = 0 END),
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+    ELSE num_nonnulls(baseline_pct, credits_per_hour, credit_cap, credit_mode) = 0 END) NOT VALID,
   ADD CONSTRAINT virtual_machines_vcpus_not_null NOT NULL vcpus NOT VALID,
-  ADD CONSTRAINT virtual_machines_memory_mib_not_null NOT NULL memory_mib NOT VALID;
+  ADD CONSTRAINT virtual_machines_memory_mib_not_null NOT NULL memory_mib NOT VALID,
+  ADD CONSTRAINT virtual_machines_hypervisor_check
+    CHECK (hypervisor IN ('kvm', 'xen', 'esxi', 'hyper_v', 'openvz', 'virtuozzo', 'lxc',
+        'nitro', 'firecracker', 'none')) NOT VALID,
+  ADD CONSTRAINT virtual_machines_cpu_model_check
+    CHECK (cpu_model IN ('dedicated', 'shared', 'burstable', 'shared_core')) NOT VALID,
+  ADD CONSTRAINT virtual_machines_credit_mode_check
+    CHECK (credit_mode IN ('standard', 'unlimited')) NOT VALID;
 
 CREATE TABLE vm_host_history (           -- where a VM ran, over time
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

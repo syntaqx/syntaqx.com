@@ -306,7 +306,7 @@ WHERE next_seq IS NOT NULL AND next_seq <> seq + 1;
 The one-original-per-withdrawal rule from the worked numbers, as a constraint on the table [Deposits & Withdrawals](/books/investing-and-digital-assets/crypto-deposits-and-withdrawals#how-to-build-it) defines:
 
 ```sql
-CREATE UNIQUE INDEX one_original_per_batch
+CREATE UNIQUE INDEX CONCURRENTLY one_original_per_batch
   ON withdrawal_transactions (batch_id)
   WHERE kind = 'original';   -- a second payment must be a fee_bump or cancel on the same nonce
 ```

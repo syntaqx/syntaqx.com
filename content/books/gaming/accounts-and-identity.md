@@ -165,25 +165,28 @@ The chapter's additions to the core model, as columns on existing tables and thr
 ```sql
 ALTER TABLE accounts
   ADD COLUMN home_region       TEXT,           -- where personal data lives; set at sign-up
-  ADD COLUMN age_band          TEXT NOT NULL DEFAULT 'unknown' CHECK (age_band IN
-                                 ('under_13', '13_15', '16_17', 'adult', 'unknown')),
+  ADD COLUMN age_band          TEXT NOT NULL DEFAULT 'unknown',
                                  -- cached; derived from age signals, lowest wins
   ADD COLUMN age_band_derived_at TIMESTAMPTZ,
   ADD COLUMN merged_into_id    UUID REFERENCES accounts (id),  -- set when retired by a merge
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_merged_closed
-    CHECK (merged_into_id IS NULL OR status = 'closed'),
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT accounts_home_region_not_null NOT NULL home_region NOT VALID;
+    CHECK (merged_into_id IS NULL OR status = 'closed') NOT VALID,
+  ADD CONSTRAINT accounts_home_region_not_null NOT NULL home_region NOT VALID,
+  ADD CONSTRAINT accounts_age_band_check
+    CHECK (age_band IN ('under_13', '13_15', '16_17', 'adult', 'unknown')) NOT VALID;
 
 ALTER TABLE platform_identities
   ADD COLUMN verified_at       TIMESTAMPTZ,            -- last successful server-side check
-  ADD COLUMN linked_via        TEXT CHECK (linked_via IN ('sign_up', 'link',
-                                 'merge', 'support')),
+  ADD COLUMN linked_via        TEXT,
+  -- EXCLUDE has no concurrent build: add it while the table is small, or in a maintenance window.
   ADD CONSTRAINT one_identity_per_platform EXCLUDE USING gist (
     tenant_id WITH =, account_id WITH =, platform WITH =, valid_during WITH &&),
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT platform_identities_verified_at_not_null NOT NULL verified_at NOT VALID,
-  ADD CONSTRAINT platform_identities_linked_via_not_null NOT NULL linked_via NOT VALID;
+  ADD CONSTRAINT platform_identities_linked_via_not_null NOT NULL linked_via NOT VALID,
+  ADD CONSTRAINT platform_identities_linked_via_check
+    CHECK (linked_via IN ('sign_up', 'link', 'merge', 'support')) NOT VALID;
 
 ALTER TABLE entitlements
   ADD COLUMN platform_scope    TEXT;   -- null: portable; otherwise usable only on this platform

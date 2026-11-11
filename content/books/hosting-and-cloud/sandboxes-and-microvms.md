@@ -172,25 +172,28 @@ The chapter adds the `isolation` column, with the vocabulary above, to `virtual_
 
 ```sql
 ALTER TABLE virtual_machines
-  ADD COLUMN isolation TEXT NOT NULL DEFAULT 'hardware_vm'
-    CHECK (isolation IN ('bare_metal', 'hardware_vm', 'microvm', 'user_space_kernel',
-      'os_container', 'language_isolate', 'wasm_sandbox')),
+  ADD COLUMN isolation TEXT NOT NULL DEFAULT 'hardware_vm',
   ADD COLUMN snapshot_restored_from TEXT, -- snapshot id when the VM resumed from one
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT virtual_machines_bare_metal_check
-    CHECK ((tenancy = 'bare_metal') = (isolation = 'bare_metal')),
+    CHECK ((tenancy = 'bare_metal') = (isolation = 'bare_metal')) NOT VALID,
   ADD CONSTRAINT virtual_machines_hypervisor_isolation_check
     CHECK ((hypervisor IN ('openvz', 'virtuozzo', 'lxc')) = (isolation = 'os_container')
-       AND (hypervisor <> 'firecracker' OR isolation = 'microvm'));
+       AND (hypervisor <> 'firecracker' OR isolation = 'microvm')) NOT VALID,
+  ADD CONSTRAINT virtual_machines_isolation_check
+    CHECK (isolation IN ('bare_metal', 'hardware_vm', 'microvm', 'user_space_kernel',
+        'os_container', 'language_isolate', 'wasm_sandbox')) NOT VALID;
 
 ALTER TABLE container_services
-  ADD COLUMN isolation TEXT
-    CHECK (isolation IN ('bare_metal', 'hardware_vm', 'microvm', 'user_space_kernel',
-      'os_container', 'language_isolate', 'wasm_sandbox')),
+  ADD COLUMN isolation TEXT,
   ADD COLUMN sandbox_runtime TEXT,       -- 'runc', 'runsc', 'kata-fc', 'firecracker'
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT container_services_shared_kernel_check
-    CHECK (isolation <> 'os_container' OR capacity_mode = 'customer_nodes'),
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT container_services_isolation_not_null NOT NULL isolation NOT VALID;
+    CHECK (isolation <> 'os_container' OR capacity_mode = 'customer_nodes') NOT VALID,
+  ADD CONSTRAINT container_services_isolation_not_null NOT NULL isolation NOT VALID,
+  ADD CONSTRAINT container_services_isolation_check
+    CHECK (isolation IN ('bare_metal', 'hardware_vm', 'microvm', 'user_space_kernel',
+        'os_container', 'language_isolate', 'wasm_sandbox')) NOT VALID;
 ```
 
 Notes on the sketch:

@@ -151,15 +151,21 @@ The vendor builds the controls and the response surface the customer's admins us
 -- consent_kind and the publisher's verification come from Apps & Marketplaces;
 -- approved_by (the admin who granted it) and api_tokens.revoked_at are core
 ALTER TABLE app_installations
-  ADD COLUMN risk_level       TEXT CHECK (risk_level IN ('low', 'medium', 'high', 'critical')),
+  ADD COLUMN risk_level       TEXT,
   ADD COLUMN disabled_at      TIMESTAMPTZ,    -- disabled, not deleted, so it can't be re-consented
-  ADD COLUMN last_used_at     TIMESTAMPTZ;
+  ADD COLUMN last_used_at     TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT app_installations_risk_level_check
+    CHECK (risk_level IN ('low', 'medium', 'high', 'critical')) NOT VALID;
 
 ALTER TABLE api_tokens
   ADD COLUMN bound_to         JSONB,          -- {"network": "...", "device_id": "..."} when bound
   ADD COLUMN last_used_ip     INET,
-  ADD COLUMN revoked_reason   TEXT CHECK (revoked_reason IN ('user', 'admin', 'incident',
-                                'leak_report', 'expired', 'app_disabled'));
+  ADD COLUMN revoked_reason   TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT api_tokens_revoked_reason_check
+    CHECK (revoked_reason IN ('user', 'admin', 'incident',
+        'leak_report', 'expired', 'app_disabled')) NOT VALID;
 
 CREATE TABLE security_contacts (         -- who the vendor tells when an incident is on its side
   organization_id UUID NOT NULL REFERENCES organizations (id),

@@ -201,17 +201,18 @@ The meters are pairs, so either basis can be computed later: `k8s.pod.cpu_reques
 
 ```sql
 ALTER TABLE usage_events                 -- the core table; the convention is enforced
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT usage_events_k8s_dimensions_check CHECK (
     meter NOT LIKE 'k8s.%' OR (
       dimensions ? 'cluster_id' AND dimensions ? 'namespace' AND
-      (dimensions ? 'pod_uid' OR dimensions ? 'pvc_id')));
+      (dimensions ? 'pod_uid' OR dimensions ? 'pvc_id'))) NOT VALID;
 
-CREATE INDEX usage_events_k8s_allocation_idx ON usage_events
+CREATE INDEX CONCURRENTLY usage_events_k8s_allocation_idx ON usage_events
   (((dimensions ->> 'cluster_id')::uuid), (dimensions ->> 'namespace'),
    lower(occurred_during))
   WHERE meter LIKE 'k8s.%';              -- allocation reads one cluster and hour at a time
 
-CREATE INDEX usage_events_k8s_labels_idx ON usage_events
+CREATE INDEX CONCURRENTLY usage_events_k8s_labels_idx ON usage_events
   USING GIN ((dimensions -> 'labels') jsonb_path_ops)
   WHERE meter LIKE 'k8s.%';              -- "everything labelled team=payments"
 

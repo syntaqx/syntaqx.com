@@ -173,10 +173,12 @@ The durable parts extend the core model ([The Games Business](/books/gaming/game
 
 ```sql
 ALTER TABLE parties                         -- the state machine above, persisted for history
-  ADD COLUMN status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'queued',
-                      'in_match', 'disbanded')),
+  ADD COLUMN status TEXT NOT NULL DEFAULT 'open',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT parties_disbanded_complete
-    CHECK ((status = 'disbanded') = (disbanded_at IS NOT NULL));
+    CHECK ((status = 'disbanded') = (disbanded_at IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT parties_status_check
+    CHECK (status IN ('open', 'queued', 'in_match', 'disbanded')) NOT VALID;
 
 CREATE TABLE party_members (
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

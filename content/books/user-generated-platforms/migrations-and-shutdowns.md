@@ -155,7 +155,8 @@ CREATE TABLE purge_runs (                -- one batch of one policy
 -- media_purges rows, pointing at the policy instead of a standing retention rule.
 ALTER TABLE media_purges
   ADD COLUMN purge_policy_id UUID REFERENCES purge_policies (id),
-  ADD CONSTRAINT media_purges_one_source CHECK (rule_id IS NULL OR purge_policy_id IS NULL);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT media_purges_one_source CHECK (rule_id IS NULL OR purge_policy_id IS NULL) NOT VALID;
 
 CREATE TABLE content_tombstones (        -- what a removed item's URL answers, forever
   subject_type     TEXT NOT NULL CHECK (subject_type IN ('content_item', 'media_asset',

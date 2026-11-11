@@ -323,8 +323,11 @@ CREATE TABLE military_lease_terminations (  -- SCRA terminations, any property t
 -- Manufactured housing and RV sites ---------------------------------------
 
 ALTER TABLE units
-  ADD COLUMN site_use TEXT CHECK (site_use IN ('home', 'rv_monthly', 'rv_nightly')),
-  ADD CONSTRAINT units_site_use_on_lots CHECK ((kind = 'lot') = (site_use IS NOT NULL));
+  ADD COLUMN site_use TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT units_site_use_on_lots CHECK ((kind = 'lot') = (site_use IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT units_site_use_check
+    CHECK (site_use IN ('home', 'rv_monthly', 'rv_nightly')) NOT VALID;
 
 CREATE TABLE homes (                      -- a manufactured home or RV, an asset in its own right
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

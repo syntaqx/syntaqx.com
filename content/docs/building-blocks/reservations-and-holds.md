@@ -146,7 +146,7 @@ Releasing a hold (expiry, cancellation) decrements the same row in the same tran
 When each unit has an identity (seat 14C, room 412 on one night, a numbered parking bay), a partial unique index is the simplest constraint there is:
 
 ```sql
-CREATE UNIQUE INDEX seat_claims_live_uniq
+CREATE UNIQUE INDEX CONCURRENTLY seat_claims_live_uniq
   ON seat_claims (event_id, seat_id)
   WHERE status IN ('held', 'confirmed');
 ```

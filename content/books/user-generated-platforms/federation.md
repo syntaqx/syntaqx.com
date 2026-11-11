@@ -209,13 +209,15 @@ ALTER TABLE content_labels
   ADD COLUMN labeler_id UUID REFERENCES labelers (id),
   ADD COLUMN signature  BYTEA,           -- as received, for verification
   ADD COLUMN expires_at TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT content_labels_labeler
-    CHECK ((source = 'labeler') = (labeler_id IS NOT NULL));
+    CHECK ((source = 'labeler') = (labeler_id IS NOT NULL)) NOT VALID;
 
 ALTER TABLE communities
   DROP CONSTRAINT communities_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT communities_kind_check CHECK (kind IN ('forum', 'server', 'channel',
-    'group', 'instance'));               -- the local server as a community
+    'group', 'instance')) NOT VALID;               -- the local server as a community
 ```
 
 Notes on the sketch:

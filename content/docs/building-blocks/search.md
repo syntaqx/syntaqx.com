@@ -24,7 +24,7 @@ ALTER TABLE articles ADD COLUMN search_vector tsvector
     setweight(to_tsvector('english', coalesce(body, '')), 'D')
   ) STORED;
 
-CREATE INDEX articles_search_vector_idx ON articles USING GIN (search_vector);
+CREATE INDEX CONCURRENTLY articles_search_vector_idx ON articles USING GIN (search_vector);
 
 SELECT id, title, ts_rank_cd(search_vector, query, 32) AS rank
   FROM articles, websearch_to_tsquery('english', $2) AS query
@@ -50,7 +50,7 @@ Full-text search matches words. It won't find "Jonh" for "John," "acme" inside "
 ```sql
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
-CREATE INDEX customers_name_trgm_idx ON customers USING GIN (name gin_trgm_ops);
+CREATE INDEX CONCURRENTLY customers_name_trgm_idx ON customers USING GIN (name gin_trgm_ops);
 
 -- typo-tolerant name lookup, best match first
 SELECT id, name, similarity(name, $2) AS score

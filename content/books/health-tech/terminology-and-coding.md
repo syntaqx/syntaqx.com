@@ -174,9 +174,12 @@ CREATE TABLE concept_maps (                 -- one source code to one target cod
 -- the release on every coded table; conditions also keep a billing code beside the clinical one
 ALTER TABLE conditions
   ADD COLUMN code_version        TEXT,      -- the release the code was chosen from
-  ADD COLUMN billing_code_system TEXT CHECK (billing_code_system IN ('icd10cm')),
+  ADD COLUMN billing_code_system TEXT,
   ADD COLUMN billing_code        TEXT,
-  ADD COLUMN billing_map_id      UUID REFERENCES concept_maps (id);
+  ADD COLUMN billing_map_id      UUID REFERENCES concept_maps (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT conditions_billing_code_system_check
+    CHECK (billing_code_system IN ('icd10cm')) NOT VALID;
 
 ALTER TABLE procedures   ADD COLUMN code_version TEXT;
 ALTER TABLE observations ADD COLUMN code_version TEXT;

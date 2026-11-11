@@ -112,15 +112,19 @@ CREATE TABLE credential_exposures (      -- a leaked credential, reported or fou
 -- phone, network and an admission map onto its existing values):
 ALTER TABLE account_links
   DROP CONSTRAINT account_links_signal_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT account_links_signal_check CHECK (signal IN ('device',
     'payment_instrument', 'phone', 'email_pattern', 'network', 'identity_document',
-    'behavior', 'admitted', 'ssh_key', 'workload_hash'));
-CREATE INDEX ON account_links (account_b_id);
+    'behavior', 'admitted', 'ssh_key', 'workload_hash')) NOT VALID;
+CREATE INDEX CONCURRENTLY ON account_links (account_b_id);
 
 ALTER TABLE quotas
-  ADD COLUMN risk_reason TEXT CHECK (risk_reason IN ('new_account', 'unverified_payment',
-    'linked_to_abuse', 'credential_exposure')),
-  ADD CONSTRAINT quotas_risk_reason CHECK ((source = 'risk') = (risk_reason IS NOT NULL));
+  ADD COLUMN risk_reason TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT quotas_risk_reason CHECK ((source = 'risk') = (risk_reason IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT quotas_risk_reason_check
+    CHECK (risk_reason IN ('new_account', 'unverified_payment',
+        'linked_to_abuse', 'credential_exposure')) NOT VALID;
 ```
 
 A fresh account's limits are risk rows that expire as trust builds:

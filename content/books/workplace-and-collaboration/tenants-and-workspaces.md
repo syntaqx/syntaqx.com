@@ -118,13 +118,14 @@ The [core data model](/books/workplace-and-collaboration/workplace-business#the-
 ```sql
 ALTER TABLE workspaces                     -- core already has organization_id and a unique slug;
                                            -- a free workspace starts under its own organization
-  ADD COLUMN access_mode     TEXT NOT NULL DEFAULT 'invite_only'
-    CHECK (access_mode IN ('open', 'by_request', 'invite_only', 'hidden')),
+  ADD COLUMN access_mode     TEXT NOT NULL DEFAULT 'invite_only',
   ADD COLUMN shard_key       INT,                                  -- logical shard, assigned at creation
   ADD COLUMN created_by_account_id UUID REFERENCES accounts (id),
   ADD COLUMN joined_organization_at TIMESTAMPTZ,   -- when it moved under its current organization
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT workspaces_shard_key_not_null NOT NULL shard_key NOT VALID;
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT workspaces_shard_key_not_null NOT NULL shard_key NOT VALID,
+  ADD CONSTRAINT workspaces_access_mode_check
+    CHECK (access_mode IN ('open', 'by_request', 'invite_only', 'hidden')) NOT VALID;
 
 CREATE TABLE org_units (                  -- Google-style OU tree for policy scope
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

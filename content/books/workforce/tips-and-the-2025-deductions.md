@@ -148,8 +148,10 @@ CREATE TABLE tipped_occupation_codes (      -- Treasury Tipped Occupation Codes
 
 ALTER TABLE job_assignments
   ADD COLUMN tipped_occupation_code CHAR(3) REFERENCES tipped_occupation_codes (code),
-  ADD COLUMN establishment_kind TEXT CHECK (establishment_kind IN ('food_beverage',
-                                'beauty_services', 'other'));   -- the 45B reference wage
+  ADD COLUMN establishment_kind TEXT,   -- the 45B reference wage
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT job_assignments_establishment_kind_check
+    CHECK (establishment_kind IN ('food_beverage', 'beauty_services', 'other')) NOT VALID;
 
 ALTER TABLE time_entries
   ADD COLUMN declared_cash_tips BIGINT,     -- cents, from the clock-out declaration

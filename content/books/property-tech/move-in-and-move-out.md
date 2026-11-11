@@ -196,9 +196,11 @@ ALTER TABLE inspections
 ALTER TABLE inspection_findings                     -- rating uses the template's scale:
                                                     -- 'new', 'good', 'fair', 'poor', 'damaged', 'missing', ...
   ADD COLUMN baseline_finding_id UUID REFERENCES inspection_findings (id),
-  ADD COLUMN attribution         TEXT CHECK (attribution IN ('wear', 'preexisting', 'resident',
-                                   'unknown')),
-  ADD COLUMN resident_comment    TEXT;              -- disputes are item by item
+  ADD COLUMN attribution         TEXT,
+  ADD COLUMN resident_comment    TEXT,              -- disputes are item by item
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT inspection_findings_attribution_check
+    CHECK (attribution IN ('wear', 'preexisting', 'resident', 'unknown')) NOT VALID;
 
 CREATE TABLE key_issuances (                         -- every way in, per person
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -284,31 +284,40 @@ The changes against [the core data model](/books/property-tech/property-business
 -- Commercial lessees are companies, and leases cover suites that change by amendment.
 ALTER TABLE legal_entities
   DROP CONSTRAINT legal_entities_role_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT legal_entities_role_check CHECK (role IN ('manager', 'owner', 'fund',
     'association', 'investor', 'sponsor', 'venture', 'lender',  -- kept from Investors
-    'commercial_tenant', 'occupier', 'counterparty'));
+    'commercial_tenant', 'occupier', 'counterparty')) NOT VALID;
 
 ALTER TABLE units
-  ADD COLUMN space_use TEXT CHECK (space_use IN ('office', 'retail', 'industrial', 'flex',
-    'medical', 'restaurant', 'private_office')),
-  ADD CONSTRAINT units_space_use_ck CHECK (kind <> 'commercial_suite' OR space_use IS NOT NULL);
+  ADD COLUMN space_use TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT units_space_use_ck CHECK (kind <> 'commercial_suite' OR space_use IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT units_space_use_check
+    CHECK (space_use IN ('office', 'retail', 'industrial', 'flex',
+        'medical', 'restaurant', 'private_office')) NOT VALID;
 
 ALTER TABLE leases
   ALTER COLUMN household_id DROP NOT NULL,
-  ADD COLUMN agreement_kind TEXT NOT NULL DEFAULT 'residential_lease'   -- which body of law governs
-    CHECK (agreement_kind IN ('residential_lease', 'commercial_lease', 'storage_rental')),
+  ADD COLUMN agreement_kind TEXT NOT NULL DEFAULT 'residential_lease',  -- which body of law governs
   ADD COLUMN lessee_entity_id     UUID REFERENCES legal_entities (id),
-  ADD COLUMN expense_structure    TEXT CHECK (expense_structure IN ('full_service_gross',
-                                    'modified_gross', 'net', 'triple_net', 'absolute_net')),
+  ADD COLUMN expense_structure    TEXT,
   ADD COLUMN rent_commencement_on DATE,   -- can differ from starts_on
-  ADD CONSTRAINT leases_one_lessee CHECK (num_nonnulls(household_id, lessee_entity_id) = 1),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT leases_one_lessee CHECK (num_nonnulls(household_id, lessee_entity_id) = 1) NOT VALID,
   ADD CONSTRAINT leases_commercial_terms
-    CHECK (agreement_kind <> 'commercial_lease' OR expense_structure IS NOT NULL);
+    CHECK (agreement_kind <> 'commercial_lease' OR expense_structure IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT leases_agreement_kind_check
+    CHECK (agreement_kind IN ('residential_lease', 'commercial_lease', 'storage_rental')) NOT VALID,
+  ADD CONSTRAINT leases_expense_structure_check
+    CHECK (expense_structure IN ('full_service_gross',
+        'modified_gross', 'net', 'triple_net', 'absolute_net')) NOT VALID;
 
 ALTER TABLE charge_codes
   DROP CONSTRAINT charge_codes_category_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT charge_codes_category_check CHECK (category IN ('rent', 'fee', 'deposit',
-    'utility', 'ancillary', 'concession', 'recovery'));
+    'utility', 'ancillary', 'concession', 'recovery')) NOT VALID;
 
 CREATE TABLE lease_amendments (          -- every change to a commercial lease is one of these
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

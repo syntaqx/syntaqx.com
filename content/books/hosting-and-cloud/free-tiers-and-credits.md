@@ -203,15 +203,19 @@ ALTER TABLE credit_grants
   ADD COLUMN program_id     UUID REFERENCES credit_programs (id),  -- null: SLA, goodwill
   ADD COLUMN sponsor_ref    TEXT,        -- the investor's or partner's org id, when sponsored
   ADD COLUMN voided_at      TIMESTAMPTZ, -- fraud, sale, account created to obtain it
-  ADD COLUMN voided_reason  TEXT CHECK (voided_reason IN ('fraud', 'misuse', 'sold',
-                              'duplicate_account', 'program_terms')),
+  ADD COLUMN voided_reason  TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT credit_grants_void_check
-    CHECK ((voided_at IS NULL) = (voided_reason IS NULL));
+    CHECK ((voided_at IS NULL) = (voided_reason IS NULL)) NOT VALID,
+  ADD CONSTRAINT credit_grants_voided_reason_check
+    CHECK (voided_reason IN ('fraud', 'misuse', 'sold',
+        'duplicate_account', 'program_terms')) NOT VALID;
 
 ALTER TABLE invoice_lines
   ADD COLUMN credit_grant_id UUID REFERENCES credit_grants (id),  -- set on line_kind 'credit'
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT invoice_lines_credit_grant_check
-    CHECK ((line_kind = 'credit') = (credit_grant_id IS NOT NULL));
+    CHECK ((line_kind = 'credit') = (credit_grant_id IS NOT NULL)) NOT VALID;
 
 CREATE TABLE spending_limits (           -- the hard cap; budgets only alert
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

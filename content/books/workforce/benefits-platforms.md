@@ -114,7 +114,8 @@ CREATE TABLE plan_rate_tables (            -- the carrier's rates for a plan and
 );
 
 ALTER TABLE benefit_rates
-  ADD FOREIGN KEY (source_rate_table_id) REFERENCES plan_rate_tables (id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD FOREIGN KEY (source_rate_table_id) REFERENCES plan_rate_tables (id) NOT VALID;
 
 CREATE TABLE eligibility_rules (           -- who may enroll in a plan, and from when
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

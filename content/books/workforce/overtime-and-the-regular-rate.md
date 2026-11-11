@@ -305,10 +305,13 @@ CREATE TABLE overtime_rules (              -- a rule set: federal, a state, a co
 
 ALTER TABLE job_assignments
   ADD COLUMN overtime_rule_codes TEXT[] NOT NULL DEFAULT ARRAY['flsa'],  -- all that apply
-  ADD COLUMN state_exempt_status TEXT CHECK (state_exempt_status IN ('exempt', 'nonexempt')),
+  ADD COLUMN state_exempt_status TEXT,
   ADD COLUMN classification_review_id UUID,  -- the reviewed decision behind flsa_status
   ADD COLUMN fluctuating_workweek BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN alt_7g2_agreement_document_id UUID REFERENCES documents (id);  -- 7(g)(2)
+  ADD COLUMN alt_7g2_agreement_document_id UUID REFERENCES documents (id),  -- 7(g)(2)
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT job_assignments_state_exempt_status_check
+    CHECK (state_exempt_status IN ('exempt', 'nonexempt')) NOT VALID;
 
 CREATE TABLE regular_rate_calculations (   -- one per worker per workweek per rule set
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -347,7 +350,10 @@ CREATE TABLE bonus_allocations (           -- 778.209: a bonus apportioned back 
 
 ALTER TABLE pay_statement_lines
   ADD COLUMN regular_rate_calculation_id UUID REFERENCES regular_rate_calculations (id),
-  ADD COLUMN overtime_tier TEXT CHECK (overtime_tier IN ('ot_1_5', 'ot_2_0', 'premium_only'));
+  ADD COLUMN overtime_tier TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT pay_statement_lines_overtime_tier_check
+    CHECK (overtime_tier IN ('ot_1_5', 'ot_2_0', 'premium_only')) NOT VALID;
 ```
 
 A pay run computes, for each worker and each workweek ending in the period, one `regular_rate_calculations` row per applicable rule set (federal always, plus the state and any contract), pays the highest result per hour, writes the overtime lines with their tier and the calculation they came from, and writes `qualified_overtime_amounts` from the federal row. A bonus with an earning period creates `bonus_allocations` rows, each with a new calculation version for its week, and one retro premium line per week with that week as its `work_period`. A correction to hours in a past week does the same, as a new version that supersedes the old.

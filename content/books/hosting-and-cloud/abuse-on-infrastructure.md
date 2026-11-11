@@ -103,8 +103,10 @@ The chapter adds a service tier to `resources`, a versioned catalog of AUP categ
 
 ```sql
 ALTER TABLE resources
-  ADD COLUMN service_tier TEXT NOT NULL DEFAULT 'hosted'
-    CHECK (service_tier IN ('hosted', 'pass_through', 'core'));
+  ADD COLUMN service_tier TEXT NOT NULL DEFAULT 'hosted',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT resources_service_tier_check
+    CHECK (service_tier IN ('hosted', 'pass_through', 'core')) NOT VALID;
     -- a CDN zone and a WAF policy are 'pass_through'; a dns_zone on authoritative DNS
     -- and a domain held by a registrar are 'core'; set by kind, overridable per product
 
@@ -130,9 +132,11 @@ ALTER TABLE reports
   ADD COLUMN aup_category_id UUID REFERENCES aup_categories (id);
 ALTER TABLE abuse_mitigations
   ADD COLUMN aup_category_id UUID REFERENCES aup_categories (id),
-  ADD COLUMN service_tier    TEXT NOT NULL DEFAULT 'hosted'
-    CHECK (service_tier IN ('hosted', 'pass_through', 'core')),  -- copied at action time
-  ADD COLUMN automated       BOOLEAN NOT NULL DEFAULT FALSE;
+  ADD COLUMN service_tier    TEXT NOT NULL DEFAULT 'hosted',  -- copied at action time
+  ADD COLUMN automated       BOOLEAN NOT NULL DEFAULT FALSE,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT abuse_mitigations_service_tier_check
+    CHECK (service_tier IN ('hosted', 'pass_through', 'core')) NOT VALID;
 -- abuse_mitigations.action gains 'interstitial', 'caching_disabled', 'proxy_disabled'
 -- and 'geoblocked' for pass-through layers.
 

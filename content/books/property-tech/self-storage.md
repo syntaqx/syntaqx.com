@@ -189,7 +189,8 @@ CREATE TABLE storage_unit_types (        -- what a customer chooses and the pric
 ALTER TABLE units                        -- a unit can be resized; history lives in the audit trail
   ADD COLUMN storage_unit_type_id UUID REFERENCES storage_unit_types (id),
   ADD COLUMN has_smart_lock       BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD CONSTRAINT units_storage_type CHECK ((kind = 'storage_unit') = (storage_unit_type_id IS NOT NULL));
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT units_storage_type CHECK ((kind = 'storage_unit') = (storage_unit_type_id IS NOT NULL)) NOT VALID;
 
 CREATE TABLE street_rates (              -- the move-in price of a unit type, over time
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -205,7 +206,7 @@ CREATE TABLE street_rates (              -- the move-in price of a unit type, ov
 -- leases.agreement_kind (added in Commercial Property) says which body of law governs the
 -- agreement; a storage agreement is 'storage_rental'.
 
-CREATE UNIQUE INDEX leases_one_open_storage_rental  -- no pre-leasing: one open agreement per unit
+CREATE UNIQUE INDEX CONCURRENTLY leases_one_open_storage_rental  -- no pre-leasing: one open agreement per unit
   ON leases (unit_id)
   WHERE agreement_kind = 'storage_rental'
     AND status IN ('out_for_signature', 'signed', 'current', 'notice_given');

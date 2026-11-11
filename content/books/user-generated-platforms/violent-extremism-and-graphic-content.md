@@ -203,9 +203,11 @@ This chapter extends the [core data model](/books/user-generated-platforms/platf
 
 ```sql
 ALTER TABLE content_items
-  ADD COLUMN warning_screen TEXT CHECK (warning_screen IN ('graphic_violence', 'disturbing',
-    'sensitive')),                       -- null: none; set by a moderation decision
-  ADD COLUMN age_restricted BOOLEAN NOT NULL DEFAULT FALSE;  -- signed-in 18+ viewers only
+  ADD COLUMN warning_screen TEXT,                       -- null: none; set by a moderation decision
+  ADD COLUMN age_restricted BOOLEAN NOT NULL DEFAULT FALSE,  -- signed-in 18+ viewers only
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT content_items_warning_screen_check
+    CHECK (warning_screen IN ('graphic_violence', 'disturbing', 'sensitive')) NOT VALID;
 
 CREATE TABLE crisis_incidents (          -- one event in incident mode: its hashes, its queue
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

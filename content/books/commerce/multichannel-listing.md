@@ -177,10 +177,12 @@ ALTER TABLE listings
   ADD COLUMN content_hash        TEXT,    -- hash of the last accepted facts document
   ADD COLUMN terms_hash          TEXT,    -- hash of the last accepted price and quantity
   ADD COLUMN channel_status      TEXT,    -- raw, e.g. 'BUYABLE,DISCOVERABLE', 'PUBLISHED'
-  ADD COLUMN match_mode          TEXT CHECK (match_mode IN ('create', 'offer_only')),
+  ADD COLUMN match_mode          TEXT,
   ADD COLUMN published_quantity  INT,     -- the last quantity the channel acknowledged
   ADD COLUMN published_price     BIGINT,  -- minor units, as the channel shows it
-  ADD COLUMN last_synced_at      TIMESTAMPTZ;
+  ADD COLUMN last_synced_at      TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT listings_match_mode_check CHECK (match_mode IN ('create', 'offer_only')) NOT VALID;
 
 CREATE TABLE channel_category_mappings (  -- merchant category to channel category and type
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

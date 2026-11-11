@@ -164,8 +164,11 @@ The deltas against the [core data model](/books/property-tech/property-business#
 -- A student property is a multifamily property with a segment; segment is the
 -- operating model, property_type the asset class.
 ALTER TABLE properties
-  ADD COLUMN segment TEXT CHECK (segment IN ('conventional', 'student', 'senior', 'military',
-    'affordable', 'build_to_rent'));
+  ADD COLUMN segment TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT properties_segment_check
+    CHECK (segment IN ('conventional', 'student', 'senior', 'military',
+        'affordable', 'build_to_rent')) NOT VALID;
 
 CREATE TABLE bed_types (                 -- what a by-the-bed property sells before beds are chosen
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -225,25 +228,28 @@ ALTER TABLE leases
   ALTER COLUMN unit_id DROP NOT NULL,
   ADD COLUMN bed_type_id      UUID REFERENCES bed_types (id),
   ADD COLUMN bed_id           UUID,     -- the bed a by-the-bed lease rents, once assigned
-  ADD COLUMN liability        TEXT NOT NULL DEFAULT 'joint_and_several'
-                                CHECK (liability IN ('joint_and_several', 'individual')),
+  ADD COLUMN liability        TEXT NOT NULL DEFAULT 'joint_and_several',
   ADD COLUMN academic_term_id UUID REFERENCES academic_terms (id),
-  ADD CONSTRAINT leases_bed_in_unit FOREIGN KEY (bed_id, unit_id) REFERENCES beds (id, unit_id),
-  ADD CONSTRAINT leases_bed_is_individual CHECK (bed_id IS NULL OR liability = 'individual'),
-  ADD CONSTRAINT leases_bed_needs_unit CHECK (bed_id IS NULL OR unit_id IS NOT NULL),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT leases_bed_in_unit FOREIGN KEY (bed_id, unit_id) REFERENCES beds (id, unit_id) NOT VALID,
+  ADD CONSTRAINT leases_bed_is_individual CHECK (bed_id IS NULL OR liability = 'individual') NOT VALID,
+  ADD CONSTRAINT leases_bed_needs_unit CHECK (bed_id IS NULL OR unit_id IS NOT NULL) NOT VALID,
   ADD CONSTRAINT leases_space_known CHECK (
     unit_id IS NOT NULL
     OR (bed_type_id IS NOT NULL AND status IN ('draft', 'out_for_signature', 'signed',
-        'cancelled'))),
+        'cancelled'))) NOT VALID,
   ADD CONSTRAINT leases_individual_has_bed CHECK (
-    liability <> 'individual' OR bed_id IS NOT NULL OR bed_type_id IS NOT NULL);
+    liability <> 'individual' OR bed_id IS NOT NULL OR bed_type_id IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT leases_liability_check
+    CHECK (liability IN ('joint_and_several', 'individual')) NOT VALID;
 
 -- Guarantees name whose obligation they back. The guaranty's document, scope, cap
 -- (guaranty_limit_amount) and renewal coverage are The Lease's lease_members columns.
 ALTER TABLE lease_members
   ADD COLUMN guarantees_person_id UUID REFERENCES people (id),  -- null: the whole lease
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT lease_members_guarantees_person CHECK (
-    role = 'guarantor' OR guarantees_person_id IS NULL);
+    role = 'guarantor' OR guarantees_person_id IS NULL) NOT VALID;
 
 CREATE TABLE bed_assignments (           -- who sleeps in which bed, over time
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

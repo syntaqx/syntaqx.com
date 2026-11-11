@@ -155,16 +155,22 @@ The core `inventory_levels` row keeps on hand and committed. Inventory adds the 
 
 ```sql
 ALTER TABLE inventory_items
-  ADD COLUMN tracking TEXT NOT NULL DEFAULT 'quantity' CHECK (tracking IN ('quantity', 'lot',
-    'serial')),
-  ADD COLUMN out_of_stock_policy TEXT NOT NULL DEFAULT 'deny' CHECK (out_of_stock_policy IN
-    ('deny', 'continue', 'backorder', 'preorder'));
+  ADD COLUMN tracking TEXT NOT NULL DEFAULT 'quantity',
+  ADD COLUMN out_of_stock_policy TEXT NOT NULL DEFAULT 'deny',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT inventory_items_tracking_check
+    CHECK (tracking IN ('quantity', 'lot', 'serial')) NOT VALID,
+  ADD CONSTRAINT inventory_items_out_of_stock_policy_check
+    CHECK (out_of_stock_policy IN ('deny', 'continue', 'backorder', 'preorder')) NOT VALID;
 
 ALTER TABLE inventory_levels
-  ADD COLUMN damaged         INT NOT NULL DEFAULT 0 CHECK (damaged >= 0),
-  ADD COLUMN quality_control INT NOT NULL DEFAULT 0 CHECK (quality_control >= 0),
+  ADD COLUMN damaged         INT NOT NULL DEFAULT 0,
+  ADD COLUMN quality_control INT NOT NULL DEFAULT 0,
   ADD COLUMN version         BIGINT NOT NULL DEFAULT 0,  -- compare-and-set on every write
-  ADD CONSTRAINT inventory_levels_parts CHECK (on_hand >= committed + damaged + quality_control);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT inventory_levels_parts CHECK (on_hand >= committed + damaged + quality_control) NOT VALID,
+  ADD CONSTRAINT inventory_levels_damaged_check CHECK (damaged >= 0) NOT VALID,
+  ADD CONSTRAINT inventory_levels_quality_control_check CHECK (quality_control >= 0) NOT VALID;
 
 CREATE TABLE inventory_movements (       -- append-only; levels are their running sum
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

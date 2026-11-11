@@ -173,16 +173,22 @@ CREATE TABLE pay_statement_requirements (  -- what a statement must show, by sta
 
 ALTER TABLE pay_statements
   ADD COLUMN rendered_document_id   UUID REFERENCES documents (id),  -- what the employee received
-  ADD COLUMN delivery_method        TEXT CHECK (delivery_method IN ('paper', 'portal', 'email')),
+  ADD COLUMN delivery_method        TEXT,
   ADD COLUMN delivered_at           TIMESTAMPTZ,
-  ADD COLUMN requirements_checked   JSONB;   -- field codes required and present at render
+  ADD COLUMN requirements_checked   JSONB,   -- field codes required and present at render
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT pay_statements_delivery_method_check
+    CHECK (delivery_method IN ('paper', 'portal', 'email')) NOT VALID;
 
 ALTER TABLE employments
-  ADD COLUMN separation_type        TEXT CHECK (separation_type IN ('discharge', 'layoff',
-                                      'quit', 'mutual', 'death', 'end_of_assignment')),
+  ADD COLUMN separation_type        TEXT,
   ADD COLUMN separation_effective_at TIMESTAMPTZ,
   ADD COLUMN notice_given_at        TIMESTAMPTZ,   -- the employee's notice of quitting
-  ADD COLUMN pay_by_mail_requested  BOOLEAN NOT NULL DEFAULT FALSE;
+  ADD COLUMN pay_by_mail_requested  BOOLEAN NOT NULL DEFAULT FALSE,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT employments_separation_type_check
+    CHECK (separation_type IN ('discharge', 'layoff',
+        'quit', 'mutual', 'death', 'end_of_assignment')) NOT VALID;
 
 CREATE TABLE final_pay_rules (             -- by state and separation facts, dated
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

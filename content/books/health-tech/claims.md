@@ -203,32 +203,38 @@ ALTER TABLE charges                      -- code, modifiers, units, fee and serv
   ADD COLUMN tooth            TEXT,                           -- dental: universal numbering
   ADD COLUMN surfaces         TEXT[],                         -- 'M', 'O', 'D', 'B', 'L', 'I'
   ADD COLUMN oral_area        TEXT,                           -- quadrant or arch
-  ADD COLUMN review_status    TEXT NOT NULL DEFAULT 'pending' CHECK (review_status IN
-                                ('pending', 'reviewed', 'held'));
+  ADD COLUMN review_status    TEXT NOT NULL DEFAULT 'pending',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT charges_review_status_check
+    CHECK (review_status IN ('pending', 'reviewed', 'held')) NOT VALID;
 
 ALTER TABLE claims                       -- kind, frequency, replaces_claim_id, the control and payer
                                          -- claim numbers, coverage_id and status are core
-  ADD COLUMN purpose           TEXT NOT NULL DEFAULT 'claim' CHECK (purpose IN ('claim',
-                                 'predetermination')),
+  ADD COLUMN purpose           TEXT NOT NULL DEFAULT 'claim',
   ADD COLUMN cob_order         SMALLINT NOT NULL DEFAULT 1,   -- the coverage's priority when billed
   ADD COLUMN rendering_role_id UUID REFERENCES practitioner_roles (id),
   ADD COLUMN place_of_service  TEXT,
   ADD COLUMN prior_auth_number TEXT,
-  ADD COLUMN rejected_by       TEXT CHECK (rejected_by IN ('syntax', 'clearinghouse', 'payer')),
+  ADD COLUMN rejected_by       TEXT,
   ADD COLUMN timely_filing_due DATE,                          -- computed from the payer's rule
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT claims_place_of_service_not_null NOT NULL place_of_service NOT VALID,
-  ADD CONSTRAINT claims_timely_filing_due_not_null NOT NULL timely_filing_due NOT VALID;
+  ADD CONSTRAINT claims_timely_filing_due_not_null NOT NULL timely_filing_due NOT VALID,
+  ADD CONSTRAINT claims_purpose_check CHECK (purpose IN ('claim', 'predetermination')) NOT VALID,
+  ADD CONSTRAINT claims_rejected_by_check
+    CHECK (rejected_by IN ('syntax', 'clearinghouse', 'payer')) NOT VALID;
 
 ALTER TABLE claim_lines                  -- charge_id, code, modifiers, units, charge and diagnoses are core
   ADD COLUMN line_control_number TEXT,                        -- echoed on 277CA and 835 lines
   ADD COLUMN revenue_code     TEXT,                           -- 837I
   ADD COLUMN tooth            TEXT,
   ADD COLUMN surfaces         TEXT[],
-  ADD COLUMN prosthesis       TEXT CHECK (prosthesis IN ('initial', 'replacement')),
+  ADD COLUMN prosthesis       TEXT,
   ADD COLUMN prior_placement  DATE,
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
-  ADD CONSTRAINT claim_lines_line_control_number_not_null NOT NULL line_control_number NOT VALID;
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT claim_lines_line_control_number_not_null NOT NULL line_control_number NOT VALID,
+  ADD CONSTRAINT claim_lines_prosthesis_check
+    CHECK (prosthesis IN ('initial', 'replacement')) NOT VALID;
 
 CREATE TABLE claim_submissions (         -- each time a claim is sent, and what answered it
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

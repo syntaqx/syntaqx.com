@@ -248,7 +248,8 @@ The core `wallets` table names a key scheme (`mpc`, `multisig`, `hsm`) and a pur
 ```sql
 ALTER TABLE wallets
   DROP CONSTRAINT wallets_key_scheme_check,
-  ADD CONSTRAINT wallets_key_scheme_check CHECK (key_scheme IN ('mpc', 'multisig', 'hsm', 'enclave'));
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT wallets_key_scheme_check CHECK (key_scheme IN ('mpc', 'multisig', 'hsm', 'enclave')) NOT VALID;
 
 CREATE TABLE keys (                -- one logical key: an HD root, an account node, a TSS key
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -157,10 +157,13 @@ The deltas against [The Core Data Model](/books/health-tech/health-tech-business
 ```sql
 ALTER TABLE integrations
   ADD COLUMN fhir_base_url       TEXT,
-  ADD COLUMN fhir_version        TEXT CHECK (fhir_version IN ('4.0.1', '4.3.0', '5.0.0')),
+  ADD COLUMN fhir_version        TEXT,
   ADD COLUMN capability_statement JSONB,       -- as fetched from /metadata
   ADD COLUMN capability_fetched_at TIMESTAMPTZ,
-  ADD COLUMN implementation_guides TEXT[] NOT NULL DEFAULT '{}';  -- canonical URLs with versions
+  ADD COLUMN implementation_guides TEXT[] NOT NULL DEFAULT '{}',  -- canonical URLs with versions
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT integrations_fhir_version_check
+    CHECK (fhir_version IN ('4.0.1', '4.3.0', '5.0.0')) NOT VALID;
 
 CREATE TABLE fhir_resource_versions (             -- a local row and the remote resource it mirrors
   organization_id  UUID NOT NULL REFERENCES organizations (id),

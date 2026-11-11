@@ -130,11 +130,21 @@ CREATE TABLE company_locations (         -- a branch, clinic or site that orders
 );
 
 ALTER TABLE company_contacts             -- one row per contact, role and location
-  DROP CONSTRAINT company_contacts_pkey,
-  ADD COLUMN id            UUID PRIMARY KEY DEFAULT uuidv7(),
+  ADD COLUMN id            UUID,                                    -- the new key, backfilled below
   ADD COLUMN location_id   UUID REFERENCES company_locations (id),  -- null: all locations
-  ADD COLUMN order_limit   BIGINT;                                  -- per order, minor units
-CREATE UNIQUE INDEX company_contacts_role_key
+  ADD COLUMN order_limit   BIGINT,                                  -- per order, minor units
+  ALTER COLUMN id SET DEFAULT uuidv7(),                             -- new rows only: no rewrite
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT company_contacts_id_not_null NOT NULL id NOT VALID;
+
+-- Once id is backfilled in batches: validate, build the key without blocking writes,
+-- and swap the primary key in one statement.
+ALTER TABLE company_contacts VALIDATE CONSTRAINT company_contacts_id_not_null;
+CREATE UNIQUE INDEX CONCURRENTLY company_contacts_id_key ON company_contacts (id);
+ALTER TABLE company_contacts
+  DROP CONSTRAINT company_contacts_pkey,
+  ADD CONSTRAINT company_contacts_pkey PRIMARY KEY USING INDEX company_contacts_id_key;
+CREATE UNIQUE INDEX CONCURRENTLY company_contacts_role_key
   ON company_contacts (company_id, customer_id, role, COALESCE(location_id, '00000000-0000-0000-0000-000000000000'));
 
 CREATE TABLE payment_terms (

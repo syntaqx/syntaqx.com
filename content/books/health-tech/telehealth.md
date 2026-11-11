@@ -132,13 +132,17 @@ Telehealth extends `encounters` and `observations` from [The Core Data Model](/b
 
 ```sql
 ALTER TABLE encounters
-  ADD COLUMN modality            TEXT CHECK (modality IN ('video', 'audio_only',
-                                   'asynchronous')),  -- null: in person
+  ADD COLUMN modality            TEXT,  -- null: in person
   ADD COLUMN patient_subdivision TEXT,          -- ISO 3166-2 where the patient was, asked at check-in
-  ADD COLUMN patient_site        TEXT CHECK (patient_site IN ('home', 'facility', 'other')),
+  ADD COLUMN patient_site        TEXT,
   ADD COLUMN practitioner_subdivision TEXT,     -- where the clinician was
   ADD COLUMN practitioner_license_id UUID,      -- the practitioner_licenses row checked at start
-  ADD COLUMN telehealth_rule_evaluation_id UUID; -- the payer and date rule that decided billability
+  ADD COLUMN telehealth_rule_evaluation_id UUID, -- the payer and date rule that decided billability
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT encounters_modality_check
+    CHECK (modality IN ('video', 'audio_only', 'asynchronous')) NOT VALID,
+  ADD CONSTRAINT encounters_patient_site_check
+    CHECK (patient_site IN ('home', 'facility', 'other')) NOT VALID;
 
 CREATE TABLE virtual_visits (            -- each connection, separate from the clinical encounter
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

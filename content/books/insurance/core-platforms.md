@@ -127,9 +127,9 @@ ALTER TABLE claims
   ADD COLUMN system_of_record TEXT NOT NULL DEFAULT 'core',
   ADD COLUMN external_ref     TEXT;
 
-CREATE UNIQUE INDEX policies_external ON policies (system_of_record, external_ref)
+CREATE UNIQUE INDEX CONCURRENTLY policies_external ON policies (system_of_record, external_ref)
   WHERE external_ref IS NOT NULL;
-CREATE UNIQUE INDEX claims_external ON claims (system_of_record, external_ref)
+CREATE UNIQUE INDEX CONCURRENTLY claims_external ON claims (system_of_record, external_ref)
   WHERE external_ref IS NOT NULL;
 ```
 

@@ -218,13 +218,15 @@ ALTER TABLE bank_accounts
   ADD COLUMN holder_entity_id   UUID REFERENCES legal_entities (id),
   ADD COLUMN title_on_account   TEXT,                 -- as the bank shows it
   ADD COLUMN is_trust           BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN trust_purpose      TEXT CHECK (trust_purpose IN ('operating', 'security_deposits',
-                                  'association', 'escrow')),
+  ADD COLUMN trust_purpose      TEXT,
   ADD COLUMN depository_state   TEXT,                 -- ISO 3166-2 of the branch
   ADD COLUMN interest_bearing   BOOLEAN NOT NULL DEFAULT FALSE,
   DROP CONSTRAINT bank_accounts_purpose_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT bank_accounts_purpose_check CHECK (purpose IN ('fbo', 'reserve', 'operating',
-                                  'clearing', 'collateral', 'trust', 'corporate'));
+                                  'clearing', 'collateral', 'trust', 'corporate')) NOT VALID,
+  ADD CONSTRAINT bank_accounts_trust_purpose_check
+    CHECK (trust_purpose IN ('operating', 'security_deposits', 'association', 'escrow')) NOT VALID;
 
 CREATE TABLE bank_account_properties (               -- whose money is in which account, when
   tenant_id       UUID NOT NULL,

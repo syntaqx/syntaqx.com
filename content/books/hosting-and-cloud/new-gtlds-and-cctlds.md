@@ -156,37 +156,45 @@ The registry is already a row in `registries` ([ICANN, Registries & Registrars](
 ```sql
 ALTER TABLE registries
   ADD COLUMN iso3166_code         CHAR(2),  -- ccTLDs: the ISO 3166-1 alpha-2 element it rests on
-  ADD COLUMN eligibility          TEXT NOT NULL DEFAULT 'open' CHECK (eligibility IN ('open',
-                                    'presence_required', 'community', 'brand_exclusive')),
-  ADD COLUMN presence_rule        TEXT CHECK (presence_rule IN ('residence_or_citizenship',
-                                    'nexus', 'local_recipient_on_request')),
-  ADD COLUMN presence_check       TEXT CHECK (presence_check IN ('attestation',
-                                    'documents_at_registration', 'spot_check')),
+  ADD COLUMN eligibility          TEXT NOT NULL DEFAULT 'open',
+  ADD COLUMN presence_rule        TEXT,
+  ADD COLUMN presence_check       TEXT,
   ADD COLUMN policy_url           TEXT,     -- the registry's own rules
-  ADD COLUMN dispute_policy       TEXT NOT NULL DEFAULT 'udrp_urs' CHECK (dispute_policy IN
-                                    ('udrp_urs', 'udrp_only', 'registry_own')),
+  ADD COLUMN dispute_policy       TEXT NOT NULL DEFAULT 'udrp_urs',
   ADD COLUMN code_of_conduct_exempt BOOLEAN NOT NULL DEFAULT FALSE,  -- Spec 13 or Spec 9 s.6
   ADD COLUMN exclusive_registrar_ids INT[],  -- Spec 13 s.5(ii): at most three, IANA ids
-  ADD COLUMN sunrise_kind         TEXT CHECK (sunrise_kind IN ('start_date', 'end_date')),
+  ADD COLUMN sunrise_kind         TEXT,
   ADD COLUMN sunrise_during       TSTZRANGE,  -- >= 30 days (start-date) or 60 (end-date)
   ADD COLUMN claims_during        TSTZRANGE,  -- >= first 90 days of general availability
   ADD COLUMN general_availability_at TIMESTAMPTZ,
   ADD COLUMN retirement_notice_at TIMESTAMPTZ,  -- ccTLD retirement: the IANA notice
   ADD COLUMN removal_due_at       TIMESTAMPTZ,  -- five years on, or the agreed plan's date
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT registries_cctld_code
-    CHECK ((tld_type = 'cctld') = (iso3166_code IS NOT NULL)),
+    CHECK ((tld_type = 'cctld') = (iso3166_code IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT registries_presence_complete
-    CHECK ((eligibility = 'presence_required') = (presence_rule IS NOT NULL)),
+    CHECK ((eligibility = 'presence_required') = (presence_rule IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT registries_brand_terms
     CHECK (tld_type <> 'brand_gtld' OR (eligibility = 'brand_exclusive'
-           AND code_of_conduct_exempt AND sunrise_during IS NULL)),
+           AND code_of_conduct_exempt AND sunrise_during IS NULL)) NOT VALID,
   ADD CONSTRAINT registries_exclusive_registrars
-    CHECK (exclusive_registrar_ids IS NULL OR cardinality(exclusive_registrar_ids) <= 3),
+    CHECK (exclusive_registrar_ids IS NULL OR cardinality(exclusive_registrar_ids) <= 3) NOT VALID,
   ADD CONSTRAINT registries_launch_order
     CHECK (claims_during IS NULL OR sunrise_during IS NULL
-           OR upper(sunrise_during) <= lower(claims_during)),
+           OR upper(sunrise_during) <= lower(claims_during)) NOT VALID,
   ADD CONSTRAINT registries_retirement_order
-    CHECK (removal_due_at IS NULL OR retirement_notice_at < removal_due_at);
+    CHECK (removal_due_at IS NULL OR retirement_notice_at < removal_due_at) NOT VALID,
+  ADD CONSTRAINT registries_eligibility_check
+    CHECK (eligibility IN ('open', 'presence_required', 'community', 'brand_exclusive')) NOT VALID,
+  ADD CONSTRAINT registries_presence_rule_check
+    CHECK (presence_rule IN ('residence_or_citizenship',
+        'nexus', 'local_recipient_on_request')) NOT VALID,
+  ADD CONSTRAINT registries_presence_check_check
+    CHECK (presence_check IN ('attestation', 'documents_at_registration', 'spot_check')) NOT VALID,
+  ADD CONSTRAINT registries_dispute_policy_check
+    CHECK (dispute_policy IN ('udrp_urs', 'udrp_only', 'registry_own')) NOT VALID,
+  ADD CONSTRAINT registries_sunrise_kind_check
+    CHECK (sunrise_kind IN ('start_date', 'end_date')) NOT VALID;
 
 -- A registry price change is a new tld_pricing version with the notice date, never an
 -- edit: the .com rise announced on 23 April 2026, effective 1 November 2026 04:00 UTC.

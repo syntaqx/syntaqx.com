@@ -120,8 +120,9 @@ Deltas against the core data model in [The Workplace Software Business](/books/w
 -- The matter is a container kind.
 ALTER TABLE containers
   DROP CONSTRAINT containers_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT containers_kind_check CHECK (kind IN ('channel', 'space', 'project', 'board',
-    'folder', 'file', 'canvas', 'meeting_series', 'matter'));
+    'folder', 'file', 'canvas', 'meeting_series', 'matter')) NOT VALID;
 
 CREATE TABLE parties (                        -- every person or organization the firm knows
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

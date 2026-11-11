@@ -143,12 +143,15 @@ The core model already has the shape: a `schedules` row is a bookable resource's
 
 ```sql
 ALTER TABLE schedules                              -- operatories are schedules with resource_kind 'operatory'
-  ADD COLUMN operatory_kind TEXT CHECK (operatory_kind IN ('dental_operatory', 'exam_room', 'surgery',
-                              'exam_lane', 'pretest', 'treatment_area', 'kennel', 'telehealth')),
+  ADD COLUMN operatory_kind TEXT,
   ADD COLUMN is_hygiene     BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN default_practitioner_role_id UUID REFERENCES practitioner_roles (id),
   ADD COLUMN online_bookable BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN sort_order     INT;                    -- column order; some PMSs pick the leftmost open
+  ADD COLUMN sort_order     INT,                    -- column order; some PMSs pick the leftmost open
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT schedules_operatory_kind_check
+    CHECK (operatory_kind IN ('dental_operatory', 'exam_room', 'surgery',
+        'exam_lane', 'pretest', 'treatment_area', 'kennel', 'telehealth')) NOT VALID;
 
 CREATE TABLE appointment_types (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -189,14 +192,19 @@ ALTER TABLE appointments
   ADD COLUMN hygienist_role_id UUID REFERENCES practitioner_roles (id),
   ADD COLUMN pattern TEXT,                          -- copied from the type, editable per appointment
   ADD COLUMN is_new_patient BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('normal', 'asap')),
+  ADD COLUMN priority TEXT NOT NULL DEFAULT 'normal',
   ADD COLUMN hold_expires_at TIMESTAMPTZ,           -- set while status = 'proposed' during booking
   ADD COLUMN source_detail TEXT,                    -- 'web_sched', 'recall_link', 'marketplace:zocdoc'
   ADD COLUMN source_booking_ref TEXT,               -- the widget's or marketplace's booking id
   ADD COLUMN idempotency_key TEXT,
   ADD COLUMN overbook_reason TEXT,                  -- set when a person overrode a conflict
   ADD COLUMN overbooked_by UUID,
-  ADD CONSTRAINT appointments_idem UNIQUE (location_id, idempotency_key);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT appointments_priority_check CHECK (priority IN ('normal', 'asap')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY appointments_idem ON appointments (location_id, idempotency_key);
+ALTER TABLE appointments ADD CONSTRAINT appointments_idem UNIQUE USING INDEX appointments_idem;
 
 CREATE TABLE booking_rules (                       -- online booking policy, versioned per location
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

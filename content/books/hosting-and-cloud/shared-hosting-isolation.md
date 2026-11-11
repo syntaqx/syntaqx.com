@@ -133,16 +133,13 @@ The chapter adds isolation and limit columns to `hosting_accounts` and a `resour
 
 ```sql
 ALTER TABLE hosting_accounts
-  ADD COLUMN php_handler        TEXT NOT NULL DEFAULT 'fpm'
-    CHECK (php_handler IN ('fpm', 'dedicated_fpm', 'lsapi', 'fcgid', 'suphp', 'cgi', 'dso')),
+  ADD COLUMN php_handler        TEXT NOT NULL DEFAULT 'fpm',
   ADD COLUMN php_version        TEXT,              -- '8.3'; per-domain overrides live in the panel
   ADD COLUMN fpm_max_children   SMALLINT,
   ADD COLUMN fpm_idle_timeout_s INT,
   ADD COLUMN fpm_max_requests   INT,
-  ADD COLUMN limit_engine       TEXT NOT NULL DEFAULT 'none'
-    CHECK (limit_engine IN ('none', 'lve', 'cgroups_v2', 'container')),
-  ADD COLUMN fs_isolation       TEXT NOT NULL DEFAULT 'permissions'
-    CHECK (fs_isolation IN ('permissions', 'cagefs', 'chroot', 'container')),
+  ADD COLUMN limit_engine       TEXT NOT NULL DEFAULT 'none',
+  ADD COLUMN fs_isolation       TEXT NOT NULL DEFAULT 'permissions',
   ADD COLUMN cpu_limit_pct      SMALLINT,          -- 100 = one core (LVE SPEED, CPUQuota)
   ADD COLUMN memory_limit_mib   INT,               -- LVE PMEM, memory.max
   ADD COLUMN memory_high_mib    INT,               -- throttle point where the engine has one
@@ -154,13 +151,21 @@ ALTER TABLE hosting_accounts
   ADD COLUMN inodes_hard_limit  INT,
   ADD COLUMN db_cpu_limit_pct   SMALLINT,          -- per-user database limits
   ADD COLUMN db_io_limit_kbps   INT,
-  ADD COLUMN limits_source      TEXT NOT NULL DEFAULT 'plan'
-    CHECK (limits_source IN ('plan', 'account_override', 'reseller_cap', 'abuse')),
-  ADD CONSTRAINT ha_no_dso_shared CHECK (php_handler <> 'dso' OR limit_engine = 'container'),
+  ADD COLUMN limits_source      TEXT NOT NULL DEFAULT 'plan',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT ha_no_dso_shared CHECK (php_handler <> 'dso' OR limit_engine = 'container') NOT VALID,
   ADD CONSTRAINT ha_nproc_over_ep CHECK (nproc_limit IS NULL OR entry_procs_limit IS NULL
-    OR nproc_limit > entry_procs_limit + 15),
+    OR nproc_limit > entry_procs_limit + 15) NOT VALID,
   ADD CONSTRAINT ha_inodes CHECK (inodes_soft_limit IS NULL OR inodes_hard_limit IS NULL
-    OR inodes_soft_limit <= inodes_hard_limit);
+    OR inodes_soft_limit <= inodes_hard_limit) NOT VALID,
+  ADD CONSTRAINT hosting_accounts_php_handler_check
+    CHECK (php_handler IN ('fpm', 'dedicated_fpm', 'lsapi', 'fcgid', 'suphp', 'cgi', 'dso')) NOT VALID,
+  ADD CONSTRAINT hosting_accounts_limit_engine_check
+    CHECK (limit_engine IN ('none', 'lve', 'cgroups_v2', 'container')) NOT VALID,
+  ADD CONSTRAINT hosting_accounts_fs_isolation_check
+    CHECK (fs_isolation IN ('permissions', 'cagefs', 'chroot', 'container')) NOT VALID,
+  ADD CONSTRAINT hosting_accounts_limits_source_check
+    CHECK (limits_source IN ('plan', 'account_override', 'reseller_cap', 'abuse')) NOT VALID;
 
 CREATE TABLE resource_limit_events (     -- faults and limit hits, as the server reports them
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

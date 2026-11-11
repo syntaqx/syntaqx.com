@@ -165,9 +165,10 @@ The chapter adds scam indicators, conversation stage scores, warnings and their 
 ```sql
 ALTER TABLE inauthentic_clusters
   DROP CONSTRAINT inauthentic_clusters_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT inauthentic_clusters_kind_check CHECK (kind IN ('spam_farm',
     'vote_ring', 'ban_evasion', 'coordinated_inauthentic_behavior',
-    'note_rating_ring', 'scam_operation'));
+    'note_rating_ring', 'scam_operation')) NOT VALID;
 
 CREATE TABLE scam_indicators (           -- off-platform identifiers seen in scams
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

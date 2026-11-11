@@ -159,6 +159,7 @@ ALTER TABLE job_assignments
   ADD COLUMN org_unit_id UUID REFERENCES org_units (id),
   ADD COLUMN job_code    TEXT,
   ADD COLUMN change_sequence SMALLINT NOT NULL DEFAULT 0,  -- several changes on one day
+  -- EXCLUDE has no concurrent build: add it while the table is small, or in a maintenance window.
   ADD CONSTRAINT job_assignments_no_overlap EXCLUDE USING GIST (
     employment_id WITH =, valid_during WITH &&) WHERE (is_primary);
 

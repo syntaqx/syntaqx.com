@@ -131,12 +131,17 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 ```sql
 ALTER TABLE loans
   ADD COLUMN precomputed BOOLEAN NOT NULL DEFAULT false,    -- add-on interest, rebated on payoff
-  ADD COLUMN rebate_method TEXT CHECK (rebate_method IN ('actuarial', 'rule_of_78s')),  -- precomputed only
-  ADD COLUMN prepayment_policy TEXT NOT NULL DEFAULT 'shorten_term'
-    CHECK (prepayment_policy IN ('shorten_term', 'reamortize', 'borrower_choice'));
+  ADD COLUMN rebate_method TEXT,  -- precomputed only
+  ADD COLUMN prepayment_policy TEXT NOT NULL DEFAULT 'shorten_term',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT loans_rebate_method_check
+    CHECK (rebate_method IN ('actuarial', 'rule_of_78s')) NOT VALID,
+  ADD CONSTRAINT loans_prepayment_policy_check
+    CHECK (prepayment_policy IN ('shorten_term', 'reamortize', 'borrower_choice')) NOT VALID;
 
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE loans ADD CONSTRAINT rule_of_78s_term
-  CHECK (rebate_method IS DISTINCT FROM 'rule_of_78s' OR term_months <= 61);  -- 15 U.S.C. 1615
+  CHECK (rebate_method IS DISTINCT FROM 'rule_of_78s' OR term_months <= 61) NOT VALID;  -- 15 U.S.C. 1615
 
 CREATE TABLE loan_disbursements (            -- where the proceeds went
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

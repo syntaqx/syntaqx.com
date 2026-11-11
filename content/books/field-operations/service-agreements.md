@@ -125,7 +125,7 @@ ALTER TABLE plan_versions
   ADD COLUMN billing_interval  TEXT,           -- month | quarter | year (periodic only)
   ADD COLUMN term_months       INTEGER,
   ADD COLUMN is_auto_renewing  BOOLEAN NOT NULL DEFAULT FALSE,
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT plan_versions_billing_model_not_null NOT NULL billing_model NOT VALID;
 
 ALTER TABLE agreements

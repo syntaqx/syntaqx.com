@@ -203,11 +203,14 @@ ALTER TABLE communications
   ADD COLUMN conversation_id UUID REFERENCES conversations (id),
   ADD COLUMN template_id UUID REFERENCES message_templates (id),
   ADD COLUMN template_version INT,
-  ADD COLUMN legal_basis TEXT CHECK (legal_basis IN ('express_consent', 'written_consent',
-                         'tcpa_healthcare_exemption', 'patient_initiated', 'none_required')),
+  ADD COLUMN legal_basis TEXT,
   ADD COLUMN consent_id UUID REFERENCES consents (id),
   ADD COLUMN segments SMALLINT,
-  ADD COLUMN blocked_reason TEXT;                -- 'opted_out', 'confidential_request', 'budget',
+  ADD COLUMN blocked_reason TEXT,                -- 'opted_out', 'confidential_request', 'budget',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT communications_legal_basis_check
+    CHECK (legal_basis IN ('express_consent', 'written_consent',
+        'tcpa_healthcare_exemption', 'patient_initiated', 'none_required')) NOT VALID;
                                                  -- 'quiet_hours', 'stale_subject', ...
 
 ALTER TABLE contacts

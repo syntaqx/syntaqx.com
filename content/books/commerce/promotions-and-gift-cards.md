@@ -214,8 +214,10 @@ ALTER TABLE promotion_redemptions
   ADD COLUMN promotion_id     UUID REFERENCES promotions (id),
   ADD COLUMN promotion_version INT,
   ADD COLUMN discount_code_id UUID REFERENCES discount_codes (id),
-  ADD COLUMN status           TEXT NOT NULL DEFAULT 'confirmed' CHECK (status IN ('reserved',
-                                'confirmed', 'released'));
+  ADD COLUMN status           TEXT NOT NULL DEFAULT 'confirmed',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT promotion_redemptions_status_check
+    CHECK (status IN ('reserved', 'confirmed', 'released')) NOT VALID;
 
 ALTER TABLE order_charges
   ADD COLUMN promotion_id UUID REFERENCES promotions (id),  -- for kind = 'discount'

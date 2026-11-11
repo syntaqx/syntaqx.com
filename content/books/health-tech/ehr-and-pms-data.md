@@ -127,22 +127,28 @@ The deltas against [The Core Data Model](/books/health-tech/health-tech-business
 
 ```sql
 ALTER TABLE conditions
-  ADD COLUMN category            TEXT NOT NULL DEFAULT 'problem_list_item'
-                                   CHECK (category IN ('problem_list_item',
-                                   'encounter_diagnosis', 'health_concern')),
-  ADD COLUMN verification_status TEXT CHECK (verification_status IN ('unconfirmed',
-                                   'provisional', 'differential', 'confirmed', 'refuted',
-                                   'entered_in_error')),
-  ADD COLUMN source_integration_id UUID REFERENCES integrations (id);  -- null: charted here
+  ADD COLUMN category            TEXT NOT NULL DEFAULT 'problem_list_item',
+  ADD COLUMN verification_status TEXT,
+  ADD COLUMN source_integration_id UUID REFERENCES integrations (id),  -- null: charted here
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT conditions_category_check
+    CHECK (category IN ('problem_list_item', 'encounter_diagnosis', 'health_concern')) NOT VALID,
+  ADD CONSTRAINT conditions_verification_status_check
+    CHECK (verification_status IN ('unconfirmed',
+        'provisional', 'differential', 'confirmed', 'refuted',
+        'entered_in_error')) NOT VALID;
 
 ALTER TABLE allergies
-  ADD COLUMN assertion           TEXT NOT NULL DEFAULT 'allergy'
-                                   CHECK (assertion IN ('allergy', 'no_known_allergies',
-                                   'no_known_drug_allergies')),
-  ADD COLUMN verification_status TEXT CHECK (verification_status IN ('unconfirmed',
-                                   'confirmed', 'refuted', 'entered_in_error')),
+  ADD COLUMN assertion           TEXT NOT NULL DEFAULT 'allergy',
+  ADD COLUMN verification_status TEXT,
   ADD COLUMN recorded_by         UUID REFERENCES practitioner_roles (id),
-  ADD COLUMN source_integration_id UUID REFERENCES integrations (id);
+  ADD COLUMN source_integration_id UUID REFERENCES integrations (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT allergies_assertion_check
+    CHECK (assertion IN ('allergy', 'no_known_allergies', 'no_known_drug_allergies')) NOT VALID,
+  ADD CONSTRAINT allergies_verification_status_check
+    CHECK (verification_status IN ('unconfirmed',
+        'confirmed', 'refuted', 'entered_in_error')) NOT VALID;
 
 CREATE TABLE clinical_notes (            -- a note's lifecycle; the signed text is a document
   id                UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -170,14 +176,21 @@ CREATE TABLE clinical_notes (            -- a note's lifecycle; the signed text 
 );
 
 ALTER TABLE procedures                   -- the dental location fields
-  ADD COLUMN tooth_system   TEXT CHECK (tooth_system IN ('universal', 'fdi')),
+  ADD COLUMN tooth_system   TEXT,
   ADD COLUMN tooth          TEXT,        -- '30', 'K', '46': text, the systems differ
-  ADD COLUMN surfaces       TEXT CHECK (surfaces ~ '^[MODBLFIV]*$'),  -- 'MO', 'MODBL'
-  ADD COLUMN quadrant       TEXT CHECK (quadrant IN ('UR', 'UL', 'LR', 'LL')),
-  ADD COLUMN sextant        SMALLINT CHECK (sextant BETWEEN 1 AND 6),
-  ADD COLUMN arch           TEXT CHECK (arch IN ('U', 'L')),
+  ADD COLUMN surfaces       TEXT,  -- 'MO', 'MODBL'
+  ADD COLUMN quadrant       TEXT,
+  ADD COLUMN sextant        SMALLINT,
+  ADD COLUMN arch           TEXT,
   ADD COLUMN referred_out   BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD CONSTRAINT procedures_tooth_has_system CHECK (tooth IS NULL OR tooth_system IS NOT NULL);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT procedures_tooth_has_system CHECK (tooth IS NULL OR tooth_system IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT procedures_tooth_system_check
+    CHECK (tooth_system IN ('universal', 'fdi')) NOT VALID,
+  ADD CONSTRAINT procedures_surfaces_check CHECK (surfaces ~ '^[MODBLFIV]*$') NOT VALID,
+  ADD CONSTRAINT procedures_quadrant_check CHECK (quadrant IN ('UR', 'UL', 'LR', 'LL')) NOT VALID,
+  ADD CONSTRAINT procedures_sextant_check CHECK (sextant BETWEEN 1 AND 6) NOT VALID,
+  ADD CONSTRAINT procedures_arch_check CHECK (arch IN ('U', 'L')) NOT VALID;
 
 CREATE TABLE tooth_findings (            -- what's on the chart that this practice didn't do
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

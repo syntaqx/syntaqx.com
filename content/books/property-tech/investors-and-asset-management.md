@@ -160,8 +160,9 @@ Deltas against [The Core Data Model](/books/property-tech/property-business#the-
 ```sql
 ALTER TABLE legal_entities
   DROP CONSTRAINT legal_entities_role_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT legal_entities_role_check CHECK (role IN ('manager', 'owner', 'fund',
-    'association', 'investor', 'sponsor', 'venture', 'lender'));  -- lenders: Budgets' draws
+    'association', 'investor', 'sponsor', 'venture', 'lender')) NOT VALID;  -- lenders: Budgets' draws
 
 CREATE TABLE offerings (
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

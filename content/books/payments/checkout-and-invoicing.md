@@ -334,9 +334,12 @@ CREATE TABLE payment_link_deliveries (
 );
 
 ALTER TABLE payments
-  ADD COLUMN surface         TEXT CHECK (surface IN ('api', 'hosted_page', 'embedded',
-                               'payment_link', 'invoice', 'portal', 'virtual_terminal')),
-  ADD COLUMN payment_link_id UUID REFERENCES payment_links (id);
+  ADD COLUMN surface         TEXT,
+  ADD COLUMN payment_link_id UUID REFERENCES payment_links (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payments_surface_check
+    CHECK (surface IN ('api', 'hosted_page', 'embedded',
+        'payment_link', 'invoice', 'portal', 'virtual_terminal')) NOT VALID;
 ```
 
 How it runs:

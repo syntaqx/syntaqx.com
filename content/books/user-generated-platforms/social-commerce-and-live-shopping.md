@@ -440,20 +440,27 @@ CREATE TABLE order_attributions (
 
 -- Orders: where they came from, how they ship, and their clocks.
 ALTER TABLE bookings
-  ADD COLUMN origin                 TEXT CHECK (origin IN ('video', 'stream', 'storefront',
-                                      'search', 'link', 'sample')),
+  ADD COLUMN origin                 TEXT,
   ADD COLUMN origin_content_item_id UUID REFERENCES content_items (id),
   ADD COLUMN live_offer_id          UUID REFERENCES live_offers (id),
-  ADD COLUMN checkout_path          TEXT CHECK (checkout_path IN ('platform', 'merchant_site')),
-  ADD COLUMN fulfilment_mode        TEXT CHECK (fulfilment_mode IN ('seller', 'platform')),
+  ADD COLUMN checkout_path          TEXT,
+  ADD COLUMN fulfilment_mode        TEXT,
   ADD COLUMN ship_from_country      CHAR(2),
   ADD COLUMN deadline_rule          TEXT,        -- handling type, calendar and policy version
   ADD COLUMN dispatch_by            TIMESTAMPTZ,
   ADD COLUMN deliver_by             TIMESTAMPTZ,
   ADD COLUMN dispatched_at          TIMESTAMPTZ, -- first carrier scan or In Transit
   ADD COLUMN delivered_at           TIMESTAMPTZ,
-  ADD COLUMN cancel_fault           TEXT CHECK (cancel_fault IN ('seller', 'buyer', 'platform',
-                                      'carrier'));
+  ADD COLUMN cancel_fault           TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT bookings_origin_check
+    CHECK (origin IN ('video', 'stream', 'storefront', 'search', 'link', 'sample')) NOT VALID,
+  ADD CONSTRAINT bookings_checkout_path_check
+    CHECK (checkout_path IN ('platform', 'merchant_site')) NOT VALID,
+  ADD CONSTRAINT bookings_fulfilment_mode_check
+    CHECK (fulfilment_mode IN ('seller', 'platform')) NOT VALID,
+  ADD CONSTRAINT bookings_cancel_fault_check
+    CHECK (cancel_fault IN ('seller', 'buyer', 'platform', 'carrier')) NOT VALID;
 
 ALTER TABLE listings
   ADD COLUMN origin_country CHAR(2);       -- where the goods were made: duty, not shipping
@@ -461,26 +468,33 @@ ALTER TABLE listings
 -- New order lines: the creator's commission and import duty.
 ALTER TABLE booking_lines
   DROP CONSTRAINT booking_lines_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT booking_lines_kind_check CHECK (kind IN ('rental', 'add_on',
     'cleaning_or_prep', 'delivery', 'guest_service_fee', 'host_service_fee', 'protection',
     'deposit_waiver', 'screening_fee', 'discount', 'promotion', 'usage', 'late_return', 'tax',
-    'affiliate_commission', 'import_duty')),
+    'affiliate_commission', 'import_duty')) NOT VALID,
   DROP CONSTRAINT booking_lines_earner_check,
   ADD CONSTRAINT booking_lines_earner_check CHECK (earner IN ('host', 'platform', 'insurer',
-    'tax_authority', 'creator', 'customs'));
+    'tax_authority', 'creator', 'customs')) NOT VALID;
 
 ALTER TABLE promotions
   DROP CONSTRAINT promotions_funded_by_check,
-  ADD CONSTRAINT promotions_funded_by_check CHECK (funded_by IN ('platform', 'host', 'shared')),
-  ADD COLUMN platform_share_bps INT CHECK (platform_share_bps BETWEEN 0 AND 10000),
-  ADD COLUMN live_offer_id      UUID REFERENCES live_offers (id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT promotions_funded_by_check CHECK (funded_by IN ('platform', 'host', 'shared')) NOT VALID,
+  ADD COLUMN platform_share_bps INT,
+  ADD COLUMN live_offer_id      UUID REFERENCES live_offers (id),
+  ADD CONSTRAINT promotions_platform_share_bps_check
+    CHECK (platform_share_bps BETWEEN 0 AND 10000) NOT VALID;
 
 -- Seller performance as a status program whose results are money.
 ALTER TABLE host_status_periods
   ADD COLUMN score           NUMERIC(3,2),
-  ADD COLUMN settlement_tier TEXT CHECK (settlement_tier IN ('introductory', 'standard',
-                               'accelerated', 'express', 'deferred')),
-  ADD COLUMN reserve_level   SMALLINT;
+  ADD COLUMN settlement_tier TEXT,
+  ADD COLUMN reserve_level   SMALLINT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT host_status_periods_settlement_tier_check
+    CHECK (settlement_tier IN ('introductory', 'standard',
+        'accelerated', 'express', 'deferred')) NOT VALID;
 ```
 
 Attribution runs once, when the order is paid: the latest valid click inside the click window beats any view, a view counts only inside the shorter view window, a click on a link counts only while the link was valid, and the plan rate is the one in force at purchase, with a targeted plan beating an open one:

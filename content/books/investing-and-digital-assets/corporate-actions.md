@@ -173,11 +173,13 @@ ALTER TABLE asset_events
   ADD COLUMN revision INT NOT NULL DEFAULT 1,                     -- DTC or issuer restatements bump it
   ADD COLUMN source TEXT NOT NULL DEFAULT 'dtc',                  -- 'dtc', 'clearing_firm', 'issuer', 'chain', 'internal'
   ADD COLUMN source_ref TEXT,                                     -- the depository's event ID
-  ADD COLUMN entitlement_basis TEXT NOT NULL DEFAULT 'record_date'
-    CHECK (entitlement_basis IN ('record_date', 'ex_date_trades', 'snapshot_block')),
+  ADD COLUMN entitlement_basis TEXT NOT NULL DEFAULT 'record_date',
   DROP CONSTRAINT asset_events_status_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT asset_events_status_check CHECK (status IN ('announced', 'confirmed',
-    'entitled', 'processed', 'reconciled', 'canceled'));
+    'entitled', 'processed', 'reconciled', 'canceled')) NOT VALID,
+  ADD CONSTRAINT asset_events_entitlement_basis_check
+    CHECK (entitlement_basis IN ('record_date', 'ex_date_trades', 'snapshot_block')) NOT VALID;
 
 CREATE TABLE asset_event_entitlements (       -- what each account gets, computed once per revision
   asset_event_id     UUID NOT NULL REFERENCES asset_events (id),

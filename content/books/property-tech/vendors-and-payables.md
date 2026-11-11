@@ -99,13 +99,16 @@ These are deltas against [the core data model](/books/property-tech/property-bus
 
 ```sql
 ALTER TABLE vendors
-  ADD COLUMN tax_classification  TEXT CHECK (tax_classification IN ('individual',
-                                   'sole_proprietor', 'partnership', 'c_corporation',
-                                   's_corporation', 'llc', 'other')),  -- from the W-9
+  ADD COLUMN tax_classification  TEXT,  -- from the W-9
   ADD COLUMN payment_hold        BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN payment_hold_reason TEXT,               -- 'coi_expired', 'bank_change_pending'
   ADD COLUMN tin_token           TEXT,               -- vaulted; match result kept with it
-  ADD COLUMN tin_match_status    TEXT;
+  ADD COLUMN tin_match_status    TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT vendors_tax_classification_check
+    CHECK (tax_classification IN ('individual',
+        'sole_proprietor', 'partnership', 'c_corporation',
+        's_corporation', 'llc', 'other')) NOT VALID;
 
 CREATE TABLE vendor_requirements (       -- what an owner or property demands of vendors
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -194,15 +197,18 @@ ALTER TABLE bills
   ADD COLUMN payer_entity_id   UUID REFERENCES legal_entities (id),
   ADD COLUMN purchase_order_id UUID REFERENCES purchase_orders (id),
   ADD COLUMN work_order_id     UUID REFERENCES work_orders (id),
-  ADD COLUMN capture_method    TEXT CHECK (capture_method IN ('keyed', 'outsourced_keying',
-                                 'ai_capture', 'e_invoice', 'vendor_portal')),
-  ADD COLUMN match_result      TEXT CHECK (match_result IN ('not_required', 'two_way',
-                                 'three_way', 'exception')),
+  ADD COLUMN capture_method    TEXT,
+  ADD COLUMN match_result      TEXT,
   ADD COLUMN split_from_document_id UUID,            -- the original multi-property invoice
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT bills_tenant_id_not_null NOT NULL tenant_id NOT VALID,
   ADD CONSTRAINT bills_property_id_not_null NOT NULL property_id NOT VALID,
-  ADD CONSTRAINT bills_payer_entity_id_not_null NOT NULL payer_entity_id NOT VALID;
+  ADD CONSTRAINT bills_payer_entity_id_not_null NOT NULL payer_entity_id NOT VALID,
+  ADD CONSTRAINT bills_capture_method_check
+    CHECK (capture_method IN ('keyed', 'outsourced_keying',
+        'ai_capture', 'e_invoice', 'vendor_portal')) NOT VALID,
+  ADD CONSTRAINT bills_match_result_check
+    CHECK (match_result IN ('not_required', 'two_way', 'three_way', 'exception')) NOT VALID;
 
 CREATE TABLE bill_lines (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

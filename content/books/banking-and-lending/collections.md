@@ -127,11 +127,12 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 ```sql
 -- Adds 'debt_validation_dispute' and 'bankruptcy'; the full list as of this chapter.
 ALTER TABLE cases DROP CONSTRAINT cases_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT cases_kind_check CHECK (kind IN ('reg_e_error', 'reg_cc_claim',
     'billing_error', 'fraud_claim', 'credit_report_dispute', 'legal_process', 'complaint',
     'aml_investigation', 'hardship', 'sanctions_review', 'mca_reconciliation',
     'servicing_error', 'information_request',
-    'loss_mitigation', 'debt_validation_dispute', 'bankruptcy'));
+    'loss_mitigation', 'debt_validation_dispute', 'bankruptcy')) NOT VALID;
 
 CREATE TABLE delinquency_snapshots (         -- daily, per loan or line; the roll-rate source
   account_id           UUID NOT NULL REFERENCES accounts (id),

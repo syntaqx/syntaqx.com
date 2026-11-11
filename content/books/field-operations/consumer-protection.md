@@ -56,23 +56,27 @@ The sales and booking apps should therefore record, on every sale, the facts the
 ```sql
 -- Columns this chapter adds to the canonical agreements table
 ALTER TABLE agreements
-  ADD COLUMN sold_via                 TEXT
-    CHECK (sold_via IN ('door', 'phone', 'web', 'store', 'technician')),
+  ADD COLUMN sold_via                 TEXT,
   ADD COLUMN sold_by_staff_member_id  UUID REFERENCES staff_members (id),  -- null for self-serve web
-  ADD COLUMN signed_via               TEXT
-    CHECK (signed_via IN ('customer_device', 'seller_device')),  -- set at signing
-  ADD COLUMN sale_location_kind       TEXT
-    CHECK (sale_location_kind IN ('buyer_home', 'other_away', 'seller_premises', 'remote')),
-  ADD COLUMN contact_initiated_by     TEXT
-    CHECK (contact_initiated_by IN ('buyer', 'seller')),
+  ADD COLUMN signed_via               TEXT,  -- set at signing
+  ADD COLUMN sale_location_kind       TEXT,
+  ADD COLUMN contact_initiated_by     TEXT,
   ADD COLUMN emergency_waiver_document_id UUID,     -- the handwritten statement, if any
   ADD COLUMN cooling_off_rule_id      UUID,         -- the rule counsel says applies, or null
   ADD COLUMN cancellation_deadline_at TIMESTAMPTZ,  -- computed once at signing, with its inputs
   ADD COLUMN cancellation_deadline_time_zone TEXT,  -- the buyer's IANA zone the midnight is in
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT agreements_sold_via_not_null NOT NULL sold_via NOT VALID,
   ADD CONSTRAINT agreements_sale_location_kind_not_null NOT NULL sale_location_kind NOT VALID,
-  ADD CONSTRAINT agreements_contact_initiated_by_not_null NOT NULL contact_initiated_by NOT VALID;
+  ADD CONSTRAINT agreements_contact_initiated_by_not_null NOT NULL contact_initiated_by NOT VALID,
+  ADD CONSTRAINT agreements_sold_via_check
+    CHECK (sold_via IN ('door', 'phone', 'web', 'store', 'technician')) NOT VALID,
+  ADD CONSTRAINT agreements_signed_via_check
+    CHECK (signed_via IN ('customer_device', 'seller_device')) NOT VALID,
+  ADD CONSTRAINT agreements_sale_location_kind_check
+    CHECK (sale_location_kind IN ('buyer_home', 'other_away', 'seller_premises', 'remote')) NOT VALID,
+  ADD CONSTRAINT agreements_contact_initiated_by_check
+    CHECK (contact_initiated_by IN ('buyer', 'seller')) NOT VALID;
 ```
 
 `sold_via` is the channel (a technician selling an add-on on a service visit is `technician`), `sold_by_staff_member_id` the rep or technician who made the sale, and `signed_via` whose device the packet was signed on ([Signing the Agreement](/books/field-operations/signing-the-agreement#embedded-or-remote-whose-device)); `sale_location_kind` is where the buyer agreed, which is what the rule's $25 and $130 thresholds turn on. A technician sale in the kitchen is `technician` and `buyer_home`, and it's a door-to-door sale like any other.

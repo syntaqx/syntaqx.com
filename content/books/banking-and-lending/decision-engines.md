@@ -153,12 +153,14 @@ CREATE TABLE decision_policies (             -- a versioned strategy: rules, mod
 
 ALTER TABLE credit_decisions
   ADD COLUMN policy_ids       UUID[] NOT NULL DEFAULT '{}',   -- every layer that ran, in order
-  ADD COLUMN system_type      TEXT NOT NULL DEFAULT 'scoring'
-    CHECK (system_type IN ('scoring', 'judgmental', 'combined')),  -- Reg B's categories
+  ADD COLUMN system_type      TEXT NOT NULL DEFAULT 'scoring',  -- Reg B's categories
   ADD COLUMN routed_to_program_id UUID REFERENCES programs (id), -- the lender of record chosen
   ADD COLUMN experiment_arm   TEXT,           -- 'champion', 'challenger_b', or NULL
   ADD COLUMN application_data_version_id UUID REFERENCES application_data_versions (id),
-  ADD COLUMN supersedes_id    UUID REFERENCES credit_decisions (id); -- an override or redecision
+  ADD COLUMN supersedes_id    UUID REFERENCES credit_decisions (id), -- an override or redecision
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT credit_decisions_system_type_check
+    CHECK (system_type IN ('scoring', 'judgmental', 'combined')) NOT VALID;
 
 CREATE TABLE decision_rule_results (         -- every rule evaluated, passed or failed
   credit_decision_id  UUID NOT NULL REFERENCES credit_decisions (id),

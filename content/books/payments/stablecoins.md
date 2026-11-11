@@ -224,7 +224,9 @@ CREATE TABLE assets (                        -- one row per token per chain
   UNIQUE (chain, contract_address)
 );
 
--- The ledger takes asset codes as well as ISO currencies.
+-- The ledger takes asset codes as well as ISO currencies. CHAR(3) to TEXT rewrites both
+-- tables under an exclusive lock: on a live ledger, expand and contract instead (a new
+-- column, dual writes, a batched backfill, then the switch).
 ALTER TABLE ledger_accounts ALTER COLUMN currency TYPE TEXT;
 ALTER TABLE ledger_entries  ALTER COLUMN currency TYPE TEXT;
 

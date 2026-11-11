@@ -236,10 +236,13 @@ CREATE TABLE successor_wage_transfers (
 -- The worker's SUI state, decided by the localization tests, over time.
 ALTER TABLE worker_tax_locations
   DROP CONSTRAINT IF EXISTS worker_tax_locations_role_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT worker_tax_locations_role_check
-    CHECK (role IN ('resident', 'work', 'sui')),
-  ADD COLUMN sui_test TEXT CHECK (sui_test IN ('localized', 'base_of_operations',
-    'direction_and_control', 'residence', 'reciprocal_election', 'elected_coverage'));
+    CHECK (role IN ('resident', 'work', 'sui')) NOT VALID,
+  ADD COLUMN sui_test TEXT,
+  ADD CONSTRAINT worker_tax_locations_sui_test_check
+    CHECK (sui_test IN ('localized', 'base_of_operations',
+        'direction_and_control', 'residence', 'reciprocal_election', 'elected_coverage')) NOT VALID;
 
 -- Remaining room under a wage base for one worker, as of a pay run.
 -- $1 = worker, $2 = employer, $3 = tax type, $4 = jurisdiction, $5 = tax year.

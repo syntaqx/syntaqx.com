@@ -221,11 +221,12 @@ The chapter's additions. A story item is a `content_item` with a side table, the
 ```sql
 ALTER TABLE content_items
   DROP CONSTRAINT content_items_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT content_items_kind_check CHECK (kind IN ('post', 'comment', 'media_post',
-    'stream', 'listing', 'story')),
+    'stream', 'listing', 'story')) NOT VALID,
   DROP CONSTRAINT content_items_state_check,
   ADD CONSTRAINT content_items_state_check CHECK (state IN ('draft', 'pending_review',
-    'published', 'hidden', 'removed', 'deleted', 'expired'));  -- expired: stopped serving
+    'published', 'hidden', 'removed', 'deleted', 'expired')) NOT VALID;  -- expired: stopped serving
 
 CREATE TABLE audience_lists (            -- close friends, custom lists, hide-from
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -395,9 +396,10 @@ CREATE TABLE expiration_purge_steps (    -- proof of purge, copy by copy
 
 ALTER TABLE legal_holds
   DROP CONSTRAINT legal_holds_reason_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT legal_holds_reason_check CHECK (reason IN ('claim_window', 'open_dispute',
     'cybertipline_preservation', 'preservation_request', 'litigation',
-    'regulatory_retention', 'tax', 'report_evidence'));  -- a user report under review
+    'regulatory_retention', 'tax', 'report_evidence')) NOT VALID;  -- a user report under review
 ```
 
 Who can see a story item, with lists frozen and revocations live:

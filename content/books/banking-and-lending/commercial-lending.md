@@ -267,10 +267,12 @@ CREATE TABLE risk_ratings (                  -- every rating ever assigned, with
 );
 
 ALTER TABLE loans
-  ADD COLUMN accrual_status TEXT NOT NULL DEFAULT 'accrual'
-    CHECK (accrual_status IN ('accrual', 'nonaccrual')),
+  ADD COLUMN accrual_status TEXT NOT NULL DEFAULT 'accrual',
   ADD COLUMN accrual_status_reason TEXT,     -- 'cash_basis', 'full_payment_not_expected', '90_days'
-  ADD COLUMN accrual_status_since DATE;
+  ADD COLUMN accrual_status_since DATE,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT loans_accrual_status_check
+    CHECK (accrual_status IN ('accrual', 'nonaccrual')) NOT VALID;
 
 CREATE TABLE credit_reviews (                -- independent credit risk review findings
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

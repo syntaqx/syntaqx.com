@@ -136,7 +136,7 @@ ALTER TABLE disputes
   ADD COLUMN fraud_report_id      TEXT,           -- the TC40 or SAFE record, when known
   ADD COLUMN outcome              TEXT,           -- won, lost, accepted, prevented
   ADD COLUMN closed_at            TIMESTAMPTZ,
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT disputes_stage_not_null NOT NULL stage NOT VALID;
 
 CREATE TABLE dispute_evidence (

@@ -121,23 +121,31 @@ The workplace twist is sourcing. A seat-based contract is bought by a company at
 ALTER TABLE subscriptions
   ADD COLUMN term_start        DATE,
   ADD COLUMN term_end          DATE,
-  ADD COLUMN billing_cadence   TEXT CHECK (billing_cadence IN ('monthly',
-                                 'annual_upfront', 'annual_monthly', 'quarterly')),
-  ADD COLUMN count_method      TEXT CHECK (count_method IN ('point_in_time',
-                                 'period_max', 'daily_prorated', 'committed')),
+  ADD COLUMN billing_cadence   TEXT,
+  ADD COLUMN count_method      TEXT,
   ADD COLUMN committed_seats   INT,              -- floor for annual commitments
   ADD COLUMN reduce_window     INTERVAL,         -- '7 days' after purchase or renewal
-  ADD COLUMN true_up_cadence   TEXT CHECK (true_up_cadence IN ('quarterly', 'annual')),
+  ADD COLUMN true_up_cadence   TEXT,
   ADD COLUMN coterm_group_id   UUID,             -- subscriptions renewing together
-  ADD COLUMN channel           TEXT NOT NULL DEFAULT 'direct' CHECK (channel IN
-                                 ('direct', 'reseller', 'aws_marketplace',
-                                  'azure_marketplace', 'gcp_marketplace')),
+  ADD COLUMN channel           TEXT NOT NULL DEFAULT 'direct',
   ADD COLUMN payer_party_id    UUID,             -- the customer, reseller or marketplace
-  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT subscriptions_term_start_not_null NOT NULL term_start NOT VALID,
   ADD CONSTRAINT subscriptions_term_end_not_null NOT NULL term_end NOT VALID,
   ADD CONSTRAINT subscriptions_billing_cadence_not_null NOT NULL billing_cadence NOT VALID,
-  ADD CONSTRAINT subscriptions_count_method_not_null NOT NULL count_method NOT VALID;
+  ADD CONSTRAINT subscriptions_count_method_not_null NOT NULL count_method NOT VALID,
+  ADD CONSTRAINT subscriptions_billing_cadence_check
+    CHECK (billing_cadence IN ('monthly',
+        'annual_upfront', 'annual_monthly', 'quarterly')) NOT VALID,
+  ADD CONSTRAINT subscriptions_count_method_check
+    CHECK (count_method IN ('point_in_time',
+        'period_max', 'daily_prorated', 'committed')) NOT VALID,
+  ADD CONSTRAINT subscriptions_true_up_cadence_check
+    CHECK (true_up_cadence IN ('quarterly', 'annual')) NOT VALID,
+  ADD CONSTRAINT subscriptions_channel_check
+    CHECK (channel IN
+        ('direct', 'reseller', 'aws_marketplace',
+        'azure_marketplace', 'gcp_marketplace')) NOT VALID;
 
 CREATE TABLE billing_parties (                  -- who receives and pays invoices
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

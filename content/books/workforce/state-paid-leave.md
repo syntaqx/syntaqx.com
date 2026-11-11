@@ -214,8 +214,11 @@ ALTER TABLE leave_cases
   ADD COLUMN pfml_program_id        UUID REFERENCES pfml_programs (id),
   ADD COLUMN concurrent_case_id     UUID REFERENCES leave_cases (id),  -- the FMLA case beside it
   ADD COLUMN state_claim_number     TEXT,
-  ADD COLUMN topup_policy           TEXT CHECK (topup_policy IN ('none', 'employee_elects',
-                                      'employer_requires', 'prohibited'));
+  ADD COLUMN topup_policy           TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT leave_cases_topup_policy_check
+    CHECK (topup_policy IN ('none', 'employee_elects',
+        'employer_requires', 'prohibited')) NOT VALID;
 ```
 
 A pay run reads the employer's `employer_program_sizes` for the period, the program's `pfml_rates` and the generated `tax_rates` rows; computes the premium on the program's wages up to its cap (or annual maximum from `accumulators`); splits it; and writes an `employee_tax` line for the withheld share and an `employer_tax` line for the rest, each with a `liabilities` row to the program or the private plan's payee. A private plan approval in force swaps the deduction code and payee for its dates. The quarterly report is generated from statement lines, and a state bill (Minnesota) is reconciled against it.

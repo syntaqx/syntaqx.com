@@ -141,22 +141,30 @@ The chapter's additions to the core model:
 
 ```sql
 ALTER TABLE media_assets
-  ADD COLUMN metadata_policy    TEXT NOT NULL DEFAULT 'strip'
-                                  CHECK (metadata_policy IN ('strip', 'keep_copyright',
-                                    'keep_camera')),  -- what served variants may carry
-  ADD COLUMN source_orientation SMALLINT CHECK (source_orientation BETWEEN 1 AND 8),
+  ADD COLUMN metadata_policy    TEXT NOT NULL DEFAULT 'strip',  -- what served variants may carry
+  ADD COLUMN source_orientation SMALLINT,
                                                      -- EXIF value, applied to the pixels
   ADD COLUMN had_location       BOOLEAN NOT NULL DEFAULT FALSE,  -- the original carries GPS
   ADD COLUMN is_animated        BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN frame_count        INT CHECK (frame_count > 0),
-  ADD COLUMN content_class      TEXT CHECK (content_class IN ('photo', 'graphic',
-                                  'screenshot', 'artwork'));  -- tunes quality
+  ADD COLUMN frame_count        INT,
+  ADD COLUMN content_class      TEXT,  -- tunes quality
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT media_assets_metadata_policy_check
+    CHECK (metadata_policy IN ('strip', 'keep_copyright', 'keep_camera')) NOT VALID,
+  ADD CONSTRAINT media_assets_source_orientation_check
+    CHECK (source_orientation BETWEEN 1 AND 8) NOT VALID,
+  ADD CONSTRAINT media_assets_frame_count_check CHECK (frame_count > 0) NOT VALID,
+  ADD CONSTRAINT media_assets_content_class_check
+    CHECK (content_class IN ('photo', 'graphic', 'screenshot', 'artwork')) NOT VALID;
 
 ALTER TABLE content_media                -- alt text belongs to this use of the file
   ADD COLUMN alt_text        TEXT,
-  ADD COLUMN alt_text_source TEXT CHECK (alt_text_source IN ('author', 'generated')),
+  ADD COLUMN alt_text_source TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT content_media_alt_text_source
-    CHECK ((alt_text IS NULL) = (alt_text_source IS NULL));
+    CHECK ((alt_text IS NULL) = (alt_text_source IS NULL)) NOT VALID,
+  ADD CONSTRAINT content_media_alt_text_source_check
+    CHECK (alt_text_source IN ('author', 'generated')) NOT VALID;
 
 CREATE TABLE media_variants (            -- every derived file of an asset, video included
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

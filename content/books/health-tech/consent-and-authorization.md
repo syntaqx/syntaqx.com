@@ -101,14 +101,13 @@ ALTER TABLE disclosure_texts             -- core: versioned wording; consent for
 
 ALTER TABLE consents
   DROP CONSTRAINT consents_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT consents_kind_check CHECK (kind IN ('treatment', 'informed_consent', 'financial',
     'assignment_of_benefits', 'npp_acknowledgment', 'hipaa_authorization', 'texting', 'calling',
     'email', 'marketing', 'telehealth', 'recording', 'proxy_access', 'sud_part2',
-    'sud_counseling_notes', 'consumer_health_data', 'research')),
+    'sud_counseling_notes', 'consumer_health_data', 'research')) NOT VALID,
   ADD COLUMN signer_contact_id  UUID REFERENCES contacts (id),   -- who actually signed
-  ADD COLUMN signer_capacity    TEXT NOT NULL DEFAULT 'self' CHECK (signer_capacity IN ('self',
-                                  'parent', 'guardian', 'health_care_agent', 'executor',
-                                  'client_owner', 'guarantor', 'other_legal')),
+  ADD COLUMN signer_capacity    TEXT NOT NULL DEFAULT 'self',
   ADD COLUMN representative_id  UUID,                            -- personal_representatives, below
   ADD COLUMN attested_by        UUID,                            -- staff member, for verbal consent
   ADD COLUMN recipients         JSONB,                           -- named, or a class ("my treating providers")
@@ -118,7 +117,11 @@ ALTER TABLE consents
   ADD COLUMN revocation_document_id UUID REFERENCES documents (id),  -- the written revocation
   ADD COLUMN superseded_by      UUID REFERENCES consents (id),
   ADD CONSTRAINT authorization_expires CHECK (kind NOT IN ('hipaa_authorization', 'sud_part2',
-    'sud_counseling_notes') OR expires_at IS NOT NULL OR expires_on_event IS NOT NULL);
+    'sud_counseling_notes') OR expires_at IS NOT NULL OR expires_on_event IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT consents_signer_capacity_check
+    CHECK (signer_capacity IN ('self',
+        'parent', 'guardian', 'health_care_agent', 'executor',
+        'client_owner', 'guarantor', 'other_legal')) NOT VALID;
 
 CREATE TABLE personal_representatives (  -- who may act for a patient, how far, on what evidence
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

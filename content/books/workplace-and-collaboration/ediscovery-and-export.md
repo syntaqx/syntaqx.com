@@ -157,7 +157,8 @@ CREATE TABLE ediscovery_case_members (      -- who may see this case; nobody els
 );
 
 ALTER TABLE legal_holds
-  ADD CONSTRAINT legal_holds_case_fk FOREIGN KEY (ediscovery_case_id) REFERENCES ediscovery_cases (id);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT legal_holds_case_fk FOREIGN KEY (ediscovery_case_id) REFERENCES ediscovery_cases (id) NOT VALID;
 
 CREATE TABLE ediscovery_searches (
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

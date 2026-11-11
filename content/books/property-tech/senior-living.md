@@ -155,14 +155,19 @@ CREATE TABLE care_licenses (             -- a state license the property operate
 );
 
 ALTER TABLE units                        -- which setting an apartment is licensed and sold as
-  ADD COLUMN care_setting      TEXT CHECK (care_setting IN ('independent', 'assisted',
-                                 'memory_care', 'skilled_nursing')),
+  ADD COLUMN care_setting      TEXT,
   ADD COLUMN care_license_id   UUID REFERENCES care_licenses (id),
-  ADD COLUMN resident_capacity INT CHECK (resident_capacity > 0);  -- companion suites hold 2
+  ADD COLUMN resident_capacity INT,  -- companion suites hold 2
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT units_care_setting_check
+    CHECK (care_setting IN ('independent', 'assisted', 'memory_care', 'skilled_nursing')) NOT VALID,
+  ADD CONSTRAINT units_resident_capacity_check CHECK (resident_capacity > 0) NOT VALID;
 
 ALTER TABLE leases                       -- the residency agreement
-  ADD COLUMN residency_type TEXT NOT NULL DEFAULT 'standard'
-    CHECK (residency_type IN ('standard', 'respite', 'trial'));
+  ADD COLUMN residency_type TEXT NOT NULL DEFAULT 'standard',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT leases_residency_type_check
+    CHECK (residency_type IN ('standard', 'respite', 'trial')) NOT VALID;
 
 CREATE TABLE care_pricing_schemes (      -- how a property turns assessed need into a price
   id           UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -262,8 +267,9 @@ ALTER TABLE lease_charge_schedules
   ADD COLUMN care_level_determination_id UUID REFERENCES care_level_determinations (id),
   ADD COLUMN payer_coverage_id           UUID REFERENCES payer_coverages (id),  -- null: household
   DROP CONSTRAINT lease_charge_schedules_frequency_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT lease_charge_schedules_frequency_check
-    CHECK (frequency IN ('monthly', 'weekly', 'annual', 'daily'));
+    CHECK (frequency IN ('monthly', 'weekly', 'annual', 'daily')) NOT VALID;
 
 -- charges.responsible_person_id (Charges & Resident Ledgers) names the resident.
 ALTER TABLE charges

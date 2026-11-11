@@ -133,10 +133,13 @@ These are deltas against [the core data model](/books/workforce/workforce-busine
 ```sql
 ALTER TABLE deduction_codes
   ADD COLUMN benefit_plan_id    UUID REFERENCES benefit_plans (id),  -- the plan that makes it pre-tax
-  ADD COLUMN authorization_kind TEXT CHECK (authorization_kind IN ('cafeteria_election',
-                                  'plan_election', 'dues_assignment', 'written_consent',
-                                  'court_order', 'none')),
-  ADD COLUMN compensation_item_types TEXT[];    -- plan compensation: which pay item types count
+  ADD COLUMN authorization_kind TEXT,
+  ADD COLUMN compensation_item_types TEXT[],    -- plan compensation: which pay item types count
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT deduction_codes_authorization_kind_check
+    CHECK (authorization_kind IN ('cafeteria_election',
+        'plan_election', 'dues_assignment', 'written_consent',
+        'court_order', 'none')) NOT VALID;
 
 ALTER TABLE deduction_elections
   ADD COLUMN roth_catch_up_required BOOLEAN NOT NULL DEFAULT FALSE,  -- from prior-year FICA wages

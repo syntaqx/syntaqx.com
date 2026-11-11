@@ -198,12 +198,16 @@ The deltas against [the core data model](/books/property-tech/property-business#
 -- The community. property_type 'association' already exists; owner_entity_id is the
 -- association's legal_entities row (role 'association').
 ALTER TABLE properties
-  ADD COLUMN association_form   TEXT CHECK (association_form IN ('planned_community',
-               'condominium', 'cooperative')),
+  ADD COLUMN association_form   TEXT,
   ADD COLUMN master_property_id UUID REFERENCES properties (id),  -- sub-association of a master
-  ADD COLUMN fiscal_year_start  SMALLINT CHECK (fiscal_year_start BETWEEN 1 AND 12),
+  ADD COLUMN fiscal_year_start  SMALLINT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT properties_association_form
-    CHECK ((property_type = 'association') = (association_form IS NOT NULL));
+    CHECK ((property_type = 'association') = (association_form IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT properties_association_form_check
+    CHECK (association_form IN ('planned_community', 'condominium', 'cooperative')) NOT VALID,
+  ADD CONSTRAINT properties_fiscal_year_start_check
+    CHECK (fiscal_year_start BETWEEN 1 AND 12) NOT VALID;
 
 CREATE TABLE unit_allocations (           -- the declaration's numbers; change only by amendment
   id                     UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -247,16 +251,21 @@ CREATE TABLE ownership_account_holders (  -- who is on the account; a co-op hold
 -- Charges and payments post to a lease or to an ownership account, never both.
 ALTER TABLE charges ALTER COLUMN lease_id DROP NOT NULL,
   ADD COLUMN ownership_account_id UUID REFERENCES ownership_accounts (id),
-  ADD CONSTRAINT charges_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) = 1);
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT charges_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) = 1) NOT VALID;
 
 ALTER TABLE payments
   ADD COLUMN ownership_account_id UUID REFERENCES ownership_accounts (id),
   ADD COLUMN payer_entity_id      UUID REFERENCES legal_entities (id),  -- an owning LLC pays
-  ADD CONSTRAINT payments_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) <= 1);  -- none: an application fee or a walk-in sale
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT payments_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) <= 1) NOT VALID;  -- none: an application fee or a walk-in sale
 
 ALTER TABLE charge_codes
-  ADD COLUMN lien_class TEXT CHECK (lien_class IN ('assessment', 'collection_cost', 'interest',
-               'late_charge', 'fine', 'not_lienable'));  -- what the jurisdiction lets the lien carry
+  ADD COLUMN lien_class TEXT,  -- what the jurisdiction lets the lien carry
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT charge_codes_lien_class_check
+    CHECK (lien_class IN ('assessment', 'collection_cost', 'interest',
+        'late_charge', 'fine', 'not_lienable')) NOT VALID;
 
 CREATE TABLE association_budgets (        -- adopted by the board for a fiscal year
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -295,9 +304,13 @@ CREATE TABLE assessment_schedule_units (  -- benefited units, or a limited commo
 );
 
 ALTER TABLE charges
-  ADD COLUMN assessment_schedule_id UUID REFERENCES assessment_schedules (id),
-  ADD CONSTRAINT charges_assessment_once
-    UNIQUE (tenant_id, assessment_schedule_id, ownership_account_id, service_period);
+  ADD COLUMN assessment_schedule_id UUID REFERENCES assessment_schedules (id);
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY charges_assessment_once
+  ON charges (tenant_id, assessment_schedule_id, ownership_account_id, service_period);
+ALTER TABLE charges
+  ADD CONSTRAINT charges_assessment_once UNIQUE USING INDEX charges_assessment_once;
 
 CREATE TABLE reserve_studies (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

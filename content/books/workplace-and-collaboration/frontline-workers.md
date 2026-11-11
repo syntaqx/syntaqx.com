@@ -136,10 +136,13 @@ The chapter's additions. A frontline member is a `members` row with a restricted
 
 ```sql
 ALTER TABLE members
-  ADD COLUMN seat_profile   TEXT NOT NULL DEFAULT 'standard'
-    CHECK (seat_profile IN ('standard', 'frontline')),
-  ADD COLUMN pay_basis      TEXT CHECK (pay_basis IN ('hourly', 'salaried_exempt',
-    'salaried_nonexempt'));              -- drives off-shift notification and access rules
+  ADD COLUMN seat_profile   TEXT NOT NULL DEFAULT 'standard',
+  ADD COLUMN pay_basis      TEXT,              -- drives off-shift notification and access rules
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT members_seat_profile_check
+    CHECK (seat_profile IN ('standard', 'frontline')) NOT VALID,
+  ADD CONSTRAINT members_pay_basis_check
+    CHECK (pay_basis IN ('hourly', 'salaried_exempt', 'salaried_nonexempt')) NOT VALID;
 -- members.employee_number (from Provisioning, SCIM & Offboarding) is the identity
 -- when there is no corporate email
 

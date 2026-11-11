@@ -123,12 +123,15 @@ ALTER TABLE properties
   ADD COLUMN landlord_registration TEXT;   -- e.g. a national register number, where required
 
 ALTER TABLE leases
-  ADD COLUMN tenancy_form TEXT NOT NULL DEFAULT 'fixed_term' CHECK (tenancy_form IN (
-    'fixed_term', 'periodic', 'assured_periodic', 'private_residential',
-    'occupation_secure', 'occupation_standard')),
+  ADD COLUMN tenancy_form TEXT NOT NULL DEFAULT 'fixed_term',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT leases_fixed_term_has_end    -- backfill US leases with no ends_on as periodic
-    CHECK (tenancy_form <> 'fixed_term' OR ends_on IS NOT NULL),
-  ADD COLUMN prescribed_form_version TEXT; -- the government lease form used, where one is mandatory
+    CHECK (tenancy_form <> 'fixed_term' OR ends_on IS NOT NULL) NOT VALID,
+  ADD COLUMN prescribed_form_version TEXT, -- the government lease form used, where one is mandatory
+  ADD CONSTRAINT leases_tenancy_form_check
+    CHECK (tenancy_form IN (
+        'fixed_term', 'periodic', 'assured_periodic', 'private_residential',
+        'occupation_secure', 'occupation_standard')) NOT VALID;
 
 CREATE TABLE deposit_schemes (             -- platform-wide: schemes and bond authorities
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

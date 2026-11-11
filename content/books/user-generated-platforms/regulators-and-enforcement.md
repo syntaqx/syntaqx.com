@@ -227,26 +227,30 @@ CREATE TABLE trusted_flaggers (          -- synced from the Commission's publish
 -- On top of Abuse Desks' reports columns (nullable reporter_id, reporter_contact,
 -- intake_channel, external_ref, acknowledged_at): who the notifier is in DSA terms.
 ALTER TABLE reports
-  ADD COLUMN notifier_kind     TEXT NOT NULL DEFAULT 'user' CHECK (notifier_kind IN ('user',
-                                 'non_user', 'trusted_flagger', 'authority')),
+  ADD COLUMN notifier_kind     TEXT NOT NULL DEFAULT 'user',
   ADD COLUMN trusted_flagger_id UUID REFERENCES trusted_flaggers (id),
   ADD COLUMN is_illegal_content_notice BOOLEAN NOT NULL DEFAULT FALSE,  -- an Art. 16 notice
   ADD COLUMN legal_notice_id   UUID REFERENCES legal_notices (id),  -- its 'dsa_notice' row
   ADD COLUMN legal_reference   TEXT,     -- the law the notifier says is broken
   ADD COLUMN notifier_country  CHAR(2),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT reports_trusted_flagger
-    CHECK ((notifier_kind = 'trusted_flagger') = (trusted_flagger_id IS NOT NULL)),
+    CHECK ((notifier_kind = 'trusted_flagger') = (trusted_flagger_id IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT reports_user_is_account
-    CHECK (notifier_kind <> 'user' OR reporter_id IS NOT NULL);
+    CHECK (notifier_kind <> 'user' OR reporter_id IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT reports_notifier_kind_check
+    CHECK (notifier_kind IN ('user', 'non_user', 'trusted_flagger', 'authority')) NOT VALID;
 
 ALTER TABLE moderation_decisions
-  ADD COLUMN legal_ground       TEXT CHECK (legal_ground IN ('illegal_content',
-                                  'terms_of_service')),
+  ADD COLUMN legal_ground       TEXT,
   ADD COLUMN legal_reference    TEXT,    -- the law or the terms clause relied on
   ADD COLUMN territorial_scope  TEXT[],  -- ISO country codes, or '{*}' for everywhere
   ADD COLUMN statement_sent_at  TIMESTAMPTZ,
   ADD COLUMN transparency_db_id TEXT,    -- the Commission database's id for the statement
-  ADD COLUMN transparency_db_submitted_at TIMESTAMPTZ;
+  ADD COLUMN transparency_db_submitted_at TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT moderation_decisions_legal_ground_check
+    CHECK (legal_ground IN ('illegal_content', 'terms_of_service')) NOT VALID;
 
 CREATE TABLE out_of_court_disputes (     -- a certified body's case about one decision
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

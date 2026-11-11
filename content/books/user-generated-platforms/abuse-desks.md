@@ -153,8 +153,9 @@ CREATE TABLE hosted_resources (          -- what an infrastructure provider can 
 
 ALTER TABLE moderation_cases
   DROP CONSTRAINT moderation_cases_subject_type_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT moderation_cases_subject_type_check CHECK (subject_type IN ('account',
-    'profile', 'community', 'content_item', 'media_asset', 'message', 'hosted_resource'));
+    'profile', 'community', 'content_item', 'media_asset', 'message', 'hosted_resource')) NOT VALID;
 
 ALTER TABLE reports                      -- reporters here are rarely account holders
   ALTER COLUMN reporter_id DROP NOT NULL,
@@ -162,20 +163,23 @@ ALTER TABLE reports                      -- reporters here are rarely account ho
   ADD COLUMN trusted_reporter   BOOLEAN NOT NULL DEFAULT FALSE,  -- the desk's own program;
                                          -- DSA trusted flaggers are notifier_kind, added in
                                          -- Regulators & Enforcement
-  ADD COLUMN intake_channel     TEXT NOT NULL DEFAULT 'in_product' CHECK (intake_channel IN
-                                  ('in_product', 'web_form', 'role_mailbox', 'api',
-                                   'structured_feed', 'blocklist', 'internal_scan')),
+  ADD COLUMN intake_channel     TEXT NOT NULL DEFAULT 'in_product',
   ADD COLUMN external_ref       TEXT,    -- reporter's ticket, XARF report id, blocklist ticket
   ADD COLUMN reported_locator   TEXT,    -- URL, domain, IP, as reported
   ADD COLUMN observed_at        TIMESTAMPTZ,  -- when the reporter saw it; drives attribution
   ADD COLUMN acknowledged_at    TIMESTAMPTZ,  -- receipt sent; ICANN requires it of registrars
   ADD COLUMN forwarded_to       TEXT,    -- the operator or host it was passed to
   ADD COLUMN forwarded_at       TIMESTAMPTZ,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT reports_reporter_known
     CHECK (reporter_id IS NOT NULL OR reporter_contact IS NOT NULL
-           OR intake_channel IN ('blocklist', 'internal_scan')),
+           OR intake_channel IN ('blocklist', 'internal_scan')) NOT VALID,
   ADD CONSTRAINT reports_forward_complete
-    CHECK ((forwarded_to IS NULL) = (forwarded_at IS NULL));
+    CHECK ((forwarded_to IS NULL) = (forwarded_at IS NULL)) NOT VALID,
+  ADD CONSTRAINT reports_intake_channel_check
+    CHECK (intake_channel IN
+        ('in_product', 'web_form', 'role_mailbox', 'api',
+        'structured_feed', 'blocklist', 'internal_scan')) NOT VALID;
 
 CREATE TABLE abuse_mitigations (         -- one action against one resource, with its scope
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

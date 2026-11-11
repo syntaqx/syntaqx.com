@@ -178,11 +178,14 @@ The GL needs to know what each account is for in the margin math:
 
 ```sql
 ALTER TABLE gl_accounts
-  ADD COLUMN margin_role TEXT CHECK (margin_role IN (
-    'earning_asset', 'nonearning_asset', 'interest_bearing_liability',
-    'noninterest_bearing_liability', 'equity', 'interest_income', 'interest_expense',
-    'noninterest_income', 'noninterest_expense', 'provision', 'tax')),
-  ADD COLUMN tax_exempt BOOLEAN NOT NULL DEFAULT FALSE;  -- for the FTE gross-up
+  ADD COLUMN margin_role TEXT,
+  ADD COLUMN tax_exempt BOOLEAN NOT NULL DEFAULT FALSE,  -- for the FTE gross-up
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT gl_accounts_margin_role_check
+    CHECK (margin_role IN (
+        'earning_asset', 'nonearning_asset', 'interest_bearing_liability',
+        'noninterest_bearing_liability', 'equity', 'interest_income', 'interest_expense',
+        'noninterest_income', 'noninterest_expense', 'provision', 'tax')) NOT VALID;
 
 CREATE TABLE policy_rates (                -- the index a beta is measured against
   index_code      TEXT NOT NULL,             -- 'fed_funds_upper', 'sofr', 'prime'

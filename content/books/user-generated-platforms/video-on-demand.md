@@ -178,18 +178,24 @@ CREATE TABLE encoding_ladders (          -- versioned rules: which rungs, codecs
 
 ALTER TABLE media_variants              -- a video rendition is a variant with codec facts
   ADD COLUMN encoding_ladder_id UUID REFERENCES encoding_ladders (id),
-  ADD COLUMN codec              TEXT CHECK (codec IN ('h264', 'vp9', 'hevc', 'av1')),
+  ADD COLUMN codec              TEXT,
   ADD COLUMN codec_string       TEXT,    -- RFC 6381, as written to the manifest
   ADD COLUMN bitrate_kbps       INT,     -- measured average
   ADD COLUMN peak_bitrate_kbps  INT,     -- measured peak; the manifest's BANDWIDTH
   ADD COLUMN frame_rate         NUMERIC(6, 3),
-  ADD COLUMN dynamic_range      TEXT CHECK (dynamic_range IN ('sdr', 'hdr10', 'hlg',
-                                  'dolby_vision')),
-  ADD COLUMN packaging          TEXT CHECK (packaging IN ('progressive_mp4', 'cmaf',
-                                  'mpeg_ts', 'webm')),
-  ADD COLUMN encryption         TEXT NOT NULL DEFAULT 'none' CHECK (encryption IN ('none',
-                                  'aes_128', 'sample_aes', 'cenc', 'cbcs')),
-  ADD COLUMN quality_score      NUMERIC(5, 2);  -- perceptual score against the source
+  ADD COLUMN dynamic_range      TEXT,
+  ADD COLUMN packaging          TEXT,
+  ADD COLUMN encryption         TEXT NOT NULL DEFAULT 'none',
+  ADD COLUMN quality_score      NUMERIC(5, 2),  -- perceptual score against the source
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT media_variants_codec_check
+    CHECK (codec IN ('h264', 'vp9', 'hevc', 'av1')) NOT VALID,
+  ADD CONSTRAINT media_variants_dynamic_range_check
+    CHECK (dynamic_range IN ('sdr', 'hdr10', 'hlg', 'dolby_vision')) NOT VALID,
+  ADD CONSTRAINT media_variants_packaging_check
+    CHECK (packaging IN ('progressive_mp4', 'cmaf', 'mpeg_ts', 'webm')) NOT VALID,
+  ADD CONSTRAINT media_variants_encryption_check
+    CHECK (encryption IN ('none', 'aes_128', 'sample_aes', 'cenc', 'cbcs')) NOT VALID;
 
 CREATE TABLE transcode_jobs (            -- every encode, repackage and derived artifact
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -227,9 +227,11 @@ ALTER TABLE tax_elections
   ADD COLUMN bridged_from_id    UUID REFERENCES tax_elections (id),  -- computational bridge source
   ADD COLUMN lock_in            BOOLEAN NOT NULL DEFAULT FALSE,      -- a letter constrains this worker
   ADD COLUMN received_on        DATE,                 -- the 30-day replacement clock starts here
-  ADD COLUMN validity           TEXT NOT NULL DEFAULT 'valid' CHECK (validity IN ('valid',
-                                  'invalid', 'default_no_form')),
-  ADD CONSTRAINT exempt_has_expiry CHECK (NOT exempt OR exempt_expires_on IS NOT NULL);
+  ADD COLUMN validity           TEXT NOT NULL DEFAULT 'valid',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT exempt_has_expiry CHECK (NOT exempt OR exempt_expires_on IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT tax_elections_validity_check
+    CHECK (validity IN ('valid', 'invalid', 'default_no_form')) NOT VALID;
 
 CREATE TABLE withholding_tables (           -- one schedule: jurisdiction x year x method x status
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

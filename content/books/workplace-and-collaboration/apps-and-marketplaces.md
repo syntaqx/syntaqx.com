@@ -113,11 +113,12 @@ The [core model](/books/workplace-and-collaboration/workplace-business#the-core-
 ALTER TABLE apps                              -- the core table: one row per app identity,
                                               -- with distribution already on it
   ADD COLUMN publisher_org_id UUID REFERENCES organizations (id),  -- the developer's org
-  ADD COLUMN hosting          TEXT NOT NULL DEFAULT 'external' CHECK (hosting IN
-                                ('external', 'platform_hosted')),
+  ADD COLUMN hosting          TEXT NOT NULL DEFAULT 'external',
   ADD COLUMN publisher_verified_at TIMESTAMPTZ,
   ADD COLUMN suspended_at     TIMESTAMPTZ,    -- platform-wide kill switch
-  ADD COLUMN suspended_reason TEXT;
+  ADD COLUMN suspended_reason TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT apps_hosting_check CHECK (hosting IN ('external', 'platform_hosted')) NOT VALID;
 
 CREATE TABLE app_versions (                   -- what each release asks for
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -187,14 +188,16 @@ CREATE TABLE app_install_requests (           -- a member asking for an app
 ALTER TABLE app_installations
   ADD COLUMN app_version_id  UUID REFERENCES app_versions (id),
   ADD COLUMN granted_scopes  TEXT[] NOT NULL DEFAULT '{}',  -- never more than policy allows
-  ADD COLUMN consent_kind    TEXT NOT NULL DEFAULT 'user' CHECK (consent_kind IN
-                               ('user', 'admin')),
+  ADD COLUMN consent_kind    TEXT NOT NULL DEFAULT 'user',
   ADD COLUMN request_id      UUID REFERENCES app_install_requests (id),
   ADD COLUMN revoked_at      TIMESTAMPTZ,
-  ADD COLUMN revoked_reason  TEXT;            -- 'uninstalled', 'policy', 'app_suspended'
+  ADD COLUMN revoked_reason  TEXT,            -- 'uninstalled', 'policy', 'app_suspended'
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT app_installations_consent_kind_check
+    CHECK (consent_kind IN ('user', 'admin')) NOT VALID;
 
 -- every token traceable to its installation (core api_tokens.app_installation_id)
-CREATE INDEX api_tokens_installation_idx ON api_tokens (app_installation_id)
+CREATE INDEX CONCURRENTLY api_tokens_installation_idx ON api_tokens (app_installation_id)
   WHERE revoked_at IS NULL;
 ```
 

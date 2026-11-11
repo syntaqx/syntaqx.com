@@ -159,7 +159,7 @@ ALTER TABLE payments
   ADD COLUMN next_action        JSONB,        -- set only in requires_action
   ADD COLUMN action_expires_at  TIMESTAMPTZ,
   ADD COLUMN api_version        TEXT,
-  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payments_api_version_not_null NOT NULL api_version NOT VALID;
 
 CREATE TABLE idempotency_records (

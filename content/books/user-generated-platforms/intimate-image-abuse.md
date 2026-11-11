@@ -164,7 +164,7 @@ CREATE TABLE copy_sweeps (               -- one identical-copy sweep per removal
   CHECK ((status = 'completed') = (completed_at IS NOT NULL))
 );
 
-CREATE INDEX ON media_assets (sha256);   -- the sweep's lookup; dedup uses it too
+CREATE INDEX CONCURRENTLY ON media_assets (sha256);   -- the sweep's lookup; dedup uses it too
 ```
 
 Notes on the sketch:

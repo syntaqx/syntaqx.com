@@ -235,21 +235,30 @@ These are deltas against [the core data model](/books/workforce/workforce-busine
 ```sql
 ALTER TABLE employers
   ADD COLUMN fmla_covered            BOOLEAN NOT NULL DEFAULT FALSE,  -- 50+ in 20+ workweeks
-  ADD COLUMN fmla_leave_year_method  TEXT CHECK (fmla_leave_year_method IN ('calendar',
-                                       'fixed_year', 'forward_from_first_use', 'rolling_backward')),
+  ADD COLUMN fmla_leave_year_method  TEXT,
   ADD COLUMN fmla_fixed_year_start   DATE,          -- for 'fixed_year': the anchor date
-  ADD COLUMN fmla_method_notice_on   DATE;          -- 60 days' notice before a change
+  ADD COLUMN fmla_method_notice_on   DATE,          -- 60 days' notice before a change
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT employers_fmla_leave_year_method_check
+    CHECK (fmla_leave_year_method IN ('calendar',
+        'fixed_year', 'forward_from_first_use', 'rolling_backward')) NOT VALID;
 
 ALTER TABLE leave_cases
-  ADD COLUMN reason                  TEXT CHECK (reason IN ('own_health', 'family_health',
-                                       'birth_bonding', 'placement_bonding', 'qualifying_exigency',
-                                       'military_caregiver')),
-  ADD COLUMN schedule_kind           TEXT CHECK (schedule_kind IN ('continuous', 'intermittent',
-                                       'reduced_schedule')),
+  ADD COLUMN reason                  TEXT,
+  ADD COLUMN schedule_kind           TEXT,
   ADD COLUMN normal_weekly_hours     NUMERIC(5, 2), -- the conversion basis, re-set on schedule change
   ADD COLUMN caregiver_period        DATERANGE,     -- forward-measured 12 months for caregiver leave
-  ADD COLUMN substitution            TEXT CHECK (substitution IN ('none', 'employee_elected',
-                                       'employer_required', 'disability_plan', 'workers_comp'));
+  ADD COLUMN substitution            TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT leave_cases_reason_check
+    CHECK (reason IN ('own_health', 'family_health',
+        'birth_bonding', 'placement_bonding', 'qualifying_exigency',
+        'military_caregiver')) NOT VALID,
+  ADD CONSTRAINT leave_cases_schedule_kind_check
+    CHECK (schedule_kind IN ('continuous', 'intermittent', 'reduced_schedule')) NOT VALID,
+  ADD CONSTRAINT leave_cases_substitution_check
+    CHECK (substitution IN ('none', 'employee_elected',
+        'employer_required', 'disability_plan', 'workers_comp')) NOT VALID;
 
 CREATE TABLE fmla_eligibility_checks (     -- one per notice of need; reproducible
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -160,9 +160,7 @@ The playbook's `risk_decisions` is the decision record, and the Payments volume 
 ```sql
 ALTER TABLE risk_decisions
   ADD COLUMN merchant_id     UUID REFERENCES merchants (id),
-  ADD COLUMN checkpoint_kind TEXT CHECK (checkpoint_kind IN ('account_creation', 'login',
-                               'payment_method', 'checkout', 'pre_capture', 'promotion',
-                               'return', 'issue', 'gift_card', 'sensitive_action')),
+  ADD COLUMN checkpoint_kind TEXT,
   ADD COLUMN customer_id     UUID REFERENCES customers (id),
   ADD COLUMN session_ref     TEXT,           -- the checkout or login session
   ADD COLUMN identity_link_ids UUID[] NOT NULL DEFAULT '{}',  -- the links the decision read
@@ -170,7 +168,12 @@ ALTER TABLE risk_decisions
   ADD COLUMN vendor_ref      TEXT,           -- the vendor's case or score ID
   ADD COLUMN guaranteed      BOOLEAN NOT NULL DEFAULT FALSE,  -- vendor carries the chargeback
   ADD COLUMN guarantee_terms JSONB,          -- e.g. ship_to, ship_by, fraud_only
-  ADD COLUMN policy_ref      TEXT;           -- the published limit or policy it enforced
+  ADD COLUMN policy_ref      TEXT,           -- the published limit or policy it enforced
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT risk_decisions_checkpoint_kind_check
+    CHECK (checkpoint_kind IN ('account_creation', 'login',
+        'payment_method', 'checkout', 'pre_capture', 'promotion',
+        'return', 'issue', 'gift_card', 'sensitive_action')) NOT VALID;
 
 -- subject_type now also takes 'order', 'checkout', 'return', 'order_issue',
 -- 'promotion_redemption', 'customer', 'gift_card'; returns.risk_decision_id,

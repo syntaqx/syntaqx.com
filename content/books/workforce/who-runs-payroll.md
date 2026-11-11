@@ -151,9 +151,11 @@ The employer row says which arrangement files its federal returns; the authoriza
 
 ```sql
 ALTER TABLE employers
-  ADD COLUMN filing_arrangement TEXT NOT NULL DEFAULT 'in_house'
+  ADD COLUMN filing_arrangement TEXT NOT NULL DEFAULT 'in_house',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT employers_filing_arrangement_check
     CHECK (filing_arrangement IN ('in_house', 'psp', 'reporting_agent', 'section_3504_agent',
-      'designated_payer', 'cpeo'));
+        'designated_payer', 'cpeo')) NOT VALID;
 -- filing_arrangement is the current value; the history lives in agent_authorizations,
 -- and every filing and remittance records the arrangement in force for its period.
 

@@ -258,15 +258,25 @@ ALTER TABLE shipments
   ADD COLUMN rate_quote_id      UUID REFERENCES rate_quotes (id),  -- the rate bought
   ADD COLUMN label_cost         BIGINT,       -- as billed at purchase
   ADD COLUMN adjusted_cost      BIGINT,       -- after the carrier's audit, if it re-billed
-  ADD COLUMN label_format       TEXT CHECK (label_format IN ('zpl', 'epl2', 'pdf', 'png')),
+  ADD COLUMN label_format       TEXT,
   ADD COLUMN label_ref          TEXT,         -- object storage key for the label as issued
-  ADD COLUMN normalized_status  TEXT CHECK (normalized_status IN ('pre_transit',
-                                  'in_transit', 'out_for_delivery', 'available_for_pickup',
-                                  'delivered', 'exception', 'return_to_sender', 'failure')),
+  ADD COLUMN normalized_status  TEXT,
   ADD COLUMN est_delivery_date  DATE,         -- the carrier's latest estimate
   ADD COLUMN first_scan_at      TIMESTAMPTZ,
   ADD COLUMN voided_at          TIMESTAMPTZ,  -- label voided before tender
-  ADD COLUMN purchase_key       TEXT UNIQUE;  -- idempotency key for the label purchase
+  ADD COLUMN purchase_key       TEXT,         -- idempotency key for the label purchase
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT shipments_label_format_check
+    CHECK (label_format IN ('zpl', 'epl2', 'pdf', 'png')) NOT VALID,
+  ADD CONSTRAINT shipments_normalized_status_check
+    CHECK (normalized_status IN ('pre_transit',
+        'in_transit', 'out_for_delivery', 'available_for_pickup',
+        'delivered', 'exception', 'return_to_sender', 'failure')) NOT VALID;
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY shipments_purchase_key_key ON shipments (purchase_key);
+ALTER TABLE shipments
+  ADD CONSTRAINT shipments_purchase_key_key UNIQUE USING INDEX shipments_purchase_key_key;
 
 CREATE TABLE tracking_events (           -- the carrier's scans, raw and normalized
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

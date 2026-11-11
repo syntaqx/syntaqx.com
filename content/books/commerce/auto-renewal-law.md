@@ -201,10 +201,12 @@ CREATE TABLE renewal_law_rules (         -- one row per notice, consent or cance
 
 ALTER TABLE renewal_consents             -- the playbook's table, pointed at either promise
   ADD COLUMN membership_id UUID REFERENCES memberships (id),
-  ADD COLUMN surface       TEXT NOT NULL DEFAULT 'checkout' CHECK (surface IN ('checkout',
-                             'upsell', 'portal', 'app', 'phone', 'in_store')),
+  ADD COLUMN surface       TEXT NOT NULL DEFAULT 'checkout',
   ADD COLUMN decline_shown TEXT,         -- the decline option's wording, as rendered
-  ADD COLUMN rule_ids      UUID[] NOT NULL DEFAULT '{}';  -- separate opt-in and other rules met
+  ADD COLUMN rule_ids      UUID[] NOT NULL DEFAULT '{}',  -- separate opt-in and other rules met
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT renewal_consents_surface_check
+    CHECK (surface IN ('checkout', 'upsell', 'portal', 'app', 'phone', 'in_store')) NOT VALID;
 
 CREATE TABLE renewal_notices (           -- every notice owed, sent or not
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

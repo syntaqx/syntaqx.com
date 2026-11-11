@@ -192,11 +192,14 @@ ALTER TABLE volume_attachments
   ADD COLUMN cluster_id    UUID REFERENCES clusters (resource_id),  -- null: attached outside
                                                                      -- Kubernetes
   ADD COLUMN requested_at  TIMESTAMPTZ,  -- when the VolumeAttachment was created
-  ADD COLUMN detach_reason TEXT CHECK (detach_reason IN ('pod_moved', 'node_drained',
-                             'node_deleted', 'force_detach_timeout', 'cluster_deleted',
-                             'manual')),
+  ADD COLUMN detach_reason TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT volume_attachments_cluster_requested
-    CHECK (cluster_id IS NULL OR requested_at IS NOT NULL);
+    CHECK (cluster_id IS NULL OR requested_at IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT volume_attachments_detach_reason_check
+    CHECK (detach_reason IN ('pod_moved', 'node_drained',
+        'node_deleted', 'force_detach_timeout', 'cluster_deleted',
+        'manual')) NOT VALID;
 
 ALTER TABLE snapshots                    -- Storage: Block, File & Object's side table
   ADD COLUMN source_claim_id UUID REFERENCES persistent_volume_claims (id),

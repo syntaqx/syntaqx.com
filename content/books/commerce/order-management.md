@@ -148,8 +148,9 @@ The core `orders`, `fulfillments` and `order_status_changes` tables already spli
 
 ```sql
 ALTER TABLE order_lines
-  ADD COLUMN cancelled_quantity NUMERIC(12, 3) NOT NULL DEFAULT 0
-    CHECK (cancelled_quantity >= 0);       -- partial cancels; quantity stays as ordered
+  ADD COLUMN cancelled_quantity NUMERIC(12, 3) NOT NULL DEFAULT 0,  -- partial cancels; quantity stays as ordered
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT order_lines_cancelled_quantity_check CHECK (cancelled_quantity >= 0) NOT VALID;
 
 ALTER TABLE orders
   ADD COLUMN ship_by       TIMESTAMPTZ,      -- the channel's or the merchant's promised ship date
@@ -157,17 +158,22 @@ ALTER TABLE orders
   ADD COLUMN released_at   TIMESTAMPTZ;      -- first fulfillment sent to a provider
 
 ALTER TABLE fulfillments
-  ADD COLUMN request_status TEXT NOT NULL DEFAULT 'unsubmitted' CHECK (request_status IN
-    ('unsubmitted', 'requested', 'accepted', 'rejected', 'cancellation_requested',
-     'cancellation_accepted', 'cancellation_rejected')),  -- the handshake with the provider
+  ADD COLUMN request_status TEXT NOT NULL DEFAULT 'unsubmitted',  -- the handshake with the provider
   ADD COLUMN fulfill_at     TIMESTAMPTZ,     -- scheduled release
   ADD COLUMN point_of_no_return TIMESTAMPTZ, -- when the provider started picking
-  ADD COLUMN sourcing_decision_id UUID;      -- sourcing_decisions, below
+  ADD COLUMN sourcing_decision_id UUID,      -- sourcing_decisions, below
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT fulfillments_request_status_check
+    CHECK (request_status IN
+        ('unsubmitted', 'requested', 'accepted', 'rejected', 'cancellation_requested',
+        'cancellation_accepted', 'cancellation_rejected')) NOT VALID;
 
 ALTER TABLE order_status_changes
   ADD COLUMN fulfillment_id UUID REFERENCES fulfillments (id),  -- null: the order itself
-  ADD COLUMN subject        TEXT NOT NULL DEFAULT 'order' CHECK (subject IN ('order',
-                              'fulfillment', 'line'));
+  ADD COLUMN subject        TEXT NOT NULL DEFAULT 'order',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT order_status_changes_subject_check
+    CHECK (subject IN ('order', 'fulfillment', 'line')) NOT VALID;
 
 CREATE TABLE order_holds (               -- work stopped, not cancelled
   id             UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -241,8 +247,9 @@ CREATE TABLE sourcing_decisions (        -- every routing decision and why
 );
 
 ALTER TABLE fulfillments
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT fulfillments_sourcing_decision_fk
-    FOREIGN KEY (sourcing_decision_id) REFERENCES sourcing_decisions (id);
+    FOREIGN KEY (sourcing_decision_id) REFERENCES sourcing_decisions (id) NOT VALID;
 ```
 
 Releasing an order is a query, not a flag: a fulfillment is releasable when its order has no active hold covering it, its own `fulfill_at` has passed and its request is unsubmitted.

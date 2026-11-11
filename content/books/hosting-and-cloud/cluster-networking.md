@@ -166,13 +166,17 @@ The chapter adds the `load_balancers` side table for resources of kind `load_bal
 
 ```sql
 ALTER TABLE clusters                     -- Kubernetes Architecture's side table
-  ADD COLUMN pod_network_mode  TEXT CHECK (pod_network_mode IN ('vpc_native', 'overlay')),
+  ADD COLUMN pod_network_mode  TEXT,
   ADD COLUMN cni               TEXT,     -- 'aws-vpc-cni', 'cilium', 'calico', 'flannel', ...
-  ADD COLUMN service_dataplane TEXT CHECK (service_dataplane IN ('iptables', 'nftables',
-                                 'ipvs', 'ebpf', 'kernelspace')),  -- set explicitly, never inherited
+  ADD COLUMN service_dataplane TEXT,  -- set explicitly, never inherited
   ADD COLUMN pod_cidrs         CIDR[],   -- overlay ranges, or the VPC ranges pods draw from
   ADD COLUMN service_cidr      CIDR,
-  ADD COLUMN pod_subnet_id     UUID REFERENCES resources (id);    -- kind = 'subnet', when VPC-native
+  ADD COLUMN pod_subnet_id     UUID REFERENCES resources (id),    -- kind = 'subnet', when VPC-native
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT clusters_pod_network_mode_check
+    CHECK (pod_network_mode IN ('vpc_native', 'overlay')) NOT VALID,
+  ADD CONSTRAINT clusters_service_dataplane_check
+    CHECK (service_dataplane IN ('iptables', 'nftables', 'ipvs', 'ebpf', 'kernelspace')) NOT VALID;
 
 CREATE TABLE load_balancers (            -- side table: kind = 'load_balancer'
   resource_id         UUID PRIMARY KEY REFERENCES resources (id),

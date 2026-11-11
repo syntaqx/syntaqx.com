@@ -207,10 +207,11 @@ CREATE TABLE extended_reporting_periods (  -- automatic and purchased tails
 ALTER TABLE claims
   ADD COLUMN first_made_at     TIMESTAMPTZ,  -- when the claim was first made against the insured
   ADD COLUMN wrongful_act_from DATE,         -- earliest alleged act, against the retro date
-  ADD COLUMN kind              TEXT NOT NULL DEFAULT 'claim'
-    CHECK (kind IN ('claim', 'circumstance')),
+  ADD COLUMN kind              TEXT NOT NULL DEFAULT 'claim',
   ADD COLUMN related_to_id     UUID REFERENCES claims (id),  -- deemed a single claim
-  ADD COLUMN deemed_made_at    TIMESTAMPTZ;  -- inherited from the first related claim
+  ADD COLUMN deemed_made_at    TIMESTAMPTZ,  -- inherited from the first related claim
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT claims_kind_check CHECK (kind IN ('claim', 'circumstance')) NOT VALID;
 ```
 
 Which term answers a claim is a query, not a judgment typed into a field:

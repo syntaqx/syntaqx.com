@@ -114,13 +114,15 @@ Agents as clients with a verification method and a trust tier, and each agent ch
 ```sql
 ALTER TABLE sales_channels
   DROP CONSTRAINT sales_channels_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT sales_channels_kind_check CHECK (kind IN ('marketplace', 'first_party', 'pos',
-    'phone', 'kiosk', 'agent'));           -- 'chatgpt', 'google_ai_mode', 'perplexity'
+    'phone', 'kiosk', 'agent')) NOT VALID;           -- 'chatgpt', 'google_ai_mode', 'perplexity'
 
 ALTER TABLE orders
   DROP CONSTRAINT orders_channel_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT orders_channel_check CHECK (channel IN ('marketplace', 'first_party', 'pos',
-    'phone', 'kiosk', 'wholesale', 'agent'));
+    'phone', 'kiosk', 'wholesale', 'agent')) NOT VALID;
 
 CREATE TABLE agent_clients (               -- an agent operator the store recognizes, and how
   id                UUID PRIMARY KEY DEFAULT uuidv7(),

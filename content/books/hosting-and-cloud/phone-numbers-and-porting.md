@@ -137,12 +137,14 @@ The chapter adds the platform's number inventory and port requests to [the core 
 ```sql
 ALTER TABLE phone_numbers
   ADD COLUMN rate_center        TEXT,          -- NANP geographic numbers
-  ADD COLUMN source             TEXT NOT NULL DEFAULT 'upstream' CHECK (source IN
-                                  ('own_block', 'upstream', 'ported_in', 'hosted')),
+  ADD COLUMN source             TEXT NOT NULL DEFAULT 'upstream',
   ADD COLUMN upstream_id        TEXT REFERENCES upstream_providers (id),
   ADD COLUMN port_out_pin_hash  BYTEA,         -- set by the customer; never stored plain
   ADD COLUMN port_out_locked    BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN emergency_address_id UUID;        -- voice; 911, CPNI & Telecom Duties adds the table
+  ADD COLUMN emergency_address_id UUID,        -- voice; 911, CPNI & Telecom Duties adds the table
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT phone_numbers_source_check
+    CHECK (source IN ('own_block', 'upstream', 'ported_in', 'hosted')) NOT VALID;
 
 CREATE TABLE number_inventory (          -- numbers the platform can assign, held or not
   e164          TEXT PRIMARY KEY,        -- +1NXXNXXXXXX

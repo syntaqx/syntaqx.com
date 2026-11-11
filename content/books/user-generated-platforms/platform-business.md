@@ -366,14 +366,15 @@ CREATE TABLE bookings (                  -- a reservation for a period, or a pur
 -- the revision that was judged.
 ALTER TABLE moderation_cases
   DROP CONSTRAINT moderation_cases_subject_type_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT moderation_cases_subject_type_check CHECK (subject_type IN ('account',
-    'profile', 'community', 'content_item', 'media_asset', 'message')),
+    'profile', 'community', 'content_item', 'media_asset', 'message')) NOT VALID,
   ADD COLUMN community_id        UUID REFERENCES communities (id),
-  ADD COLUMN scope               TEXT NOT NULL DEFAULT 'platform'
-                                   CHECK (scope IN ('platform', 'community')),
+  ADD COLUMN scope               TEXT NOT NULL DEFAULT 'platform',
   ADD COLUMN content_revision_id UUID REFERENCES content_revisions (id),
   ADD CONSTRAINT moderation_cases_community_scope
-    CHECK (scope = 'platform' OR community_id IS NOT NULL);
+    CHECK (scope = 'platform' OR community_id IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT moderation_cases_scope_check CHECK (scope IN ('platform', 'community')) NOT VALID;
 
 ALTER TABLE penalties
   ADD COLUMN community_id UUID REFERENCES communities (id);  -- null: sitewide

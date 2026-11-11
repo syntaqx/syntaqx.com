@@ -172,9 +172,10 @@ The chapter widens `verifications` from [Accounts, Identity & Standing](/books/u
 -- One widening for the marketplace chapters: what can be verified about an account.
 ALTER TABLE verifications
   DROP CONSTRAINT verifications_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT verifications_kind_check CHECK (kind IN ('identity', 'notability',
     'organization', 'phone', 'email', 'payment_instrument', 'driver_license', 'business',
-    'tax_id', 'bank_account'));
+    'tax_id', 'bank_account')) NOT VALID;
 
 CREATE TABLE trader_profiles (           -- what INFORM and the DSA require, per payee entity
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),

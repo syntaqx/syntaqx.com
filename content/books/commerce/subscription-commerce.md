@@ -189,22 +189,27 @@ CREATE TABLE subscription_plans (        -- an offer: "Subscribe and save, every
 
 ALTER TABLE subscriptions
   ADD COLUMN plan_id            UUID REFERENCES subscription_plans (id),
-  ADD COLUMN kind               TEXT NOT NULL DEFAULT 'replenishment' CHECK (kind IN
-                                  ('replenishment', 'need_timed', 'curated', 'build_a_box')),
+  ADD COLUMN kind               TEXT NOT NULL DEFAULT 'replenishment',
   ADD COLUMN schedule_rule      TEXT,    -- need-timed: the region and season rule that sets dates
   ADD COLUMN purchaser_id       UUID REFERENCES customers (id),  -- a gift: who paid
   ADD COLUMN credential_ref     TEXT,    -- the stored-credential agreement in the Payments model
   ADD COLUMN pause_until        DATE,
   ADD COLUMN cancel_at          TIMESTAMPTZ,  -- set by a cancellation request; ends then
-  ADD COLUMN ended_reason       TEXT CHECK (ended_reason IN ('cancelled', 'non_payment',
-                                  'term_completed', 'fraud')),
-  ADD COLUMN previous_id        UUID REFERENCES subscriptions (id);  -- a win-back links back
+  ADD COLUMN ended_reason       TEXT,
+  ADD COLUMN previous_id        UUID REFERENCES subscriptions (id),  -- a win-back links back
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT subscriptions_kind_check
+    CHECK (kind IN ('replenishment', 'need_timed', 'curated', 'build_a_box')) NOT VALID,
+  ADD CONSTRAINT subscriptions_ended_reason_check
+    CHECK (ended_reason IN ('cancelled', 'non_payment', 'term_completed', 'fraud')) NOT VALID;
 
 ALTER TABLE subscription_lines
-  ADD COLUMN kind          TEXT NOT NULL DEFAULT 'recurring' CHECK (kind IN ('recurring',
-                             'one_time', 'box_selection')),
+  ADD COLUMN kind          TEXT NOT NULL DEFAULT 'recurring',
   ADD COLUMN selection     JSONB,        -- build-a-box contents, read at cutoff
-  ADD COLUMN applies_cycle INT;          -- one-time add-on: the cycle it rides on
+  ADD COLUMN applies_cycle INT,          -- one-time add-on: the cycle it rides on
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT subscription_lines_kind_check
+    CHECK (kind IN ('recurring', 'one_time', 'box_selection')) NOT VALID;
 
 CREATE TABLE subscription_changes (      -- every edit, append-only
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

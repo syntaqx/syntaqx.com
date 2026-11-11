@@ -103,14 +103,20 @@ ALTER TABLE plans
   ADD COLUMN sponsor_org_id    UUID REFERENCES organizations (id),  -- the employer, for group plans
   ADD COLUMN administrator_id  UUID REFERENCES payers (id),  -- TPA or ASO insurer, if not the payer
   ADD COLUMN situs_state       TEXT,     -- ISO 3166-2: the state whose insurance law applies
-  ADD COLUMN market            TEXT CHECK (market IN ('individual', 'small_group',
-                                 'large_group', 'medicare', 'medicaid', 'other')),
-  ADD COLUMN network_id        UUID;     -- networks, below: what prices the in-network tier
+  ADD COLUMN market            TEXT,
+  ADD COLUMN network_id        UUID,     -- networks, below: what prices the in-network tier
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT plans_market_check
+    CHECK (market IN ('individual', 'small_group',
+        'large_group', 'medicare', 'medicaid', 'other')) NOT VALID;
 
 ALTER TABLE coverages
-  ADD COLUMN source            TEXT CHECK (source IN ('card', 'eligibility_271',
-                                 'enrollment_834', 'manual', 'payer_api')),
-  ADD COLUMN cob_basis         TEXT;      -- why this priority: 'birthday_rule', 'msp_working_aged'
+  ADD COLUMN source            TEXT,
+  ADD COLUMN cob_basis         TEXT,      -- why this priority: 'birthday_rule', 'msp_working_aged'
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT coverages_source_check
+    CHECK (source IN ('card', 'eligibility_271',
+        'enrollment_834', 'manual', 'payer_api')) NOT VALID;
 
 CREATE TABLE plan_benefits (             -- one plan's cost-sharing for one benefit period
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

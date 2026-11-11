@@ -206,7 +206,7 @@ ALTER TABLE deployments                  -- Platforms Take Over the Deploy's tab
                                          -- push, and commit_sha or artifact_digest is the exact
                                          -- revision applied
   ADD COLUMN namespace         TEXT,
-  ADD COLUMN source_kind       TEXT CHECK (source_kind IN ('helm', 'kustomize', 'manifests')),
+  ADD COLUMN source_kind       TEXT,
   ADD COLUMN gitops_source_id  UUID REFERENCES gitops_sources (id),  -- null: pushed by a person
                                          -- or a pipeline
   ADD COLUMN chart_ref         TEXT,     -- 'oci://registry/charts/web' or repo/chart
@@ -214,15 +214,21 @@ ALTER TABLE deployments                  -- Platforms Take Over the Deploy's tab
   ADD COLUMN release_name      TEXT,     -- Helm release, when source_kind = 'helm'
   ADD COLUMN release_revision  INT,      -- Helm's revision number for that release
   ADD COLUMN tool_version      TEXT,     -- what rendered it: 'helm 4.0.0', 'kustomize 5.4.2'
-  ADD COLUMN sync_status       TEXT CHECK (sync_status IN ('synced', 'out_of_sync',
-                                 'unknown')),
-  ADD COLUMN health_status     TEXT CHECK (health_status IN ('healthy', 'progressing',
-                                 'degraded', 'suspended', 'missing', 'unknown')),
+  ADD COLUMN sync_status       TEXT,
+  ADD COLUMN health_status     TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT deployments_cluster_shape CHECK (
     (namespace IS NULL) = (source_kind IS NULL) AND
-    (source_kind = 'helm') = (release_name IS NOT NULL)),
+    (source_kind = 'helm') = (release_name IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT deployments_gitops_source CHECK (
-    gitops_source_id IS NULL OR source = 'gitops');
+    gitops_source_id IS NULL OR source = 'gitops') NOT VALID,
+  ADD CONSTRAINT deployments_source_kind_check
+    CHECK (source_kind IN ('helm', 'kustomize', 'manifests')) NOT VALID,
+  ADD CONSTRAINT deployments_sync_status_check
+    CHECK (sync_status IN ('synced', 'out_of_sync', 'unknown')) NOT VALID,
+  ADD CONSTRAINT deployments_health_status_check
+    CHECK (health_status IN ('healthy', 'progressing',
+        'degraded', 'suspended', 'missing', 'unknown')) NOT VALID;
 ```
 
 Notes on the sketch:

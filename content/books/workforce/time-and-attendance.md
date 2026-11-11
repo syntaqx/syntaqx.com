@@ -189,14 +189,18 @@ ALTER TABLE time_entries
   ADD COLUMN start_punch_id   UUID REFERENCES raw_punches (id),
   ADD COLUMN end_punch_id     UUID REFERENCES raw_punches (id),
   ADD COLUMN workday          DATE,          -- the workday the hours count toward
-  ADD COLUMN time_kind        TEXT NOT NULL DEFAULT 'work' CHECK (time_kind IN ('work',
-                                'travel', 'waiting', 'on_call', 'callout', 'training',
-                                'rest', 'meal', 'sleep', 'pre_shift', 'post_shift')),
+  ADD COLUMN time_kind        TEXT NOT NULL DEFAULT 'work',
   ADD COLUMN compensable      BOOLEAN NOT NULL DEFAULT TRUE,
   ADD COLUMN rounded_hours    NUMERIC(7, 2), -- derived under rounding_rule_id; hours stays raw
   ADD COLUMN rounding_rule_id UUID,
-  ADD COLUMN created_by_kind  TEXT NOT NULL DEFAULT 'worker' CHECK (created_by_kind IN
-                                ('worker', 'manager', 'admin', 'system', 'integration'));
+  ADD COLUMN created_by_kind  TEXT NOT NULL DEFAULT 'worker',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT time_entries_time_kind_check
+    CHECK (time_kind IN ('work',
+        'travel', 'waiting', 'on_call', 'callout', 'training',
+        'rest', 'meal', 'sleep', 'pre_shift', 'post_shift')) NOT VALID,
+  ADD CONSTRAINT time_entries_created_by_kind_check
+    CHECK (created_by_kind IN ('worker', 'manager', 'admin', 'system', 'integration')) NOT VALID;
 
 CREATE TABLE rounding_rules (              -- named, versioned; never applied to meal punches
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

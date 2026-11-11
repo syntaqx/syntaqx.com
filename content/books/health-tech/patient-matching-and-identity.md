@@ -105,10 +105,13 @@ The deltas against [The Core Data Model](/books/health-tech/health-tech-business
 ```sql
 ALTER TABLE patient_identifiers         -- the core's system, issuer, value and valid_during stay
   ADD COLUMN issuer_uri         TEXT,            -- the issuer as a FHIR identifier system URI or OID
-  ADD COLUMN retired_reason     TEXT CHECK (retired_reason IN ('merged', 'replaced', 'entered_in_error')),
+  ADD COLUMN retired_reason     TEXT,
   ADD COLUMN source_integration_id UUID REFERENCES integrations (id),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT patient_identifiers_retired_closed
-    CHECK (retired_reason IS NULL OR NOT upper_inf(valid_during));
+    CHECK (retired_reason IS NULL OR NOT upper_inf(valid_during)) NOT VALID,
+  ADD CONSTRAINT patient_identifiers_retired_reason_check
+    CHECK (retired_reason IN ('merged', 'replaced', 'entered_in_error')) NOT VALID;
 
 CREATE TABLE match_candidates (          -- a pair someone or something must decide
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

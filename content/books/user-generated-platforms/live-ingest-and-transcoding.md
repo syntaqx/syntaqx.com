@@ -151,15 +151,17 @@ The chapter's additions to the core model: a channel's ingest profile on `stream
 
 ```sql
 ALTER TABLE streams
-  ADD COLUMN ingest_profile   TEXT NOT NULL DEFAULT 'standard'
-                                CHECK (ingest_profile IN ('standard', 'reduced',
-                                  'passthrough', 'multitrack')),  -- as resolved at go-live
-  ADD COLUMN processing_tier  TEXT NOT NULL DEFAULT 'as_available'
-                                CHECK (processing_tier IN ('guaranteed', 'priority',
-                                  'as_available', 'source_only')),
+  ADD COLUMN ingest_profile   TEXT NOT NULL DEFAULT 'standard',  -- as resolved at go-live
+  ADD COLUMN processing_tier  TEXT NOT NULL DEFAULT 'as_available',
   ADD COLUMN source_cap_height INT,          -- e.g. 720 where delivery is capped; null: none
-  ADD COLUMN reconnect_window_s INT NOT NULL DEFAULT 60
-                                CHECK (reconnect_window_s BETWEEN 0 AND 1800);
+  ADD COLUMN reconnect_window_s INT NOT NULL DEFAULT 60,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT streams_ingest_profile_check
+    CHECK (ingest_profile IN ('standard', 'reduced', 'passthrough', 'multitrack')) NOT VALID,
+  ADD CONSTRAINT streams_processing_tier_check
+    CHECK (processing_tier IN ('guaranteed', 'priority', 'as_available', 'source_only')) NOT VALID,
+  ADD CONSTRAINT streams_reconnect_window_s_check
+    CHECK (reconnect_window_s BETWEEN 0 AND 1800) NOT VALID;
 
 CREATE TABLE stream_keys (               -- a bearer credential for one channel
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

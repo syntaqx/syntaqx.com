@@ -215,9 +215,12 @@ CREATE TABLE perp_contracts (              -- one row per perpetual instrument
 );
 
 ALTER TABLE positions                      -- still derived from journal_lines and executions
-  ADD COLUMN margin_mode       TEXT CHECK (margin_mode IN ('cross', 'isolated', 'portfolio')),
+  ADD COLUMN margin_mode       TEXT,
   ADD COLUMN avg_entry_price   NUMERIC(38, 18),
-  ADD COLUMN isolated_margin   NUMERIC(78, 0);        -- smallest units of the margin instrument
+  ADD COLUMN isolated_margin   NUMERIC(78, 0),        -- smallest units of the margin instrument
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT positions_margin_mode_check
+    CHECK (margin_mode IN ('cross', 'isolated', 'portfolio')) NOT VALID;
 
 CREATE TABLE mark_prices (                 -- every price margin was computed from
   instrument_id        UUID NOT NULL REFERENCES instruments (id),

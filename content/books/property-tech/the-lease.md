@@ -372,25 +372,30 @@ ALTER TABLE leases
   ADD COLUMN renewal_offer_id UUID REFERENCES renewal_offers (id),  -- renewals
   ADD COLUMN language         TEXT NOT NULL DEFAULT 'en-US',        -- language of negotiation
   ADD COLUMN periodic_from    DATE,           -- holdover: month-to-month began
-  ADD COLUMN ended_reason     TEXT CHECK (ended_reason IN ('moved_out', 'renewed',
-                                'transferred', 'early_termination', 'eviction', 'abandonment')),
+  ADD COLUMN ended_reason     TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT renewal_offer_needs_renewal
-    CHECK (renewal_offer_id IS NULL OR renewal_of_lease_id IS NOT NULL),
-  ADD CONSTRAINT ended_has_reason
-    CHECK ((status = 'ended') = (ended_reason IS NOT NULL)),
+    CHECK (renewal_offer_id IS NULL OR renewal_of_lease_id IS NOT NULL) NOT VALID,
+  ADD CONSTRAINT ended_has_reason CHECK ((status = 'ended') = (ended_reason IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT periodic_after_term
-    CHECK (periodic_from IS NULL OR (ends_on IS NOT NULL AND periodic_from > ends_on));
+    CHECK (periodic_from IS NULL OR (ends_on IS NOT NULL AND periodic_from > ends_on)) NOT VALID,
+  ADD CONSTRAINT leases_ended_reason_check
+    CHECK (ended_reason IN ('moved_out', 'renewed',
+        'transferred', 'early_termination', 'eviction', 'abandonment')) NOT VALID;
 
 ALTER TABLE lease_members
   ADD COLUMN joined_by_document_id   UUID REFERENCES lease_documents (id),  -- amendment, if mid-term
   ADD COLUMN released_by_document_id UUID REFERENCES lease_documents (id),  -- written release
   ADD COLUMN guaranty_document_id    UUID REFERENCES lease_documents (id),  -- may be on a prior lease
-  ADD COLUMN guaranty_scope          TEXT CHECK (guaranty_scope IN ('rent_only', 'all_sums')),
+  ADD COLUMN guaranty_scope          TEXT,
   ADD COLUMN guaranty_limit_amount   BIGINT,   -- null: unlimited
   ADD COLUMN guaranty_covers_renewals BOOLEAN,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT guaranty_fields_only_for_guarantors
     CHECK (role = 'guarantor' OR (guaranty_document_id IS NULL AND guaranty_scope IS NULL
-           AND guaranty_limit_amount IS NULL AND guaranty_covers_renewals IS NULL));
+           AND guaranty_limit_amount IS NULL AND guaranty_covers_renewals IS NULL)) NOT VALID,
+  ADD CONSTRAINT lease_members_guaranty_scope_check
+    CHECK (guaranty_scope IN ('rent_only', 'all_sums')) NOT VALID;
 ```
 
 The `signed` transition is a check, not a flag. It passes only when the lease's primary document is executed and every leaseholder and guarantor member on the signing date has a signed request:

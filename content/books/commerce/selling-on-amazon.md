@@ -212,13 +212,18 @@ ALTER TABLE listings
   ADD COLUMN connected_system_id UUID REFERENCES connected_systems (id),  -- which seller account
   ADD COLUMN marketplace_ref     TEXT,   -- e.g. 'ATVPDKIKX0DER' for amazon.com
   ADD COLUMN seller_sku          TEXT,   -- the SKU the channel knows; may differ from items.sku
-  ADD COLUMN fulfillment_channel TEXT CHECK (fulfillment_channel IN ('merchant', 'marketplace',
-                                   'merchant_prime')),  -- FBM, FBA, Seller Fulfilled Prime
-  ADD COLUMN condition           TEXT NOT NULL DEFAULT 'new';
+  ADD COLUMN fulfillment_channel TEXT,  -- FBM, FBA, Seller Fulfilled Prime
+  ADD COLUMN condition           TEXT NOT NULL DEFAULT 'new',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT listings_fulfillment_channel_check
+    CHECK (fulfillment_channel IN ('merchant', 'marketplace', 'merchant_prime')) NOT VALID;
 -- One item can be offered from several accounts or conditions; widen the uniqueness.
 ALTER TABLE listings DROP CONSTRAINT listings_channel_id_item_id_key;
-ALTER TABLE listings ADD CONSTRAINT listings_offer_key
-  UNIQUE NULLS NOT DISTINCT (channel_id, connected_system_id, marketplace_ref, seller_sku);
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY listings_offer_key
+  ON listings (channel_id, connected_system_id, marketplace_ref, seller_sku) NULLS NOT DISTINCT;
+ALTER TABLE listings ADD CONSTRAINT listings_offer_key UNIQUE USING INDEX listings_offer_key;
 
 CREATE TABLE offer_observations (        -- what the channel showed, when
   listing_id        UUID NOT NULL REFERENCES listings (id),
@@ -288,10 +293,11 @@ CREATE TABLE marketplace_order_contacts (  -- buyer PII under the channel's rete
 CREATE INDEX ON marketplace_order_contacts (purge_after);
 
 ALTER TABLE documents DROP CONSTRAINT documents_kind_check;
+-- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
 ALTER TABLE documents ADD CONSTRAINT documents_kind_check CHECK (kind IN ('invoice',
   'credit_memo', 'packing_slip', 'purchase_order', 'po_acknowledgment', 'po_change',
   'ship_notice', 'inventory_advice', 'product_activity', 'receipt', 'bill_of_lading',
-  'commercial_invoice', 'settlement_report', 'policy_notice', 'plan_of_action'));
+  'commercial_invoice', 'settlement_report', 'policy_notice', 'plan_of_action')) NOT VALID;
 ```
 
 Fees are computed before the sale and confirmed after it. A referral fee schedule with both tier shapes is data with a validity range, and the expected fee becomes an `order_charges` row when the order is imported; the settlement line confirms or contradicts it:

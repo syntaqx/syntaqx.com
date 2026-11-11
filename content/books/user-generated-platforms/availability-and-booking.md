@@ -196,18 +196,22 @@ ALTER TABLE bookings
   ADD COLUMN hold_expires_at      TIMESTAMPTZ,  -- checkout and verification hold
   ADD COLUMN instant_booked       BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN instant_book_rules   JSONB,        -- the rules that let it through, as evaluated
-  ADD COLUMN initiated_by         TEXT NOT NULL DEFAULT 'guest' CHECK (initiated_by IN
-                                    ('guest', 'host_offer', 'partner_api')),
-  ADD COLUMN decline_reason       TEXT CHECK (decline_reason IN ('dates_unavailable',
-                                    'trip_type_not_offered', 'guest_requirements_not_met',
-                                    'asset_unavailable', 'other')),
+  ADD COLUMN initiated_by         TEXT NOT NULL DEFAULT 'guest',
+  ADD COLUMN decline_reason       TEXT,
   ADD COLUMN started_at           TIMESTAMPTZ,  -- the pickup handoff
   ADD COLUMN ended_at             TIMESTAMPTZ,  -- the return handoff
   ADD COLUMN version              INT NOT NULL DEFAULT 1,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT bookings_request_expiry
-    CHECK (status <> 'requested' OR request_expires_at IS NOT NULL),
+    CHECK (status <> 'requested' OR request_expires_at IS NOT NULL) NOT VALID,
   ADD CONSTRAINT bookings_declined_reason
-    CHECK ((status = 'declined') = (decline_reason IS NOT NULL));
+    CHECK ((status = 'declined') = (decline_reason IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT bookings_initiated_by_check
+    CHECK (initiated_by IN ('guest', 'host_offer', 'partner_api')) NOT VALID,
+  ADD CONSTRAINT bookings_decline_reason_check
+    CHECK (decline_reason IN ('dates_unavailable',
+        'trip_type_not_offered', 'guest_requirements_not_met',
+        'asset_unavailable', 'other')) NOT VALID;
 
 CREATE TABLE booking_participants (      -- the guests and drivers on a booking
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

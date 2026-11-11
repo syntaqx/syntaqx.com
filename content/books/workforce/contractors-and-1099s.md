@@ -171,8 +171,9 @@ These are deltas against [the core data model](/books/workforce/workforce-busine
 ```sql
 ALTER TABLE money_movements
   DROP CONSTRAINT money_movements_purpose_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT money_movements_purpose_check CHECK (purpose IN ('client_debit', 'net_pay',
-    'tax_payment', 'garnishment', 'benefit', 'refund', 'recovery', 'contractor_payment'));
+    'tax_payment', 'garnishment', 'benefit', 'refund', 'recovery', 'contractor_payment')) NOT VALID;
 
 CREATE TABLE w9_certifications (           -- every W-9 received, never overwritten
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),

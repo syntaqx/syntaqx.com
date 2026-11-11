@@ -172,12 +172,17 @@ The chapter adds seller entity columns on the Payments volume's `merchants`, sel
 -- Seller entities -----------------------------------------------------------
 
 ALTER TABLE merchants                     -- each selling legal entity is a merchant
-  ADD COLUMN entity_code        TEXT UNIQUE,      -- 'seller.emea', 'seller.us', 'seller.telecom.eu'
+  ADD COLUMN entity_code        TEXT,             -- 'seller.emea', 'seller.us', 'seller.telecom.eu'
   ADD COLUMN entity_roles       TEXT[] NOT NULL DEFAULT '{seller_of_record}',
                                   -- 'seller_of_record', 'contracting', 'settlement_billing'
   ADD COLUMN registered_address TEXT,
   ADD COLUMN invoice_currency   CHAR(3),
   ADD COLUMN contracting_merchant_id UUID REFERENCES merchants (id);  -- billing entity's principal
+
+-- Unique without blocking writes: build the index concurrently, then attach it.
+CREATE UNIQUE INDEX CONCURRENTLY merchants_entity_code_key ON merchants (entity_code);
+ALTER TABLE merchants
+  ADD CONSTRAINT merchants_entity_code_key UNIQUE USING INDEX merchants_entity_code_key;
 
 CREATE TABLE seller_entity_rules (       -- which entity sells what to whom, dated
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -277,11 +282,12 @@ ALTER TABLE invoices
 -- The playbook's tax lines, widened for telecom and per-line surcharges:
 ALTER TABLE invoice_line_taxes
   DROP CONSTRAINT invoice_line_taxes_tax_type_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT invoice_line_taxes_tax_type_check CHECK (tax_type IN ('sales', 'use', 'vat',
-    'gst', 'lease', 'telecom', 'surcharge', 'excise')),
+    'gst', 'lease', 'telecom', 'surcharge', 'excise')) NOT VALID,
   DROP CONSTRAINT invoice_line_taxes_engine_check,
   ADD CONSTRAINT invoice_line_taxes_engine_check CHECK (engine IN ('avalara', 'stripe_tax',
-    'vertex', 'communications_engine', 'manual')),
+    'vertex', 'communications_engine', 'manual')) NOT VALID,
   ADD COLUMN units                    NUMERIC,        -- access lines, for per-line surcharges
   ADD COLUMN per_unit_amount          NUMERIC(12,6),  -- 41 cents of 911 surcharge per line
   ADD COLUMN tax_registration_id      UUID REFERENCES tax_registrations (id),

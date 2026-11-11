@@ -136,8 +136,10 @@ ALTER TABLE properties
                                                     -- 'high_rise', 'scattered_site'; the market
                                                     -- segment is properties.segment (Student Housing)
   ADD COLUMN year_renovated   INT,
-  ADD COLUMN status           TEXT NOT NULL DEFAULT 'active'
-                                CHECK (status IN ('onboarding', 'active', 'offboarded'));
+  ADD COLUMN status           TEXT NOT NULL DEFAULT 'active',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT properties_status_check
+    CHECK (status IN ('onboarding', 'active', 'offboarded')) NOT VALID;
                                 -- read-only after offboarding; history stays
 
 ALTER TABLE buildings
@@ -169,8 +171,9 @@ ALTER TABLE units
                                                                   -- 'adaptable', 'roll_in_shower'
   ADD COLUMN retired_on     DATE,                                 -- merged, split or demolished
   DROP CONSTRAINT units_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT units_kind_check CHECK (kind IN ('dwelling', 'commercial_suite', 'storage_unit',
-                                         'lot', 'slip'));
+                                         'lot', 'slip')) NOT VALID;
   -- kind says what is rented; each segment's use column refines it: units.site_use on lots
   -- (home, monthly or nightly RV: Military & Specialty Housing), units.space_use on
   -- commercial suites (Commercial Property), units.storage_unit_type_id (Self Storage)

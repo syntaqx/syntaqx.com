@@ -109,8 +109,10 @@ ALTER TABLE workspaces
   ADD COLUMN data_region      TEXT NOT NULL DEFAULT 'us',     -- 'eu-central', 'jp', 'au', ...
   ADD COLUMN backup_region    TEXT NOT NULL DEFAULT 'us',
   ADD COLUMN processing_in_region BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN residency_state  TEXT NOT NULL DEFAULT 'pinned'
-    CHECK (residency_state IN ('unpinned', 'pinned', 'moving'));
+  ADD COLUMN residency_state  TEXT NOT NULL DEFAULT 'pinned',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT workspaces_residency_state_check
+    CHECK (residency_state IN ('unpinned', 'pinned', 'moving')) NOT VALID;
 
 CREATE TABLE residency_categories (       -- the published list of what residency covers
   key          TEXT PRIMARY KEY,          -- 'messages', 'files', 'search_index', 'profiles', 'audit_log'

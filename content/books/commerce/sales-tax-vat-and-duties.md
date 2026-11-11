@@ -191,8 +191,11 @@ ALTER TABLE order_charges
   ADD COLUMN tax_calculation_id UUID REFERENCES tax_calculations (id),
   ADD COLUMN jurisdiction       TEXT,           -- e.g. 'US-TX', 'US-TX-AUSTIN', 'DE'
   ADD COLUMN tax_rate           NUMERIC(8, 6),  -- 0.0825, applied to base_amount
-  ADD COLUMN remitter           TEXT CHECK (remitter IN ('merchant', 'marketplace',
-                                  'merchant_of_record', 'carrier', 'none'));
+  ADD COLUMN remitter           TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT order_charges_remitter_check
+    CHECK (remitter IN ('merchant', 'marketplace',
+        'merchant_of_record', 'carrier', 'none')) NOT VALID;
 
 -- Sales by destination state over the trailing 12 months, for threshold monitoring.
 SELECT f.dropoff ->> 'subdivision' AS state,

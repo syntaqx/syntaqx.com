@@ -124,16 +124,18 @@ These are deltas against [The Core Data Model](/books/banking-and-lending/bankin
 ```sql
 ALTER TABLE applications
   ADD COLUMN purpose            TEXT,          -- 'purchase', 'refinance', 'debt_consolidation', ...
-  ADD COLUMN stage              TEXT NOT NULL DEFAULT 'application'
-    CHECK (stage IN ('prequalification', 'application', 'processing', 'underwriting',
-      'conditional_approval', 'clear_to_close', 'closing', 'funded', 'post_closing',
-      'withdrawn', 'declined', 'incomplete_closed')),
+  ADD COLUMN stage              TEXT NOT NULL DEFAULT 'application',
   ADD COLUMN taken_by_party_id  UUID REFERENCES parties (id),  -- broker, dealer or correspondent
   ADD COLUMN loan_officer_ref   TEXT,          -- NMLS ID where licensed
   ADD COLUMN trid_application_at TIMESTAMPTZ,  -- the sixth item: Loan Estimate clock
   ADD COLUMN hmda_reportable    BOOLEAN,       -- decided by the Reg C definition, not the label
   ADD COLUMN incompleteness_notice_due DATE,   -- computed: received + 30 days, until complete
-  ADD COLUMN decision_notice_due DATE;         -- computed: completed + 30 days
+  ADD COLUMN decision_notice_due DATE,         -- computed: completed + 30 days
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT applications_stage_check
+    CHECK (stage IN ('prequalification', 'application', 'processing', 'underwriting',
+        'conditional_approval', 'clear_to_close', 'closing', 'funded', 'post_closing',
+        'withdrawn', 'declined', 'incomplete_closed')) NOT VALID;
 
 CREATE TABLE application_parties (           -- each person or business on the application
   application_id      UUID NOT NULL REFERENCES applications (id),

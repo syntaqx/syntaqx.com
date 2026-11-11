@@ -137,10 +137,12 @@ The chapter adds linked accounts, challenges, clusters of coordinated accounts a
 ALTER TABLE accounts
   ADD COLUMN automated             BOOLEAN NOT NULL DEFAULT FALSE,  -- declared or found bot
   ADD COLUMN automation_operator_id UUID REFERENCES accounts (id),   -- the human responsible
-  ADD COLUMN automation_declared_by TEXT CHECK (automation_declared_by IN ('operator',
-                                      'platform')),
+  ADD COLUMN automation_declared_by TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_automation_check
-    CHECK (automated = (automation_declared_by IS NOT NULL));
+    CHECK (automated = (automation_declared_by IS NOT NULL)) NOT VALID,
+  ADD CONSTRAINT accounts_automation_declared_by_check
+    CHECK (automation_declared_by IN ('operator', 'platform')) NOT VALID;
 
 CREATE TABLE account_links (             -- evidence that two accounts share an operator
   id           UUID PRIMARY KEY DEFAULT uuidv7(),

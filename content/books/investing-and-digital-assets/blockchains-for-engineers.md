@@ -152,8 +152,9 @@ These are deltas against the core data model's `chains` and `onchain_transaction
 
 ```sql
 ALTER TABLE chains
-  ADD COLUMN ledger_model TEXT NOT NULL DEFAULT 'account'
-    CHECK (ledger_model IN ('utxo', 'account'));
+  ADD COLUMN ledger_model TEXT NOT NULL DEFAULT 'account',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT chains_ledger_model_check CHECK (ledger_model IN ('utxo', 'account')) NOT VALID;
 
 CREATE TABLE blocks (                      -- the platform's own view of each chain
   chain_id      UUID NOT NULL REFERENCES chains (id),
@@ -210,8 +211,9 @@ CREATE TABLE chain_finality_rules (        -- how this platform decides "final",
 -- chapter adds dropped and replaced, the sender and nonce, and the fee detail.
 ALTER TABLE onchain_transactions
   DROP CONSTRAINT onchain_transactions_status_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT onchain_transactions_status_check CHECK (status IN ('pending', 'confirmed',
-    'finalized', 'reorged', 'failed', 'dropped', 'replaced')),
+    'finalized', 'reorged', 'failed', 'dropped', 'replaced')) NOT VALID,
   ADD COLUMN from_address      TEXT,             -- account chains: the signing address
   ADD COLUMN sender_nonce      NUMERIC(20,0),    -- the nonce it was signed with
   ADD COLUMN max_fee_per_unit  NUMERIC(78,0),    -- EIP-1559 max fee per gas, in wei
@@ -226,7 +228,7 @@ ALTER TABLE onchain_transactions
 
 -- One live transaction per sender nonce: a replacement reuses the nonce and
 -- the original becomes replaced, so this stays unique.
-CREATE UNIQUE INDEX one_live_tx_per_nonce ON onchain_transactions (chain_id, from_address,
+CREATE UNIQUE INDEX CONCURRENTLY one_live_tx_per_nonce ON onchain_transactions (chain_id, from_address,
   sender_nonce) WHERE sender_nonce IS NOT NULL AND status NOT IN ('replaced', 'dropped');
 
 CREATE TABLE utxos (                       -- Bitcoin-family wallets: outputs the platform controls

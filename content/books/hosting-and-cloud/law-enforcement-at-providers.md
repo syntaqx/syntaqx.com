@@ -67,9 +67,10 @@ Requests, subjects and productions are the UGP [`legal_requests`, `legal_request
 ```sql
 ALTER TABLE legal_request_subjects
   DROP CONSTRAINT legal_request_subjects_identifier_kind_check,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT legal_request_subjects_identifier_kind_check CHECK (identifier_kind IN
     ('account_id', 'handle', 'email', 'phone', 'content_url', 'community', 'ip_address',
-     'payment_ref', 'ipv6_prefix', 'hostname', 'domain', 'resource_ref')),
+     'payment_ref', 'ipv6_prefix', 'hostname', 'domain', 'resource_ref')) NOT VALID,
   ADD COLUMN resource_id            UUID REFERENCES resources (id),
   ADD COLUMN resource_identifier_id UUID REFERENCES resource_identifiers (id),
   ADD COLUMN shared_identifier      BOOLEAN NOT NULL DEFAULT FALSE,  -- many holders behind it
@@ -80,9 +81,11 @@ ALTER TABLE legal_requests
   ADD COLUMN customer_notified_at      TIMESTAMPTZ;
 
 ALTER TABLE products
-  ADD COLUMN provider_visibility TEXT NOT NULL DEFAULT 'metadata_only'
+  ADD COLUMN provider_visibility TEXT NOT NULL DEFAULT 'metadata_only',
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT products_provider_visibility_check
     CHECK (provider_visibility IN ('metadata_only', 'stored_encrypted_customer_keys',
-      'stored_readable', 'managed_readable'));
+        'stored_readable', 'managed_readable')) NOT VALID;
     -- what the provider could produce under a content warrant, decided once per product
 ```
 

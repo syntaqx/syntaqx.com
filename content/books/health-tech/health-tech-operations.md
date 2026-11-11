@@ -102,10 +102,12 @@ The playbook's `support_sessions` gains the patient scope and the PHI tier; noti
 ```sql
 ALTER TABLE support_sessions
   ADD COLUMN patient_id     UUID REFERENCES patients (id),   -- the patient in the ticket, if any
-  ADD COLUMN phi_tier       TEXT NOT NULL DEFAULT 'operational'
-    CHECK (phi_tier IN ('operational', 'clinical', 'sensitive')),
+  ADD COLUMN phi_tier       TEXT NOT NULL DEFAULT 'operational',
   ADD COLUMN reveals        INT NOT NULL DEFAULT 0,           -- unmasking actions in the session
-  ADD COLUMN staff_location TEXT;                             -- country of access, for contract terms
+  ADD COLUMN staff_location TEXT,                             -- country of access, for contract terms
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT support_sessions_phi_tier_check
+    CHECK (phi_tier IN ('operational', 'clinical', 'sensitive')) NOT VALID;
 
 CREATE TABLE practice_notices (          -- what a tenant was told, about what, and when
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

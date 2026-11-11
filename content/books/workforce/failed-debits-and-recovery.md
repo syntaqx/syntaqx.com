@@ -180,8 +180,11 @@ CREATE TABLE funding_strikes (
 -- An employee credit that came back: money owed to one worker.
 ALTER TABLE money_movements
   ADD COLUMN returned_at       TIMESTAMPTZ,
-  ADD COLUMN resolution        TEXT CHECK (resolution IN ('retried_new_account',
-                                 'refunded_to_employer', 'paid_by_check', 'escheat_pending'));
+  ADD COLUMN resolution        TEXT,
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT money_movements_resolution_check
+    CHECK (resolution IN ('retried_new_account',
+        'refunded_to_employer', 'paid_by_check', 'escheat_pending')) NOT VALID;
 
 -- No reinitiation beyond the network's limit, and never on an unauthorized return.
 CREATE FUNCTION check_reinitiation() RETURNS trigger AS $$

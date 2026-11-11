@@ -288,9 +288,12 @@ CREATE TABLE calculation_snapshots (
 );
 
 ALTER TABLE calculation_runs
-  ADD FOREIGN KEY (inputs_hash) REFERENCES calculation_snapshots (inputs_hash),
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD FOREIGN KEY (inputs_hash) REFERENCES calculation_snapshots (inputs_hash) NOT VALID,
   ADD COLUMN replayed_at     TIMESTAMPTZ,
-  ADD COLUMN replay_result   TEXT CHECK (replay_result IN ('match', 'diff', 'error'));
+  ADD COLUMN replay_result   TEXT,
+  ADD CONSTRAINT calculation_runs_replay_result_check
+    CHECK (replay_result IN ('match', 'diff', 'error')) NOT VALID;
 
 -- One journal batch per run (or correction) per company's ledger.
 CREATE TABLE gl_exports (

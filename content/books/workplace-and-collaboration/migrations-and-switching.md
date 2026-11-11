@@ -123,9 +123,11 @@ Core tables (`workspaces`, `containers`, `items`, `members`, `accounts`) are fix
 
 ```sql
 ALTER TABLE containers
-  ADD COLUMN migration_state TEXT NOT NULL DEFAULT 'none'
-    CHECK (migration_state IN ('none', 'in_progress', 'completed')),
-  ADD COLUMN history_starts_at TIMESTAMPTZ;   -- earliest back-dated item allowed
+  ADD COLUMN migration_state TEXT NOT NULL DEFAULT 'none',
+  ADD COLUMN history_starts_at TIMESTAMPTZ,   -- earliest back-dated item allowed
+  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  ADD CONSTRAINT containers_migration_state_check
+    CHECK (migration_state IN ('none', 'in_progress', 'completed')) NOT VALID;
 
 ALTER TABLE items
   ADD COLUMN imported_from TEXT,              -- 'slack', 'confluence', 'jira'
