@@ -183,12 +183,14 @@ ALTER TABLE virtual_machines
        AND (hypervisor <> 'firecracker' OR isolation = 'microvm'));
 
 ALTER TABLE container_services
-  ADD COLUMN isolation TEXT NOT NULL
+  ADD COLUMN isolation TEXT
     CHECK (isolation IN ('bare_metal', 'hardware_vm', 'microvm', 'user_space_kernel',
       'os_container', 'language_isolate', 'wasm_sandbox')),
   ADD COLUMN sandbox_runtime TEXT,       -- 'runc', 'runsc', 'kata-fc', 'firecracker'
   ADD CONSTRAINT container_services_shared_kernel_check
-    CHECK (isolation <> 'os_container' OR capacity_mode = 'customer_nodes');
+    CHECK (isolation <> 'os_container' OR capacity_mode = 'customer_nodes'),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT container_services_isolation_not_null NOT NULL isolation NOT VALID;
 ```
 
 Notes on the sketch:

@@ -151,10 +151,13 @@ CREATE TABLE estimate_lines (
 );
 
 ALTER TABLE patient_statements           -- guarantor, balance_due, delivery, document and status are core
-  ADD COLUMN sequence          SMALLINT NOT NULL,          -- first, second, final notice
+  ADD COLUMN sequence          SMALLINT,                   -- first, second, final notice
   ADD COLUMN pending_insurance BIGINT NOT NULL DEFAULT 0,  -- shown, not billed
-  ADD COLUMN entry_ids         UUID[] NOT NULL,            -- the ledger entries that make the balance
-  ADD COLUMN sent_at           TIMESTAMPTZ;
+  ADD COLUMN entry_ids         UUID[],                     -- the ledger entries that make the balance
+  ADD COLUMN sent_at           TIMESTAMPTZ,
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT patient_statements_sequence_not_null NOT NULL sequence NOT VALID,
+  ADD CONSTRAINT patient_statements_entry_ids_not_null NOT NULL entry_ids NOT VALID;
 
 CREATE TABLE payment_plans (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

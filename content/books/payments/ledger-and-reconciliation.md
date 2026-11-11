@@ -203,19 +203,23 @@ The tables below extend the core `ledger_accounts`, `ledger_transactions`, `ledg
 -- Dimensions on accounts, so one type covers every merchant, bank account and currency.
 -- The core `name` holds the account type: 'merchant_balance', 'cash', 'suspense', ...
 ALTER TABLE ledger_accounts
-  ADD COLUMN side            TEXT NOT NULL CHECK (side IN ('asset', 'liability', 'income', 'expense')),
+  ADD COLUMN side            TEXT CHECK (side IN ('asset', 'liability', 'income', 'expense')),
   ADD COLUMN bank_account_id UUID REFERENCES bank_accounts (id),
   ADD COLUMN processor       TEXT,
   DROP CONSTRAINT ledger_accounts_merchant_id_name_currency_key,
   ADD CONSTRAINT ledger_accounts_dims_key
-    UNIQUE NULLS NOT DISTINCT (name, merchant_id, bank_account_id, processor, currency);
+    UNIQUE NULLS NOT DISTINCT (name, merchant_id, bank_account_id, processor, currency),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT ledger_accounts_side_not_null NOT NULL side NOT VALID;
 
 -- The third date, and corrections linked to what they correct.
 -- source_type gains 'file_row' and 'adjustment' alongside the payment events.
 ALTER TABLE ledger_transactions
   ADD COLUMN created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),  -- when the ledger recorded it
-  ADD COLUMN period       DATE NOT NULL,                       -- accounting period it posts into
-  ADD COLUMN corrects_id  UUID REFERENCES ledger_transactions (id);
+  ADD COLUMN period       DATE,                                -- accounting period it posts into
+  ADD COLUMN corrects_id  UUID REFERENCES ledger_transactions (id),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT ledger_transactions_period_not_null NOT NULL period NOT VALID;
 
 CREATE TABLE external_files (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

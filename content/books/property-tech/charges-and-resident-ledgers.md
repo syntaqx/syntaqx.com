@@ -178,7 +178,9 @@ ALTER TABLE charges
                                      'thirty_day_month', 'actual_days_year')),
   ADD COLUMN lease_concession_id   UUID REFERENCES lease_concessions (id),  -- concession credits
   ADD COLUMN reason                TEXT,                           -- required for one-offs and reversals
-  ADD COLUMN posted_by             UUID NOT NULL REFERENCES users (id);  -- staff, or the run's
+  ADD COLUMN posted_by             UUID REFERENCES users (id),           -- staff, or the run's
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT charges_posted_by_not_null NOT NULL posted_by NOT VALID;
                                                                    -- service user
 
 CREATE TABLE charge_posting_runs (       -- one row per property per run

@@ -25,6 +25,54 @@ function failure(block: SqlBlock): string | null {
   }
 }
 
+type Node = { [key: string]: unknown };
+type Parsed = { stmts?: { stmt: Node; stmt_location?: number }[] };
+
+/**
+ * Columns an ALTER adds as NOT NULL with nothing to fill existing rows: on a
+ * table that has rows, the ALTER fails. A column with a natural value gets a
+ * DEFAULT; one that needs a backfill is added nullable with
+ * ADD CONSTRAINT <table>_<column>_not_null NOT NULL <column> NOT VALID
+ * (/docs/database/zero-downtime-migrations#lock-aware-ddl).
+ */
+function unsafeColumns(block: SqlBlock): string[] {
+  const sql = bindParams(block.sql);
+  let parsed: Parsed;
+  try {
+    parsed = parseSync(sql) as Parsed;
+  } catch {
+    return []; // reported by the parse test
+  }
+  const bytes = Buffer.from(sql); // statement positions are UTF-8 byte offsets
+  return (parsed.stmts ?? []).flatMap((s) => {
+    const alter = s.stmt.AlterTableStmt as Node | undefined;
+    if (!alter) return [];
+    const line =
+      block.line +
+      bytes
+        .subarray(0, s.stmt_location ?? 0)
+        .toString()
+        .split("\n").length -
+      1;
+    const table = (alter.relation as Node).relname;
+    return ((alter.cmds as Node[]) ?? []).flatMap((c) => {
+      const cmd = c.AlterTableCmd as Node;
+      if (cmd?.subtype !== "AT_AddColumn") return [];
+      const column = (cmd.def as Node).ColumnDef as Node;
+      const kinds = ((column.constraints as Node[]) ?? []).map(
+        (k) => (k.Constraint as Node).contype,
+      );
+      const required = kinds.includes("CONSTR_NOTNULL") || kinds.includes("CONSTR_PRIMARY");
+      const filled = kinds.some(
+        (k) => k === "CONSTR_DEFAULT" || k === "CONSTR_GENERATED" || k === "CONSTR_IDENTITY",
+      );
+      return required && !filled
+        ? [`${block.file}:${line}: ${table}.${column.colname} is NOT NULL with no DEFAULT`]
+        : [];
+    });
+  });
+}
+
 const files = markdownFiles(path.join(process.cwd(), "content"))
   .map((f) => {
     const file = path.relative(process.cwd(), f).replaceAll("\\", "/");
@@ -46,5 +94,13 @@ describe("SQL in content", () => {
     const hint =
       'Fix the SQL, or mark the fence: ```sql fragment for a partial on purpose, ```sql dialect="ClickHouse" for another engine.';
     expect(failures, `${failures.join("\n")}\n${hint}`).toEqual([]);
+  });
+
+  it.each(files)("$file adds columns a table with rows accepts", ({ blocks }) => {
+    const unsafe = blocks.flatMap(unsafeColumns);
+    const hint =
+      "Give the column a DEFAULT if one is true for existing rows; otherwise add it nullable with " +
+      "ADD CONSTRAINT <table>_<column>_not_null NOT NULL <column> NOT VALID, validated after the backfill.";
+    expect(unsafe, `${unsafe.join("\n")}\n${hint}`).toEqual([]);
   });
 });

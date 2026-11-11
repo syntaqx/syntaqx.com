@@ -131,11 +131,13 @@ Disputes add evidence, the deadlines that run the process, their fees, and the d
 
 ```sql
 ALTER TABLE disputes
-  ADD COLUMN stage                TEXT NOT NULL,  -- inquiry, chargeback, pre_arbitration, arbitration
+  ADD COLUMN stage                TEXT,           -- inquiry, chargeback, pre_arbitration, arbitration
   ADD COLUMN network_due_by       TIMESTAMPTZ,    -- the acquirer's deadline
   ADD COLUMN fraud_report_id      TEXT,           -- the TC40 or SAFE record, when known
   ADD COLUMN outcome              TEXT,           -- won, lost, accepted, prevented
-  ADD COLUMN closed_at            TIMESTAMPTZ;
+  ADD COLUMN closed_at            TIMESTAMPTZ,
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT disputes_stage_not_null NOT NULL stage NOT VALID;
 
 CREATE TABLE dispute_evidence (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

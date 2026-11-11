@@ -171,9 +171,13 @@ The changes below extend the core `payments`, `refunds`, `payouts` and `merchant
 -- A merchant has one account per entity and country it acquires in;
 -- the account's country is the merchant outlet location.
 ALTER TABLE merchant_accounts
-  ADD COLUMN legal_entity          TEXT NOT NULL,
-  ADD COLUMN acquirer              TEXT NOT NULL,   -- the licensed acquirer behind the processor
-  ADD COLUMN settlement_currencies TEXT[] NOT NULL;
+  ADD COLUMN legal_entity          TEXT,
+  ADD COLUMN acquirer              TEXT,            -- the licensed acquirer behind the processor
+  ADD COLUMN settlement_currencies TEXT[],
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT merchant_accounts_legal_entity_not_null NOT NULL legal_entity NOT VALID,
+  ADD CONSTRAINT merchant_accounts_acquirer_not_null NOT NULL acquirer NOT VALID,
+  ADD CONSTRAINT merchant_accounts_settlement_currencies_not_null NOT NULL settlement_currencies NOT VALID;
 
 CREATE TABLE fx_quotes (
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -193,12 +197,14 @@ CREATE TABLE fx_quotes (
 -- Where each party is, decided once and kept with the payment.
 ALTER TABLE payments
   ADD COLUMN issuer_country           TEXT,          -- from BIN data, with its version
-  ADD COLUMN merchant_outlet_country  TEXT NOT NULL, -- merchant_accounts.country of the account used
+  ADD COLUMN merchant_outlet_country  TEXT,          -- merchant_accounts.country of the account used
   ADD COLUMN is_cross_border          BOOLEAN GENERATED ALWAYS AS
                                         (issuer_country IS DISTINCT FROM merchant_outlet_country) STORED,
   ADD COLUMN pricing_mode             TEXT NOT NULL DEFAULT 'domestic'
                                         CHECK (pricing_mode IN ('domestic', 'mcp', 'provider_fx', 'dcc')),
-  ADD COLUMN fx_quote_id              UUID REFERENCES fx_quotes (id);
+  ADD COLUMN fx_quote_id              UUID REFERENCES fx_quotes (id),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT payments_merchant_outlet_country_not_null NOT NULL merchant_outlet_country NOT VALID;
 
 -- Each conversion actually executed, linked to the ledger's two legs.
 CREATE TABLE fx_conversions (
@@ -240,12 +246,14 @@ CREATE TABLE dcc_offers (
 );
 
 ALTER TABLE payouts
-  ADD COLUMN funding_currency CHAR(3) NOT NULL,
+  ADD COLUMN funding_currency CHAR(3),
   ADD COLUMN fx_conversion_id UUID REFERENCES fx_conversions (id),
   -- rail (from Payouts & Settlement) gains 'sepa_ct', 'faster_payments', 'swift'
   ADD COLUMN charge_bearer    TEXT CHECK (charge_bearer IN ('OUR', 'SHA', 'BEN')),
   ADD COLUMN screening_status TEXT NOT NULL DEFAULT 'pending'
-                                CHECK (screening_status IN ('pending', 'clear', 'review', 'blocked'));
+                                CHECK (screening_status IN ('pending', 'clear', 'review', 'blocked')),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT payouts_funding_currency_not_null NOT NULL funding_currency NOT VALID;
 ```
 
 How it runs:

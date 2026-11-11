@@ -112,14 +112,16 @@ The [core data model](/books/workplace-and-collaboration/workplace-business#the-
 
 ```sql
 ALTER TABLE domains
-  ADD COLUMN verification_token TEXT NOT NULL,              -- the value expected in DNS or the file
+  ADD COLUMN verification_token TEXT,                       -- the value expected in DNS or the file
   ADD COLUMN token_expires_at   TIMESTAMPTZ,                -- e.g. a week after issue
   ADD COLUMN is_wildcard        BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN status             TEXT NOT NULL DEFAULT 'pending'
     CHECK (status IN ('pending', 'verified', 'check_failing', 'revoked')),
   ADD COLUMN last_checked_at    TIMESTAMPTZ,
   ADD COLUMN claimable_after    TIMESTAMPTZ,                -- verified_at plus the notice period
-  ADD CONSTRAINT domains_one_owner UNIQUE (domain);         -- one organization per domain label
+  ADD CONSTRAINT domains_one_owner UNIQUE (domain),         -- one organization per domain label
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT domains_verification_token_not_null NOT NULL verification_token NOT VALID;
 
 CREATE TABLE account_claims (             -- moving an account from personal to managed, and back
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

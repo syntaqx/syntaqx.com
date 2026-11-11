@@ -171,12 +171,15 @@ CREATE TABLE memo_posts (
 
 -- Hard posts: when they posted, in which run and position, and the memo post they replace.
 ALTER TABLE transactions
-  ADD COLUMN booking_date   DATE NOT NULL,          -- the business date it posted on; effective_date is the value date
-  ADD COLUMN posting_class  TEXT NOT NULL,          -- 'credit', 'card_debit', 'ach_debit', 'check', 'fee', ...
+  ADD COLUMN booking_date   DATE,                   -- the business date it posted on; effective_date is the value date
+  ADD COLUMN posting_class  TEXT,                   -- 'credit', 'card_debit', 'ach_debit', 'check', 'fee', ...
   ADD COLUMN posting_run_id UUID,                   -- the batch or stream run that posted it
   ADD COLUMN posting_seq    INTEGER,                -- its position in that run
   ADD COLUMN memo_post_id   UUID REFERENCES memo_posts (id),
-  ADD CONSTRAINT value_not_after_booking CHECK (effective_date <= booking_date);
+  ADD CONSTRAINT value_not_after_booking CHECK (effective_date <= booking_date),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT transactions_booking_date_not_null NOT NULL booking_date NOT VALID,
+  ADD CONSTRAINT transactions_posting_class_not_null NOT NULL posting_class NOT VALID;
 
 -- Holds: a target amount and what is currently secured, disputes as a reason, and who acted.
 ALTER TABLE holds
@@ -184,16 +187,22 @@ ALTER TABLE holds
   ADD CONSTRAINT holds_reason_check CHECK (reason IN ('card_authorization', 'deposit_availability',
     'legal_process', 'fraud', 'collateral', 'dispute', 'manual',
     'provisional_insurance')),                     -- keeps When Banks Fail's 12 CFR 360.9 hold
-  ADD COLUMN secured_amount    BIGINT NOT NULL,    -- what it reduces available balance by now; amount is the target
+  ADD COLUMN secured_amount    BIGINT,             -- what it reduces available balance by now; amount is the target
   ADD COLUMN release_condition TEXT,               -- for blocks with no expires_at
-  ADD COLUMN placed_by         TEXT NOT NULL,
+  ADD COLUMN placed_by         TEXT,
   ADD COLUMN released_by       TEXT,
-  ADD CONSTRAINT secured_within_target CHECK (secured_amount BETWEEN 0 AND amount);
+  ADD CONSTRAINT secured_within_target CHECK (secured_amount BETWEEN 0 AND amount),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT holds_secured_amount_not_null NOT NULL secured_amount NOT VALID,
+  ADD CONSTRAINT holds_placed_by_not_null NOT NULL placed_by NOT VALID;
 
 -- The inputs behind each day's three balances.
 ALTER TABLE balance_snapshots
-  ADD COLUMN float_amount BIGINT NOT NULL,         -- deposited items not yet collected
-  ADD COLUMN holds_amount BIGINT NOT NULL;
+  ADD COLUMN float_amount BIGINT,                  -- deposited items not yet collected
+  ADD COLUMN holds_amount BIGINT,
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT balance_snapshots_float_amount_not_null NOT NULL float_amount NOT VALID,
+  ADD CONSTRAINT balance_snapshots_holds_amount_not_null NOT NULL holds_amount NOT VALID;
 
 -- Posting order as versioned configuration.
 CREATE TABLE posting_order_rules (

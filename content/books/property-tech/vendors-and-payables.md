@@ -189,16 +189,20 @@ CREATE TABLE purchase_order_lines (
 
 -- Bills are the Payments volume's bills, one per paying entity and property.
 ALTER TABLE bills
-  ADD COLUMN tenant_id         UUID NOT NULL,
-  ADD COLUMN property_id       UUID NOT NULL REFERENCES properties (id),
-  ADD COLUMN payer_entity_id   UUID NOT NULL REFERENCES legal_entities (id),
+  ADD COLUMN tenant_id         UUID,
+  ADD COLUMN property_id       UUID REFERENCES properties (id),
+  ADD COLUMN payer_entity_id   UUID REFERENCES legal_entities (id),
   ADD COLUMN purchase_order_id UUID REFERENCES purchase_orders (id),
   ADD COLUMN work_order_id     UUID REFERENCES work_orders (id),
   ADD COLUMN capture_method    TEXT CHECK (capture_method IN ('keyed', 'outsourced_keying',
                                  'ai_capture', 'e_invoice', 'vendor_portal')),
   ADD COLUMN match_result      TEXT CHECK (match_result IN ('not_required', 'two_way',
                                  'three_way', 'exception')),
-  ADD COLUMN split_from_document_id UUID;            -- the original multi-property invoice
+  ADD COLUMN split_from_document_id UUID,            -- the original multi-property invoice
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT bills_tenant_id_not_null NOT NULL tenant_id NOT VALID,
+  ADD CONSTRAINT bills_property_id_not_null NOT NULL property_id NOT VALID,
+  ADD CONSTRAINT bills_payer_entity_id_not_null NOT NULL payer_entity_id NOT VALID;
 
 CREATE TABLE bill_lines (
   id            UUID PRIMARY KEY DEFAULT uuidv7(),

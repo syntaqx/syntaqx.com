@@ -150,14 +150,17 @@ ALTER TABLE remittances                  -- trace_number, payment_method, paymen
                                'unbalanced', 'duplicate', 'posting', 'posted', 'exceptions'));
 
 ALTER TABLE remittance_lines             -- amounts, adjustments, remarks and claim status are core
-  ADD COLUMN patient_control_number TEXT NOT NULL,   -- CLP01, how the claim was matched
+  ADD COLUMN patient_control_number TEXT,            -- CLP01, how the claim was matched
   ADD COLUMN line_control_number    TEXT,            -- Loop 2110 REF, how the line was matched
-  ADD COLUMN procedure_code  TEXT NOT NULL,
+  ADD COLUMN procedure_code  TEXT,
   ADD COLUMN modifiers       TEXT[] NOT NULL DEFAULT '{}',
   ADD COLUMN units           NUMERIC(8,2),
   ADD COLUMN crossed_over_to TEXT,                   -- the payer Medicare forwarded the claim to
   ADD COLUMN posting_status  TEXT NOT NULL DEFAULT 'pending' CHECK (posting_status IN ('pending',
-                               'auto_posted', 'manual_posted', 'exception'));
+                               'auto_posted', 'manual_posted', 'exception')),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT remittance_lines_patient_control_number_not_null NOT NULL patient_control_number NOT VALID,
+  ADD CONSTRAINT remittance_lines_procedure_code_not_null NOT NULL procedure_code NOT VALID;
 
 CREATE TABLE provider_adjustments (      -- PLB: not tied to a claim in this ERA
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

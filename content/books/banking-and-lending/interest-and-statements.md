@@ -179,11 +179,15 @@ These tables extend `interest_accruals`, `statements` and `products` from [The C
 ```sql
 -- What each day's accrual used, and its booking.
 ALTER TABLE interest_accruals
-  ADD COLUMN product_id      UUID NOT NULL REFERENCES products (id),  -- the version in force that day
-  ADD COLUMN balance_method  TEXT NOT NULL CHECK (balance_method IN ('daily', 'average_daily')),
+  ADD COLUMN product_id      UUID REFERENCES products (id),           -- the version in force that day
+  ADD COLUMN balance_method  TEXT CHECK (balance_method IN ('daily', 'average_daily')),
   ADD COLUMN tier_detail     JSONB,                    -- per-slice balance and rate under marginal tiering
-  ADD COLUMN accrued_to_date NUMERIC(20, 6) NOT NULL,  -- since the last crediting, minor units
-  ADD COLUMN journal_entry_id UUID REFERENCES journal_entries (id);  -- the day's expense or income booking
+  ADD COLUMN accrued_to_date NUMERIC(20, 6),           -- since the last crediting, minor units
+  ADD COLUMN journal_entry_id UUID REFERENCES journal_entries (id),  -- the day's expense or income booking
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT interest_accruals_product_id_not_null NOT NULL product_id NOT VALID,
+  ADD CONSTRAINT interest_accruals_balance_method_not_null NOT NULL balance_method NOT VALID,
+  ADD CONSTRAINT interest_accruals_accrued_to_date_not_null NOT NULL accrued_to_date NOT VALID;
 
 -- Corrections to past days, without rewriting them.
 CREATE TABLE interest_accrual_adjustments (
@@ -214,12 +218,17 @@ CREATE TABLE interest_credits (
 
 -- The statement's computed Regulation DD figures, beside its totals and document.
 ALTER TABLE statements
-  ADD COLUMN days_in_period        INTEGER NOT NULL,
-  ADD COLUMN average_daily_balance BIGINT NOT NULL,
-  ADD COLUMN interest_label        TEXT NOT NULL CHECK (interest_label IN ('interest_paid',
+  ADD COLUMN days_in_period        INTEGER,
+  ADD COLUMN average_daily_balance BIGINT,
+  ADD COLUMN interest_label        TEXT CHECK (interest_label IN ('interest_paid',
                                      'interest_earned', 'interest_accrued')),
   ADD COLUMN apy_earned            NUMERIC(6, 2),   -- percent; NULL when deferred to a later statement
-  ADD COLUMN document_sha256       BYTEA NOT NULL;
+  ADD COLUMN document_sha256       BYTEA,
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT statements_days_in_period_not_null NOT NULL days_in_period NOT VALID,
+  ADD CONSTRAINT statements_average_daily_balance_not_null NOT NULL average_daily_balance NOT VALID,
+  ADD CONSTRAINT statements_interest_label_not_null NOT NULL interest_label NOT VALID,
+  ADD CONSTRAINT statements_document_sha256_not_null NOT NULL document_sha256 NOT VALID;
 -- totals carries interest, fees by type, and overdraft and returned item fees for the period and year to date.
 
 -- Year-end tax reporting, maintained as interest is credited or collected.

@@ -177,9 +177,12 @@ CREATE TABLE payment_method_external_ids (
 
 -- Which processor charges a credential, and since when
 ALTER TABLE payment_methods
-  ADD COLUMN charging_processor TEXT NOT NULL,
-  ADD COLUMN charging_since     TIMESTAMPTZ NOT NULL,
-  ADD COLUMN cohort             TEXT;          -- migration cohort, null once settled
+  ADD COLUMN charging_processor TEXT,
+  ADD COLUMN charging_since     TIMESTAMPTZ,
+  ADD COLUMN cohort             TEXT,          -- migration cohort, null once settled
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT payment_methods_charging_processor_not_null NOT NULL charging_processor NOT VALID,
+  ADD CONSTRAINT payment_methods_charging_since_not_null NOT NULL charging_since NOT VALID;
 
 -- Retry attempts belong to the card, across processors
 CREATE INDEX payment_attempts_payment_method_id_requested_at_idx

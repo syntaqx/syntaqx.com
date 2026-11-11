@@ -130,12 +130,14 @@ ALTER TABLE claims
                                                                 -- 'api_partner', 'telematics', ...
   ADD COLUMN reported_by_party_id UUID REFERENCES parties (id),
   ADD COLUMN notice_received_by  TEXT,                -- 'insurer', 'agent', 'tpa', 'representative'
-  ADD COLUMN jurisdiction        TEXT NOT NULL,       -- whose claim rules apply: 'US-FL'
+  ADD COLUMN jurisdiction        TEXT,                -- whose claim rules apply: 'US-FL'
   ADD COLUMN policy_version_id   UUID REFERENCES policy_versions (id),  -- opened against
   ADD COLUMN policy_verified     BOOLEAN NOT NULL DEFAULT TRUE,
   ADD COLUMN segment             TEXT,                -- 'fast_track', 'total_loss', 'injury', ...
   ADD COLUMN segment_rule_ref    TEXT,                -- the rule version that segmented it
-  ADD COLUMN submitted_at        TIMESTAMPTZ;         -- draft became a claim
+  ADD COLUMN submitted_at        TIMESTAMPTZ,         -- draft became a claim
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT claims_jurisdiction_not_null NOT NULL jurisdiction NOT VALID;
 
 CREATE TABLE incidents (                   -- what was damaged or hurt
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

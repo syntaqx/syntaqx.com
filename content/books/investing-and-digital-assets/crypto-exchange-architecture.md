@@ -228,7 +228,9 @@ CREATE TABLE ledger_wallet_proofs (
 ALTER TABLE wallets ADD COLUMN holds TEXT NOT NULL DEFAULT 'customer' CHECK (holds IN ('customer', 'corporate'));
 
 -- Every account's products are checked against its verified residence, not its IP.
-ALTER TABLE accounts ADD COLUMN residence_jurisdiction TEXT NOT NULL;
+ALTER TABLE accounts ADD COLUMN residence_jurisdiction TEXT,
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT accounts_residence_jurisdiction_not_null NOT NULL residence_jurisdiction NOT VALID;
 ```
 
 Two checks run off these tables, and both page someone when they fail. **Per wallet:** `difference` in `ledger_wallet_proofs` is zero, meaning the chain holds exactly what the ledger's omnibus lines for that wallet say, after the two in-transit adjustments; a non-zero difference is a `recon_breaks` row. **Per instrument:** the core model's rule that customer lines, less firm lines, equal omnibus lines, summed over wallets with `holds = 'customer'` only, so firm treasury can't paper over a shortfall and customer coins can't fund the firm. Together they are the invariant: what customers are owed is in the ledger's omnibus lines, and what the omnibus lines say is on chain. The itemized daily version, with staked assets and coins at outside venues, is [Treasury Reconciliation](/books/investing-and-digital-assets/hot-and-cold-wallets#treasury-reconciliation).

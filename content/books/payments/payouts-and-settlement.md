@@ -129,7 +129,9 @@ These are deltas against [the core data model](/books/payments/card-payments#the
 ```sql
 ALTER TABLE payouts ADD COLUMN direction TEXT NOT NULL DEFAULT 'credit'
   CHECK (direction IN ('credit', 'debit'));             -- 'debit' is a clawback
-ALTER TABLE payouts ADD COLUMN rail TEXT NOT NULL;      -- 'ach', 'rtp', 'fednow', 'push_to_card', ...
+ALTER TABLE payouts ADD COLUMN rail TEXT,               -- 'ach', 'rtp', 'fednow', 'push_to_card', ...
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT payouts_rail_not_null NOT NULL rail NOT VALID;
 ALTER TABLE payouts ADD COLUMN attempt SMALLINT NOT NULL DEFAULT 1;
 ALTER TABLE payouts ADD COLUMN return_code TEXT;        -- raw, e.g. 'R02'
 ALTER TABLE payouts ADD COLUMN returned_at TIMESTAMPTZ;
@@ -147,8 +149,12 @@ CREATE TABLE merchant_bank_accounts (         -- where each kind of money lands
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE payouts ADD COLUMN bank_account_id UUID NOT NULL REFERENCES merchant_bank_accounts (id);
-ALTER TABLE payouts ADD COLUMN usage TEXT NOT NULL;  -- which usage the account was chosen for
+ALTER TABLE payouts ADD COLUMN bank_account_id UUID REFERENCES merchant_bank_accounts (id),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT payouts_bank_account_id_not_null NOT NULL bank_account_id NOT VALID;
+ALTER TABLE payouts ADD COLUMN usage TEXT,           -- which usage the account was chosen for
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT payouts_usage_not_null NOT NULL usage NOT VALID;
 
 CREATE TABLE payout_items (                  -- what each payout pays
   payout_id             UUID NOT NULL REFERENCES payouts (id),
