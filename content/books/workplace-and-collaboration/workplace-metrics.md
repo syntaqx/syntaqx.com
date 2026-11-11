@@ -164,7 +164,7 @@ SELECT
   COUNT(*) FILTER (WHERE last_activity_on >= current_date - 27)::numeric
     / NULLIF(COUNT(*), 0) AS utilization_28d,
   ARRAY_AGG(member_id) FILTER (
-    WHERE last_activity_on IS NULL OR last_activity_on < current_date - $3
+    WHERE last_activity_on IS NULL OR last_activity_on < current_date - $3::int
   ) AS reclaim_candidates
 FROM last_seen;
 ```

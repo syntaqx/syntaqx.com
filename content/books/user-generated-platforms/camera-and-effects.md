@@ -310,7 +310,7 @@ JOIN accounts a       ON a.id = ci.author_account_id
 WHERE ce.effect_id = $1
   AND ci.state = 'published'
   AND ci.visibility = 'public'
-  AND ci.published_at < $2 + INTERVAL '90 days'   -- $2: the effect's first approval
+  AND ci.published_at < $2::timestamptz + INTERVAL '90 days'  -- $2: the effect's first approval
   AND a.status = 'active'
   AND a.home_country = ANY ($3)                   -- the program's eligible regions
 GROUP BY ce.effect_id;

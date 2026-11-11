@@ -119,6 +119,7 @@ ALTER TABLE domains
     CHECK (status IN ('pending', 'verified', 'check_failing', 'revoked')),
   ADD COLUMN last_checked_at    TIMESTAMPTZ,
   ADD COLUMN claimable_after    TIMESTAMPTZ,                -- verified_at plus the notice period
+  DROP CONSTRAINT domains_method_check,                     -- the core model's list, replaced
   ADD CONSTRAINT domains_method_check CHECK (method IN ('dns_txt', 'https_file', 'idp_trusted')),
   ADD CONSTRAINT domains_one_owner UNIQUE (domain);         -- one organization per domain label
 

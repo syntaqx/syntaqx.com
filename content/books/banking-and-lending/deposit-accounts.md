@@ -157,7 +157,6 @@ These are deltas against [the core data model](/books/banking-and-lending/bankin
 ALTER TABLE products
   ADD COLUMN reg_d_kind          TEXT CHECK (reg_d_kind IN ('transaction', 'savings', 'time')),
   ADD COLUMN consumer_purpose    BOOLEAN NOT NULL DEFAULT TRUE,     -- Reg DD applies
-  ADD COLUMN balance_method      TEXT CHECK (balance_method IN ('daily', 'average_daily')),
   ADD COLUMN withdrawal_limit    JSONB,      -- e.g. {"count": 6, "per": "statement_cycle", "excess": "fee"}; null = none
   ADD COLUMN interest_bearing    BOOLEAN NOT NULL DEFAULT TRUE,
   ADD COLUMN earnings_credit     BOOLEAN NOT NULL DEFAULT FALSE;    -- business analysis accounts

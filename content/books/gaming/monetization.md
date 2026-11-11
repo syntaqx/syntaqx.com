@@ -79,7 +79,7 @@ CREATE TABLE pass_seasons (
   game_id       UUID NOT NULL REFERENCES games (id),
   name          TEXT NOT NULL,
   valid_during  TSTZRANGE NOT NULL,                 -- [start, end)
-  premium_offer_id UUID REFERENCES offers (id),     -- how the premium lane is sold (offers: below)
+  premium_offer_id UUID,                            -- how the premium lane is sold (offers: below)
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -202,6 +202,8 @@ CREATE TABLE offers (
   is_personalizable BOOLEAN NOT NULL DEFAULT FALSE,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE pass_seasons ADD FOREIGN KEY (premium_offer_id) REFERENCES offers (id);
 
 -- Prices are dated rows per store and market, in money or in the game's currency.
 CREATE TABLE offer_prices (

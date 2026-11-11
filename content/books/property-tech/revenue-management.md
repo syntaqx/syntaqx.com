@@ -228,6 +228,22 @@ CREATE TABLE pricing_settings (          -- the landlord's own choices, per prop
   EXCLUDE USING GIST (property_id WITH =, valid_during WITH &&)
 );
 
+CREATE TABLE rent_limits (               -- each period's computed cap: a typed slice of a
+                                         -- 'rent_cap' legal rule; shared, so no tenant_id
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  legal_rule_id      UUID NOT NULL REFERENCES legal_rules (id),  -- source, review, versions
+  jurisdiction_id    UUID NOT NULL REFERENCES jurisdictions (id),  -- 'US-CA', 'US-WA', a city
+  name               TEXT NOT NULL,      -- 'Tenant Protection Act'
+  formula            TEXT NOT NULL,      -- 'min(5% + CPI, 10%)'
+  max_increase_pct   NUMERIC(5, 2) NOT NULL,  -- the computed maximum for this period
+  lookback_months    INT NOT NULL,       -- 12
+  index_series       TEXT,               -- the CPI series the formula names
+  index_value        NUMERIC(6, 3),
+  coverage_rule_ref  TEXT NOT NULL,      -- exemptions, resolved per unit elsewhere
+  valid_during       DATERANGE NOT NULL,
+  EXCLUDE USING GIST (jurisdiction_id WITH =, name WITH =, valid_during WITH &&)
+);
+
 CREATE TABLE price_recommendations (     -- what the engine suggested, and from what
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id           UUID NOT NULL,
@@ -243,7 +259,7 @@ CREATE TABLE price_recommendations (     -- what the engine suggested, and from 
   model_ids           UUID[] NOT NULL,   -- pricing_models used
   source_ids          UUID[] NOT NULL,   -- pricing_data_sources read at runtime
   settings_id         UUID NOT NULL REFERENCES pricing_settings (id),
-  rent_limit_id       UUID REFERENCES rent_limits (id),  -- (below): the cap applied, if any
+  rent_limit_id       UUID REFERENCES rent_limits (id),  -- (above): the cap applied, if any
   clamped_by_limit    BOOLEAN NOT NULL DEFAULT FALSE,
   explanation         JSONB NOT NULL,    -- drivers: exposure, amenity premiums, term premium
   business_date       DATE NOT NULL,     -- the property's date
@@ -282,22 +298,6 @@ CREATE TABLE rent_quotes (               -- the price a prospect was given
                                          -- when the website quoted it
   valid_until        TIMESTAMPTZ NOT NULL,
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE rent_limits (               -- each period's computed cap: a typed slice of a
-                                         -- 'rent_cap' legal rule; shared, so no tenant_id
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  legal_rule_id      UUID NOT NULL REFERENCES legal_rules (id),  -- source, review, versions
-  jurisdiction_id    UUID NOT NULL REFERENCES jurisdictions (id),  -- 'US-CA', 'US-WA', a city
-  name               TEXT NOT NULL,      -- 'Tenant Protection Act'
-  formula            TEXT NOT NULL,      -- 'min(5% + CPI, 10%)'
-  max_increase_pct   NUMERIC(5, 2) NOT NULL,  -- the computed maximum for this period
-  lookback_months    INT NOT NULL,       -- 12
-  index_series       TEXT,               -- the CPI series the formula names
-  index_value        NUMERIC(6, 3),
-  coverage_rule_ref  TEXT NOT NULL,      -- exemptions, resolved per unit elsewhere
-  valid_during       DATERANGE NOT NULL,
-  EXCLUDE USING GIST (jurisdiction_id WITH =, name WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE renewal_offers (            -- one row per term offered to a household

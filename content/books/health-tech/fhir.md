@@ -213,7 +213,9 @@ CREATE TABLE fhir_subscriptions (              -- subscriptions this platform ho
   status           TEXT NOT NULL CHECK (status IN ('requested', 'active', 'error', 'off')),
   last_event_number BIGINT,                    -- to detect gaps
   last_notified_at TIMESTAMPTZ,
-  catch_up_cursor_id UUID REFERENCES sync_cursors (id)   -- the polling backstop
+  catch_up_resource TEXT,                      -- the polling backstop: this integration's
+  catch_up_direction TEXT,                     -- sync_cursors row for the resource
+  FOREIGN KEY (integration_id, catch_up_resource, catch_up_direction) REFERENCES sync_cursors
 );
 ```
 

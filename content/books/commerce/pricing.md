@@ -207,7 +207,7 @@ CREATE TABLE map_policy_items (
 SELECT MIN(price) AS prior_price
 FROM price_history
 WHERE price_list_id = $1 AND item_id = $2 AND min_quantity = 1
-  AND effective && tstzrange($3 - INTERVAL '30 days', $3);
+  AND effective && tstzrange($3::timestamptz - INTERVAL '30 days', $3);
 ```
 
 Design notes:

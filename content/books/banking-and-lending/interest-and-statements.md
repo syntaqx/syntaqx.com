@@ -252,7 +252,7 @@ APY earned for a closed statement period, computed from the stored snapshots and
 WITH days AS (
   SELECT GREATEST(b.ledger_balance, 0) AS bal          -- negative balances count as zero
   FROM balance_snapshots b
-  WHERE b.account_id = :account_id AND b.business_date <@ :period
+  WHERE b.account_id = :account_id AND b.business_date <@ :period::daterange
 ), adb AS (
   SELECT AVG(bal)::numeric AS adb, COUNT(*) AS days FROM days
 )

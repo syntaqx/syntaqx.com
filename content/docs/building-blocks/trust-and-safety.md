@@ -116,7 +116,7 @@ CREATE TABLE penalties (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id          UUID NOT NULL REFERENCES tenants (id),
   account_id         UUID NOT NULL REFERENCES users (id),
-  decision_id        UUID NOT NULL REFERENCES moderation_decisions (id),
+  decision_id        UUID NOT NULL,                  -- the decision that imposed it (below)
   kind               TEXT NOT NULL CHECK (kind IN
                        ('warning', 'feature_restriction', 'suspension', 'permanent_ban')),
   restricted_feature TEXT,
@@ -192,6 +192,8 @@ CREATE TABLE moderation_decisions (
   CONSTRAINT moderation_decisions_reviewer_check
     CHECK (reviews_decision_id IS NULL OR actor_type = 'appeal_reviewer')
 );
+
+ALTER TABLE penalties ADD FOREIGN KEY (decision_id) REFERENCES moderation_decisions (id);
 ```
 
 Moderators are privileged users with access to other people's private messages, so their own work is audited the way [Support Access](/docs/security/support-access#logging-support-access) audits support: every case opened, every piece of evidence viewed, every decision made. Then look at it: decision rates per moderator against peers, decisions on accounts the moderator is connected to, a reviewer whose reversal rate is far above the team's.

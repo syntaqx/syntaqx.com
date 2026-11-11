@@ -221,7 +221,7 @@ Gift card liability, old against new, from the crosswalk and the ledger the prom
 -- :old_total is the old platform's outstanding balance report, by currency.
 SELECT g.currency,
        SUM(t.balance)                       AS migrated_liability,
-       :old_total                            AS old_platform_liability,
+       :old_total::numeric                   AS old_platform_liability,
        SUM(t.balance) - :old_total           AS difference
 FROM record_mappings m
 JOIN gift_cards g ON g.id = m.local_id

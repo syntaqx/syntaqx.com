@@ -258,7 +258,7 @@ WITH co AS (
   FROM charge_offs c
   JOIN accounts a ON a.id = c.account_id
   WHERE a.institution_id = :institution_id
-    AND c.charged_off_on <@ :quarter                  -- a DATERANGE
+    AND c.charged_off_on <@ :quarter::daterange
 ), rec AS (
   SELECT COALESCE(SUM(gross_amount), 0) AS recovered
   FROM recoveries r

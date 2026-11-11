@@ -159,7 +159,7 @@ CREATE TABLE tickets (                   -- a support conversation, mirrored fro
   customer_id       UUID REFERENCES customers (id),  -- null until matched
   channel           TEXT NOT NULL CHECK (channel IN ('email', 'chat', 'sms', 'phone', 'social',
                       'marketplace', 'web_form')),
-  sales_channel_id  UUID REFERENCES sales_channels (id),  -- the marketplace, for its SLA
+  sales_channel_id  TEXT REFERENCES sales_channels (id),  -- the marketplace, for its SLA
   category          TEXT NOT NULL CHECK (category IN ('wismo', 'change_cancel', 'damaged_wrong',
                       'not_received', 'return_exchange', 'subscription', 'promotion',
                       'product_question', 'account_privacy', 'other')),

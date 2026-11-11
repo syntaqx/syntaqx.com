@@ -493,21 +493,24 @@ Trending is a query over uses, not a counter:
 
 ```sql
 -- Rising sounds in a country: distinct creators this week against last week
-SELECT u.sound_id,
-       count(DISTINCT ci.author_account_id) FILTER (WHERE u.created_at >= NOW() - INTERVAL '7 days') AS creators_7d,
-       count(DISTINCT ci.author_account_id) FILTER (WHERE u.created_at <  NOW() - INTERVAL '7 days') AS creators_prev_7d
-FROM sound_uses u
-JOIN content_items ci ON ci.id = u.content_item_id
-JOIN accounts a       ON a.id = ci.author_account_id
-WHERE u.created_at >= NOW() - INTERVAL '14 days'
-  AND u.state = 'active'
-  AND a.home_country = $1
-  AND NOT a.automated                    -- Spam, Bots & Inauthentic Behavior
-  AND NOT EXISTS (SELECT 1 FROM cluster_members m
-                  WHERE m.subject_type = 'account' AND m.subject_id = a.id
-                    AND m.removed_at IS NULL)
-GROUP BY u.sound_id
-HAVING count(DISTINCT ci.author_account_id) FILTER (WHERE u.created_at >= NOW() - INTERVAL '7 days') >= 50
+WITH counts AS (
+  SELECT u.sound_id,
+         count(DISTINCT ci.author_account_id) FILTER (WHERE u.created_at >= NOW() - INTERVAL '7 days') AS creators_7d,
+         count(DISTINCT ci.author_account_id) FILTER (WHERE u.created_at <  NOW() - INTERVAL '7 days') AS creators_prev_7d
+  FROM sound_uses u
+  JOIN content_items ci ON ci.id = u.content_item_id
+  JOIN accounts a       ON a.id = ci.author_account_id
+  WHERE u.created_at >= NOW() - INTERVAL '14 days'
+    AND u.state = 'active'
+    AND a.home_country = $1
+    AND NOT a.automated                    -- Spam, Bots & Inauthentic Behavior
+    AND NOT EXISTS (SELECT 1 FROM cluster_members m
+                    WHERE m.subject_type = 'account' AND m.subject_id = a.id
+                      AND m.removed_at IS NULL)
+  GROUP BY u.sound_id
+)
+SELECT * FROM counts
+WHERE creators_7d >= 50
 ORDER BY creators_7d::numeric / GREATEST(creators_prev_7d, 1) DESC
 LIMIT 100;
 ```

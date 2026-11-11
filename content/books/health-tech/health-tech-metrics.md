@@ -128,19 +128,22 @@ CREATE TABLE metric_values (             -- computed, frozen when reported
 No-show rate for a location and month, with the late-cancellation cutoff the definition names:
 
 ```sql
+ALTER TABLE appointments
+  ADD COLUMN rescheduled_at TIMESTAMPTZ;  -- the patient moved it; the new time is a new appointment
+
 -- Definition no_show_rate v2: no-shows plus cancellations within 24 hours of the start,
 -- over appointments scheduled to start in the period, excluding those rescheduled
 -- more than 24 hours ahead. Dates are the location's business date.
 SELECT
   COUNT(*) FILTER (WHERE a.status = 'no_show'
                    OR (a.status = 'cancelled'
-                       AND a.cancelled_at > a.starts_at - INTERVAL '24 hours')) AS numerator,
-  COUNT(*) FILTER (WHERE a.status <> 'rescheduled'
-                   OR a.rescheduled_at > a.starts_at - INTERVAL '24 hours')      AS denominator
+                       AND a.cancelled_at > lower(a.during) - INTERVAL '24 hours')) AS numerator,
+  COUNT(*) FILTER (WHERE a.rescheduled_at IS NULL
+                   OR a.rescheduled_at > lower(a.during) - INTERVAL '24 hours')    AS denominator
 FROM appointments a
 JOIN locations l ON l.id = a.location_id
 WHERE a.location_id = $1
-  AND (a.starts_at AT TIME ZONE l.time_zone)::date BETWEEN $2 AND $3;
+  AND (lower(a.during) AT TIME ZONE l.time_zone)::date BETWEEN $2 AND $3;
 ```
 
 Locations' gross and net revenue retention for a base month, from monthly recurring revenue per location:

@@ -145,12 +145,12 @@ The per-tenant impact list for an incident window, from the audit store the [arc
 
 ```sql
 -- Patients whose records were read by an actor or path implicated in the incident.
-SELECT a.tenant_id, COUNT(DISTINCT a.patient_id) AS patients
+SELECT a.organization_id, COUNT(DISTINCT a.patient_id) AS patients
 FROM audit_events a
 WHERE a.occurred_at BETWEEN $1 AND $2
-  AND a.actor_ref = ANY ($3)              -- the compromised credential, service or session
+  AND a.actor_id = ANY ($3)               -- the compromised credential, service or session
   AND a.patient_id IS NOT NULL
-GROUP BY a.tenant_id
+GROUP BY a.organization_id
 ORDER BY patients DESC;
 ```
 

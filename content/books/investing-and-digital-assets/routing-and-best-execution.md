@@ -167,7 +167,7 @@ CREATE TABLE routing_rules (               -- the routing table, versioned
   version             INT NOT NULL,
   approved_by         UUID NOT NULL,         -- the best execution committee's decision
   valid_during        TSTZRANGE NOT NULL,
-  EXCLUDE USING gist (legal_entity_id WITH =, asset_class WITH =, segment WITH =,
+  EXCLUDE USING gist (legal_entity_id WITH =, asset_class WITH =, (segment::text) WITH =,
                       valid_during WITH &&)
 );
 

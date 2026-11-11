@@ -138,9 +138,8 @@ The core model's `integrations` and `sync_cursors` carry every connection; this 
 ALTER TABLE integrations
   ADD COLUMN agent_version     TEXT,            -- on-premises sync agent build, null for cloud APIs
   ADD COLUMN last_heartbeat_at TIMESTAMPTZ,
-  ADD COLUMN rate_limit_state  JSONB,           -- remaining budget, reset time, last Retry-After
-  ADD COLUMN status            TEXT NOT NULL DEFAULT 'active'
-    CHECK (status IN ('pending', 'active', 'degraded', 'disconnected', 'retired'));
+  ADD COLUMN rate_limit_state  JSONB;           -- remaining budget, reset time, last Retry-After
+                                                -- status is on the core table
 
 ALTER TABLE sync_cursors
   ADD COLUMN last_success_at   TIMESTAMPTZ,     -- shown to the practice per object
@@ -190,17 +189,20 @@ CREATE TABLE sensitivity_labels (            -- record-level labels beyond ordin
   PRIMARY KEY (tenant_id, record_table, record_id, label)
 );
 
+-- audit_events already records patient_id (whose record was touched, for access
+-- reports), action and purpose; reads add the labels they saw.
 ALTER TABLE audit_events
-  ADD COLUMN patient_id      UUID,            -- whose record was touched, for access reports
-  ADD COLUMN action          TEXT,            -- 'C', 'R', 'U', 'D', 'E' as in AuditEvent.action
-  ADD COLUMN purpose         TEXT,            -- 'treatment', 'payment', 'operations', 'support', 'export'
   ADD COLUMN labels_seen     TEXT[];          -- sensitivity labels on what was read
-CREATE INDEX audit_events_by_patient ON audit_events (tenant_id, patient_id, occurred_at);
+CREATE INDEX audit_events_by_patient ON audit_events (organization_id, patient_id, occurred_at);
 ```
 
 The outbound check, for any path that sends a record outside the tenant's clinical users:
 
 ```sql
+ALTER TABLE consents
+  ADD COLUMN covers_labels  TEXT[] NOT NULL DEFAULT '{}',  -- sensitivity labels it releases
+  ADD COLUMN recipient_ref  TEXT;                          -- the recipient it names
+
 -- A message or export may include this record only if no label on it blocks the purpose,
 -- or an active consent covers the label for this recipient.
 SELECT r.record_id
@@ -210,16 +212,17 @@ WHERE NOT EXISTS (
   WHERE l.tenant_id = $2 AND l.record_table = $3 AND l.record_id = r.record_id
     AND NOT EXISTS (
       SELECT 1 FROM consents c
-      WHERE c.tenant_id = $2 AND c.patient_id = $4
-        AND c.status = 'active' AND l.label = ANY (c.covers_labels)
-        AND c.recipient_ref = $5));
+      WHERE c.organization_id = $2 AND c.patient_id = $4
+        AND c.decision = 'permit' AND c.revoked_at IS NULL
+        AND (c.expires_at IS NULL OR c.expires_at > now())
+        AND l.label = ANY (c.covers_labels) AND c.recipient_ref = $5));
 ```
 
 Design notes:
 
 - **PHI never sits in a queue row.** `inbound_messages.body_ref` and the outbox's payloads point at encrypted objects or carry IDs only; the tables operators query during an incident hold metadata.
 - **`tenant_id` references the contracting organization.** It is the top of the `organizations` tree for that customer, and row-level security keys on it; location and department scoping is a second check inside it.
-- **`consents.covers_labels` and `consents.recipient_ref`** are columns this check assumes on the core model's `consents`; [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization#the-consent-record) owns their meaning.
+- **`consents.covers_labels` and `consents.recipient_ref`** are added here for this check; an active consent is a `permit` that is neither revoked nor expired, and [Consent, Authorization & Proxies](/books/health-tech/consent-and-authorization#the-consent-record) owns what each means.
 - **A FHIR version is minted only when the rendering changes.** The hash comparison keeps `_since` queries and subscriptions from firing on internal column changes a client can't see.
 - **Labels propagate, and the propagation is recorded.** A claim built from a labeled encounter inherits the label with `inherited_from`, so removing the source label is a reviewable event, not a silent cascade.
 - **Emit `integration.degraded`, `integration.disconnected`, `sync.drift_detected` and `sensitivity_label.set`,** which operations and the practice's own dashboard consume.

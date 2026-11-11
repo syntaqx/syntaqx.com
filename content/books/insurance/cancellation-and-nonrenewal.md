@@ -216,7 +216,7 @@ CREATE TABLE notices (                     -- each required notice, its deadline
   agent_copy_sent_at TIMESTAMPTZ,           -- NY: within seven days
   deadline_met       BOOLEAN GENERATED ALWAYS AS
                        (mailed_at IS NOT NULL AND must_mail_by IS NOT NULL
-                        AND mailed_at::date <= must_mail_by) STORED,
+                        AND (mailed_at AT TIME ZONE 'UTC')::date <= must_mail_by) STORED,
   returned_at        TIMESTAMPTZ,
   rescinded_at       TIMESTAMPTZ            -- payment cured, cancellation withdrawn
 );

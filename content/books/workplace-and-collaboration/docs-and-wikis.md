@@ -136,6 +136,18 @@ This chapter adds the `pages` kind table and the page tree on top of the [core m
 ```sql
 -- containers.kind gains 'space' (wikis); items.kind gains 'page'.
 
+CREATE TABLE page_templates (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  workspace_id     UUID NOT NULL REFERENCES workspaces (id),
+  container_id     UUID REFERENCES containers (id),  -- null for workspace-wide templates
+  name             TEXT NOT NULL,
+  version          INT NOT NULL,
+  body             JSONB NOT NULL,         -- blocks plus property defaults
+  created_by       UUID NOT NULL REFERENCES members (id),
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (id, version)
+);
+
 CREATE TABLE pages (                       -- kind table for items where kind = 'page'
   item_id          UUID PRIMARY KEY REFERENCES items (id),
   container_id     UUID NOT NULL REFERENCES containers (id),
@@ -168,18 +180,6 @@ CREATE TABLE page_blocks (                 -- current content; history lives in 
   props            JSONB NOT NULL DEFAULT '{}',
   embed_item_id    UUID REFERENCES items (id),  -- transclusion or link preview target
   PRIMARY KEY (page_item_id, block_id)
-);
-
-CREATE TABLE page_templates (
-  id               UUID PRIMARY KEY DEFAULT uuidv7(),
-  workspace_id     UUID NOT NULL REFERENCES workspaces (id),
-  container_id     UUID REFERENCES containers (id),  -- null for workspace-wide templates
-  name             TEXT NOT NULL,
-  version          INT NOT NULL,
-  body             JSONB NOT NULL,         -- blocks plus property defaults
-  created_by       UUID NOT NULL REFERENCES members (id),
-  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE (id, version)
 );
 
 CREATE TABLE page_publications (           -- a page published outside the org
