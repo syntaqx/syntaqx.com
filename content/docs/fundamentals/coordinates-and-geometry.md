@@ -31,6 +31,7 @@ There is no single convention, and that's the most common bug in location code:
 | [GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.1) | Longitude, latitude (then optional altitude) |
 | WKT, WKB and PostGIS [`ST_MakePoint`](https://postgis.net/docs/ST_MakePoint.html) | X, Y: longitude, latitude |
 | [TopoJSON](https://github.com/topojson/topojson-specification) | Longitude, latitude |
+| KML [`<coordinates>`](https://developers.google.com/kml/documentation/kmlreference) | Longitude, latitude (then optional altitude), comma-separated |
 | Google Maps [`LatLng`](https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLng) | Latitude, longitude |
 | Leaflet [`LatLng`](https://leafletjs.com/reference.html#latlng) and its `[lat, lng]` arrays | Latitude, longitude |
 | Google's [encoded polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm) examples | Latitude, longitude |
@@ -168,7 +169,7 @@ GeoJSON is my default for exchange because everything reads it, not because it's
 - **Vector tiles** cut a map into tiles of Protocol Buffers with integer coordinates relative to each tile, in Web Mercator. They're how a map client draws millions of features quickly, and they're an output: generate them from the source data, never treat them as the source.
 - **GeoPackage** is an OGC-standard SQLite file that holds many vector and raster layers with their metadata, which makes it the file to hand a GIS analyst. Its own FAQ calls it potentially overkill for simple exchange.
 - **KML and GPX** are XML formats I accept on import. KML is for visualization (Google Earth, placemarks with styling), and GPX carries waypoints, routes and tracks from GPS devices and fitness apps.
-- **Shapefiles** still arrive from government and GIS sources. Accept them on import, convert them to GeoJSON or PostGIS immediately, and don't produce them.
+- **Shapefiles** still arrive from government and GIS sources. Esri's [technical description](https://www.esri.com/content/dam/esrisites/sitecore-archive/Files/Pdfs/library/whitepapers/pdfs/shapefile.pdf) (July 1998) defines one as several files sharing a name: the geometry in `.shp`, an index in `.shx`, and the attributes in a dBASE `.dbf` table with one record per shape. Every non-null shape in a file must be the same type, so points and polygons need separate shapefiles, and a missing `.dbf` loses every attribute. Accept them on import as a zip of all the parts, convert them to GeoJSON or PostGIS immediately, and don't produce them.
 
 ### Cells Instead of Shapes
 
@@ -176,6 +177,7 @@ Sometimes the question isn't "is this point inside that polygon" but "which area
 
 - **[H3](https://h3geo.org/docs/)** divides the world into hexagons at [16 resolutions](https://h3geo.org/docs/core-library/restable) (0 to 15). A child cell is only approximately inside its parent's shape.
 - **[S2](https://s2geometry.io/)** projects a cube onto the sphere and divides each face into quadrants down to [level 30](https://s2geometry.io/devguide/s2cell_hierarchy), each cell identified by a 64-bit ID along a Hilbert curve, so nearby cells usually have nearby IDs.
+- **Geohash** is the older, simpler scheme: a string in which each extra character narrows a rectangle. PostGIS's [`ST_GeoHash`](https://postgis.net/docs/ST_GeoHash.html) describes a shorter geohash as a less precise box that contains the point, which makes geohashes searchable by prefix in any database that indexes text. It returns 20 characters for a point unless you ask for fewer, and expects longitude and latitude input.
 
 Store the cell ID beside the coordinate, as a derived column, for aggregation and fast lookups. Keep the coordinate and the real shapes as the source of truth; a territory boundary drawn in cells is an approximation of the one on the map.
 
@@ -214,5 +216,8 @@ Store the cell ID beside the coordinate, as a derived column, for aggregation an
 - [Google Maps JavaScript API: LatLng](https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLng) and [Leaflet: LatLng](https://leafletjs.com/reference.html#latlng), latitude-first map libraries
 - [FlatGeobuf](https://flatgeobuf.org/), binary features with a spatial index and HTTP range requests
 - [H3](https://h3geo.org/docs/) and [S2](https://s2geometry.io/), hierarchical cell systems
+- [PostGIS: ST_GeoHash](https://postgis.net/docs/ST_GeoHash.html), geohash encoding and its prefix property
+- [Google: KML Reference](https://developers.google.com/kml/documentation/kmlreference), elements and `lon,lat[,alt]` coordinate tuples
+- [Esri: Shapefile Technical Description](https://www.esri.com/content/dam/esrisites/sitecore-archive/Files/Pdfs/library/whitepapers/pdfs/shapefile.pdf), the July 1998 white paper defining the `.shp`, `.shx` and `.dbf` files
 - [orb](https://pkg.go.dev/github.com/paulmach/orb/geojson), GeoJSON for Go
 - [geojson](https://docs.rs/geojson/latest/geojson/), GeoJSON for Rust
