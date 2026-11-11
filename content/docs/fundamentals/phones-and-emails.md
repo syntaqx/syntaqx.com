@@ -3,7 +3,7 @@ title = "Phone Numbers & Email Addresses"
 nav_title = "Phones & Emails"
 description = "Phone numbers in E.164 via libphonenumber, email accepted broadly and compared with care, ownership proven, and what was typed kept beside every key."
 category = "Fundamentals"
-order = 105
+order = 104
 tags = ["phone-numbers", "email", "e164", "data-modeling", "standards", "privacy"]
 +++
 

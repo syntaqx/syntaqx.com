@@ -12,7 +12,7 @@ Location data starts as a pair of numbers and grows into shapes: a pin for a cus
 
 - **One coordinate system: WGS 84 longitude and latitude in decimal degrees** (EPSG:4326), the system GeoJSON requires and PostGIS assumes by default. Anything projected for a map or a local calculation is derived from it, never stored instead of it.
 - **Points in an API as named fields:** `{"latitude": -33.8568, "longitude": 151.2153}`. Names make the order impossible to get wrong.
-- **Shapes in an API as GeoJSON,** served as `application/geo+json`. It's the one geometry format every language, database and map library reads.
+- **Shapes in an API as GeoJSON,** served as `application/geo+json`. It's an IETF standard, and PostGIS, Leaflet and the Google Maps JavaScript API all read it directly.
 - **Storage in PostGIS `geography`,** so distances and areas come back in meters on the real earth. I switch to `geometry` only for the cases below.
 - **Six decimal places** on the way out, about 10 centimeters, and the measurement's accuracy stored beside it.
 
@@ -44,11 +44,17 @@ Map libraries say "latitude, longitude" because that's how people read a positio
 
 ### Precision Isn't Accuracy
 
-RFC 7946 notes that [six decimal places](https://datatracker.ietf.org/doc/html/rfc7946#section-11.2) amount to about 10 centimeters, and that the number of digits [says nothing](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.10) about how uncertain the position is. A phone fix good to 50 meters still prints 15 digits. Round output to six places, and store the accuracy the device reported or the geocoder's precision in its own column ([A Position Is a Measurement](/docs/building-blocks/location-tracking#a-position-is-a-measurement), [Geocode and Precision](/docs/fundamentals/addresses#geocode-and-precision)).
+RFC 7946 notes that [six decimal places](https://datatracker.ietf.org/doc/html/rfc7946#section-11.2) amount to about 10 centimeters, and that the number of digits [says nothing](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.10) about how uncertain the position is. A phone fix good to tens of meters still serializes every digit a floating-point number holds. Round output to six places, and store the accuracy the device reported or the geocoder's precision in its own column ([A Position Is a Measurement](/docs/building-blocks/location-tracking#a-position-is-a-measurement), [Geocode and Precision](/docs/fundamentals/addresses#geocode-and-precision)).
+
+### A Coordinate Is Personal Data
+
+A point at six decimal places picks out one house, and a series of them shows where someone sleeps, works and worships. The GDPR names ["location data"](https://eur-lex.europa.eu/eli/reg/2016/679/oj) among the identifiers that make a person identifiable ([GDPR](/docs/compliance/gdpr)). Treat stored coordinates like any other personal data, and coarsen them before showing one person's location to another: round to fewer decimal places, snap to a grid cell ([Cells Instead of Shapes](#cells-instead-of-shapes)), or show an area instead of a pin. Consent and retention for tracked positions are in [Consent, Law and Retention](/docs/building-blocks/location-tracking#consent-law-and-retention).
 
 ## GeoJSON
 
 [RFC 7946](https://datatracker.ietf.org/doc/html/rfc7946) (August 2016) defines GeoJSON: seven geometry types (`Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`, `GeometryCollection`), plus a `Feature` that pairs a geometry with `properties`, and a `FeatureCollection` of features.
+
+![Seven small drawings, each labeled with its type name and the nesting of its coordinates array. Point: a single dot, [x, y]. MultiPoint: four scattered dots, [[x, y], ...]. LineString: a stepped line through four dotted vertices, [[x, y], ...]. MultiLineString: two separate stepped lines, [[[x, y], ...], ...]. Polygon, accented: a filled rectangle with a rectangular hole, [[[x, y], ...], hole, ...]. MultiPolygon: two separate filled rectangles, [[[[x, y], ...]], ...]. GeometryCollection: a dot, a line and a rectangle together, geometries: [...].](/diagrams/geojson-geometry-types.svg "The seven geometry types. Each level of nesting in the coordinates array adds one kind of grouping: a position, a list of positions, a list of rings or lines, a list of polygons.")
 
 ```json
 {
@@ -73,9 +79,14 @@ The rules that trip people up:
 - **Longitude first, and WGS 84 only.** The 2008 community format allowed a `crs` member naming another coordinate system; RFC 7946 [dropped it](https://datatracker.ietf.org/doc/html/rfc7946#appendix-B.1). A GeoJSON file in another projection isn't valid GeoJSON.
 - **Rings close.** A polygon ring has [four or more positions](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6), and the first and last must be identical: the square above has five.
 - **Rings wind by the right-hand rule.** The outer ring runs counterclockwise and holes run clockwise. Parsers [should not reject](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6) the wrong winding, for backwards compatibility, so data from the wild arrives both ways. Normalize it on import; PostGIS's `ST_ForcePolygonCCW` does it.
+- **Valid isn't the same as well-formed.** A ring that crosses itself (a "bowtie"), a hole that pokes outside its polygon, or two rings that overlap all parse as GeoJSON, and then point-in-polygon tests and areas come out wrong with no error. Check shapes on import with PostGIS's [`ST_IsValid`](https://postgis.net/docs/ST_IsValid.html), and either send invalid ones back for correction or repair them with [`ST_MakeValid`](https://postgis.net/docs/ST_MakeValid.html), which attempts a repair without losing any of the shape's vertices. Check a repaired shape before trusting it: a self-crossing ring can come back as two pieces.
 - **Cut at the antimeridian.** A shape that crosses longitude 180, such as a territory spanning Fiji or the Aleutians, [should be split](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.9) into two parts, or a naive renderer draws it the long way around the world.
 - **`bbox` is west, south, east, north.** An optional [`bbox`](https://datatracker.ietf.org/doc/html/rfc7946#section-5) member gives the extent, ordered [west, south, east, north](https://datatracker.ietf.org/doc/html/rfc7946#appendix-B.1), which for a box crossing the antimeridian means west is greater than east.
 - **Extend with properties, not types.** Extra members are [allowed](https://datatracker.ietf.org/doc/html/rfc7946#section-6.1), but implementations [must not](https://datatracker.ietf.org/doc/html/rfc7946#section-7) add geometry types. Your own data goes in `properties`.
+
+![A polygon drawn on two axes, x for longitude along the bottom and y for latitude up the side. The exterior ring, accented, runs counterclockwise through numbered corners 1 southwest, 2 southeast, 3 northeast and 4 northwest. A rectangular hole inside it runs clockwise. A table beside it lists the exterior ring's five positions as longitude and latitude, from 151.2140, -33.8580 through the other three corners and back to 151.2140, -33.8580, noting that the last position repeats the first.](/diagrams/geojson-rings.svg "The example polygon's exterior ring: longitude is x, latitude is y, the ring runs counterclockwise and closes on its first position. A hole would run clockwise.")
+
+![A flat world map from -180 to 180 longitude, with the 180 degree meridian marked at both edges as the same line. Top row, accented: a shape from 165 degrees east to 165 degrees west, cut at 180 degrees into two slivers, one at each edge of the map, with the bbox [165, -10, -165, 10], west greater than east. Bottom row, dashed: the same shape as one uncut ring, drawn from -165 to 165 across the rest of the world.](/diagrams/geojson-antimeridian.svg "A shape that crosses 180 degrees, cut into two parts as RFC 7946 asks, next to the same shape left as one ring, which a flat map draws the long way round.")
 
 Parsing it is a library call. Both libraries keep GeoJSON's order, so the first coordinate is longitude:
 
@@ -120,6 +131,7 @@ CREATE TABLE service_areas (
   id    UUID PRIMARY KEY DEFAULT uuidv7(),
   name  TEXT NOT NULL,
   area  GEOGRAPHY(MULTIPOLYGON, 4326) NOT NULL
+        CHECK (ST_IsValid(area::geometry))  -- no bowties, no stray holes
 );
 
 -- Spatial indexes are GiST indexes over bounding boxes.
@@ -147,7 +159,9 @@ Point-in-polygon lookups (which territory, tax district or service area holds th
 
 ## Other Formats
 
-GeoJSON is my default for exchange because everything reads it, not because it's the best at any one job. It's verbose, it repeats every shared border, and a large file has to be parsed whole. These are the formats I reach for instead:
+GeoJSON is my default for exchange because everything reads it, not because it's the best at any one job. It's verbose, it repeats every shared border, and a single `FeatureCollection` is one JSON document that a reader parses whole.
+
+That last one has a GeoJSON answer. [RFC 8142](https://datatracker.ietf.org/doc/html/rfc8142) (April 2017) defines GeoJSON Text Sequences, media type `application/geo+json-seq`: one feature per record in a stream, which makes arbitrarily large datasets parseable incrementally. That's what I use for large exports and imports before reaching for another format. The rest are for jobs GeoJSON doesn't do well:
 
 | Format | Encoding | Defined by | Use it for |
 | ------ | -------- | ---------- | ---------- |
@@ -187,7 +201,9 @@ Store the cell ID beside the coordinate, as a derived column, for aggregation an
 - Named `latitude` and `longitude` fields in APIs; GeoJSON, as `application/geo+json`, for shapes.
 - One function swaps between GeoJSON order and the map library's order, with a test fixture that can't survive a swap.
 - Six decimal places on output, and the accuracy or geocode precision stored in its own column.
-- Polygons normalized on import: closed rings, right-hand winding, split at the antimeridian.
+- Polygons normalized on import: closed rings, right-hand winding, split at the antimeridian, and checked with `ST_IsValid` (repaired or sent back when they fail).
+- Coordinates treated as personal data, and coarsened before one person sees another's location.
+- Large GeoJSON moves as RFC 8142 text sequences, one feature per record.
 - `geography` columns with GiST indexes by default; `geometry` for heavy processing or projected data.
 - `ST_DWithin` for distance filters; `ST_Covers` for point-in-polygon.
 - Other formats at the edges: WKB to the database, TopoJSON or vector tiles to map clients, GeoParquet to the warehouse, GeoPackage to GIS tools.
@@ -197,6 +213,8 @@ Store the cell ID beside the coordinate, as a derived column, for aggregation an
 **Specifications**
 
 - [RFC 7946: The GeoJSON Format](https://datatracker.ietf.org/doc/html/rfc7946), geometry types, coordinate order, WGS 84, winding, antimeridian cutting and precision
+- [RFC 8142: GeoJSON Text Sequences](https://datatracker.ietf.org/doc/html/rfc8142), streaming GeoJSON one feature per record
+- [GDPR](https://eur-lex.europa.eu/eli/reg/2016/679/oj), Article 4(1), location data as an identifier
 - [OGC Simple Feature Access](https://www.ogc.org/standards/sfa/), the geometry model behind WKT and WKB
 - [TopoJSON specification](https://github.com/topojson/topojson-specification), shared arcs and quantization
 - [Mapbox Vector Tile specification](https://github.com/mapbox/vector-tile-spec), version 2.1
@@ -211,6 +229,7 @@ Store the cell ID beside the coordinate, as a derived column, for aggregation an
 - [PostGIS: ST_MakePoint](https://postgis.net/docs/ST_MakePoint.html), X as longitude and Y as latitude
 - [PostGIS: ST_GeomFromGeoJSON](https://postgis.net/docs/ST_GeomFromGeoJSON.html) and [ST_AsGeoJSON](https://postgis.net/docs/ST_AsGeoJSON.html), reading and writing GeoJSON
 - [PostGIS: ST_DWithin](https://postgis.net/docs/ST_DWithin.html), index-assisted distance filters in meters
+- [PostGIS: ST_IsValid](https://postgis.net/docs/ST_IsValid.html) and [ST_MakeValid](https://postgis.net/docs/ST_MakeValid.html), checking and repairing invalid shapes
 - [PostGIS Workshop: Spatial Indexing](https://postgis.net/workshops/postgis-intro/indexing.html), GiST indexes over bounding boxes
 - [Google: Encoded Polyline Algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm), the encoding and its precision
 - [Google Maps JavaScript API: LatLng](https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLng) and [Leaflet: LatLng](https://leafletjs.com/reference.html#latlng), latitude-first map libraries

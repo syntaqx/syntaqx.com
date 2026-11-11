@@ -2,7 +2,7 @@
 title = "Addresses & Geocoding"
 description = "Capturing, standardizing, validating and geocoding addresses, what vendor licenses let you store, and keeping postal city, service point and jurisdiction apart."
 category = "Fundamentals"
-order = 104
+order = 106
 tags = ["addresses", "geocoding", "data-modeling", "standards", "time-zones"]
 +++
 
@@ -53,7 +53,9 @@ Store the precision beside the point and gate uses on it (the coordinate itself,
 
 Read the license before you design the table. Google's Address Validation policies generally restrict caching or storing its content, "except for the place ID which can be stored indefinitely," and results shown outside a Google Map need Google's attribution ([Google: Address Validation policies](https://developers.google.com/maps/documentation/address-validation/policies)). Place IDs themselves can change, and Google recommends refreshing any older than 12 months; a `NOT_FOUND` means the ID is obsolete ([Google: Place IDs](https://developers.google.com/maps/documentation/places/web-service/place-id)). Smarty's high-accuracy geocodes are for internal business use and may be kept "only during the Subscription Term," with copies deleted within 30 days after it ends ([Smarty: Product Terms](https://www.smarty.com/legal/product-terms)).
 
-So the shape that holds up with Google is: store the place ID as the durable reference, keep what the user typed and your own decision about it, and fetch the cleaned address and coordinates again when you need them. Coordinates you must keep for years need a source licensed for storage: a pin a person dropped, the Census Geocoder, or a vendor contract that permits it.
+Coordinates are where this bites, because the obvious design (geocode once, store the point, query it forever) isn't allowed with Google's data. The [Geocoding](https://developers.google.com/maps/documentation/geocoding/policies), [Places](https://developers.google.com/maps/documentation/places/web-service/policies) and [Address Validation](https://developers.google.com/maps/documentation/address-validation/policies) policies each allow caching latitude and longitude "for up to 30 consecutive calendar days," then require deleting them. The same policies forbid creating content based on Google Maps content, and Google's own example is using Places coordinates for point-in-polygon analysis. A permanent `location` column filled from Google, queried for territories, radius searches or reports, is exactly what the terms rule out. Address Validation's standardized address follows the same 30-day limit, with one way out: after 30 days you may replace it with data the end user confirmed or corrected, and that version is yours to keep.
+
+So the shape that holds up with Google is: store the place ID as the durable reference, keep what the user typed and your own decision about it, and fetch the cleaned address and coordinates again when you need them, holding them no longer than 30 days. Coordinates you must keep and query for years need a source licensed for storage: a pin a person dropped, the Census Geocoder, or a vendor contract that permits it. That's what `location_source` in the table below records.
 
 ```sql
 CREATE TABLE addresses (
