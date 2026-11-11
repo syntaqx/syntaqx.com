@@ -33,7 +33,7 @@ export default function draw() {
       ],
       [
         6,
-        "The pin starts on a geocode you may store; the point the customer confirms or moves is kept.",
+        "The pin starts on a geocode you may store and moves only inside a box sized by its precision.",
       ],
       [7, "Country comes first and decides the fields; no state or province is preselected."],
       [
@@ -133,6 +133,7 @@ export default function draw() {
   s.line(c.x, mapY + mapH / 2, c.x + cw, mapY + mapH / 2, "ext");
   const pinX = c.x + cw / 2,
     pinY = mapY + 24;
+  s.rect(pinX - 30, mapY + 5, 60, 30, "phantom"); // the bound the pin may move within
   s.path(`M${pinX},${pinY + 10}l-6,-10a6,6 0 1,1 12,0z`, "obj hl"); // the pin
   s.rect(c.x + cw / 2 - 38, mapY + mapH - 18, 76, 13, "obj plate", { rx: 6 });
   s.label(c.x + cw / 2 - 38, mapY + mapH - 18, 76, 13, "adjust pin", "sl hl");
