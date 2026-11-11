@@ -169,8 +169,7 @@ CREATE TABLE domains (                   -- email domains an organization proved
   id               UUID PRIMARY KEY DEFAULT uuidv7(),
   organization_id  UUID NOT NULL REFERENCES organizations (id),
   domain           TEXT NOT NULL,         -- lowercase, punycode
-  method           TEXT NOT NULL CHECK (method IN ('dns_txt', 'https_file', 'email',
-                     'identity_provider')),
+  method           TEXT NOT NULL CHECK (method IN ('dns_txt', 'https_file', 'idp_trusted')),
   verified_at      TIMESTAMPTZ,           -- null: pending
   created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
