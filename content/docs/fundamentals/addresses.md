@@ -1,6 +1,6 @@
 +++
 title = "Addresses & Geocoding"
-description = "Capturing, standardizing, validating and geocoding addresses, what vendor licenses let you store, and keeping postal city, service point and jurisdiction apart."
+description = "Capturing, validating, geocoding and storing addresses: the capture flow, what vendor licenses let you keep, and an architecture that scales from day one."
 category = "Fundamentals"
 order = 106
 tags = ["addresses", "geocoding", "data-modeling", "standards", "time-zones"]
@@ -16,6 +16,41 @@ Stop bad addresses at the keyboard, and keep what was typed.
 - **Offer autocomplete.** Google's [Place Autocomplete](https://developers.google.com/maps/documentation/places/web-service/place-autocomplete) suggests addresses as the user types and returns a place ID for the one picked. For flows that need only an address and coordinates, Google suggests skipping session tokens and calling Geocoding on the selected prediction, which it says costs less when users pick within about four requests.
 - **Collect the unit separately.** The same page notes that apartment and unit addresses can come back as partial predictions. The unit is the part that decides whether a parcel reaches the right door, so give it its own field and validate the whole address afterwards.
 - **Never block on autocomplete.** Let people type an address the suggestions don't contain. Some of them are right and the data is late (see [Addresses No Vendor Knows](#addresses-no-vendor-knows)).
+
+## The Capture Flow
+
+Products that take addresses all day (food and parcel delivery, rideshare, field service) converge on the same four steps. The flow is worth copying for its own sake, and it also solves most of the storage problem in [What You May Store](#what-you-may-store), because the location you end up keeping comes from the customer.
+
+![A four-step flow from left to right. Step 1, choose: saved addresses, with labels such as home, work or custom, most recent first. Step 2, search: autocomplete, suggestions as you type, near the user. Step 3, confirm, accented: details and pin, covering unit, gate code, entrance pin, instructions and label. Step 4, save: the address book, where orders keep a copy of the address. A dashed branch leaves step 2 on no match to a dashed manual entry box, country first and then its fields, and returns to step 3 to validate and then pin.](/diagrams/address-capture-flow.svg "The capture flow. Step 3 is where the address becomes yours: the customer's pin and details carry no vendor's license, and manual entry rejoins the flow there so typed addresses get a pin too.")
+
+1. **Start from the address book.** A returning customer picks a saved address rather than typing one: a list with their own labels (home, work or a name they choose), the current choice marked, an edit control on each entry, and the search field above it. Choosing an address is one tap.
+2. **Search with autocomplete.** Suggestions arrive as the customer types, each with the street on the first line and the city, region and postcode under it, ranked toward where the customer is. The last entry in the list is always "enter address manually."
+3. **Confirm the details.** Picking a suggestion opens a form with the chosen address at the top and the parts no geocoder knows:
+   - **The type of place** (house, apartment, office, hotel), which decides what else to ask.
+   - **Unit or floor, building name, and gate or door code.**
+   - **A map with a pin** on the geocoded point and an "adjust pin" control to drag it to the entrance a courier should use. A geocode lands on a rooftop or a parcel's center; the entrance can be around the corner.
+   - **How to hand over** (leave at the door, leave in the lobby, hand to me) and **free-text instructions,** with a hint saying what belongs there and what doesn't (order changes go elsewhere).
+   - **A personal label** that only the customer sees.
+4. **Save.** The address joins the book, and every order copies it (see below).
+
+Manual entry asks for the country first, because the country decides which fields exist and in what order ([Standardize](#standardize)). Don't preselect a state or province: a default that looks filled in gets submitted unchanged. Validate when the customer continues, then send them to step 3, so a typed address gets a confirmed pin like any other.
+
+### What Each Step Stores
+
+| Data | Comes from | May you keep it? |
+| ---- | ---------- | ---------------- |
+| What the customer typed | The customer | Yes |
+| The address picked from Google Autocomplete | The customer's selection | For that customer's transaction: Google exempts "the end user's selected address" from its content restrictions, but not the list of suggestions ([Places policies](https://developers.google.com/maps/documentation/places/web-service/policies)) |
+| Google place ID | Google | Indefinitely; refresh after 12 months |
+| Coordinates from Google | Google | Up to 30 days, then delete ([What You May Store](#what-you-may-store)) |
+| Coordinates from a storage-licensed geocoder | Esri with `forStorage`, Mapbox permanent, the Census Geocoder | Yes, on the vendor's terms ([Where the Stored Point Comes From](#where-the-stored-point-comes-from)) |
+| The adjusted pin | The customer | Yes |
+| Unit, building, type, instructions, label | The customer | Yes |
+| Gate or door code | The customer | Yes, encrypted, shown only when needed |
+
+A gate code opens a gate. Encrypt it in the application ([Encryption at Rest](/docs/security/encryption-at-rest#envelope-encryption)), show it to the courier or technician only during an active job, never log it, and leave it out of analytics exports. Free-text instructions deserve the same caution in exports, since people type phone numbers and names into them.
+
+**Orders copy the address.** At checkout, write the address as it stands (lines, unit, pin, code reference, instructions) onto the order. Editing the address book afterwards then changes future orders without rewriting receipts, disputes or the record of where a delivery was sent.
 
 ## Standardize
 
@@ -62,19 +97,81 @@ CREATE TABLE addresses (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   country            TEXT NOT NULL,         -- ISO 3166-1 alpha-2
   input              JSONB NOT NULL,        -- what was typed, always yours to keep
+  match_key          TEXT NOT NULL UNIQUE,  -- normalized country, lines and unit; one row per place
   google_place_xid   TEXT,                  -- storable indefinitely; refresh yearly
+  place_checked_at   TIMESTAMPTZ,           -- drives the rolling refresh
   standardized       JSONB,                 -- only from a source licensed for storage
   validation_status  TEXT NOT NULL CHECK (validation_status IN
                        ('validated', 'customer_asserted', 'overridden', 'needs_review', 'unvalidated')),
   deliverability     TEXT,                  -- vendor verdict, e.g. DPV Y, S, D or N
   location           GEOGRAPHY(POINT),      -- from a source licensed for storage
   location_source    TEXT CHECK (location_source IN ('person_pin', 'census', 'vendor')),
-  location_precision TEXT CHECK (location_precision IN ('rooftop', 'parcel', 'street', 'postal_code'))
+  location_precision TEXT CHECK (location_precision IN ('rooftop', 'parcel', 'street', 'postal_code')),
+  geocoded_at        TIMESTAMPTZ,           -- null until the background geocode lands
   time_zone          TEXT,                  -- IANA name, from the location
   validated_at       TIMESTAMPTZ,
   created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE saved_addresses (           -- one customer's use of an address
+  id             UUID PRIMARY KEY DEFAULT uuidv7(),
+  customer_id    UUID NOT NULL REFERENCES customers (id),
+  address_id     UUID NOT NULL REFERENCES addresses (id),
+  label          TEXT,                    -- 'home', 'work' or the customer's own; private to them
+  place_type     TEXT CHECK (place_type IN ('house', 'apartment', 'office', 'hotel', 'other')),
+  building_name  TEXT,
+  entrance       GEOGRAPHY(POINT),        -- the pin the customer placed: theirs, and yours to keep
+  access_code    BYTEA,                   -- gate or door code, encrypted in the application
+  handoff        TEXT CHECK (handoff IN ('leave_at_door', 'leave_in_lobby', 'hand_to_me')),
+  instructions   TEXT,
+  last_used_at   TIMESTAMPTZ,             -- orders the address book, most recent first
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 ```
+
+The unit stays in `addresses`, with the lines it belongs to, because it changes deliverability. Everything about how one customer uses the place, including the entrance pin and the gate code, lives in `saved_addresses`.
+
+## Architecture That Scales From Day One
+
+None of this needs a big system on day one, but a few decisions are cheap at the first address and expensive at the ten-millionth: one row per place, geocoding off the request path, a stored point you're licensed to keep, refreshes that trickle instead of stampede, and vendors behind an interface.
+
+![A system diagram. Top row: the app, as an actor, sends the picked address and pin to the address API, which upserts by match key into the addresses store, which readers such as routing and tax read. Bottom row: autocomplete, an external vendor, which the app calls as the customer types; a job queue; a geocode worker; and a storage-licensed geocoder, as an actor. The accented path runs from the address API down into the queue in the same transaction, from the queue to the worker, from the worker to the geocoder in batches, and from the worker back up to the addresses store with the point, precision and source.](/diagrams/address-architecture.svg "Vendors sit at the edges: autocomplete in the client while the customer types, and the stored geocode in a background worker. Everything that reads addresses (dispatch, routing, tax, territories) reads the database and never calls a vendor.")
+
+### One Address, Many Customers
+
+A building with two hundred tenants is one place and two hundred saved addresses. Keep `addresses` as one row per place (lines, unit and country) and `saved_addresses` as each customer's use of it, and the geocoding, validation and refresh work scales with places, not with customers or orders.
+
+Deduplicate on a `match_key` built only from data you're allowed to keep: the customer's input normalized with a parser such as libpostal (case, abbreviations, punctuation and unit designators made uniform), or a standardized form from a source licensed for storage. A key built from Google's standardized address would have to be deleted after 30 days along with the address it came from. Insert with the key under a unique constraint (`INSERT ... ON CONFLICT (match_key) DO NOTHING`, then read the row), so two customers saving the same building at the same moment end up on one row ([Match Before Create](/docs/building-blocks/record-linkage#match-before-create)).
+
+### Geocode Once, in the Background
+
+Only autocomplete belongs in the customer's request, and it runs in the client. Saving an address writes the row, the customer's pin if they placed one, and a geocode job in the same transaction ([Enqueue Transactionally](/docs/architecture/background-jobs#enqueue-transactionally)); a worker geocodes it with a storable source and writes the point, precision and source back. A slow or failing geocoder then delays a background job instead of checkout, and the job retries with backoff ([Retries & Timeouts](/docs/architecture/retries-and-timeouts)).
+
+Key the job by `address_id`, so a retried or duplicated job geocodes a place once. Batch where the vendor allows it (Mapbox takes up to [1,000 queries per request](https://docs.mapbox.com/api/search/geocoding/), the Census Geocoder 10,000 records per file), and cap the workers' concurrency at the vendor's rate limit, which the queue enforces better than any caller can.
+
+### Where the Stored Point Comes From
+
+The 30-day rule applies to Google's data, not to addresses. Products that keep millions of geocoded addresses mostly don't keep Google's coordinates; they use Google, or another vendor, for the typing experience and get the stored point elsewhere:
+
+- **A geocoder licensed for storage.** Esri's geocoding service says applications "are contractually prohibited" from storing results unless the request sets [`forStorage=true`](https://developers.arcgis.com/rest/geocode/find-address-candidates/), and Esri prices stored and not-stored geocodes differently. Mapbox's [Geocoding API](https://docs.mapbox.com/api/search/geocoding/) defaults to temporary results, which may not be cached; with `permanent=true`, results "are allowed to be cached and stored indefinitely," which requires a credit card on file or an enterprise contract. Smarty's terms allow keeping its geocodes for the subscription term ([What You May Store](#what-you-may-store)). Geocode once, at capture or in a batch, and keep the point with its precision and source.
+- **Public data where it covers you.** The [Census Geocoder](https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.html) is free for the United States, Puerto Rico and the Island Areas, with batches of up to 10,000 records per file. [OpenStreetMap](https://www.openstreetmap.org/copyright) data is open under the ODbL, which requires attribution and puts any database you build from it and distribute under the same license. The public Nominatim service isn't for volume: its [usage policy](https://operations.osmfoundation.org/policies/nominatim/) sets an absolute maximum of 1 request per second and forbids systematic queries, so bulk geocoding on OpenStreetMap means running your own Nominatim.
+- **The customer's pin.** Every address that goes through step 3 of [the capture flow](#the-capture-flow) ends with a point the customer placed, which no vendor license covers. Over time these replace vendor geocodes for every address that matters.
+- **The place ID for anything Google shows.** Keep it, and fetch fresh Google details when a customer looks at the place.
+
+What doesn't work is re-geocoding everything with Google every 29 days. It's expensive at millions of rows, and it doesn't touch the other rule: building your own territories, radius searches or reports on Google's coordinates is creating content from Google Maps content, however fresh the coordinates are.
+
+My default for a delivery or field-service product: Google Autocomplete (or the autocomplete of whichever map the product shows) for typing, a storage-licensed geocoder or the Census Geocoder for the stored point with its precision, the customer's pin overriding both, and the place ID kept for display.
+
+### Refresh on a Rolling Schedule
+
+Place IDs want refreshing after 12 months, `customer_asserted` addresses want re-checking until a vendor knows them, and vendor data improves. Done as one yearly job, that's every row at once, a rate-limit wall and a bill spike. Instead, run a daily job that takes the oldest slice (`WHERE place_checked_at < now() - interval '12 months' ORDER BY place_checked_at LIMIT n`), sized so the whole table cycles within the window. The load is flat from the first thousand rows to the hundred-millionth, and a backlog is visible as the age of the oldest row.
+
+### Keep Vendors Swappable, and Off the Read Path
+
+- **One geocoder interface.** Workers call your own `Geocode(address) -> (point, precision, source, license)`, with an adapter per vendor. Changing vendors, or using different ones per country, is then a configuration change plus a backfill through the same queue.
+- **Every point records its source and license.** That's what tells you, the day a contract ends, which rows to re-geocode or delete; Smarty's terms, for one, end storage with the subscription ([What You May Store](#what-you-may-store)). Keep each source's answer as an observation rather than overwriting ([Observations, Not Overwrites](/docs/building-blocks/record-linkage#observations-not-overwrites)).
+- **Readers never call a vendor.** Dispatch, routing, tax, territories and reports read `addresses` and `saved_addresses`, through a spatial index ([Storing Geometry: PostGIS](/docs/fundamentals/coordinates-and-geometry#storing-geometry-postgis)). The read path's latency and availability are then your database's, not a vendor's, and an address the background geocode hasn't reached yet (`geocoded_at` null) is a state the reader handles, not a call it makes.
+- **Deleting a saved address deletes the customer's data, not the place.** The `saved_addresses` row, with its label, pin, code and instructions, goes on request ([Data Subject Rights](/docs/compliance/gdpr#data-subject-rights)); the `addresses` row stays while other customers or past orders use it.
 
 ## Addresses No Vendor Knows
 
@@ -110,11 +207,13 @@ Over the years an address arrives from autocomplete, a partner's import, a parce
 ## Checklist
 
 - **Capture** with autofill tokens and autocomplete, a separate unit field, and an escape hatch for addresses the suggestions don't know.
+- **Copy the four-step flow:** saved addresses, autocomplete with a manual escape, details with an entrance pin, save; orders copy the address.
+- **Encrypt gate and door codes,** and show them only during an active job.
 - **Keep the raw input** beside every cleaned version.
 - **Standardize** with CASS-certified processing in the US and a parser such as libpostal elsewhere; model addresses as lines plus levels and a country.
 - **Validate,** read the verdict, and choose fix, confirm or accept by what the address is for.
 - **Store precision with every point,** and replace low-precision points with a person's pin where location matters.
-- **Store only what the license allows:** with Google, the place ID, refreshed yearly; vendor coordinates only under terms that permit it.
+- **Store only what the license allows:** with Google, the place ID, refreshed yearly, and coordinates for at most 30 days; stored points from a storage-licensed geocoder, public data or the customer's pin.
 - **Accept `customer_asserted` addresses,** send validation feedback, and re-check until confirmed.
 - **Keep postal address, service point and jurisdictions separate,** and never compute tax or territory from a ZIP Code.
 - **Derive the IANA time zone from the location.**
@@ -144,3 +243,10 @@ Over the years an address arrives from autocomplete, a partner's import, a parce
 - [Loqate: Address Verification Code](https://docs.loqate.com/report-codes/address-verification-code.md), verification status, match levels and match score
 - [US Census Bureau: Census Geocoder](https://geocoding.geo.census.gov/geocoder/), free single and batch geocoding of US addresses
 - [libpostal](https://github.com/openvenues/libpostal), open-source international address parsing and normalization
+- [Google: Places API policies](https://developers.google.com/maps/documentation/places/web-service/policies), caching limits and the exception for an end user's selected address
+- [Google: Geocoding API policies](https://developers.google.com/maps/documentation/geocoding/policies), the 30-day limit on cached coordinates
+- [Esri: findAddressCandidates](https://developers.arcgis.com/rest/geocode/find-address-candidates/), the `forStorage` parameter and the storage prohibition without it
+- [Mapbox: Geocoding API](https://docs.mapbox.com/api/search/geocoding/), temporary versus permanent results
+- [US Census Bureau: Geocoding Services API](https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.html), batch format, the 10,000-record limit and coverage
+- [OpenStreetMap: Copyright and License](https://www.openstreetmap.org/copyright), the ODbL, attribution and share-alike
+- [OSMF: Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/), the request limit and bulk geocoding rules
