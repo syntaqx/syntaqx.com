@@ -161,8 +161,8 @@ This extends the core model in [The Field Operations Business](/books/field-oper
 ALTER TABLE agreements
   ADD COLUMN kind                  TEXT NOT NULL DEFAULT 'recurring',
   ADD COLUMN source_opportunity_id UUID,             -- FK added below
-  -- 'fulfilled' is in the core status CHECK; only one-time agreements may use it
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
+  -- 'fulfilled' is in the core status CHECK; only one-time agreements may use it
   ADD CONSTRAINT agreements_fulfilled_kind_check
     CHECK (status <> 'fulfilled' OR kind = 'one_time') NOT VALID,
   ADD CONSTRAINT agreements_kind_check CHECK (kind IN ('recurring', 'one_time')) NOT VALID;
@@ -175,7 +175,6 @@ ALTER TABLE agreements
 -- Only a recurring agreement can own a recurrence
 ALTER TABLE recurrences
   ADD COLUMN agreement_kind TEXT NOT NULL DEFAULT 'recurring',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT recurrences_agreement_kind_fkey
     FOREIGN KEY (agreement_id, agreement_kind) REFERENCES agreements (id, kind) NOT VALID,
   ADD CONSTRAINT recurrences_agreement_kind_check CHECK (agreement_kind = 'recurring') NOT VALID;
@@ -224,7 +223,6 @@ CREATE TABLE opportunities (
 );
 
 ALTER TABLE agreements
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT agreements_source_opportunity_fkey
     FOREIGN KEY (source_opportunity_id) REFERENCES opportunities (id) NOT VALID;
 

@@ -269,9 +269,8 @@ ALTER TABLE shipments
   ADD CONSTRAINT shipments_label_format_check
     CHECK (label_format IN ('zpl', 'epl2', 'pdf', 'png')) NOT VALID,
   ADD CONSTRAINT shipments_normalized_status_check
-    CHECK (normalized_status IN ('pre_transit',
-        'in_transit', 'out_for_delivery', 'available_for_pickup',
-        'delivered', 'exception', 'return_to_sender', 'failure')) NOT VALID;
+    CHECK (normalized_status IN ('pre_transit', 'in_transit', 'out_for_delivery',
+        'available_for_pickup', 'delivered', 'exception', 'return_to_sender', 'failure')) NOT VALID;
 
 -- Unique without blocking writes: build the index concurrently, then attach it.
 CREATE UNIQUE INDEX CONCURRENTLY shipments_purchase_key_key ON shipments (purchase_key);

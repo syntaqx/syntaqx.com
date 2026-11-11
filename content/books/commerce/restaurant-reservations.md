@@ -361,7 +361,6 @@ CREATE TABLE waitlist_entries (
 ALTER TABLE table_sessions               -- seating closes the loop to the booking
   ADD COLUMN reservation_id    UUID REFERENCES reservations (id),
   ADD COLUMN waitlist_entry_id UUID REFERENCES waitlist_entries (id),
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT table_sessions_one_source CHECK
     (reservation_id IS NULL OR waitlist_entry_id IS NULL) NOT VALID;
 
@@ -402,7 +401,6 @@ ALTER TABLE reviews                      -- a review of a visit, not of a produc
   ALTER COLUMN product_id DROP NOT NULL,
   ADD COLUMN location_id    UUID REFERENCES locations (id),
   ADD COLUMN reservation_id UUID REFERENCES reservations (id),  -- the seated visit
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT reviews_one_subject CHECK ((product_id IS NULL) <> (location_id IS NULL)) NOT VALID;
 
 ALTER TABLE loyalty_ledger

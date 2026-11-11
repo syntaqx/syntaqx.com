@@ -188,7 +188,6 @@ ALTER TABLE accounts
   ADD COLUMN price_book TEXT NOT NULL DEFAULT 'list';  -- the book this account rates at
 
 ALTER TABLE skus
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT skus_meter_fkey FOREIGN KEY (meter) REFERENCES meters (code) NOT VALID,
   ADD COLUMN dimension_match JSONB NOT NULL DEFAULT '{}',  -- {"os": "windows"}, {"carrier": "verizon"}
   ADD COLUMN match_priority  SMALLINT NOT NULL DEFAULT 0;  -- most specific match wins
@@ -210,7 +209,6 @@ CREATE TABLE rating_runs (               -- one execution of the rater over a sc
 );
 
 ALTER TABLE rated_usage
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT rated_usage_rating_run_fkey FOREIGN KEY (rating_run_id)
     REFERENCES rating_runs (id) NOT VALID;
 
@@ -231,7 +229,6 @@ CREATE TABLE usage_corrections (         -- why a set of events was restated
 );
 
 ALTER TABLE usage_events
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT usage_events_correction_fkey FOREIGN KEY (correction_id)
     REFERENCES usage_corrections (id) NOT VALID,
   ADD CONSTRAINT usage_events_correction_pair CHECK ((corrects_id IS NULL) =

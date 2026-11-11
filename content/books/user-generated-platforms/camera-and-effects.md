@@ -270,20 +270,18 @@ CREATE TABLE content_effects (           -- which effect versions made a post; t
 CREATE INDEX content_effects_by_effect ON content_effects (effect_id, recorded_at);
 
 ALTER TABLE media_assets
-  ADD COLUMN capture_source   TEXT,        -- what the client says; imported means unknown
+  ADD COLUMN capture_source   TEXT,             -- what the client says; imported means unknown
   ADD COLUMN capture_edits    JSONB,            -- segments, speed changes, retouch on/off, trims
   ADD COLUMN platform_manifest_key TEXT,        -- the C2PA manifest the platform signed, if any
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT media_assets_capture_source_check
-    CHECK (capture_source IN ('in_app_camera',
-        'device_library', 'platform_editor', 'external_editor',
-        'api')) NOT VALID;
+    CHECK (capture_source IN ('in_app_camera', 'device_library', 'platform_editor',
+        'external_editor', 'api')) NOT VALID;
 
 ALTER TABLE upload_sessions
   ADD COLUMN client_draft_id  TEXT,             -- the device's draft; retries reuse the session
   ADD COLUMN started_from     TEXT,
   ADD COLUMN discard_after    TIMESTAMPTZ,      -- speculative bytes deleted if never published
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT upload_sessions_started_from_check
     CHECK (started_from IN ('post_tapped', 'cloud_draft')) NOT VALID;
 

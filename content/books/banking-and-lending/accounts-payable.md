@@ -126,8 +126,7 @@ ALTER TABLE vendors
   ADD COLUMN erp_vendor_ref     TEXT,                            -- the vendor's ID in the ERP
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT vendors_onboarding_status_check
-    CHECK (onboarding_status IN
-        ('invited', 'submitted', 'in_review', 'approved', 'blocked')) NOT VALID,
+    CHECK (onboarding_status IN ('invited', 'submitted', 'in_review', 'approved', 'blocked')) NOT VALID,
   ADD CONSTRAINT vendors_tax_form_check
     CHECK (tax_form IN ('w9', 'w8ben', 'w8bene', 'none')) NOT VALID;
 
@@ -167,7 +166,6 @@ ALTER TABLE purchase_order_lines
 ALTER TABLE receipts
   ALTER COLUMN location_id DROP NOT NULL,                   -- a service has no dock
   ADD COLUMN kind TEXT NOT NULL DEFAULT 'goods',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT receipts_kind_check CHECK (kind IN ('goods', 'service_confirmation')) NOT VALID;
 
 -- The Payments bill, with what AP adds.
@@ -183,20 +181,18 @@ ALTER TABLE bills
   ADD COLUMN match_status       TEXT,
   ADD COLUMN pay_on             DATE,                     -- scheduled send date, from the due date and rail
   ADD COLUMN erp_ref            TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT bills_capture_method_check
-    CHECK (capture_method IN ('keyed', 'ocr', 'email_inbox',
-        'supplier_portal', 'edi_810', 'e_invoice', 'api')) NOT VALID,
+    CHECK (capture_method IN ('keyed', 'ocr', 'email_inbox', 'supplier_portal', 'edi_810',
+        'e_invoice', 'api')) NOT VALID,
   ADD CONSTRAINT bills_match_status_check
-    CHECK (match_status IN ('not_required', 'matched',
-        'within_tolerance', 'exception', 'variance_approved')) NOT VALID;
+    CHECK (match_status IN ('not_required', 'matched', 'within_tolerance', 'exception',
+        'variance_approved')) NOT VALID;
 
 -- Bill approval steps are expense_approvals rows with subject_kind 'bill', which already
 -- carry the routing rule version, delegation and the no-self-approval check.
 ALTER TABLE expense_approvals
   ADD COLUMN stage  TEXT NOT NULL DEFAULT 'approval',
   ADD COLUMN advice JSONB,                                -- an AI recommendation, if shown
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT expense_approvals_stage_check
     CHECK (stage IN ('approval', 'payment_release')) NOT VALID;
 

@@ -225,7 +225,6 @@ ALTER TABLE statements
   ADD COLUMN interest_label        TEXT,
   ADD COLUMN apy_earned            NUMERIC(6, 2),   -- percent; NULL when deferred to a later statement
   ADD COLUMN document_sha256       BYTEA,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT statements_days_in_period_not_null NOT NULL days_in_period NOT VALID,
   ADD CONSTRAINT statements_average_daily_balance_not_null NOT NULL average_daily_balance NOT VALID,
   ADD CONSTRAINT statements_interest_label_not_null NOT NULL interest_label NOT VALID,

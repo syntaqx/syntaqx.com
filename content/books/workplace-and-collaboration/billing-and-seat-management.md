@@ -135,17 +135,14 @@ ALTER TABLE subscriptions
   ADD CONSTRAINT subscriptions_billing_cadence_not_null NOT NULL billing_cadence NOT VALID,
   ADD CONSTRAINT subscriptions_count_method_not_null NOT NULL count_method NOT VALID,
   ADD CONSTRAINT subscriptions_billing_cadence_check
-    CHECK (billing_cadence IN ('monthly',
-        'annual_upfront', 'annual_monthly', 'quarterly')) NOT VALID,
+    CHECK (billing_cadence IN ('monthly', 'annual_upfront', 'annual_monthly', 'quarterly')) NOT VALID,
   ADD CONSTRAINT subscriptions_count_method_check
-    CHECK (count_method IN ('point_in_time',
-        'period_max', 'daily_prorated', 'committed')) NOT VALID,
+    CHECK (count_method IN ('point_in_time', 'period_max', 'daily_prorated', 'committed')) NOT VALID,
   ADD CONSTRAINT subscriptions_true_up_cadence_check
     CHECK (true_up_cadence IN ('quarterly', 'annual')) NOT VALID,
   ADD CONSTRAINT subscriptions_channel_check
-    CHECK (channel IN
-        ('direct', 'reseller', 'aws_marketplace',
-        'azure_marketplace', 'gcp_marketplace')) NOT VALID;
+    CHECK (channel IN ('direct', 'reseller', 'aws_marketplace', 'azure_marketplace',
+        'gcp_marketplace')) NOT VALID;
 
 CREATE TABLE billing_parties (                  -- who receives and pays invoices
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

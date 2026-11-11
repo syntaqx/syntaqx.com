@@ -704,6 +704,12 @@ Three decisions keep the map one model rather than several:
 - **One concept, one table, reused.** Fraud decisions extend the playbook's `risk_decisions` rather than adding a commerce copy ([Commerce Fraud & Abuse](/books/commerce/commerce-fraud#how-to-build-it)). A migration's crosswalk from old IDs to new is ERP & Integrations' `record_mappings`, with the old platform as the system ([Replatforming & Migration](/books/commerce/replatforming#how-to-build-it)). A cancellation request is a `subscription_cancellations` row, with the delivery memberships' `membership_cancellations` its counterpart ([Auto-Renewal & Cancellation Law](/books/commerce/auto-renewal-law#how-to-build-it)). Deferred revenue is one `deferred_revenue_schedules` row per obligation, pointing at the membership's `deferred_fee_schedules` row or the subscription's `prepaid_periods` row instead of copying either ([Commerce Accounting](/books/commerce/commerce-accounting#how-to-build-it)).
 - **Orders reach their merchant through the location.** `orders` carries no `merchant_id`: every order has a selling `location_id`, and `locations.merchant_id` names the merchant, so a per-merchant query joins through `locations`. Carts and subscriptions resolve the same way, through their own `location_id`.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Cross-Border Commerce adds to `orders`:
+
+```sql
+ALTER TABLE orders VALIDATE CONSTRAINT orders_incoterm_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones customers, retailers, marketplaces, tax authorities, regulators and courts ask about later:

@@ -685,6 +685,12 @@ Three decisions keep the map one model rather than several:
 - **One transfer table for every way in and out.** ACH, wires, ACATS, on-chain deposits and internal journals differ in their rails, not their shape: an instruction, a status, a hold, a settlement, a journal entry. Each chapter adds a detail table keyed by `transfers.id` instead of a parallel pipeline.
 - **One reconciliation table for every outside record.** DTC positions, a clearing firm's statement, a custodian's report, a bank balance, a chain's balances at a block and an issuer's supply are all `reconciliations` rows, so "does the ledger agree with the world today" is one query.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Blockchains for Platform Engineers adds to `chains`:
+
+```sql
+ALTER TABLE chains VALIDATE CONSTRAINT chains_ledger_model_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones examiners, auditors, trustees, attestation accountants and courts ask about later:

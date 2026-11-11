@@ -196,9 +196,8 @@ ALTER TABLE time_entries
   ADD COLUMN created_by_kind  TEXT NOT NULL DEFAULT 'worker',
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT time_entries_time_kind_check
-    CHECK (time_kind IN ('work',
-        'travel', 'waiting', 'on_call', 'callout', 'training',
-        'rest', 'meal', 'sleep', 'pre_shift', 'post_shift')) NOT VALID,
+    CHECK (time_kind IN ('work', 'travel', 'waiting', 'on_call', 'callout', 'training', 'rest',
+        'meal', 'sleep', 'pre_shift', 'post_shift')) NOT VALID,
   ADD CONSTRAINT time_entries_created_by_kind_check
     CHECK (created_by_kind IN ('worker', 'manager', 'admin', 'system', 'integration')) NOT VALID;
 

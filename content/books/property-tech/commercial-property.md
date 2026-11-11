@@ -291,11 +291,10 @@ ALTER TABLE legal_entities
 
 ALTER TABLE units
   ADD COLUMN space_use TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT units_space_use_ck CHECK (kind <> 'commercial_suite' OR space_use IS NOT NULL) NOT VALID,
   ADD CONSTRAINT units_space_use_check
-    CHECK (space_use IN ('office', 'retail', 'industrial', 'flex',
-        'medical', 'restaurant', 'private_office')) NOT VALID;
+    CHECK (space_use IN ('office', 'retail', 'industrial', 'flex', 'medical', 'restaurant',
+        'private_office')) NOT VALID;
 
 ALTER TABLE leases
   ALTER COLUMN household_id DROP NOT NULL,
@@ -303,19 +302,17 @@ ALTER TABLE leases
   ADD COLUMN lessee_entity_id     UUID REFERENCES legal_entities (id),
   ADD COLUMN expense_structure    TEXT,
   ADD COLUMN rent_commencement_on DATE,   -- can differ from starts_on
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT leases_one_lessee CHECK (num_nonnulls(household_id, lessee_entity_id) = 1) NOT VALID,
   ADD CONSTRAINT leases_commercial_terms
     CHECK (agreement_kind <> 'commercial_lease' OR expense_structure IS NOT NULL) NOT VALID,
   ADD CONSTRAINT leases_agreement_kind_check
     CHECK (agreement_kind IN ('residential_lease', 'commercial_lease', 'storage_rental')) NOT VALID,
   ADD CONSTRAINT leases_expense_structure_check
-    CHECK (expense_structure IN ('full_service_gross',
-        'modified_gross', 'net', 'triple_net', 'absolute_net')) NOT VALID;
+    CHECK (expense_structure IN ('full_service_gross', 'modified_gross', 'net', 'triple_net',
+        'absolute_net')) NOT VALID;
 
 ALTER TABLE charge_codes
   DROP CONSTRAINT charge_codes_category_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT charge_codes_category_check CHECK (category IN ('rent', 'fee', 'deposit',
     'utility', 'ancillary', 'concession', 'recovery')) NOT VALID;
 

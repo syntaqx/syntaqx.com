@@ -468,7 +468,6 @@ ALTER TABLE listings
 -- New order lines: the creator's commission and import duty.
 ALTER TABLE booking_lines
   DROP CONSTRAINT booking_lines_kind_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT booking_lines_kind_check CHECK (kind IN ('rental', 'add_on',
     'cleaning_or_prep', 'delivery', 'guest_service_fee', 'host_service_fee', 'protection',
     'deposit_waiver', 'screening_fee', 'discount', 'promotion', 'usage', 'late_return', 'tax',
@@ -479,7 +478,6 @@ ALTER TABLE booking_lines
 
 ALTER TABLE promotions
   DROP CONSTRAINT promotions_funded_by_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT promotions_funded_by_check CHECK (funded_by IN ('platform', 'host', 'shared')) NOT VALID,
   ADD COLUMN platform_share_bps INT,
   ADD COLUMN live_offer_id      UUID REFERENCES live_offers (id),
@@ -491,10 +489,8 @@ ALTER TABLE host_status_periods
   ADD COLUMN score           NUMERIC(3,2),
   ADD COLUMN settlement_tier TEXT,
   ADD COLUMN reserve_level   SMALLINT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT host_status_periods_settlement_tier_check
-    CHECK (settlement_tier IN ('introductory', 'standard',
-        'accelerated', 'express', 'deferred')) NOT VALID;
+    CHECK (settlement_tier IN ('introductory', 'standard', 'accelerated', 'express', 'deferred')) NOT VALID;
 ```
 
 Attribution runs once, when the order is paid: the latest valid click inside the click window beats any view, a view counts only inside the shorter view window, a click on a link counts only while the link was valid, and the plan rate is the one in force at purchase, with a targeted plan beating an open one:

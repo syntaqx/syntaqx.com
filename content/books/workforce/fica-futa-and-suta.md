@@ -241,8 +241,8 @@ ALTER TABLE worker_tax_locations
     CHECK (role IN ('resident', 'work', 'sui')) NOT VALID,
   ADD COLUMN sui_test TEXT,
   ADD CONSTRAINT worker_tax_locations_sui_test_check
-    CHECK (sui_test IN ('localized', 'base_of_operations',
-        'direction_and_control', 'residence', 'reciprocal_election', 'elected_coverage')) NOT VALID;
+    CHECK (sui_test IN ('localized', 'base_of_operations', 'direction_and_control', 'residence',
+        'reciprocal_election', 'elected_coverage')) NOT VALID;
 
 -- Remaining room under a wage base for one worker, as of a pay run.
 -- $1 = worker, $2 = employer, $3 = tax type, $4 = jurisdiction, $5 = tax year.

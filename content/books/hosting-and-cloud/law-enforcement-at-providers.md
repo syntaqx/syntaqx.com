@@ -82,7 +82,6 @@ ALTER TABLE legal_requests
 
 ALTER TABLE products
   ADD COLUMN provider_visibility TEXT NOT NULL DEFAULT 'metadata_only',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT products_provider_visibility_check
     CHECK (provider_visibility IN ('metadata_only', 'stored_encrypted_customer_keys',
         'stored_readable', 'managed_readable')) NOT VALID;

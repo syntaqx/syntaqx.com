@@ -130,7 +130,7 @@ CREATE TABLE company_locations (         -- a branch, clinic or site that orders
 );
 
 ALTER TABLE company_contacts             -- one row per contact, role and location
-  ADD COLUMN id            UUID,                                    -- the new key, backfilled below
+  ADD COLUMN id            UUID,                                    -- the new key; backfill before the swap
   ADD COLUMN location_id   UUID REFERENCES company_locations (id),  -- null: all locations
   ADD COLUMN order_limit   BIGINT,                                  -- per order, minor units
   ALTER COLUMN id SET DEFAULT uuidv7(),                             -- new rows only: no rewrite
@@ -144,6 +144,7 @@ CREATE UNIQUE INDEX CONCURRENTLY company_contacts_id_key ON company_contacts (id
 ALTER TABLE company_contacts
   DROP CONSTRAINT company_contacts_pkey,
   ADD CONSTRAINT company_contacts_pkey PRIMARY KEY USING INDEX company_contacts_id_key;
+
 CREATE UNIQUE INDEX CONCURRENTLY company_contacts_role_key
   ON company_contacts (company_id, customer_id, role, COALESCE(location_id, '00000000-0000-0000-0000-000000000000'));
 

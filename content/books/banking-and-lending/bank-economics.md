@@ -182,8 +182,7 @@ ALTER TABLE gl_accounts
   ADD COLUMN tax_exempt BOOLEAN NOT NULL DEFAULT FALSE,  -- for the FTE gross-up
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT gl_accounts_margin_role_check
-    CHECK (margin_role IN (
-        'earning_asset', 'nonearning_asset', 'interest_bearing_liability',
+    CHECK (margin_role IN ('earning_asset', 'nonearning_asset', 'interest_bearing_liability',
         'noninterest_bearing_liability', 'equity', 'interest_income', 'interest_expense',
         'noninterest_income', 'noninterest_expense', 'provision', 'tax')) NOT VALID;
 

@@ -187,8 +187,7 @@ ALTER TABLE registries
   ADD CONSTRAINT registries_eligibility_check
     CHECK (eligibility IN ('open', 'presence_required', 'community', 'brand_exclusive')) NOT VALID,
   ADD CONSTRAINT registries_presence_rule_check
-    CHECK (presence_rule IN ('residence_or_citizenship',
-        'nexus', 'local_recipient_on_request')) NOT VALID,
+    CHECK (presence_rule IN ('residence_or_citizenship', 'nexus', 'local_recipient_on_request')) NOT VALID,
   ADD CONSTRAINT registries_presence_check_check
     CHECK (presence_check IN ('attestation', 'documents_at_registration', 'spot_check')) NOT VALID,
   ADD CONSTRAINT registries_dispute_policy_check

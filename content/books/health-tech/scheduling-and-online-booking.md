@@ -150,8 +150,8 @@ ALTER TABLE schedules                              -- operatories are schedules 
   ADD COLUMN sort_order     INT,                    -- column order; some PMSs pick the leftmost open
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT schedules_operatory_kind_check
-    CHECK (operatory_kind IN ('dental_operatory', 'exam_room', 'surgery',
-        'exam_lane', 'pretest', 'treatment_area', 'kennel', 'telehealth')) NOT VALID;
+    CHECK (operatory_kind IN ('dental_operatory', 'exam_room', 'surgery', 'exam_lane', 'pretest',
+        'treatment_area', 'kennel', 'telehealth')) NOT VALID;
 
 CREATE TABLE appointment_types (
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -199,7 +199,6 @@ ALTER TABLE appointments
   ADD COLUMN idempotency_key TEXT,
   ADD COLUMN overbook_reason TEXT,                  -- set when a person overrode a conflict
   ADD COLUMN overbooked_by UUID,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT appointments_priority_check CHECK (priority IN ('normal', 'asap')) NOT VALID;
 
 -- Unique without blocking writes: build the index concurrently, then attach it.

@@ -504,6 +504,12 @@ Each later chapter extends a defined part of this spine. The chapters and the co
 | [Regulatory & Statistical Reporting](/books/insurance/regulatory-and-statistical-reporting) | `premium_entries`, `claims`; adds `stat_records`, `data_calls`, `tax_filings` |
 | [Replacing a Core System](/books/insurance/replacing-a-core-system) | `policy_transactions` (kind `conversion`), `premium_entries` (kind `conversion_transfer`, which the earned premium query above must read); adds `conversion_batches`, `conversion_mappings` |
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Professional & Management Liability adds to `claims`:
+
+```sql
+ALTER TABLE claims VALIDATE CONSTRAINT claims_kind_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones examiners, auditors, actuaries, reinsurers, courts and guaranty associations ask about later:

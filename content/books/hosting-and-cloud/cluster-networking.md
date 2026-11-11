@@ -168,7 +168,7 @@ The chapter adds the `load_balancers` side table for resources of kind `load_bal
 ALTER TABLE clusters                     -- Kubernetes Architecture's side table
   ADD COLUMN pod_network_mode  TEXT,
   ADD COLUMN cni               TEXT,     -- 'aws-vpc-cni', 'cilium', 'calico', 'flannel', ...
-  ADD COLUMN service_dataplane TEXT,  -- set explicitly, never inherited
+  ADD COLUMN service_dataplane TEXT,     -- set explicitly, never inherited
   ADD COLUMN pod_cidrs         CIDR[],   -- overlay ranges, or the VPC ranges pods draw from
   ADD COLUMN service_cidr      CIDR,
   ADD COLUMN pod_subnet_id     UUID REFERENCES resources (id),    -- kind = 'subnet', when VPC-native

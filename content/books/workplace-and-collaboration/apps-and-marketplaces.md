@@ -192,7 +192,6 @@ ALTER TABLE app_installations
   ADD COLUMN request_id      UUID REFERENCES app_install_requests (id),
   ADD COLUMN revoked_at      TIMESTAMPTZ,
   ADD COLUMN revoked_reason  TEXT,            -- 'uninstalled', 'policy', 'app_suspended'
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT app_installations_consent_kind_check
     CHECK (consent_kind IN ('user', 'admin')) NOT VALID;
 

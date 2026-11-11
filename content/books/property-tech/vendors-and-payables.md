@@ -106,8 +106,7 @@ ALTER TABLE vendors
   ADD COLUMN tin_match_status    TEXT,
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT vendors_tax_classification_check
-    CHECK (tax_classification IN ('individual',
-        'sole_proprietor', 'partnership', 'c_corporation',
+    CHECK (tax_classification IN ('individual', 'sole_proprietor', 'partnership', 'c_corporation',
         's_corporation', 'llc', 'other')) NOT VALID;
 
 CREATE TABLE vendor_requirements (       -- what an owner or property demands of vendors
@@ -200,13 +199,12 @@ ALTER TABLE bills
   ADD COLUMN capture_method    TEXT,
   ADD COLUMN match_result      TEXT,
   ADD COLUMN split_from_document_id UUID,            -- the original multi-property invoice
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT bills_tenant_id_not_null NOT NULL tenant_id NOT VALID,
   ADD CONSTRAINT bills_property_id_not_null NOT NULL property_id NOT VALID,
   ADD CONSTRAINT bills_payer_entity_id_not_null NOT NULL payer_entity_id NOT VALID,
   ADD CONSTRAINT bills_capture_method_check
-    CHECK (capture_method IN ('keyed', 'outsourced_keying',
-        'ai_capture', 'e_invoice', 'vendor_portal')) NOT VALID,
+    CHECK (capture_method IN ('keyed', 'outsourced_keying', 'ai_capture', 'e_invoice',
+        'vendor_portal')) NOT VALID,
   ADD CONSTRAINT bills_match_result_check
     CHECK (match_result IN ('not_required', 'two_way', 'three_way', 'exception')) NOT VALID;
 

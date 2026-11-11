@@ -109,7 +109,7 @@ The chapter adds AI labels on content items and extends three tables other chapt
 ```sql
 ALTER TABLE content_items
   ADD COLUMN ai_label        TEXT NOT NULL DEFAULT 'none',
-  ADD COLUMN ai_label_prominence TEXT,     -- where the label shows, by risk
+  ADD COLUMN ai_label_prominence TEXT,           -- where the label shows, by risk
   ADD COLUMN ai_declared_at  TIMESTAMPTZ,        -- the uploader's answer
   ADD COLUMN ai_label_decision_id UUID REFERENCES moderation_decisions (id),  -- detected or reviewed
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes

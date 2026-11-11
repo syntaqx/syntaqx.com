@@ -134,7 +134,6 @@ ALTER TABLE abuse_mitigations
   ADD COLUMN aup_category_id UUID REFERENCES aup_categories (id),
   ADD COLUMN service_tier    TEXT NOT NULL DEFAULT 'hosted',  -- copied at action time
   ADD COLUMN automated       BOOLEAN NOT NULL DEFAULT FALSE,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT abuse_mitigations_service_tier_check
     CHECK (service_tier IN ('hosted', 'pass_through', 'core')) NOT VALID;
 -- abuse_mitigations.action gains 'interstitial', 'caching_disabled', 'proxy_disabled'

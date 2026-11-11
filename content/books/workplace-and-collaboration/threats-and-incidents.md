@@ -162,7 +162,6 @@ ALTER TABLE api_tokens
   ADD COLUMN bound_to         JSONB,          -- {"network": "...", "device_id": "..."} when bound
   ADD COLUMN last_used_ip     INET,
   ADD COLUMN revoked_reason   TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT api_tokens_revoked_reason_check
     CHECK (revoked_reason IN ('user', 'admin', 'incident',
         'leak_report', 'expired', 'app_disabled')) NOT VALID;

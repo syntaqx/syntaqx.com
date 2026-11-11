@@ -251,21 +251,18 @@ CREATE TABLE ownership_account_holders (  -- who is on the account; a co-op hold
 -- Charges and payments post to a lease or to an ownership account, never both.
 ALTER TABLE charges ALTER COLUMN lease_id DROP NOT NULL,
   ADD COLUMN ownership_account_id UUID REFERENCES ownership_accounts (id),
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT charges_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) = 1) NOT VALID;
 
 ALTER TABLE payments
   ADD COLUMN ownership_account_id UUID REFERENCES ownership_accounts (id),
   ADD COLUMN payer_entity_id      UUID REFERENCES legal_entities (id),  -- an owning LLC pays
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payments_one_account CHECK (num_nonnulls(lease_id, ownership_account_id) <= 1) NOT VALID;  -- none: an application fee or a walk-in sale
 
 ALTER TABLE charge_codes
   ADD COLUMN lien_class TEXT,  -- what the jurisdiction lets the lien carry
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT charge_codes_lien_class_check
-    CHECK (lien_class IN ('assessment', 'collection_cost', 'interest',
-        'late_charge', 'fine', 'not_lienable')) NOT VALID;
+    CHECK (lien_class IN ('assessment', 'collection_cost', 'interest', 'late_charge', 'fine',
+        'not_lienable')) NOT VALID;
 
 CREATE TABLE association_budgets (        -- adopted by the board for a fiscal year
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),

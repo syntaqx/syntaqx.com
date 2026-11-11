@@ -243,8 +243,8 @@ ALTER TABLE builds
   ADD CONSTRAINT builds_configuration_check
     CHECK (configuration IN ('development', 'test', 'shipping')) NOT VALID,
   ADD CONSTRAINT builds_pipeline_state_check
-    CHECK (pipeline_state IN ('queued', 'syncing', 'compiling', 'cooking',
-        'packaging', 'testing', 'passed', 'failed')) NOT VALID,
+    CHECK (pipeline_state IN ('queued', 'syncing', 'compiling', 'cooking', 'packaging', 'testing',
+        'passed', 'failed')) NOT VALID,
   ADD CONSTRAINT builds_promotion_check
     CHECK (promotion IN ('candidate', 'submitted', 'certified', 'released', 'withdrawn')) NOT VALID;
 

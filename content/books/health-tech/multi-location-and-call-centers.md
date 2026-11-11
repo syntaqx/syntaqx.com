@@ -206,7 +206,6 @@ ALTER TABLE conversations                    -- Two-Way Texting & Messaging's ta
 ALTER TABLE communications
   ADD COLUMN handled_by_user UUID,
   ADD COLUMN handled_from    TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT communications_handled_from_check
     CHECK (handled_from IN ('location', 'center', 'ai_agent')) NOT VALID;
 

@@ -162,16 +162,13 @@ ALTER TABLE fulfillments
   ADD COLUMN fulfill_at     TIMESTAMPTZ,     -- scheduled release
   ADD COLUMN point_of_no_return TIMESTAMPTZ, -- when the provider started picking
   ADD COLUMN sourcing_decision_id UUID,      -- sourcing_decisions, below
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT fulfillments_request_status_check
-    CHECK (request_status IN
-        ('unsubmitted', 'requested', 'accepted', 'rejected', 'cancellation_requested',
-        'cancellation_accepted', 'cancellation_rejected')) NOT VALID;
+    CHECK (request_status IN ('unsubmitted', 'requested', 'accepted', 'rejected',
+        'cancellation_requested', 'cancellation_accepted', 'cancellation_rejected')) NOT VALID;
 
 ALTER TABLE order_status_changes
   ADD COLUMN fulfillment_id UUID REFERENCES fulfillments (id),  -- null: the order itself
   ADD COLUMN subject        TEXT NOT NULL DEFAULT 'order',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT order_status_changes_subject_check
     CHECK (subject IN ('order', 'fulfillment', 'line')) NOT VALID;
 
@@ -247,7 +244,6 @@ CREATE TABLE sourcing_decisions (        -- every routing decision and why
 );
 
 ALTER TABLE fulfillments
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT fulfillments_sourcing_decision_fk
     FOREIGN KEY (sourcing_decision_id) REFERENCES sourcing_decisions (id) NOT VALID;
 ```

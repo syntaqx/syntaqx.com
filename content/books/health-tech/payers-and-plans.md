@@ -107,16 +107,13 @@ ALTER TABLE plans
   ADD COLUMN network_id        UUID,     -- networks, below: what prices the in-network tier
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT plans_market_check
-    CHECK (market IN ('individual', 'small_group',
-        'large_group', 'medicare', 'medicaid', 'other')) NOT VALID;
+    CHECK (market IN ('individual', 'small_group', 'large_group', 'medicare', 'medicaid', 'other')) NOT VALID;
 
 ALTER TABLE coverages
   ADD COLUMN source            TEXT,
   ADD COLUMN cob_basis         TEXT,      -- why this priority: 'birthday_rule', 'msp_working_aged'
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT coverages_source_check
-    CHECK (source IN ('card', 'eligibility_271',
-        'enrollment_834', 'manual', 'payer_api')) NOT VALID;
+    CHECK (source IN ('card', 'eligibility_271', 'enrollment_834', 'manual', 'payer_api')) NOT VALID;
 
 CREATE TABLE plan_benefits (             -- one plan's cost-sharing for one benefit period
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

@@ -126,7 +126,6 @@ ALTER TABLE grants                       -- core has workspace_id, granted_by an
   ADD COLUMN effect       TEXT NOT NULL DEFAULT 'allow',
   ADD COLUMN can_reshare  BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN acl_revision BIGINT,                                    -- the revision that wrote it
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT grants_role_check CHECK (role IN ('owner', 'full_access', 'editor',
     'content_editor', 'creator', 'commenter', 'viewer')) NOT VALID,
   ADD CONSTRAINT grants_acl_revision_not_null NOT NULL acl_revision NOT VALID,
@@ -134,7 +133,6 @@ ALTER TABLE grants                       -- core has workspace_id, granted_by an
 
 ALTER TABLE share_links                  -- core has audience, created_by and expires_at
   DROP CONSTRAINT share_links_audience_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT share_links_audience_check CHECK (audience IN ('organization', 'workspace', 'anyone')) NOT VALID,
   ADD COLUMN role         TEXT NOT NULL DEFAULT 'viewer',
   ADD COLUMN resource_key TEXT,                   -- secret part of the URL; rotated to kill old links

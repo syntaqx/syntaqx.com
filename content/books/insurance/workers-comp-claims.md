@@ -184,8 +184,8 @@ ALTER TABLE claims
   ADD COLUMN benefit_table_ref  TEXT,        -- the injury-date rate table: 'CA TD 2026'
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT claims_compensability_check
-    CHECK (compensability IN ('pending', 'accepted',
-        'denied', 'accepted_by_presumption', 'waived_contest')) NOT VALID;
+    CHECK (compensability IN ('pending', 'accepted', 'denied', 'accepted_by_presumption',
+        'waived_contest')) NOT VALID;
 
 CREATE TABLE benefit_periods (             -- the disability facts benefits are computed from
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

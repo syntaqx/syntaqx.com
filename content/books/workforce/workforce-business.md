@@ -895,6 +895,12 @@ Three decisions keep the map one model rather than several:
 - **One liability table for everyone a run owes.** The IRS, a state, a city, a carrier, a 401(k) plan, a disbursement unit and an employee with a returned deposit differ in their payee and due date rule, not their shape. Each chapter adds a detail table keyed by `liabilities.id` instead of a parallel ledger.
 - **One effective-dated pattern for every rule and election.** Rates, elections, registrations, taxability, minimum wages, leave policies and plan rules all carry `valid_during`, so "what applied on that date" has one answer and one query shape across the volume.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Gross-to-Net, Step by Step adds to `pay_item_types`:
+
+```sql
+ALTER TABLE pay_item_types VALIDATE CONSTRAINT pay_item_types_pipeline_step_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones the IRS, the SSA, state agencies, the DOL, plan auditors, SOC 1 auditors and courts ask about later:

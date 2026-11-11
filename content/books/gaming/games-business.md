@@ -380,6 +380,12 @@ Design decisions behind it:
 
 What goes wrong most often is building for one game and then becoming a publisher: profiles get merged into accounts, currency gets stored per game, and the second title needs a migration of every player's purchases. My rule: model the account above the game from the first title, even if only one game will ever exist.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Inventories, Entitlements & Economies adds to `item_instances`:
+
+```sql
+ALTER TABLE item_instances VALIDATE CONSTRAINT item_instances_quantity_check;
+```
+
 ## Auditing
 
 The decisions in this chapter are the ones disputed later:

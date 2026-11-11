@@ -254,8 +254,7 @@ ALTER TABLE work_orders
   ADD COLUMN reported_language     TEXT,              -- BCP 47
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT work_orders_request_channel_check
-    CHECK (request_channel IN ('portal', 'app', 'sms',
-        'phone', 'email', 'in_person', 'device')) NOT VALID,
+    CHECK (request_channel IN ('portal', 'app', 'sms', 'phone', 'email', 'in_person', 'device')) NOT VALID,
   ADD CONSTRAINT work_orders_owner_approval_status_check
     CHECK (owner_approval_status IN ('not_required', 'pending', 'approved', 'declined')) NOT VALID;
 

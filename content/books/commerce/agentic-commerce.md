@@ -120,7 +120,6 @@ ALTER TABLE sales_channels
 
 ALTER TABLE orders
   DROP CONSTRAINT orders_channel_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT orders_channel_check CHECK (channel IN ('marketplace', 'first_party', 'pos',
     'phone', 'kiosk', 'wholesale', 'agent')) NOT VALID;
 

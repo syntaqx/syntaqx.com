@@ -138,7 +138,6 @@ ALTER TABLE benefit_enrollments
   ADD COLUMN elected_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   ADD COLUMN enrollment_window_id UUID,     -- enrollment_windows
   ADD COLUMN status             TEXT NOT NULL DEFAULT 'active',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT benefit_enrollments_status_check
     CHECK (status IN ('pending', 'active', 'pending_eoi', 'terminated', 'canceled')) NOT VALID;
 
@@ -165,7 +164,6 @@ CREATE TABLE enrollment_windows (          -- open enrollment, new hire and life
 );
 
 ALTER TABLE benefit_enrollments
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD FOREIGN KEY (enrollment_window_id) REFERENCES enrollment_windows (id) NOT VALID;
 
 CREATE TABLE eoi_requests (                -- the amount over guaranteed issue, pending the carrier
@@ -221,7 +219,6 @@ CREATE TABLE benefit_rates (               -- what a tier costs, and who pays it
 );
 
 ALTER TABLE benefit_enrollments
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD FOREIGN KEY (benefit_rate_id) REFERENCES benefit_rates (id) NOT VALID;
 ```
 

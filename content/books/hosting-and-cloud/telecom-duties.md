@@ -188,9 +188,8 @@ CREATE TABLE regulatory_fee_rates (      -- percentages and per-line amounts, ef
 );
 
 ALTER TABLE accounts
-  ADD COLUMN interstate_method TEXT,        -- how this provider splits VoIP revenue
+  ADD COLUMN interstate_method TEXT,     -- how this provider splits VoIP revenue
   ADD COLUMN usf_exempt_ref    TEXT,     -- a customer's reseller or exemption certificate
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT accounts_interstate_method_check
     CHECK (interstate_method IN ('safe_harbor', 'traffic_study', 'actual')) NOT VALID;
 ```

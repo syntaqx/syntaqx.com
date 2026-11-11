@@ -215,9 +215,8 @@ ALTER TABLE content_labels
 
 ALTER TABLE communities
   DROP CONSTRAINT communities_kind_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT communities_kind_check CHECK (kind IN ('forum', 'server', 'channel',
-    'group', 'instance')) NOT VALID;               -- the local server as a community
+    'group', 'instance')) NOT VALID;  -- the local server as a community
 ```
 
 Notes on the sketch:

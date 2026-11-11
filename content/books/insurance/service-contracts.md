@@ -195,8 +195,8 @@ ALTER TABLE policies
   ADD COLUMN backing_policy_id UUID REFERENCES policies (id),  -- the reimbursement policy
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT policies_legal_form_check
-    CHECK (legal_form IN ('insurance', 'service_contract',
-        'home_warranty', 'vsc', 'debt_cancellation')) NOT VALID;
+    CHECK (legal_form IN ('insurance', 'service_contract', 'home_warranty', 'vsc',
+        'debt_cancellation')) NOT VALID;
 
 CREATE TABLE obligor_authorities (         -- licensed or registered, per state, with its security basis
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),

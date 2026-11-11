@@ -127,7 +127,6 @@ ALTER TABLE employers
   ALTER COLUMN federal_return DROP NOT NULL,
   ALTER COLUMN deposit_schedule DROP NOT NULL,
   ALTER COLUMN deposit_schedule_year DROP NOT NULL,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT us_employer_fields CHECK (country <> 'US' OR (ein IS NOT NULL
     AND federal_return IS NOT NULL AND deposit_schedule IS NOT NULL
     AND deposit_schedule_year IS NOT NULL)) NOT VALID;

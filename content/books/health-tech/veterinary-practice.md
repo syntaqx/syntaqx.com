@@ -153,7 +153,6 @@ ALTER TABLE medication_requests
   ADD COLUMN extralabel       BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN compounded       BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN dispensed_by     TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT medication_requests_dispensed_by_check
     CHECK (dispensed_by IN ('clinic', 'clinic_online_store',
         'outside_pharmacy', 'written_released')) NOT VALID;

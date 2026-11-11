@@ -350,7 +350,6 @@ ALTER TABLE payments
   ADD COLUMN stay_id               UUID REFERENCES stays (id),
   ADD COLUMN channel_connection_id UUID REFERENCES channel_connections (id),
   DROP CONSTRAINT payments_one_account,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payments_one_account
     CHECK (num_nonnulls(lease_id, ownership_account_id, stay_id, channel_connection_id) <= 1) NOT VALID;
 
@@ -435,7 +434,6 @@ ALTER TABLE work_orders
   ADD COLUMN next_stay_id UUID REFERENCES stays (id),   -- the arrival it must beat, if any
   ADD COLUMN work_window  TSTZRANGE,                    -- checkout time to next check-in time
   DROP CONSTRAINT work_orders_source_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT work_orders_source_check CHECK (source IN ('resident', 'staff',
     'inspection', 'preventive', 'make_ready', 'turnover')) NOT VALID,
   ADD CONSTRAINT work_orders_turnover_ck CHECK (source <> 'turnover' OR stay_id IS NOT NULL) NOT VALID;

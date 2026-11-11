@@ -160,7 +160,6 @@ ALTER TABLE media_assets
 ALTER TABLE content_media                -- alt text belongs to this use of the file
   ADD COLUMN alt_text        TEXT,
   ADD COLUMN alt_text_source TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT content_media_alt_text_source
     CHECK ((alt_text IS NULL) = (alt_text_source IS NULL)) NOT VALID,
   ADD CONSTRAINT content_media_alt_text_source_check

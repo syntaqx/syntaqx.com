@@ -124,9 +124,8 @@ ALTER TABLE domains
     CHECK (status IN ('pending', 'verified', 'check_failing', 'revoked')) NOT VALID;
 
 -- Unique without blocking writes: build the index concurrently, then attach it.
-CREATE UNIQUE INDEX CONCURRENTLY domains_one_owner ON domains (domain);
-ALTER TABLE domains  -- one organization per domain label
-  ADD CONSTRAINT domains_one_owner UNIQUE USING INDEX domains_one_owner;
+CREATE UNIQUE INDEX CONCURRENTLY domains_one_owner ON domains (domain);  -- one organization per domain label
+ALTER TABLE domains ADD CONSTRAINT domains_one_owner UNIQUE USING INDEX domains_one_owner;
 
 CREATE TABLE account_claims (             -- moving an account from personal to managed, and back
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

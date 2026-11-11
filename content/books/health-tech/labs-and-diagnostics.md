@@ -173,7 +173,6 @@ ALTER TABLE observations
   ADD COLUMN reference_range  TEXT,       -- from the performing lab
   ADD COLUMN interpretation   TEXT,
   ADD COLUMN supersedes_id    UUID REFERENCES observations (id),  -- a correction points back
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT observations_interpretation_check
     CHECK (interpretation IN ('normal', 'low', 'high',
         'critical_low', 'critical_high', 'abnormal')) NOT VALID;

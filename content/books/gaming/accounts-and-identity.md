@@ -165,8 +165,7 @@ The chapter's additions to the core model, as columns on existing tables and thr
 ```sql
 ALTER TABLE accounts
   ADD COLUMN home_region       TEXT,           -- where personal data lives; set at sign-up
-  ADD COLUMN age_band          TEXT NOT NULL DEFAULT 'unknown',
-                                 -- cached; derived from age signals, lowest wins
+  ADD COLUMN age_band          TEXT NOT NULL DEFAULT 'unknown',  -- cached; derived from age signals, lowest wins
   ADD COLUMN age_band_derived_at TIMESTAMPTZ,
   ADD COLUMN merged_into_id    UUID REFERENCES accounts (id),  -- set when retired by a merge
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
@@ -182,7 +181,6 @@ ALTER TABLE platform_identities
   -- EXCLUDE has no concurrent build: add it while the table is small, or in a maintenance window.
   ADD CONSTRAINT one_identity_per_platform EXCLUDE USING gist (
     tenant_id WITH =, account_id WITH =, platform WITH =, valid_during WITH &&),
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT platform_identities_verified_at_not_null NOT NULL verified_at NOT VALID,
   ADD CONSTRAINT platform_identities_linked_via_not_null NOT NULL linked_via NOT VALID,
   ADD CONSTRAINT platform_identities_linked_via_check

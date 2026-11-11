@@ -171,9 +171,8 @@ ALTER TABLE risk_decisions
   ADD COLUMN policy_ref      TEXT,           -- the published limit or policy it enforced
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT risk_decisions_checkpoint_kind_check
-    CHECK (checkpoint_kind IN ('account_creation', 'login',
-        'payment_method', 'checkout', 'pre_capture', 'promotion',
-        'return', 'issue', 'gift_card', 'sensitive_action')) NOT VALID;
+    CHECK (checkpoint_kind IN ('account_creation', 'login', 'payment_method', 'checkout',
+        'pre_capture', 'promotion', 'return', 'issue', 'gift_card', 'sensitive_action')) NOT VALID;
 
 -- subject_type now also takes 'order', 'checkout', 'return', 'order_issue',
 -- 'promotion_redemption', 'customer', 'gift_card'; returns.risk_decision_id,

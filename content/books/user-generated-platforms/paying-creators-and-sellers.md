@@ -255,7 +255,6 @@ ALTER TABLE balance_holds
 ALTER TABLE merchants
   ADD COLUMN payout_status TEXT NOT NULL DEFAULT 'not_ready',  -- derived from requirements, stored for speed
   ADD COLUMN payout_schedule TEXT,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT merchants_payout_status_check
     CHECK (payout_status IN ('not_ready', 'ready', 'paused', 'closed')) NOT VALID,
   ADD CONSTRAINT merchants_payout_schedule_check

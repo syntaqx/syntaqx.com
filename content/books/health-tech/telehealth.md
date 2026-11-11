@@ -132,7 +132,7 @@ Telehealth extends `encounters` and `observations` from [The Core Data Model](/b
 
 ```sql
 ALTER TABLE encounters
-  ADD COLUMN modality            TEXT,  -- null: in person
+  ADD COLUMN modality            TEXT,          -- null: in person
   ADD COLUMN patient_subdivision TEXT,          -- ISO 3166-2 where the patient was, asked at check-in
   ADD COLUMN patient_site        TEXT,
   ADD COLUMN practitioner_subdivision TEXT,     -- where the clinician was

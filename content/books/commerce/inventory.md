@@ -167,7 +167,6 @@ ALTER TABLE inventory_levels
   ADD COLUMN damaged         INT NOT NULL DEFAULT 0,
   ADD COLUMN quality_control INT NOT NULL DEFAULT 0,
   ADD COLUMN version         BIGINT NOT NULL DEFAULT 0,  -- compare-and-set on every write
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT inventory_levels_parts CHECK (on_hand >= committed + damaged + quality_control) NOT VALID,
   ADD CONSTRAINT inventory_levels_damaged_check CHECK (damaged >= 0) NOT VALID,
   ADD CONSTRAINT inventory_levels_quality_control_check CHECK (quality_control >= 0) NOT VALID;

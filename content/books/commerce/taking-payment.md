@@ -125,8 +125,7 @@ ALTER TABLE order_payments
   ADD COLUMN status          TEXT NOT NULL DEFAULT 'succeeded',
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT order_payments_method_check
-    CHECK (method IN ('card', 'wallet',
-        'paypal', 'bnpl', 'bank', 'gift_card', 'store_credit')) NOT VALID,
+    CHECK (method IN ('card', 'wallet', 'paypal', 'bnpl', 'bank', 'gift_card', 'store_credit')) NOT VALID,
   ADD CONSTRAINT order_payments_status_check
     CHECK (status IN ('pending', 'succeeded', 'failed', 'expired', 'voided')) NOT VALID;
 

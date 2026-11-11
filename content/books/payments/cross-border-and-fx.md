@@ -202,7 +202,6 @@ ALTER TABLE payments
                                         (issuer_country IS DISTINCT FROM merchant_outlet_country) STORED,
   ADD COLUMN pricing_mode             TEXT NOT NULL DEFAULT 'domestic',
   ADD COLUMN fx_quote_id              UUID REFERENCES fx_quotes (id),
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payments_merchant_outlet_country_not_null NOT NULL merchant_outlet_country NOT VALID,
   ADD CONSTRAINT payments_pricing_mode_check
     CHECK (pricing_mode IN ('domestic', 'mcp', 'provider_fx', 'dcc')) NOT VALID;
@@ -252,7 +251,6 @@ ALTER TABLE payouts
   -- rail (from Payouts & Settlement) gains 'sepa_ct', 'faster_payments', 'swift'
   ADD COLUMN charge_bearer    TEXT,
   ADD COLUMN screening_status TEXT NOT NULL DEFAULT 'pending',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT payouts_funding_currency_not_null NOT NULL funding_currency NOT VALID,
   ADD CONSTRAINT payouts_charge_bearer_check
     CHECK (charge_bearer IN ('OUR', 'SHA', 'BEN')) NOT VALID,

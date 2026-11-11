@@ -165,7 +165,6 @@ ALTER TABLE units                        -- which setting an apartment is licens
 
 ALTER TABLE leases                       -- the residency agreement
   ADD COLUMN residency_type TEXT NOT NULL DEFAULT 'standard',
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT leases_residency_type_check
     CHECK (residency_type IN ('standard', 'respite', 'trial')) NOT VALID;
 
@@ -267,7 +266,6 @@ ALTER TABLE lease_charge_schedules
   ADD COLUMN care_level_determination_id UUID REFERENCES care_level_determinations (id),
   ADD COLUMN payer_coverage_id           UUID REFERENCES payer_coverages (id),  -- null: household
   DROP CONSTRAINT lease_charge_schedules_frequency_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT lease_charge_schedules_frequency_check
     CHECK (frequency IN ('monthly', 'weekly', 'annual', 'daily')) NOT VALID;
 

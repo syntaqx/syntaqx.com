@@ -358,8 +358,14 @@ CREATE TABLE promotion_charges (
 App-store purchases use Gaming's [`store_transactions` and `store_fee_rates`](/books/gaming/stores-and-payments#receipt-validation-and-entitlement-grants) (the state machine from `pending` through `granted` to `reversed`, the store's transaction ID as the key, the fee as an estimate until the store reports), without `tenant_id` and `game_id`, with `product_id` in place of `offer_id`:
 
 ```sql
+-- The store's transaction ID becomes unique per store, without game_id. Build that key
+-- concurrently first, then swap it in as the columns go, so a key holds throughout.
+CREATE UNIQUE INDEX CONCURRENTLY store_transactions_store_xid_new
+  ON store_transactions (store, store_transaction_xid);
+
 ALTER TABLE store_transactions
   DROP CONSTRAINT store_transactions_store_xid_key,
+  ADD CONSTRAINT store_transactions_store_xid_key UNIQUE USING INDEX store_transactions_store_xid_new,
   DROP COLUMN tenant_id,
   DROP COLUMN game_id,
   DROP COLUMN offer_id,
@@ -367,12 +373,6 @@ ALTER TABLE store_transactions
   ADD COLUMN product_price_id UUID REFERENCES product_prices (id),  -- the price shown
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT store_transactions_product_id_not_null NOT NULL product_id NOT VALID;
-
--- Unique without blocking writes: build the index concurrently, then attach it.
-CREATE UNIQUE INDEX CONCURRENTLY store_transactions_store_xid_key
-  ON store_transactions (store, store_transaction_xid);
-ALTER TABLE store_transactions
-  ADD CONSTRAINT store_transactions_store_xid_key UNIQUE USING INDEX store_transactions_store_xid_key;
 ```
 
 Resolving the terms for a payment is a lookup by program, tier, country and channel at the moment the money was earned, falling back from the most specific row:

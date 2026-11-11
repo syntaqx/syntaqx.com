@@ -173,8 +173,7 @@ ALTER TABLE content_items
   ADD CONSTRAINT content_items_removed_by
     CHECK ((state = 'removed') = (removed_by IS NOT NULL)) NOT VALID,
   ADD CONSTRAINT content_items_format_check
-    CHECK (format IN ('text', 'link', 'image', 'gallery',
-        'video', 'poll', 'repost', 'quote')) NOT VALID,
+    CHECK (format IN ('text', 'link', 'image', 'gallery', 'video', 'poll', 'repost', 'quote')) NOT VALID,
   ADD CONSTRAINT content_items_removed_by_check
     CHECK (removed_by IN ('moderator', 'platform', 'automod')) NOT VALID;
 

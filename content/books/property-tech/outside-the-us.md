@@ -129,8 +129,7 @@ ALTER TABLE leases
     CHECK (tenancy_form <> 'fixed_term' OR ends_on IS NOT NULL) NOT VALID,
   ADD COLUMN prescribed_form_version TEXT, -- the government lease form used, where one is mandatory
   ADD CONSTRAINT leases_tenancy_form_check
-    CHECK (tenancy_form IN (
-        'fixed_term', 'periodic', 'assured_periodic', 'private_residential',
+    CHECK (tenancy_form IN ('fixed_term', 'periodic', 'assured_periodic', 'private_residential',
         'occupation_secure', 'occupation_standard')) NOT VALID;
 
 CREATE TABLE deposit_schemes (             -- platform-wide: schemes and bond authorities

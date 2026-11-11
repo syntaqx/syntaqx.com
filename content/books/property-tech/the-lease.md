@@ -380,8 +380,8 @@ ALTER TABLE leases
   ADD CONSTRAINT periodic_after_term
     CHECK (periodic_from IS NULL OR (ends_on IS NOT NULL AND periodic_from > ends_on)) NOT VALID,
   ADD CONSTRAINT leases_ended_reason_check
-    CHECK (ended_reason IN ('moved_out', 'renewed',
-        'transferred', 'early_termination', 'eviction', 'abandonment')) NOT VALID;
+    CHECK (ended_reason IN ('moved_out', 'renewed', 'transferred', 'early_termination', 'eviction',
+        'abandonment')) NOT VALID;
 
 ALTER TABLE lease_members
   ADD COLUMN joined_by_document_id   UUID REFERENCES lease_documents (id),  -- amendment, if mid-term
@@ -390,7 +390,6 @@ ALTER TABLE lease_members
   ADD COLUMN guaranty_scope          TEXT,
   ADD COLUMN guaranty_limit_amount   BIGINT,   -- null: unlimited
   ADD COLUMN guaranty_covers_renewals BOOLEAN,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT guaranty_fields_only_for_guarantors
     CHECK (role = 'guarantor' OR (guaranty_document_id IS NULL AND guaranty_scope IS NULL
            AND guaranty_limit_amount IS NULL AND guaranty_covers_renewals IS NULL)) NOT VALID,

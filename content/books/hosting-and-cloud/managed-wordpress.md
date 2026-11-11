@@ -175,17 +175,16 @@ The chapter adds WordPress columns to the `sites` side table on `resources` rows
 
 ```sql
 ALTER TABLE sites                        -- side table: resources.kind = 'site'
-  ADD COLUMN application        TEXT,  -- null: not a
-                                                      -- managed application
+  ADD COLUMN application        TEXT,                 -- null: not a managed application
   ADD COLUMN environment        TEXT,
   ADD COLUMN staging_parent_id  UUID REFERENCES sites (resource_id),  -- the production site
   ADD COLUMN isolation          TEXT,
-  ADD COLUMN visit_meter        TEXT,     -- the plan's unit, published
+  ADD COLUMN visit_meter        TEXT,                 -- the plan's unit, published
   ADD COLUMN cache_layer        TEXT,
   ADD COLUMN page_cache_ttl     INTERVAL,                       -- e.g. 10 minutes
   ADD COLUMN object_cache       TEXT,
   ADD COLUMN auto_update_policy TEXT,
-  ADD COLUMN plugin_source      TEXT,       -- where updates come from
+  ADD COLUMN plugin_source      TEXT,                 -- where updates come from
   ADD COLUMN system_cron        BOOLEAN,              -- DISABLE_WP_CRON plus a scheduler
   ADD COLUMN wp_version         TEXT,                 -- observed, from the last scan
   ADD COLUMN php_version        TEXT,
@@ -210,8 +209,8 @@ ALTER TABLE sites                        -- side table: resources.kind = 'site'
   ADD CONSTRAINT sites_object_cache_check
     CHECK (object_cache IN ('none', 'redis', 'memcached')) NOT VALID,
   ADD CONSTRAINT sites_auto_update_policy_check
-    CHECK (auto_update_policy IN ('core_minor', 'core_all',
-        'core_and_plugins', 'managed_with_rollback', 'off')) NOT VALID,
+    CHECK (auto_update_policy IN ('core_minor', 'core_all', 'core_and_plugins',
+        'managed_with_rollback', 'off')) NOT VALID,
   ADD CONSTRAINT sites_plugin_source_check
     CHECK (plugin_source IN ('wordpress_org', 'host_mirror', 'composer', 'vendor')) NOT VALID;
 ```

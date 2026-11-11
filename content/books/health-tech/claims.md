@@ -217,7 +217,6 @@ ALTER TABLE claims                       -- kind, frequency, replaces_claim_id, 
   ADD COLUMN prior_auth_number TEXT,
   ADD COLUMN rejected_by       TEXT,
   ADD COLUMN timely_filing_due DATE,                          -- computed from the payer's rule
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT claims_place_of_service_not_null NOT NULL place_of_service NOT VALID,
   ADD CONSTRAINT claims_timely_filing_due_not_null NOT NULL timely_filing_due NOT VALID,
   ADD CONSTRAINT claims_purpose_check CHECK (purpose IN ('claim', 'predetermination')) NOT VALID,
@@ -231,7 +230,6 @@ ALTER TABLE claim_lines                  -- charge_id, code, modifiers, units, c
   ADD COLUMN surfaces         TEXT[],
   ADD COLUMN prosthesis       TEXT,
   ADD COLUMN prior_placement  DATE,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT claim_lines_line_control_number_not_null NOT NULL line_control_number NOT VALID,
   ADD CONSTRAINT claim_lines_prosthesis_check
     CHECK (prosthesis IN ('initial', 'replacement')) NOT VALID;

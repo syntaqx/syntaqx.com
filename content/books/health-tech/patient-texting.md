@@ -207,11 +207,11 @@ ALTER TABLE communications
   ADD COLUMN consent_id UUID REFERENCES consents (id),
   ADD COLUMN segments SMALLINT,
   ADD COLUMN blocked_reason TEXT,                -- 'opted_out', 'confidential_request', 'budget',
+                                                 -- 'quiet_hours', 'stale_subject', ...
   -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT communications_legal_basis_check
-    CHECK (legal_basis IN ('express_consent', 'written_consent',
-        'tcpa_healthcare_exemption', 'patient_initiated', 'none_required')) NOT VALID;
-                                                 -- 'quiet_hours', 'stale_subject', ...
+    CHECK (legal_basis IN ('express_consent', 'written_consent', 'tcpa_healthcare_exemption',
+        'patient_initiated', 'none_required')) NOT VALID;
 
 ALTER TABLE contacts
   ADD COLUMN line_type_checked_at TIMESTAMPTZ;    -- kind re-verified against a line-type lookup

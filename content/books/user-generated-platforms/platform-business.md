@@ -419,6 +419,12 @@ Each later chapter extends a defined part of this spine:
 
 What goes wrong most often is building for one kind of platform and bolting on the rest: a forum whose posts can't carry a price, an image host whose files live on the post row, a marketplace whose listings can't be reported through the same pipeline as comments. My rule: decide the shape of content, media, inventory and cases together, even if you launch with one.
 
+Chapters change tables that already hold rows, so their `ALTER`s are written to run on a live database: checks, required columns and foreign keys on existing columns are added `NOT VALID`, which checks new rows without scanning the old ones, and indexes and unique keys are built `CONCURRENTLY`. Once any backfill is done, each `NOT VALID` constraint is validated under a lock that doesn't block reads or writes ([Zero-Downtime Migrations](/docs/database/zero-downtime-migrations#lock-aware-ddl)). For the check Images at Scale adds to `media_assets`:
+
+```sql
+ALTER TABLE media_assets VALIDATE CONSTRAINT media_assets_frame_count_check;
+```
+
 ## Auditing
 
 The records in this chapter are the ones users, creators, regulators and courts ask about later:

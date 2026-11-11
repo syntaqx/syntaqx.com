@@ -171,7 +171,6 @@ ALTER TABLE units
                                                                   -- 'adaptable', 'roll_in_shower'
   ADD COLUMN retired_on     DATE,                                 -- merged, split or demolished
   DROP CONSTRAINT units_kind_check,
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT units_kind_check CHECK (kind IN ('dwelling', 'commercial_suite', 'storage_unit',
                                          'lot', 'slip')) NOT VALID;
   -- kind says what is rented; each segment's use column refines it: units.site_use on lots

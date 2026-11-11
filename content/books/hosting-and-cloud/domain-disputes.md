@@ -193,7 +193,6 @@ ALTER TABLE domain_locks
     CHECK ((kind IN ('udrp', 'urs', 'court_order', 'tdrp')) = (dispute_id IS NOT NULL)) NOT VALID;
 
 ALTER TABLE domain_transfers
-  -- NOT VALID: new rows checked now; validate after any backfill, without blocking writes
   ADD CONSTRAINT domain_transfers_reversed_by_dispute
     FOREIGN KEY (reversed_by_dispute_id) REFERENCES domain_disputes (id) NOT VALID;
 ```

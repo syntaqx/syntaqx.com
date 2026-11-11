@@ -209,9 +209,8 @@ ALTER TABLE bookings
   ADD CONSTRAINT bookings_initiated_by_check
     CHECK (initiated_by IN ('guest', 'host_offer', 'partner_api')) NOT VALID,
   ADD CONSTRAINT bookings_decline_reason_check
-    CHECK (decline_reason IN ('dates_unavailable',
-        'trip_type_not_offered', 'guest_requirements_not_met',
-        'asset_unavailable', 'other')) NOT VALID;
+    CHECK (decline_reason IN ('dates_unavailable', 'trip_type_not_offered',
+        'guest_requirements_not_met', 'asset_unavailable', 'other')) NOT VALID;
 
 CREATE TABLE booking_participants (      -- the guests and drivers on a booking
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
