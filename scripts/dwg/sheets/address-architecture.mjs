@@ -53,6 +53,19 @@ export default function draw() {
     side: "right",
   });
 
-  s.height = r1 + h + 30;
+  s.comment("The seed geocode, in the request: the API asks the licensed geocoder once");
+  const below = r1 + h + 22;
+  s.wire(
+    [
+      api.port("l", 0.8),
+      [X(1) - gap / 2, api.y + h * 0.8],
+      [X(1) - gap / 2, below],
+      [geo.cx, below],
+      [geo.cx, geo.y2],
+    ],
+    { label: "seed geocode, in the request", seg: 2, side: "below" },
+  );
+
+  s.height = below + 30;
   return s.toString();
 }
