@@ -159,23 +159,25 @@ Retention has a second master. GDPR's storage limitation pushes toward deleting 
 The [core model](/books/workplace-and-collaboration/workplace-business#the-core-data-model) owns `retention_policies`, `legal_holds` and `hold_custodians`. This chapter gives them their shape, adds container and query scopes, a compliance store for preserved versions, custodian notices and a record of every deletion run. The columns below are the full definitions: where one restates a core sketch column, this definition replaces it; `retention_policy_targets` replaces the sketch's `scope_type`/`scope_id`, and `hold_containers` takes the container custodians, so `hold_custodians` holds members only:
 
 ```sql
-ALTER TABLE retention_policies
-  ADD COLUMN organization_id  UUID NOT NULL REFERENCES organizations (id),
-  ADD COLUMN workspace_id     UUID REFERENCES workspaces (id),    -- NULL: org-wide
-  ADD COLUMN name             TEXT NOT NULL,
-  ADD COLUMN item_kinds       TEXT[] NOT NULL,                     -- 'message', 'file', 'page', 'recording'
-  ADD COLUMN container_kinds  TEXT[],                              -- 'channel', 'dm', 'space'; NULL: all
-  ADD COLUMN scope            TEXT NOT NULL CHECK (scope IN ('all', 'include', 'exclude', 'adaptive')),
-  ADD COLUMN scope_query      JSONB,                               -- adaptive: evaluated daily
-  ADD COLUMN action           TEXT NOT NULL CHECK (action IN ('retain', 'delete', 'retain_then_delete')),
-  ADD COLUMN duration         INTERVAL,                            -- NULL: forever
-  ADD COLUMN measured_from    TEXT NOT NULL CHECK (measured_from IN ('created', 'modified', 'labeled')),
-  ADD COLUMN track_edits      BOOLEAN NOT NULL DEFAULT TRUE,
-  ADD COLUMN member_override  BOOLEAN NOT NULL DEFAULT FALSE,      -- may members set shorter on DMs
-  ADD COLUMN locked_at        TIMESTAMPTZ,                         -- preservation lock: no disable, no shortening
-  ADD COLUMN priority         SMALLINT NOT NULL DEFAULT 0,
-  ADD COLUMN status           TEXT NOT NULL CHECK (status IN ('draft', 'applying', 'active', 'disabled')),
-  ADD COLUMN created_by       UUID NOT NULL REFERENCES members (id);
+CREATE TABLE retention_policies (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  workspace_id     UUID REFERENCES workspaces (id),    -- NULL: org-wide
+  name             TEXT NOT NULL,
+  item_kinds       TEXT[] NOT NULL,                     -- 'message', 'file', 'page', 'recording'
+  container_kinds  TEXT[],                              -- 'channel', 'dm', 'space'; NULL: all
+  scope            TEXT NOT NULL CHECK (scope IN ('all', 'include', 'exclude', 'adaptive')),
+  scope_query      JSONB,                               -- adaptive: evaluated daily
+  action           TEXT NOT NULL CHECK (action IN ('retain', 'delete', 'retain_then_delete')),
+  duration         INTERVAL,                            -- NULL: forever
+  measured_from    TEXT NOT NULL CHECK (measured_from IN ('created', 'modified', 'labeled')),
+  track_edits      BOOLEAN NOT NULL DEFAULT TRUE,
+  member_override  BOOLEAN NOT NULL DEFAULT FALSE,      -- may members set shorter on DMs
+  locked_at        TIMESTAMPTZ,                         -- preservation lock: no disable, no shortening
+  priority         SMALLINT NOT NULL DEFAULT 0,
+  status           TEXT NOT NULL CHECK (status IN ('draft', 'applying', 'active', 'disabled')),
+  created_by       UUID NOT NULL REFERENCES members (id)
+);
 
 CREATE TABLE retention_policy_targets (      -- explicit includes and excludes
   policy_id     UUID NOT NULL REFERENCES retention_policies (id),
@@ -185,28 +187,33 @@ CREATE TABLE retention_policy_targets (      -- explicit includes and excludes
   PRIMARY KEY (policy_id, target_type, target_id)
 );
 
-ALTER TABLE legal_holds
-  ADD COLUMN organization_id  UUID NOT NULL REFERENCES organizations (id),
-  ADD COLUMN matter_ref       TEXT NOT NULL,                       -- the customer's matter name or number
-  ADD COLUMN ediscovery_case_id UUID,                              -- set by eDiscovery & Export
-  ADD COLUMN scope            TEXT NOT NULL CHECK (scope IN ('custodian_all', 'custodian_dms',
-                                'containers', 'query')),
-  ADD COLUMN date_range       TSTZRANGE,                           -- fixed at creation
-  ADD COLUMN query            JSONB,
-  ADD COLUMN suppress_ephemeral BOOLEAN NOT NULL DEFAULT TRUE,     -- force history on, timers off
-  ADD COLUMN status           TEXT NOT NULL CHECK (status IN ('active', 'releasing', 'released')),
-  ADD COLUMN created_by       UUID NOT NULL REFERENCES members (id),
-  ADD COLUMN released_by      UUID REFERENCES members (id),
-  ADD COLUMN release_approved_by UUID REFERENCES members (id),
-  ADD COLUMN released_at      TIMESTAMPTZ,
-  ADD CONSTRAINT legal_holds_two_person_release
-    CHECK (released_by IS NULL OR release_approved_by IS DISTINCT FROM released_by);
+CREATE TABLE legal_holds (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  matter_ref       TEXT NOT NULL,                       -- the customer's matter name or number
+  ediscovery_case_id UUID,                              -- set by eDiscovery & Export
+  scope            TEXT NOT NULL CHECK (scope IN ('custodian_all', 'custodian_dms',
+                     'containers', 'query')),
+  date_range       TSTZRANGE,                           -- fixed at creation
+  query            JSONB,
+  suppress_ephemeral BOOLEAN NOT NULL DEFAULT TRUE,     -- force history on, timers off
+  status           TEXT NOT NULL CHECK (status IN ('active', 'releasing', 'released')),
+  created_by       UUID NOT NULL REFERENCES members (id),
+  released_by      UUID REFERENCES members (id),
+  release_approved_by UUID REFERENCES members (id),
+  released_at      TIMESTAMPTZ,
+  CONSTRAINT legal_holds_two_person_release
+    CHECK (released_by IS NULL OR release_approved_by IS DISTINCT FROM released_by)
+);
 
-ALTER TABLE hold_custodians
-  ADD COLUMN member_id        UUID NOT NULL REFERENCES members (id),
-  ADD COLUMN added_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
-  ADD COLUMN removed_at       TIMESTAMPTZ,
-  ADD COLUMN coverage         JSONB NOT NULL DEFAULT '{}';         -- computed: held, suppressed, not covered
+CREATE TABLE hold_custodians (
+  legal_hold_id    UUID NOT NULL REFERENCES legal_holds (id),
+  member_id        UUID NOT NULL REFERENCES members (id),
+  added_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  removed_at       TIMESTAMPTZ,
+  coverage         JSONB NOT NULL DEFAULT '{}',         -- computed: held, suppressed, not covered
+  PRIMARY KEY (legal_hold_id, member_id)
+);
 
 CREATE TABLE hold_containers (               -- shared places held regardless of author
   legal_hold_id UUID NOT NULL REFERENCES legal_holds (id),

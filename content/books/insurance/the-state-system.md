@@ -180,7 +180,7 @@ CREATE TABLE jurisdiction_rules (          -- the rulebook every chapter reads
   source_url         TEXT NOT NULL,
   checked_on         DATE NOT NULL,
   EXCLUDE USING gist (jurisdiction WITH =, rule_key WITH =,
-    (COALESCE(line, '')) WITH =, qualifier WITH =, effective WITH &&)
+    (COALESCE(line, '')) WITH =, (qualifier::text) WITH =, effective WITH &&)
 );
 ```
 

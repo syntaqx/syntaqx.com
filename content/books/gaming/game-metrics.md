@@ -208,9 +208,9 @@ CREATE TABLE fct_player_days (
 Match quality reads the matchmaker's snapshot, which [Matchmaking & Ranked](/books/gaming/matchmaking#the-ticket-model) adds to the core tables (`rating_before`, `expected_score` and `queue_wait_ms` per participant; `match_quality` and `rating_model_id` per match). The metrics need three more kinds of fact, written when they happen: the queue timeline split at the moment a match formed, so matching and placement time can be told apart; the team-level prediction; and the server's frame counts:
 
 ```sql
+-- ticket_created_at (player asked for a match) and matched_at (potential match formed)
+-- come from Matchmaking & Ranked; placement completes the timeline.
 ALTER TABLE match_participants
-  ADD COLUMN ticket_created_at        TIMESTAMPTZ,   -- player asked for a match
-  ADD COLUMN matched_at               TIMESTAMPTZ,   -- potential match formed
   ADD COLUMN placed_at                TIMESTAMPTZ;   -- server allocated, player sent to it
 
 ALTER TABLE matches

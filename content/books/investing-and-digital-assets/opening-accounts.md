@@ -150,6 +150,16 @@ The SEC amended the rule on May 16, 2024 (89 FR 47688, published June 3, 2024, e
 These are deltas against [The Core Data Model](/books/investing-and-digital-assets/investing-business#the-core-data-model): `parties`, `party_identities`, `accounts` (with `account_type`, `legal_entity_id`, `capabilities`, `options_level` and `status`), `account_parties` (whose roles include `custodian`, `trustee` and `trusted_contact`), `legal_entities` and `disclosures`. What opening adds is the application that becomes an account, the versioned investment profile, each capability approval, tax certifications, reliance certifications between firms, and senior investor holds.
 
 ```sql
+CREATE TABLE cip_reliance_agreements (       -- 1023.220(a)(6): who relies on whom, certified yearly
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  relying_entity_id  UUID NOT NULL REFERENCES legal_entities (id),
+  relied_on_name     TEXT NOT NULL,          -- the other broker-dealer or institution
+  relied_on_regulator TEXT NOT NULL,         -- its federal functional regulator
+  steps_covered      TEXT[] NOT NULL,        -- 'collect', 'verify', 'list_check', 'notice'
+  contract_ref       TEXT NOT NULL,
+  valid_during       DATERANGE NOT NULL
+);
+
 CREATE TABLE account_applications (          -- one request to open one account at one entity
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
   applicant_party_id UUID NOT NULL REFERENCES parties (id),     -- the CIP customer (custodian, trustee, signer)
@@ -165,16 +175,6 @@ CREATE TABLE account_applications (          -- one request to open one account 
   account_id         UUID REFERENCES accounts (id),             -- set when opened
   submitted_at       TIMESTAMPTZ NOT NULL,
   decided_at         TIMESTAMPTZ
-);
-
-CREATE TABLE cip_reliance_agreements (       -- 1023.220(a)(6): who relies on whom, certified yearly
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  relying_entity_id  UUID NOT NULL REFERENCES legal_entities (id),
-  relied_on_name     TEXT NOT NULL,          -- the other broker-dealer or institution
-  relied_on_regulator TEXT NOT NULL,         -- its federal functional regulator
-  steps_covered      TEXT[] NOT NULL,        -- 'collect', 'verify', 'list_check', 'notice'
-  contract_ref       TEXT NOT NULL,
-  valid_during       DATERANGE NOT NULL
 );
 
 CREATE TABLE reliance_certifications (       -- the annual certification itself

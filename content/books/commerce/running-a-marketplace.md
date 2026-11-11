@@ -198,7 +198,7 @@ WITH seller_orders AS (
   FROM orders o
   JOIN locations l ON l.id = o.location_id
   JOIN merchants m ON m.id = l.merchant_id
-  WHERE m.operator_id = $1 AND o.placed_at <@ $2
+  WHERE m.operator_id = $1 AND o.placed_at <@ $2::tstzrange
 )
 SELECT so.seller_id,
        (SELECT COALESCE(SUM(ol.amount), 0) FROM order_lines ol

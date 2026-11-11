@@ -147,6 +147,14 @@ CREATE TABLE cash_vehicles (                  -- the products cash can sit in
   valid_during       DATERANGE NOT NULL
 );
 
+CREATE TABLE sweep_consents (                 -- 15c3-3(j)(2)(ii)(A): prior written affirmative consent
+  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
+  account_id         UUID NOT NULL REFERENCES accounts (id),
+  disclosure_id      UUID NOT NULL REFERENCES disclosures (id),  -- the terms shown
+  consented_at       TIMESTAMPTZ NOT NULL,
+  method             TEXT NOT NULL
+);
+
 CREATE TABLE sweep_elections (                -- which vehicle each account's cash is in, by date
   account_id         UUID NOT NULL REFERENCES accounts (id),
   cash_vehicle_id    UUID NOT NULL REFERENCES cash_vehicles (id),
@@ -155,14 +163,6 @@ CREATE TABLE sweep_elections (                -- which vehicle each account's ca
   consent_id         UUID REFERENCES sweep_consents (id),
   valid_during       DATERANGE NOT NULL,
   PRIMARY KEY (account_id, cash_vehicle_id, balance_from, valid_during)
-);
-
-CREATE TABLE sweep_consents (                 -- 15c3-3(j)(2)(ii)(A): prior written affirmative consent
-  id                 UUID PRIMARY KEY DEFAULT uuidv7(),
-  account_id         UUID NOT NULL REFERENCES accounts (id),
-  disclosure_id      UUID NOT NULL REFERENCES disclosures (id),  -- the terms shown
-  consented_at       TIMESTAMPTZ NOT NULL,
-  method             TEXT NOT NULL
 );
 
 CREATE TABLE sweep_change_notices (           -- 30 calendar days before any change

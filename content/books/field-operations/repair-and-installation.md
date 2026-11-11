@@ -247,7 +247,7 @@ ALTER TABLE work_orders
   ADD COLUMN currency                TEXT,
   ADD COLUMN callback_cause          TEXT CHECK (callback_cause IN ('workmanship',
                                        'diagnosis_wrong', 'equipment_failure')),
-  ADD CONSTRAINT work_orders_callback_cause_check
+  ADD CONSTRAINT work_orders_callback_cause_on_callbacks
     CHECK (callback_cause IS NULL OR source = 'callback');
 
 CREATE TABLE work_order_parts (

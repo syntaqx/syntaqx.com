@@ -179,7 +179,7 @@ WHERE t.account_id = :account_id
   AND t.rail = 'ach'
   AND t.counterparty ->> 'benefit_marker' = 'XX'     -- positions 54-55 of the entry, as received
   AND t.reverses_id IS NULL
-  AND t.effective_date >= (:review_date - INTERVAL '1 day' - INTERVAL '2 months')::date
+  AND t.effective_date >= (:review_date::date - INTERVAL '1 day' - INTERVAL '2 months')::date
   AND t.effective_date <= :review_date - 1;
 ```
 

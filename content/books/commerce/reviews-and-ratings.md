@@ -179,7 +179,7 @@ SELECT r.rule_version, COUNT(DISTINCT r.order_line_id)::NUMERIC / NULLIF(d.lines
 FROM review_requests r,
      (SELECT COUNT(*) AS lines FROM order_lines ol JOIN fulfillment_lines fl
         ON fl.order_line_id = ol.id JOIN fulfillments f ON f.id = fl.fulfillment_id
-      WHERE f.status = 'delivered' AND f.created_at <@ $1) d
+      WHERE f.status = 'delivered' AND f.created_at <@ $1::tstzrange) d
 WHERE r.sent_at <@ $1
 GROUP BY r.rule_version, d.lines;
 ```

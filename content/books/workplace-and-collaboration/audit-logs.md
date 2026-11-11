@@ -104,32 +104,6 @@ The audit log feeds detection on both sides of the inversion. Vendors ship detec
 The core data model's `audit_events` ([The Workplace Software Business](/books/workplace-and-collaboration/workplace-business#the-core-data-model)) is the table every chapter writes to. This chapter fixes its shape and adds the action catalog, export streams and per-record retention. The columns below are the table's full definition: where one restates a core sketch column (`organization_id`, `workspace_id`, `action`, `actor_type`, `occurred_at`), this definition replaces it, and `target_type`, `target_id` and `details` replace the sketch's `resource_type`, `resource_id` and `context`:
 
 ```sql
-ALTER TABLE audit_events
-  ADD COLUMN organization_id  UUID NOT NULL REFERENCES organizations (id),
-  ADD COLUMN workspace_id     UUID REFERENCES workspaces (id),     -- NULL for org-level events
-  ADD COLUMN occurred_at      TIMESTAMPTZ NOT NULL,                 -- when it happened
-  ADD COLUMN recorded_at      TIMESTAMPTZ NOT NULL DEFAULT now(),   -- when the pipeline wrote it
-  ADD COLUMN action           TEXT NOT NULL REFERENCES audit_actions (action),
-  ADD COLUMN actor_type       TEXT NOT NULL CHECK (actor_type IN ('member', 'admin', 'app',
-                                'bot', 'service', 'agent', 'vendor_staff', 'system')),
-  ADD COLUMN actor_member_id  UUID REFERENCES members (id),
-  ADD COLUMN on_behalf_of_id  UUID REFERENCES members (id),         -- the member whose token or account was used
-  ADD COLUMN app_installation_id UUID REFERENCES app_installations (id),
-  ADD COLUMN api_token_id     UUID REFERENCES api_tokens (id),
-  ADD COLUMN actor_label      TEXT NOT NULL,                        -- name or app name as it was
-  ADD COLUMN target_type      TEXT NOT NULL,                        -- 'item', 'container', 'member', 'grant', 'policy', 'workspace'
-  ADD COLUMN target_id        UUID,
-  ADD COLUMN target_label     TEXT,                                 -- channel or file name at the time
-  ADD COLUMN container_id     UUID REFERENCES containers (id),
-  ADD COLUMN sensitivity_label_id UUID,                             -- label on the target when read
-  ADD COLUMN ip_address       INET,
-  ADD COLUMN user_agent       TEXT,
-  ADD COLUMN session_id       TEXT,
-  ADD COLUMN details          JSONB NOT NULL DEFAULT '{}',          -- before/after for changes
-  ADD COLUMN expires_at       TIMESTAMPTZ NOT NULL,                 -- fixed at write time
-  ADD COLUMN prev_hash        BYTEA,                                -- hash chain per organization
-  ADD COLUMN row_hash         BYTEA NOT NULL;
-
 CREATE TABLE audit_actions (                -- the published catalog, one row per action name
   action          TEXT PRIMARY KEY,         -- 'file.downloaded', 'retention_policy.updated'
   band            TEXT NOT NULL CHECK (band IN ('admin', 'content_change', 'read', 'auth', 'security')),
@@ -138,6 +112,34 @@ CREATE TABLE audit_actions (                -- the published catalog, one row pe
   plan_gate       TEXT,                     -- NULL: emitted on every plan
   introduced_at   DATE NOT NULL,
   deprecated_at   DATE
+);
+
+CREATE TABLE audit_events (
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  organization_id  UUID NOT NULL REFERENCES organizations (id),
+  workspace_id     UUID REFERENCES workspaces (id),     -- NULL for org-level events
+  occurred_at      TIMESTAMPTZ NOT NULL,                 -- when it happened
+  recorded_at      TIMESTAMPTZ NOT NULL DEFAULT now(),   -- when the pipeline wrote it
+  action           TEXT NOT NULL REFERENCES audit_actions (action),
+  actor_type       TEXT NOT NULL CHECK (actor_type IN ('member', 'admin', 'app',
+                     'bot', 'service', 'agent', 'vendor_staff', 'system')),
+  actor_member_id  UUID REFERENCES members (id),
+  on_behalf_of_id  UUID REFERENCES members (id),         -- the member whose token or account was used
+  app_installation_id UUID REFERENCES app_installations (id),
+  api_token_id     UUID REFERENCES api_tokens (id),
+  actor_label      TEXT NOT NULL,                        -- name or app name as it was
+  target_type      TEXT NOT NULL,                        -- 'item', 'container', 'member', 'grant', 'policy', 'workspace'
+  target_id        UUID,
+  target_label     TEXT,                                 -- channel or file name at the time
+  container_id     UUID REFERENCES containers (id),
+  sensitivity_label_id UUID,                             -- label on the target when read
+  ip_address       INET,
+  user_agent       TEXT,
+  session_id       TEXT,
+  details          JSONB NOT NULL DEFAULT '{}',          -- before/after for changes
+  expires_at       TIMESTAMPTZ NOT NULL,                 -- fixed at write time
+  prev_hash        BYTEA,                                -- hash chain per organization
+  row_hash         BYTEA NOT NULL
 );
 
 CREATE TABLE audit_streams (                -- a customer's SIEM destination

@@ -287,7 +287,7 @@ Committing stock for an order line is a guarded update and a movement in one tra
 UPDATE inventory_levels
 SET committed = committed + $qty, version = version + 1, updated_at = NOW()
 WHERE item_id = $item AND location_id = $location
-  AND on_hand - committed - damaged - quality_control >= $qty + $reserved_by_others
+  AND on_hand - committed - damaged - quality_control >= $qty::int + $reserved_by_others
 RETURNING version;
 -- zero rows: not enough stock; the order manager re-sources or holds
 -- then INSERT INTO inventory_movements (... bucket 'committed', reason 'committed' ...)

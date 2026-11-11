@@ -226,7 +226,7 @@ LEFT JOIN api_tokens t ON t.app_installation_id = ai.id AND t.revoked_at IS NULL
 WHERE ai.workspace_id = $1
   AND ai.disabled_at IS NULL
   AND (ai.consent_kind = 'admin' OR ai.risk_level IN ('high', 'critical'))
-GROUP BY ai.id, a.name
+GROUP BY ai.id, a.id
 ORDER BY ai.risk_level DESC NULLS LAST, ai.last_used_at DESC NULLS LAST;
 ```
 

@@ -181,9 +181,6 @@ ALTER TABLE charges
   ADD COLUMN posted_by             UUID NOT NULL REFERENCES users (id);  -- staff, or the run's
                                                                    -- service user
 
-ALTER TABLE payment_applications
-  ADD COLUMN application_rule_id UUID REFERENCES payment_application_rules (id);  -- the order used
-
 CREATE TABLE charge_posting_runs (       -- one row per property per run
   id            UUID PRIMARY KEY DEFAULT uuidv7(),
   tenant_id     UUID NOT NULL,
@@ -218,6 +215,10 @@ CREATE TABLE payment_application_rules ( -- the operator's order; ordered steps
                                          --  {"match": "any", "order": "oldest_due"}]
   valid_during  DATERANGE NOT NULL
 );
+
+ALTER TABLE payment_applications
+  ADD COLUMN application_rule_id UUID REFERENCES payment_application_rules (id);  -- the order used
+
 -- A jurisdiction's mandatory order is a legal_rules row of type 'payment_application_order'
 -- with the same steps; where one applies it wins, and the evaluation is recorded.
 

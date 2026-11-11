@@ -209,7 +209,7 @@ Visits are ordinary usage events: one per site per UTC day, produced by the log 
 ```sql
 INSERT INTO usage_events (source, idempotency_key, account_id, resource_id, meter,
                           quantity, dimensions, occurred_during)
-VALUES ('edge-logs', 'visits:' || $site_id || ':2026-10-26', $account_id, $site_id,
+VALUES ('edge-logs', 'visits:' || $site_id::uuid || ':2026-10-26', $account_id, $site_id,
         'site.visits', 18342,
         '{"environment": "production", "excluded_bots": 4110, "excluded_403": 212,
           "classifier": "bots-2025-09"}',

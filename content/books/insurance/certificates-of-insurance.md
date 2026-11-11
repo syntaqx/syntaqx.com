@@ -147,6 +147,9 @@ CREATE TABLE certificate_lines (           -- each policy the certificate report
   CHECK (NOT subrogation_waiver_shown OR waiver_form_id IS NOT NULL)
 );
 
+ALTER TABLE party_roles
+  ADD COLUMN attributes JSONB NOT NULL DEFAULT '{}';  -- terms of the role, as below
+
 -- Additional insureds are party_roles on the policy version with the endorsement that
 -- grants the status: role 'additional_insured', plus
 --   attributes {"form_id": ..., "scope": "ongoing" | "completed" | "both",

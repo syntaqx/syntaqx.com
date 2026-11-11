@@ -170,7 +170,7 @@ SELECT ac.operator, COUNT(*) AS orders,
 FROM agent_checkout_sessions s
 JOIN agent_clients ac ON ac.id = s.agent_client_id
 JOIN orders o ON o.id = s.order_id
-WHERE o.placed_at <@ $1
+WHERE o.placed_at <@ $1::tstzrange
 GROUP BY ac.operator;
 ```
 

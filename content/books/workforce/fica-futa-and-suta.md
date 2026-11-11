@@ -252,7 +252,7 @@ SELECT GREATEST(r.wage_base
 FROM tax_rates r
 LEFT JOIN accumulators a
   ON a.worker_id = $1 AND a.employer_id = $2 AND a.tax_year = $5
- AND a.key LIKE '%:' || $3 || ':' || $4::TEXT
+ AND a.key LIKE '%:' || $3 || ':' || $4::uuid
 WHERE r.jurisdiction_id = $4 AND r.tax_type = $3 AND r.payer = 'employee'
   AND r.valid_during @> make_date($5, 12, 31)
 GROUP BY r.wage_base;

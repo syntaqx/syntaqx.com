@@ -116,7 +116,6 @@ The core `medication_requests` row already holds the prescriber's role, RxNorm a
 
 ```sql
 ALTER TABLE medication_requests
-  ADD COLUMN compounded           BOOLEAN NOT NULL DEFAULT false,
   ADD COLUMN dea_schedule         TEXT CHECK (dea_schedule IN ('II', 'III', 'IV', 'V')),
   ADD COLUMN quantity_unit        TEXT,
   ADD COLUMN days_supply          INT,

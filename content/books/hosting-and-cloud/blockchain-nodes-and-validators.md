@@ -315,7 +315,7 @@ JOIN LATERAL (
 ) w ON TRUE
 WHERE e.meter = 'rpc.calls'
   AND e.dimensions->>'outcome' NOT IN ('rate_limited', 'allowance_exhausted', 'server_error')
-  AND lower(e.occurred_during) <@ :window
+  AND lower(e.occurred_during) <@ :window::tstzrange
 GROUP BY e.account_id;
 ```
 

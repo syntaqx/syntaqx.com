@@ -211,9 +211,7 @@ ALTER TABLE hosting_accounts
   ADD COLUMN panel_package_id   UUID REFERENCES panel_packages (id),  -- replaces the bare name
   ADD COLUMN owner_account_id   UUID REFERENCES accounts (id),  -- root's operator or the reseller
   ADD COLUMN primary_domain     TEXT,              -- A-label; addon domains are resource_identifiers
-  ADD COLUMN php_version        TEXT,              -- 'ea-php82', vendor 'alt-php74'
-  ADD COLUMN php_handler        TEXT CHECK (php_handler IN ('cgi', 'dso', 'suphp', 'fpm',
-                                  'fcgid', 'lsapi')),
+  -- php_version ('ea-php82', vendor 'alt-php74') and php_handler: from Shared Hosting Isolation
   ADD COLUMN suspension_locked  BOOLEAN NOT NULL DEFAULT FALSE,  -- resellers can't unsuspend
   ADD COLUMN panel_seen_at      TIMESTAMPTZ;       -- last reconciliation that found it
   -- panel_user is validated by the provider before createacct: <= 16 chars, [a-z0-9],

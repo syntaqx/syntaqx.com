@@ -126,7 +126,6 @@ ALTER TABLE members
 
 ALTER TABLE groups
   ADD COLUMN directory_connection_id UUID REFERENCES directory_connections (id),
-  ADD COLUMN external_id TEXT,
   ADD CONSTRAINT groups_external_id_unique UNIQUE (directory_connection_id, external_id);
 
 CREATE TABLE scim_operations (            -- every request the identity provider sent, as received

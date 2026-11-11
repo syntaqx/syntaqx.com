@@ -381,7 +381,7 @@ WITH hours AS (
     ON v.distribution = e.dimensions ->> 'distribution'
    AND v.minor        = e.dimensions ->> 'version_minor'
   WHERE e.meter = 'k8s.control_plane.hours'
-    AND lower(e.occurred_during) >= lower(:period)
+    AND lower(e.occurred_during) >= lower(:period::tstzrange)
     AND lower(e.occurred_during) <  upper(:period)
     AND NOT EXISTS (SELECT 1 FROM usage_events c WHERE c.corrects_id = e.id)
 ),
