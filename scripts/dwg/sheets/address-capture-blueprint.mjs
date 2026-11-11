@@ -1,7 +1,7 @@
 // The address capture flow as a UI blueprint: four wireframed screens (saved
 // addresses, search, confirm details, manual entry) with the flow between
 // them and numbered notes on what each field stores and under whose license.
-// The entrance pin is the accent: seeded from a storable geocode, it's the location kept.
+// The entrance pin is the accent: seeded from a storable geocode and held within a radius of it.
 // Embedded in content/docs/fundamentals/addresses.md (The Capture Flow).
 import { sheet } from "../kit.mjs";
 
@@ -33,7 +33,7 @@ export default function draw() {
       ],
       [
         6,
-        "The pin starts on a geocode you may store and moves only inside a box sized by its precision.",
+        "The pin starts on a geocode you may store and moves only within a radius sized by its precision.",
       ],
       [7, "Country comes first and decides the fields; no state or province is preselected."],
       [
@@ -133,14 +133,16 @@ export default function draw() {
   s.line(c.x, mapY + mapH / 2, c.x + cw, mapY + mapH / 2, "ext");
   const pinX = c.x + cw / 2,
     pinY = mapY + 24;
-  s.rect(pinX - 30, mapY + 5, 60, 30, "phantom"); // the bound the pin may move within
+  circle(pinX, pinY + 2, 14, "phantom"); // the radius the pin may move within
   s.path(`M${pinX},${pinY + 10}l-6,-10a6,6 0 1,1 12,0z`, "obj hl"); // the pin
   s.rect(c.x + cw / 2 - 38, mapY + mapH - 18, 76, 13, "obj plate", { rx: 6 });
   s.label(c.x + cw / 2 - 38, mapY + mapH - 18, 76, 13, "adjust pin", "sl hl");
   s.nb(X(2) + sw + 10, mapY + 8, 6);
   cy += mapH + 6;
-  field(c.x, cy, half, 16, "door");
-  field(c.x + half + 6, cy, half, 16, "lobby", "slot");
+  const third = (cw - 8) / 3;
+  field(c.x, cy, third, 16, "door");
+  field(c.x + third + 4, cy, third, 16, "lobby", "slot");
+  field(c.x + 2 * (third + 4), cy, third, 16, "hand", "slot");
   cy += 22;
   slot(c.x, cy, cw, 26, "instructions");
   cy += 32;
