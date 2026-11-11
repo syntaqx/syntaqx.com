@@ -214,7 +214,7 @@ CREATE TABLE compliance_charge_rules (   -- the partner's charge schedule, versi
 CREATE TABLE po_delivery_measures (      -- what OTIF and on-time programs measure, per PO
   order_id         UUID PRIMARY KEY REFERENCES orders (id),
   must_arrive_by   DATE,
-  window           TSTZRANGE,            -- the on-time window the program applies
+  on_time_window   TSTZRANGE,            -- the on-time window the program applies
   routing_guide_id UUID REFERENCES routing_guides (id),
   arrived_at       TIMESTAMPTZ,          -- from carrier POD or retailer receiving
   units_ordered    INT NOT NULL,

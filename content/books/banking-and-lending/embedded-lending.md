@@ -201,7 +201,7 @@ CREATE TABLE repayment_floors (              -- each period minimum or milestone
   kind                TEXT NOT NULL CHECK (kind IN ('period_minimum', 'fixed_payment',
                         'cumulative_milestone')),
   sequence            SMALLINT NOT NULL,
-  window              DATERANGE NOT NULL,    -- the period, or origination to the milestone date
+  floor_window        DATERANGE NOT NULL,    -- the period, or origination to the milestone date
   required            BIGINT NOT NULL,       -- an amount, or the milestone's share of the total
   withheld            BIGINT NOT NULL DEFAULT 0,
   manual_paid         BIGINT NOT NULL DEFAULT 0,

@@ -41,7 +41,7 @@ My default is the first: one table, one constraint, the hold and the booking the
 
 A hold that has expired must stop blocking availability at the instant it expires, whether or not a cleanup job has run. Make expiry part of every read that asks "is this taken?":
 
-```sql
+```sql fragment
 -- what blocks a slot right now
 WHERE status = 'confirmed'
    OR (status = 'held' AND hold_expires_at > now())

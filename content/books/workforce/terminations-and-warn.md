@@ -196,7 +196,7 @@ CREATE TABLE warn_events (                 -- a closing or layoff at a site, und
   law                 TEXT NOT NULL,         -- 'federal', 'ca', 'ny', 'nj', ...
   kind                TEXT NOT NULL CHECK (kind IN ('plant_closing', 'mass_layoff',
                         'relocation', 'hours_reduction', 'below_threshold')),
-  window              DATERANGE NOT NULL,    -- the 30- or 90-day span the count covers
+  count_window        DATERANGE NOT NULL,    -- the 30- or 90-day span the count covers
   site_headcount      INT NOT NULL,          -- excluding part-time, as the law defines
   employment_losses   INT NOT NULL,
   aggregated          BOOLEAN NOT NULL DEFAULT FALSE,

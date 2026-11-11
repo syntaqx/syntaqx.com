@@ -179,7 +179,7 @@ CREATE TABLE privacy_requests (
   person_id        UUID REFERENCES people (id),   -- null until identity is matched
   requester_kind   TEXT NOT NULL CHECK (requester_kind IN ('resident', 'applicant',
                      'prospect', 'staff', 'owner', 'vendor_contact', 'authorized_agent')),
-  right            TEXT NOT NULL CHECK (right IN ('know', 'access', 'correct', 'delete',
+  requested_right  TEXT NOT NULL CHECK (requested_right IN ('know', 'access', 'correct', 'delete',
                      'opt_out_sale_share', 'limit_sensitive', 'portability')),
   jurisdiction_id  UUID NOT NULL REFERENCES jurisdictions (id),  -- whose law applies
   received_at      TIMESTAMPTZ NOT NULL,
