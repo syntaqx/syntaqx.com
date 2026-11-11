@@ -128,8 +128,8 @@ ALTER TABLE virtual_machines
                           'nitro', 'firecracker', 'none')),  -- 'none': a bare-metal instance
   ADD COLUMN host_asset_id    UUID REFERENCES hardware_assets (id),  -- current host; host_ref
                                                                     -- stays as the opaque label
-  ADD COLUMN vcpus            SMALLINT NOT NULL,
-  ADD COLUMN memory_mib       INT NOT NULL,
+  ADD COLUMN vcpus            SMALLINT,
+  ADD COLUMN memory_mib       INT,
   ADD COLUMN cpu_model        TEXT NOT NULL DEFAULT 'dedicated'
     CHECK (cpu_model IN ('dedicated', 'shared', 'burstable', 'shared_core')),
   ADD COLUMN baseline_pct     NUMERIC(5,2),         -- per vCPU, for burstable
@@ -139,7 +139,10 @@ ALTER TABLE virtual_machines
   ADD COLUMN memory_overcommit BOOLEAN NOT NULL DEFAULT FALSE,
   ADD CONSTRAINT vm_credit_fields CHECK (CASE WHEN cpu_model = 'burstable'
     THEN num_nulls(baseline_pct, credits_per_hour, credit_cap, credit_mode) = 0
-    ELSE num_nonnulls(baseline_pct, credits_per_hour, credit_cap, credit_mode) = 0 END);
+    ELSE num_nonnulls(baseline_pct, credits_per_hour, credit_cap, credit_mode) = 0 END),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT virtual_machines_vcpus_not_null NOT NULL vcpus NOT VALID,
+  ADD CONSTRAINT virtual_machines_memory_mib_not_null NOT NULL memory_mib NOT VALID;
 
 CREATE TABLE vm_host_history (           -- where a VM ran, over time
   id              UUID PRIMARY KEY DEFAULT uuidv7(),

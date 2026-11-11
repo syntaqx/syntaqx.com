@@ -121,10 +121,12 @@ ALTER TABLE plan_versions
   ADD COLUMN initial_amount    BIGINT,
   ADD COLUMN recurring_amount  BIGINT,
   ADD COLUMN currency          TEXT NOT NULL DEFAULT 'USD',
-  ADD COLUMN billing_model     TEXT NOT NULL,  -- per_visit | periodic | prepaid | seasonal
+  ADD COLUMN billing_model     TEXT,           -- per_visit | periodic | prepaid | seasonal
   ADD COLUMN billing_interval  TEXT,           -- month | quarter | year (periodic only)
   ADD COLUMN term_months       INTEGER,
-  ADD COLUMN is_auto_renewing  BOOLEAN NOT NULL DEFAULT FALSE;
+  ADD COLUMN is_auto_renewing  BOOLEAN NOT NULL DEFAULT FALSE,
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT plan_versions_billing_model_not_null NOT NULL billing_model NOT VALID;
 
 ALTER TABLE agreements
   ADD COLUMN signed_at         TIMESTAMPTZ,

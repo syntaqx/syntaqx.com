@@ -132,7 +132,9 @@ CREATE UNIQUE INDEX container_one_host
   ON container_organizations (container_id) WHERE role = 'host';
 
 ALTER TABLE items
-  ADD COLUMN author_organization_id UUID NOT NULL REFERENCES organizations (id);  -- set at write, never changed
+  ADD COLUMN author_organization_id UUID REFERENCES organizations (id),           -- set at write, never changed
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT items_author_organization_id_not_null NOT NULL author_organization_id NOT VALID;
 ```
 
 Notes on the sketch:

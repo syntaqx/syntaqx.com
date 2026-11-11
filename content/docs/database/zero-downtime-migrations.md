@@ -60,7 +60,7 @@ Some DDL takes an `ACCESS EXCLUSIVE` lock that blocks every read and write on th
 | ------ | ------------- |
 | Add an index | `CREATE INDEX CONCURRENTLY` (slower, and can't run in a transaction, but doesn't block writes) |
 | Add a foreign key | `ADD CONSTRAINT ... NOT VALID`, then `VALIDATE CONSTRAINT` separately |
-| Add `NOT NULL` | Add a `CHECK (col IS NOT NULL) NOT VALID`, validate it, then `SET NOT NULL`, which skips the table scan once a valid check proves there are no nulls. Postgres 18 can also add the `NOT NULL` constraint itself as `NOT VALID` |
+| Add `NOT NULL` | Add a `CHECK (col IS NOT NULL) NOT VALID`, validate it, then `SET NOT NULL`, which skips the table scan once a valid check proves there are no nulls. Postgres 18 can also add the `NOT NULL` constraint itself as `NOT VALID`: `ADD CONSTRAINT t_c_not_null NOT NULL c NOT VALID`, then `VALIDATE CONSTRAINT` after the backfill |
 | Add a column with a default | Safe on Postgres 11+ when the default is non-volatile: it's stored as metadata, not written to every row |
 | Change a column's type | Usually rewrites the table. Use expand and contract with a new column |
 

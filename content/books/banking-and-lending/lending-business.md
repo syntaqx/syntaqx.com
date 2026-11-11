@@ -161,7 +161,9 @@ ALTER TABLE loans
   ADD COLUMN measurement_basis TEXT NOT NULL DEFAULT 'amortized_cost'
     CHECK (measurement_basis IN ('amortized_cost', 'fair_value', 'held_for_sale')),
   ADD COLUMN basis_elected_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  ADD COLUMN vintage           DATE NOT NULL;  -- first of the origination month
+  ADD COLUMN vintage           DATE,           -- first of the origination month
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT loans_vintage_not_null NOT NULL vintage NOT VALID;
 
 CREATE TABLE loan_economics_monthly (        -- derived, rebuilt from the ledger; never edited
   account_id         UUID NOT NULL REFERENCES accounts (id),

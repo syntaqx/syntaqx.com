@@ -119,11 +119,11 @@ The workplace twist is sourcing. A seat-based contract is bought by a company at
 
 ```sql
 ALTER TABLE subscriptions
-  ADD COLUMN term_start        DATE NOT NULL,
-  ADD COLUMN term_end          DATE NOT NULL,
-  ADD COLUMN billing_cadence   TEXT NOT NULL CHECK (billing_cadence IN ('monthly',
+  ADD COLUMN term_start        DATE,
+  ADD COLUMN term_end          DATE,
+  ADD COLUMN billing_cadence   TEXT CHECK (billing_cadence IN ('monthly',
                                  'annual_upfront', 'annual_monthly', 'quarterly')),
-  ADD COLUMN count_method      TEXT NOT NULL CHECK (count_method IN ('point_in_time',
+  ADD COLUMN count_method      TEXT CHECK (count_method IN ('point_in_time',
                                  'period_max', 'daily_prorated', 'committed')),
   ADD COLUMN committed_seats   INT,              -- floor for annual commitments
   ADD COLUMN reduce_window     INTERVAL,         -- '7 days' after purchase or renewal
@@ -132,7 +132,12 @@ ALTER TABLE subscriptions
   ADD COLUMN channel           TEXT NOT NULL DEFAULT 'direct' CHECK (channel IN
                                  ('direct', 'reseller', 'aws_marketplace',
                                   'azure_marketplace', 'gcp_marketplace')),
-  ADD COLUMN payer_party_id    UUID;             -- the customer, reseller or marketplace
+  ADD COLUMN payer_party_id    UUID,             -- the customer, reseller or marketplace
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT subscriptions_term_start_not_null NOT NULL term_start NOT VALID,
+  ADD CONSTRAINT subscriptions_term_end_not_null NOT NULL term_end NOT VALID,
+  ADD CONSTRAINT subscriptions_billing_cadence_not_null NOT NULL billing_cadence NOT VALID,
+  ADD CONSTRAINT subscriptions_count_method_not_null NOT NULL count_method NOT VALID;
 
 CREATE TABLE billing_parties (                  -- who receives and pays invoices
   id             UUID PRIMARY KEY DEFAULT uuidv7(),

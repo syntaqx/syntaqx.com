@@ -158,7 +158,9 @@ CREATE TABLE api_keys (
 ALTER TABLE payments
   ADD COLUMN next_action        JSONB,        -- set only in requires_action
   ADD COLUMN action_expires_at  TIMESTAMPTZ,
-  ADD COLUMN api_version        TEXT NOT NULL;
+  ADD COLUMN api_version        TEXT,
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT payments_api_version_not_null NOT NULL api_version NOT VALID;
 
 CREATE TABLE idempotency_records (
   merchant_id     UUID NOT NULL REFERENCES merchants (id),

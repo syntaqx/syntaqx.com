@@ -33,11 +33,11 @@ The core `entitlements` table in [The Games Business](/books/gaming/games-busine
 
 ```sql
 ALTER TABLE entitlements
-  ADD COLUMN source        TEXT NOT NULL CHECK (source IN ('purchase', 'platform', 'reward',
+  ADD COLUMN source        TEXT CHECK (source IN ('purchase', 'platform', 'reward',
                              'grant', 'subscription')),
-  ADD COLUMN source_ref    TEXT NOT NULL,       -- order id, store transaction id, match + drop slot, campaign + account
-  ADD COLUMN granted_by    TEXT NOT NULL,       -- typed actor: 'system:store', 'agent:<id>', 'liveops:<campaign>'
-  ADD COLUMN valid_during  TSTZRANGE NOT NULL,  -- unbounded for a purchase, bounded for a pass or rental
+  ADD COLUMN source_ref    TEXT,                -- order id, store transaction id, match + drop slot, campaign + account
+  ADD COLUMN granted_by    TEXT,                -- typed actor: 'system:store', 'agent:<id>', 'liveops:<campaign>'
+  ADD COLUMN valid_during  TSTZRANGE,           -- unbounded for a purchase, bounded for a pass or rental
   ADD COLUMN revoked_at    TIMESTAMPTZ,
   ADD COLUMN revoke_reason TEXT CHECK (revoke_reason IN ('refund', 'chargeback', 'fraud',
                              'grant_error', 'support', 'merge')),
@@ -45,7 +45,12 @@ ALTER TABLE entitlements
   ADD COLUMN revoke_ref    TEXT,                -- the store's refund or void id, or the support ticket
   ADD CONSTRAINT entitlements_revocation_complete
     CHECK ((revoked_at IS NULL) = (revoke_reason IS NULL)),
-  ADD CONSTRAINT entitlements_grant_once UNIQUE (account_id, item_id, source, source_ref);
+  ADD CONSTRAINT entitlements_grant_once UNIQUE (account_id, item_id, source, source_ref),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT entitlements_source_not_null NOT NULL source NOT VALID,
+  ADD CONSTRAINT entitlements_source_ref_not_null NOT NULL source_ref NOT VALID,
+  ADD CONSTRAINT entitlements_granted_by_not_null NOT NULL granted_by NOT VALID,
+  ADD CONSTRAINT entitlements_valid_during_not_null NOT NULL valid_during NOT VALID;
 ```
 
 The `source` values cover the list above: `purchase` for your own store, `platform` for a store receipt, `reward` for drops and play rewards, `grant` for promotions, support and migrations, and `subscription` for access that lasts a billing period. The unique constraint is what makes grants idempotent: a webhook delivered twice, a match result retried, a compensation script run again after a timeout all collide on the same `source_ref` and grant once ([Idempotency](/docs/requests/idempotency#idempotency-beyond-the-api)). Time-limited access (a rental, a trial weekend, a season pass) is the `valid_during` range, not a cron job that deletes rows ([Effective Dating & History](/docs/database/temporal-data)).
@@ -75,13 +80,16 @@ ALTER TABLE item_instances
   ADD COLUMN entitlement_id UUID REFERENCES entitlements (id),  -- the right that paid for it, if any
   ADD COLUMN quantity       INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
   ADD COLUMN attributes     JSONB NOT NULL DEFAULT '{}',  -- rolled stats, wear, level
-  ADD COLUMN source         TEXT NOT NULL,              -- 'purchase', 'reward', 'craft', 'trade', 'grant', 'merge'
-  ADD COLUMN source_ref     TEXT NOT NULL,
+  ADD COLUMN source         TEXT,                       -- 'purchase', 'reward', 'craft', 'trade', 'grant', 'merge'
+  ADD COLUMN source_ref     TEXT,
   ADD COLUMN tradable_after TIMESTAMPTZ,
   ADD COLUMN destroyed_at   TIMESTAMPTZ,
   ADD COLUMN destroy_reason TEXT CHECK (destroy_reason IN ('consumed', 'crafted', 'revoked', 'expired')),
   ADD CONSTRAINT item_instances_destroy_complete
-    CHECK ((destroyed_at IS NULL) = (destroy_reason IS NULL));
+    CHECK ((destroyed_at IS NULL) = (destroy_reason IS NULL)),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT item_instances_source_not_null NOT NULL source NOT VALID,
+  ADD CONSTRAINT item_instances_source_ref_not_null NOT NULL source_ref NOT VALID;
 ```
 
 ## Inventories
@@ -131,14 +139,21 @@ ALTER TABLE wallets
   ADD CONSTRAINT wallets_id_currency UNIQUE (id, currency);  -- lets entries pin the currency
 
 ALTER TABLE currency_ledger_entries
-  ADD COLUMN transaction_id UUID NOT NULL REFERENCES currency_ledger_transactions (id),
-  ADD COLUMN wallet_id      UUID NOT NULL,
-  ADD COLUMN currency       TEXT NOT NULL,       -- 'GEMS'
-  ADD COLUMN delta_amount   BIGINT NOT NULL CHECK (delta_amount <> 0),  -- signed, whole units
-  ADD COLUMN ledger_account TEXT NOT NULL CHECK (ledger_account IN ('player', 'issued', 'consumed')),
-  ADD COLUMN funding        TEXT NOT NULL CHECK (funding IN ('paid', 'earned')),
+  ADD COLUMN transaction_id UUID REFERENCES currency_ledger_transactions (id),
+  ADD COLUMN wallet_id      UUID,
+  ADD COLUMN currency       TEXT,                -- 'GEMS'
+  ADD COLUMN delta_amount   BIGINT CHECK (delta_amount <> 0),           -- signed, whole units
+  ADD COLUMN ledger_account TEXT CHECK (ledger_account IN ('player', 'issued', 'consumed')),
+  ADD COLUMN funding        TEXT CHECK (funding IN ('paid', 'earned')),
   ADD CONSTRAINT currency_ledger_entries_wallet
-    FOREIGN KEY (wallet_id, currency) REFERENCES wallets (id, currency);
+    FOREIGN KEY (wallet_id, currency) REFERENCES wallets (id, currency),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT currency_ledger_entries_transaction_id_not_null NOT NULL transaction_id NOT VALID,
+  ADD CONSTRAINT currency_ledger_entries_wallet_id_not_null NOT NULL wallet_id NOT VALID,
+  ADD CONSTRAINT currency_ledger_entries_currency_not_null NOT NULL currency NOT VALID,
+  ADD CONSTRAINT currency_ledger_entries_delta_amount_not_null NOT NULL delta_amount NOT VALID,
+  ADD CONSTRAINT currency_ledger_entries_ledger_account_not_null NOT NULL ledger_account NOT VALID,
+  ADD CONSTRAINT currency_ledger_entries_funding_not_null NOT NULL funding NOT VALID;
 ```
 
 A deferred constraint trigger rejects any transaction whose entries don't sum to zero per currency, and another rejects a spend that would take a player account below zero. The unique key on the transaction's source makes every posting idempotent, as in the payments ledger. Rows are never updated or deleted; a wrong grant is corrected by a reversing transaction that points at it, so the history shows both the mistake and the fix ([Append-Only Records](/docs/money/payment-states#append-only-records)).

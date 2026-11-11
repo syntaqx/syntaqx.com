@@ -148,9 +148,12 @@ ALTER TABLE products
   ADD COLUMN early_withdrawal_penalty JSONB,     -- e.g. {"days_interest": 90}
   ADD COLUMN renews_to_code   TEXT,              -- the product line a maturing account renews into
   ADD COLUMN dormancy_days    INTEGER,
-  ADD COLUMN created_by       UUID NOT NULL,
-  ADD COLUMN approved_by      UUID NOT NULL,
-  ADD CONSTRAINT products_two_people CHECK (approved_by <> created_by);
+  ADD COLUMN created_by       UUID,
+  ADD COLUMN approved_by      UUID,
+  ADD CONSTRAINT products_two_people CHECK (approved_by <> created_by),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT products_created_by_not_null NOT NULL created_by NOT VALID,
+  ADD CONSTRAINT products_approved_by_not_null NOT NULL approved_by NOT VALID;
 
 CREATE TABLE product_rate_tiers (
   product_id     UUID NOT NULL REFERENCES products (id),

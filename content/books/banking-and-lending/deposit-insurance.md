@@ -124,7 +124,9 @@ These are deltas against [the core data model](/books/banking-and-lending/bankin
 
 ```sql
 ALTER TABLE institutions
-  ADD COLUMN insurer TEXT NOT NULL CHECK (insurer IN ('fdic', 'ncusif', 'none'));  -- 'none': trust banks
+  ADD COLUMN insurer TEXT CHECK (insurer IN ('fdic', 'ncusif', 'none')),           -- 'none': trust banks
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT institutions_insurer_not_null NOT NULL insurer NOT VALID;
 
 ALTER TABLE account_parties
   ADD COLUMN withdrawal_rights_equal BOOLEAN,       -- joint test, 330.9

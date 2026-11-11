@@ -225,19 +225,25 @@ The core model's `builds` table holds each versioned client and server build, on
 
 ```sql
 ALTER TABLE builds
-  ADD COLUMN source_revision TEXT NOT NULL,     -- changelist or commit
-  ADD COLUMN branch TEXT NOT NULL,              -- mainline, release/26.21
-  ADD COLUMN platform TEXT NOT NULL,            -- windows, ps5, xbox_series, switch, ios, android
-  ADD COLUMN configuration TEXT NOT NULL
+  ADD COLUMN source_revision TEXT,              -- changelist or commit
+  ADD COLUMN branch TEXT,                       -- mainline, release/26.21
+  ADD COLUMN platform TEXT,                     -- windows, ps5, xbox_series, switch, ios, android
+  ADD COLUMN configuration TEXT
     CHECK (configuration IN ('development', 'test', 'shipping')),
-  ADD COLUMN engine_version TEXT NOT NULL,      -- 'unreal 5.6', or your own engine's tag
+  ADD COLUMN engine_version TEXT,               -- 'unreal 5.6', or your own engine's tag
   ADD COLUMN pipeline_state TEXT NOT NULL DEFAULT 'queued'
     CHECK (pipeline_state IN ('queued', 'syncing', 'compiling', 'cooking',
       'packaging', 'testing', 'passed', 'failed')),
   ADD COLUMN promotion TEXT                     -- null until a passed build is promoted
     CHECK (promotion IN ('candidate', 'submitted', 'certified', 'released', 'withdrawn')),
   ADD COLUMN started_at TIMESTAMPTZ,
-  ADD COLUMN finished_at TIMESTAMPTZ;
+  ADD COLUMN finished_at TIMESTAMPTZ,
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT builds_source_revision_not_null NOT NULL source_revision NOT VALID,
+  ADD CONSTRAINT builds_branch_not_null NOT NULL branch NOT VALID,
+  ADD CONSTRAINT builds_platform_not_null NOT NULL platform NOT VALID,
+  ADD CONSTRAINT builds_configuration_not_null NOT NULL configuration NOT VALID,
+  ADD CONSTRAINT builds_engine_version_not_null NOT NULL engine_version NOT VALID;
 
 CREATE TABLE build_artifacts (
   id UUID PRIMARY KEY DEFAULT uuidv7(),

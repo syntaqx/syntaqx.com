@@ -95,7 +95,7 @@ ALTER TABLE documents
                                  'fhir_bundle', 'text', 'dicom_sr')),
   ADD COLUMN ccda_document_type TEXT,          -- LOINC document type code from the header
   ADD COLUMN ccda_template_ids TEXT[],          -- templateId roots and extensions as received
-  ADD COLUMN byte_size         BIGINT NOT NULL,
+  ADD COLUMN byte_size         BIGINT,
   ADD COLUMN received_via      TEXT CHECK (received_via IN ('created_here', 'direct', 'network_query',
                                  'fax', 'scan', 'patient_upload', 'api', 'hl7v2')),
   ADD COLUMN source_organization_id UUID REFERENCES organizations (id),
@@ -103,7 +103,9 @@ ALTER TABLE documents
                                  CHECK (filing_status IN ('unfiled', 'filed', 'misfiled_moved',
                                  'rejected')),
   ADD COLUMN filed_by          UUID,           -- the user who indexed it to this chart
-  ADD COLUMN validation_errors JSONB;          -- template validation results for C-CDA
+  ADD COLUMN validation_errors JSONB,          -- template validation results for C-CDA
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT documents_byte_size_not_null NOT NULL byte_size NOT VALID;
 
 CREATE TABLE ccda_sections (                  -- an index over a received C-CDA, never a replacement
   id               UUID PRIMARY KEY DEFAULT uuidv7(),

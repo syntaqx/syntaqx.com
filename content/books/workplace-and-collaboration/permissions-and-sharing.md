@@ -123,18 +123,22 @@ ALTER TABLE items
 ALTER TABLE grants                       -- core has workspace_id, granted_by and expires_at
   ADD COLUMN effect       TEXT NOT NULL DEFAULT 'allow' CHECK (effect IN ('allow', 'deny')),
   ADD COLUMN can_reshare  BOOLEAN NOT NULL DEFAULT FALSE,
-  ADD COLUMN acl_revision BIGINT NOT NULL,                           -- the revision that wrote it
+  ADD COLUMN acl_revision BIGINT,                                    -- the revision that wrote it
   ADD CONSTRAINT grants_role_check CHECK (role IN ('owner', 'full_access', 'editor',
-    'content_editor', 'creator', 'commenter', 'viewer'));
+    'content_editor', 'creator', 'commenter', 'viewer')),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT grants_acl_revision_not_null NOT NULL acl_revision NOT VALID;
 
 ALTER TABLE share_links                  -- core has audience, created_by and expires_at
   DROP CONSTRAINT share_links_audience_check,
   ADD CONSTRAINT share_links_audience_check CHECK (audience IN ('organization', 'workspace', 'anyone')),
   ADD COLUMN role         TEXT NOT NULL DEFAULT 'viewer' CHECK (role IN ('viewer', 'commenter', 'editor')),
-  ADD COLUMN resource_key TEXT NOT NULL,          -- secret part of the URL; rotated to kill old links
+  ADD COLUMN resource_key TEXT,                   -- secret part of the URL; rotated to kill old links
   ADD COLUMN disabled_at  TIMESTAMPTZ,
   ADD COLUMN disabled_reason TEXT CHECK (disabled_reason IN ('owner', 'admin_policy', 'expired',
-    'creator_offboarded'));
+    'creator_offboarded')),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT share_links_resource_key_not_null NOT NULL resource_key NOT VALID;
 
 CREATE TABLE acl_revisions (              -- one monotonic counter per workspace: the consistency token
   workspace_id UUID PRIMARY KEY REFERENCES workspaces (id),

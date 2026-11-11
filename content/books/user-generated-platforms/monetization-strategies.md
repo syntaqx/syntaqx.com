@@ -363,9 +363,11 @@ ALTER TABLE store_transactions
   DROP COLUMN tenant_id,
   DROP COLUMN game_id,
   DROP COLUMN offer_id,
-  ADD COLUMN product_id UUID NOT NULL REFERENCES products (id),
+  ADD COLUMN product_id UUID REFERENCES products (id),
   ADD COLUMN product_price_id UUID REFERENCES product_prices (id),  -- the price shown
-  ADD CONSTRAINT store_transactions_store_xid_key UNIQUE (store, store_transaction_xid);
+  ADD CONSTRAINT store_transactions_store_xid_key UNIQUE (store, store_transaction_xid),
+  -- NOT VALID: new rows must set it now; validate once existing rows are backfilled
+  ADD CONSTRAINT store_transactions_product_id_not_null NOT NULL product_id NOT VALID;
 ```
 
 Resolving the terms for a payment is a lookup by program, tier, country and channel at the moment the money was earned, falling back from the most specific row:

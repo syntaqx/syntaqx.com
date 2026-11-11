@@ -157,14 +157,17 @@ CREATE TABLE payment_approvals (           -- a reserve change or payment over a
 );
 
 ALTER TABLE claim_payments
-  ADD COLUMN coverage_code     TEXT NOT NULL,      -- Model 900 4J, printed on the payment
-  ADD COLUMN payee_line        TEXT NOT NULL,      -- as rendered: 'Jane Doe and First Bank, ISAOA'
+  ADD COLUMN coverage_code     TEXT,               -- Model 900 4J, printed on the payment
+  ADD COLUMN payee_line        TEXT,               -- as rendered: 'Jane Doe and First Bank, ISAOA'
   ADD COLUMN payee_rule_refs   TEXT[] NOT NULL DEFAULT '{}',  -- 'Fla. Stat. 627.70121', ...
   ADD COLUMN is_final          BOOLEAN NOT NULL DEFAULT FALSE, -- only at limits or agreed compromise
   ADD COLUMN sanctions_screen_id UUID,             -- the screening result it passed
   ADD COLUMN tax_form          TEXT,               -- '1099-MISC-10', '1099-MISC-6', '1099-NEC-1a'
   ADD COLUMN tax_payee_party_id UUID REFERENCES parties (id),
-  ADD COLUMN approval_id       UUID REFERENCES payment_approvals (id);
+  ADD COLUMN approval_id       UUID REFERENCES payment_approvals (id),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT claim_payments_coverage_code_not_null NOT NULL coverage_code NOT VALID,
+  ADD CONSTRAINT claim_payments_payee_line_not_null NOT NULL payee_line NOT VALID;
 ```
 
 Case outstanding and reported (incurred) loss by exposure and cost type, as of any date, are queries over the history:

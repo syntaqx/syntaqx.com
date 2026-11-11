@@ -201,15 +201,18 @@ CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 ALTER TABLE visits
   ADD COLUMN occupied_during TSTZRANGE,       -- planned time on site, closed-open; derived
-  ADD COLUMN booked_via      TEXT NOT NULL CHECK (booked_via IN ('portal', 'csr',
+  ADD COLUMN booked_via      TEXT CHECK (booked_via IN ('portal', 'csr',
                                'ai_agent', 'lead_source', 'technician', 'office',
                                'system')),
-  ADD COLUMN idempotency_key TEXT NOT NULL,
+  ADD COLUMN idempotency_key TEXT,
   ADD CONSTRAINT visits_tenant_id_idempotency_key_key UNIQUE (tenant_id, idempotency_key),
   ADD CONSTRAINT visits_occupied_during_excl EXCLUDE USING GIST (
     resource_id WITH =,
     occupied_during WITH &&
-  ) WHERE (status IN ('held', 'scheduled', 'dispatched', 'en_route', 'on_site'));
+  ) WHERE (status IN ('held', 'scheduled', 'dispatched', 'en_route', 'on_site')),
+  -- NOT VALID: new rows must set these now; validate once existing rows are backfilled
+  ADD CONSTRAINT visits_booked_via_not_null NOT NULL booked_via NOT VALID,
+  ADD CONSTRAINT visits_idempotency_key_not_null NOT NULL idempotency_key NOT VALID;
 ```
 
 Every visit gets a `booked_via`, including the ones no customer asked for: `system` for visits the recurring generator or an optimizer creates, and `office` for visits a dispatcher creates without a customer request (a second visit for a held work order, say), while `csr` is a rep booking on a customer's behalf and `ai_agent` matches the channel name used for cancellations.
