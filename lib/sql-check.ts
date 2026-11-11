@@ -46,6 +46,8 @@ export type SqlCheck = {
 };
 
 const EXTENSIONS = { postgis, btree_gist, citext, ltree, pg_trgm };
+/** SQL that needs PostGIS. */
+const GEOSPATIAL = /\bST_\w+\s*\(|\bgeography\b|\bgeometry\b|\bpostgis\b/i;
 /** Types that belong to extensions PGlite doesn't ship. */
 const MISSING_EXTENSION_TYPES = ["vector", "halfvec", "sparsevec"];
 
@@ -198,15 +200,22 @@ export async function checkSql(root = process.cwd()): Promise<SqlCheck> {
   );
 
   const pg = new PGlite({ extensions: EXTENSIONS });
-  for (const name of Object.keys(EXTENSIONS))
+  for (const name of Object.keys(EXTENSIONS).filter((e) => e !== "postgis"))
     await pg.exec(`CREATE EXTENSION IF NOT EXISTS ${name}`);
   const builtin = async (fn: string) =>
     (await pg.query("SELECT 1 FROM pg_proc WHERE proname = $1", [fn])).rows.length > 0;
 
   const result: SqlCheck = { checked: 0, failures: [], unverifiable: [], stubs: 0 };
   let n = 0;
+  let postgisReady = false;
 
   for (const [unit, statements] of units) {
+    // PostGIS takes seconds to create and a few pages use it, so it waits for the first.
+    if (!postgisReady && statements.some((s) => GEOSPATIAL.test(s.text))) {
+      await pg.exec("CREATE EXTENSION IF NOT EXISTS postgis");
+      postgisReady = true;
+    }
+    // Each unit gets a fresh schema; the database is thrown away at the end, so none is dropped.
     const schema = `unit_${n++}`;
     await pg.exec(`CREATE SCHEMA ${schema}; SET search_path = ${schema}, public;`);
     const isBook = unit.startsWith("content/books/");
@@ -223,11 +232,13 @@ export async function checkSql(root = process.cwd()): Promise<SqlCheck> {
 
     const run = async (s: Statement, depth = 0): Promise<void> => {
       done.add(s);
-      const sql = QUERIES.has(s.kind) ? `PREPARE checked AS ${s.text}` : s.text;
+      // One round trip per query; the newline keeps a trailing comment from eating the semicolon.
+      const sql = QUERIES.has(s.kind)
+        ? `PREPARE checked AS ${s.text}\n;\nDEALLOCATE checked`
+        : s.text;
       for (let attempt = 0; attempt < 16; attempt++) {
         try {
           await pg.exec(sql);
-          if (QUERIES.has(s.kind)) await pg.exec("DEALLOCATE checked");
           const table = createdTable(s);
           if (table) created.add(table);
           return;
@@ -306,7 +317,6 @@ export async function checkSql(root = process.cwd()): Promise<SqlCheck> {
     }
 
     for (const s of ordered) if (!done.has(s)) await check(s);
-    await pg.exec(`RESET search_path; DROP SCHEMA ${schema} CASCADE;`);
   }
   await pg.close();
   return result;
