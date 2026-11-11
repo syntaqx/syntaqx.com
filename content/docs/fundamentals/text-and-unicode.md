@@ -2,7 +2,7 @@
 title = "Text & Unicode"
 description = "UTF-8 everywhere, four ways to measure a string, NFC for storage, case folding, locale-aware collation, confusables, bidi controls and database encodings."
 category = "Fundamentals"
-order = 106
+order = 105
 tags = ["unicode", "utf-8", "text", "standards", "databases", "security"]
 +++
 

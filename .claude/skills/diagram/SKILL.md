@@ -454,3 +454,6 @@ diagram avoids it. Keep each to one or two lines: what went wrong, the rule.
   timelines with breaks drifted from sheet to sheet. Resolved 2026-10-27:
   `s.fanOut`, `s.fanIn`, `s.bracket`, `sub` arrays and `s.timeline`; use
   them before drawing paths by hand.
+- 2026-11-10: Runs of spaces inside one label collapse to a single space in
+  SVG text, so `"[...]   west > east"` ran together; separate parts with
+  `·` or place them as two texts.
