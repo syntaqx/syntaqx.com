@@ -45,7 +45,7 @@
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
-      "description": "shadcn's Label, which dims with a disabled Field.",
+      "description": "shadcn's Label in the theme's foreground color. It names the control it's for, and dims along with it when the Field around them is disabled.",
       "dependencies": ["radix-ui"],
       "files": [
         {
@@ -91,7 +91,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "shadcn's Input with sm, default and lg sizes to match the Button. Inside a Field it wires itself up.",
+      "description": "shadcn's Input with sm, default and lg sizes to match the Button. Inside a Field it wires itself up: id, description, error and disabled state.",
       "dependencies": ["class-variance-authority"],
       "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
       "files": [
@@ -113,7 +113,7 @@
       "name": "textarea",
       "type": "registry:ui",
       "title": "Textarea",
-      "description": "shadcn's Textarea that grows with its content up to a limit, then scrolls. Inside a Field it wires itself up.",
+      "description": "shadcn's Textarea that grows with its content up to a limit, then scrolls. Inside a Field it wires itself up, like the Input, with no extra props.",
       "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
       "files": [
         {
@@ -131,7 +131,7 @@
       "name": "input-group",
       "type": "registry:ui",
       "title": "Input Group",
-      "description": "shadcn's InputGroup with the Input's sizes: icons, text and buttons inside one border.",
+      "description": "shadcn's InputGroup with the Input's sizes: icons, text and buttons inside one border, and a click on an addon focuses the field it sits beside.",
       "dependencies": ["class-variance-authority"],
       "registryDependencies": [
         "https://www.syntaqx.com/r/button.json",
@@ -157,7 +157,7 @@
       "name": "password-input",
       "type": "registry:ui",
       "title": "Password Input",
-      "description": "A password field with a show/hide toggle that keeps the caret in place and a Caps Lock warning.",
+      "description": "A password field with a show/hide toggle that keeps the caret in place, and a Caps Lock warning that screen readers announce as it appears.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["https://www.syntaqx.com/r/input-group.json"],
       "files": [
@@ -172,7 +172,7 @@
       "name": "number-input",
       "type": "registry:ui",
       "title": "Number Input",
-      "description": "A whole-number field with the numeric keypad on phones, arrow-key and button steppers, and clamping on blur.",
+      "description": "A whole-number field with the numeric keypad on phones, arrow-key and button steppers, and clamping to its min and max when the field loses focus.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["https://www.syntaqx.com/r/input-group.json"],
       "files": [
@@ -187,7 +187,7 @@
       "name": "requirement-list",
       "type": "registry:ui",
       "title": "Requirement List",
-      "description": "A field's rules, shown before the first keystroke and ticked off as each is met.",
+      "description": "A field's rules, shown before the first keystroke and ticked off as each is met, so nobody learns the password policy from an error message.",
       "dependencies": ["lucide-react"],
       "files": [
         {
@@ -258,7 +258,7 @@
       "name": "separator",
       "type": "registry:ui",
       "title": "Separator",
-      "description": "shadcn's Separator.",
+      "description": "shadcn's Separator: a hairline between groups of content, horizontal or vertical, hidden from screen readers unless it's marked as meaningful.",
       "dependencies": ["radix-ui"],
       "files": [
         {
@@ -276,7 +276,7 @@
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
-      "description": "shadcn's Skeleton: a placeholder sized to the content that's coming.",
+      "description": "shadcn's Skeleton: a pulsing placeholder sized to the content that's coming, so the page doesn't jump when it arrives.",
       "files": [
         {
           "path": "registry/syntaqx/ui/skeleton.tsx",
@@ -289,7 +289,7 @@
       "name": "spinner",
       "type": "registry:ui",
       "title": "Spinner",
-      "description": "shadcn's Spinner, for waits with no shape to hold.",
+      "description": "shadcn's Spinner, for waits with no shape to hold: an animated icon that screen readers announce as Loading, sized like any other icon.",
       "dependencies": ["lucide-react"],
       "files": [
         {
@@ -303,7 +303,7 @@
       "name": "empty",
       "type": "registry:ui",
       "title": "Empty",
-      "description": "shadcn's Empty: what goes where there's nothing yet, nothing matching, or nothing left.",
+      "description": "shadcn's Empty: what goes where there's nothing yet, nothing matching, or nothing left, with an icon, a title, a description and a next step.",
       "files": [
         {
           "path": "registry/syntaqx/ui/empty.tsx",
@@ -317,7 +317,7 @@
       "name": "kbd",
       "type": "registry:ui",
       "title": "Kbd",
-      "description": "shadcn's Kbd, for showing the key next to the action it triggers.",
+      "description": "shadcn's Kbd, for showing the key next to the action it triggers, and KbdGroup to set a shortcut of several keys, like Ctrl + K, on one line.",
       "files": [
         {
           "path": "registry/syntaqx/ui/kbd.tsx",
@@ -330,7 +330,7 @@
       "name": "button-group",
       "type": "registry:ui",
       "title": "Button Group",
-      "description": "shadcn's ButtonGroup: related actions in one row, which works as a toolbar.",
+      "description": "shadcn's ButtonGroup: related actions in one row or column, joined at the borders, which works as a toolbar and can hold text, inputs and selects.",
       "registryDependencies": [
         "https://www.syntaqx.com/r/button.json",
         "https://www.syntaqx.com/r/separator.json"
@@ -352,7 +352,7 @@
       "name": "dialog",
       "type": "registry:ui",
       "title": "Dialog",
-      "description": "shadcn's Dialog: a modal that traps focus while open and hands it back when it closes.",
+      "description": "shadcn's Dialog: a modal that traps focus while open, closes on Escape or a click outside, and hands focus back to whatever opened it.",
       "dependencies": ["lucide-react", "radix-ui"],
       "files": [
         {
@@ -371,7 +371,7 @@
       "name": "paste-button",
       "type": "registry:ui",
       "title": "Paste Button",
-      "description": "The Copy Button's other half: reads the clipboard into a field, icon-only or labeled, and confirms for 2s.",
+      "description": "The Copy Button's other half: reads the clipboard into a field, icon-only or labeled, confirms for 2s, and tells screen readers what happened.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["https://www.syntaqx.com/r/button.json"],
       "files": [
@@ -386,7 +386,7 @@
       "name": "toggle",
       "type": "registry:ui",
       "title": "Toggle",
-      "description": "shadcn's Toggle: a button that stays pressed until it's pressed again.",
+      "description": "shadcn's Toggle: a button that stays pressed until it's pressed again, in default and outline variants and three sizes, with aria-pressed set.",
       "dependencies": ["class-variance-authority", "radix-ui"],
       "files": [
         {
@@ -400,7 +400,7 @@
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
-      "description": "shadcn's Select. Inside a Field it wires itself up, so the FieldLabel names it.",
+      "description": "shadcn's Select. Inside a Field the trigger wires itself up, so the FieldLabel names it and the Field's description and error state reach it.",
       "dependencies": ["lucide-react", "radix-ui"],
       "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
       "files": [
@@ -423,7 +423,7 @@
       "name": "checkbox",
       "type": "registry:ui",
       "title": "Checkbox",
-      "description": "shadcn's Checkbox. Inside a Field it wires itself up, so the FieldLabel beside it names and toggles it.",
+      "description": "shadcn's Checkbox. Inside a Field it wires itself up, so the FieldLabel beside it names and toggles it, and the Field's state reaches it too.",
       "dependencies": ["lucide-react", "radix-ui"],
       "registryDependencies": ["https://www.syntaqx.com/r/field.json"],
       "files": [
@@ -446,7 +446,7 @@
       "name": "toggle-group",
       "type": "registry:ui",
       "title": "Toggle Group",
-      "description": "shadcn's ToggleGroup: a segmented control for one choice, or a row of toggles for several.",
+      "description": "shadcn's ToggleGroup: a segmented control for one choice, or a row of toggles for several, joined or spaced, horizontal or vertical.",
       "dependencies": ["class-variance-authority", "radix-ui"],
       "registryDependencies": ["https://www.syntaqx.com/r/toggle.json"],
       "files": [
@@ -497,7 +497,7 @@
       "name": "tooltip",
       "type": "registry:ui",
       "title": "Tooltip",
-      "description": "shadcn's Tooltip that works without a provider around the app.",
+      "description": "shadcn's Tooltip that works without a provider around the app: a lone tooltip brings its own, and one inside a TooltipProvider uses that one.",
       "dependencies": ["radix-ui"],
       "files": [
         {
@@ -521,7 +521,7 @@
       "name": "alert",
       "type": "registry:ui",
       "title": "Alert",
-      "description": "shadcn's Alert: a message that stays on the page, announced when it appears.",
+      "description": "shadcn's Alert: a message that stays on the page and is announced when it appears, with a title, a description, an action slot and a destructive variant.",
       "dependencies": ["class-variance-authority"],
       "files": [
         {

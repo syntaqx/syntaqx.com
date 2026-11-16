@@ -25,9 +25,12 @@ describe("meta descriptions", () => {
     }
   });
 
-  it("keeps every UI component's description within 160 characters", () => {
-    for (const c of components)
+  it("keeps every UI component's description between 110 and 160 characters", () => {
+    for (const c of components) {
+      // Crawlers flag descriptions under ~110 characters as too short.
+      expect(c.description.length, c.name).toBeGreaterThanOrEqual(110);
       expect(c.description.length, c.name).toBeLessThanOrEqual(MAX_DESCRIPTION);
+    }
   });
 
   it("keeps every book's summary, its cover's description, within 160 characters", () => {
