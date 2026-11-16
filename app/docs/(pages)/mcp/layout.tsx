@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 const title = "MCP Server";
 const description =
-  "Connect Claude Code, Cursor, VS Code or any MCP client to the syntaqx playbook, posts and books: search and read them, with opinions labeled apart from reference.";
+  "Connect Claude Code, Cursor, VS Code or any MCP client to the syntaqx playbook, posts and books: search and read them, opinions labeled apart from reference.";
 
 export const metadata = pageMetadata("/docs/mcp", title, description);
 

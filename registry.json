@@ -30,7 +30,7 @@
       "name": "copy-button",
       "type": "registry:ui",
       "title": "Copy Button",
-      "description": "The copy button from shadcn's docs as an installable component: built on Button, with a fallback where the Clipboard API is blocked, icon-only or labeled, and its own confirmation for 2s.",
+      "description": "The copy button from shadcn's docs, installable: built on Button, with a fallback where the Clipboard API is blocked, icon-only or labeled, confirming for 2s.",
       "dependencies": ["lucide-react"],
       "files": [
         {
@@ -63,7 +63,7 @@
       "name": "field",
       "type": "registry:ui",
       "title": "Field",
-      "description": "shadcn's Field, wired: the label, description, error and success messages connect to the control on their own, and invalid, disabled and required reach it from the Field.",
+      "description": "shadcn's Field, wired: the label, description, error and success messages connect to the control on their own, and invalid, disabled and required reach it.",
       "dependencies": ["class-variance-authority", "lucide-react"],
       "registryDependencies": ["https://www.syntaqx.com/r/label.json"],
       "files": [
@@ -465,7 +465,7 @@
       "name": "tabs",
       "type": "registry:ui",
       "title": "Tabs",
-      "description": "shadcn's Tabs: panels behind a row of triggers. The line variant is a full-width strip with mono labels and the active tab underlined, like the site's code tabs.",
+      "description": "shadcn's Tabs: panels behind a row of triggers. The line variant is a full-width strip with mono labels and the active tab underlined, like the code tabs.",
       "dependencies": ["class-variance-authority", "radix-ui"],
       "files": [
         {

@@ -25,6 +25,11 @@ describe("meta descriptions", () => {
     }
   });
 
+  it("keeps every UI component's description within 160 characters", () => {
+    for (const c of components)
+      expect(c.description.length, c.name).toBeLessThanOrEqual(MAX_DESCRIPTION);
+  });
+
   it("keeps every book's summary, its cover's description, within 160 characters", () => {
     for (const book of BOOKS)
       expect(book.summary.length, book.slug).toBeLessThanOrEqual(MAX_DESCRIPTION);

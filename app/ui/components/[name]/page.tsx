@@ -5,7 +5,7 @@ import { ExamplePreview } from "@/app/ui/_components/example-preview";
 import { examples } from "@/app/ui/components/_examples";
 import { DocsHeader } from "@/components/docs-header";
 import { DocsToc } from "@/components/docs-toc";
-import { pageMetadata } from "@/lib/metadata";
+import { pageMetadata, titleIn } from "@/lib/metadata";
 import { componentGroups, components } from "@/lib/ui";
 import registry from "@/registry.json";
 
@@ -20,7 +20,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { name } = await params;
   const c = components.find((x) => x.name === name)!;
-  return pageMetadata(c.href, c.title, c.description);
+  return { ...pageMetadata(c.href, c.title, c.description), title: titleIn(c.title, "UI") };
 }
 
 export default async function ComponentPage({ params }: Props) {
