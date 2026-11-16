@@ -49,11 +49,14 @@ Sentry.init({
   // "Object Not Found Matching Id:N, MethodName:update" is a non-Error
   // rejection thrown by email link scanners (Outlook Safe Links and similar
   // headless CefSharp browsers) while they preview a link, not by this site.
+  // Vercel Analytics' script (at /_vercel/insights/ or its first-party
+  // /<hash>/script.js path) throws "Invalid or unexpected token" only for
+  // scrapers that mangle it in transit; production serves it intact.
   ignoreErrors: [
     /Cannot read properties of null \(reading 'getItem'\)/,
     /Object Not Found Matching Id:\d+, MethodName:\w+/,
   ],
-  denyUrls: [/\/_next-live\/feedback\//],
+  denyUrls: [/\/_next-live\/feedback\//, /\/_vercel\/insights\//, /\/[0-9a-f]{16}\/script\.js/],
 });
 
 // Layout shift: when a session's CLS passes 0.1, one warning naming the
