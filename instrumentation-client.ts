@@ -15,11 +15,14 @@ function scrub<T>(event: T): T {
   return JSON.parse(JSON.stringify(event).replace(SECRET_FRAGMENT, "$1"));
 }
 
-// Headless browsers are audit and screenshot harnesses, not readers: their
-// cold-cache layout shifts and injected-script errors were all of Sentry's
-// noise. Real visitors never send that user agent.
+// Headless and automated browsers are audit harnesses and crawlers, not
+// readers: their cold-cache layout shifts, slow paints and scripted clicks
+// were most of Sentry's noise. Puppeteer, Playwright and Selenium set
+// navigator.webdriver even when they spoof a desktop user agent.
 const production =
-  process.env.VERCEL_ENV === "production" && !navigator.userAgent.includes("HeadlessChrome");
+  process.env.VERCEL_ENV === "production" &&
+  !navigator.webdriver &&
+  !navigator.userAgent.includes("HeadlessChrome");
 
 Sentry.init({
   beforeSend: scrub,
