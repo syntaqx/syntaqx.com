@@ -391,5 +391,5 @@ Retention follows the record type ([Data Retention & Deletion](/docs/building-bl
 **In practice**
 
 - [Miami University: Lease signing](https://miamioh.edu/life-at-miami/living-off-campus/housing-search/lease-signing.html), joint and several versus individual leases, what happens when a roommate leaves or doesn't pay, and the parent's guarantee or prepaid-rent addendum
-- [San Francisco State University: Social Security Number](https://ali.sfsu.edu/global/resources/ssn), F-1 and J-1 students eligible for an SSN only with work authorization, and none assigned for enrollment alone
+- [San Francisco State University: Social Security Number (Wayback Machine, August 7, 2026)](https://web.archive.org/web/20260807214429/https://oip.sfsu.edu/ssn), F-1 and J-1 students eligible for an SSN only with work authorization, and none assigned for enrollment alone
 - [Bisnow: Judge rejects RealPage's motion to dismiss rent-fixing lawsuit (January 3, 2024)](https://www.bisnow.com/news/national/multifamily/judge-rejects-realpages-motion-to-dismiss-rent-fixing-lawsuit-122269), the related student housing suit dismissed while the multifamily claims went forward

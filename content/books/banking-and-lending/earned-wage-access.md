@@ -239,7 +239,8 @@ EWA is examined by state regulators under licensing statutes, by the CFPB and st
 - [Wisconsin: 2025 Act 199](https://docs.legis.wisconsin.gov/2025/related/acts/199), the $5 and $7.50 fee caps, their inflation adjustment and the April 3 enactment and April 4, 2026 publication
 - [Wisconsin: Stat. 991.11](https://docs.legis.wisconsin.gov/statutes/statutes/991/11), acts take effect the day after publication unless they say otherwise
 - [Kansas OSBC: Earned Wage Access Services Act](https://osbckansas.gov/?p=9809), registration through NMLS from July 1, 2024
-- [Kansas Legislature: Supplemental note on HB 2105](https://www.kslegislature.gov/li_2024/b2023_24/measures/documents/supp_note_hb2105_03_0000.pdf), the act's provisions before they moved into HB 2560
+- [Kansas Legislature: Supplemental note on HB 2105](https://www.kslegislature.gov/b2023_24/bills/download/?apn=b2023_24/ds_docs_li/supp_note_hb2105_03_0000.pdf), the act's provisions as HB 2105
+- [Kansas Legislature: Conference committee report brief on HB 2560 (April 2, 2024)](https://www.kslegislature.gov/b2023_24/bills/download/?apn=b2023_24/ds_docs_li/ccrb_hb2560_01_0000.pdf), the Earned Wage Access Services Act enacted with HB 2105's provisions
 - [South Carolina: S.700 (Act 190 of 2024)](https://www.scstatehouse.gov/sess125_2023-2024/bills/700.htm), registration, fee, bond, no-cost option, tips and effective date
 - [Utah: HB 279 (2025), enrolled](https://le.utah.gov/Session/2025/bills/enrolled/HB0279.pdf), registration with the Division of Consumer Protection, prohibited practices and penalties, effective May 7, 2025
 - [Arkansas: Act 347 of 2025 (PDF)](https://arkleg.state.ar.us/Acts/FTPDocument?path=%2FACTS%2F2025R%2FPublic%2F&file=347.pdf&ddBienniumSession=2025%2F2025R), the not-lending provision, the no-cost option, tips, the bank exclusion and the March 20, 2025 approval

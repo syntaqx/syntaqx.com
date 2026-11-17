@@ -507,7 +507,7 @@ Notes on the sketch:
 
 **In practice**
 
-- [Dell'Oro: Ethernet more than doubles InfiniBand in AI scale-out networks in 2025](https://www.delloro.com/news/ethernet-more-than-doubles-size-of-infiniband-as-the-leading-fabric-for-ai-scale-out-networks-in-2025/), March 10, 2026
+- [Dell'Oro: Ethernet more than doubles InfiniBand in AI scale-out networks in 2025](https://www.delloro.com/newsroom/ethernet-more-than-doubles-size-of-infiniband-as-the-leading-fabric-for-ai-scale-out-networks-in-2025/), March 10, 2026
 - [Dell'Oro: 2026 predictions for data center switching](https://www.delloro.com/2026-predictions-data-center-switch-frontend-ai-backed-networks/), December 2025, the "nearly 80%" InfiniBand baseline
 </content>
 </invoke>

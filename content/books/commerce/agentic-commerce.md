@@ -17,7 +17,7 @@ As of October 2026, from the platforms' own announcements and documentation:
 
 | Surface | Launched | How a purchase happens | Who is the seller | What the merchant integrates |
 | --- | --- | --- | --- | --- |
-| **ChatGPT** (OpenAI) | Instant Checkout, September 29, 2025, for US users, with Etsy sellers first and Shopify merchants announced | Inside the chat through the Agentic Commerce Protocol, or by sending the shopper to the store's checkout | "OpenAI is not the merchant of record"; the merchant validates the order, calculates tax, runs risk checks and charges the payment | A product feed (approved partners), and the Agentic Checkout Spec for in-chat checkout |
+| **ChatGPT** (OpenAI) | Instant Checkout, September 29, 2025, for US users, with Etsy sellers first and Shopify merchants announced; OpenAI has since said it is "moving away from a standalone Instant Checkout experience" | On the merchant's own site or app, reached from the chat ("purchases are completed on merchant-owned websites or apps") | The merchant: "Your business handles the order, fulfillment, customer support, and fraud decisions" | A product feed, and checkout through the merchant's site with ChatGPT Wallet or a plugin that hands off a `continue_url` |
 | **Google AI Mode and Gemini** | Agentic checkout ("buy for me" on tracked prices, with Google Pay), November 13, 2025; the Universal Commerce Protocol, January 11, 2026 | In AI Mode or Gemini through UCP, paid with Google Pay; "We'll always ask for your permission first" | "Retailers remain the seller of record" | Merchant Center products marked eligible for native checkout (US only), and UCP checkout and order endpoints; UCP access by waitlist |
 | **Perplexity** | Shopping with checkout by PayPal for all US users, November 25, 2025 | Inside Perplexity, with PayPal | Retailers "stay at the center of the transaction" | PayPal as the payment route |
 | **Shopify agentic storefronts** | "Active by default for eligible stores" | ChatGPT sends buyers to the store's own checkout; Google AI Mode and Gemini, Microsoft Copilot and Meta check out in the channel | The merchant, which retains "full ownership of the customer relationship" | Nothing beyond Shopify; managed under Sales channels > Agentic |
@@ -36,7 +36,7 @@ Amazon is on both sides: its assistant shops only Amazon, its Buy for Me agent s
 
 Every agent purchase falls into one of three shapes, and each needs different things from the store:
 
-- **Handoff.** The agent finds the product and sends the shopper to the store's checkout with the cart filled. The store's normal checkout runs, with its normal fraud checks and terms. Shopify's Checkout MCP returns a `continue_url` for this, and ChatGPT's purchases from Shopify stores take this path ("Customers complete purchases on your online store checkout, in ChatGPT's in-app browser or in a new tab"). Whether ChatGPT's Instant Checkout continues in-chat for other merchants, I couldn't confirm. <!-- source-gap: openai-instant-checkout-2026 | status | whether ChatGPT Instant Checkout still completes purchases in chat as of October 2026, and its merchant fees | closes with: OpenAI's merchant documentation or help center; developers.openai.com/commerce describes only the product feed and the Agentic Checkout Spec, openai.com and help.openai.com returned 403, and press reports say OpenAI scaled Instant Checkout back in March 2026 | checked: 2026-11-10 -->
+- **Handoff.** The agent finds the product and sends the shopper to the store's checkout with the cart filled. The store's normal checkout runs, with its normal fraud checks and terms. Shopify's Checkout MCP returns a `continue_url` for this, and ChatGPT's purchases from Shopify stores take this path ("Customers complete purchases on your online store checkout, in ChatGPT's in-app browser or in a new tab"). For every merchant, OpenAI now says it is "moving away from a standalone Instant Checkout experience in ChatGPT": shoppers "discover and evaluate products in ChatGPT, but purchases are completed on merchant-owned websites or apps," and "There are no fees on purchases that start in ChatGPT."
 - **Delegated checkout.** The agent completes checkout through the merchant's API: it creates a checkout session, updates it with address and shipping choice, and completes it with a payment token the shopper approved in the agent's interface. The merchant computes totals, charges the token and creates the order. This is ACP and UCP.
 - **Browsing agent.** The agent drives the store's website like a person (Buy for Me, browser agents). The store sees a session, a cart and a checkout, filled by software. Nothing was negotiated, and the store can only tell by the agent's own identification or its behavior.
 
@@ -49,10 +49,10 @@ The two published checkout protocols describe the same object, a checkout sessio
 **The Agentic Commerce Protocol (ACP)**, published by OpenAI and Stripe under Apache 2.0, defines a merchant-hosted checkout API:
 
 - **Endpoints.** `POST /checkout_sessions` creates a session from items; `POST /checkout_sessions/{id}` updates it (buyer, address, fulfillment option); `GET /checkout_sessions/{id}` reads it; `POST /checkout_sessions/{id}/complete` places the order with a payment token; `POST /checkout_sessions/{id}/cancel` abandons it.
-- **States.** `not_ready_for_payment`, `ready_for_payment`, `completed` and `canceled`; the merchant's response carries line items, totals, fulfillment options and messages the agent shows the buyer.
-- **Headers.** `Idempotency-Key`, a request `Signature`, and an `API-Version` (dated, such as `2025-09-12`).
-- **Orders.** The merchant sends `order_created` and `order_updated` webhooks back to the agent.
-- **Payment.** A separate Delegated Payment Spec has the agent obtain a token from the merchant's payment provider, limited by `max_amount`, currency, expiry, merchant and checkout session; Stripe's shared payment token is the first implementation ([Agentic Commerce](/books/payments/ai-in-payments#agentic-commerce)).
+- **States.** `not_ready_for_payment`, `ready_for_payment`, `in_progress`, `completed` and `canceled`, plus `authentication_required` when 3DS or similar is needed; the merchant's response carries line items, totals, fulfillment options and messages the agent shows the buyer.
+- **Headers.** `Idempotency-Key`, a request `Signature`, and an `API-Version` (dated, such as `2026-01-16`).
+- **Orders.** The merchant sends `order_create` and `order_update` webhooks back to the agent.
+- **Payment.** A separate Delegate Payment spec has the agent obtain a vault token from the merchant's payment provider, limited by `max_amount`, currency, expiry, merchant and checkout session; Stripe's shared payment token is the first implementation ([Agentic Commerce](/books/payments/ai-in-payments#agentic-commerce)).
 
 **The Universal Commerce Protocol (UCP)**, announced by Google on January 11, 2026 as "a new open standard for agentic commerce" and co-developed with Shopify, Etsy, Wayfair, Target and Walmart, is broader:
 
@@ -74,7 +74,7 @@ For a merchant's system, both protocols map onto what [Cart & Checkout](/books/c
 
 Agents choose from feeds, and they are stricter than search engines about what they can act on:
 
-- **OpenAI's product feed** requires `item_id`, `title`, `description`, `url`, `brand`, `seller_name`, `image_url`, `availability` and `price` for discovery, with `is_eligible_checkout`, `seller_privacy_policy` and `seller_tos` needed for checkout; it takes JSONL, CSV or TSV, with a full snapshot "at least once a day," and is "currently available to approved partners."
+- **OpenAI's product feed** requires `item_id`, `title`, `description`, `url`, `brand`, `seller_name`, `image_url`, `availability` and `price` for discovery, with `is_eligible_checkout`, `seller_privacy_policy` and `seller_tos` needed for checkout; it takes JSONL, CSV or TSV, delivered as full snapshots by manual upload, a hosted URL or SFTP, after the business verifies its identity in OpenAI's Business Hub.
 - **Google** uses Merchant Center product data, the same feed as Shopping ([Channel Content and Syndication](/books/commerce/product-information#channel-content-and-syndication)), with checkout eligibility as a product attribute.
 - **Shopify's Global Catalog** (`search_catalog`, `lookup_catalog`, `get_product`) clusters products across stores by a Universal Product ID and marks some fields as "Inferred," generated by Shopify rather than the merchant.
 - **Marketplace operators** are selling the same thing: Mirakl offers "Agentic Activation" to enrich catalogs so they can be found by AI assistants.
@@ -82,7 +82,7 @@ Agents choose from feeds, and they are stricter than search engines about what t
 What this means for the catalog:
 
 - **Facts beat prose.** An agent answering "waterproof to what depth, fits which phone, ships by when" reads attributes, not marketing copy. Products with complete, typed attributes ([Attribute Models](/books/commerce/product-information#attribute-models)), GTINs and accurate delivery promises are the ones an agent can recommend with confidence.
-- **The feed price is the checkout price.** A feed refreshed daily and a checkout priced live will disagree whenever a price changes; the agent shows the feed's number and the checkout charges another. Prices and availability in feeds come from the same resolver as the store ([Pricing & Price Lists](/books/commerce/pricing#how-to-build-it)), and changes push to agent feeds the way they push to Google.
+- **The feed price is the checkout price.** A feed refreshed on a schedule and a checkout priced live will disagree whenever a price changes; the agent shows the feed's number and the checkout charges another. Prices and availability in feeds come from the same resolver as the store ([Pricing & Price Lists](/books/commerce/pricing#how-to-build-it)), and changes push to agent feeds the way they push to Google.
 - **Inferred fields are someone else's claims.** When a catalog or agent infers an attribute the merchant didn't supply, it may be wrong, and the shopper will hold the merchant to it. Supplying the attribute is the only control.
 - **Policies are data.** Return windows, shipping times, terms and privacy links are fields the agent reads and repeats; they come from the merchant's policy records, not a page of text.
 
@@ -207,9 +207,11 @@ Design notes:
 **Agent surfaces**
 
 - [Stripe: Stripe powers Instant Checkout in ChatGPT (September 2025)](https://stripe.com/newsroom/news/stripe-openai-instant-checkout), launch, Etsy and Shopify merchants, and shared payment tokens
-- [OpenAI: Commerce documentation](https://developers.openai.com/commerce), feeds, checkout and payment specs
-- [OpenAI: Key concepts](https://developers.openai.com/commerce/guides/key-concepts.md), merchant of record and merchant responsibilities
-- [OpenAI: Get started](https://developers.openai.com/commerce/guides/get-started.md), approved partners and daily feed snapshots
+- [OpenAI: Commerce documentation](https://developers.openai.com/commerce), feeds, payments, browser access and plugins
+- [OpenAI: ChatGPT for merchants](https://chatgpt.com/merchants/), moving away from standalone Instant Checkout, merchant-owned checkout and no fees
+- [OpenAI: Accept payments](https://developers.openai.com/commerce/guides/accept-payments), ChatGPT Wallet and merchant responsibilities
+- [OpenAI: Submit product feeds](https://developers.openai.com/commerce/guides/submit-product-feeds), identity verification and full snapshots
+- [OpenAI: Build a plugin](https://developers.openai.com/commerce/guides/build-a-plugin), the `continue_url` handoff
 - [Google: New tech and tools for retailers in an agentic shopping era (January 2026)](https://blog.google/products/ads-commerce/agentic-commerce-ai-tools-protocol-retailers-platforms/), UCP, co-developers and retailers as seller of record
 - [Google: Agentic checkout and holiday AI shopping (November 2025)](https://blog.google/products/shopping/agentic-checkout-holiday-ai-shopping/), buy for me with Google Pay and permission first
 - [Perplexity: Shopping that puts you first (November 2025)](https://www.perplexity.ai/hub/blog/shopping-that-puts-you-first), PayPal checkout for US users
@@ -225,8 +227,9 @@ Design notes:
 **Protocols and platform APIs**
 
 - [Agentic Commerce Protocol](https://www.agenticcommerce.dev/), maintainers and license
-- [OpenAI: Agentic Checkout Spec](https://developers.openai.com/commerce/specs/checkout.md), endpoints, states, headers and webhooks
-- [OpenAI: Delegated Payment Spec](https://developers.openai.com/commerce/specs/payment.md), allowance limits and vault tokens
+- [ACP: Agentic Checkout RFC](https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/blob/main/rfcs/rfc.agentic_checkout.md), endpoints, states, headers and webhooks (version 2026-01-16)
+- [ACP: Delegate Payment RFC](https://github.com/agentic-commerce-protocol/agentic-commerce-protocol/blob/main/rfcs/rfc.delegate_payment.md), allowance limits and vault tokens (version 2025-09-29)
+- [ACP: Sellers](https://www.agenticcommerce.dev/docs/getting-started/sellers), the seller remains merchant of record
 - [OpenAI: Product feed spec](https://developers.openai.com/commerce/specs/file-upload/products.md), required fields, checkout fields and formats
 - [Universal Commerce Protocol](https://ucp.dev/), license, participants and transports
 - [UCP: Specification overview](https://ucp.dev/latest/specification/overview/), profiles, agent header, capabilities and versions

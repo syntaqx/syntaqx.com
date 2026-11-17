@@ -56,7 +56,7 @@ What a vended account or subscription arrives with is the same everywhere:
 
 The frameworks are code. AFT supports HCP Terraform, Terraform Enterprise and the community edition, takes an account request file through a pipeline, and applies customizations to all accounts, a set of accounts or individual accounts; AWS says its pipeline is "solely for automated provisioning and customizing" of accounts, not for application resources. Landing Zone Accelerator is installed from a CloudFormation template that deploys a CodePipeline, reads its configuration files from an `aws-accelerator-config` bucket, can include a manual review stage, and "will not, by itself, make you compliant." Google's foundation is seven Terraform stages, from `0-bootstrap` (state bucket, service accounts, CI/CD project) to `5-app-infra`. Two traps recur. Control Tower's controls don't bind the management account, by design ("this exception is intentional"), so nothing runs there except the organization itself. And Azure Resource Manager caches the management group hierarchy for up to 30 minutes, so a vending pipeline that moves a subscription and immediately checks its policies can see the old ones.
 
-The **Well-Architected** frameworks are the review half of the same idea: AWS's framework (current revision November 6, 2024) and its free Well-Architected Tool, and Azure's five pillars (reliability, security, cost optimization, operational excellence, performance efficiency) with an assessment tool. AWS is explicit that a review "is a constructive conversation about architectural decisions, and is not an audit mechanism." They are what a workload is checked against when it moves into its landing zone, not guardrails.
+The **Well-Architected** frameworks are the review half of the same idea: AWS's framework (current revision November 16, 2026, which merged the six pillar whitepapers into one document) and its free Well-Architected Tool, and Azure's five pillars (reliability, security, cost optimization, operational excellence, performance efficiency) with an assessment tool. AWS is explicit that a review "is a constructive conversation about architectural decisions, and is not an audit mechanism." They are what a workload is checked against when it moves into its landing zone, not guardrails.
 
 ## Guardrails by Layer
 
@@ -440,7 +440,8 @@ Design decisions behind it:
 - [Microsoft Learn: Azure Blueprints overview](https://learn.microsoft.com/en-us/azure/governance/blueprints/overview), retirement on January 31, 2027 with phases from July 31, 2026, Deployment Stacks and Template Specs
 - [Google Cloud: Enterprise foundations blueprint](https://docs.cloud.google.com/architecture/blueprints/security-foundations), the renamed security foundations blueprint, Terraform assets and guide, last updated May 15, 2025
 - [GitHub: terraform-example-foundation](https://github.com/terraform-google-modules/terraform-example-foundation), stages 0-bootstrap to 5-app-infra, folder layout, Apache-2.0
-- [AWS: Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html), November 6, 2024 revision, the free Well-Architected Tool, a review "is not an audit mechanism"
+- [AWS: Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/framework.html), November 16, 2026 revision, a review "is not an audit mechanism"
+- [AWS: Well-Architected Tool FAQs](https://aws.amazon.com/well-architected-tool/faqs/), "no additional charge for the AWS Well-Architected Tool"
 - [Microsoft Learn: Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/), the five pillars and the assessment tool
 
 **Guardrails**

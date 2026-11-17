@@ -9,6 +9,9 @@ import { routeAt, type ClsReport, type RouteMark } from "@/lib/cls-report";
 
 export type VitalsReport = ClsReport;
 
+/** Web Vitals' "good" LCP budget, applied to the part of the load after the first byte. */
+const AFTER_FIRST_BYTE_MS = 2500;
+
 const ms = (n: number | undefined) => (n === undefined ? null : Math.round(n));
 const noQuery = (url: string) => url.split(/[?#]/)[0];
 
@@ -49,8 +52,10 @@ export function inpReport(
 }
 
 /**
- * Null unless the load was poor (over 4s). Speed Insights already judges the
- * p75; a 2.5s cutoff filed every slow phone on a far network. Fingerprinted
+ * Null unless the load was poor (over 4s) and the page's own share, the time
+ * after the first byte, is itself over 2.5s. Speed Insights already judges
+ * the p75 and TTFB; without the second check a far or stalled network (3.6s
+ * to a 60s first byte, then a 1s render) filed as a slow page. Fingerprinted
  * by route pattern, since every docs and book page shares the same first
  * paragraph as its LCP element and would otherwise pile into one issue.
  */
@@ -61,6 +66,7 @@ export function lcpReport(
 ): VitalsReport | null {
   if (metric.rating !== "poor") return null;
   const a = metric.attribution;
+  if (metric.value - a.timeToFirstByte <= AFTER_FIRST_BYTE_MS) return null;
   const target = a.target || "(unknown)";
   return {
     fingerprint: ["lcp", "{{ transaction }}"],

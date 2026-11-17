@@ -219,7 +219,8 @@ Design notes:
 - [Amazon: Customer Reviews tool](https://sell.amazon.com/tools/customer-reviews), Request a Review and what sellers may not do
 - [Amazon: Vine](https://sell.amazon.com/programs/vine), eligibility, units, fees and how Vine Voices are chosen
 - [Amazon: 2025 Trustworthy Shopping Experience Report](https://trustworthyshopping.aboutamazon.com/2025-trustworthy-shopping-experience-report), fake reviews blocked and brokers stopped
-- [Bazaarvoice: About](https://www.bazaarvoice.com/about/), network size and Google syndication partnership
+- [Bazaarvoice: Company](https://www.bazaarvoice.com/company), network size ("12,000+ brand and retail websites")
+- [Bazaarvoice: Partners with Google to bring reviews to Gemini](https://www.bazaarvoice.com/blog/bazaarvoice-google-partnership-ai-shopping), Google syndication into the Shopping Graph (May 7, 2026)
 - [Bazaarvoice: Authenticity Policy](https://www.bazaarvoice.com/legal/authenticity-policy/), sentiment-neutral requests, no self-moderation, badges and syndication eligibility
 - [PowerReviews](https://www.powerreviews.com/), ratings, sampling and syndication
 - [Shopify App Store: Product Reviews](https://apps.shopify.com/product-reviews), the app's availability

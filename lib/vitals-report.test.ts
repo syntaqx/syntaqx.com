@@ -31,13 +31,13 @@ const inp = (value: number, rating: "good" | "needs-improvement" | "poor") =>
     },
   }) as unknown as INPMetricWithAttribution;
 
-const lcp = (value: number, rating: "good" | "needs-improvement" | "poor") =>
+const lcp = (value: number, rating: "good" | "needs-improvement" | "poor", timeToFirstByte = 280) =>
   ({
     value,
     rating,
     attribution: {
       target: "main>article>h1",
-      timeToFirstByte: 280,
+      timeToFirstByte,
       resourceLoadDelay: 0,
       resourceLoadDuration: 0,
       elementRenderDelay: 6900.4,
@@ -68,6 +68,11 @@ describe("lcpReport", () => {
 
   it("stays quiet for a load that only needs improvement", () => {
     expect(lcpReport(lcp(3300, "needs-improvement"), "/books", [1440, 900])).toBeNull();
+  });
+
+  it("stays quiet when the first byte took most of a poor load", () => {
+    expect(lcpReport(lcp(4664, "poor", 3596), "/", [1783, 842])).toBeNull();
+    expect(lcpReport(lcp(61016, "poor", 60137), "/", [1919, 992])).toBeNull();
   });
 
   it("groups by route, names the element and splits the time", () => {
