@@ -51,6 +51,13 @@ const community: Project[] = [
 
 const projects: Project[] = [
   {
+    title: "yoink",
+    description:
+      "Clone every repository in an organization, and keep them all up to date with one command. A Go CLI for GitHub and Azure DevOps.",
+    tags: ["go", "cli", "git", "azure-devops"],
+    url: "https://github.com/syntaqx/yoink",
+  },
+  {
     title: "serve",
     description: "A static http server anywhere you need one.",
     tags: ["cli", "http", "static-site"],
