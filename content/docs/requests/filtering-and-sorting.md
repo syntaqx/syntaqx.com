@@ -23,7 +23,7 @@ GET /payments?status=captured&currency=USD
 
 ### Ranges
 
-Range filters add a suffix to the field name, which keeps each one a plain `key=value`:
+Range filters put an operator suffix on the field's name, which keeps each one a plain `key=value`. For a field named with a type suffix ([JSON Field Conventions](/docs/requests/json-conventions#types)), the operator replaces it: `created_at` is filtered with `created_after`, and `published_on` with `published_before`. Other fields just take the operator: `amount_gte`. The same names are the keys of a [QUERY](/docs/requests/http-query) body.
 
 | Suffix | Meaning | Example |
 | ------ | ------- | ------- |

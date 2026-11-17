@@ -51,6 +51,8 @@ Clients stop writing `response.data.data`, a resource from a `GET` is byte-for-b
 
 The suffixes and prefixes carry the type in the name: `published_on` has no time component, and `is_active` can't be mistaken for a timestamp of when something became active.
 
+They name a resource's own fields: what a response returns, and what a request that creates or updates the resource sends. Filters aren't fields. They follow [Filtering & Sorting](/docs/requests/filtering-and-sorting#ranges), where an operator suffix takes the place of the type suffix (`created_after`, not `created_at_after`), and that holds wherever a filter is written: in a query string or in a [QUERY](/docs/requests/http-query) body.
+
 ### Enums Are Strings
 
 Enum values are lowercase snake_case strings, never integers. `"status": "captured"` reads correctly in a log, a support ticket and a database query; `"status": 3` needs a lookup table, and the table drifts.
