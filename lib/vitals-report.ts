@@ -12,18 +12,23 @@ export type VitalsReport = ClsReport;
 const ms = (n: number | undefined) => (n === undefined ? null : Math.round(n));
 const noQuery = (url: string) => url.split(/[?#]/)[0];
 
-/** Null when the interaction was good (200ms or under). Fingerprinted by element. */
+/**
+ * Null unless the interaction was poor (over 500ms); Speed Insights judges
+ * the p75, and a 200ms cutoff filed single slow visits as regressions.
+ * Fingerprinted by route pattern and element, since most interactions land
+ * on #main and would otherwise pile every page into one issue.
+ */
 export function inpReport(
   metric: Pick<INPMetricWithAttribution, "value" | "rating" | "attribution">,
   marks: readonly RouteMark[],
   viewport: readonly [number, number],
 ): VitalsReport | null {
-  if (metric.rating === "good") return null;
+  if (metric.rating !== "poor") return null;
   const a = metric.attribution;
   const target = a.interactionTarget || "(unknown)";
   const script = a.longestScript?.entry;
   return {
-    fingerprint: ["inp", target],
+    fingerprint: ["inp", "{{ transaction }}", target],
     tags: {
       inp_target: target.slice(0, 200),
       inp_route: a.interactionTime === undefined ? "(unknown)" : routeAt(marks, a.interactionTime),

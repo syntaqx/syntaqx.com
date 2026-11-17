@@ -74,7 +74,7 @@ if (production) {
   // Slow interactions and loads, with the element and where the time went.
   onINP((metric) => {
     const report = inpReport(metric, routes, [innerWidth, innerHeight]);
-    if (report) Sentry.captureMessage("Interaction above 200ms", { level: "warning", ...report });
+    if (report) Sentry.captureMessage("Interaction above 500ms", { level: "warning", ...report });
   });
   onLCP((metric) => {
     const report = lcpReport(metric, routes[0].path, [innerWidth, innerHeight]);

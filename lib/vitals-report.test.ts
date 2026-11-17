@@ -49,9 +49,13 @@ describe("inpReport", () => {
     expect(inpReport(inp(120, "good"), marks, [1440, 900])).toBeNull();
   });
 
+  it("stays quiet for an interaction that only needs improvement", () => {
+    expect(inpReport(inp(424, "needs-improvement"), marks, [1440, 900])).toBeNull();
+  });
+
   it("names the element, the route it happened on and where the time went", () => {
     const r = inpReport(inp(1112, "poor"), marks, [1440, 900])!;
-    expect(r.fingerprint).toEqual(["inp", "nav>div>button"]);
+    expect(r.fingerprint).toEqual(["inp", "{{ transaction }}", "nav>div>button"]);
     expect(r.tags.inp_route).toBe("/docs/money/payment-states");
     expect(r.extra).toMatchObject({
       value: 1112,
