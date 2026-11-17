@@ -55,11 +55,10 @@ for (const run of RUNS) {
       let scheme = run.schemes[0];
       try {
         await page.goto(`${base}${path}`, { waitUntil: "load", timeout: 60000 });
+        // State changes after load (a button re-enabling once a fetch lands)
+        // and scheme switches both fade; axe would read contrast mid-fade.
+        await page.addStyleTag({ content: "*,*::before,*::after{transition:none!important}" });
         await page.waitForTimeout(500);
-        // Switching schemes on a loaded page fades transition-colors
-        // elements; axe would read their contrast mid-fade.
-        if (run.schemes.length > 1)
-          await page.addStyleTag({ content: "*,*::before,*::after{transition:none!important}" });
         for (scheme of run.schemes) {
           await page.emulateMedia({ colorScheme: scheme });
           const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
