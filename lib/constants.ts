@@ -15,7 +15,7 @@ export const socials = [
     label: "LinkedIn",
   },
   {
-    href: "https://stackoverflow.com/users/1295839/syntaqx",
+    href: "https://stackoverflow.com/users/syntaqx",
     icon: "stackoverflow",
     label: "Stack Overflow",
   },
