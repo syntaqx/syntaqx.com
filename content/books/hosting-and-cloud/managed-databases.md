@@ -134,16 +134,20 @@ Two decisions recur in every catalog. The first is **provisioned versus used sto
 
 MySQL is the engine every provider in this chapter sells, which makes it the cleanest place to compare them. The table prices one small production database at each, on demand, in a US East region, as of 20 Nov 2026: 2 vCPU and 8 GiB where the provider has that size, and the nearest size where it doesn't. Monthly figures are the hourly rate times 730 hours.
 
-| Service | Size priced | One zone | With high availability | Storage, GB-month | Failover, as the provider states it | Writes scale out |
-| --- | --- | --- | --- | --- | --- | --- |
-| **Amazon RDS for MySQL** | db.m7g.large (2 vCPU, 8 GiB), N. Virginia | $0.168/h (about $123/month) | Multi-AZ $0.337/h (about $246) | gp3 $0.115; $0.23 Multi-AZ | "typically 60–120 seconds" | No |
-| **Aurora MySQL** | db.r7g.large (2 vCPU, 16 GiB), N. Virginia | $0.276/h Standard, $0.359 I/O-Optimized | A reader in a second zone is a second instance: about $403/month Standard | $0.10 plus $0.20 per million I/Os; $0.225 I/O-Optimized, no I/O charge | Under 60 seconds to a replica, "often less than 30 seconds" | No: Limitless Database is PostgreSQL only |
-| **Cloud SQL for MySQL, Enterprise edition** | 2 vCPU and 8 GiB, Northern Virginia (us-east4) | $0.0442 per vCPU-hour plus $0.0075 per GiB-hour: $0.148/h (about $108) | HA rates are exactly double: about $217 | SSD $0.1819; $0.3638 with HA | No time stated; the Enterprise SLA is 99.95% excluding maintenance | No |
-| **Azure Database for MySQL Flexible Server** | General Purpose, 2 vCores (8 GiB), East US | $0.0855 per vCore-hour: $0.171/h (about $125) | Primary and standby both billed: about $250 | $0.115, billed for both copies with HA | "typically take between 60 and 120 seconds" | No |
-| **DigitalOcean Managed MySQL, Advanced Edition** | 2 vCPU, 8 GiB node | $130/month per node | HA needs three nodes, each billed: $390/month | $0.115 or $0.215 per GiB: DigitalOcean's two pages disagree | Automatic primary election; no time stated | No |
-| **PlanetScale (Vitess)** | PS-80 (1 vCPU, 8 GiB) on AWS us-east-1 | Not sold: every cluster is a primary and two replicas | $179/month; PS-160 (2 vCPU, 16 GiB) $349 | Not listed on the pricing page | Automatic primary election; no time stated | Yes, by an explicit shard key |
-| **Aiven for MySQL** | No size-by-region price is published | Startup plans from $0.10/h ($75/month, one VM) | Business plans from $0.25/h ($180/month, primary and standby) | Not listed separately | The standby is promoted; no time stated | No |
-| **TiDB Cloud** (MySQL-compatible, not MySQL) | Dedicated, 4 vCPU and 16 GiB per node | $0.4416/h per node, region not labeled | Three replicas by default | $0.000197 per GiB-hour of TiKV storage | Automatic, when a minority of replicas fail | Yes, automatically |
+| Service | Size priced | One zone, per month | With HA, per month | Storage, per GB-month | Shards writes |
+| --- | --- | --- | --- | --- | --- |
+| **Amazon RDS for MySQL** | db.m7g.large: 2 vCPU, 8 GiB | $123 ($0.168/h) | $246 (Multi-AZ) | $0.115 gp3; $0.23 Multi-AZ | No |
+| **Aurora MySQL** | db.r7g.large: 2 vCPU, 16 GiB | $201 Standard; $262 I/O-Optimized | $403 Standard, writer plus reader | $0.10 plus I/O; $0.225 I/O-Optimized | No |
+| **Cloud SQL Enterprise** | 2 vCPU, 8 GiB | $108 ($0.148/h) | $217 | $0.1819 SSD; $0.3638 HA | No |
+| **Azure Flexible Server** | General Purpose, 2 vCores, 8 GiB | $125 ($0.171/h) | $250 | $0.115, both copies billed with HA | No |
+| **DigitalOcean Advanced** | 2 vCPU, 8 GiB node | $130 per node | $390, three nodes | $0.115 or $0.215 | No |
+| **PlanetScale** | PS-80: 1 vCPU, 8 GiB | Not sold | $179, primary plus two replicas | Not listed | Yes, explicit |
+| **Aiven** | Plan floors; no per-size price | From $75 (Startup) | From $180 (Business) | Not listed separately | No |
+| **TiDB Cloud Dedicated** | 4 vCPU, 16 GiB node | $322 per node ($0.4416/h) | Three replicas by default | $0.000197 per GiB-hour | Yes, automatic |
+
+Regions are N. Virginia for AWS, Northern Virginia (us-east4) for Google, East US for Azure and AWS us-east-1 for PlanetScale. Cloud SQL bills $0.0442 per vCPU-hour and $0.0075 per GiB-hour, and its HA rates are exactly double. Aurora storage on Standard adds $0.20 per million I/Os. PlanetScale's 2 vCPU size, PS-160, has 16 GiB and costs $349.
+
+Failover, as each provider states it: RDS Multi-AZ is "typically 60–120 seconds," and Azure says failovers "typically take between 60 and 120 seconds." Aurora restores service through a replica in under 60 seconds and "often less than 30 seconds." Google states no failover time; the Enterprise edition's SLA is 99.95% excluding maintenance. DigitalOcean, PlanetScale and Aiven promote a replica or standby automatically and publish no time. TiDB fails over automatically when a minority of its replicas fail.
 
 Two figures are soft. DigitalOcean's storage rate is $0.115 per GiB-month in its documentation and $0.215 on its pricing page.<!-- source-gap: do-mysql-storage | missing | DigitalOcean's MySQL storage rate per GiB-month | closes with: the same rate on docs.digitalocean.com/products/databases/mysql/details/pricing/ and digitalocean.com/pricing/managed-databases | checked: 2026-11-20 --> TiDB Cloud's node price comes from a table that doesn't name its region.<!-- source-gap: tidb-region | missing | the region the TiDB Cloud Dedicated $0.4416/h node price applies to | closes with: a region label on pingcap.com/tidb-cloud-pricing-details/ | checked: 2026-11-20 -->
 
