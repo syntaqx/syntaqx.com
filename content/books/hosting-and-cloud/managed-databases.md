@@ -1,15 +1,16 @@
 +++
-title = "Managed Databases"
-description = "RDS to Aurora's log-structured storage, DynamoDB, Spanner, Atlas and managed caches: how they work, how they meter, extended support fees and lock-in."
+title = "Managed Databases: MySQL, Postgres & Pricing Compared"
+nav_title = "Managed Databases"
+description = "Managed MySQL and Postgres from RDS, Aurora, Cloud SQL, Azure, PlanetScale and more: what HA costs, who shards, extended support fees and lock-in."
 category = "Hosting & Cloud Industry"
 order = 2134
 part = "Managed Services"
-tags = ["databases", "rds", "aurora", "dynamodb", "valkey", "pricing"]
+tags = ["databases", "rds", "aurora", "mysql", "dynamodb", "valkey", "pricing"]
 +++
 
 A managed database is a database engine that the provider installs, patches, backs up, replicates and fails over, sold by the hour and the gigabyte. The customer gets an endpoint and a set of knobs; the provider keeps the operating system, the storage layout, the replication topology and the 3 a.m. pages. It was the first managed service most clouds added after compute and storage, and it is still the stickiest: a virtual machine can be moved in an afternoon, but a database holds the company's state, and moving it means a migration with a cutover window.
 
-The product has two halves that pull in different directions. One is a commodity: open-source engines (MySQL, PostgreSQL, MariaDB, Redis and its fork Valkey) run on rented machines with automation around them, where every provider competes on price and the customer can leave. The other is proprietary: storage engines the provider wrote itself (Aurora's shared log, DynamoDB, Spanner, Cosmos DB, Aurora DSQL) that speak a familiar protocol or none at all, outperform the commodity version, and can't be taken elsewhere. Most of what is interesting about this market is the line between the two, and the meters that sit on each side of it. This chapter covers the history from RDS to Aurora, how a managed relational database works, key-value and distributed SQL services, managed document databases and caches, the meters, extended support fees, migration and lock-in, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with `databases`, `caches` and engine support windows. Serverless Postgres, branching and databases at the edge are the next chapter, [Serverless & Edge Databases](/books/hosting-and-cloud/serverless-and-edge-databases); the license fights over the engines are [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds).
+The product has two halves that pull in different directions. One is a commodity: open-source engines (MySQL, PostgreSQL, MariaDB, Redis and its fork Valkey) run on rented machines with automation around them, where every provider competes on price and the customer can leave. The other is proprietary: storage engines the provider wrote itself (Aurora's shared log, DynamoDB, Spanner, Cosmos DB, Aurora DSQL) that speak a familiar protocol or none at all, outperform the commodity version, and can't be taken elsewhere. Most of what is interesting about this market is the line between the two, and the meters that sit on each side of it. This chapter covers the history from RDS to Aurora, how a managed relational database works, key-value and distributed SQL services, managed document databases and caches, the meters, managed MySQL priced side by side across eight services, extended support fees, migration and lock-in, and extends [the core data model](/books/hosting-and-cloud/hosting-and-cloud-business#the-core-data-model) with `databases`, `caches` and engine support windows. Serverless Postgres, branching and databases at the edge are the next chapter, [Serverless & Edge Databases](/books/hosting-and-cloud/serverless-and-edge-databases); the license fights over the engines are [Open Source & the Clouds](/books/hosting-and-cloud/open-source-and-the-clouds).
 
 The engineering rules for using a database live in the playbook: [Database Performance](/docs/database/performance) for plans, indexes, pooling and replicas, [Transactions & Concurrency](/docs/database/transactions-and-concurrency) for isolation, [Zero-Downtime Migrations](/docs/database/zero-downtime-migrations) for schema changes, [Disaster Recovery](/docs/operations/disaster-recovery) for RPO, RTO and restores, and [Application Caching](/docs/architecture/application-caching) for when a cache earns its place. This chapter is the provider side.
 
@@ -128,6 +129,53 @@ A managed database bill is several meters, each tied to a cost the provider carr
 | Extended support | vCPU-hour or ACU-hour | $0.100 per vCPU-hour years 1 to 2, $0.200 year 3 (MySQL, US East Ohio) | Customer, by not upgrading |
 
 Two decisions recur in every catalog. The first is **provisioned versus used storage**: RDS bills what the customer allocated, Aurora what it consumes, and the difference decides whether a deleted table lowers the bill. The second is **whether I/O is a meter at all**: a per-I/O charge is honest about cost and impossible for a customer to forecast, which is why AWS ended up selling both and Google's AlloyDB announcement made "no opaque I/O charges" a selling point. The FinOps side of both (budgets, anomaly alerts, who owns a database's cost) is the playbook's [Cost & FinOps](/docs/operations/cost-and-finops#the-levers-that-actually-matter) and the [Cost Data, FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills) chapter.
+
+## Managed MySQL Compared
+
+MySQL is the engine every provider in this chapter sells, which makes it the cleanest place to compare them. The table prices one small production database at each, on demand, in a US East region, as of 20 Nov 2026: 2 vCPU and 8 GiB where the provider has that size, and the nearest size where it doesn't. Monthly figures are the hourly rate times 730 hours.
+
+| Service | Size priced | One zone | With high availability | Storage, GB-month | Failover, as the provider states it | Writes scale out |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Amazon RDS for MySQL** | db.m7g.large (2 vCPU, 8 GiB), N. Virginia | $0.168/h (about $123/month) | Multi-AZ $0.337/h (about $246) | gp3 $0.115; $0.23 Multi-AZ | "typically 60–120 seconds" | No |
+| **Aurora MySQL** | db.r7g.large (2 vCPU, 16 GiB), N. Virginia | $0.276/h Standard, $0.359 I/O-Optimized | A reader in a second zone is a second instance: about $403/month Standard | $0.10 plus $0.20 per million I/Os; $0.225 I/O-Optimized, no I/O charge | Under 60 seconds to a replica, "often less than 30 seconds" | No: Limitless Database is PostgreSQL only |
+| **Cloud SQL for MySQL, Enterprise edition** | 2 vCPU and 8 GiB, Northern Virginia (us-east4) | $0.0442 per vCPU-hour plus $0.0075 per GiB-hour: $0.148/h (about $108) | HA rates are exactly double: about $217 | SSD $0.1819; $0.3638 with HA | No time stated; the Enterprise SLA is 99.95% excluding maintenance | No |
+| **Azure Database for MySQL Flexible Server** | General Purpose, 2 vCores (8 GiB), East US | $0.0855 per vCore-hour: $0.171/h (about $125) | Primary and standby both billed: about $250 | $0.115, billed for both copies with HA | "typically take between 60 and 120 seconds" | No |
+| **DigitalOcean Managed MySQL, Advanced Edition** | 2 vCPU, 8 GiB node | $130/month per node | HA needs three nodes, each billed: $390/month | $0.115 or $0.215 per GiB: DigitalOcean's two pages disagree | Automatic primary election; no time stated | No |
+| **PlanetScale (Vitess)** | PS-80 (1 vCPU, 8 GiB) on AWS us-east-1 | Not sold: every cluster is a primary and two replicas | $179/month; PS-160 (2 vCPU, 16 GiB) $349 | Not listed on the pricing page | Automatic primary election; no time stated | Yes, by an explicit shard key |
+| **Aiven for MySQL** | No size-by-region price is published | Startup plans from $0.10/h ($75/month, one VM) | Business plans from $0.25/h ($180/month, primary and standby) | Not listed separately | The standby is promoted; no time stated | No |
+| **TiDB Cloud** (MySQL-compatible, not MySQL) | Dedicated, 4 vCPU and 16 GiB per node | $0.4416/h per node, region not labeled | Three replicas by default | $0.000197 per GiB-hour of TiKV storage | Automatic, when a minority of replicas fail | Yes, automatically |
+
+Two figures are soft. DigitalOcean's storage rate is $0.115 per GiB-month in its documentation and $0.215 on its pricing page.<!-- source-gap: do-mysql-storage | missing | DigitalOcean's MySQL storage rate per GiB-month | closes with: the same rate on docs.digitalocean.com/products/databases/mysql/details/pricing/ and digitalocean.com/pricing/managed-databases | checked: 2026-11-20 --> TiDB Cloud's node price comes from a table that doesn't name its region.<!-- source-gap: tidb-region | missing | the region the TiDB Cloud Dedicated $0.4416/h node price applies to | closes with: a region label on pingcap.com/tidb-cloud-pricing-details/ | checked: 2026-11-20 -->
+
+The table is not a ranking; read it by row:
+
+- **The hyperscalers sell HA by doubling the bill.** RDS Multi-AZ, Cloud SQL's HA rates and Azure's zone-redundant standby each charge a second copy of compute, and RDS and Azure bill the storage twice. Aurora has no standby price at all: storage is already six copies across three zones, and high availability is a reader instance, priced like the writer.
+- **The developer clouds price HA as a cluster.** DigitalOcean's Advanced Edition and PlanetScale count nodes, and PlanetScale doesn't sell a cluster without its two replicas. Aiven's plan names include it.
+- **The unit changes what's comparable.** Cloud SQL bills vCPUs and memory separately, so any shape is possible; RDS, Aurora and Azure sell fixed classes; PlanetScale, DigitalOcean and Aiven sell monthly plans with hourly billing underneath. Aurora's 2 vCPU class carries 16 GiB, twice the others, and its storage and I/O meters make the instance price only part of the bill.
+- **None of the hyperscalers' MySQL services spread writes across machines.** One primary takes every write; replicas scale reads. Aurora's sharded option, Limitless Database, is PostgreSQL only. PlanetScale shards through Vitess, which the customer drives by choosing a primary Vindex and moving tables onto shards; TiDB splits its storage into Regions and balances them across nodes on its own, and speaks the MySQL protocol over an engine that isn't MySQL.
+
+### What "Enterprise" Adds
+
+What separates an enterprise tier from the rows above is mostly availability and maintenance, not the engine. Cloud SQL Enterprise Plus raises the SLA to 99.99% including maintenance and cuts planned-maintenance downtime to under a second, from under 60 seconds on Enterprise. RDS adds a Multi-AZ shape with two readable standbys, priced per instance-hour like the others. Above that sit commitments (reserved instances, committed-use discounts) that lower the rate in exchange for a term, and the extended-support fees below, which an enterprise running an old version pays more of than anyone.
+
+### MySQL 8.0's End, Provider by Provider
+
+Each provider turned MySQL 8.0's end of life into a different date and a different bill:
+
+| Service | Current majors | What happens to 8.0 |
+| --- | --- | --- |
+| **Amazon RDS for MySQL** | 9.7, 8.4; 8.0 and 5.7 only under Extended Support | Standard support ended 31 Jul 2026; Extended Support charges per vCPU-hour, with year-three rates from 1 Aug 2028 |
+| **Aurora MySQL** | 8.4; version 3 (8.0-compatible); version 2 (5.7) in Extended Support | Version 3 has standard support to 30 Apr 2028 |
+| **Cloud SQL for MySQL** | 9.7, 8.4 (the default), 8.0 | Extended support starts 1 Jan 2027 |
+| **Azure Flexible Server** | 8.4 and 8.0; 9.5 in preview | Extended support starts 1 Feb 2027 at $0.07 per vCore-hour, doubling in year three |
+| **DigitalOcean** | 8.4 | Forced upgrades to 8.4 began 30 Oct 2026 |
+| **Aiven** | 8.4 | End of life 31 Oct 2026; no extended support: services are upgraded or powered off |
+
+Aurora's own versioning buys an 8.0-compatible engine two more years of standard support than RDS gives MySQL 8.0 itself. The developer clouds took the other path and upgraded. For a customer, the version is a cost line with a date on it; for a provider, the support calendar is the product decision covered next.
+
+### My Pick for MySQL
+
+My default for a MySQL application is RDS for MySQL or Cloud SQL Enterprise on 8.4, with high availability on, because both run the real engine, bill a legible instance plus storage, and leave the exit open. I'd move to Aurora MySQL when failover time or storage growth is the problem. I'd reach for PlanetScale or TiDB only when one primary can't take the writes, and pick PlanetScale when I want to choose the shard key myself and TiDB when I want the system to place data on its own, knowing TiDB is a different engine behind a MySQL protocol.
 
 ## Extended Support and Forced Upgrades
 
@@ -348,6 +396,27 @@ Notes on the sketch:
 - [Microsoft Learn: Azure Database for PostgreSQL](https://learn.microsoft.com/en-us/azure/postgresql/), Flexible Server and the migration service
 - [Microsoft Learn (archived): What's happening to PostgreSQL Single Server](https://web.archive.org/web/20231002024315/https://learn.microsoft.com/en-us/azure/postgresql/single-server/whats-happening-to-postgresql-single-server), the 28 Mar 2025 retirement
 - [Microsoft Learn (archived): What's happening to MySQL Single Server](https://web.archive.org/web/20240512132304/https://learn.microsoft.com/en-us/azure/mysql/single-server/whats-happening-to-mysql-single-server), the 16 Sep 2024 retirement and select-workload auto-migration
+- [AWS Price List API: Amazon RDS, US East (N. Virginia), publication of 19 Nov 2026](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRDS/current/us-east-1/index.json), db.m7g.large MySQL Single-AZ and Multi-AZ, db.r7g.large Aurora MySQL Standard and I/O-Optimized, gp3 rates
+- [Amazon Aurora pricing](https://aws.amazon.com/rds/aurora/pricing/), Standard and I/O-Optimized storage and I/O rates
+- [Amazon RDS: Failover for Multi-AZ instances](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.Failover.html), "typically 60–120 seconds"
+- [Aurora: High availability](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.AuroraHighAvailability.html), failover to a replica in under 60 seconds and often under 30
+- [Aurora PostgreSQL Limitless Database](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/limitless.html), sharding for PostgreSQL only
+- [Amazon RDS for MySQL versions](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Concepts.VersionMgmt.html), the version list and the 8.0 end of standard support
+- [Aurora MySQL release calendars](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraMySQLReleaseNotes/AuroraMySQL.release-calendars.html), version 3 and 8.4 support dates
+- [Google Cloud: Cloud SQL pricing](https://cloud.google.com/sql/pricing), Enterprise edition vCPU, memory, HA and SSD rates in Northern Virginia (us-east4)
+- [Cloud SQL: Editions](https://docs.cloud.google.com/sql/docs/mysql/editions-intro), the Enterprise and Enterprise Plus SLAs and maintenance downtime
+- [Cloud SQL: MySQL versions](https://docs.cloud.google.com/sql/docs/mysql/db-versions) and [extended support](https://docs.cloud.google.com/sql/docs/mysql/extended-support), the 8.0 date
+- [Azure Retail Prices API: Azure Database for MySQL, East US](https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Azure%20Database%20for%20MySQL%27%20and%20armRegionName%20eq%20%27eastus%27), General Purpose vCore, storage and extended support rates
+- [Microsoft Learn: High availability in Azure Database for MySQL](https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-high-availability), both replicas billed and the failover time
+- [Microsoft Learn: Azure Database for MySQL version policy](https://learn.microsoft.com/en-us/azure/mysql/concepts-version-policy), versions and extended support dates
+- [DigitalOcean: MySQL pricing](https://docs.digitalocean.com/products/databases/mysql/details/pricing/), Advanced Edition node price and three-node billing
+- [DigitalOcean: MySQL Advanced Edition](https://docs.digitalocean.com/products/databases/mysql/concepts/advanced-edition/), MySQL 8.4 and the forced upgrades from 8.0
+- [PlanetScale: Pricing](https://planetscale.com/pricing), PS-80 and PS-160 cluster prices and the three-node shape
+- [PlanetScale: Sharding](https://planetscale.com/docs/vitess/sharding), explicit sharding by primary Vindex
+- [Aiven for MySQL pricing](https://aiven.io/pricing/mysql), Startup and Business plan floors
+- [Aiven for MySQL version lifecycle](https://aiven.io/docs/products/mysql/reference/version-lifecycle), 8.0 end of life and no extended support
+- [TiDB Cloud pricing details](https://www.pingcap.com/tidb-cloud-pricing-details/), Dedicated node and storage rates
+- [TiDB storage](https://docs.pingcap.com/tidb/stable/tidb-storage/), Regions balanced across nodes
 - [Redis: Redis adopts dual source-available licensing](https://redis.io/blog/redis-adopts-dual-source-available-licensing/), Microsoft's agreement to continue its Redis service
 
 **Filings**
