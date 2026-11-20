@@ -149,6 +149,14 @@ export const postRedirects = [
   },
 ];
 
+// Project pages from the old site, still in Google's index as 404s. Each
+// project is now a card on /projects that links to its repository.
+export const projectRedirects = ["cookie", "env", "serve", "setup-kustomize"].map((name) => ({
+  source: `/projects/${name}`,
+  destination: "/projects",
+  permanent: true,
+}));
+
 // Post tags consolidated (November 2026): near-duplicates merged and
 // one-post tags folded into the tag that covers them.
 export const tagRedirects = Object.entries({
@@ -192,6 +200,7 @@ const nextConfig: NextConfig = {
     ...docRedirects(),
     ...sectionRedirects,
     ...postRedirects,
+    ...projectRedirects,
     ...tagRedirects,
     ...resumeHostRedirects,
   ],
