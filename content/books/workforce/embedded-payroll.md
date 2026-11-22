@@ -168,7 +168,7 @@ What each side owns, as the public material divides it:
 | Approving, demoting and suspending companies | Explaining those decisions to its customer |
 
 The contract terms that set the split (revenue share, loss sharing, support tiers, termination and data portability) aren't public for any partner I could read.
-<!-- source-gap: wf-embedded-contract-terms | missing | embedded payroll partner contract terms: loss sharing beyond Gusto's 90-day rule, support obligations, data portability on termination | closes with: a published partner agreement or a filing describing embedded payroll partner terms | checked: 2026-11-10 -->
+<!-- source-gap: wf-embedded-contract-terms | missing | embedded payroll partner contract terms: loss sharing beyond Gusto's 90-day rule, support obligations, data portability on termination | closes with: a published partner agreement or a filing describing embedded payroll partner terms | checked: 2026-11-22 -->
 
 ## Versions and Change
 

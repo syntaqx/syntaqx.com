@@ -23,7 +23,7 @@ What pay equity and compensation vendors publish, and what ATS and HRIS vendors 
 | **Payscale** | Compensation data and software | "Analyze pay equity with auditable methodology" |
 | **Syndio** | Pay equity software | "the pay equity leader trusted by 350+ global enterprises," with "EU Pay Transparency Directive readiness built in: continuous pay gap reporting across jurisdictions" |
 
-<!-- source-gap: wf-pay-vendors | missing | public product documentation for Trusaic, Carta Total Compensation, Mercer and HCM suites' pay transparency features | closes with: public product or help pages describing range management and pay gap reporting | checked: 2026-11-10 -->
+<!-- source-gap: wf-pay-vendors | missing | public product documentation for Trusaic, Carta Total Compensation, Mercer and HCM suites' pay transparency features | closes with: public product or help pages describing range management and pay gap reporting | checked: 2026-11-22 -->
 
 The industry's split is between systems that hold the ranges (compensation planning and the job architecture in the HRIS), systems that publish them (the ATS and job boards), and systems that analyze outcomes (pay equity tools that read the HRIS's job, pay and demographic data). The data model below follows the same split.
 
@@ -38,22 +38,22 @@ The rules as of November 2026. Rows marked *secondary* rest on Brightmine's char
 | **Connecticut** | Gen. Stat. 31-40z | No size threshold in the section | No posting rule in the version through January 1, 2025 (*secondary*: a posting rule from October 1, 2026) | Range to an applicant on request or at the offer, and to an employee at hire, at a change of position or on first request | Yes |
 | **District of Columbia** | D.C. Code 32-1453.01 (D.C. Law 25-138) | No size threshold in the section | "the minimum and maximum projected salary or hourly pay in all job listings and position descriptions advertised" | Disclose healthcare benefits "before the first interview" | Yes |
 | **Maryland** | Labor and Employment 3-304.2 | No size threshold in the section | "the wage range and a general description of benefits" in "each public or internal posting" | Without a posting, before compensation is discussed | Yes |
-| **Massachusetts** | G.L. c. 149, s. 105F (Chapter 141 of the Acts of 2024) | 25 or more employees in the commonwealth | "the pay range for a particular and specific employment position" | Range to an employee offered a promotion or transfer, and on request to an employee or applicant; a 2-business-day cure in the first two years | One year after the act's effective date (approved July 31, 2024) |
+| **Massachusetts** | G.L. c. 149, s. 105F (Chapter 141 of the Acts of 2024) | 25 or more employees in the commonwealth | "the pay range for a particular and specific employment position" | Range to an employee offered a promotion or transfer, and on request to an employee or applicant; a 2-business-day cure in the first two years | October 29, 2025 |
 | **Minnesota** | Minn. Stat. 181.173 | 30 or more employees at sites in Minnesota | "the starting salary range" and "a general description of all of the benefits and other compensation" | | Yes |
 | **New Jersey** | P.L.2024, c.91 | 10 or more employees over 20 calendar weeks | "the hourly wage or salary, or a range," and "a general description of benefits and other compensation programs" | Reasonable efforts to announce promotion opportunities | From the first day of the seventh month after enactment (approved November 18, 2024): June 1, 2025 by my count |
 | **New York State** | Labor Law 194-b | Four or more employees | Pay ranges for "designated job opportunities, promotions, and transfers," as a minimum and maximum annual salary or hourly rate, with job descriptions | | Yes |
 | **Nevada** | NRS 613.133 | No size threshold in the section | No posting rule | The range "To an applicant for employment who has completed an interview" | Yes (2021) |
 | **Vermont** | 21 V.S.A. 495p | Five or more employees | "the compensation or range of compensation for the job opening," including positions current employees can move into | | July 1, 2025 |
 | **Washington** | RCW 49.58.110 | 15 or more employees | "The wage scale or salary range" and "a general description of all of the benefits and other compensation" | Range on request for an internal transfer or promotion; no penalty if a posting is corrected "within five business days" of written notice, for postings from July 27, 2025 through July 27, 2027 | January 1, 2023; amended 2025 |
-| **Delaware** | *secondary* | More than 25 employees | Range and benefits | | September 26, 2027 |
+| **Delaware** | 19 Del. C. 709C (85 Del. Laws, c. 228) | Does not apply to employers with 25 or fewer employees | "the hourly or salary compensation range" and a general description of benefits and other compensation, for jobs located in Delaware and noninternational remote positions offered by a Delaware employer | | September 26, 2027 |
 | **Hawaii** | HRS 378-2.4, *secondary* | 50 or more employees | Hourly rate or salary range; internal promotions excluded | | Yes |
 | **Illinois** | 820 ILCS 112/10, *secondary* | 15 or more employees | Pay scale and benefits | Notify current employees of promotion opportunities | Yes |
-| **Maine** | *secondary* | 10 or more employees | Range | | Yes |
-| **Rhode Island** | *secondary* | All employers | No posting rule | Range on request | Yes |
-| **Virginia** | *secondary* | All employers | Range | | Yes |
+| **Maine** | 26 M.R.S. 622-A (PL 2025, c. 771) | 10 or more employees | A statement that "lists the prospective range of pay the employer will offer to a successful applicant," or that pay is solely commission | | In the published code; effective date not stated there |
+| **Rhode Island** | R.I. Gen. Laws 28-6-22 | No size threshold in the section | No posting rule | The wage range to an applicant on request (and "prior to discussing compensation"), to an employee at hire, at a move to a new position and on request | January 1, 2023 |
+| **Virginia** | Va. Code 40.1-28.7:12 (2026 Acts, cc. 996 and 1063) | No size threshold in the section | "the wage, salary, or wage or salary range" in "each public and internal posting for each job, promotion, transfer, or other employment opportunity" | Salary history ban, cause of action and civil penalty | In the published code; effective date not stated there |
 | **New York City** | *secondary* | Four or more employees | Range in any ad for a job, promotion or transfer | | Yes |
 
-<!-- source-gap: wf-pay-primaries | secondary | Delaware, Hawaii, Illinois, Maine, Rhode Island, Virginia and New York City pay transparency rules, Connecticut's 2026 posting amendment, Massachusetts' effective date, and effective dates for California's 432.3 posting rule, Minnesota and New York State | closes with: each statute or agency page (ilga.gov, capitol.hawaii.gov, mass.gov and nyc.gov were blocked or missing) | checked: 2026-11-09 -->
+<!-- source-gap: wf-pay-primaries | secondary | Hawaii, Illinois and New York City pay transparency rules, Connecticut's 2026 posting amendment, Maine's and Virginia's effective dates, and effective dates for California's 432.3 posting rule, Minnesota and New York State | closes with: each statute or agency page (ilga.gov certificate error, capitol.hawaii.gov and codelibrary.amlegal.com 403 on Nov 22, 2026) | checked: 2026-11-22 -->
 
 Cities add their own (Brightmine lists Jersey City at five or more employees, Cleveland at 15 or more and Columbus from January 1, 2027, among others), and the chart counts 27 jurisdictions in all.
 
@@ -99,9 +99,9 @@ The EEO-1 requires "all private sector employers with 100 or more employees, and
 
 - **The last collection.** "The 2024 EEO-1 Component 1 Data Collection is CLOSED," and the EEOC says updates on a 2025 collection "will be posted to this page as they become available."
 - **The proposal.** "Removal of Reporting Requirements" (91 FR 46332, published July 23, 2026) would rescind the EEO-1 through EEO-6 reports and the related recordkeeping and record preservation requirements in 29 CFR part 1602, which the EEOC calls "inconsistent with equal employment opportunity law and potentially unconstitutional." Comments closed August 24, 2026, after a public hearing noticed July 30.
-- **The status.** No final rule appears in the Federal Register's EEOC listing as of November 9, 2026, and the proposal itself says the Commission will include other part 1602 revisions in "the final rule issued at the conclusion of this rulemaking." The reporting requirement remains in the regulations until a final rule removes it.
+- **The status.** No final rule appears in the Federal Register's EEOC listing as of November 22, 2026 (the latest EEOC items are meeting notices and an ADEA waiver collection extension), and the proposal itself says the Commission will include other part 1602 revisions in "the final rule issued at the conclusion of this rulemaking." The reporting requirement remains in the regulations until a final rule removes it.
 
-<!-- source-gap: wf-pay-eeo1-final | status | whether the EEOC finalizes the rescission of EEO-1 reporting and part 1602 recordkeeping | closes with: a final rule in the Federal Register or a 2025 collection notice on eeoc.gov | checked: 2026-11-10 -->
+<!-- source-gap: wf-pay-eeo1-final | status | whether the EEOC finalizes the rescission of EEO-1 reporting and part 1602 recordkeeping | closes with: a final rule in the Federal Register or a 2025 collection notice on eeoc.gov | checked: 2026-11-22 -->
 
 A system should keep the EEO-1's data model even if the federal report goes: California's and Massachusetts' reports use its job categories and demographic categories, pay equity analyses use the same groupings, and an employer's own records of the snapshot it filed for 2024 stay within their retention period. What changes is that the federal filing becomes a `filings` row the calendar stops generating once the rule's effective date passes.
 
@@ -120,9 +120,9 @@ Directive (EU) 2023/970 binds employers through national law, and Member States 
 
 "Pay level" means "gross annual pay and the corresponding gross hourly pay" (Art. 3(1)(b)), so the system needs both, from actual pay, by worker.
 
-Transposition is uneven. The EUR-Lex national transposition page (updated weekly, with Member States solely responsible for its content) lists notified measures from 17 Member States (Austria, Belgium, Bulgaria, Czechia, Estonia, Finland, Greece, Italy, Latvia, Lithuania, Malta, Poland, Romania, Slovakia, Slovenia, Spain and Sweden) and none from ten (Croatia, Cyprus, Denmark, France, Germany, Hungary, Ireland, Luxembourg, the Netherlands and Portugal), as of November 2026. A notification shows that a state sent a measure, not that it transposed the whole directive.
+Transposition is uneven. The EUR-Lex national transposition page (updated weekly, with Member States solely responsible for its content) lists notified measures from 17 Member States (Austria, Belgium, Bulgaria, Czechia, Estonia, Finland, Greece, Italy, Latvia, Lithuania, Malta, Poland, Romania, Slovakia, Slovenia, Spain and Sweden) and none from ten (Croatia, Cyprus, Denmark, France, Germany, Hungary, Ireland, Luxembourg, the Netherlands and Portugal), as of November 2026. A notification shows that a state sent a measure, not that it transposed the whole directive. The Commission's monthly infringement packages of July 15, September 25 and November 19, 2026, which sent letters of formal notice for late transposition of other directives, list no case on Directive 2023/970, so I can't state the Commission's position on the delays.
 
-<!-- source-gap: wf-pay-eu-status | secondary | which Member States have fully transposed Directive 2023/970 and the European Commission's position on delays | closes with: the Commission's transposition scoreboard or infringement notices | checked: 2026-11-09 -->
+<!-- source-gap: wf-pay-eu-status | secondary | which Member States have fully transposed Directive 2023/970 and the European Commission's position on delays | closes with: the Commission's transposition scoreboard or infringement notices | checked: 2026-11-22 -->
 
 ## Pay Equity Analysis as a System
 
@@ -286,10 +286,15 @@ Pay transparency is enforced by complaint, and pay data by filing. Keep:
 - [California Government Code 12999 (Civil Rights Department: Pay data reporting)](https://calcivilrights.ca.gov/paydatareporting/), filers, the May 13, 2026 deadline for reporting year 2025 and the statutory basis
 - [D.C. Code 32-1453.01](https://code.dccouncil.gov/us/dc/council/code/sections/32-1453.01), salary or hourly range in listings and healthcare benefits before the first interview
 - [Maryland Labor and Employment 3-304.2](https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=gle&section=3-304.2&enactments=false), wage range and benefits in postings and the wage history ban
+- [Massachusetts General Laws c. 149, s. 105F](https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXI/Chapter149/Section105F), covered employers of 25 or more and the October 29, 2025 effective date
 - [Massachusetts: Chapter 141 of the Acts of 2024](https://malegislature.gov/Laws/SessionLaws/Acts/2024/Chapter141), sections 105E (data reports by February 1) and 105F (pay ranges, 25 employees, promotions, requests, the cure period and its effective date)
 - [Minnesota Statutes 181.173](https://www.revisor.mn.gov/statutes/cite/181.173), the starting salary range and benefits for employers with 30 or more employees in Minnesota
 - [Nevada Revised Statutes 613.133](https://www.leg.state.nv.us/NRS/NRS-613.html), the range after an interview and the salary history ban
 - [New Jersey P.L.2024, c.91](https://pub.njleg.gov/bills/2024/PL24/91_.HTM), the posting rule for employers with 10 or more employees, promotion announcements and the effective date formula
+- [Delaware Code title 19, chapter 7, subchapter I (709C)](https://delcode.delaware.gov/title19/c007/sc01/index.html), the posting range and benefits, the 25-employee exclusion and the September 26, 2027 effective date
+- [Maine 26 M.R.S. 622-A](https://legislature.maine.gov/statutes/26/title26sec622-A.html), the prospective pay range in postings for employers with 10 or more employees
+- [Rhode Island General Laws 28-6-22](https://webserver.rilegislature.gov/Statutes/TITLE28/28-6/28-6-22.htm), wage ranges on request, at hire and at a move, effective January 1, 2023
+- [Code of Virginia 40.1-28.7:12](https://law.lis.virginia.gov/vacode/title40.1/chapter3/section40.1-28.7:12/), the posting rule, salary history ban and 2026 Acts chapters 996 and 1063
 - [Vermont 21 V.S.A. 495p](https://legislature.vermont.gov/statutes/section/21/005/00495p), compensation in postings for employers with five or more employees, effective July 1, 2025
 - [RCW 49.58.110](https://app.leg.wa.gov/rcw/default.aspx?cite=49.58.110), Washington's posting rule for 15 or more employees, internal transfers and the 2025 cure provision
 - [Connecticut General Statutes, chapter 557 (31-40z)](https://www.cga.ct.gov/current/pub/chap_557.htm), wage ranges on request and at hire, and the salary history ban
@@ -303,8 +308,11 @@ Pay transparency is enforced by complaint, and pay data by filing. Keep:
 - [New York State DOL: Pay transparency](https://dol.ny.gov/pay-transparency), employers with four or more employees and ranges for jobs, promotions and transfers
 - [EEOC: EEO data collections](https://www.eeoc.gov/data/eeo-data-collections), EEO-1 filers and the closed 2024 collection
 - [Federal Register: Removal of Reporting Requirements (2026-14937)](https://www.federalregister.gov/api/v1/documents/2026-14937.json), 91 FR 46332, the proposed rescission of EEO-1 to EEO-6 and part 1602 recordkeeping
-- [Federal Register: EEOC documents](https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=equal-employment-opportunity-commission&order=newest&per_page=10), the July 30, 2026 hearing notice and no final rule as of November 9, 2026
+- [Federal Register: EEOC documents](https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=equal-employment-opportunity-commission&order=newest&per_page=10), the July 30, 2026 hearing notice and no final rule as of November 22, 2026
 - [EUR-Lex: National transposition measures for Directive 2023/970](https://eur-lex.europa.eu/legal-content/EN/NIM/?uri=CELEX:32023L0970), notified measures by Member State
+- [European Commission: July 2026 infringements package (INF/26/1380)](https://ec.europa.eu/commission/presscorner/api/files/document/print/en/inf_26_1380/INF_26_1380_EN.pdf), July 15, 2026 non-transposition letters, none on Directive 2023/970
+- [European Commission: September 2026 infringements package (INF/26/1834)](https://ec.europa.eu/commission/presscorner/api/files/document/print/en/inf_26_1834/INF_26_1834_EN.pdf), September 25, 2026 non-transposition letters, none on Directive 2023/970
+- [European Commission: November 2026 infringements package (INF/26/2269)](https://ec.europa.eu/commission/presscorner/api/files/document/print/en/inf_26_2269/INF_26_2269_EN.pdf), November 19, 2026 decisions, none on Directive 2023/970
 
 **Vendor documentation**
 

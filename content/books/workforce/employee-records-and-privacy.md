@@ -58,9 +58,9 @@ The federal floor, with the event each clock starts from:
 | **FMLA records** | 29 CFR 825.500 | "for no less than three years" | |
 | **OSHA 300 Log, annual summary, 301 forms** | 29 CFR 1904.33 | "five (5) years following the end of the calendar year that these records cover" | Year end |
 
-States add their own: California's personnel records three years after termination and job title and wage rate history for employment plus three years ([Salary Range Posting Laws](/books/workforce/pay-transparency-and-equity#salary-range-posting-laws)), California's four years for employment records including automated-decision data ([Candidate Data Retention](/books/workforce/recruiting-and-hiring#candidate-data-retention)), Massachusetts' three years after termination, and many more. The EEOC's July 2026 proposal would remove part 1602's recordkeeping and preservation rules along with the EEO-1; until a final rule takes effect, 1602.14 applies.
+States add their own: California's personnel records three years after termination and job title and wage rate history for employment plus three years ([Salary Range Posting Laws](/books/workforce/pay-transparency-and-equity#salary-range-posting-laws)), California's four years for employment records including automated-decision data ([Candidate Data Retention](/books/workforce/recruiting-and-hiring#candidate-data-retention)), Massachusetts' three years after termination, New York's payroll records, which Labor Law 195(4) says to "establish, maintain and preserve for not less than six years," and many more. The EEOC's July 2026 proposal would remove part 1602's recordkeeping and preservation rules along with the EEO-1; until a final rule takes effect, 1602.14 applies.
 
-<!-- source-gap: wf-rec-state-retention | missing | a primary-source table of state payroll and personnel record retention periods beyond California, Massachusetts and Oregon | closes with: each state labor agency's recordkeeping rule | checked: 2026-11-10 -->
+<!-- source-gap: wf-rec-state-retention | missing | a primary-source table of state payroll and personnel record retention periods beyond California, Massachusetts, New York and Oregon | closes with: each state labor agency's recordkeeping rule | checked: 2026-11-22 -->
 
 ### Worked Numbers: One Employee's Purge Dates
 
@@ -259,6 +259,7 @@ Records programs are reviewed by DOL, the IRS, ICE, the EEOC, state agencies, pl
 - [29 CFR 1627.3](https://www.law.cornell.edu/cfr/text/29/1627.3), ADEA payroll records 3 years, personnel records 1 year, benefit plans and enforcement holds
 - [29 USC 1027](https://www.law.cornell.edu/uscode/text/29/1027), ERISA records kept not less than six years after filing
 - [29 CFR 825.500](https://www.law.cornell.edu/cfr/text/29/825.500), FMLA records three years and medical records in separate files
+- [New York Labor Law 195](https://www.nysenate.gov/legislation/laws/LAB/195), subsection 4: payroll records preserved for not less than six years
 - [29 CFR 1904.33](https://www.law.cornell.edu/cfr/text/29/1904.33), OSHA injury and illness records five years after the year they cover
 - [29 CFR 1630.14](https://www.law.cornell.edu/cfr/text/29/1630.14), ADA medical examinations, separate confidential medical files and their exceptions
 - [29 CFR 1635.9](https://www.law.cornell.edu/cfr/text/29/1635.9), GINA confidentiality and the permitted disclosures

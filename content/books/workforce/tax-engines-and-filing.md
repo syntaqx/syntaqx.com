@@ -132,7 +132,17 @@ The layer's core loop each quarter is: lock the period's statement lines, build 
 **W-2s to SSA (EFW2).** Annual W-2 Copy A goes to the Social Security Administration in its EFW2 format (Publication 42-007 for tax year 2026) through Business Services Online, with W-2c in EFW2C; [Year-End, W-2s & Wage Reporting](/books/workforce/year-end-and-w2s#efw2-and-bso) covers the records and the 2026 changes.
 
 **State returns and wage reports.** States accept withholding returns, SUI wage reports and annual reconciliations through their online accounts and bulk upload formats, many derived from the EFW2 layout for W-2 data and from a shared record format for quarterly wage reports, each with state-specific fields. A filing service maintains a format per state per form per year, which is much of what the vendors above sell.
-<!-- source-gap: wf-state-bulk-formats | missing | the bulk upload formats states accept for SUI quarterly wage reports and withholding reconciliations (record layouts, shared standards such as ICESA, and which states use them) | closes with: state employer e-file specifications for the largest payroll states | checked: 2026-11-09 -->
+
+The shared quarterly wage format is ICESA, "published by the National Association of State Work Force Agencies (formerly ICESA - Interstate Conference of Employment Security Agencies)": fixed-length records of 275 bytes, typed A (transmitter), B (basic information), E (employer), S (employee wage), T (total) and F (final), each state defining its own fields within them. Three of the largest payroll states show the range:
+
+| State | Bulk formats for the quarterly wage report | Notes |
+| --- | --- | --- |
+| California (DE 9C) | XML, ICESA and MMREF-1 file upload; CSV import; FSET XML web service | Zipped, 10 MB limit; no test environment (DE 8300, Rev. 12, 7-24) |
+| Texas | ICESA (the QuickFile layout) with C-3 contribution and C-4 wage detail data, and BLS 3020 worksite data where applicable | 275-byte records with carriage return and line feed; several accounts per file |
+| Pennsylvania | ICESA (.ICS) and CSV, by file upload or FTP | 500k upload limit, larger files by FTP; ICESA accepted for tax and wage data since January 1, 2020 (UC-2010, Rev. 11-25) |
+
+W-2 uploads follow EFW2 instead, with a state RS record: Ohio's tax year 2025 specification, for one, "follows the EFW2 layout required by the Social Security Administration (with certain modifications)." Which other states take ICESA, MMREF-1, CSV or their own layout is per-state data from each agency's specification.
+<!-- source-gap: wf-state-bulk-formats | missing | the bulk upload formats for SUI wage reports and withholding reconciliations in states other than California, Texas, Pennsylvania and Ohio | closes with: state employer e-file specifications for the other large payroll states (New York, Florida, Illinois) | checked: 2026-11-22 -->
 
 **Information returns (IRIS).** Forms 1099 move to the IRS's Information Returns Intake System, which replaces FIRE starting with tax year 2026 filings; [Contractors & 1099s](/books/workforce/contractors-and-1099s) covers it.
 
@@ -264,6 +274,10 @@ Engines and filing services are what a SOC 1 auditor and an agency examiner both
 - [IRS: Publication 15 (2026), Employer's Tax Guide](https://www.irs.gov/publications/p15), e-filing by reporting agents (Pub 3112, Rev. Proc. 2007-40) and CPEOs (Schedule R)
 - [IRS: Publication 15-T (2026), Federal Income Tax Withholding Methods](https://www.irs.gov/publications/p15t), Worksheet 1A for automated payroll, the nonresident alien worked example and rounding to whole dollars
 - [Indiana Department of Revenue: Departmental Notice 1](https://www.in.gov/dor/files/dn01.pdf), the state and county worked example and rates effective October 1, 2026
+- [California EDD: Electronic Filing Guide for the Quarterly Wage and Withholding Program (DE 8300, PDF)](https://edd.ca.gov/siteassets/files/pdf_pub_ctr/de8300.pdf), Rev. 12 (7-24): the XML, ICESA and MMREF-1 bulk upload, CSV import, the 10 MB zipped limit and FSET
+- [Texas Workforce Commission: ICESA format, QuickFile wage reporting program (PDF)](https://www.twc.texas.gov/sites/default/files/ui/docs/icesa-tape-format-with-c3-c4-mwr-allocation-data-information-twc.pdf), the NASWA origin, 275-byte records, the A, B, E, S, T and F record types and the C-3, C-4 and BLS 3020 data
+- [Pennsylvania L&I: File layouts and formats for electronic reporting of PA quarterly UC wage and tax data (UC-2010, PDF)](https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/uc/uc-forms/uc-2010.pdf), Rev. 11-25: CSV and ICESA formats, the 500k upload limit and FTP, and ICESA for tax and wage data from January 1, 2020
+- [Ohio Department of Taxation: W-2 upload specifications, tax year 2025 (PDF)](https://dam.assets.ohio.gov/image/upload/tax.ohio.gov/employer_withholding/2025-2026%20NYP%20Updates/2025_W2_Specs_V1.pdf), the modified EFW2 layout with an RS record
 - [Social Security Administration: Specifications for filing Forms W-2 and W-2c electronically](https://www.ssa.gov/employer/EFW2&EFW2C.htm), EFW2 Publication 42-007 and EFW2C Publication 42-014 for tax year 2026
 
 **Vendor documentation**
