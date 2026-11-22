@@ -49,52 +49,63 @@ const community: Project[] = [
   },
 ];
 
-const projects: Project[] = [
+// Wide cards keep the grid's rows full: on two columns yoink takes a row of
+// its own; on three, yoink and capacitor each take two of a row's three cells.
+const projects: (Project & { wide?: string })[] = [
   {
     title: "yoink",
+    kicker: "go · cli",
     description:
       "Clone every repository in an organization, and keep them all up to date with one command. A Go CLI for GitHub and Azure DevOps.",
-    tags: ["go", "cli", "git", "azure-devops"],
+    tags: ["git", "github", "azure-devops"],
     url: "https://github.com/syntaqx/yoink",
+    wide: "md:col-span-2",
+  },
+  {
+    title: "nullable",
+    kicker: "go · package",
+    description:
+      "A single generic type for values that may be null in Go, with first-class support for JSON and database/sql.",
+    tags: ["generics", "json", "sql"],
+    url: "https://github.com/syntaqx/nullable",
   },
   {
     title: "serve",
+    kicker: "cli",
     description: "A static http server anywhere you need one.",
-    tags: ["cli", "http", "static-site"],
+    tags: ["http", "static-site"],
     url: "https://github.com/syntaqx/serve",
   },
   {
     title: "cookie",
+    kicker: "go · package",
     description:
       "A Go package that provides a simple and helpful way to populate structs from Cookies.",
-    tags: ["go", "cookie"],
+    tags: ["cookie", "http"],
     url: "https://github.com/syntaqx/cookie",
   },
   {
     title: "env",
+    kicker: "go · package",
     description: "A simple and helpful way to interact with environment variables in Go.",
-    tags: ["go", "env", "dotenv"],
+    tags: ["env", "dotenv"],
     url: "https://github.com/syntaqx/env",
   },
   {
     title: "setup-kustomize",
+    kicker: "github action",
     description: "A GitHub Action to download and install kustomize, and add it to your $PATH.",
-    tags: ["github-action", "kustomize"],
+    tags: ["kustomize", "ci"],
     url: "https://github.com/syntaqx/setup-kustomize",
   },
   {
     title: "capacitor",
+    kicker: "go · package",
     description:
       "An adaptive HTTP client for Go that automatically adjusts concurrency based on rate limiting and capacity signaling headers.",
-    tags: ["go", "http", "rate-limiting"],
+    tags: ["http", "rate-limiting"],
     url: "https://github.com/syntaqx/capacitor",
-  },
-  {
-    title: "nullable",
-    description:
-      "A single generic type for values that may be null in Go, with first-class support for JSON and database/sql.",
-    tags: ["go", "generics", "json"],
-    url: "https://github.com/syntaqx/nullable",
+    wide: "lg:col-span-2",
   },
 ];
 
@@ -195,38 +206,13 @@ export default function ProjectsPage() {
 
       <section className="mb-20">
         <SectionHead label="open source" count={projects.length} />
-        <ol className="border-t border-border">
-          {projects.map((p, i) => (
-            <li key={p.title} className="border-b border-border last:border-b-0">
-              <a
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative isolate grid gap-x-8 gap-y-2 overflow-hidden px-3 py-5 sm:grid-cols-[3rem_minmax(10rem,13rem)_minmax(0,1fr)_auto] sm:items-baseline"
-              >
-                {/* Diagonal wipe on hover */}
-                <span
-                  aria-hidden="true"
-                  className="slant absolute inset-y-0 -left-8 -z-10 w-0 bg-card transition-[width] duration-300 ease-out group-hover:w-[calc(100%+4rem)]"
-                />
-                <span className="font-voice text-xl leading-none font-bold text-primary">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="text-xl leading-none text-foreground transition-colors group-hover:text-primary">
-                  {p.title}
-                </h3>
-                <div className="grid gap-3">
-                  <p className="text-[0.95rem] leading-snug text-subtle">{p.description}</p>
-                  <Tags tags={p.tags} />
-                </div>
-                <ArrowUpRight
-                  size={16}
-                  className="hidden text-muted-foreground transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary sm:block"
-                />
-              </a>
-            </li>
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-2 md:px-8 lg:grid-cols-3">
+          {projects.map((p) => (
+            <div key={p.title} className={cn("min-w-0", p.wide)}>
+              <SlantCard item={p} />
+            </div>
           ))}
-        </ol>
+        </div>
       </section>
 
       <section>
