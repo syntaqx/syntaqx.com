@@ -130,8 +130,14 @@ export default function RootLayout({
               href="/"
               className="group flex items-center gap-2.5 border-r border-border px-4 sm:pl-0 sm:pr-5"
             >
-              <Image src="/brand.svg" alt="" width={28} height={28} className="size-6 sm:size-7" />
-              <span className="translate-y-[-0.17em] font-inst text-base lowercase sm:text-lg tracking-wide text-foreground transition-colors group-hover:text-primary">
+              <Image
+                src="/brand.svg"
+                alt=""
+                width={24}
+                height={24}
+                className="size-5.5 sm:size-6"
+              />
+              <span className="translate-y-[-0.17em] font-inst text-[0.95rem] lowercase sm:text-base tracking-wide text-foreground transition-colors group-hover:text-primary">
                 syntaqx
               </span>
             </Link>

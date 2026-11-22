@@ -215,9 +215,9 @@ body:has([data-full-bleed]) {
   }
   /* The sticky header's height: everything pinned below it reads this. */
   :root {
-    --header-h: 3.5rem;
+    --header-h: 3.25rem;
     @media (width >= 40rem) {
-      --header-h: 4rem;
+      --header-h: 3.5rem;
     }
   }
   /* Anchors and focus land below the sticky header, not under it. */
