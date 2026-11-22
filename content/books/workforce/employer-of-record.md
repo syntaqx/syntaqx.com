@@ -21,11 +21,12 @@ As of November 2026, from each provider's public pages (country counts and owner
 | **Deel** | From $599 per month | Contracts, terminations and local law handled "in 150+ countries" | "We own entities and payroll engine in 130+ countries" | Contractor management from $49; contractor of record $325; US PEO $125 |
 | **Globalization Partners (G-P)** | Not published | "180+ countries covered" | "200+ global partners" | G-P Gia, "AI-powered compliance intelligence" |
 | **Oyster** | "USD 699" a month, with unpriced annual discounts | EOR in 120+ countries; contractors in 180+ | No owned-entity claim on the pages I read | Contractors from USD 29 |
+| **Papaya Global** | From $499 per employee per month | "In-country experts in 180+ countries" | Not stated on the pricing page | Contractor of record from $199; contractor payments from $5; Payroll Plus from $29 |
 | **Pebl (formerly Velocity Global)** | Not published | "185+ countries" | "90% of employees supported through Pebl-owned entities" | |
 | **Remote** | From $599 per employee per month on annual contracts; no setup or onboarding fee | EOR in "90+ countries" | "100% owned entities, no third parties" | Contractor management $29 and $99; contractor of record $325; global payroll $19; US PEO $99 |
 | **Rippling** | Not published | EOR in "115 countries" | Not stated | Global payroll "via Rippling entities" or "via your entities" |
 
-<!-- source-gap: wf-eor-papaya-multiplier | missing | Papaya Global and Multiplier EOR pricing, country counts and entity models | closes with: their public pricing or EOR pages, opened (papayaglobal.com 403 and multiplier HTTP 530 on Nov 10, 2026) | checked: 2026-11-22 --> Papaya Global's and Multiplier's pages weren't reachable when I checked, so they aren't in the table.
+Multiplier's site returned a DNS error when I checked, so it isn't in the table. <!-- source-gap: wf-eor-papaya-multiplier | missing | Multiplier's EOR pricing, country count and entity model | closes with: Multiplier's pricing or EOR page, opened (Cloudflare origin DNS error in a browser on 2026-11-22; Papaya's pricing page was read then) | checked: 2026-11-22 -->
 
 The table shows where the market competes: owned entities as a quality claim (Remote's "no third parties," Pebl's 90%), coverage as a reach claim (G-P's 180 countries with 200 partners), and flat monthly pricing in a narrow band. Velocity Global's rebrand to Pebl is recent enough that both names appear in contracts and procurement records.
 
@@ -65,7 +66,7 @@ Corporate income tax follows a company's taxable presence in a country, which ta
 - **A fixed place of business,** "through which the business of an enterprise is wholly or partly carried on" (5(1)), excluding activities "of a preparatory or auxiliary character" (5(4)).
 - **A dependent agent** who "has and habitually exercises" in the country "an authority to conclude contracts that are binding on the enterprise" (5(5)); an independent agent acting in the ordinary course of its business doesn't create one (5(6)).
 
-The OECD revised its model's agent test in 2017 to reach people who play the principal role in concluding contracts as well as those who sign them; treaties based on the newer text are broader. <!-- source-gap: wf-oecd-art5-2017 | missing | the 2017 OECD Model Tax Convention Article 5 text (principal role leading to the conclusion of contracts, anti-fragmentation) | closes with: the OECD Model Tax Convention 2017 text on oecd.org, opened (403 on Nov 10 and Nov 22, 2026) | checked: 2026-11-22 --> The OECD's own text wasn't reachable when I checked, so the wording above is the US model's.
+The wording above is the US model's. The OECD's 2017 model is broader in two places. Its agent test covers a person who "habitually concludes contracts, or habitually plays the principal role leading to the conclusion of contracts that are routinely concluded without material modification by the enterprise" (5(5)), and someone acting "exclusively or almost exclusively" for closely related enterprises isn't an independent agent (5(6)). Its anti-fragmentation rule (5(4.1)) denies the preparatory-or-auxiliary exceptions where the same or a closely related enterprise carries on business at the same place or another place in the country and the combined activities "constitute complementary functions that are part of a cohesive business operation." Treaties based on the newer text reach more arrangements.
 
 An EOR employs the worker, but the worker works for the client, and the vendors say plainly that the EOR doesn't remove the client's PE risk. Deel calls EOR not suitable where PE risk is clear, such as C-level hires, and Oyster lists PE triggers that survive an EOR (a fixed place of business, staff who negotiate or conclude contracts, core revenue activity, long-term activity, senior leadership roles) and concludes that "EORs protect your company, but the protection isn't absolute." For a system, PE risk is a review attached to each engagement: the role, whether it negotiates or signs contracts, seniority, duration and headcount in the country, flagged for tax review when any trigger applies.
 
@@ -217,6 +218,7 @@ A client's finance team, a tax authority or an acquirer's diligence asks:
 
 **Law and regulation**
 
+- [OECD: Model Tax Convention on Income and on Capital, Condensed Version 2017 (PDF)](https://www.oecd.org/content/dam/oecd/en/publications/reports/2017/12/model-tax-convention-on-income-and-on-capital-condensed-version-2017_g1g8769b/mtc_cond-2017-en.pdf), Article 5 paragraphs 4.1, 5 and 6
 - [US Treasury: United States Model Income Tax Convention (2016) (PDF)](https://home.treasury.gov/system/files/131/Treaty-US-Model-2016_1.pdf), Article 5, fixed place of business, preparatory or auxiliary activities and dependent agents
 - [Germany: Arbeitnehmerüberlassungsgesetz §1](https://www.gesetze-im-internet.de/a_g/__1.html), the permit requirement and the 18-month limit
 
@@ -228,6 +230,7 @@ A client's finance team, a tax authority or an acquirer's diligence asks:
 
 **Vendor documentation**
 
+- [Papaya Global: Pricing](https://www.papayaglobal.com/pricing/), EOR from $499 per employee per month, contractor of record from $199, contractor payments from $5, in-country experts in 180+ countries (read November 22, 2026)
 - [Remote: Pricing](https://remote.com/pricing), EOR from $599, contractor products, contractor of record $325, global payroll and US PEO
 - [Remote: Employer of Record](https://remote.com/employer-of-record), owned entities in 90+ countries, day-to-day management by the client and terminations led by Remote
 - [Remote: Contractor of Record](https://remote.com/global-hr/contractor-of-record), uncapped misclassification indemnity during the engagement and pricing

@@ -126,7 +126,7 @@ Rules for the integration:
 
 ## SLAs and What They Measure
 
-A 3PL contract is mostly its SLA and its liability clauses. The measures recur across providers and in WERC's DC Measures benchmarking study, whose 2026 report ranks on-time shipments first and dock-to-stock time second among warehouse metrics, with order picking accuracy also in its top ten (the ranking here comes from a summary of the report, not WERC's own page). <!-- source-gap: werc-dc-measures-2026 | secondary | WERC 2026 DC Measures ranking (on-time shipments first, dock-to-stock second, picking accuracy seventh) and best-in-class values (on-time at least 99.5%, dock-to-stock under 3.1 hours, picking accuracy at least 99.7%) | closes with: WERC's own DC Measures report or page; werc.org returned 403 | checked: 2026-11-22 -->
+A 3PL contract is mostly its SLA and its liability clauses. The measures recur across providers and in WERC's DC Measures benchmarking study, whose 2026 report (announced May 16, 2026) tracks 36 operational metrics; its five most popular were on-time shipments, dock-to-stock cycle time in hours, average and peak warehouse capacity used, and backorders as a percentage of total lines.
 
 | Measure | What it means | Published examples |
 | --- | --- | --- |
@@ -315,4 +315,5 @@ Design notes:
 
 **Research**
 
+- [WERC: 2026 DC Measures Report delivers benchmarks for an industry at an inflection point (May 16, 2026)](https://werc.org/news/727406/WERCs-2026-DC-Measures-Report-Delivers-Benchmarks-for-an-Industry-at-an-Inflection-Point.htm), the 36 metrics and the five most popular
 - [Yale Materials Handling: WERC 2026 DC Measures white paper (August 2026)](https://www.yale.com/4a4034/globalassets/coms/yale/north-america/documents/white-papers/yal-1558_werc2026updates_improvingdcmetricswhitepaper.pdf), a summary of WERC's ranking of warehouse metrics

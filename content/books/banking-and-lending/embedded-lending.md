@@ -109,7 +109,7 @@ Business credit has no Truth in Lending Act, and since 2022 a growing set of sta
 | **Utah** | Utah Code 7-27 | January 1, 2023 | Loans, open-end credit, receivables purchases | Exempt over $1 million | No | Yes, with DFI through NMLS, annually | Contract stays enforceable |
 | **Virginia** | Va. Code §§ 6.2-2228 to 2238 | 2022 | Sales-based financing to Virginia businesses | Exempt over $500,000 | No | Yes, with the SCC, providers and brokers | Confessions of judgment banned; Virginia venue; noncompliant terms unenforceable |
 | **Florida** | Fla. Stat. §§ 559.961 to 559.9615 | January 1, 2024 | Commercial financing | Exempt over $500,000 | No | No | Broker rules; Attorney General enforces; no private right |
-| **Georgia** | O.C.G.A. § 10-1-393.18 | January 1, 2024 | Commercial financing | Exempt over $500,000 | No | No | Attorney General enforces |
+| **Georgia** | O.C.G.A. § 10-1-393.18 | January 1, 2024 | Commercial financing | Exempt over $500,000 | No | No | Attorney General enforces; civil penalties of $500 per violation ($1,000 after notice), no private right of action |
 | **Connecticut** | Conn. Gen. Stat. §§ 36a-861 to 872 | July 1, 2024 | Sales-based financing | $250,000 or less | No | Yes, by October 1, 2024 | Offer can't be revoked before midnight of the third day; prejudgment-remedy waivers unenforceable |
 | **Kansas** | Commercial Financing Disclosure Act (SB 345, 2024) | July 1, 2024 | Loans, open-end credit, receivables purchases | Exempt over $500,000 | No | No | A provider's "purchase" characterization is conclusive that it isn't a loan |
 | **Missouri** | Mo. Rev. Stat. § 427.300 | 2025 | Commercial financing | Exempt over $500,000 | No | Brokers only, with a $10,000 bond | |
@@ -117,8 +117,7 @@ Business credit has no Truth in Lending Act, and since 2022 a growing set of sta
 | **Louisiana** | R.S. 9:3137.10 (Act 198, 2025) | August 1, 2025 | Revenue-based financing | | No | No | Charges "are not interest" |
 | **Vermont** | 8 V.S.A. § 2247 (Act 142, 2026) | July 1, 2027 | Sales-based financing and factoring | Exempt at $1 million or more | Yes | A lender license | Automatic debits need a first-priority security interest; confessions of judgment void |
 
-<!-- source-gap: georgia-commercial-financing | secondary | Georgia's commercial financing disclosure law (O.C.G.A. 10-1-393.18, SB 90): effective for transactions on or after January 1, 2024, the $500,000 ceiling and Attorney General enforcement | closes with: the statute text from legis.ga.gov (PDFs unreadable) or Justia (bot challenge) | checked: 2026-11-22 -->
-Georgia's row rests on a practitioner summary; the statute text wasn't readable. The disclosure items themselves converge. Utah, Florida, Kansas and Missouri require six: the total amount of funds provided, the amount disbursed, the total to be paid, the total dollar cost, the manner, frequency and amount of payments (an estimate if they vary), and the cost or discount of prepayment. Virginia, Connecticut and Texas add the estimated number of payments, collateral and broker compensation. New York requires the estimated APR, the finance charge, the estimated term and the average projected monthly payment, among others (§ 803).
+The disclosure items themselves converge. Utah, Florida, Kansas and Missouri require six: the total amount of funds provided, the amount disbursed, the total to be paid, the total dollar cost, the manner, frequency and amount of payments (an estimate if they vary), and the cost or discount of prepayment. Virginia, Connecticut and Texas add the estimated number of payments, collateral and broker compensation. New York requires the estimated APR, the finance charge, the estimated term and the average projected monthly payment, among others (§ 803).
 
 Three requirements drive engineering more than the disclosure form:
 
@@ -295,6 +294,7 @@ An embedded program is examined by the bank partner, its regulator, state regula
 
 **Law and regulation**
 
+- [Justia: O.C.G.A. § 10-1-393.18 (2025)](https://law.justia.com/codes/georgia/title-10/chapter-1/article-15/part-2/section-10-1-393-18/), Georgia's exemption for transactions over $500,000, application to transactions on or after January 1, 2024, Attorney General enforcement, civil penalties and no private right of action
 - [New York Senate: Financial Services Law § 803, sales-based financing disclosures](https://www.nysenate.gov/legislation/laws/FIS/803), the required items, the estimated APR under 12 CFR 1026.22, and the historical and opt-in methods
 - [New York Senate: Financial Services Law § 802, exemptions](https://www.nysenate.gov/legislation/laws/FIS/802), financial institutions, the five-transaction threshold and the $2.5 million ceiling
 - [New York Senate: Financial Services Law § 812, enforcement](https://www.nysenate.gov/legislation/laws/FIS/812), penalties of $2,000 per violation and $10,000 if willful, by the superintendent

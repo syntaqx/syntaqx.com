@@ -79,9 +79,9 @@ Software that screens resumes, ranks candidates, scores video interviews or reco
 | **New York City** | Local Law 144 of 2021 | An automated employment decision tool may be used only if it has "been subject to a bias audit within one year of the use of the tool," a summary of the results is public, and notice is given "10 business days prior to use" | Enforced by DCWP since July 5, 2023 |
 | **California** | Civil Rights Council regulations on automated-decision systems | Use of an automated-decision system can violate anti-discrimination law; employment records, including automated-decision data, kept at least four years; ADS assessments that elicit disability information can be an unlawful medical inquiry | Effective October 1, 2025 |
 | **Colorado** | SB 26-189, "Automated Decision-Making Technology" | Repeals and reenacts the 2024 AI act (SB 24-205) as an ADMT law for consequential decisions including employment: notice at the point of interaction, a plain-language description of the tool's role within 30 days after an adverse outcome, rights to request and correct data and to "meaningful human review and reconsideration," and records kept at least 3 years; developer documentation from January 1, 2027; attorney general rules due by January 1, 2027 | Signed May 14, 2026 (Session Law Chapter 131) |
-| **Illinois** | HB 3773 (Public Act 103-0804), amending the Human Rights Act | Bars using AI that has the effect of discriminating, and requires notice to employees of AI use in employment decisions | Effective January 1, 2026; implementing rules not final |
+| **Illinois** | HB 3773 (Public Act 103-0804), amending the Human Rights Act | Makes it a civil rights violation to use AI "that has the effect of subjecting employees to discrimination" on protected classes, or zip codes as a proxy, in recruiting, hiring and other decisions, or to fail to give employees notice of that use; the Department of Human Rights is to adopt rules on when, how and how soon notice is given | Effective January 1, 2026; implementing rules not confirmed as final |
 
-<!-- source-gap: wf-ats-illinois-hb3773 | secondary | Illinois HB 3773 effective January 1, 2026, its notice duty, and the status of IDHR's implementing rules | closes with: the Public Act text on ilga.gov and an IDHR rulemaking page | checked: 2026-11-22 -->
+<!-- source-gap: wf-ats-illinois-hb3773 | status | the status of IDHR's rules implementing the AI notice duty in Public Act 103-0804 | closes with: an IDHR rulemaking page or Illinois Register notice (the Public Act text was read on ilga.gov in a browser on 2026-11-22) | checked: 2026-11-22 -->
 
 ### Worked Numbers: An Impact Ratio
 
@@ -290,6 +290,7 @@ An ATS is audited by EEOC charges, OFCCP compliance reviews under the remaining 
 
 **Law and regulation**
 
+- [Illinois Public Act 103-0804 (HB 3773)](https://www.ilga.gov/Legislation/publicacts/view/103-0804), the AI definition, the discrimination and notice violations, the Department's rulemaking duty and the January 1, 2026 effective date
 - [29 CFR 1602.14](https://www.law.cornell.edu/cfr/text/29/1602.14), application forms and personnel records kept one year from the record or action, and until final disposition of a charge
 - [29 CFR 1627.3](https://www.law.cornell.edu/cfr/text/29/1627.3), ADEA records: applications, resumes, tests and job advertisements kept one year
 - [29 CFR 1607.4](https://www.law.cornell.edu/cfr/text/29/1607.4), the four-fifths rule and the small numbers caveat

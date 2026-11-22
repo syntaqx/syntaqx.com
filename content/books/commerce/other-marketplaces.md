@@ -24,7 +24,7 @@ As of October 2026, from each marketplace's seller pages, help centers and filin
 | **TikTok Shop (US)** | US residents and entities 18 or older, and cross-border sellers based in Japan | 6% in most categories | Affiliate commissions the seller sets, 1% to 80% | Seller-fulfilled, or Fulfilled by TikTok (FBT) | Not disclosed in US filings |
 | **Target Plus** | By invitation | Not published | Not published | Seller-fulfilled to Target's standards | "more than 1,200 partners"; about $1 billion of third-party digital sales in 2024, targeted above $5 billion by 2030 |
 | **Best Buy Marketplace (US)** | Approved sellers | Not published | Not published | Seller-fulfilled; returns accepted in Best Buy stores | Launched August 19, 2025, "powered by Mirakl" |
-| **Mercado Libre** | Sellers in 18 Latin American countries | By listing type and category | Fixed per-unit cost on low-priced items | Mercado Envios and fulfillment centers handling "more than half of shipments" | $65.0 billion GMV and 121 million unique active buyers in 2025 |
+| **Mercado Libre** | Sellers in 18 Latin American countries | By listing type and category | A minimum item price in Mexico (MX$35) | Mercado Envios and fulfillment centers handling "more than half of shipments" | $65.0 billion GMV and 121 million unique active buyers in 2025 |
 | **Temu** | Manufacturers and, since 2024, local sellers | Not published; in the managed model Temu sets the price | Not published | Temu's logistics, or the local seller's | Parent PDD's 2025 revenue $61.8 billion, Temu not broken out |
 | **Shein Marketplace** | Third-party fashion and lifestyle sellers alongside Shein's own goods | Not published | Launch incentives with "no platform fees" for a period | Seller-fulfilled or Shein's | Not disclosed |
 
@@ -101,7 +101,7 @@ Mirakl's platform sits under many of these: Lowe's partnered with Mirakl for its
 
 Mercado Libre is the marketplace of Latin America: its "e-commerce platform is present in 18 countries," Brazil, Argentina and Mexico produced 95.6% of its 2025 net revenues and financial income, and its fintech arm, Mercado Pago, "processes and settles all transactions on our Marketplace" where it operates. Third-party sellers "account for most of the GMV," with first-party sales "less than 10% of GMV." In 2025 it reported $65,037 million of GMV, 121 million unique active buyers and 2,429 million items sold, and its fulfillment centers handle "more than half of shipments"; in Mexico, "fulfillment penetration reached a record high of nearly 80% in Q4'25."
 
-Sellers choose a listing type per item (Classic and Premium in Brazil and Mexico), which sets the commission by category, with a fixed per-unit cost on low-priced items; the commission tables are on help pages I couldn't open for this edition. <!-- source-gap: mercado-libre-commissions | secondary | Mercado Libre Classic and Premium commission ranges by country and the fixed per-unit cost | closes with: Mercado Libre's official seller fee pages; the Mexico and Brazil pages returned 403 | checked: 2026-11-22 -->
+Sellers choose a listing type per item, which with the category sets the commission charged when the item sells; listing is free. As of November 2026 Mexico's help page gives Clásica between 8% and 17% and Premium between 11% and 21.5%, with Premium adding up to 18 interest-free monthly installments, and requires an item price of at least MX$35 "to cover the selling fees"; Brazil's gives Clássico between 10% and 14% and Premium between 15% and 19% with up to 12 interest-free installments, and a lower fee in selected categories for items priced between R$150 and R$700. Neither page lists a fixed per-unit fee.
 
 For a US brand, Mercado Libre is a cross-border decision as much as a marketplace one: local tax registration or a cross-border program, local-currency pricing and import duties ([Cross-Border Commerce](/books/commerce/cross-border-commerce#the-merchant-of-record)).
 
@@ -333,6 +333,8 @@ Design notes:
 
 **Mercado Libre, Temu and Shein**
 
+- [Mercado Libre México: ¿Cuánto pago por vender un producto?](https://www.mercadolibre.com.mx/ayuda/costos-vender-producto_870), Clásica and Premium commission ranges, installments and the MX$35 minimum price (read November 22, 2026)
+- [Mercado Livre Brasil: Quanto custa vender um produto?](https://www.mercadolivre.com.br/ajuda/870), Clássico and Premium commission ranges, installments and the R$150 to R$700 reduced fee (read November 22, 2026)
 - [MercadoLibre: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1099590/000109959026000006/meli-20251231.htm), countries, third-party share of GMV, fulfillment, Mercado Pago and revenue concentration
 - [MercadoLibre: Fourth quarter and full year 2025 results (February 24, 2026)](https://www.sec.gov/Archives/edgar/data/1099590/000109959026000003/meli-20260224xex991.htm), GMV, unique active buyers, items sold and Mexico fulfillment penetration
 - [PDD Holdings: Form 20-F for 2025](https://www.sec.gov/Archives/edgar/data/0001737806/000110465926050727/pdd-20251231x20f.htm), Temu's launch and services, revenue and the end of de minimis

@@ -54,8 +54,8 @@ A reciprocity agreement between two states says each will not tax the other's re
 - **Montana's** side of the North Dakota agreement covers only personal services income; a North Dakota resident working in Montana claims the exemption on Form MW-4, renewed annually.
 - **West Virginia's** Form IT-104NR, Certificate of Nonresidence, covers residents of Kentucky, Maryland, Ohio, Pennsylvania and Virginia whose only West Virginia income is wages.
 
-The agreements aren't always symmetric on their terms (Virginia's daily-commute condition for Kentucky, Kentucky's S corporation exception for Ohio), so each direction is its own rule row. I couldn't open the District of Columbia's or Michigan's own pages, and Ohio's current IT 4 (which since December 7, 2020 replaces the IT 4NR, "Employees' Statement of Residency in a Reciprocity State") was readable only as its cover notice, which doesn't list the states, so those three states' certificates and partners aren't stated here, and the list changes when a state ends an agreement.
-<!-- source-gap: wf-reciprocity-list | missing | reciprocity agreements and exemption certificates as published by DC, Michigan and Ohio | closes with: DC's Form D-4A, Michigan's MI-W4 or withholding guide and Ohio's IT 4 reciprocity section, opened (otr.cfo.dc.gov and michigan.gov 403 on Nov 22, 2026; Ohio's IT 4NR PDF 404) | checked: 2026-11-22 -->
+The agreements aren't always symmetric on their terms (Virginia's daily-commute condition for Kentucky, Kentucky's S corporation exception for Ohio), so each direction is its own rule row. Michigan's MI-W4 is its certificate: line 8b lets an employee claim exemption as "a resident of one of the following reciprocal states while working in Michigan: Illinois, Indiana, Kentucky, Minnesota, Ohio, or Wisconsin." I couldn't open the District of Columbia's page, and Ohio's current IT 4 (which since December 7, 2020 replaces the IT 4NR, "Employees' Statement of Residency in a Reciprocity State") was readable only as its cover notice, which doesn't list the states, so those two jurisdictions' certificates and partners aren't stated here, and the list changes when a state ends an agreement.
+<!-- source-gap: wf-reciprocity-list | missing | reciprocity agreements and exemption certificates as published by DC and Ohio | closes with: DC's Form D-4A and Ohio's current IT 4 reciprocity section, opened (otr.cfo.dc.gov returned Access denied in a browser on 2026-11-22; the Ohio IT 4 PDF at dam.assets.ohio.gov is a 2006 edition; Michigan's MI-W4 was read then) | checked: 2026-11-22 -->
 
 Three implementation consequences:
 
@@ -134,7 +134,7 @@ New York writes the periods down (20 NYCRR 132.24). The New York share is a frac
 - **Nonstatutory options with a readily ascertainable fair market value, and restricted stock with a section 83(b) election:** "the same period of time that applies to regular, non-stock-based remuneration from the grantor."
 - **Restricted stock without an 83(b) election:** from "the date that the stock was received" to the earliest of substantial vesting, the end of services or sale.
 
-California's rules are in FTB Publication 1004, which I couldn't open (ftb.ca.gov refused automated access), so they aren't stated here. <!-- source-gap: wf-equity-allocation | missing | California's allocation rules for stock options and restricted stock earned across states | closes with: California FTB Publication 1004, opened | checked: 2026-11-22 -->
+California's FTB Publication 1004 (revised January 2015) gives "one reasonable method," an allocation by time worked: for a nonstatutory option, California workdays from the grant date to the exercise date (or the end of employment, if earlier) divided by total workdays in that period, and for restricted stock, California workdays from the purchase date to the vesting date divided by total workdays, each ratio applied to the income.
 
 ### Worked Numbers: Allocating a Vest
 
@@ -260,6 +260,8 @@ Nonresident audits are day-count audits: a state asks for the days worked in it 
 
 **Agency guidance and forms**
 
+- [Michigan Department of Treasury: Form MI-W4 (PDF)](https://www.michigan.gov/taxes/-/media/Project/Websites/taxes/Forms/All-Years/MIW4.pdf), line 8b and the six reciprocal states
+- [California FTB Publication 1004, Equity-Based Compensation Guidelines](https://www.ftb.ca.gov/forms/misc/1004.html), the workday allocation ratios for nonstatutory options and restricted stock
 - [New York State: Nonresident and part-year resident FAQs](https://www.tax.ny.gov/pit/file/nonresident-faqs.htm), telecommuting days as New York days unless a bona fide employer office exists
 - [New Jersey Division of Taxation: Reciprocal agreement with Pennsylvania](https://www.nj.gov/treasury/taxation/njit25.shtml), Pennsylvania residents working in New Jersey, NJ-165 and REV-419EX
 - [New Jersey Division of Taxation: Convenience of the employer rule](https://nj.gov/treasury/taxation/conveniencerule.shtml), P.L.2023, c.125, enacted July 21, 2023 and retroactive to January 1, 2023

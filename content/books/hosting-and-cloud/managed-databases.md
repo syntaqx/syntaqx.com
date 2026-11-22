@@ -149,7 +149,7 @@ Regions are N. Virginia for AWS, Northern Virginia (us-east4) for Google, East U
 
 Failover, as each provider states it: RDS Multi-AZ is "typically 60–120 seconds," and Azure says failovers "typically take between 60 and 120 seconds." Aurora restores service through a replica in under 60 seconds and "often less than 30 seconds." Google states no failover time; the Enterprise edition's SLA is 99.95% excluding maintenance. DigitalOcean, PlanetScale and Aiven promote a replica or standby automatically and publish no time. TiDB fails over automatically when a minority of its replicas fail.
 
-DigitalOcean's added storage is $0.115 per GiB-month on Advanced Edition and $0.215 on Standard Edition clusters, the rate its pricing page lists for its standard plans. One figure is soft: TiDB Cloud's node price comes from a table that doesn't name its region.<!-- source-gap: tidb-region | missing | the region the TiDB Cloud Dedicated $0.4416/h node price applies to | closes with: a region label on pingcap.com/tidb-cloud-pricing-details/ | checked: 2026-11-22 -->
+DigitalOcean's added storage is $0.115 per GiB-month on Advanced Edition and $0.215 on Standard Edition clusters, the rate its pricing page lists for its standard plans. TiDB Cloud's node price is the AWS Oregon (us-west-2) rate, the default selection in its pricing table; other providers and regions can differ.
 
 The table is not a ranking; read it by row:
 
@@ -420,7 +420,7 @@ Notes on the sketch:
 - [PlanetScale: Sharding](https://planetscale.com/docs/vitess/sharding), explicit sharding by primary Vindex
 - [Aiven for MySQL pricing](https://aiven.io/pricing/mysql), Startup and Business plan floors
 - [Aiven for MySQL version lifecycle](https://aiven.io/docs/products/mysql/reference/version-lifecycle), 8.0 end of life and no extended support
-- [TiDB Cloud pricing details](https://www.pingcap.com/tidb-cloud-pricing-details/), Dedicated node and storage rates
+- [TiDB Cloud pricing details](https://www.pingcap.com/tidb-dedicated-pricing-details/), Dedicated node and storage rates, the node compute table's AWS Oregon (us-west-2) default
 - [TiDB storage](https://docs.pingcap.com/tidb/stable/tidb-storage/), Regions balanced across nodes
 - [Redis: Redis adopts dual source-available licensing](https://redis.io/blog/redis-adopts-dual-source-available-licensing/), Microsoft's agreement to continue its Redis service
 

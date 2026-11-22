@@ -132,7 +132,7 @@ Dated, from each acquirer's filing or announcement, as of November 2026:
 | March 2, 2026 | Charles Schwab completes its acquisition of Forge Global, agreed November 5, 2025 at $45.00 a share in cash | A retail broker buys a private-company share marketplace |
 | June 2026 | Robinhood completes its acquisition of WonderFi, agreed May 12, 2025 at C$0.36 a share | A US broker buys outside the US |
 
-Stripe's purchase of Privy, an embedded wallet provider, in 2025 is reported in press but not in a Stripe announcement this chapter could open. <!-- source-gap: stripe-privy | secondary | Stripe's acquisition of Privy and its date | closes with: a Stripe or Privy announcement of the acquisition | checked: 2026-11-22 -->
+Privy, an embedded wallet provider, announced on June 11, 2025 that Stripe is acquiring it, saying it would keep operating as an independent product.
 
 Three patterns run through the list. **Brokers buy crypto, and crypto buys derivatives.** Robinhood bought a licensed global exchange; Coinbase, which already ran a CFTC-regulated designated contract market, bought the options venue whose volume now dominates its own. **Everyone wants a charter or a license they didn't have.** The December 2025 trust approvals and Rothera's exchange purchase are the same move as the Bitstamp deal: buy or apply for the permission rather than rent it ([Regulators & Licenses](/books/investing-and-digital-assets/regulators-and-licenses)). **Payments companies buy the stablecoin stack.** Stripe bought Bridge's stablecoin infrastructure, and press reports a wallet provider after it.
 
@@ -266,6 +266,7 @@ Design notes:
 
 **Vendor documentation**
 
+- [Privy: Privy and Stripe, Bringing crypto to everyone (June 11, 2025, Wayback Machine copy)](https://web.archive.org/web/20260110103004/https://privy.io/blog/announcing-our-acquisition-by-stripe), the acquisition announcement and Privy continuing as an independent product
 - [Tether: Q3 2026 attestation release](https://tether.io/news/tether-generates-1-5-billion-in-q3-net-operating-profit-as-reserve-buffer-doubles-to-almost-8-billion/), tokens issued as of September 30, 2026
 - [DefiLlama: Stablecoins API](https://stablecoins.llama.fi/stablecoins?includePrices=false), circulating supply by token, read November 5, 2026
 - [Apex Fintech Solutions](https://apexfintechsolutions.com/), services and company figures

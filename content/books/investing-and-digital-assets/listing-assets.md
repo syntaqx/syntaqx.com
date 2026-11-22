@@ -121,7 +121,7 @@ Delistings come from the same eight areas as listings, usually after something c
 
 ### The 2023 US delistings
 
-After the SEC's June 2023 suits named tokens it considered securities, US platforms restricted or delisted them. Robinhood ended support for ADA, MATIC and SOL in June 2023, according to press reports at the time, and relisted SOL and ADA (with XRP and PEPE) on November 13, 2024.<!-- source-gap: robinhood-2023-delisting | secondary | Robinhood ended support for ADA, MATIC and SOL effective June 27, 2023 | closes with: Robinhood's June 2023 customer notice or newsroom post | checked: 2026-11-22 --> Binance.US, press reported, suspended dollar deposits in June 2023 and became a crypto-only platform for a period.<!-- source-gap: binance-us-usd-suspension | secondary | Binance.US suspended USD deposits June 8, 2023 after the SEC suit | closes with: a Binance.US announcement or a court filing in SEC v. Binance | checked: 2026-11-22 --> The lesson for the delisting machinery was that it had to run at the scale of whole assets across millions of accounts, on a regulator's timeline, including automatic conversion of balances customers didn't withdraw or sell.
+After the SEC's June 2023 suits named tokens it considered securities, US platforms restricted or delisted them. Robinhood's quarterly report for the quarter ended June 30, 2023 says the SEC had alleged that Cardano, Polygon and Solana, "which were supported on our platform," are securities, and that "we have since ceased support for Cardano, Polygon, and Solana"; it relisted SOL and ADA (with XRP and PEPE) on November 13, 2024. Binance.US, press reported, suspended dollar deposits in June 2023 and became a crypto-only platform for a period.<!-- source-gap: binance-us-usd-suspension | secondary | Binance.US suspended USD deposits June 8, 2023 after the SEC suit | closes with: a Binance.US announcement or a court filing in SEC v. Binance | checked: 2026-11-22 --> The lesson for the delisting machinery was that it had to run at the scale of whole assets across millions of accounts, on a regulator's timeline, including automatic conversion of balances customers didn't withdraw or sell.
 
 ### MiCA and non-compliant stablecoins
 
@@ -308,6 +308,7 @@ What a regulator, auditor or court asks of a listing program:
 
 **Filings**
 
+- [Robinhood Markets: Form 10-Q for the quarter ended June 30, 2023](https://www.sec.gov/Archives/edgar/data/1783879/000178387923000175/hood-20230630.htm), ending support for Cardano, Polygon and Solana after the SEC's Coinbase and Binance charges
 - [Coinbase Global: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1679788/000167978826000015/coin-20251231.htm), listing review by senior leaders, the security analysis policy, removal of assets, 360+ assets, and no obligation to support forks or airdrops
 - [iShares Bitcoin Trust ETF: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1980994/000143774926006058/bit20251231_10k.htm), the custodian's fork and airdrop policy
 
