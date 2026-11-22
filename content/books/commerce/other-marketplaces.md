@@ -70,7 +70,7 @@ eBay is an open marketplace of individuals and businesses, new and used, auction
 
 ## Etsy
 
-Etsy restricts what may be sold rather than who sells it. Its creativity standards allow items the seller made or designed, curated vintage and items from nature, and craft and party supplies; mass-produced resale is not allowed. <!-- source-gap: etsy-creativity-standards | missing | Etsy creativity standards labels (made, designed, handpicked, sourced) and the vintage age rule | closes with: etsy.com/legal/creativity readable without a block; it returned 403 to fetchers | checked: 2026-11-22 -->
+Etsy restricts what may be sold rather than who sells it. In 2024 it reorganized its permitted items policy into Creativity Standards, which require that every item be "Made by a Seller, Designed by a Seller, Handpicked by a Seller, or Sourced by a seller" ([Etsy 10-K for 2024](https://www.sec.gov/Archives/edgar/data/1370637/000137063725000017/etsy-20241231.htm)). "Reselling is not allowed on Etsy," reselling being "the practice of selling a commercially available item that the seller did not make or design," with exceptions for craft and party supplies, vintage items and gift baskets; vintage items must be handpicked and "over 20 years old," and "Drop shipping is not allowed on Etsy" except for craft and party supplies ([Etsy Help](https://help.etsy.com/hc/en-us/articles/23948763872151-Does-Etsy-Allow-Drop-Shipping-or-Reselling)).
 
 **Fees.** A listing costs "$0.20 USD per listing"; "Etsy charges 6.5% of the total order amount" as a transaction fee; US payment processing is 3% + $0.25 "in addition to the 6.5% transaction fee"; and Offsite Ads charge 15% (12% above $10,000 a year) on orders they're credited with, capped at $100 ([Marketplace Ads Elsewhere](/books/commerce/retail-media#marketplace-ads-elsewhere)). Etsy's 2025 take rate, revenue over GMS, was 24.2%, up from 22.3% in 2024, because services (ads, shipping labels, subscriptions) grew faster than the commission.
 
@@ -301,9 +301,11 @@ Design notes:
 
 - [Etsy Help: Etsy fee basics](https://help.etsy.com/hc/en-us/articles/360035902374-Etsy-Fee-Basics), listing and transaction fees
 - [Etsy Help: Payment processing fees](https://help.etsy.com/hc/en-us/articles/115015628847), the US rate
+- [Etsy Help: Does Etsy allow drop shipping or reselling?](https://help.etsy.com/hc/en-us/articles/23948763872151-Does-Etsy-Allow-Drop-Shipping-or-Reselling), the reselling and drop shipping bans, their exceptions and the 20-year vintage rule
 - [Etsy Help: Offsite Ads](https://help.etsy.com/hc/articles/360000338367), fees, cap and threshold
 - [Etsy Help: Star Seller](https://help.etsy.com/hc/articles/29654393638679), Star Seller targets and the customer service floor
 - [Etsy Developers: Open API v3](https://developers.etsy.com/documentation/), API scope and OAuth
+- [Etsy: Form 10-K for 2024](https://www.sec.gov/Archives/edgar/data/1370637/000137063725000017/etsy-20241231.htm), the 2024 Creativity Standards and their four categories
 - [Etsy: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1370637/000137063726000019/etsy-20251231.htm), GMS, active buyers and sellers, take rate and the Reverb and Depop sales
 
 **TikTok Shop**
