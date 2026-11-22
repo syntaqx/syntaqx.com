@@ -44,7 +44,7 @@ A commercial line is a statement line (the NAIC's annual statement categories) a
 
 Professional, management and cyber liability sit beside these and are covered in their own chapters; surety bonds are not insurance in the same sense and have [Surety Bonds](/books/insurance/surety).
 
-The size of each line, 2025 US direct premiums written from the NAIC's market share report: other liability (occurrence and claims-made, including most CGL, umbrella and professional) $139.5 billion, commercial auto $77.1 billion, workers' compensation $56.1 billion, against $1,109.8 billion for all P&C lines. Trade press reports a decade of commercial auto underwriting losses from a rating agency's segment report, which I couldn't open, so I give no combined ratio for the line here. <!-- source-gap: commercial-auto-results | secondary | commercial auto underwriting losses every year since 2015 and the 2025 combined ratio (AM Best) | closes with: the AM Best commercial auto segment report opened | checked: 2026-11-10 -->
+The size of each line, 2025 US direct premiums written from the NAIC's market share report: other liability (occurrence and claims-made, including most CGL, umbrella and professional) $139.5 billion, commercial auto $77.1 billion, workers' compensation $56.1 billion, against $1,109.8 billion for all P&C lines. Trade press reports a decade of commercial auto underwriting losses from a rating agency's segment report, which I couldn't open, so I give no combined ratio for the line here. <!-- source-gap: commercial-auto-results | secondary | commercial auto underwriting losses every year since 2015 and the 2025 combined ratio (AM Best) | closes with: the AM Best commercial auto segment report opened | checked: 2026-11-22 -->
 
 ### BOP Versus Package
 
