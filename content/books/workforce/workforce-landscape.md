@@ -41,7 +41,7 @@ Many of the companies employers know best publish no audited figures. What follo
 | --- | --- | --- |
 | **Check** | Embedded payroll API for vertical software | "1 Million+ employees paid," "50,000+ businesses," "$15 Billion+ processed annually" (self-reported, November 2026) |
 | **Deel** | EOR, contractor management, global payroll, US PEO | "40,000+ companies," "650,000+ workers hired," "$17.3B processed payments," 150 countries (self-reported, undated about page); EOR from $599 and US PEO at $125 per employee per month |
-| **Gusto** | Small business payroll, HR and benefits; Gusto Embedded for partners | No filings; its developer documentation publishes the embedded API, payroll speeds and partner terms |
+| **Gusto** | Small business payroll, HR and benefits; Gusto Embedded for partners | No filings; "surpassed $1 billion in trailing 12-month revenue" and "more than 500,000 small businesses" (self-reported, May 7, 2026); its developer documentation publishes the embedded API, payroll speeds and partner terms |
 | **Justworks** | PEO | More than 9,000 customers and over 160,000 worksite employees at May 31, 2022, in an S-1 it withdrew in July 2022; CPEO entities on the IRS list |
 | **Oyster** | EOR | EOR at $699 per employee per month |
 | **Remote** | EOR, contractor management, payroll | EOR from $599 per employee per month on annual contracts |
@@ -49,7 +49,7 @@ Many of the companies employers know best publish no audited figures. What follo
 | **UKG** | Enterprise HCM and workforce management | No filings |
 | **Zeal** | Embedded payroll API | "Multi-jurisdiction tax handling across all 50 states"; "automatically batches, processes, and settles funds on the pay date - and files taxes on the employer's behalf" |
 
-A gap like UKG's matters for the book's method: where a company publishes nothing, the volume describes the segment from companies that do and names the private one only for what it states itself. <!-- source-gap: wf-private-scale | missing | customer, worker and revenue figures for Gusto, Rippling and UKG | closes with: a company newsroom, filing or audited disclosure with dated figures | checked: 2026-11-09 -->
+A gap like UKG's matters for the book's method: where a company publishes nothing, the volume describes the segment from companies that do and names the private one only for what it states itself. Gusto's figures are a press release, not an audited disclosure, and it gives a threshold rather than a revenue number. <!-- source-gap: wf-private-scale | missing | customer, worker and revenue figures for Rippling and UKG | closes with: a company newsroom, filing or audited disclosure with dated figures (ukg.com 403 on Nov 22, 2026; Rippling's about page has none) | checked: 2026-11-22 -->
 
 ## The Segments
 
@@ -78,9 +78,11 @@ The landscape's recent deals, dated from filings and the companies' releases:
 | April 14, 2025 | Paychex completes its acquisition of Paycor | $22.50 a share in cash, about $4.1 billion enterprise value; over $80 million of expected fiscal 2026 cost savings | A mid-market HCM inside Paychex; Paycor contributed about 12 points of Paychex's 17% revenue growth in fiscal 2026 |
 | September 2025 | Workday acquires Paradox | $1.1 billion | Added to Workday's HCM suite |
 | November 2025 | Workday acquires Sana | $1.1 billion | Added to Workday's suite |
+| November 6, 2025 | Gusto completes its acquisition of Guideline | Not disclosed | Guideline's 401(k) platform becomes Gusto 401(k) |
 | February 4, 2026 | Thoma Bravo completes its acquisition of Dayforce | $70.00 a share in cash, about $12.3 billion (announced August 21, 2025, with an ADIA minority investment) | An enterprise HCM delisted from the NYSE and TSX; no further periodic reports |
+| April 9, 2026 | Gusto acquires Mosey | Not disclosed | State and local business registration and filing compliance, for a planned Gusto Business Compliance product |
 
-Two directions show in the table. The suites buy breadth (time, spend, recruiting, AI) so one contract covers more of the employee lifecycle, and private equity takes public HCM companies private. A third, private companies buying each other, is harder to date from primary sources. <!-- source-gap: wf-private-deals | missing | dates and terms of 2025-2026 acquisitions by private payroll and HR companies (Gusto, Rippling, Deel, isolved and others) | closes with: each acquirer's press release | checked: 2026-11-09 -->
+Two directions show in the table. The suites buy breadth (time, spend, recruiting, AI) so one contract covers more of the employee lifecycle, and private equity takes public HCM companies private. A third, private companies buying each other, shows in Gusto's two deals, which it dated but priced in neither; for other private acquirers the dates are harder to fix from primary sources (Deel's acquisition posts carry only a "last update" date). <!-- source-gap: wf-private-deals | missing | dates and terms of 2025-2026 acquisitions by private payroll and HR companies other than Gusto (Rippling, Deel, isolved and others) | closes with: each acquirer's dated press release | checked: 2026-11-22 -->
 
 For a system, an acquisition is a data event, not a news item: a client's provider changes name and sometimes platform, contract terms carry over or don't, and integrations keyed to the old company's IDs need mapping. When a provider migrates acquired clients to its own platform, each client is a mid-year conversion with year-to-date to load ([Changing Providers Mid-Year](/books/workforce/changing-providers)).
 
@@ -232,6 +234,9 @@ Design notes:
 - [Oyster: Pricing](https://www.oysterhr.com/pricing), EOR pricing
 - [Check](https://www.checkhq.com/), self-reported employees paid, businesses and annual volume
 - [Zeal: Documentation](https://docs.zeal.com/), tax handling across all 50 states, settlement on the pay date and filing on the employer's behalf
+- [Gusto: Gusto surpasses $1 billion in revenue, serving more than 500,000 small businesses](https://www.prnewswire.com/news-releases/gusto-surpasses-1-billion-in-revenue-serving-more-than-500-000-small-businesses-302765484.html), May 7, 2026: the trailing 12-month revenue threshold, the customer count and the Mosey and Guideline acquisitions
+- [Gusto: Gusto acquires Mosey to close the compliance gap for small businesses](https://www.prnewswire.com/news-releases/gusto-acquires-mosey-to-close-the-compliance-gap-for-small-businesses-302737584.html), April 9, 2026, no terms disclosed
+- [Guideline: It's official, Guideline has joined Gusto](https://www.guideline.com/education/articles/its-official-guideline-and-gusto), November 6, 2025: the acquisition complete, no terms disclosed
 - [Gusto Embedded: Suspend a company's account](https://docs.gusto.com/embedded-payroll/reference/post-companies-company_uuid-suspensions.md), suspension reasons, the competitor joined, remaining filings and the refund of collected taxes when switching
 
 **In practice**

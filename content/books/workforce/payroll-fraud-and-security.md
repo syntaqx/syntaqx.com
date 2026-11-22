@@ -29,7 +29,7 @@ Three patterns. **The attack is on people, not systems.** Every published scheme
 ## The Size of It
 
 The IC3's 2025 report counts 1,008,597 complaints and $20.877 billion in reported losses, a 26% increase in losses over 2024; business email compromise losses were $3,046,598,558, up from $2,770,151,146 in 2024 and $2,946,830,270 in 2023, and "businesses reported losses over $30 million to BEC scams involving AI." The IC3 defines BEC as "a scam targeting businesses or individuals working with suppliers and/or businesses regularly performing wire transfer payments," carried out by "compromising email accounts and other forms of communication ... through social engineering or computer intrusion techniques to conduct unauthorized transfer of funds." The reports don't break out payroll diversion, so the payroll share of those losses isn't public.
-<!-- source-gap: wf-payroll-diversion-losses | missing | the number of payroll diversion incidents or losses as a share of BEC | closes with: an IC3 or FinCEN publication that breaks out payroll diversion | checked: 2026-11-10 -->
+<!-- source-gap: wf-payroll-diversion-losses | missing | the number of payroll diversion incidents or losses as a share of BEC | closes with: an IC3 or FinCEN publication that breaks out payroll diversion | checked: 2026-11-22 -->
 
 ## Direct Deposit Change Fraud and Business Email Compromise
 

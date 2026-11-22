@@ -45,7 +45,7 @@ The notices a payroll system receives for employment tax accounts, as the IRS de
 | **Failure-to-deposit penalty notice** | A penalty computed on late or improper deposits | 90 days to designate how deposits apply | Compute the designation that minimizes the penalty; consider abatement |
 
 The list isn't complete (there are notices for missing returns, for changes the IRS made to a return, for a W-4 lock-in letter on an employee, for levies on an employee's wages), but these five are the ones a deposit and filing system causes and can answer from its own data. Letter 99C is described in [The Workforce Business](/books/workforce/workforce-business#the-life-of-a-payroll-tax-dollar); the reconciliation it asks for is in [Year-End, W-2s & Wage Reporting](/books/workforce/year-end-and-w2s#reconciling-w-2s-to-the-941s).
-<!-- source-gap: wf-irs-notice-catalog | missing | a complete catalog of IRS employment tax notices (CP and letter numbers) with response windows | closes with: IRS notice pages for each employment tax CP notice and letter | checked: 2026-11-09 -->
+<!-- source-gap: wf-irs-notice-catalog | missing | a complete catalog of IRS employment tax notices (CP and letter numbers) with response windows | closes with: IRS notice pages for each employment tax CP notice and letter | checked: 2026-11-22 -->
 
 ## State Notices
 
@@ -104,7 +104,9 @@ The employer owes the full $1,530 including the employee's $765; collecting the 
 ## State Amendments
 
 States have their own amendment processes for withholding returns, unemployment wage reports and annual reconciliations: some take an amended return of the same form with an amended indicator, some a separate adjustment form, some an online correction in the employer's account; unemployment wage report corrections usually need the per-worker detail, not only totals. A federal correction often implies state corrections (a bonus coded nontaxable was probably wrong for state income tax and SUI too), so the correction workflow fans out from one discovery to every filing whose lines change. The core model's `filings.amends_filing_id` and `status = 'amended'` hold each one; this chapter's tables tie them to the case that started them.
-<!-- source-gap: wf-state-amendments | missing | how states take amended withholding returns and SUI wage report corrections (form, format, deadline, interest) | closes with: state employer guides for the largest payroll states | checked: 2026-11-09 -->
+
+Two large states show both ends. California takes adjustments "to previously filed wage reports" through e-Services for Business, an online correction rather than a file. Pennsylvania takes an amended ICESA file that restates the quarter: "Please include all employees in the file, not just the employees that need to be amended," with the A record's report type set to Amended and a T record that "must reflect the total numbers for all employees for the quarter/year," which "the system will use to adjust the quarter/year tax data and receivables"; originals and amendments go in separate files. A Pennsylvania amendment is therefore a full replacement generated from the corrected quarter, not a delta.
+<!-- source-gap: wf-state-amendments | missing | how other states take amended withholding returns and SUI wage report corrections (form, format, deadline, interest), and California's and Pennsylvania's deadlines and interest on them | closes with: state employer guides for the other large payroll states | checked: 2026-11-22 -->
 
 ## Who May Talk to the Agency
 
@@ -274,6 +276,8 @@ Notices and corrections are where examinations start. Keep:
 - [IRS: Understanding your CP136 notice](https://www.irs.gov/individuals/understanding-your-cp136-notice), next year's deposit schedule
 - [IRS: Understanding your CP207 notice](https://www.irs.gov/individuals/understanding-your-cp207-notice), the record of federal tax liability and the 45-day correction window
 - [IRS: Understanding your CP161 notice](https://www.irs.gov/individuals/understanding-your-cp161-notice), unpaid balance and the 10-day window to dispute
+- [California EDD: Electronic Filing Guide for the Quarterly Wage and Withholding Program (DE 8300, PDF)](https://edd.ca.gov/siteassets/files/pdf_pub_ctr/de8300.pdf), Rev. 12 (7-24): adjustments to filed wage reports through e-Services for Business
+- [Pennsylvania L&I: File layouts and formats for electronic reporting of PA quarterly UC wage and tax data (UC-2010, PDF)](https://www.pa.gov/content/dam/copapwp-pagov/en/dli/documents/uc/uc-forms/uc-2010.pdf), Rev. 11-25: amended ICESA files with all employees, the Amended report type, the T record totals and separate files for originals and amendments
 
 **Vendor documentation**
 

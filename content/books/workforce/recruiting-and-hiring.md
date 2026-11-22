@@ -28,7 +28,7 @@ What ATS vendors publish about their objects, hiring hand-offs and candidate dat
 
 Greenhouse's Harvest documentation still says, as of November 2026, that "The Harvest v1/v2 API is deprecated and will be removed on August 31, 2026," pointing integrators to Harvest v3; I found no notice confirming the removal took place, and an integration built against v1 or v2 should be treated as retired.
 
-<!-- source-gap: wf-ats-greenhouse-v2-removal | status | whether Greenhouse removed Harvest v1/v2 on August 31, 2026 | closes with: a Greenhouse changelog or doc page after the date confirming removal | checked: 2026-11-10 -->
+<!-- source-gap: wf-ats-greenhouse-v2-removal | status | whether Greenhouse removed Harvest v1/v2 on August 31, 2026 | closes with: a Greenhouse changelog or doc page after the date confirming removal | checked: 2026-11-22 -->
 
 The pattern across vendors is consistent: a person (candidate) is separate from each attempt (application or opportunity), demographic self-identification is a separate object with separate permissions, and the hire is an explicit event that requires the offer and its approvals to be complete. The core model inherits all three.
 
@@ -81,7 +81,7 @@ Software that screens resumes, ranks candidates, scores video interviews or reco
 | **Colorado** | SB 26-189, "Automated Decision-Making Technology" | Repeals and reenacts the 2024 AI act (SB 24-205) as an ADMT law for consequential decisions including employment: notice at the point of interaction, a plain-language description of the tool's role within 30 days after an adverse outcome, rights to request and correct data and to "meaningful human review and reconsideration," and records kept at least 3 years; developer documentation from January 1, 2027; attorney general rules due by January 1, 2027 | Signed May 14, 2026 (Session Law Chapter 131) |
 | **Illinois** | HB 3773 (Public Act 103-0804), amending the Human Rights Act | Bars using AI that has the effect of discriminating, and requires notice to employees of AI use in employment decisions | Effective January 1, 2026; implementing rules not final |
 
-<!-- source-gap: wf-ats-illinois-hb3773 | secondary | Illinois HB 3773 effective January 1, 2026, its notice duty, and the status of IDHR's implementing rules | closes with: the Public Act text on ilga.gov and an IDHR rulemaking page | checked: 2026-11-10 -->
+<!-- source-gap: wf-ats-illinois-hb3773 | secondary | Illinois HB 3773 effective January 1, 2026, its notice duty, and the status of IDHR's implementing rules | closes with: the Public Act text on ilga.gov and an IDHR rulemaking page | checked: 2026-11-22 -->
 
 ### Worked Numbers: An Impact Ratio
 

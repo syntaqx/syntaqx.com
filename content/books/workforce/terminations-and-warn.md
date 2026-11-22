@@ -131,7 +131,9 @@ In a group layoff the consideration period is 45 days (to Thursday, December 17 
 
 When a former employee files for unemployment, the state agency asks the last employer, and sometimes base-period employers, about the separation and the wages. The employer's answers decide whether the claimant is eligible (a voluntary quit without good cause and a discharge for misconduct generally disqualify; a layoff doesn't), and benefits paid are generally charged to the employer's experience rating, which sets its future SUTA rate ([SUTA: State Unemployment Insurance](/books/workforce/fica-futa-and-suta#suta-state-unemployment-insurance)). Each state sets its own response deadline, and a late or missing response can forfeit the employer's chance to contest the claim and the charge.
 
-<!-- source-gap: wf-ui-response-deadlines | missing | state deadlines for employer responses to unemployment separation requests and the consequences of a late response | closes with: state workforce agency employer pages or the DOL Comparison of State UI Laws, administration chapter | checked: 2026-11-09 -->
+Texas shows what is at stake. The Workforce Commission gives the employer "14 calendar days from the date we mail you a Notice of Application for Unemployment Benefits," counted from the mailing date, not receipt, and "If we do not receive a response within the 14-day deadline, you are not an interested party to the claim": no determination, and no right to appeal it, only an appeal of the late-response notice. Base-period employers get a separate Notice of Maximum Potential Chargeback after the first payment, with "30 calendar days of the mail date listed on the notice" to dispute it, and otherwise "will be charged." My rule for the system: a dated task per notice, due from the mail date, with the response and its submission date recorded.
+
+<!-- source-gap: wf-ui-response-deadlines | missing | other states' deadlines for employer responses to unemployment separation requests and the consequences of a late response | closes with: state workforce agency employer pages (California EDD's responding page 404 on Nov 22, 2026) or the DOL Comparison of State UI Laws, administration chapter | checked: 2026-11-22 -->
 
 For a system, a claim is a notice with a respond-by date (the core model's `notices`), a case that gathers the separation's facts (reason code, documentation, final pay, severance, warnings), a response sent through SIDES or the state portal, and later the determination, appeals and the benefit charge on the next rate notice. Three design rules carry most of the value:
 
@@ -316,6 +318,8 @@ Separations are reviewed in wage claims, WARN suits, discrimination charges, une
 - [California DLSE: Paydays, pay periods, and the final payment of wages](https://www.dir.ca.gov/dlse/faq_paydays.htm), final pay including accrued vacation on discharge, and the quit rules with and without 72 hours' notice
 - [DOL: Last paycheck](https://www.dol.gov/general/topic/wages/lastpaycheck), no federal requirement of immediate final pay
 - [DOL EBSA: An Employer's Guide to Group Health Continuation Coverage Under COBRA](https://www.dol.gov/agencies/ebsa/about-ebsa/our-activities/resource-center/publications/an-employers-guide-to-group-health-continuation-coverage-under-cobra), the 30-day employer notice and 14-day election notice
+- [Texas Workforce Commission: Employer notices](https://www.twc.texas.gov/programs/unemployment-tax/employer-notices), the 14-day response to a Notice of Application for Unemployment Benefits and interested-party status
+- [Texas Workforce Commission: Employer unemployment benefit chargebacks](https://www.twc.texas.gov/programs/unemployment-tax/employer-unemployment-benefit-chargebacks), the 30-day response to a Notice of Maximum Potential Chargeback
 - [NASWA: UI SIDES](https://www.naswa.org/uisides), the claims exchange system run with DOL for employers, TPAs and PEOs
 
 **Courts and enforcement**
