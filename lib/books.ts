@@ -211,6 +211,19 @@ export const BOOKS: Book[] = [
       "It reads in ten parts, plus a glossary: the business (providers, revenue, agents and PEOs), gross to net (withholding, deductions, tips and corrections), payroll tax at every level, moving the money (funding, client funds, direct deposit, child support and garnishments), time and wage-hour law, hiring and HR records, leave, benefits administration, contractors and global payroll, and running the platform (embedded payroll, unified APIs, architecture, controls and fraud).",
     ],
   },
+  {
+    slug: "logistics",
+    type: "industry",
+    name: "Logistics & Supply Chain",
+    shortName: "Logistics",
+    cover: "pallet",
+    summary:
+      "How freight moves and gets paid, from the load tender and the bill of lading to brokers, ports, customs entries, warehouses and the factory's lots.",
+    intro: [
+      "A pallet of cartons looks like one thing, and it lives in a dozen records at once: a line on the buyer's purchase order, a shipment on the shipper's bill of lading, a stop on the carrier's load, a margin on the broker's books, a stream of status messages, an invoice that audit matches to a proof of delivery, a payable a factor bought, and, if it crosses a border, an entry line with a tariff number and a duty. Shippers, carriers in every mode, brokers, forwarders, customs brokers, warehouses and plants each keep their own copy in their own codes and time zones, under FMCSA, CBP, the FMC, the STB and FDA, and most rules in the industry govern one of those records. This book surveys how the industry does each piece, benchmarked across C.H. Robinson, Knight-Swift, Old Dominion, J.B. Hunt, Union Pacific, Maersk, Expeditors, Kuehne+Nagel, Oracle, SAP, Manhattan, Descartes, project44, Samsara, CargoWise and the others, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in twelve parts, plus a glossary: the business (the landscape, freight markets and cycles, how carriers, brokers and 3PLs make money), road and rail (truckload, LTL networks and freight class, intermodal and drayage, rail, parcel networks), ocean and air (ocean shipping, bills of lading, detention and demurrage, forwarders and NVOCCs, air cargo), freight brokerage (onboarding, fraud, load boards), carrier regulation (authority, insurance, hours of service, ELDs, drivers, safety, claims, hazmat), planning and execution (TMS, rating, procurement, tendering, load planning, dispatch), data and visibility (EDI, APIs, tracking, ETAs), warehouses and yards (WMS, picking, automation, docks, 3PL billing), freight money (invoicing, audit, paying carriers, fuel, accounting), customs and trade (brokers and bonds, entries, classification, tariff programs, drawback and FTZs, forced labor, exports, the EU, UK and Canada), manufacturing (ERP and MES, BOMs, MRP, planning, supplier schedules, quality, traceability, recalls, emissions), and running the platform.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
@@ -218,12 +231,6 @@ export const UPCOMING_BOOKS: UpcomingBook[] = [];
 
 /** Books I'm weighing but haven't committed to, shown as "Considering". */
 export const CONSIDERING_BOOKS: FutureBook[] = [
-  {
-    name: "Logistics & Supply Chain",
-    type: "industry",
-    summary:
-      "Loads, shipments and inventory across brokers, carriers and warehouses, through EDI, customs and recalls.",
-  },
   {
     name: "Advertising",
     type: "industry",

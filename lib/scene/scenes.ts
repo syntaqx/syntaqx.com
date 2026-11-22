@@ -4294,6 +4294,131 @@ const policy: SceneFn = (s) => {
   };
 };
 
+/**
+ * Logistics & Supply Chain: a trailer backed into a dock, its roll-up door
+ * open, and a pallet being built on the dock in front of it. One carton at a
+ * time slides out of the trailer across the dock plate and settles on the
+ * top layer; when the layer is full the stack is wrapped and labeled. On
+ * hover the layers lift apart and the door rolls the rest of the way up.
+ */
+const pallet: SceneFn = (s) => {
+  const dockH = 1;
+  // the trailer: its body behind the dock, rear face at y = ty
+  const [tx, ty, ta, tl, th] = [2.4, 2.2, 3, 4.8, 3.2];
+  const [ox0, ox1] = [tx + 0.2, tx + ta - 0.2];
+  const doorTop = dockH + th - 0.15;
+  const doorBottom = dockH + 2.2 + s.spread * (doorTop - dockH - 2.2);
+  const face = (x0: number, x1: number, z0: number, z1: number): V3[] => [
+    [x0, ty + 0.01, z0],
+    [x1, ty + 0.01, z0],
+    [x1, ty + 0.01, z1],
+    [x0, ty + 0.01, z1],
+  ];
+  // the pallet: a deck, then two layers of four cartons
+  const [px, py, pa, pb] = [4.4, 4.4, 2.4, 2.0];
+  const deck = dockH + 0.28;
+  const [cw, cd, ch] = [pa / 2, pb / 2, 0.8];
+  const gap = s.spread * 0.6;
+  const layerZ = (k: number) => deck + k * (ch + gap);
+  const slots: [number, number][] = [
+    [0, 0],
+    [1, 0],
+    [0, 1],
+    [1, 1],
+  ];
+  const carton = (i: number, z: number, accent = false): Part => ({
+    kind: "box",
+    box: box(px + slots[i][0] * cw, py + slots[i][1] * cd, z, cw - 0.04, cd - 0.04, ch),
+    ...(accent ? { accent: true, soft: true } : {}),
+  });
+  // a cycle per carton; two cycles held wrapped
+  const T = 3.2;
+  const k = Math.floor(s.t / T) % 6;
+  const ph = (s.t % T) / T;
+  const filled = Math.min(k, 4);
+  const wrapped = k >= 4;
+  // the moving carton: out of the trailer, across the plate, onto its slot
+  const [sx, sy] = [tx + 0.9, ty - 1.4];
+  const [gx, gy] = [px + slots[filled % 4][0] * cw, py + slots[filled % 4][1] * cd];
+  const out = ease(Math.min(1, ph / 0.35));
+  const across = ease(Math.min(1, Math.max(0, (ph - 0.35) / 0.45)));
+  const top = layerZ(1);
+  const mx = sx + (gx - sx) * across;
+  const my = sy + (ty + 1.2 - sy) * out + (gy - ty - 1.2) * across;
+  const mz = dockH + (top - dockH) * across + Math.sin(across * Math.PI) * 0.7;
+  const moving: Part = {
+    kind: "box",
+    box: box(mx, my, mz, cw - 0.04, cd - 0.04, ch),
+    accent: true,
+  };
+  const inTrailer = !wrapped && my < ty;
+  const onDock = !wrapped && my >= ty;
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // the trailer: wheels, body, the dark opening, freight inside, the door
+    { kind: "box", box: box(tx + 0.2, ty - tl + 0.4, 0, 0.5, 1.3, dockH), small: true },
+    { kind: "box", box: box(tx + ta - 0.7, ty - tl + 0.4, 0, 0.5, 1.3, dockH), small: true },
+    { kind: "box", box: box(tx, ty - tl, dockH, ta, tl, th) },
+    { kind: "plane", pts: face(ox0, ox1, dockH + 0.05, doorBottom), v: 0.03 },
+    { kind: "box", box: box(ox0 + 0.1, ty - 2.6, dockH, 1, 1, 0.8), small: true },
+    { kind: "box", box: box(ox0 + 1.3, ty - 2.4, dockH, 1, 1, 1.4), small: true },
+    ...(inTrailer ? [moving] : []),
+    { kind: "plane", pts: face(ox0, ox1, doorBottom, doorTop), v: 0.2 },
+    ...[0.3, 0.6].map(
+      (u): Part => ({
+        kind: "line",
+        a: [ox0, ty + 0.02, doorBottom + (doorTop - doorBottom) * u],
+        b: [ox1, ty + 0.02, doorBottom + (doorTop - doorBottom) * u],
+        alpha: 0.5,
+      }),
+    ),
+    // the dock, its plate bridging into the trailer, and the bumpers
+    { kind: "box", box: box(0.6, ty + 0.2, 0, 8.2, 5.6, dockH) },
+    {
+      kind: "plane",
+      pts: [
+        [ox0 + 0.3, ty - 0.5, dockH + 0.02],
+        [ox1 - 0.3, ty - 0.5, dockH + 0.02],
+        [ox1 - 0.3, ty + 1.2, dockH + 0.02],
+        [ox0 + 0.3, ty + 1.2, dockH + 0.02],
+      ],
+      v: 0.26,
+    },
+    // the pallet deck, then the stack
+    { kind: "box", box: box(px, py, dockH, pa, pb, 0.28), small: true },
+    ...slots.map((_, i) => carton(i, layerZ(0))),
+    ...slots.slice(0, filled).map((_, i) => carton(i, layerZ(1))),
+    ...(wrapped
+      ? [
+          {
+            kind: "box",
+            box: box(px - 0.06, py - 0.06, deck, pa + 0.08, pb + 0.08, layerZ(1) + ch - deck),
+            ghost: true,
+          } satisfies Part,
+          {
+            kind: "box",
+            box: box(px + 0.9, py + pb + 0.02, layerZ(1) + 0.2, 0.6, 0.02, 0.4),
+            accent: true,
+          } satisfies Part,
+        ]
+      : []),
+    ...(onDock ? [moving] : []),
+  ];
+  return {
+    parts,
+    ext: [
+      [0, 10, 0],
+      [10, 0, 0],
+      [10, 10, 0],
+      [0, 0, 0],
+      [tx, ty - tl, dockH + th],
+      [tx + ta, ty - tl, dockH + th],
+      [px, py, layerZ(1) + ch + 0.8],
+    ],
+    axes: ground(10),
+  };
+};
+
 export const scenes = {
   system,
   loop,
@@ -4327,6 +4452,7 @@ export const scenes = {
   library,
   legal,
   policy,
+  pallet,
 } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
@@ -4345,6 +4471,7 @@ export const BOOK_SCENES = [
   "board",
   "policy",
   "paystub",
+  "pallet",
 ] as const satisfies readonly SceneName[];
 export type BookSceneName = (typeof BOOK_SCENES)[number];
 
