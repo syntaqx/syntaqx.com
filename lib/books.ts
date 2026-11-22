@@ -224,20 +224,25 @@ export const BOOKS: Book[] = [
       "It reads in twelve parts, plus a glossary: the business (the landscape, freight markets and cycles, how carriers, brokers and 3PLs make money), road and rail (truckload, LTL networks and freight class, intermodal and drayage, rail, parcel networks), ocean and air (ocean shipping, bills of lading, detention and demurrage, forwarders and NVOCCs, air cargo), freight brokerage (onboarding, fraud, load boards), carrier regulation (authority, insurance, hours of service, ELDs, drivers, safety, claims, hazmat), planning and execution (TMS, rating, procurement, tendering, load planning, dispatch), data and visibility (EDI, APIs, tracking, ETAs), warehouses and yards (WMS, picking, automation, docks, 3PL billing), freight money (invoicing, audit, paying carriers, fuel, accounting), customs and trade (brokers and bonds, entries, classification, tariff programs, drawback and FTZs, forced labor, exports, the EU, UK and Canada), manufacturing (ERP and MES, BOMs, MRP, planning, supplier schedules, quality, traceability, recalls, emissions), and running the platform.",
     ],
   },
+  {
+    slug: "advertising",
+    type: "industry",
+    name: "Advertising",
+    cover: "billboard",
+    summary:
+      "How advertising runs in software, from the ad server and the auction to identity, measurement, fraud, CTV, retail media, privacy law and the bill.",
+    intro: [
+      "An ad looks like a picture on a page, and underneath it is a chain of companies settling a price in a fraction of a second. A brand's money passes through an agency, a buying platform, an exchange and a publisher's ad server, each taking a share and each counting the impression its own way, while consent signals, supply-chain files and fraud filters decide whether the impression may be sold, bought or billed at all. Weeks later the same impression is reconciled against an invoice, a publisher statement and an attribution report that can disagree by more than the contract allows. This book surveys how the industry does each piece, benchmarked across Google, Meta, Amazon Ads, The Trade Desk, Magnite, PubMatic, Prebid, AppLovin, Criteo, DoubleVerify, Nielsen, Netflix, Walmart Connect and the others, with no single company as the model, and how you'd build it, extending one core data model chapter by chapter.",
+      "It reads in twelve parts, plus a glossary: the business, ad serving and creative, programmatic, auctions and pricing, identity and audiences, measurement, fraud and brand safety, walled gardens (search, social, retail media and self-serve platforms), channels (CTV, video, audio, in-app, games and out-of-home), privacy and law, contracts and money, and running the platform.",
+    ],
+  },
 ];
 
 /** Books planned but not written yet, shown as "Soon". */
 export const UPCOMING_BOOKS: UpcomingBook[] = [];
 
 /** Books I'm weighing but haven't committed to, shown as "Considering". */
-export const CONSIDERING_BOOKS: FutureBook[] = [
-  {
-    name: "Advertising",
-    type: "industry",
-    summary:
-      "Auctions, impressions and attribution across DSPs and SSPs, and the consent and privacy law that limits each.",
-  },
-];
+export const CONSIDERING_BOOKS: FutureBook[] = [];
 
 export const getBook = (slug: string) => BOOKS.find((b) => b.slug === slug);
 
