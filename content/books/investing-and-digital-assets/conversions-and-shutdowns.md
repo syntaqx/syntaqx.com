@@ -24,7 +24,7 @@ The public record of large account events, as of November 2026:
 | **Mt. Gox** (2014 to 2027) | Repayments in bitcoin and bitcoin cash since 2024; the trustee's October 16, 2026 notice moved the deadline from October 31, 2026 to October 31, 2027 ([Mt. Gox](/books/investing-and-digital-assets/exchange-security#mt-gox)) | [Mt. Gox trustee](https://www.mtgox.com/) notices |
 | **US exchanges and the 2023 SEC cases** | The SEC charged Bittrex in April 2023 with operating an unregistered exchange, broker and clearing agency, and Binance, its US affiliate BAM Trading and Changpeng Zhao in June 2023; on May 29, 2025 the SEC and the defendants filed a joint stipulation to dismiss the Binance case with prejudice | SEC press releases 2023-78 and 2023-101 |
 
-<!-- source-gap: ida-market-exits | missing | dates and mechanics of US and non-US crypto market exits (Bittrex's US wind-down, Binance.US dollar rails, Binance's exits from Canada and the Netherlands, Coinbase's exit from Japan) | closes with: the companies' own announcements or court notices, opened | checked: 2026-11-05 -->
+<!-- source-gap: ida-market-exits | missing | dates and mechanics of US and non-US crypto market exits (Bittrex's US wind-down, Binance.US dollar rails, Binance's exits from Canada and the Netherlands, Coinbase's exit from Japan) | closes with: the companies' own announcements or court notices, opened | checked: 2026-11-22 -->
 
 The exits of US and foreign crypto venues from markets in 2023 are not in this chapter's sources at all; I describe the mechanics without their dates. Three patterns run through what is sourced:
 
@@ -137,7 +137,7 @@ Delaware's law (Title 12, Chapter 11) is a useful model because many firms are i
 - **Virtual currency** is defined as "a digital representation of value, including cryptocurrency," with exclusions for game content, loyalty programs and the like.
 - **What counts as interest:** a record communicated by the owner about the property; an oral communication the holder records at the time; presenting a check for a dividend, interest or other distribution; and "activity directed by an owner in the account in which the property is held, including accessing the account." Communications from third parties don't count unless the record shows the owner knew of the property.
 
-<!-- source-gap: ida-unclaimed-california | missing | California's dormancy period for securities (CCP 1516) and its 2025 law on escheating digital financial assets in kind, with effective dates | closes with: the California code sections and the State Controller's holder guidance, opened | checked: 2026-11-05 -->
+<!-- source-gap: ida-unclaimed-california | missing | California's dormancy period for securities (CCP 1516) and its 2025 law on escheating digital financial assets in kind, with effective dates | closes with: the California code sections and the State Controller's holder guidance, opened | checked: 2026-11-22 -->
 
 Other states set their own periods and contact rules, and California's treatment of securities and crypto isn't in this chapter's sources; a firm generally applies the law of the owner's last known address state, which makes the rules a table, not a constant. The bank-side version, with the priority rules for which state gets the property and a worked dormant account, is the Banking & Lending volume's [Dormancy, Escheat & Closing Accounts](/books/banking-and-lending/dormancy-and-escheat#which-state-gets-it). What the system needs:
 

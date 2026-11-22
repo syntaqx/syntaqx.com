@@ -140,7 +140,7 @@ A **match** is money the broker adds to an IRA as a percentage of the customer's
 What a match adds to the system:
 
 - **A conditional asset.** The match is in the account and invested from day one but can be reclaimed if the conditions fail, so each match is a row with its contribution, amount, start date and condition dates, and a transfer out or withdrawal within five years has to find the matches it affects before it completes.
-- **A contribution that isn't one.** The match isn't the customer's contribution and doesn't count toward their limit in the broker's register; how it is reported on the 5498 is a tax question I couldn't source from the materials I opened. <!-- source-gap: ida-ira-match-tax-reporting | missing | how a broker's IRA match is characterized and reported (5498 box, taxability, effect on the customer's contribution limit) | closes with: a broker's published match terms or tax FAQ, or IRS guidance, opened | checked: 2026-11-05 -->
+- **A contribution that isn't one.** The match isn't the customer's contribution and doesn't count toward their limit in the broker's register; how it is reported on the 5498 is a tax question I couldn't source from the materials I opened. <!-- source-gap: ida-ira-match-tax-reporting | missing | how a broker's IRA match is characterized and reported (5498 box, taxability, effect on the customer's contribution limit) | closes with: a broker's published match terms or tax FAQ, or IRS guidance, opened | checked: 2026-11-22 -->
 - **A marketing expense with a clawback.** The firm books the match as a cost and any reclaimed match as a recovery, by legal entity.
 
 ## Crypto in IRAs
