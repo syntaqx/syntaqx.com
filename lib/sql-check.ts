@@ -212,7 +212,7 @@ export async function checkSql(root = process.cwd()): Promise<SqlCheck> {
   for (const [unit, statements] of units) {
     // PostGIS takes seconds to create and a few pages use it, so it waits for the first.
     if (!postgisReady && statements.some((s) => GEOSPATIAL.test(s.text))) {
-      await pg.exec("CREATE EXTENSION IF NOT EXISTS postgis");
+      await pg.exec("CREATE EXTENSION IF NOT EXISTS postgis SCHEMA public");
       postgisReady = true;
     }
     // Each unit gets a fresh schema; the database is thrown away at the end, so none is dropped.
