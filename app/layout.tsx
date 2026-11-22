@@ -137,7 +137,7 @@ export default function RootLayout({
                 height={24}
                 className="size-5.5 sm:size-6"
               />
-              <span className="translate-y-[-0.17em] font-inst text-[0.95rem] lowercase sm:text-base tracking-wide text-foreground transition-colors group-hover:text-primary">
+              <span className="translate-y-[-0.11em] font-inst text-[0.95rem] lowercase sm:text-base tracking-wide text-foreground transition-colors group-hover:text-primary">
                 syntaqx
               </span>
             </Link>
@@ -161,7 +161,7 @@ export default function RootLayout({
             <div className="grid content-start gap-4">
               <Link href="/" className="group flex w-fit items-center gap-2.5">
                 <Image src="/brand.svg" alt="" width={22} height={22} className="size-5.5" />
-                <span className="translate-y-[-0.17em] font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-primary">
+                <span className="translate-y-[-0.11em] font-inst text-base lowercase tracking-wide text-foreground transition-colors group-hover:text-primary">
                   syntaqx
                 </span>
               </Link>
