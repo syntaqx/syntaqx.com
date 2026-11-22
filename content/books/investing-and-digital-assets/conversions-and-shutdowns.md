@@ -137,7 +137,7 @@ Delaware's law (Title 12, Chapter 11) is a useful model because many firms are i
 - **Virtual currency** is defined as "a digital representation of value, including cryptocurrency," with exclusions for game content, loyalty programs and the like.
 - **What counts as interest:** a record communicated by the owner about the property; an oral communication the holder records at the time; presenting a check for a dividend, interest or other distribution; and "activity directed by an owner in the account in which the property is held, including accessing the account." Communications from third parties don't count unless the record shows the owner knew of the property.
 
-<!-- source-gap: ida-unclaimed-california | missing | California's dormancy period for securities (CCP 1516) and its 2025 law on escheating digital financial assets in kind, with effective dates | closes with: the California code sections and the State Controller's holder guidance, opened | checked: 2026-11-22 -->
+California takes a different line on crypto. Sums owed to security holders escheat if unclaimed, without written correspondence, "within three years after the date prescribed for payment or delivery" (Code of Civil Procedure 1516). SB 822 (Statutes of 2025, chapter 660, approved October 11, 2025) added section 1516.5: a digital financial asset held by a business association escheats if unclaimed for more than three years from a returned communication or, where the holder can't track delivery, from the owner's last act of ownership in the account; within 30 days after the report deadline the holder must transfer "the exact digital financial asset type, private keys, and amount, unliquidated" to the Controller's cryptocurrency custodian, keeping it until it can if it holds only a partial key; and the Controller may select custodians and convert escheated assets to fiat. A holder's system therefore needs in-kind transfer for California rather than a cash remittance.
 
 Other states set their own periods and contact rules, and California's treatment of securities and crypto isn't in this chapter's sources; a firm generally applies the law of the owner's last known address state, which makes the rules a table, not a constant. The bank-side version, with the priority rules for which state gets the property and a worked dormant account, is the Banking & Lending volume's [Dormancy, Escheat & Closing Accounts](/books/banking-and-lending/dormancy-and-escheat#which-state-gets-it). What the system needs:
 
@@ -312,6 +312,8 @@ What regulators, auditors, trustees, states and customers ask about accounts tha
 
 **Law and regulation**
 
+- [California Code of Civil Procedure 1516](https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CCP&sectionNum=1516), three years for sums owed to security holders and for business association interests
+- [California SB 822 (2025), Unclaimed property: digital financial assets, chaptered text](https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB822), chapter 660, approved October 11, 2025: section 1516.5 dormancy, unliquidated transfer with private keys and section 1568 custodians
 - [Delaware Code, Title 12, Chapter 11, Subchapter II (Unclaimed Property: presumptions of abandonment)](https://delcode.delaware.gov/title12/c011/sc02/index.html), the 3-year period for securities and 5-year period for virtual currency, the definitions of security and virtual currency, and what counts as an indication of interest
 
 **Regulators and guidance**

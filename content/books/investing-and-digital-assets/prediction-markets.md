@@ -55,7 +55,7 @@ The direction is clear even with nothing final: the CFTC under Chairman Michael 
 
 ## Kalshi's Election Contracts
 
-Kalshi self-certified contracts on which party would control the House and Senate in 2023. The CFTC reviewed them under 40.11 and on September 22, 2023 ordered them disapproved, finding they involved gaming and unlawful activity and were contrary to the public interest. Kalshi sued (*KalshiEX LLC v. CFTC*, No. 1:23-cv-03257, D.D.C.). Judge Jia Cobb granted Kalshi summary judgment and vacated the order by an order of September 6, 2024, with her memorandum opinion following on September 12, holding that the contracts didn't involve unlawful activity or gaming as the statute uses those words. The CFTC appealed to the D.C. Circuit (No. 24-5205), and in May 2025, under new leadership, moved to dismiss its own appeal; the motion was granted and the case closed, as the CFTC recounted in its June 2026 proposal. <!-- source-gap: ida-kalshi-dc-circuit-docket | secondary | the exact date the CFTC's appeal in No. 24-5205 was dismissed (the docket number is sourced to the CFTC's opening brief) | closes with: the D.C. Circuit docket or dismissal order on CourtListener or PACER | checked: 2026-11-22 --> I couldn't open the dismissal order, so the dismissal rests on the CFTC's own account.
+Kalshi self-certified contracts on which party would control the House and Senate in 2023. The CFTC reviewed them under 40.11 and on September 22, 2023 ordered them disapproved, finding they involved gaming and unlawful activity and were contrary to the public interest. Kalshi sued (*KalshiEX LLC v. CFTC*, No. 1:23-cv-03257, D.D.C.). Judge Jia Cobb granted Kalshi summary judgment and vacated the order by an order of September 6, 2024, with her memorandum opinion following on September 12, holding that the contracts didn't involve unlawful activity or gaming as the statute uses those words. The CFTC appealed to the D.C. Circuit (No. 24-5205), and under new leadership filed an unopposed motion on May 5, 2025 to dismiss its own appeal; a per curiam order of May 7, 2025 (Judges Pillard, Wilkins and Rao) granted it and the mandate issued the same day. I couldn't open the dismissal order, so the dismissal rests on the CFTC's own account.
 
 The case settled the question for elections in practice: political contracts have listed since, and the 2024 proposal that would have barred them was withdrawn. It didn't settle sports, which turned on a different question: whether state gambling law can reach a contract on a federally registered exchange at all.
 
@@ -102,7 +102,7 @@ Every contract is fully funded at the moment of the trade, so there is no variat
 
 A customer buys 100 YES at $0.62 through an FCM, so the cost before fees is $62.00.
 
-**A fee on expected earnings.** Kalshi describes its fee as a charge on "expected earnings" and publishes the formula in a fee schedule I couldn't open. <!-- source-gap: ida-kalshi-fee-formula | missing | Kalshi's trading fee formula and coefficient (reported as 0.07 x contracts x price x (1 - price), rounded up) | closes with: an opened copy of kalshi.com/docs/kalshi-fee-schedule.pdf | checked: 2026-11-22 --> Its API documentation's worked rounding example (one contract at 5.5 cents with a model fee of $0.00363825) is exactly 0.07 × 0.055 × (1 − 0.055), so I use that shape here as an illustration: fee = 0.07 × contracts × P × (1 − P).
+**A fee on expected earnings.** Kalshi's fee schedule (updated and effective July 7, 2026) charges takers "a variable percentage fee of the expected earnings on an individual contract": fees = round up(M × 0.07 × C × P × (1 − P)), where P is the price in dollars, C the number of contracts, M a per-contract multiplier (1 unless otherwise indicated) and the round-up makes fee plus position cost a whole centicent. Resting orders that execute later pay a maker fee of the same shape with 0.0175 in place of 0.07 and a default multiplier of 0, and some products have their own schedules. Its API documentation's worked rounding example (one contract at 5.5 cents with a model fee of $0.00363825) is exactly 0.07 × 0.055 × (1 − 0.055).
 
 - Model fee: 0.07 × 100 × 0.62 × 0.38 = **$1.6492**.
 - Kalshi computes the trade fee to $0.000001 and, for an FCM-cleared account whose balance moves in cents, rounds the balance change down to the cent and records the difference as a rounding fee that is rebated later as it accumulates. The account moves by −$62.00 − $1.6492 = −$63.6492, aligned to **−$63.65**.
@@ -266,6 +266,7 @@ For 100 contracts at 62 cents with a 700 basis point coefficient this returns 1,
 
 **Courts and enforcement**
 
+- [KalshiEX LLC v. CFTC, No. 24-5205 (D.C. Cir.), docket (CourtListener)](https://www.courtlistener.com/docket/69156289/kalshiex-llc-v-cftc/), the CFTC's May 5, 2025 unopposed motion to dismiss and the May 7, 2025 order and mandate
 - [GovInfo: KalshiEX LLC v. CFTC, No. 1:23-cv-03257 (D.D.C.), memorandum opinion of September 12, 2024](https://api.govinfo.gov/packages/USCOURTS-dcd-1_23-cv-03257/granules/USCOURTS-dcd-1_23-cv-03257-0/summary?api_key=DEMO_KEY), summary judgment for Kalshi on the congressional control contracts
 - [KalshiEX LLC v. Martin, No. 25-1892 (4th Cir. November 18, 2026)](https://www.ca4.uscourts.gov/opinions/251892.P.pdf), the per curiam affirmance, the Gregory and Thacker concurrences and the Benjamin dissent
 - [KalshiEX LLC v. CFTC, No. 24-5205 (D.C. Cir.), appellant's brief of October 16, 2024](https://storage.courtlistener.com/recap/gov.uscourts.cadc.41256/gov.uscourts.cadc.41256.1208671805.0.pdf), the appeal number and the September 6, 2024 order and September 12, 2024 memorandum opinion under review
@@ -284,6 +285,7 @@ For 100 contracts at 62 cents with a 700 basis point coefficient this returns 1,
 
 **Vendor documentation**
 
+- [Kalshi: Fee Schedule, July 7, 2026 update (PDF)](https://kalshi.com/docs/kalshi-fee-schedule.pdf), the trading fee formula and coefficient, the maker fee formula and the round-up rule
 - [Kalshi: Fees (April 19, 2026)](https://help.kalshi.com/en/articles/13823805-fees), the fee on expected earnings, maker fees and free cancellation
 - [Kalshi: Fee rounding](https://docs.kalshi.com/getting_started/fee_rounding), trade fees to $0.000001, cent alignment for FCM-cleared balances, rounding fees and rebates, and the 5.5-cent worked example
 - [Kalshi: Trading hours](https://help.kalshi.com/en/articles/13823807-what-are-trading-hours), 24/7 with Thursday maintenance from 3:00 to 5:00 am ET

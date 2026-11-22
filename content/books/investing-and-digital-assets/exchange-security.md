@@ -36,7 +36,7 @@ Mt. Gox applied for civil rehabilitation in Tokyo on February 28, 2014, stating 
 
 ### Bitfinex, 2016
 
-The 2016 theft from Bitfinex is the case that showed stolen coins can be traced and recovered years later; its figures come from US court records I couldn't open on this pass, so I give none. <!-- source-gap: bitfinex-2016 | missing | Bitfinex 2016 theft amount, the 2022 seizure and the 2023 pleas and 2024 sentencing | closes with: DOJ press releases or the D.D.C. docket for United States v. Lichtenstein | checked: 2026-11-22 -->
+The 2016 theft from Bitfinex is the case that showed stolen coins can be traced and recovered years later: in August 2016 Ilya Lichtenstein got into Bitfinex's network and authorized more than 2,000 transactions moving 119,754 bitcoin to a wallet he controlled; in February 2022 the government seized about 95,000 of the stolen bitcoin, then worth about $3.6 billion, from wallets he and Heather Morgan controlled, and later seized about $475 million more. Both pleaded guilty on August 3, 2023, and on November 14, 2024 Lichtenstein was sentenced to 60 months in prison.
 
 ### Coincheck and the Japanese rules
 
@@ -44,7 +44,7 @@ In January 2018, Coincheck, "then under its prior management," lost "approximate
 
 ### DMM Bitcoin
 
-On May 31, 2024, DMM Bitcoin announced the loss of 4,502.9 BTC, about ¥48.2 billion. The Kanto Local Finance Bureau issued a business improvement order on September 26, 2024, and on January 14, 2025 the governments of the United States, Japan and South Korea issued a joint statement on North Korean crypto theft. The FBI's attribution page for this case returned an error when I tried it, so the mechanism stays with the governments' statement. <!-- source-gap: dmm-bitcoin-mechanism | missing | the FBI, DC3 and NPA attribution of the DMM Bitcoin theft to TraderTraitor and the vendor-employee social engineering path | closes with: the FBI press release (403 on 2026-11-05) or the NPA's English release | checked: 2026-11-22 -->
+On May 31, 2024, DMM Bitcoin announced the loss of 4,502.9 BTC, about ¥48.2 billion. The Kanto Local Finance Bureau issued a business improvement order on September 26, 2024, and on January 14, 2025 the governments of the United States, Japan and South Korea issued a joint statement on North Korean crypto theft. The FBI, the Defense Department's Cyber Crime Center and Japan's National Police Agency attributed the theft on December 23, 2024 to North Korean actors whose activity is tracked as TraderTraitor (also Jade Sleet, UNC4899 and Slow Pisces), and described the path: in late March 2024 an actor posing as a LinkedIn recruiter sent an employee of Ginco, the Japanese enterprise wallet software company, a malicious Python script disguised as a pre-employment test on GitHub; the employee, who had access to Ginco's wallet management system, ran it, and after mid-May the actors used session cookie information to impersonate that employee, reached Ginco's unencrypted communications system and in late May "likely used this access to manipulate a legitimate transaction request by a DMM employee," losing 4,502.9 BTC, worth $308 million at the time.
 
 ### WazirX
 
@@ -230,6 +230,9 @@ Notes on the sketch:
 
 **Courts and enforcement**
 
+- [FBI, DC3 and NPA: TraderTraitor responsible for theft of $308 million from Bitcoin.DMM.com (December 23, 2024)](https://www.fbi.gov/news/press-releases/fbi-dc3-and-npa-identification-of-north-korean-cyber-actors-tracked-as-tradertraitor-responsible-for-theft-of-308-million-from-bitcoindmmcom), the attribution, the Ginco recruiter and pre-employment test path, and the manipulated transaction request
+- [U.S. Department of Justice: Bitfinex hacker and wife plead guilty (August 3, 2023)](https://www.justice.gov/archives/opa/pr/bitfinex-hacker-and-wife-plead-guilty-money-laundering-conspiracy-involving-billions), the 2022 seizure of about 95,000 bitcoin, its $3.6 billion value and the further $475 million
+- [U.S. Attorney, D.D.C.: Bitfinex hacker sentenced (November 14, 2024)](https://www.justice.gov/usao-dc/pr/bitfinex-hacker-sentenced-money-laundering-conspiracy-involving-billions-stolen), the 119,754 bitcoin transferred and the 60-month sentence
 - [In re FTX Trading Ltd., First Interim Report of John J. Ray III on Control Failures (D. Del. 22-11068, Doc 1242-1, April 9, 2023)](https://storage.courtlistener.com/recap/gov.uscourts.deb.188450/gov.uscourts.deb.188450.1242.1.pdf), Japan's requirement that at least 95% of users' crypto be held offline, as the report cites it
 - [Mt. Gox: Announcement of February 28, 2014](https://www.mtgox.com/img/pdf/20140228-announcement_eng.pdf), the civil rehabilitation application, assets and liabilities, and the bitcoins that disappeared
 - [Mt. Gox: Announcement of March 20, 2014](https://www.mtgox.com/img/pdf/20140320-btc-announce.pdf), the about 200,000 BTC found in an old-format wallet
