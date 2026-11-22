@@ -33,7 +33,7 @@ A substitute W-9 (an onboarding web form instead of the IRS PDF) is allowed if i
 
 ## TIN Matching
 
-The IRS's TIN Matching program lets a payer check a name and TIN combination before filing. It "is only for payers and their authorized agents that submit information returns"; the payer must be in the IRS's Payer Account File and applies through e-Services as an authorized payer of income subject to backup withholding. Payers of Forms 1099-B, DIV, INT, K, MISC, NEC, OID, G and PATR may be eligible. "Interactive or bulk options are available." <!-- source-gap: wf-tin-matching-limits | missing | TIN Matching interactive and bulk request limits and the result codes returned | closes with: IRS Publication 2108A, opened (the PDF returned 404 on Nov 10 and Nov 22, 2026, and the IRS TIN Matching pages now link only Publication 2108) | checked: 2026-11-22 --> The per-request limits and the result codes are in Publication 2108A, which wasn't reachable when I checked, so I don't state them here.
+The IRS's TIN Matching program lets a payer check a name and TIN combination before filing. It "is only for payers and their authorized agents that submit information returns"; the payer must be in the IRS's Payer Account File and applies through e-Services as an authorized payer of income subject to backup withholding. Payers of Forms 1099-B, DIV, INT, K, MISC, NEC, OID, G and PATR may be eligible. "Interactive or bulk options are available." Publication 2108 (Rev. 11-2024), the one publication the IRS TIN Matching page now links, carries the program's procedures (the older Publication 2108A PDF returns 404). Interactive requests go in "groups of up to 25 name/TIN combinations" with results in real time, and "there is a limit of 9,999 on the number of interactive requests that may be input during a 24-hour period by one User ID." A bulk file is a semicolon-delimited .txt of "up to 100,000 name/TIN combinations" (TIN type, TIN, name, optional account number), answered within 24 hours to a secure mailbox; the results stay downloadable for 30 days and are purged 3 days after access, and the IRS sets no daily limit on bulk files. Each combination gets a numeric indicator: 0 matches, 1 missing or not a 9-digit TIN, 2 not currently issued, 3 doesn't match, 4 invalid request, 5 duplicate, and 6, 7 and 8 for a TIN type of "unknown" that matched on the SSN file, the EIN file or both. Submitting the same TIN with various names (or the reverse) suspends access for 96 hours after four attempts.
 
 The design point is when to match: at onboarding, before the first payment, so a mismatch is fixed by asking the contractor instead of by a CP2100 a year later. A mismatch result is a reason to solicit a corrected W-9, not by itself a reason to backup withhold; the IRS's notice is.
 
@@ -199,7 +199,7 @@ CREATE TABLE tin_match_results (           -- each check against the IRS
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   w9_certification_id UUID NOT NULL REFERENCES w9_certifications (id),
   channel             TEXT NOT NULL CHECK (channel IN ('interactive', 'bulk')),
-  result_code         TEXT NOT NULL,         -- as Pub 2108A defines them
+  result_code         TEXT NOT NULL,         -- 0-8, as Pub 2108 defines them
   matched             BOOLEAN NOT NULL,
   checked_at          TIMESTAMPTZ NOT NULL
 );
@@ -308,6 +308,7 @@ An IRS penalty notice, a B-notice review or a contractor's dispute asks:
 - [IRS Publication 1281: Backup Withholding for Missing and Incorrect Name/TIN(s) (PDF)](https://www.irs.gov/pub/irs-pdf/p1281.pdf), the 15 and 30 business-day clocks, stopping withholding, second notices, SSA and IRS validation letters and the two-in-three-years limit
 - [IRS: Instructions for Form 945 (2026)](https://www.irs.gov/instructions/i945), the return for backup withholding, due dates and deposit rules
 - [IRS: Taxpayer Identification Number (TIN) Matching](https://www.irs.gov/tax-professionals/taxpayer-identification-number-tin-matching), eligibility, the Payer Account File and interactive and bulk options
+- [IRS Publication 2108 (Rev. 11-2024): Federal Agency TIN Matching Program (PDF)](https://www.irs.gov/pub/irs-pdf/p2108.pdf), the 25-combination interactive request and 9,999-per-day limit, the 100,000-combination bulk file format and 24-hour turnaround, result indicators 0 to 8 and the 96-hour suspension
 - [IRS: Instructions for Forms 1099-MISC and 1099-NEC (December 2026 revision)](https://www.irs.gov/instructions/i1099mec), boxes, thresholds, the corporate exception, Form 1099-K for card payments and due dates
 - [IRS Publication 1099 (2026): General Instructions for Certain Information Returns](https://www.irs.gov/publications/p1099), the $2,000 threshold for reporting and backup withholding and IRIS as the only intake system
 - [IRS: E-file information returns with IRIS](https://www.irs.gov/filing/e-file-information-returns-with-iris), the Portal and A2A, limits, the IRIS TCC and schema 5.0.7
