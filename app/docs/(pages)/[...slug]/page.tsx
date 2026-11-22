@@ -4,6 +4,7 @@ import { markdownAlternates, titleIn } from "@/lib/metadata";
 import { pageRef } from "@/lib/schema";
 import { getAllDocs, getDocBySlug, getDocsByCategory } from "@/lib/docs";
 import { ChapterCount, DocArticle } from "@/components/doc-article";
+import { BookCitations } from "@/components/book-citations";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -82,6 +83,7 @@ export default async function DocPage({ params }: Props) {
       }
       prev={neighbor(docs[index - 1])}
       next={neighbor(docs[index + 1])}
+      footer={<BookCitations docSlug={doc.slug} />}
     />
   );
 }

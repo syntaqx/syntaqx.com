@@ -75,6 +75,7 @@ export const footerNav: {
       { href: "/resume", label: "resume" },
       { href: "/tags", label: "topics" },
       { href: "/feed.xml", label: "rss", file: true },
+      { href: "/updates.xml", label: "updates rss", file: true },
     ],
   },
   {

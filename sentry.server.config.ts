@@ -10,6 +10,5 @@ Sentry.init({
   // Only run in real production (NODE_ENV is also "production" in preview).
   enabled: process.env.VERCEL_ENV === "production",
 
-  // Sampled at 10% — per-request tracing overhead feeds TTFB.
-  tracesSampleRate: 0.1,
+  // No tracing: next.config.ts compiles it out (bundleSizeOptimizations).
 });

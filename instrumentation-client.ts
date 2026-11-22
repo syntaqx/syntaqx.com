@@ -39,9 +39,9 @@ Sentry.init({
   // events to record sessions and was the prime suspect for INP on
   // /posts/[slug]. Error tracking + sampled tracing stay.
 
-  // Traces sampled at 10% — enough signal for a personal site without the
-  // per-page-view overhead of tracing every load.
-  tracesSampleRate: 0.1,
+  // No tracing: next.config.ts compiles it out (bundleSizeOptimizations), so
+  // every reader stops downloading it. Speed Insights covers page speed, and
+  // the web-vitals warnings below name the slow element.
 
   // SDK 11 attaches a stack to every captureMessage by default, and Sentry
   // then titles the issue after its top minified frame ("sb", "st") instead
@@ -87,9 +87,6 @@ if (production) {
   });
 }
 
-export function onRouterTransitionStart(
-  ...args: Parameters<typeof Sentry.captureRouterTransitionStart>
-) {
-  routes.push({ at: performance.now(), path: new URL(args[0], location.href).pathname });
-  Sentry.captureRouterTransitionStart(...args);
+export function onRouterTransitionStart(href: string) {
+  routes.push({ at: performance.now(), path: new URL(href, location.href).pathname });
 }

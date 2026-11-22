@@ -12,7 +12,13 @@ describe("canonical URLs", () => {
   it("gives docs and books pages a canonical beside their Markdown", () => {
     expect(markdownAlternates("/docs/x")).toMatchObject({
       canonical: "/docs/x",
-      types: { "text/markdown": "/docs/x.md" },
+      types: {
+        "application/rss+xml": [
+          { url: "/feed.xml", title: "syntaqx RSS feed" },
+          { url: "/updates.xml", title: "syntaqx: new docs and book chapters" },
+        ],
+        "text/markdown": "/docs/x.md",
+      },
     });
   });
 });

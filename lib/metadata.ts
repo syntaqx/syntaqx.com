@@ -5,6 +5,8 @@ export const MAX_DESCRIPTION = 160;
 
 /** A page-level `alternates` replaces the layout's wholesale, so pages restate the feed. */
 const RSS = [{ url: "/feed.xml", title: "syntaqx RSS feed" }];
+/** New docs and book chapters, advertised on those pages beside the posts feed. */
+const UPDATES = { url: "/updates.xml", title: "syntaqx: new docs and book chapters" };
 
 /**
  * Title, description, canonical URL, and the Open Graph fields that would
@@ -33,7 +35,7 @@ export function markdownAlternates(path: string): Metadata["alternates"] {
   return {
     canonical: path,
     types: {
-      "application/rss+xml": RSS,
+      "application/rss+xml": [...RSS, UPDATES],
       "text/markdown": `${path}.md`,
     },
   };
