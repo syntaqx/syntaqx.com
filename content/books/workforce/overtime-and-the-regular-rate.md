@@ -263,7 +263,7 @@ Layered rules need an order, and the federal principle that keeps them from doub
 5. **Price each overtime hour** at its multiple of the regular rate, and record the FLSA-required premium separately from what state law or a contract added.
 6. **Compare with the FLSA alone** and pay the higher where rules differ.
 
-Housecall Pro's documentation states the same convention for its own time product ("If the daily overtime and weekly overtime rules are turned on at the same time, daily overtime hours are counted first"), and 7shifts' fields separate daily, weekly and consecutive-day overtime from double time. <!-- source-gap: wf-ca-ot-order | missing | California's primary-source rule for applying daily overtime before weekly overtime on the remaining hours (DLSE Enforcement Manual section 48) | closes with: the DLSE Enforcement Policies and Interpretations Manual overtime section from dir.ca.gov | checked: 2026-11-22 --> California's enforcement manual (the March 2011 edition on dir.ca.gov) doesn't state the sequence in so many words, as far as I searched it, so the order here rests on vendor documentation rather than a primary source.
+Housecall Pro's documentation states the same convention for its own time product ("If the daily overtime and weekly overtime rules are turned on at the same time, daily overtime hours are counted first"), and 7shifts' fields separate daily, weekly and consecutive-day overtime from double time. <!-- source-gap: wf-ca-ot-order | missing | California's primary-source rule for applying daily overtime before weekly overtime on the remaining hours (the DLSE Enforcement Manual, August 2019 revision, sections 48 and 49 read on 2026-11-22, doesn't state it) | closes with: a DLSE opinion letter or California decision stating the order | checked: 2026-11-22 --> California's enforcement manual (the 2002 update as revised August 2019, on dir.ca.gov) defines the workday and workweek for daily and weekly overtime in section 48 but doesn't state the sequence in so many words, as far as I searched it, so the order here rests on vendor documentation rather than a primary source.
 
 ## Exemptions and the Salary Level
 
@@ -412,6 +412,7 @@ An overtime audit, whether DOL's, a state's or a class action's, reconstructs ea
 - [DOL WHD: Fact Sheet 17A, Exemption for executive, administrative, professional, computer and outside sales employees](https://www.dol.gov/agencies/whd/fact-sheets/17a-overtime), the $684 and $107,432 levels, the 10% bonus credit and the duties tests
 - [DOL WHD: State minimum wage laws](https://www.dol.gov/agencies/whd/minimum-wage/state), California's $16.90 and Nevada's $12.00
 - [California DLSE: Overtime FAQ](https://www.dir.ca.gov/dlse/faq_overtime.htm), weighted averages, salary conversion, nondiscretionary bonuses and paid time off not counted toward 40
+- [California DLSE: Enforcement Policies and Interpretations Manual (PDF)](https://www.dir.ca.gov/dlse/DLSEManual/dlse_enfcmanual.pdf), 2002 update revised August 2019: section 48 definitions of workday and workweek for daily and weekly overtime
 - [Alaska Department of Labor: Wage and Hour Act](https://labor.alaska.gov/lss/whact.htm), 8 and 40 hours and the under-4-employees exemption
 
 **Courts and enforcement**
