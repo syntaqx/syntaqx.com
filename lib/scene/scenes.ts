@@ -4417,6 +4417,161 @@ const pallet: SceneFn = (s) => {
   };
 };
 
+/**
+ * Advertising: a roadside billboard on its posts, a catwalk along its foot
+ * and lamps leaning over the top. Its ad is a headline, an image and a play
+ * button. Beside it a bid ticker runs an auction every few seconds, and the
+ * winner's creative goes up on the board. On hover the creative pulls off the
+ * panel.
+ */
+const billboard: SceneFn = (s) => {
+  // the panel: a thin board facing +y, up on its posts
+  const [x0, y0, a, d, z0, h] = [1.2, 3.4, 7.2, 0.3, 3.4, 3.6];
+  const yf = y0 + d;
+  const top = z0 + h;
+  const yc = yf + 0.02 + s.spread * 1.4;
+  // a rectangle, a polygon and a ring on the face, in x and z
+  const rect = (x: number, z: number, w: number, hh: number): V3[] => [
+    [x, yc, z],
+    [x + w, yc, z],
+    [x + w, yc, z + hh],
+    [x, yc, z + hh],
+  ];
+  const ring = (cx: number, cz: number, r: number, n = 24): V3[] =>
+    Array.from({ length: n }, (_, i): V3 => {
+      const t = (i / n) * Math.PI * 2;
+      return [cx + Math.cos(t) * r, yc, cz + Math.sin(t) * r];
+    });
+  // the auction: three bids rise, the highest wins and its creative runs
+  const T = 3.2;
+  // offset so the bids stand grown at rest
+  const u = s.t + T * 0.6;
+  const cycle = Math.floor(u / T);
+  const grow = ease(Math.min(1, (u % T) / T / 0.5));
+  const bids = [0, 1, 2].map(
+    (i) => 0.5 + 1.1 * ((Math.sin((cycle + 1) * (i + 1.7) * 2.3) + 1) / 2),
+  );
+  const win = bids.indexOf(Math.max(...bids));
+  const [ix, iz, iw, ih] = [x0 + 0.5, z0 + 0.4, 2.8, 2.6];
+  const creative: Part[] =
+    cycle % 2 === 0
+      ? [
+          { kind: "plane", pts: ring(ix + 1.9, iz + 1.8, 0.45), v: 0.45 },
+          {
+            kind: "plane",
+            pts: [
+              [ix + 0.2, yc, iz + 0.2],
+              [ix + 1.2, yc, iz + 1.6],
+              [ix + 1.8, yc, iz + 0.9],
+              [ix + 2.1, yc, iz + 1.2],
+              [ix + 2.6, yc, iz + 0.2],
+            ],
+            v: 0.3,
+          },
+        ]
+      : [
+          { kind: "plane", pts: rect(ix + 0.7, iz + 0.3, 1.4, 1.4), v: 0.3 },
+          {
+            kind: "plane",
+            pts: [
+              [ix + 0.7, yc, iz + 1.7],
+              [ix + 2.1, yc, iz + 1.7],
+              [ix + 2.4, yc, iz + 2.1],
+              [ix + 1.0, yc, iz + 2.1],
+            ],
+            v: 0.45,
+          },
+          { kind: "line", a: [ix + 1.4, yc, iz + 0.3], b: [ix + 1.4, yc, iz + 1.7], alpha: 0.5 },
+        ];
+  const [px, pz] = [x0 + 6.1, z0 + 0.9];
+  const play: V3[] = [
+    [px, yc, pz],
+    [px + 0.7, yc, pz + 0.45],
+    [px, yc, pz + 0.9],
+  ];
+  // a gooseneck lamp over the top edge, reaching out over the face
+  const lamp = (x: number): Part[] => [
+    ...Array.from({ length: 6 }, (_, k): Part => {
+      const at = (u: number): V3 => [
+        x,
+        y0 + d / 2 + Math.sin((u * Math.PI) / 2) * 1.1,
+        top + 0.1 + Math.sin(u * Math.PI * 0.8) * 0.55,
+      ];
+      return { kind: "line", a: at(k / 6), b: at((k + 1) / 6), alpha: 0.9 };
+    }),
+    { kind: "box", box: box(x - 0.2, yf + 0.65, top + 0.1, 0.4, 0.35, 0.15), small: true },
+  ];
+  const [py, ry] = [y0 + d / 2, yf + 0.85];
+  const [tx, ty] = [5.8, 7.0];
+  const parts: Part[] = [
+    { kind: "plane", pts: quad(0, 0, 0, 10, 10), v: 0.09, grid: 10 },
+    // footings and posts up to the panel
+    ...[3.0, 6.6].flatMap((x): Part[] => [
+      { kind: "box", box: box(x - 0.35, py - 0.35, 0, 0.7, 0.7, 0.2), small: true },
+      { kind: "cyl", cx: x, cy: py, z: 0.2, r: 0.14, h: z0 - 0.2 },
+    ]),
+    { kind: "box", box: box(x0, y0, z0, a, d, h) },
+    // the catwalk and its rail
+    { kind: "box", box: box(x0, yf, z0 - 0.3, a, 0.85, 0.08) },
+    { kind: "line", a: [x0, ry, z0 + 0.3], b: [x0 + a, ry, z0 + 0.3], alpha: 0.8 },
+    ...Array.from({ length: 7 }, (_, i): Part => {
+      const x = x0 + (i * a) / 6;
+      return { kind: "line", a: [x, ry, z0 - 0.22], b: [x, ry, z0 + 0.3], alpha: 0.6 };
+    }),
+    // the creative: image block, headline, copy, play button and badge
+    ...(s.spread > 0.05
+      ? [
+          [x0 + 0.2, z0 + 0.2],
+          [x0 + a - 0.2, top - 0.2],
+        ].map(([x, z]): Part => ({
+          kind: "line",
+          a: [x, yf, z],
+          b: [x, yc, z],
+          dashed: true,
+          alpha: 0.4,
+        }))
+      : []),
+    { kind: "plane", pts: rect(x0 + 0.2, z0 + 0.2, a - 0.4, h - 0.4), v: 0.16 },
+    { kind: "plane", pts: rect(ix, iz, iw, ih), v: 0.22 },
+    ...creative,
+    { kind: "plane", pts: rect(x0 + 3.7, z0 + 2.3, 3.0, 0.55), v: 0.45 },
+    { kind: "line", a: [x0 + 3.7, yc, z0 + 1.85], b: [x0 + 6.2, yc, z0 + 1.85], alpha: 0.55 },
+    { kind: "line", a: [x0 + 3.7, yc, z0 + 1.5], b: [x0 + 5.5, yc, z0 + 1.5], alpha: 0.55 },
+    { kind: "plane", pts: play, v: 0.3 },
+    ...play.map((p, i): Part => ({ kind: "line", a: p, b: play[(i + 1) % 3], accent: true })),
+    { kind: "plane", pts: rect(x0 + a - 1.2, top - 0.75, 0.8, 0.4), v: 0.5 },
+    ...[x0 + 1.4, x0 + a / 2, x0 + a - 1.4].flatMap(lamp),
+    // the bid ticker, wired to the near post
+    {
+      kind: "cable",
+      pts: [
+        [tx, ty, 0.02],
+        [3.0, ty, 0.02],
+        [3.0, py + 0.35, 0.02],
+      ],
+      speed: 0.6,
+    },
+    { kind: "box", box: box(tx - 0.2, ty - 0.5, 0, 2.6, 1, 0.12) },
+    ...bids.map((b, i): Part => ({
+      kind: "box",
+      box: box(tx + i * 0.8, ty - 0.25, 0.12, 0.5, 0.5, 0.05 + b * grow),
+      ...(i === win && grow > 0.95 ? { accent: true, soft: true } : { small: true }),
+    })),
+  ];
+  return {
+    parts,
+    ext: [
+      [0, 10, 0],
+      [10, 0, 0],
+      [10, 10, 0],
+      [0, 0, 0],
+      [x0, yf, top + 0.8],
+      [x0 + a, y0, top + 0.8],
+    ],
+    axes: ground(10),
+  };
+};
+
 export const scenes = {
   system,
   loop,
@@ -4451,6 +4606,7 @@ export const scenes = {
   legal,
   policy,
   pallet,
+  billboard,
 } satisfies Record<string, SceneFn>;
 export type SceneName = keyof typeof scenes;
 
@@ -4470,6 +4626,7 @@ export const BOOK_SCENES = [
   "policy",
   "paystub",
   "pallet",
+  "billboard",
 ] as const satisfies readonly SceneName[];
 export type BookSceneName = (typeof BOOK_SCENES)[number];
 
