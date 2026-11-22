@@ -49,31 +49,27 @@ const community: Project[] = [
   },
 ];
 
-// Wide cards keep the grid's rows full: on two columns yoink takes a row of
-// its own; on three, yoink and capacitor each take two of a row's three cells.
-const projects: (Project & { wide?: string })[] = [
+// Open source is an index, not more cards, so it reads apart from the
+// slanted cards above and below it.
+const projects: Omit<Project, "tags">[] = [
   {
     title: "yoink",
     kicker: "go · cli",
     description:
       "Clone every repository in an organization, and keep them all up to date with one command. A Go CLI for GitHub and Azure DevOps.",
-    tags: ["git", "github", "azure-devops"],
     url: "https://github.com/syntaqx/yoink",
-    wide: "md:col-span-2",
   },
   {
     title: "nullable",
     kicker: "go · package",
     description:
       "A single generic type for values that may be null in Go, with first-class support for JSON and database/sql.",
-    tags: ["generics", "json", "sql"],
     url: "https://github.com/syntaqx/nullable",
   },
   {
     title: "serve",
     kicker: "cli",
     description: "A static http server anywhere you need one.",
-    tags: ["http", "static-site"],
     url: "https://github.com/syntaqx/serve",
   },
   {
@@ -81,21 +77,18 @@ const projects: (Project & { wide?: string })[] = [
     kicker: "go · package",
     description:
       "A Go package that provides a simple and helpful way to populate structs from Cookies.",
-    tags: ["cookie", "http"],
     url: "https://github.com/syntaqx/cookie",
   },
   {
     title: "env",
     kicker: "go · package",
     description: "A simple and helpful way to interact with environment variables in Go.",
-    tags: ["env", "dotenv"],
     url: "https://github.com/syntaqx/env",
   },
   {
     title: "setup-kustomize",
     kicker: "github action",
     description: "A GitHub Action to download and install kustomize, and add it to your $PATH.",
-    tags: ["kustomize", "ci"],
     url: "https://github.com/syntaqx/setup-kustomize",
   },
   {
@@ -103,9 +96,7 @@ const projects: (Project & { wide?: string })[] = [
     kicker: "go · package",
     description:
       "An adaptive HTTP client for Go that automatically adjusts concurrency based on rate limiting and capacity signaling headers.",
-    tags: ["http", "rate-limiting"],
     url: "https://github.com/syntaqx/capacitor",
-    wide: "lg:col-span-2",
   },
 ];
 
@@ -168,6 +159,40 @@ function SlantCard({ item, lead = false }: { item: Project; lead?: boolean }) {
   );
 }
 
+/**
+ * One numbered row of the open source index. Wide screens give it columns and
+ * cut the description to one line so rows stay one height; phones stack it.
+ */
+function IndexRow({ item, n }: { item: Omit<Project, "tags">; n: number }) {
+  return (
+    <li>
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group relative grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-baseline gap-x-5 gap-y-1 border-b border-border px-3 py-4.5 transition-colors after:absolute after:inset-x-0 after:-bottom-px after:h-px after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-out hover:bg-card hover:after:scale-x-100 lg:grid-cols-[2.5rem_11rem_8.5rem_minmax(0,1fr)_1rem] lg:items-center"
+      >
+        <span className="inst tabular-nums text-muted-foreground">
+          {String(n).padStart(2, "0")}
+        </span>
+        <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1 lg:contents">
+          <h3 className="text-2xl text-foreground transition-colors group-hover:text-primary">
+            {item.title}
+          </h3>
+          <span className="inst text-muted-foreground">{item.kicker}</span>
+        </span>
+        <span className="col-start-2 min-w-0 text-[0.95rem] leading-relaxed text-subtle lg:col-auto lg:truncate">
+          {item.description}
+        </span>
+        <ArrowUpRight
+          size={16}
+          className="col-start-3 row-start-1 self-center text-muted-foreground transition-[color,translate] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary lg:col-auto lg:row-auto"
+        />
+      </a>
+    </li>
+  );
+}
+
 function SectionHead({ label, count }: { label: string; count: number }) {
   return (
     <div className="mb-8 flex items-center gap-4">
@@ -206,13 +231,11 @@ export default function ProjectsPage() {
 
       <section className="mb-20">
         <SectionHead label="open source" count={projects.length} />
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-2 md:px-8 lg:grid-cols-3">
-          {projects.map((p) => (
-            <div key={p.title} className={cn("min-w-0", p.wide)}>
-              <SlantCard item={p} />
-            </div>
+        <ol className="border-t border-border md:mx-8">
+          {projects.map((p, i) => (
+            <IndexRow key={p.title} item={p} n={i + 1} />
           ))}
-        </div>
+        </ol>
       </section>
 
       <section>
