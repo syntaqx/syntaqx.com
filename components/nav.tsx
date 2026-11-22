@@ -30,7 +30,7 @@ function Marker({ on, list = false }: { on: boolean; list?: boolean }) {
 
 const itemClass = (active: boolean) =>
   cn(
-    "relative flex items-center gap-2 whitespace-nowrap px-3 transition-colors focus-visible:-outline-offset-2",
+    "relative flex items-center gap-2 whitespace-nowrap px-3.5 transition-colors focus-visible:-outline-offset-2",
     active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
   );
 
@@ -162,7 +162,7 @@ export function MobileMenu() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         aria-label="Open menu"
-        className="flex w-12 items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer data-[state=open]:opacity-0 lg:hidden"
+        className="flex w-(--header-h) items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer data-[state=open]:opacity-0 lg:hidden"
       >
         <Menu size={18} />
       </Dialog.Trigger>
@@ -170,12 +170,12 @@ export function MobileMenu() {
         <Dialog.Overlay className="lg:hidden fixed inset-0 z-90 bg-background/40" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="lg:hidden fixed inset-x-0 top-12 bottom-0 z-100 bg-background outline-none"
+          className="lg:hidden fixed inset-x-0 top-(--header-h) bottom-0 z-100 bg-background outline-none"
         >
           <Dialog.Title className="sr-only">Site navigation</Dialog.Title>
           <Dialog.Close
             aria-label="Close menu"
-            className="absolute -top-12 right-0 flex size-12  items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+            className="absolute -top-(--header-h) right-0 flex size-(--header-h) items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
           >
             <X size={18} />
           </Dialog.Close>

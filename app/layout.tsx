@@ -125,13 +125,13 @@ export default function RootLayout({
           data-pagefind-ignore
           className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md"
         >
-          <div className="mx-auto grid h-12 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
+          <div className="mx-auto grid h-(--header-h) max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-stretch sm:px-6">
             <Link
               href="/"
               className="group flex items-center gap-2.5 border-r border-border px-4 sm:pl-0 sm:pr-5"
             >
-              <Image src="/brand.svg" alt="" width={22} height={22} className="size-5.5" />
-              <span className="translate-y-[-0.17em] font-inst text-[0.9rem] lowercase tracking-wide text-foreground transition-colors group-hover:text-primary">
+              <Image src="/brand.svg" alt="" width={28} height={28} className="size-6 sm:size-7" />
+              <span className="translate-y-[-0.17em] font-inst text-base lowercase sm:text-lg tracking-wide text-foreground transition-colors group-hover:text-primary">
                 syntaqx
               </span>
             </Link>

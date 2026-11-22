@@ -182,7 +182,7 @@ export function SearchButton() {
         aria-label="Search"
         aria-keyshortcuts="/ Control+K Meta+K"
         title={shortcut ? `Search (/ or ${shortcut})` : "Search"}
-        className="flex w-12 cursor-pointer items-center justify-center gap-2.5 border-l border-border text-muted-foreground transition-colors hover:text-foreground focus-visible:-outline-offset-2 md:any-pointer-fine:w-auto md:any-pointer-fine:px-4"
+        className="flex w-(--header-h) cursor-pointer items-center justify-center gap-2.5 border-l border-border text-muted-foreground transition-colors hover:text-foreground focus-visible:-outline-offset-2 md:any-pointer-fine:w-auto md:any-pointer-fine:px-4"
       >
         <Search size={14} className="shrink-0" />
         <kbd className="hidden min-w-4.5 justify-center border border-border px-1 font-mono text-[10.4px]/4  md:any-pointer-fine:inline-flex">

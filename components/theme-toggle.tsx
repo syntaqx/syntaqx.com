@@ -60,7 +60,7 @@ export function ThemeToggle() {
     <Menu>
       <MenuTrigger
         aria-label="Toggle theme"
-        className="flex w-12 items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
+        className="flex w-(--header-h) items-center justify-center border-l border-border text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
       >
         <ActiveIcon size={14} />
       </MenuTrigger>
