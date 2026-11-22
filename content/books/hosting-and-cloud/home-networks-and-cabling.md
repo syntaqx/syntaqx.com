@@ -123,7 +123,7 @@ The 6 GHz band is the reason to buy 6E or 7: in the US, FCC 20-51 lets low-power
 
 **Powerline** adapters (HomePlug AV2, G.hn) carry Ethernet over the electrical wiring. They are the last resort before mesh; their throughput depends on the circuit, and I have no vendor-neutral measurement to cite.
 
-<!-- source-gap: powerline-throughput | missing | measured powerline (HomePlug AV2, G.hn) throughput and latency in homes | closes with: an independent lab test or the HomePlug/HomeGrid specifications | checked: 2026-11-10 -->
+<!-- source-gap: powerline-throughput | missing | measured powerline (HomePlug AV2, G.hn) throughput and latency in homes | closes with: an independent lab test or the HomePlug/HomeGrid specifications | checked: 2026-11-22 -->
 
 ## ISP Handoffs
 

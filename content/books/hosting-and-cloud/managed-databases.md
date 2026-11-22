@@ -140,7 +140,7 @@ MySQL is the engine every provider in this chapter sells, which makes it the cle
 | **Aurora MySQL** | db.r7g.large: 2 vCPU, 16 GiB | $201 Standard; $262 I/O-Optimized | $403 Standard, writer plus reader | $0.10 plus I/O; $0.225 I/O-Optimized | No |
 | **Cloud SQL Enterprise** | 2 vCPU, 8 GiB | $108 ($0.148/h) | $217 | $0.1819 SSD; $0.3638 HA | No |
 | **Azure Flexible Server** | General Purpose, 2 vCores, 8 GiB | $125 ($0.171/h) | $250 | $0.115, both copies billed with HA | No |
-| **DigitalOcean Advanced** | 2 vCPU, 8 GiB node | $130 per node | $390, three nodes | $0.115 or $0.215 | No |
+| **DigitalOcean Advanced** | 2 vCPU, 8 GiB node | $130 per node | $390, three nodes | $0.115 | No |
 | **PlanetScale** | PS-80: 1 vCPU, 8 GiB | Not sold | $179, primary plus two replicas | Not listed | Yes, explicit |
 | **Aiven** | Plan floors; no per-size price | From $75 (Startup) | From $180 (Business) | Not listed separately | No |
 | **TiDB Cloud Dedicated** | 4 vCPU, 16 GiB node | $322 per node ($0.4416/h) | Three replicas by default | $0.000197 per GiB-hour | Yes, automatic |
@@ -149,7 +149,7 @@ Regions are N. Virginia for AWS, Northern Virginia (us-east4) for Google, East U
 
 Failover, as each provider states it: RDS Multi-AZ is "typically 60–120 seconds," and Azure says failovers "typically take between 60 and 120 seconds." Aurora restores service through a replica in under 60 seconds and "often less than 30 seconds." Google states no failover time; the Enterprise edition's SLA is 99.95% excluding maintenance. DigitalOcean, PlanetScale and Aiven promote a replica or standby automatically and publish no time. TiDB fails over automatically when a minority of its replicas fail.
 
-Two figures are soft. DigitalOcean's storage rate is $0.115 per GiB-month in its documentation and $0.215 on its pricing page.<!-- source-gap: do-mysql-storage | missing | DigitalOcean's MySQL storage rate per GiB-month | closes with: the same rate on docs.digitalocean.com/products/databases/mysql/details/pricing/ and digitalocean.com/pricing/managed-databases | checked: 2026-11-20 --> TiDB Cloud's node price comes from a table that doesn't name its region.<!-- source-gap: tidb-region | missing | the region the TiDB Cloud Dedicated $0.4416/h node price applies to | closes with: a region label on pingcap.com/tidb-cloud-pricing-details/ | checked: 2026-11-20 -->
+DigitalOcean's added storage is $0.115 per GiB-month on Advanced Edition and $0.215 on Standard Edition clusters, the rate its pricing page lists for its standard plans. One figure is soft: TiDB Cloud's node price comes from a table that doesn't name its region.<!-- source-gap: tidb-region | missing | the region the TiDB Cloud Dedicated $0.4416/h node price applies to | closes with: a region label on pingcap.com/tidb-cloud-pricing-details/ | checked: 2026-11-22 -->
 
 The table is not a ranking; read it by row:
 
@@ -413,7 +413,8 @@ Notes on the sketch:
 - [Azure Retail Prices API: Azure Database for MySQL, East US](https://prices.azure.com/api/retail/prices?$filter=serviceName%20eq%20%27Azure%20Database%20for%20MySQL%27%20and%20armRegionName%20eq%20%27eastus%27), General Purpose vCore, storage and extended support rates
 - [Microsoft Learn: High availability in Azure Database for MySQL](https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-high-availability), both replicas billed and the failover time
 - [Microsoft Learn: Azure Database for MySQL version policy](https://learn.microsoft.com/en-us/azure/mysql/concepts-version-policy), versions and extended support dates
-- [DigitalOcean: MySQL pricing](https://docs.digitalocean.com/products/databases/mysql/details/pricing/), Advanced Edition node price and three-node billing
+- [DigitalOcean: MySQL pricing](https://docs.digitalocean.com/products/databases/mysql/details/pricing/), Advanced Edition node price and three-node billing, and added storage at $0.115 per GiB-month on Advanced and $0.215 on Standard Edition (updated October 1, 2026)
+- [DigitalOcean: Managed Databases pricing](https://www.digitalocean.com/pricing/managed-databases), scalable storage at $0.215 per GiB-month for MySQL and PostgreSQL plans
 - [DigitalOcean: MySQL Advanced Edition](https://docs.digitalocean.com/products/databases/mysql/concepts/advanced-edition/), MySQL 8.4 and the forced upgrades from 8.0
 - [PlanetScale: Pricing](https://planetscale.com/pricing), PS-80 and PS-160 cluster prices and the three-node shape
 - [PlanetScale: Sharding](https://planetscale.com/docs/vitess/sharding), explicit sharding by primary Vindex
