@@ -51,12 +51,12 @@ The notice periods, each from the state's statute or the bureau form, as of Nove
 | **California** | Residential property | At least 10 calendar days (also for fraud) | At least 20 calendar days | At least 75 days for policies expiring on or after July 1, 2020 (renewal offer at least 45) |
 | **California** | Commercial (675.5 policies) | At least 10 days (also for fraud) | At least 30 days | Not covered here |
 | **New York** | Personal auto | 15 days; payment within 15 days after mailing is timely | At least 20 days after mailing; specific reasons in the first 60 days, listed grounds after | 45 to 60 days before the end of the period (at least 20 days for other than a natural person's non-business vehicle) |
-| **New York** | Other personal lines | Payment within 15 days after mailing is timely | Specific reasons in the first 60 days; listed grounds after | 45 to 60 days before the end of the period |
+| **New York** | Other personal lines | Payment within 15 days after mailing is timely | Specific reasons in the first 60 days; listed grounds after; 5 days' written notice for homeowners (standard fire policy) | 45 to 60 days before the end of the period |
 | **New York** | Commercial | 15 days after mailing (after the first 60 days), stating the amount due | 20 days in the first 60 days; 15 days after, on listed grounds | 60 to 120 days (30 for excess and jumbo risks) |
 | **North Carolina** | Personal auto: liability, medical payments, UM/UIM | At least 15 days | 60 days | At least 60 days |
 | **North Carolina** | Personal auto: other coverages | At least 10 days | At least 10 days | At least 10 days |
 
-New York's personal lines cancellation notice days are not in 3425 (which sets grounds, reasons, the 15-day payment window and proof). For auto they come from the Vehicle and Traffic Law: cancellation takes effect at least 20 days after mailing, with 15 days enough for nonpayment, and the insurer files the termination with the motor vehicle commissioner within 30 days after it takes effect ([N.Y. VTL 313](https://www.nysenate.gov/legislation/laws/VAT/313)). For homeowners and other personal lines the days come from the department's regulations, which I have not opened.<!-- source-gap: ny-ca-cancel-days | missing | New York homeowners and other non-auto personal lines cancellation notice days (11 NYCRR) | closes with: the regulation text | checked: 2026-11-10 -->
+New York's personal lines cancellation notice days are not in 3425 (which sets grounds, reasons, the 15-day payment window and proof). For auto they come from the Vehicle and Traffic Law: cancellation takes effect at least 20 days after mailing, with 15 days enough for nonpayment, and the insurer files the termination with the motor vehicle commissioner within 30 days after it takes effect ([N.Y. VTL 313](https://www.nysenate.gov/legislation/laws/VAT/313)). For homeowners the floor is the standard fire policy's cancellation clause, which lets the company cancel "by giving to the insured a five days' written notice of cancellation" ([N.Y. Ins. Law 3404(e)](https://www.nysenate.gov/legislation/laws/ISC/3404)); the department's Office of General Counsel reads that five-day notice as applying to all homeowners policies, and for other non-auto personal lines it said that, absent a contrary contract or statute, a 3425 cancellation notice "may take effect immediately," subject to the 15-day nonpayment window ([NY DFS: OGC Opinion No. 05-09-15, September 16, 2005](https://www.dfs.ny.gov/insurance/ogco2005/rg050915.htm)).
 
 ## A Notice-Date Calculation Across States
 
@@ -273,6 +273,7 @@ Design choices:
 - [N.Y. Ins. Law 3425](https://www.nysenate.gov/legislation/laws/ISC/3425), personal lines cancellation grounds, required policy periods, the 15-day payment window, 45 to 60 day nonrenewal notices, the 2% territory cap, proof of mailing and agent copies
 - [N.Y. Ins. Law 3426](https://www.nysenate.gov/legislation/laws/ISC/3426), commercial cancellation in and after the first 60 days, nonpayment notices with the amount due, and 60 to 120 day nonrenewal notices
 - [N.Y. Vehicle and Traffic Law 313](https://www.nysenate.gov/legislation/laws/VAT/313), auto cancellation 20 days after mailing (15 for nonpayment), nonrenewal notice periods and the 30-day termination filing
+- [N.Y. Insurance Law 3404](https://www.nysenate.gov/legislation/laws/ISC/3404), the standard fire policy's five days' written notice of cancellation
 - [N.Y. Banking Law 576](https://www.nysenate.gov/legislation/laws/BNK/576), pro rata return of gross unearned premium to the finance agency within 60 days and the 10% or $60 minimum earned premium
 - [Cal. Ins. Code 661 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-661/), auto cancellation grounds
 - [Cal. Ins. Code 662 (FindLaw)](https://codes.findlaw.com/ca/insurance-code/ins-sect-662/), auto cancellation notice of 20 days, 10 for nonpayment, to the named insured, lienholder or additional interest
@@ -286,6 +287,7 @@ Design choices:
 
 **Regulators and guidance**
 
+- [NY DFS: OGC Opinion No. 05-09-15, September 16, 2005](https://www.dfs.ny.gov/insurance/ogco2005/rg050915.htm), the five-day notice for homeowners policies under 3404(e) and immediate effect for other non-auto personal lines cancellations absent a contrary provision
 - [North Carolina Department of Insurance: FAQs About Auto Insurance](https://www.ncdoi.gov/consumers/auto-and-vehicle-insurance/faqs-about-auto-insurance), cancellation notice of 15 days for nonpayment and 60 days otherwise for liability, medical payments and UM/UIM, and 10 days for other coverages
 
 **Filings**

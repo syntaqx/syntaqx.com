@@ -34,7 +34,7 @@ Nearly every state requires liability insurance or another form of financial res
 - **New York** requires 25/50 for bodily injury, $50,000/$100,000 for death, and $10,000 property damage, plus no-fault and uninsured motorists coverage (New York DMV).
 - **Florida** requires no bodily injury liability for most drivers: $10,000 of personal injury protection and $10,000 of property damage liability (Fla. Stat. 324.022; Florida DHSMV). A lapse can suspend license and plates for up to three years, with a reinstatement fee of up to $500.
 
-The Insurance Information Institute's table of financial responsibility limits by state is the usual all-states reference; the copy I could open is dated October 25, 2022, before California's change, so the system's own limits table must be maintained from each state's statute and effective dates, not from a secondary summary.<!-- source-gap: auto-minimum-limits-all-states | secondary | a current all-states table of minimum auto liability limits | closes with: a 2026 compilation from a regulator (NAIC or a state DOI) or a refreshed III table | checked: 2026-11-10 -->
+The Insurance Information Institute's table of financial responsibility limits by state is the usual all-states reference; the copy I could open is dated October 25, 2022, before California's change, so the system's own limits table must be maintained from each state's statute and effective dates, not from a secondary summary.<!-- source-gap: auto-minimum-limits-all-states | secondary | a current all-states table of minimum auto liability limits | closes with: a 2026 compilation from a regulator (NAIC or a state DOI) or a refreshed III table | checked: 2026-11-22 -->
 
 What minimums mean in software:
 

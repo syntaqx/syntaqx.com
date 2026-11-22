@@ -42,7 +42,7 @@ A statistical record differs from an accounting entry in four ways:
 | **Dates** | Accounting date | Policy effective date and accounting date for premium; accident date for losses, so data can be organized by policy year and accident year |
 | **Purpose** | The books | Ratemaking: matching losses to the exposures and characteristics that produced them |
 
-<!-- source-gap: stat-plan-layouts | missing | a statistical plan's record layout, required fields, reporting deadlines and data quality tolerances (ISO, NISS or AAIS plan manual) | closes with: a plan manual or a state's statistical plan regulation opened (Verisk, AAIS, WCIRB and TDI statistical plan pages returned errors) | checked: 2026-11-10 --> The plan manuals with exact record layouts, deadlines and error tolerances are distributed to reporting companies, and I couldn't open one, so the table describes the contents a plan asks for, not a specific layout.
+<!-- source-gap: stat-plan-layouts | missing | a statistical plan's record layout, required fields, reporting deadlines and data quality tolerances (ISO, NISS or AAIS plan manual) | closes with: a plan manual or a state's statistical plan regulation opened (Verisk, AAIS, WCIRB and TDI statistical plan pages returned errors) | checked: 2026-11-22 --> The plan manuals with exact record layouts, deadlines and error tolerances are distributed to reporting companies, and I couldn't open one, so the table describes the contents a plan asks for, not a specific layout.
 
 What a statistical plan asks of the system:
 
