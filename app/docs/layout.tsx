@@ -11,7 +11,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="lg:grid lg:grid-cols-[248px_1fr] lg:gap-10">
       <aside data-pagefind-ignore className="hidden lg:-my-12 lg:block">
-        <div className="rail-scroll sticky top-12 h-[calc(100vh-3rem)] overflow-y-auto border-x border-border">
+        <div className="rail-scroll sticky top-(--header-h) h-[calc(100vh-var(--header-h))] overflow-y-auto border-x border-border">
           <DocsSidebar categories={categories} />
         </div>
       </aside>

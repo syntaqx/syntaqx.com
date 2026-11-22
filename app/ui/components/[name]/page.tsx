@@ -98,7 +98,7 @@ export default async function ComponentPage({ params }: Props) {
       <aside data-pagefind-ignore className="hidden xl:block">
         <DocsToc
           headings={sections}
-          className="rail-scroll sticky top-16 max-h-[calc(100vh-5rem)] overflow-y-auto"
+          className="rail-scroll sticky top-[calc(var(--header-h)+1rem)] max-h-[calc(100vh-var(--header-h)-2rem)] overflow-y-auto"
         />
       </aside>
     </article>

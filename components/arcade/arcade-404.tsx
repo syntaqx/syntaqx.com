@@ -174,7 +174,7 @@ export function Arcade404() {
     <div
       ref={stageRef}
       data-full-bleed
-      className="relative -my-12 h-[calc(100dvh-3rem)] min-h-140 w-screen overflow-hidden"
+      className="relative -my-12 h-[calc(100dvh-var(--header-h))] min-h-140 w-screen overflow-hidden"
       style={{ marginInline: "calc(50% - 50vw)" }}
     >
       {/* Faded so it reads as a backdrop; it paints the page's own background, so it blends in. */}
