@@ -225,28 +225,10 @@ export const CONSIDERING_BOOKS: FutureBook[] = [
       "Loads, shipments and inventory across brokers, carriers and warehouses, through EDI, customs and recalls.",
   },
   {
-    name: "Travel, Hospitality & Events",
-    type: "industry",
-    summary:
-      "Reservations, rates and inventory across GDS and channel managers, hotel systems and ticketed on-sales.",
-  },
-  {
     name: "Advertising",
     type: "industry",
     summary:
       "Auctions, impressions and attribution across DSPs and SSPs, and the consent and privacy law that limits each.",
-  },
-  {
-    name: "Energy & Utilities",
-    type: "industry",
-    summary:
-      "Meter reads into bills under tariffs, net metering and distributed energy, and settlement in wholesale markets.",
-  },
-  {
-    name: "Public Sector & Education",
-    type: "industry",
-    summary:
-      "Permits and benefits eligibility for government, student records and aid for schools, donors and grants for nonprofits.",
   },
 ];
 
