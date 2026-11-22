@@ -98,7 +98,7 @@ My default is to compute wash sales the reporting rule requires, per account by 
 
 ### Digital assets and wash sales
 
-Section 1091 applies to "stock or securities," and a digital asset that is not a security isn't one. The Form 1099-DA instructions require a disallowed wash sale loss in box 1i only for tokenized securities, the digital assets that are also securities, with the same basis increase. <!-- source-gap: ida-crypto-wash-sale-bills | status | that no enacted law as of November 2026 extends section 1091 to digital assets that are not securities | closes with: congress.gov status of the pending bills, opened | checked: 2026-11-05 --> Extending the rule to all digital assets has been proposed in Congress, and I couldn't open a current status for any bill, so the engine treats wash sales on non-security digital assets as off by configuration per instrument class, with tokenized securities on.
+Section 1091 applies to "stock or securities," and a digital asset that is not a security isn't one. The Form 1099-DA instructions require a disallowed wash sale loss in box 1i only for tokenized securities, the digital assets that are also securities, with the same basis increase. <!-- source-gap: ida-crypto-wash-sale-bills | status | that no enacted law as of November 2026 extends section 1091 to digital assets that are not securities | closes with: congress.gov status of the pending bills, opened | checked: 2026-11-22 --> Extending the rule to all digital assets has been proposed in Congress, and I couldn't open a current status for any bill, so the engine treats wash sales on non-security digital assets as off by configuration per instrument class, with tokenized securities on.
 
 ## Corporate Actions and Basis
 

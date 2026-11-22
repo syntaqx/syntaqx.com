@@ -36,7 +36,7 @@ Mt. Gox applied for civil rehabilitation in Tokyo on February 28, 2014, stating 
 
 ### Bitfinex, 2016
 
-The 2016 theft from Bitfinex is the case that showed stolen coins can be traced and recovered years later; its figures come from US court records I couldn't open on this pass, so I give none. <!-- source-gap: bitfinex-2016 | missing | Bitfinex 2016 theft amount, the 2022 seizure and the 2023 pleas and 2024 sentencing | closes with: DOJ press releases or the D.D.C. docket for United States v. Lichtenstein | checked: 2026-11-10 -->
+The 2016 theft from Bitfinex is the case that showed stolen coins can be traced and recovered years later; its figures come from US court records I couldn't open on this pass, so I give none. <!-- source-gap: bitfinex-2016 | missing | Bitfinex 2016 theft amount, the 2022 seizure and the 2023 pleas and 2024 sentencing | closes with: DOJ press releases or the D.D.C. docket for United States v. Lichtenstein | checked: 2026-11-22 -->
 
 ### Coincheck and the Japanese rules
 
@@ -44,7 +44,7 @@ In January 2018, Coincheck, "then under its prior management," lost "approximate
 
 ### DMM Bitcoin
 
-On May 31, 2024, DMM Bitcoin announced the loss of 4,502.9 BTC, about ¥48.2 billion. The Kanto Local Finance Bureau issued a business improvement order on September 26, 2024, and on January 14, 2025 the governments of the United States, Japan and South Korea issued a joint statement on North Korean crypto theft. The FBI's attribution page for this case returned an error when I tried it, so the mechanism stays with the governments' statement. <!-- source-gap: dmm-bitcoin-mechanism | missing | the FBI, DC3 and NPA attribution of the DMM Bitcoin theft to TraderTraitor and the vendor-employee social engineering path | closes with: the FBI press release (403 on 2026-11-05) or the NPA's English release | checked: 2026-11-05 -->
+On May 31, 2024, DMM Bitcoin announced the loss of 4,502.9 BTC, about ¥48.2 billion. The Kanto Local Finance Bureau issued a business improvement order on September 26, 2024, and on January 14, 2025 the governments of the United States, Japan and South Korea issued a joint statement on North Korean crypto theft. The FBI's attribution page for this case returned an error when I tried it, so the mechanism stays with the governments' statement. <!-- source-gap: dmm-bitcoin-mechanism | missing | the FBI, DC3 and NPA attribution of the DMM Bitcoin theft to TraderTraitor and the vendor-employee social engineering path | closes with: the FBI press release (403 on 2026-11-05) or the NPA's English release | checked: 2026-11-22 -->
 
 ### WazirX
 
