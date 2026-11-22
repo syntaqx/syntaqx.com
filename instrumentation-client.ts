@@ -43,6 +43,11 @@ Sentry.init({
   // per-page-view overhead of tracing every load.
   tracesSampleRate: 0.1,
 
+  // SDK 11 attaches a stack to every captureMessage by default, and Sentry
+  // then titles the issue after its top minified frame ("sb", "st") instead
+  // of the message. The vitals warnings' stack is web-vitals internals anyway.
+  attachStacktrace: false,
+
   // Drop noise we can't fix. Vercel's injected `vercel-live-feedback`
   // toolbar (served from `_next-live/feedback/instrument.*.js`) throws
   // "Cannot read properties of null (reading 'getItem')" inside a
