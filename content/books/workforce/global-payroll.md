@@ -20,9 +20,9 @@ As of November 2026, from the providers' public pages (counts are vendor claims)
 | **ADP Global Payroll** | "140+ countries and territories" | A "hybrid technology and service model" | ADP doesn't say on the page which countries run on its own engine and which through partners |
 | **Deel Global Payroll** | "150+ countries"; "$20B+" processed | Not stated | Its API's global payroll resources include employment and worker information, adjustments, shifts, gross-to-net (G2N) reports and payslips |
 | **Remote Payroll** | "100+ countries and jurisdictions"; from $19 per employee per month | Remote "builds the platform, runs the compliance systems, and employs the specialists" | Claims to be "a regulated payments institution in Canada, the UK, and the EEA" |
+| **Papaya Global** | "180+ countries"; Payroll Plus from $29 per employee per month | "One platform. One process. One accountable partner." with "100% payment liability coverage" | Its OneData layer connects to HR and ERP systems; the page doesn't say which countries run on its own engine |
 | **Rippling Global Payroll** | Not stated | Payroll "via Rippling entities" (EOR) or "via your entities" | |
 
-<!-- source-gap: wf-global-papaya | missing | Papaya Global's global payroll model (owned engine or partners), coverage and API | closes with: Papaya Global's product or developer pages, opened (403 on Nov 10, 2026) | checked: 2026-11-22 --> Papaya Global's pages weren't reachable when I checked.
 
 The vocabulary the APIs share is telling: Deel exposes "G2N reports" as a resource, because the gross-to-net result from each country is the unit the employer receives, reconciles and books. Rippling's split is the line that matters for any global payroll buyer: payroll for workers employed by the provider's entities (EOR) and payroll for the employer's own entities are different products with different liability, even when the screens look the same.
 
@@ -266,6 +266,8 @@ A local tax audit, a group finance close or a data protection review asks:
 
 **Vendor documentation**
 
+- [Papaya Global: Global payroll](https://www.papayaglobal.com/global-payroll/), 180+ countries, the one-partner model, payment liability coverage and OneData integrations (read November 22, 2026)
+- [Papaya Global: Pricing](https://www.papayaglobal.com/pricing/), Payroll Plus from $29 per employee per month
 - [ADP: Global Payroll](https://www.adp.com/what-we-offer/products/adp-global-payroll.aspx), coverage and the hybrid model
 - [Deel: Global Payroll](https://www.deel.com/global-payroll/), coverage and volume processed
 - [Deel: Global Payroll API](https://developer.deel.com/api/global-payroll), employment, adjustments, G2N reports and payslips

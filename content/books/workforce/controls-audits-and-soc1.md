@@ -31,7 +31,7 @@ Three patterns. **Everyone starts from the payroll register.** Every examiner's 
 The AICPA describes SOC 1 as "an examination of controls at a service organization" relevant to "user entities' internal control over financial reporting," and says SOC 1 reports are "specifically intended to meet the needs of entities that use service organizations" and "the CPAs that audit the user entities' financial statements (user auditors)." A payroll provider is the textbook service organization: it computes an expense line and several liabilities on every client's balance sheet, holds the cash to pay them, and files the returns that support them. The client's auditor can't re-perform the provider's calculation, so it reads the provider's report on its controls.
 
 As with SOC 2, a Type 1 report describes the controls and opines on their design at a point in time, and a Type 2 adds the auditor's tests of whether they operated effectively over a period ([Type 1 and Type 2](/docs/compliance/soc-2#type-1-and-type-2)). For a user auditor, only the Type 2 is evidence that the controls worked during the client's fiscal year, which is why providers report on rolling periods (Paycom's semiannual cadence) and issue bridge letters to cover the gap to a client's year end.
-<!-- source-gap: wf-soc1-definitions | missing | SOC 1 Type 1 versus Type 2, the AT-C 320 standard, complementary user entity controls, subservice organizations and the carve-out and inclusive methods as the AICPA defines them | closes with: the AICPA SOC 1 guide or AT-C 320 text, or PCAOB AS 2601 | checked: 2026-11-22 -->
+For a public company's audit the PCAOB's AS 2601 frames the same two reports: a "report on controls placed in operation" covers whether the described controls "were suitably designed to achieve specified control objectives" and "had been placed in operation as of a specific date," and a "report on controls placed in operation and tests of operating effectiveness" adds whether the tested controls "were operating with sufficient effectiveness" to give reasonable assurance the objectives were achieved over the period. <!-- source-gap: wf-soc1-definitions | missing | the AT-C 320 standard, complementary user entity controls, subservice organizations and the carve-out and inclusive methods as the AICPA defines them | closes with: the AICPA SOC 1 guide or AT-C 320 text (PCAOB AS 2601's two report types were read in a browser on 2026-11-22; it doesn't address subservice organizations) | checked: 2026-11-22 -->
 
 The control objectives in a payroll SOC 1 follow the life of a pay run in [The Workforce Business](/books/workforce/workforce-business#the-life-of-a-pay-run). The ones a reader should expect, and what tests each:
 
@@ -248,6 +248,7 @@ This chapter is about auditing, so the list is short: keep the control evidence 
 
 **Standards and specifications**
 
+- [PCAOB: AS 2601, Consideration of an Entity's Use of a Service Organization](https://pcaobus.org/oversight/standards/auditing-standards/details/AS2601), the definitions of the report on controls placed in operation and the report that adds tests of operating effectiveness
 - [AICPA & CIMA: SOC 1](https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-1), SOC 1 as an examination of controls at a service organization for user entities and their auditors
 
 **Filings**
