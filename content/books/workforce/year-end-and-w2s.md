@@ -87,17 +87,17 @@ The **W-3** transmits a paper or electronic batch and totals it: box b's "Kind o
 
 ## EFW2 and BSO
 
-The Social Security Administration publishes the electronic format for W-2 Copy A as **EFW2** (Publication 42-007 for tax year 2026) and for W-2c as **EFW2C** (Publication 42-014), and "Developers of payroll and tax reporting software must follow these file formats when submitting wage data files electronically to SSA." Files are submitted through **Business Services Online (BSO)**, where a registered user can create W-2s online, upload a formatted wage file, check a file for formatting accuracy, view submission status and errors, see the status of reports a third party filed for the employer, and request an extension to resubmit. For tax year 2025, BSO began accepting submissions on December 8, 2025.
+The Social Security Administration publishes the electronic format for W-2 Copy A as **EFW2** (Publication 42-007 for tax year 2026) and for W-2c as **EFW2C** (Publication 42-014), and "Developers of payroll and tax reporting software must follow these file formats when submitting wage data files electronically to SSA." Files are submitted through **Business Services Online (BSO)**, where a registered user can create W-2s online, upload a formatted wage file, check a file for formatting accuracy, view submission status and errors, see the status of reports a third party filed for the employer, and request an extension to resubmit. For tax year 2025, BSO began accepting submissions on December 8, 2025; for tax year 2026 BSO uploads and EDT transmissions open December 8, 2026, and the filing deadline for 2026 W-2s and the W-3 is February 1, 2027.
 
 An EFW2 file is a sequence of fixed-length records: a submitter record, then per employer an RE (employer) record followed by an RW (employee wage) record and optional RO (employee optional) record per employee, employer total records RT and RU, and a final record. The tax year 2026 specification changed:
 
-- **RE** gains an optional Employer Signature PIN field.
-- **RW** gains two Treasury Tipped Occupation Code fields (box 14b).
-- **RO and RU** split the combined "Uncollected Employee Tax on Tips (Codes A and B)" field into two.
-- **Codes J, K, L and P**, which had no EFW2 field, now each have one; TA, TP and TT are added to the list of money fields SSA doesn't maintain on the earnings record.
+- **RE** gains an Employer Signature PIN field, for employers that request a signature PIN for wage reporting.
+- **RW** gains box 14b, Treasury Tipped Occupation Code(s).
+- **RO and RU** split the combined uncollected employee tax on tips field into code A (Social Security or RRTA) and code B (Medicare); the combined field "will remain valid through tax year 2025."
+- **Codes J, K, L and P**, which had no EFW2 money field, now each have one, and the new box 12 codes TA (employer contributions under section 128 Trump account contribution programs), TP (cash tips reported to the employer) and TT (qualified overtime compensation) get their own.
 
 The EFW2C records (RCE, RCW, RCO, RCU) changed to match. Each record is 512 positions; Ohio's tax year 2025 W-2 specification, which follows SSA's EFW2 layout, puts its blank fillers out to position 512 and requires RA first, RE second and one RF last.
-<!-- source-gap: wf-efw2-layout | secondary | EFW2 tax year 2026 changes and field positions (SSA's Publication 42-007 PDF refused automated reading, 403 again on Nov 10 and Nov 22, 2026; the changes are from a vendor summary, the record set and length from Ohio's EFW2-based TY2025 state spec) | closes with: SSA Publication 42-007 (TY2026) read directly | checked: 2026-11-22 -->
+<!-- source-gap: wf-efw2-layout | secondary | EFW2 record length and field positions (the TY2026 changes, dates and deadline are sourced to SSA Publication 42-007, read in a browser on 2026-11-22; the 512-position length and record order still come from Ohio's EFW2-based TY2025 spec) | closes with: the record layout sections of SSA Publication 42-007 (TY2026) | checked: 2026-11-22 -->
 
 A file a provider submits for thousands of employers carries one RE per employer, and SSA's processing errors come back per employer through BSO; the system needs the submission ID per RE so a resubmission covers only the employers that failed. AccuWage Online is SSA's tool for checking a file before submission.
 
@@ -312,6 +312,7 @@ W-2s are audited by SSA's matching, the IRS's CAWR, state reconciliations and em
 
 **Agency guidance and forms**
 
+- [SSA: Publication 42-007, Specifications for Filing Forms W-2 Electronically (EFW2), tax year 2026 (PDF, version of November 12, 2026)](https://www.ssa.gov/employer/efw/26efw2.pdf), What's New (RE, RW, RO and RU changes and the new box 12 codes), the December 8, 2026 filing start and the February 1, 2027 deadline
 - [IRS: General Instructions for Forms W-2 and W-3 (2026)](https://www.irs.gov/instructions/iw2w3), the February 1, 2027 deadline, what's new for 2026, boxes 1 to 20, box 12 codes, box 14b, the W-3, e-filing at 10 returns, Forms 8809 and 15397, VOID forms, W-2c rules, prior-year repayments and penalties
 - [IRS: Information return penalties](https://www.irs.gov/payments/information-return-penalties), the per-return amounts and annual maximums for returns due in 2027
 - [IRS: Publication 15 (2026), Employer's Tax Guide](https://www.irs.gov/publications/p15), final returns and W-2 deadlines, reconciling W-2 and W-3 with Forms 941, Additional Medicare and Form 945, and W-2c limits per BSO session
