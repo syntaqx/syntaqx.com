@@ -70,7 +70,7 @@ What carries over to any conversion:
 The largest US bank chose the progressive route for its domestic consumer bank and the greenfield route abroad.
 
 In the US, Chase is moving its consumer bank onto Thought Machine's Vault Core. Thought Machine described it in October 2022 as a multi-year program to deploy Vault Core across Consumer & Community Banking, serving "more than 66 million households in the United States", quoting the division's CIO on helping "modernize the core banking technology that powers a variety of products ... as we migrate to their cloud-native core banking platform at scale." JPMorgan also invested in Thought Machine's 2021 funding round.
-<!-- source-gap: jpm-core-migration-status | missing | JPMorgan Chase's progress migrating US consumer accounts to Vault Core after 2022 | closes with: a JPMorgan 10-K, investor day presentation or shareholder letter stating migration milestones | checked: 2026-11-10 -->
+<!-- source-gap: jpm-core-migration-status | missing | JPMorgan Chase's progress migrating US consumer accounts to Vault Core after 2022 | closes with: a JPMorgan 10-K, investor day presentation or shareholder letter stating migration milestones | checked: 2026-11-22 -->
 I found no public statement from JPMorgan, as of October 2026, of how far that migration has gone.
 
 In the UK, Chase didn't migrate anything: it built a new bank. 10x Banking's case study describes a cloud-native core on AWS, more than two years of build, and, in its own figures, over 2.5 million customers by February 2025. A greenfield bank avoids conversion entirely and pays for it later in a different way: when a parent eventually wants one platform, the conversion it skipped is still waiting.
