@@ -24,7 +24,7 @@ const launched: (Project & { lead?: boolean })[] = [
     kicker: "founder · company",
     description:
       "The company I wish existed, so I made it real. A small, independent software company making good software, in the open: the handbook, the pay, and the way we decide are all public. The products can speak for themselves.",
-    tags: ["company", "in the open", "cost + 20%"],
+    tags: ["company", "in the open"],
     url: "https://flagon.io",
     lead: true,
   },
