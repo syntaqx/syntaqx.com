@@ -5,8 +5,11 @@ const DOC_LINK = /\]\(\/docs\/([^)#?\s]+)/g;
 
 export interface Citation {
   chapter: DocData;
-  /** How many times the chapter links the doc. */
-  links: number;
+  /**
+   * The doc's share of the chapter's links to docs: a chapter about this doc
+   * scores high, a book's overview that links every doc once scores low.
+   */
+  score: number;
 }
 
 let index: Map<string, Citation[]> | undefined;
@@ -20,8 +23,9 @@ function citationIndex(): Map<string, Citation[]> {
     for (const [, slug] of chapter.content.matchAll(DOC_LINK)) {
       counts.set(slug, (counts.get(slug) ?? 0) + 1);
     }
+    const total = [...counts.values()].reduce((a, b) => a + b, 0);
     for (const [slug, links] of counts) {
-      index.set(slug, [...(index.get(slug) ?? []), { chapter, links }]);
+      index.set(slug, [...(index.get(slug) ?? []), { chapter, score: links / total }]);
     }
   }
   return index;
@@ -29,13 +33,13 @@ function citationIndex(): Map<string, Citation[]> {
 
 /**
  * The book chapters that cite a doc, for its "In the books" list: the chapter
- * that leans on it most from each book first, so one book can't fill the list,
+ * most about it from each book first, so one book can't fill the list,
  * then the rest by the same measure. Also the totals, for "and N more".
  */
 export function bookCitations(docSlug: string, limit = 6) {
   const all = citationIndex().get(docSlug) ?? [];
   const ranked = [...all].sort(
-    (a, b) => b.links - a.links || a.chapter.slug.localeCompare(b.chapter.slug),
+    (a, b) => b.score - a.score || a.chapter.slug.localeCompare(b.chapter.slug),
   );
   const seen = new Set<string>();
   const firsts = ranked.filter((c) => !seen.has(c.chapter.section) && seen.add(c.chapter.section));
