@@ -82,8 +82,7 @@ Third-party sick pay and tips count toward the threshold: when the employer's an
 
 **Credit reduction.** A state that borrows from the federal unemployment trust fund to pay benefits and doesn't repay it loses part of its employers' credit. The Department of Labor's rule is that employers in a state with an outstanding Title XII advance on January 1 of two or more consecutive years face a credit reduction for that year "if the advances are not all repaid before November 10," with larger reductions after the third and fifth such January 1. The reduction is a tax on every FUTA wage in the state, owed by employers who never borrowed anything, and it is owed in one lump: credit reduction liability is included "with your fourth quarter deposit," recorded as incurred in the fourth quarter, though an employer may deposit it during the year.
 
-For 2025, Schedule A lists **California at 1.2%** and the **U.S. Virgin Islands at 4.5%**. For 2026, the Department of Labor's January 15, 2026 list of potential reductions showed California at 1.5% (5.3% with a 3.8% benefit cost rate add-on unless the state obtained a waiver) and the Virgin Islands at 4.8%; the Virgin Islands then paid off its outstanding loans and, as PayrollOrg reported in June 2026, will not face a 2026 reduction if it carries no balance on November 10. The final 2026 list follows the November 10, 2026 repayment deadline, so as of this writing (November 9, 2026) the 2026 California figure is potential.
-<!-- source-gap: wf-futa-cr-2026 | status | 2026 FUTA credit reduction for California (potential 1.5%, 5.3% with BCR add-on) and whether the BCR waiver was granted | closes with: DOL's final 2026 credit reduction list or the 2026 Schedule A (Form 940) | checked: 2026-11-10 -->
+For 2025, Schedule A lists **California at 1.2%** and the **U.S. Virgin Islands at 4.5%**. For 2026, the Department of Labor's January 15, 2026 list of potential reductions showed California at 1.5% (5.3% with a 3.8% benefit cost rate add-on unless the state obtained a waiver) and the Virgin Islands at 4.8%. The final 2026 list, updated November 10, 2026, settles both: California "did not repay all their advances before November 10, 2026," applied for a waiver of the BCR add-on and "was determined to be eligible for the waiver, therefore employers in California are subject to a 1.5% credit reduction," while the Virgin Islands "repaid all outstanding advances before November 10, 2026" and has no reduction. California is the only credit reduction state for 2026.
 
 ### Worked Numbers: What a Credit Reduction Costs
 
@@ -93,8 +92,8 @@ FUTA is $7,000 times a rate, so the cost per employee is easy to state and easy 
 | --- | --- | --- | --- |
 | Normal state, full credit | 0.6% | $42 | $0 |
 | California 2025 (reduction 1.2%) | 1.8% | $126 | $84 |
-| California 2026, potential 1.5% | 2.1% | $147 | $105 |
-| California 2026, potential 5.3% (no BCR waiver) | 5.9% | $413 | $371 |
+| California 2026 (reduction 1.5%, BCR add-on waived) | 2.1% | $147 | $105 |
+| California 2026 had the waiver been denied (5.3%) | 5.9% | $413 | $371 |
 | All FUTA wages excluded from state tax | 6.0% | $420 | $378 |
 
 An invented employer with 200 California employees who each earned over $7,000 owed $16,800 of credit reduction for 2025 ($84 times 200), on top of $8,400 of ordinary FUTA. Schedule A's own example, State A at 0.012 on $21,000 of FUTA wages, gives $252.00. The calculation is per state on the FUTA wages paid in that state, which means FUTA wages have to be allocated to states (Schedule A has a box per state, and multi-state employers check line 1b and attach it), and that allocation follows the SUI state of the wages, not the worker's residence.
@@ -307,6 +306,7 @@ FICA, FUTA and SUI are audited by arithmetic: the IRS compares the 941s with the
 - [IRS: Instructions for Form 941 (Rev. March 2026)](https://www.irs.gov/instructions/i941), lines 5a to 5d and the 2026 rates
 - [IRS: General Instructions for Forms W-2 and W-3 (2026)](https://www.irs.gov/instructions/iw2w3), box 3 capped at $184,500 and elective deferrals in box 3
 - [U.S. Department of Labor: FUTA credit reductions](https://oui.doleta.gov/unemploy/futa_credit.asp), consecutive January 1 balances, the November 10 repayment deadline and further reductions
+- [U.S. Department of Labor: Final 2026 FUTA credit reductions (updated November 10, 2026)](https://oui.doleta.gov/unemploy/docs/final_credit_states_2026.xlsx), California at 1.5% with the BCR add-on waived, the Virgin Islands repaid before November 10
 - [U.S. Department of Labor: Significant Provisions of State UI Laws, effective July 2026](https://oui.doleta.gov/unemploy/content/sigpros/2020-2029/July2026.pdf), taxable wage bases, rate ranges, new employer rates and rate years
 - [U.S. Department of Labor: Comparison of State UI Laws 2023, Coverage](https://oui.doleta.gov/unemploy/pdf/uilawcompar/2023/coverage.pdf), localization of work, base of operations, reciprocal coverage arrangements and elected coverage
 - [U.S. Department of Labor: Comparison of State UI Laws 2023, Financing](https://oui.doleta.gov/unemploy/pdf/uilawcompar/2023/financing.pdf), the 5.4% maximum rate, employee contributions in Alaska, New Jersey and Pennsylvania, experience rating and the reserve ratio, new employer rates, voluntary contributions and reimbursing employers
@@ -326,4 +326,3 @@ FICA, FUTA and SUI are audited by arithmetic: the IRS compares the 941s with the
 
 - [Journal of Accountancy: Social Security wage base and COLA announced for 2027 (October 14, 2026)](https://www.journalofaccountancy.com/news/2026/oct/social-security-wage-base-and-cola-announced-for-2027/), the $192,300 base for 2027
 - [PayrollOrg: California and Virgin Islands may face credit reduction for 2026 (April 7, 2026)](https://payroll.org/news-resources/news/news-detail/2026/04/07/california-and-virgin-islands-may-face-credit-reduction-for-2026), DOL's potential 2026 rates and the BCR add-on
-- [PayrollOrg: U.S. Virgin Islands pays off outstanding UI loans (June 26, 2026)](https://payroll.org/news-resources/news/news-detail/2026/06/26/u.s.-virgin-islands-pays-off-outstanding-ui-loans), no 2026 reduction if no balance on November 10
