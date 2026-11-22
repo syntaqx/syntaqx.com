@@ -1,17 +1,12 @@
 import { getBookChapters } from "@/lib/docs";
 import { getBook } from "@/lib/books";
-import { ogCard } from "@/lib/og-card";
+import { CDN_CACHED, ogCard } from "@/lib/og-card";
 
 // The social preview for each book chapter, the docs' card with the book and
 // chapter number as its kicker. A route handler, like /og/docs.
 
-// Rendered on first request and cached, not at build: prerendering every
-// card cost the build most of its time. Unknown slugs 404 below.
-export const dynamic = "force-static";
-
-export function generateStaticParams() {
-  return [];
-}
+// Rendered on first request and held by the CDN, not built: prerendering
+// every card cost the build most of its time. Unknown slugs 404 below.
 
 export async function GET(
   _request: Request,
@@ -24,12 +19,15 @@ export async function GET(
   if (!book || index < 0) return new Response("Not found", { status: 404 });
   const chapter = chapters[index];
 
-  return ogCard({
-    kicker: `${book.name}  ·  Chapter ${String(index + 1).padStart(2, "0")}`,
-    title: chapter.title,
-    description: chapter.description,
-    scene: book.cover,
-    path: `/books/${chapter.slug}`,
-    stat: chapter.part,
-  });
+  return ogCard(
+    {
+      kicker: `${book.name}  ·  Chapter ${String(index + 1).padStart(2, "0")}`,
+      title: chapter.title,
+      description: chapter.description,
+      scene: book.cover,
+      path: `/books/${chapter.slug}`,
+      stat: chapter.part,
+    },
+    CDN_CACHED,
+  );
 }

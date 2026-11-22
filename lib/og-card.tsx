@@ -21,7 +21,17 @@ type Card = {
   stat?: string;
 };
 
-export function ogCard({ kicker, title, description, scene, path, stat }: Card) {
+/**
+ * For cards a route handler renders on request. Vercel's ISR re-rendered
+ * these on nearly every hit (STALE a minute after a render), so Vercel's CDN
+ * holds each one instead, until the next deploy purges it.
+ */
+export const CDN_CACHED = { "Vercel-CDN-Cache-Control": "max-age=31536000" };
+
+export function ogCard(
+  { kicker, title, description, scene, path, stat }: Card,
+  headers?: Record<string, string>,
+) {
   const art = sceneImage(scene, ART, OG_SIZE.height, { pitch: 6 });
   // Size by length, then shrink until the longest word fits the column
   // (Big Shoulders caps run about 0.41em wide), since a word can't wrap.
@@ -157,7 +167,7 @@ export function ogCard({ kicker, title, description, scene, path, stat }: Card) 
         </div>
       </div>
     </div>,
-    { ...OG_SIZE, fonts: ogFonts },
+    { ...OG_SIZE, fonts: ogFonts, headers },
   );
 }
 
