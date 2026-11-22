@@ -1,5 +1,6 @@
 import { getAllPosts, markdownToHtml } from "@/lib/posts";
 import { SITE_URL } from "@/lib/constants";
+import { cdata, escapeXml } from "@/lib/rss";
 
 // Generated at build time alongside the rest of the static site.
 export const dynamic = "force-static";
@@ -7,20 +8,6 @@ export const dynamic = "force-static";
 const FEED_TITLE = "syntaqx";
 const FEED_DESCRIPTION =
   "Essays and notes on software engineering, architecture, engineering leadership, and building with LLMs by Chase Pierce.";
-
-function escapeXml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
-}
-
-function cdata(value: string): string {
-  // Split any literal `]]>` so it can't close the CDATA section early.
-  return `<![CDATA[${value.replace(/]]>/g, "]]]]><![CDATA[>")}]]>`;
-}
 
 export async function GET() {
   const posts = getAllPosts();

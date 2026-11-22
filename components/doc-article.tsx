@@ -35,6 +35,7 @@ export async function DocArticle({
   crumbs,
   prev,
   next,
+  footer,
 }: {
   doc: DocData;
   /** The structured data's headline, where it names more than the page's title does. */
@@ -52,6 +53,8 @@ export async function DocArticle({
   crumbs: Crumb[];
   prev?: Neighbor;
   next?: Neighbor;
+  /** After the article, before previous and next. */
+  footer?: ReactNode;
 }) {
   const toc: Heading[] = [];
   const content = await markdownToHtml(doc.content, toc);
@@ -104,6 +107,7 @@ export async function DocArticle({
           </div>
         </DocsHeader>
         <div className="prose prose-docs" dangerouslySetInnerHTML={{ __html: content }} />
+        {footer}
         <Pager prev={prev} next={next} />
       </div>
       {rail && (
