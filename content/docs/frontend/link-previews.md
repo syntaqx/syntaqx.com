@@ -79,16 +79,16 @@ What each consumer documents about its fetch, its cache and how to refresh it, a
 | [WhatsApp](https://developers.facebook.com/documentation/business-messaging/whatsapp/link-previews/) | `WhatsApp/2.x.x.x A\|I\|N` | `og:title`, `og:description`, `og:url`, `og:image` | Not documented; test by typing the link without sending |
 | [LinkedIn](https://www.linkedin.com/help/linkedin/answer/a521928) | Not documented | `og:title`, `og:image`, `og:description`, `og:url`, and oEmbed | [Post Inspector](https://www.linkedin.com/post-inspector/); LinkedIn says to allow 48 hours from the last share ([help](https://www.linkedin.com/help/linkedin/answer/a525063)) |
 | [Slack](https://api.slack.com/robots) | `Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)` | oEmbed, X Cards, Open Graph | Cached "globally for about 30 minutes"; doesn't honor robots.txt |
-| [Discord](https://docs.discord.com/developers/link-previews/overview) | Not documented | Open Graph, X Cards, `theme-color`, oEmbed (JSON only) | About 30 minutes; change the URL (`?v=2`) to bust it; Embed Debugger |
+| [Discord](https://docs.discord.com/developers/link-previews/overview) | `Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)` for pages, `Discordbot/2.0` for linked JSON ([component embeds](https://docs.discord.com/developers/link-previews/component-embeds)) | Open Graph, X Cards, `theme-color`, oEmbed (JSON only) | About 30 minutes; change the URL (`?v=2`) to bust it; Embed Debugger |
 | [Apple Messages](https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages) | Not documented; serve the same tags to every agent | `og:title`, `og:site_name`, `og:image`, `og:video`, icons | Not documented |
 | [Telegram](https://bugs.telegram.org/c/57) | Not documented | Not documented | Send the link to [@WebpageBot](https://t.me/webpagebot) for an updated preview |
 | X | `Twitterbot` | X Cards, then Open Graph | 7 days (unconfirmed, see above) |
 
-<!-- source-gap: unfurler-user-agents | missing | LinkedIn, Discord, Apple Messages and Telegram don't document their link preview user agents; Telegram doesn't document which tags it reads | closes with: a vendor page naming each fetcher's user agent (and Telegram's supported tags); Discord's support article on Discordbot (support.discord.com/hc articles/42500550752919) returned HTTP 403 | checked: 2026-11-22 -->
-LinkedIn, Discord, Apple and Telegram don't publish their preview fetchers' user agents or (for Telegram) the tags they read, so I don't build anything that depends on recognizing them. A few vendor details are worth knowing on their own:
+<!-- source-gap: unfurler-user-agents | missing | LinkedIn, Apple Messages and Telegram don't document their link preview user agents (Discord's is now sourced); Telegram doesn't document which tags it reads | closes with: a vendor page naming each fetcher's user agent (and Telegram's supported tags) | checked: 2026-11-22 -->
+LinkedIn, Apple and Telegram don't publish their preview fetchers' user agents or (for Telegram) the tags they read, so I don't build anything that depends on recognizing them. A few vendor details are worth knowing on their own:
 
 - **Meta's crawlers** need gzip and deflate support, and both `meta-externalfetcher` and, for security checks, `facebookexternalhit` may bypass robots.txt. Allow up to 24 hours for a robots.txt change to be seen ([Meta: Web crawlers](https://developers.facebook.com/docs/sharing/webmasters/web-crawlers)). A re-scrape refreshes the page's tags, but an image at an unchanged URL stays cached, so a new image needs a new URL.
-- **Discord's limits** are a title of 70 bytes (3 lines), a description of 350 bytes (20 lines), a site name of 256 characters and URLs of 2,048. It reads at most 50 MB and needs a `2xx` with a `text/html` or `application/xhtml+xml` type ([Discord: Link previews](https://docs.discord.com/developers/link-previews/overview)).
+- **Discord's limits** are a title of 70 bytes (3 lines), a description of 350 bytes (20 lines), a site name of 256 characters and URLs of 2,048. It reads at most 50 MB and needs a `2xx` with a `text/html` or `application/xhtml+xml` type ([Discord: Link previews](https://docs.discord.com/developers/link-previews/overview)), and a component embed's whole fetch, images included, must finish within 10 seconds ([Discord: Component embeds](https://docs.discord.com/developers/link-previews/component-embeds)).
 - **Apple Messages** wants square icons of at least 108 px, follows server-side redirects but not meta refreshes, and plays `og:video` or `twitter:player:stream` inline only when it points at a direct media file. It notes the "limits may change in the future" ([Apple TN3156](https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages)).
 - **Slack** fetches with `Range` headers and caches globally, so a fix takes up to half an hour to show everywhere ([Slack: Robots](https://api.slack.com/robots)).
 
@@ -136,7 +136,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
 The constraints are worth knowing before designing the template, per the Next.js and [Vercel OG](https://vercel.com/docs/og-image-generation) docs as of October 2026:
 
-- **A CSS subset with flexbox layout.** `ImageResponse` supports "only flexbox and a subset of CSS"; `display: grid` "will not work." Satori, the renderer underneath, now documents Grid and WOFF2 support in its own README ([Satori](https://github.com/vercel/satori)), but the version bundled in `next/og` may lag, so I design to the Next.js page. <!-- source-gap: satori-next-og-css | status | Next.js and Vercel OG docs say flexbox only and ttf/otf/woff fonts; the Satori README documents Grid and WOFF2 | closes with: Next.js ImageResponse docs updated to match Satori, or a next/og release note naming the Satori version (rechecked: ImageResponse docs updated 2026-08-06 still say flexbox only and ttf/otf/woff) | checked: 2026-11-22 -->
+- **A CSS subset with flexbox layout.** `ImageResponse` supports "only flexbox and a subset of CSS"; `display: grid` "will not work." Satori, the renderer underneath, gained `display: grid` in 0.37.0 (October 8, 2026, when it replaced Yoga with Taffy) and WOFF2 fonts in 0.55.0 (October 13, 2026) ([Satori releases](https://github.com/vercel/satori/releases)). The copy vendored in `next/og` was last bumped on August 14, 2026 ([next.js #97276](https://github.com/vercel/next.js/pull/97276)), and Next.js 16.4.6, the latest release as of November 2026, ships `@vercel/og` 1.0.1 built on Satori 0.29.0, whose layout maps `display` only to flex, block (laid out as flex), contents and none. So the Next.js page is right for `next/og` today, and I design to it.
 - **Fonts in TTF, OTF or WOFF,** loaded explicitly; there are no system fonts.
 - **A 500 KB bundle limit,** including fonts and images.
 - **Size limits on the output:** Next.js fails the build for an `opengraph-image` over 8 MB or a `twitter-image` over 5 MB ([Next.js: opengraph-image](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image)).
@@ -259,6 +259,7 @@ Unfurlers fetch URLs from private conversations without any of the viewer's cook
 - [Slack: Robots](https://api.slack.com/robots), the Slackbot user agent, tags read, caching and robots.txt
 - [Slack: Unfurling links in messages](https://docs.slack.dev/messaging/unfurling-links-in-messages), classic unfurls from Open Graph and X Card metadata
 - [Discord: Link previews](https://docs.discord.com/developers/link-previews/overview), fetch limits, tags read, theme color, image formats, field limits and caching
+- [Discord: Component embeds](https://docs.discord.com/developers/link-previews/component-embeds), the crawler's user agents and the 10-second fetch limit
 - [Apple: TN3156 Create rich previews for Messages](https://developer.apple.com/documentation/technotes/tn3156-create-rich-previews-for-messages), tags read, icon and image sizes, resource limits and fetch behavior
 - [Telegram: Link preview tips](https://bugs.telegram.org/c/57), refreshing previews with @WebpageBot
 
@@ -269,6 +270,8 @@ Unfurlers fetch URLs from private conversations without any of the viewer's cook
 - [Next.js: generateMetadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata), metadataBase, shallow merging and HTML-limited bots
 - [Vercel: OG image generation](https://vercel.com/docs/og-image-generation), recommended size, limits and caching
 - [Vercel: Satori](https://github.com/vercel/satori), the HTML and CSS to SVG renderer and its supported CSS
+- [Satori releases](https://github.com/vercel/satori/releases), `display: grid` in 0.37.0 (October 8, 2026) and WOFF2 in 0.55.0 (October 13, 2026)
+- [next.js #97276: bump satori and @vercel/og](https://github.com/vercel/next.js/pull/97276), the last update to the Satori copy vendored in `next/og` (August 14, 2026)
 
 **Icons and theme**
 

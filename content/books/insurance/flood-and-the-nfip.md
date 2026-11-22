@@ -54,7 +54,7 @@ Statutory limits then cap how fast any one policy's premium can rise: most incre
 
 ### An NFIP Premium, Step by Step
 
-An illustration, mine, following the methodology's order with FEMA's published charges; the rates per $1,000, the constants and the ICC premium are invented for the example, since the actual tables are in FEMA's Flood Insurance Manual (effective October 1, 2025 for new business), which is too large for me to retrieve.<!-- source-gap: nfip-manual-premium-tables | missing | Flood Insurance Manual (Oct 1, 2025) tables: ICC premium amounts, expense and loss constants, and the exact premium base the 18% cap and the Reserve Fund assessment are applied to | closes with: the relevant sections of the FEMA Flood Insurance Manual, or a FEMA rate explanation for a real policy | checked: 2026-11-22 -->
+An illustration, mine, following the order of FEMA's own worked examples. FEMA's October 2, 2023 bulletin on the April 1, 2024 manual changes prints sample premium breakdowns in which the building premium, contents premium and ICC premium, less the mitigation and CRS discounts, make the **full-risk premium** (with the loss and expense constants "incorporated in the full-risk premium"); statutory discounts, the annual increase cap among them, are subtracted from that to give the **discounted premium**; and the 18% Reserve Fund assessment is charged on the discounted premium, before the HFIAA surcharge and Federal Policy Fee. In its Scenario 1, a single-family primary residence: $1,211 building plus $658 contents plus $36 ICC less an $85 mitigation discount is a $1,820 full-risk premium; a $474 Newly Mapped discount leaves $1,346; the Reserve Fund assessment is $242, and with the $25 HFIAA surcharge and $47 Federal Policy Fee the total is $1,660 ([FEMA: W-23014, NFIP Program Changes and Updated Guidance Effective April 1, 2024 (PDF)](https://agents.floodsmart.gov/sites/default/files/bulletins/W-23014/w-23014.pdf)). The rates per $1,000, the constants and the ICC premium below are invented, since the rate tables are in the Flood Insurance Manual (effective October 1, 2025 for new business), which is too large for me to retrieve, and so is the exact prior-year amount the 18% cap compares against.<!-- source-gap: nfip-manual-premium-tables | missing | Flood Insurance Manual (Oct 1, 2025) tables: ICC premium amounts, expense and loss constants, and the prior-year amount the 18% annual increase cap is measured from (the calculation order and the Reserve Fund base are sourced to FEMA bulletin W-23014) | closes with: the relevant sections of the FEMA Flood Insurance Manual (the full PDF exceeds WebFetch's 10 MB limit) | checked: 2026-11-22 -->
 
 A primary residence, single-family home with a building replacement cost of $250,000 and contents of $100,000, insured to those limits, in a CRS Class 6 community (a 20% discount), no prior claims, renewing; last year's premium on the same basis was $1,000.
 
@@ -65,16 +65,16 @@ A primary residence, single-family home with a building replacement cost of $250
 | Initial premium | 250 × $4.10 + 100 × $2.00 | $1,225.00 |
 | Prior claims surcharge | none | $0.00 |
 | Expense and loss constants (illustrative) | | $60.00 |
-| Full-risk premium before ICC and assessments | | $1,285.00 |
-| Annual increase cap for a primary residence | $1,000 × 1.18 | $1,180.00 |
-| Premium charged (lesser of full-risk and capped) | | $1,180.00 |
 | ICC premium (illustrative) | | $30.00 |
-| Reserve Fund assessment, 18% | 18% × $1,210.00 | $217.80 |
+| Full-risk premium | | $1,315.00 |
+| Annual increase cap for a primary residence | $1,000 × 1.18 = $1,180.00, a statutory discount of $135.00 | −$135.00 |
+| Discounted premium | | $1,180.00 |
+| Reserve Fund assessment, 18% of the discounted premium | 18% × $1,180.00 | $212.40 |
 | HFIAA surcharge, primary residence | | $25.00 |
 | Federal Policy Fee | | $47.00 |
-| **Total cost to the policyholder** | | **$1,499.80** |
+| **Total cost to the policyholder** | | **$1,464.40** |
 
-The parts with statutory or FEMA-set values: the Reserve Fund assessment is 18% of premium on all policies (raised from 15% effective April 1, 2020); the HFIAA surcharge is $25 for primary residences and $250 for all other properties; the Federal Policy Fee is $47 for most policies (reduced by unit count for large residential condominium buildings) and funds mapping and floodplain management; a $50 probation fee applies in communities on probation for floodplain management deficiencies; and Increased Cost of Compliance coverage pays up to $30,000 toward bringing a substantially damaged building up to code (CRS). Next year the same house's premium can rise at most another 18% toward its $1,285 full-risk level, so the system stores both the full-risk premium and the capped premium charged, every year, with the cap's base.
+The parts with statutory or FEMA-set values: the Reserve Fund assessment is 18% of premium on all policies (raised from 15% effective April 1, 2020); the HFIAA surcharge is $25 for primary residences and $250 for all other properties; the Federal Policy Fee is $47 for most policies (reduced by unit count for large residential condominium buildings) and funds mapping and floodplain management; a $50 probation fee applies in communities on probation for floodplain management deficiencies; and Increased Cost of Compliance coverage pays up to $30,000 toward bringing a substantially damaged building up to code (CRS). Next year the same house's premium can rise at most another 18% toward its $1,315 full-risk level, so the system stores both the full-risk premium and the capped premium charged, every year, with the cap's base.
 
 ## Coverage, Limits and the Waiting Period
 
@@ -210,6 +210,7 @@ A new business or renewal transaction checks that the transaction's effective da
 - [FEMA: Risk Rating 2.0](https://www.fema.gov/flood-insurance/risk-rating), implementation phases, rating variables, the 18% cap and CRS discounts
 - [FEMA: NFIP Risk Rating 2.0 Methodology and Data Sources, January 18, 2022 (PDF)](https://www.fema.gov/sites/default/files/documents/FEMA_Risk-Rating-2.0_Methodology-and-Data-Appendix__01-22.pdf), target premiums from the AIR, CoreLogic and KatRisk models, territories, foundation and machinery factors, the maximum rate, the prior claims surcharge, factor capping and the order of the premium calculation
 - [FEMA: Flood Insurance Manual, current editions](https://www.fema.gov/flood-insurance/work-with-nfip/manuals/current), the manual effective October 1, 2025
+- [FEMA: W-23014, NFIP Program Changes and Updated Guidance Effective April 1, 2024, October 2, 2023 (PDF)](https://agents.floodsmart.gov/sites/default/files/bulletins/W-23014/w-23014.pdf), the Appendix J sample scenarios: full-risk premium including ICC and the incorporated loss and expense constants, statutory discounts including the annual increase cap, and the 18% Reserve Fund assessment on the discounted premium
 - [FEMA: NFIP reinsurance program](https://www.fema.gov/flood-insurance/work-with-nfip/reinsurance), 2024 traditional reinsurance and cat bond placements
 - [Congressional Research Service: Introduction to the National Flood Insurance Program (R44593), updated October 5, 2026](https://www.everycrsreport.com/reports/R44593.html), the Federal Policy Fee, Reserve Fund assessment, HFIAA surcharge, probation fee, ICC, CRS discounts, caps, coverage limits, WYO share, debt and borrowing, the direct quoting tool and the private flood rules
 - [Congressional Research Service: NFIP reauthorization (IN10835), September 11, 2026](https://www.everycrsreport.com/files/2026-09-11_IN10835_1177d2de1e2916fd50e80100ff618a10dbb6bb04.html), authorization to December 11, 2026 under P.L. 119-103, lapse effects and dates, borrowing authority and program size
