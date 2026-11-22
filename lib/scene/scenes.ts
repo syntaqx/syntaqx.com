@@ -4364,14 +4364,12 @@ const pallet: SceneFn = (s) => {
     { kind: "box", box: box(ox0 + 1.3, ty - 2.4, dockH, 1, 1, 1.4), small: true },
     ...(inTrailer ? [moving] : []),
     { kind: "plane", pts: face(ox0, ox1, doorBottom, doorTop), v: 0.2 },
-    ...[0.3, 0.6].map(
-      (u): Part => ({
-        kind: "line",
-        a: [ox0, ty + 0.02, doorBottom + (doorTop - doorBottom) * u],
-        b: [ox1, ty + 0.02, doorBottom + (doorTop - doorBottom) * u],
-        alpha: 0.5,
-      }),
-    ),
+    ...[0.3, 0.6].map((u): Part => ({
+      kind: "line",
+      a: [ox0, ty + 0.02, doorBottom + (doorTop - doorBottom) * u],
+      b: [ox1, ty + 0.02, doorBottom + (doorTop - doorBottom) * u],
+      alpha: 0.5,
+    })),
     // the dock, its plate bridging into the trailer, and the bumpers
     { kind: "box", box: box(0.6, ty + 0.2, 0, 8.2, 5.6, dockH) },
     {
