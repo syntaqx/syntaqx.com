@@ -128,7 +128,7 @@ A remix graph is a set of edges from a child post to its parent, each with a sha
 
 The parent can be deleted by its author, removed by the platform, made private, have reuse turned off, or be trimmed or blurred. The platforms disagree on what that does to children:
 
-<!-- source-gap: tiktok-duet-parent-deleted | missing | what happens to a TikTok Duet when the original is deleted | closes with: a TikTok support page documenting it | checked: 2026-11-10 -->
+<!-- source-gap: tiktok-duet-parent-deleted | missing | what happens to a TikTok Duet when the original is deleted | closes with: a TikTok support page documenting it | checked: 2026-11-22 -->
 
 | Event | TikTok | Instagram | YouTube Shorts |
 | --- | --- | --- | --- |
