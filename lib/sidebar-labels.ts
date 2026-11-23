@@ -37,6 +37,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Hiring and HR Records": "HR Records",
   "How Games Get Made": "Making Games",
   "How the Work Flows": "How Work Flows",
+  "Identity and Audiences": "Identity",
   "Infrastructure as Code": "Infra as Code",
   "Institutional Crypto": "Institutional",
   "Law Firms and Professional Services": "Law Firms",
