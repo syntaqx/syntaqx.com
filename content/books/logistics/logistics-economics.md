@@ -20,7 +20,7 @@ As of November 2026, from 2025 annual filings:
 
 | Company | Model | Headline measure in its filing | 2025 figure |
 | --- | --- | --- | --- |
-| **C.H. Robinson** | Broker and forwarder, principal on most transportation | Adjusted gross profit: "total revenues less the total of purchased transportation and related services" | $2,588.6 million on $16.2 billion of revenue, a margin of 16.8% (15.6% in 2024) |
+| **C.H. Robinson** | Broker and forwarder, principal on most transportation | Adjusted gross profit: revenues less purchased transportation and related services and the cost of products bought for resale | $2,729.4 million on $16.2 billion of revenue, a margin of 16.8% (15.6% in 2024); transportation alone $2,588.6 million, 17.5% of transportation revenue |
 | **GXO Logistics** | Contract warehousing | Revenue and operating income | $13,178 million of revenue, $245 million of operating income (about 1.9%, my division) |
 | **J.B. Hunt** | Asset-light intermodal on railroads' track, plus dedicated and brokerage | Revenue per load | Intermodal: 2,138,191 loads at $2,795 a load |
 | **Knight-Swift** | Asset-based truckload, plus LTL, logistics and intermodal | Operating ratio: "operating expenses as a percentage of total revenue, or the inverse of operating margin" | Consolidated 97.1% (96.7% in 2024); Truckload 97.0% (94.8% adjusted); Logistics 96.0%; Intermodal 102.1% |

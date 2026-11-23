@@ -19,7 +19,7 @@ As of November 2026, from 2025 annual filings (calendar 2025 unless noted):
 
 | Company | Role | 2025 revenue | What the filing says about the model |
 | --- | --- | --- | --- |
-| **C.H. Robinson** | Broker, forwarder, managed services | $16.2 billion; adjusted gross profit $2.59 billion | About 37 million shipments, more than 450,000 transportation providers on its platform, gross recognition for most transportation |
+| **C.H. Robinson** | Broker, forwarder, managed services | $16.2 billion; adjusted gross profit $2.73 billion | About 37 million shipments, more than 450,000 transportation providers on its platform, gross recognition for most transportation |
 | **GXO Logistics** | Contract logistics | $13.2 billion | 1,043 facilities, about 221 million square feet, about 154,000 team members in 26 countries; "Most of our customer contracts contain both fixed and variable components" |
 | **J.B. Hunt** | Intermodal, dedicated, brokerage, final mile, truckload | $12.00 billion | Intermodal the largest segment ($5,975 million), most moves on BNSF and Norfolk Southern |
 | **XPO** | LTL | $8,157 million | An LTL carrier first |
