@@ -18,15 +18,15 @@ As of November 2026, the fees intermediaries publish or that the court record fo
 
 | Intermediary | Side | Fee | Basis | Source |
 | --- | --- | --- | --- | --- |
+| **Agencies and trading desks** | Buy side | Set in each agency agreement; 7% of spend in ISBA's 2020 sample | Varies | ISBA/PwC 2020 |
 | **Alphabet traffic acquisition costs** | Network and search partners | 20.3% of advertising revenues paid to partners in 2025 | Blended across search distribution and Network publishers | Alphabet 10-K |
 | **Amazon Transparent Ad Marketplace** | Sell side (server-to-server header bidding) | "A transparent 2.5% service fee charged to bidders" | Charged to the buyer | Amazon Publisher Services |
-| **Google AdSense** | Buy and sell (network) | Buy side keeps "on average 15% of advertiser spend"; publishers receive 80% of what reaches AdSense | Two fees, applied in sequence | Google help center and blog |
 | **Google Ad Manager (DFP)** | Publisher ad server | About 1.3 to 1.7% take rate, per defense expert testimony | A flat fee per impression, equal to that share of the publisher's revenue | EDVA opinion |
+| **Google AdSense** | Buy and sell (network) | Buy side keeps "on average 15% of advertiser spend"; publishers receive 80% of what reaches AdSense | Two fees, applied in sequence | Google help center and blog |
 | **Google AdX** | Exchange | "around 20%" overall, varied per impression under dynamic revenue share | On the clearing price | EDVA opinion |
-| **Google Open Bidding** | Exchange-to-exchange | "a 5% fee" on rival exchanges' bids | On the rival's bid | EDVA opinion |
 | **Google Display & Video 360** | DSP | A standard rate of 15% in Google's 2020 disclosure | On media | Google blog (2020) |
+| **Google Open Bidding** | Exchange-to-exchange | "a 5% fee" on rival exchanges' bids | On the rival's bid | EDVA opinion |
 | **The Trade Desk** | DSP | "a platform fee generally based on a percentage of our clients' total platform spend"; 2025 revenue was 21.6% of gross spend (derived) | On platform spend, including data and services | The Trade Desk 10-K |
-| **Agencies and trading desks** | Buy side | Set in each agency agreement; 7% of spend in ISBA's 2020 sample | Varies | ISBA/PwC 2020 |
 
 Three patterns:
 
@@ -74,7 +74,7 @@ The ANA now publishes a quarterly Programmatic Transparency Benchmark with TAG T
 | --- | --- | --- |
 | Share of spend reaching publishers | 47.1%, up 11 points since 2023 | Not reported on the release |
 | TrueAdSpend (share of spend delivering "fraud-free, measurable, viewable, and MFA-free impressions") | 39% | 43.3% |
-| Made-for-advertising share of spend | 0.39% | 1.1%, with "AI slop" flagged as a new subtype |
+| Made-for-advertising | 0.39% of spend | 1.1% "exposure" (the release doesn't say of what), with "AI slop" flagged as an emerging subtype |
 | CTV share of programmatic spend | 45.6% | |
 | Private marketplace share of spend | 81.6% | |
 | Spend converted to qualified impressions, high vs low performers | | 54.0% vs 32.1% |
@@ -105,7 +105,7 @@ A made-for-advertising (MFA) site exists to sell ad impressions bought with chea
 - generic, templated content; and
 - poorly designed, templated sites.
 
-MFA inventory is usually not invalid traffic: the visitors can be real people who arrived from a paid link, saw several ads and left. It passes ads.txt checks (the sellers are authorized) and often viewability thresholds. That is why it reached 21% of impressions in the ANA's 2023 sample and why the fix was buyers excluding it, not fraud filters catching it. By the third quarter of 2025 it was 0.39% of benchmark spend; the first quarter of 2026's rise to 1.1%, with AI-generated content sites named as a new form, shows that an exclusion list needs maintenance, not a one-time cleanup.
+MFA inventory is usually not invalid traffic: the visitors can be real people who arrived from a paid link, saw several ads and left. It passes ads.txt checks (the sellers are authorized) and often viewability thresholds. That is why it reached 21% of impressions in the ANA's 2023 sample and why the fix was buyers excluding it, not fraud filters catching it. By the third quarter of 2025 it was 0.39% of benchmark spend; the first quarter of 2026's rise to 1.1% MFA exposure (a measure the release doesn't define against spend), with AI-generated content sites named as a new form, shows that an exclusion list needs maintenance, not a one-time cleanup.
 
 For the system, MFA is a **property-level classification with a source and a date**, not a property flag: vendors classify differently and change their minds, the ANA definition names signals rather than a threshold, and an advertiser's exclusion decision should record which classification it relied on. [Brand Safety & Suitability](/books/advertising/brand-safety-and-suitability) covers the suitability side of the same lists.
 

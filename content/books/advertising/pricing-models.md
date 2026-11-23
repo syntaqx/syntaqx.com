@@ -23,7 +23,7 @@ As of November 2026, the pricing units each platform documents:
 | **Apple Ads** | Cost per tap (Advanced); cost per install (Basic) | "Pay only when a user taps your ad, up to a maximum price you choose" |
 | **eBay Promoted Listings** | General: cost per sale at an ad rate "between 2% and 100%"; Priority: cost per click; Offsite: dynamic cost per click | The CPS fee applies to the "total sale amount (including item price, shipping, taxes, and any other applicable fees)" for sales within 30 days of the click |
 | **Google Ads** | Cost per click; viewable CPM ("Max. CPM is no longer available as a bid strategy"); cost per view on YouTube; pay for conversions in Display for eligible accounts | Viewable means 50% on screen for 1 second (display) or 2 continuous seconds of play (video) |
-| **LinkedIn** | Chargeable event follows the optimization goal: impressions, clicks, video views, sends, leads | Charged "for accumulated ad spend on a regular basis" |
+| **LinkedIn** | Chargeable event follows the optimization goal and bid strategy: impressions, clicks, landing page clicks, engagement clicks, sends, video views | Charged "for accumulated ad spend on a regular basis" |
 | **Meta** | `billing_event` per ad set: impressions, clicks, link clicks, ThruPlay, app installs, post engagement, page likes, offer claims, purchase, listing interaction, none | Optimization goal set separately from the billing event |
 | **Publisher direct sales (IAB/4A's terms)** | CPM, CPC, CPL and CPA deliverables; flat fee and fixed placements (roadblocks, time-based and share-of-voice buys, sponsorships) | Only CPM and fixed deliverables are guaranteed |
 
@@ -85,7 +85,7 @@ Two cautions on eCPM. It is backward-looking: a CPC line item's eCPM is its last
 The billable count is always one party's count of one event under one definition, and the definition is part of the contract. A platform should treat four things as separate fields, because platforms do:
 
 - **The optimization goal**: what the bidder optimizes (purchases, link clicks, reach). Meta sets it per ad set as `optimization_goal`.
-- **The billing event**: what is charged. Meta's `billing_event` enum is `APP_INSTALLS`, `CLICKS`, `IMPRESSIONS`, `LINK_CLICKS`, `NONE`, `OFFER_CLAIMS`, `PAGE_LIKES`, `POST_ENGAGEMENT`, `THRUPLAY`, `PURCHASE` and `LISTING_INTERACTION`. At LinkedIn "the optimization goal and bidding strategy determine what the chargeable event is": impressions, clicks, landing page clicks, video views, sends, leads or conversions. An ad set can optimize for purchases and bill per impression, the arrangement often called optimized CPM.
+- **The billing event**: what is charged. Meta's `billing_event` enum is `APP_INSTALLS`, `CLICKS`, `IMPRESSIONS`, `LINK_CLICKS`, `NONE`, `OFFER_CLAIMS`, `PAGE_LIKES`, `POST_ENGAGEMENT`, `THRUPLAY`, `PURCHASE` and `LISTING_INTERACTION`. At LinkedIn "the optimization goal and bidding strategy determine what the chargeable event is": impressions, clicks, landing page clicks, engagement clicks, sends or video views. An ad set can optimize for purchases and bill per impression, the arrangement often called optimized CPM.
 - **The bid unit**: what the bid is expressed in, which may differ from the billing event when the platform converts (a cost-per-result goal bid against impression billing).
 - **The measured definition**: what counts as the event. A viewable impression under the MRC standard; a Google view at 30 seconds or interaction; a completion as VAST `complete`; a conversion under a window and model; a click after validation.
 

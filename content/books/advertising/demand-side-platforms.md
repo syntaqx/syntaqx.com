@@ -153,7 +153,7 @@ The inputs are public files and the DSP's own logs:
 - **Duplicates.** `source.tid` is the same transaction ID across every copy of one opportunity, so the DSP can count how many paths offered the same impression.
 - **Cost and quality per path.** The exchange's fee (where disclosed), win rates, clearing prices, the share of spend that becomes viewable, non-invalid impressions, and the share that reaches the publisher.
 
-The policies follow: prefer DIRECT paths, cap the number of hops, prefer exchanges with lower fees for the same inventory, block paths through unknown or confidential sellers, and drop made-for-advertising and invalid-traffic-heavy supply. The industry measurement shows why this matters: the ANA and TAG TrustNet benchmark for the third quarter of 2025 measured 47.1% of participants' programmatic spend reaching publishers, up 11 points since 2023, and 81.6% of spend in private marketplaces; by the first quarter of 2026, made-for-advertising inventory had risen to 1.1% of spend, from 0.4-0.6% through 2025. The ISBA and PwC 2020 study found 15% of UK spend in an "unknown delta" that couldn't be traced; the second study cut it to 3%. [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality) covers the studies; the DSP's job is to turn them into supply rules it can apply per bid request.
+The policies follow: prefer DIRECT paths, cap the number of hops, prefer exchanges with lower fees for the same inventory, block paths through unknown or confidential sellers, and drop made-for-advertising and invalid-traffic-heavy supply. The industry measurement shows why this matters: the ANA and TAG TrustNet benchmark for the third quarter of 2025 measured 47.1% of participants' programmatic spend reaching publishers, up 11 points since 2023, and 81.6% of spend in private marketplaces; by the first quarter of 2026, made-for-advertising exposure had risen to 1.1%, from 0.4-0.6% through 2025. The ISBA and PwC 2020 study found 15% of UK spend in an "unknown delta" that couldn't be traced; the second study cut it to 3%. [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality) covers the studies; the DSP's job is to turn them into supply rules it can apply per bid request.
 
 DSPs also sell shorter paths as products: The Trade Desk's OpenPath connects it "directly" to publishers, and Yahoo's Backstage is "a direct path to top-tier supply." For an engineer, these are additional supply sources with their own connection, and the same records apply.
 
@@ -300,19 +300,16 @@ Design notes:
 - [Microsoft Advertising: May 2025 update](https://about.ads.microsoft.com/en/blog/post/may-2025/empowering-businesses-for-a-future-that-is-conversational-personal-and-agentic), Microsoft Invest buying ending February 28, 2026
 - [Microsoft Advertising: Collaboration with Amazon (October 2025)](https://about.ads.microsoft.com/en/blog/post/october-2025/unlocking-more-opportunities-for-partners-and-customers-through-collaboration-with-amazon), Amazon DSP as preferred transition partner and Monetize in Amazon's Certified Supply Exchange
 - [Yahoo DSP](https://www.yahooinc.com/yahoo-dsp), channels, Backstage and its MFA-free certification claim
+- [ANA: Programmatic Transparency Benchmark, third quarter 2025](https://www.ana.net/content/show/id/pr-2025-11-transparency), share of spend reaching publishers and the PMP share
+- [ANA: Programmatic Transparency Benchmark, first quarter 2026](https://www.ana.net/content/show/id/pr-2026-05-programmatic), made-for-advertising exposure of 1.1% after 0.4 to 0.6% through 2025
+- [ISBA: Programmatic Supply Chain Transparency Study, executive summary (2020)](https://www.isba.org.uk/system/files/media/documents/2020-12/executive-summary-programmatic-supply-chain-transparency-study.pdf), the 15% unknown delta
+- [ISBA: Second programmatic supply chain study (January 18, 2023)](https://www.isba.org.uk/article/isbas-programmatic-supply-chain-study-finds-match-rate-increases-and-reduction), the unknown delta cut to 3%
 
 **Filings**
 
 - [The Trade Desk: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000014/ttd-20251231.htm), the platform fee, net reporting, gross spend definition, paying suppliers before collections, holding company concentration, Kokai and OpenPath
 - [The Trade Desk: Fourth quarter 2025 results](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000009/ttd-20260225x8kexx991.htm), 2025 revenue and gross spend
 - [The Trade Desk: Third quarter 2026 results](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000115/ttd-20261109x8kexx991.htm), quarterly revenue of $736 million against $739 million
-
-**Industry studies**
-
-- [ANA: Programmatic Transparency Benchmark, third quarter 2025](https://www.ana.net/content/show/id/pr-2025-11-transparency), share of spend reaching publishers and the PMP share
-- [ANA: Programmatic Transparency Benchmark, first quarter 2026](https://www.ana.net/content/show/id/pr-2026-05-programmatic), the made-for-advertising share of spend
-- [ISBA: Programmatic Supply Chain Transparency Study, executive summary (2020)](https://www.isba.org.uk/system/files/media/documents/2020-12/executive-summary-programmatic-supply-chain-transparency-study.pdf), the 15% unknown delta
-- [ISBA: Second programmatic supply chain study (January 18, 2023)](https://www.isba.org.uk/article/isbas-programmatic-supply-chain-study-finds-match-rate-increases-and-reduction), the unknown delta cut to 3%
 
 **Court records**
 

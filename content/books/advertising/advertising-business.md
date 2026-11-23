@@ -176,7 +176,7 @@ The same records move through every model; what differs is who runs each step. T
 
 **Request.** A reader opens an article. The page's ad tag (or an app's SDK, or a CTV player's SSAI service) asks the publisher's ad server for an ad for one ad unit, with the page URL, the ad sizes, the device and user agent, an IP-derived location, any first-party identifier and the consent state. The request gets an ID that every later record carries.
 
-**Consent signals.** Before anything personal leaves the page, the consent management platform has set the signals: in the EEA and UK, a TCF consent string (since TCF v2.3, strings created after February 28, 2026 must carry the `disclosedVendors` segment); in US states, a GPP string with the sections that apply (`usnat`, or a state's section); the browser's Global Privacy Control (`Sec-GPC: 1`), which California requires businesses to treat as an opt-out of sale and sharing; and a COPPA flag for child-directed properties, where the amended COPPA Rule requires separate parental consent before disclosing a child's data "for targeted advertising". OpenRTB carries them as `regs.gdpr`, `user.consent`, `regs.gpp`, `regs.gpp_sid` and `regs.coppa`. The rule for every hop is the same as for any collection: no consent, no personal data ([Consent Before Collection](/docs/telemetry/consent-and-privacy#consent-before-collection), [The 2025 Amendments](/docs/compliance/childrens-privacy#the-2025-amendments)), and a downstream party that receives a signal must honor it, not just pass it on.
+**Consent signals.** Before anything personal leaves the page, the consent management platform has set the signals: in the EEA and UK, a TCF consent string (since TCF v2.3, strings created after February 28, 2026 must carry the `disclosedVendors` segment); in US states, a GPP string with the sections that apply (`usnat`, or a state's section); the browser's Global Privacy Control (`Sec-GPC: 1`), which California requires businesses to treat as an opt-out of sale and sharing; and a COPPA flag for child-directed properties, where the amended COPPA Rule requires separate parental consent before disclosing a child's data to third parties for targeted advertising. OpenRTB carries them as `regs.gdpr`, `user.consent`, `regs.gpp`, `regs.gpp_sid` and `regs.coppa`. The rule for every hop is the same as for any collection: no consent, no personal data ([Consent Before Collection](/docs/telemetry/consent-and-privacy#consent-before-collection), [The 2025 Amendments](/docs/compliance/childrens-privacy#the-2025-amendments)), and a downstream party that receives a signal must honor it, not just pass it on.
 
 **Ad server decision.** The publisher's ad server finds the line items eligible for this ad unit, targeting and frequency caps, and ranks them by priority. Google Ad Manager's classes are sponsorship (4), standard (6, 8 or 10), price priority, network, bulk, AdSense and Ad Exchange (12) and house (16), lower winning. Guaranteed line items are not simply first: under dynamic allocation they compete with a temporary CPM, the "opportunity cost of not serving the guaranteed line item", so non-guaranteed demand wins an impression only if it pays more than the guarantee needs it to be worth.
 
@@ -391,7 +391,7 @@ CREATE TABLE line_items (                -- the unit of delivery
   pacing            TEXT NOT NULL DEFAULT 'even' CHECK (pacing IN ('even', 'front_loaded',
                       'asap')),
   targeting         JSONB NOT NULL DEFAULT '{}',  -- an expression tree, owned by Campaigns & Line Items
-  frequency_caps    JSONB NOT NULL DEFAULT '[]',  -- e.g. [{"events": 3, "per": "day"}]
+  frequency_caps    JSONB NOT NULL DEFAULT '[]',  -- e.g. [{"events": 3, "per": {"unit": "day", "count": 1}}]
   status            TEXT NOT NULL CHECK (status IN ('draft', 'ready', 'delivering', 'paused',
                       'completed', 'archived')),
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -768,7 +768,8 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 
 **Reference**
 
-- [IAB: Digital ad revenue climbs to nearly $300B](https://www.iab.com/news/digital-ad-revenue-climbs-to-nearly-300b-as-iab-celebrates-30-year-anniversary/), 2025 US internet advertising revenue, programmatic and commerce media
+- [IAB: Digital ad revenue climbs to nearly $300B](https://www.iab.com/news/digital-ad-revenue-climbs-to-nearly-300b-as-iab-celebrates-30-year-anniversary/), 2025 internet advertising revenue, programmatic and commerce media
+- [IAB: Internet Advertising Revenue Report, full year 2025](https://www.iab.com/insights/internet-advertising-revenue-report-full-year-2025/), the report as the benchmark for US advertising revenue
 - [ISBA: Programmatic Supply Chain Transparency Study, executive summary (2020)](https://www.isba.org.uk/system/files/media/documents/2020-12/executive-summary-programmatic-supply-chain-transparency-study.pdf), the split of advertiser spend to publishers
 - [ISBA: Second programmatic supply chain study (2023)](https://www.isba.org.uk/article/isbas-programmatic-supply-chain-study-finds-match-rate-increases-and-reduction), the 58% match rate and 3% unknown delta
 - [ANA: Programmatic transparency benchmark, third quarter 2025](https://www.ana.net/content/show/id/pr-2025-11-transparency), the share of spend reaching publishers and CTV's share of programmatic spend

@@ -23,7 +23,7 @@ As of November 2026, the proceedings and their status:
 | **Canada: Commissioner of Competition v. Google** | Competition Tribunal | Application filed November 2024; status not public on reachable pages | Divestiture of DFP and AdX and a penalty, per secondary reports |
 | **EU: Case AT.40670 (Google Adtech)** | European Commission | €2.95 billion fine, September 5, 2025; Google given 60 days to propose measures | Self-preferencing AdX in DFP and in Google Ads and DV360 bidding "between at least 2014 and today" |
 | **Texas v. Google (ad tech)** | E.D. Tex., No. 4:20-cv-00957 | Jury trial stayed until final judgment in the Virginia case, per secondary reports | State antitrust and deceptive practices claims over the same stack |
-| **United States v. Google LLC (ad tech)** | E.D. Va., No. 1:23-cv-00108 | Liability opinion April 17, 2025; remedies order and memorandum September 2, 2026, unsealed September 16, 2026 | Monopolization of publisher ad server and ad exchange markets and an unlawful tie; behavioral remedies for six years, no AdX divestiture |
+| **United States v. Google LLC (ad tech)** | E.D. Va., No. 1:23-cv-00108 | Liability opinion April 17, 2025; remedies memorandum opinion September 2, 2026, unsealed September 16, 2026 | Monopolization of publisher ad server and ad exchange markets and an unlawful tie; behavioral remedies for six years, no AdX divestiture |
 | **Private and competitor suits** | Various | Pending | Magnite reports its own litigation against Google LLC in its 2025 results |
 
 Two patterns:
@@ -54,7 +54,7 @@ The opinion also records the money: AdX took "around 20%" overall, varied per im
 
 ## The Remedies
 
-The remedies phase produced a two-page order and a 106-page memorandum (Dkt. 1858) filed September 2, 2026; the memorandum was unsealed September 16, 2026. The memorandum on the public docket is a scanned image; the summary below follows reporting on the unsealed opinion, checked against the scan's machine-read (OCR) text where that text was legible, which is not the same as reading the entered final judgment. The final judgment's entry date and any appeal were not confirmed on reachable pages as of November 22, 2026. <!-- source-gap: adv-google-remedies-primary | secondary | the remedies granted and denied, effective date and duration in US v. Google (ad tech), from the court's own text | closes with: a text-searchable copy of Dkt. 1858 or the entered final judgment | checked: 2026-11-22 --> <!-- source-gap: adv-google-remedies-appeal | status | the entry date of the final judgment and whether Google or the plaintiffs appealed | closes with: the E.D. Va. or Fourth Circuit docket | checked: 2026-11-22 -->
+The remedies phase produced a 106-page memorandum opinion (Dkt. 1858) filed September 2, 2026 and unsealed September 16, 2026, which ordered the parties to meet and confer and present one agreed version of the final judgment. The memorandum on the public docket is a scanned image; the summary below follows its machine-read (OCR) text, which is legible throughout, cross-checked against reporting on the unsealed opinion. The final judgment's entry date and any appeal were not confirmed on reachable pages as of November 22, 2026. <!-- source-gap: adv-google-remedies-appeal | status | the entry date of the final judgment and whether Google or the plaintiffs appealed | closes with: the E.D. Va. or Fourth Circuit docket | checked: 2026-11-22 -->
 
 **Denied**:
 
@@ -66,22 +66,22 @@ The remedies phase produced a two-page order and a 106-page memorandum (Dkt. 185
 - broad anti-circumvention and anti-retaliation provisions, as too vague;
 - the plaintiffs' 15-year term.
 
-**Granted**, for six years, worldwide (per the reporting), effective 60 days after entry:
+**Granted**, for six years, worldwide, effective 60 days after entry:
 
 - **No tie.** Google may not condition DFP on AdX or AdX on DFP, or recreate the tie by other means; publishers using DFP need not use AdX to reach Google Ads demand.
 - **No First Look, Last Look or Unified Pricing Rules** for indirect (non-direct-sold) transactions.
 - **Per-exchange floors.** Publishers may set different floors on different exchanges.
-- **Prebid interoperability.** Google must build integrations that let Prebid solicit real-time AdX bids for "all indirect open-web display inventory", and DFP publishers must be able to route indirect and programmatic direct demand through Prebid.
+- **Prebid interoperability.** Google must build integrations that let Prebid solicit real-time AdX bids for "all indirect open-web display ad inventory", and DFP publishers must be able to route indirect and programmatic direct demand through Prebid.
 - **AdX bids to rival ad servers** on the same terms DFP receives them.
 - **Data.** Publishers may export their DFP data to competing ad servers and receive AdX bid data, including losing bids; Google must document how DFP selects ads and provide a per-ad data file with candidate prices, adjustments and the reason the winner was chosen.
-- **Buy side.** Remedies on Google Ads (AdWords) bidding, which may favor AdX only for advertiser return on investment and not because Google owns it; none on DV360, which the court found played no role in the liability phase.
+- **Buy side.** Remedies on Google Ads (AdWords) bidding, which may favor AdX only for advertiser return on investment and not because Google owns it; none on DV360, which the court found sits outside any market in which liability was found.
 - **Oversight.** A Monitor with access to documents, employees and source code, supported by a Technical Committee and an Internal Compliance Officer.
 
 The court found that, with only behavioral remedies, the final judgment "should be implemented within 15 months." A plaintiffs' expert estimated that removing Unified Pricing Rules alone would lower AdX's take rate from 20% to roughly 16.6%. Magnite's guidance for 2027, given in its third-quarter 2026 results, excludes "upside from Google remedies."
 
 ## The EU Decision
 
-On September 5, 2025 the European Commission fined Google €2.95 billion in Case AT.40670 for abusing dominant positions by favoring its own exchange, "between at least 2014 and today": DFP favored AdX in ad selection, for example by "informing AdX in advance of the value of the best bid from competitors which it had to beat to win the auction", and "Google Ads was avoiding competing ad exchanges and mainly placing bids on AdX." The Commission gave Google 60 days to propose how it would comply, and stated a preliminary view that "only the divestment by Google of part of its services would address the situation of inherent conflicts of interest", without ordering one. Reports describe Google proposing behavioral measures in November 2025 and the Commission publishing the decision's public version on January 14, 2026; I found no Commission remedies decision through November 2026. <!-- source-gap: adv-eu-adtech-remedies | status | whether the European Commission accepted Google's November 2025 measures or ordered other remedies in AT.40670 | closes with: a Commission press release or decision on the measures | checked: 2026-11-22 -->
+On September 5, 2025 the European Commission fined Google €2.95 billion in Case AT.40670 for abusing dominant positions by favoring its own exchange, "between at least 2014 and today": DFP favored AdX in ad selection, for example by "informing AdX in advance of the value of the best bid from competitors which it had to beat to win the auction", and "Google Ads was avoiding competing ad exchanges and mainly placing bids on AdX." The Commission gave Google 60 days to propose how it would comply, and stated a preliminary view that "only the divestment by Google of part of its services would address the situation of inherent conflicts of interest", without ordering one. Reports describe Google proposing behavioral measures in November 2025 and the Commission publishing the decision's public version on January 14, 2026 <!-- source-gap: adv-eu-adtech-google-measures | secondary | Google's November 2025 proposed measures and the January 14, 2026 public version of the AT.40670 decision, known only from reports | closes with: the Commission's AT.40670 case page or a Google statement | checked: 2026-11-22 -->; I found no Commission remedies decision through November 2026. <!-- source-gap: adv-eu-adtech-remedies | status | whether the European Commission accepted Google's November 2025 measures or ordered other remedies in AT.40670 | closes with: a Commission press release or decision on the measures | checked: 2026-11-22 -->
 
 ## The Other Cases
 
@@ -228,14 +228,14 @@ Design notes:
 **Court records**
 
 - [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Memorandum Opinion, Dkt. 1410 (April 17, 2025)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1410.0.pdf), parties and procedure, the markets and shares, the rejected advertiser ad network market, the tie, First Look, Last Look, Unified Pricing Rules, Open Bidding, Project Poirot, AdX and publisher ad server fees, the DoubleClick acquisition and AdX's 2014 win share
-- [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Remedies Memorandum Opinion, Dkt. 1858 (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date and length of the remedies memorandum, and (from the scan's OCR text) the rejection of structural relief as "neither realistic nor needed", the Prebid and rival ad server integrations, data sharing, the AdWords-only buy-side remedies, the six-year term, the 60-day effective date, the 15-month implementation and the 16.6% UPR take-rate estimate
+- [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Remedies Memorandum Opinion, Dkt. 1858 (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date and length of the remedies memorandum and, from the scan's OCR text, the rejection of structural relief as "neither realistic nor needed", the Prebid and rival ad server integrations, data sharing, the AdWords-only buy-side remedies, the six-year term, the 60-day effective date, the 15-month implementation and the 16.6% UPR take-rate estimate, worldwide scope, the denied escrow, open-source auction and contingent DFP divestiture, the anti-retaliation provisions as too vague, and the order to agree the final judgment
 
 **Regulation**
 
 - [European Commission: Commission fines Google €2.95 billion over abusive practices in online advertising technology (IP/25/1992, September 5, 2025)](https://ec.europa.eu/commission/presscorner/api/documents?reference=IP/25/1992&language=en), Case AT.40670, the conduct, the period, the preliminary view on divestment and the 60 days to propose measures
 - [US Department of Justice: Department of Justice prevails in landmark antitrust case against Google](https://www.justice.gov/opa/pr/department-justice-prevails-landmark-antitrust-case-against-google), the liability ruling and the trial
 
-**Standards**
+**Specifications**
 
 - [MRC: Digital Advertising Auction Transparency Standards (January 2026)](https://mediaratingcouncil.org/sites/default/files/Standards/MRC_Digital_Advertising_Auction_Transparency_Standards_FINAL_0.pdf), disclosure of auction type, clearing and reserves not set per buyer
 
@@ -245,7 +245,7 @@ Design notes:
 - [Magnite: Fourth quarter 2025 results](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000010/a991-earningsq42025.htm), litigation against Google LLC
 - [Magnite: Third quarter 2026 results](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000039/a991-earningsq32026.htm), 2027 guidance excluding upside from Google remedies
 
-**Secondary**
+**Reference**
 
 - [National Law Review: Court declines to order AdX divestiture in Google ad tech case](https://natlawreview.com/article/court-declines-order-adx-divestiture-google-ad-tech-case), the remedies granted and denied, the unsealing date, effective date, duration, the 15-month implementation finding and the UPR take-rate estimate
 - [Tech Policy Press: A deep dive into the antitrust remedies that spared Google's ad tech business](https://techpolicy.press/a-deep-dive-into-the-antitrust-remedies-that-spared-googles-ad-tech-business), the unbundling, Prebid, data and DV360 provisions as read by the author

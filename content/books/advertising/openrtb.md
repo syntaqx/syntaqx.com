@@ -70,7 +70,7 @@ A request is one `BidRequest` object with one or more `Imp` objects and the cont
 
 **Device.** User agent (`ua`) and the structured `sua` object 2.6 added, `ip` or `ipv6` (often truncated), `geo`, `devicetype`, `make`, `model`, `os`, `ifa` (the advertising ID in apps and CTV), `lmt` (limit ad tracking) and connection type.
 
-**User.** `id` (the exchange's ID for the user), `buyeruid` (the bidder's ID, from a sync), `consent` (the TCF string when GDPR applies) and `eids`, the extended identifiers: each `EID` has a `source` ("Canonical domain of the ID"), `uids` with an `id` and an `atype` (1 browser or device, 2 in-app device, 3 person-based "same across devices"), and since 2.6-202409 `inserter`, `matcher` and `mm`. The specification strongly recommends `atype` because bidders keep app and browser identifiers apart.
+**User.** `id` (the exchange's ID for the user), `buyeruid` (the bidder's ID, from a sync), `consent` (the TCF string when GDPR applies) and `eids`, the extended identifiers: each `EID` has a `source` ("Canonical domain of the ID"), `uids` with an `id` and an `atype` (1 browser or device, 2 in-app device, 3 person-based "same across devices"), and since 2.6-202409 `inserter`, `matcher` and `mm`. The specification calls `atype` "highly recommended" because DSPs keep app and browser identifiers apart.
 
 **Source.** `fd` (0 when the exchange makes the final sale decision, 1 when an upstream source such as a header bidding wrapper does), `tid` (a transaction ID common to all participants), `pchain` and `schain`, the SupplyChain object, which 2.6 moved from `source.ext.schain` into `source` itself.
 
@@ -78,7 +78,7 @@ A request is one `BidRequest` object with one or more `Imp` objects and the cont
 
 ### Auction types
 
-`at` is 1 for first price and 2 for "Second Price Plus" (the default), with exchange-specific types from 500. The specification doesn't define "plus" as a term; its example clears a second-price auction at "the second-best price plus $0.01". A deal can override the auction type for its own bids, and `Deal.at = 3` says the deal's `bidfloor` is "the agreed upon deal price": a fixed-price deal. The industry runs first price for display (Google Ad Manager announced a unified first-price auction in March 2019 and completed the rollout from September 2019), so a bidder must not assume `at = 2` because the field is absent from one exchange's requests; it must read the exchange's guide. [Auction Mechanics](/books/advertising/auction-mechanics) covers the theory and bid shading's reason for existing.
+`at` is 1 for first price and 2 for "Second Price Plus" (the default), with exchange-specific types from 500. The specification doesn't define "plus" as a term; its example clears a second-price auction at "the second-best price plus $0.01". A deal can override the auction type for its own bids, and `Deal.at = 3` says the deal's `bidfloor` is "the agreed upon deal price": a fixed-price deal. The industry runs first price for display (Google Ad Manager announced a unified first-price auction in March 2019 and began the full rollout to all partners in September 2019), so a bidder must not assume `at = 2` because the field is absent from one exchange's requests; it must read the exchange's guide. [Auction Mechanics](/books/advertising/auction-mechanics) covers the theory and bid shading's reason for existing.
 
 ### Deals
 
@@ -531,7 +531,7 @@ Design notes:
 **Reference**
 
 - [Google Authorized Buyers: Get started with real-time bidding](https://developers.google.com/authorized-buyers/rtb/start), OpenRTB in Protobuf and JSON and the response deadline
-- [Google Ad Manager: Rolling out first price auctions (September 5, 2019)](https://blog.google/products/admanager/rolling-out-first-price-auctions-google-ad-manager-partners/), the unified first-price auction
+- [Google Ad Manager: Rolling out first price auctions (September 5, 2019)](https://blog.google/products/admanager/rolling-out-first-price-auctions-google-ad-manager-partners/), the unified first-price auction and the full rollout to all partners
 - [Microsoft Learn: Required parameters for CTV inventory](https://learn.microsoft.com/en-us/xandr/monetize/required-parameters-for-ctv-inventory), ifa_type values on CTV ad tags
 - [Google Authorized Buyers: Cookie matching](https://developers.google.com/authorized-buyers/rtb/cookie-guide), HTTPS required on all endpoints
 - [Prebid.org: Prebid Server overview](https://docs.prebid.org/prebid-server/overview/prebid-server-overview.html), server-to-server header bidding in Go and Java

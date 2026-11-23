@@ -193,7 +193,7 @@ With the same bids, GSP collects $250 per thousand impressions and VCG $200, and
 
 price per click(k) = (1 / (quality(k) × s(k))) × Σ over j below k of e(j) × (s(j−1) − s(j))
 
-Varian and Harris also discuss the practical issues of running one. The practical case against VCG on a platform: it needs click-through estimates per position as an explicit input, and its prices are harder to explain to a buyer than "the bid below you." The practical case for it is the bidding: a truthful mechanism lets an automated bidder bid its value (with a multiplier for its constraints) without modeling rivals, which is the property [Automated Bidding](/books/advertising/automated-bidding#value-bidding) relies on.
+The practical case against VCG on a platform: it needs click-through estimates per position as an explicit input, and its prices are harder to explain to a buyer than "the bid below you." The practical case for it is the bidding: a truthful mechanism lets an automated bidder bid its value (with a multiplier for its constraints) without modeling rivals, which is the property [Automated Bidding](/books/advertising/automated-bidding#value-bidding) relies on.
 
 ## Quality-Weighted Ranking
 
@@ -233,7 +233,7 @@ A single impression on the open web passes through several auctions, and the ord
 
 **Header bidding and the unified auction.** Header bidding asks several exchanges at once and passes their best bids into the ad server, where they compete with the ad server's own exchange and its line items; Google moved Ad Manager to a unified first-price auction in 2019 so that all of them compete on the same basis. The chain is now three auctions in sequence (the wrapper's, each exchange's, the ad server's), each a separate `auctions` row, and the winner of one is a bid in the next. [Header Bidding & Prebid](/books/advertising/header-bidding-and-prebid) covers the plumbing; [Ad Servers](/books/advertising/ad-servers) covers the ad server's decision, including dynamic allocation, which lets a guaranteed line item compete with a temporary CPM, an "opportunity cost" Ad Manager calculates.
 
-**Who sees what, and when.** A unified auction is fair only if every source answers under the same information. The US court found that Google's "First Look" (AdX offered impressions before other exchanges) and "Last Look" (AdX could see the best header bid and outbid it) gave its exchange advantages no rival had, and the 2026 remedies, per reports of the unsealed opinion, ban both for indirect transactions ([The Google Ad Tech Cases](/books/advertising/google-ad-tech-cases)).<!-- source-gap: adv-adtech-remedies-look | secondary | 2026 remedies ban First Look and Last Look for indirect transactions | closes with: a text-searchable copy of the remedies memorandum, E.D. Va. Dkt. 1858 (the CourtListener PDF is image-only) | checked: 2026-11-22 --> The MRC's standards add a disclosure duty for the related case of direct deals: "direct deals or certain managed service buys that supersede an auction and may be the reason other bidders lose despite price are required to be generally disclosed."
+**Who sees what, and when.** A unified auction is fair only if every source answers under the same information. The US court found that Google's "First Look" (AdX offered impressions before other exchanges) and "Last Look" (AdX could see the best header bid and outbid it) gave its exchange advantages no rival had, and the September 2026 remedies memorandum bars Google from reimplementing either and requires it to deprecate Unified Pricing Rules for all indirect transaction types ([The Google Ad Tech Cases](/books/advertising/google-ad-tech-cases#the-remedies)). The MRC's standards add a disclosure duty for the related case of direct deals: "direct deals or certain managed service buys that supersede an auction and may be the reason other bidders lose despite price are required to be generally disclosed."
 
 **Multi-stage pricing.** A bid's price changes as it moves up the chain: an exchange returns its winner net of its fee, so the ad server compares net values, and Google's floors apply "after removing Google's revenue share." Whether fees come off before or after the comparison is part of the rules; the MRC encourages fees "applied pre-auction ('net bidding')" and discounts "post-auction", and requires disclosing which.
 
@@ -378,6 +378,7 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 **Court records**
 
 - [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Memorandum Opinion, Dkt. 1410 (April 17, 2025)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1410.0.pdf), First Look and Last Look
+- [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Remedies Memorandum Opinion, Dkt. 1858 (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), from the scan's OCR text: no reimplementation of First Look or Last Look and Unified Pricing Rules deprecated for indirect transactions
 - [FTC et al. v. Amazon.com, Inc., No. 2:26-cv-03097 (W.D. Wash.), Complaint (August 31, 2026)](https://ag.ny.gov/sites/default/files/court-filings/federal-trade-commission-et-al-v-amazon.com-inc-complaint-2026_0.pdf), the plaintiffs, the alleged two-stage GSP and soft reserve pricing, the share of clicks charged the winning bid, and the quoted bid-shading statement
 
 **Reference**
@@ -385,7 +386,6 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 - [Edelman, Ostrovsky and Schwarz: Internet Advertising and the Generalized Second-Price Auction (American Economic Review, 2007)](https://www.aeaweb.org/articles?id=10.1257/aer.97.1.242), GSP, truthful bidding not an equilibrium, and the equilibrium with VCG payoffs
 - [Varian and Harris: The VCG Auction in Theory and Practice (American Economic Review, 2014)](https://www.aeaweb.org/articles?id=10.1257/aer.104.5.442), VCG for search advertising and its practical issues
 - [Ostrovsky and Schwarz: Reserve Prices in Internet Advertising Auctions: A Field Experiment (Journal of Political Economy, 2023)](https://econpapers.repec.org/RePEc:ucp:jpolec:doi:10.1086/725702), reserve prices from optimal auction theory and the revenue increase
-- [National Law Review: Court Declines to Order AdX Divestiture in Google Ad Tech Case (September 18, 2026)](https://natlawreview.com/article/court-declines-order-adx-divestiture-google-ad-tech-case), a secondary report of the remedies opinion unsealed September 16, 2026: First Look and Last Look prohibited for indirect transactions
 
 **In practice**
 
