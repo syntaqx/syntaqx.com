@@ -130,6 +130,8 @@ An SIVT vendor finds that a seller account laundered spoofed CTV inventory throu
 | Exchange | Deduction from the seller's March earnings (if still open) or a clawback from April's | -$8,000.00 |
 | Exchange | Its own fee, reversed in its revenue | -$2,000.00 |
 
+![An SIVT finding, 400,000 impressions from March 1 to 20, drawn dashed down to four parties in a row: advertiser, DSP, exchange and seller. Ink arrows run forward with what was paid: $11,500 from the advertiser to the DSP, $10,000 from the DSP to the exchange, $8,000 from the exchange to the seller. Accented arrows run back: an $8,000 clawback from the seller to the exchange, a $10,000 refund from the exchange to the DSP, and an $11,500 credit from the DSP to the advertiser. Under each party: credited on the April invoice from the DSP; its $1,500 fee reversed with the media; its own $2,000 fee reversed in revenue; deducted from March earnings, or clawed back from April's.](/diagrams/adv-ivt-adjustment-chain.svg "One finding, one adjustment in each ledger, all pointing back at the finding. If the seller was paid and is gone, the exchange books the $8,000 loss.")
+
 The DSP is whole if the exchange refunds; the exchange is whole only if it recovers $8,000.00 from the seller. If the seller was paid and is gone, the exchange books an $8,000.00 loss. Every amount is computed from the finding's affected impressions and the fee terms in force, not typed.
 
 ## How to Build It
