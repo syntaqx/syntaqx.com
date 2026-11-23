@@ -61,7 +61,7 @@ Unified ID 2.0 describes itself as "a framework that enables deterministic ident
 
 **Opt-out.** A consumer opts out at the Transparency and Control Portal. From then, token generation and refresh return the opt-out response, so publishers stop sending tokens, and DSPs learn of opt-outs by webhook and through `POST /optout/status`. A site-level opt-out is not a UID2 opt-out. UID2 states no propagation SLA; opt-outs reach publishers through the next refresh, so a token in flight can outlive an opt-out by up to its remaining lifetime, and a DSP must check before using raw UID2s from advertisers' audiences.
 
-**EUID.** European Unified ID is built on UID2 but in a separate namespace: UID2's legal basis is framed by US law (CCPA/CPRA), EUID's by GDPR, the TCF and local guidance, and EUID covers European countries and the UK. An EUID is not a UID2 and the two do not join; a platform operating in both regions treats them as two sources.
+**EUID.** European Unified ID is built on UID2 but in a separate namespace: UID2's legal basis is framed by US law (CCPA/CPRA), EUID's by GDPR, the TCF and local guidance, and EUID is designed for "many European countries and some other regions such as the UK". An EUID is not a UID2 and the two do not join; a platform operating in both regions treats them as two sources.
 
 ## Other Email-Based and Graph IDs
 
@@ -316,10 +316,11 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 - [IAB Tech Lab: OpenRTB 2.6 specification](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb2.x/main/2.6.md), the EID and UID objects, source, inserter, matcher, mm and the recommendation to send atype
 - [IAB Tech Lab: AdCOM 1.0](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/AdCOM/main/AdCOM%20v1.0%20FINAL.md), agent types and ID match methods
+- [IAB Tech Lab: OpenRTB 2.x releases](https://github.com/InteractiveAdvertisingBureau/openrtb2.x/releases), 2.6-202409 adding `inserter`, `matcher` and `mm` to the EID object
 
 **Reference**
 
-- [UID2: Introduction](https://unifiedid.com/docs/intro), the framework's description and no central storage of mappings
+- [UID2: Introduction](https://unifiedid.com/docs/intro), the framework's description and no centralized storage for personal data
 - [UID2: Normalization and encoding](https://unifiedid.com/docs/getting-started/gs-normalization-encoding), email and phone normalization, SHA-256 and Base64 of the raw bytes
 - [UID2: Identifier types](https://unifiedid.com/docs/ref-info/uid-identifier-types), raw UID2 versus UID2 token, holders and bidstream use
 - [UID2: Components](https://unifiedid.com/docs/ref-info/uid-components), the core, operator, opt-out and portal services and who runs them
@@ -327,7 +328,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 - [UID2: POST /token/generate](https://unifiedid.com/docs/endpoints/post-token-generate), inputs, the token and refresh fields, opt-out status and server-side calls
 - [UID2: POST /v3/identity/map](https://unifiedid.com/docs/endpoints/post-identity-map), current and previous raw UID2s, refresh timestamps, the 1/365 daily rotation and batch limits
 - [UID2: Opt-out](https://unifiedid.com/docs/getting-started/gs-opt-out), the portal, webhook and status API, and site opt-outs not being UID2 opt-outs
-- [EUID: Introduction](https://euid.eu/docs/intro), the separate namespace and GDPR and TCF basis
+- [EUID: Introduction](https://euid.eu/docs/intro), the separate namespace, the CCPA/CPRA versus GDPR and TCF basis, and the regions covered
 - [LiveRamp: Interpreting RampID](https://docs.liveramp.com/connect/en/interpreting-rampid,-liveramp-s-people-based-identifier.html), maintained, derived, placeholder and household RampID formats, and device and email opt-outs
 - [Prebid.org: User ID module](https://docs.prebid.org/dev-docs/modules/userId.html), submodule configuration, storage, bidder restrictions, consent behavior, opt-out keys and EID sources
 - [Prebid.org: UID2 user ID submodule](https://docs.prebid.org/dev-docs/modules/userid-submodules/unified2.html), server and client token generation, automatic refresh and opt-out handling

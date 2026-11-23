@@ -371,17 +371,16 @@ Design notes:
 - [TAG: Certified Against Fraud Guidelines](https://www.tagtoday.net/hubfs/CAF/TAG%20CAF%20Guidelines%20Final.pdf?hsLang=en-us), version 11.0 (July 2026), requirements by role, 100% GIVT and SIVT filtering, the Data Center IP List, Payment ID, ads.txt, device attestation and SSAI headers
 - [IAB Tech Lab: CTV Programmatic Guide](https://iabtechlab.com/standards-old/ctv-programmatic-guide/), X-Device-IP and X-Device-User-Agent from stitchers
 
-**Court records**
-
-- [TechTarget: "King of Fraud" sentenced for Methbot botnet operation (November 2021)](https://www.techtarget.com/searchsecurity/news/252509387/King-of-Fraud-sentenced-for-Methbot-botnet-operation), the EDNY sentence and forfeiture, servers, IP addresses, spoofed domains and the $7 million taken (secondary)
-- [The Record: US recovers $15 million in profits from 3ve ad fraud scheme (May 2022)](https://therecord.media/us-recovers-15-million-in-profits-from-3ve-ad-fraud-scheme/), the prosecution period, 1.7 million infected computers, about $29 million and the recovery (secondary)
-
 **Reference**
 
 - [Google and White Ops: The Hunt for 3ve (November 2018)](https://services.google.com/fh/files/blogs/3ve_google_whiteops_whitepaper_final_nov_2018.pdf), peak IPs, counterfeit domains, daily bid requests, servers, the three sub-operations, Kovter's infections and the ads.txt status of 3ve's traffic
 - [AppsFlyer: SDK spoofing](https://www.appsflyer.com/glossary/sdk-spoofing/), fake installs and events sent from real devices through malicious code
 - [AppsFlyer: Click injection](https://www.appsflyer.com/glossary/click-injection/), Android install broadcasts and the injected click
 - [TAG: Fourth straight year of sub-1% IVT in TAG Certified Channels (October 2024)](https://www.tagtoday.net/pressreleases/us-ad-industry-extends-success-in-fight-against-fraud-with-fourth-straight-year-of-sub-1-ivt-in-tag-certified-channels), the 2024 US benchmark and its 745 billion impressions
+- [TechTarget: "King of Fraud" sentenced for Methbot botnet operation (November 2021)](https://www.techtarget.com/searchsecurity/news/252509387/King-of-Fraud-sentenced-for-Methbot-botnet-operation), the EDNY sentence and forfeiture, servers, IP addresses, spoofed domains and the $7 million taken (secondary)
+- [The Record: US recovers $15 million in profits from 3ve ad fraud scheme (May 2022)](https://therecord.media/us-recovers-15-million-in-profits-from-3ve-ad-fraud-scheme/), the prosecution period, 1.7 million infected computers, about $29 million and the recovery (secondary)
+- [IAB: Standard Advertising Services Terms and Conditions (May 20, 2026)](https://www.iab.com/guidelines/direct-buy-addendum-v1-0-final/), the final General Terms and Direct Buy Addendum, whose text sits behind an account login
+- [PPC Land: IAB's new contract framework addresses 15 years of advertising chaos (February 15, 2026)](https://ppc.land/iabs-new-contract-framework-addresses-15-years-of-advertising-chaos/), the public comment draft's non-billable IVT clause and its 2% GIVT and 0.1% SIVT thresholds (secondary)
 
 **In practice**
 

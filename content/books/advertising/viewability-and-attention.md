@@ -21,11 +21,11 @@ As of November 2026, from each standard and platform's documentation and the MRC
 | --- | --- | --- | --- |
 | **DoubleVerify** | MRC thresholds | Viewable display and video; attention metrics | Viewable display (D, MW, MA) and video (D, MW, MA, CTV certified apps only); attention metrics (D, MW, MA) |
 | **Google Ad Manager (Active View)** | Display: "50% of a creative's pixels have been in the browser viewport area for 1 continuous second"; video: "the requirement is 2 seconds" | Eligible impressions "assumed to be measurable and not viewable" until a pingback says otherwise | Viewable display and video (D, MW, MA) |
+| **IAB and MRC Attention Measurement Guidelines v1.0** (November 2025) | Attention accrues on a base of MRC-viewable, SIVT-filtered impressions with a user's presence indicated or confirmed | Non-viewable attention only as a separate, diagnostic presentation | DoubleVerify attention metrics are the one accredited entry on the digital list |
 | **Integral Ad Science** | MRC thresholds | Viewable display and video, pre-bid viewability | Viewable display (D, MW, MA) and video (D, MW, MA, CTV, certified traffic) |
 | **Meta** | Not stated on the pages opened | First-party measurement | Viewable video in-app only; viewable display not listed |
-| **MRC Viewable Ad Impression Guidelines v2.0** (June 2014, updated August 2015) | Display 50% / 1 s; large display (242,500 pixels or more) 30% / 1 s; video 50% of the ad's pixels / 2 s of play | Viewable, non-viewable and undetermined buckets; measured rate and viewable rate | The baseline every accreditation above is audited against |
 | **MRC Cross-Media Phase I (Video)** (September 2019) | "100% of pixels on screen for at least two continuous seconds" for combined, deduplicated cross-media video | Duration weighted viewable impressions as an additional metric | Applies to cross-media audience services |
-| **IAB and MRC Attention Measurement Guidelines v1.0** (November 2025) | Attention accrues on a base of MRC-viewable, SIVT-filtered impressions with a user's presence indicated or confirmed | Non-viewable attention only as a separate, diagnostic presentation | DoubleVerify attention metrics are the one accredited entry on the digital list |
+| **MRC Viewable Ad Impression Guidelines v2.0** (June 2014, updated August 2015) | Display 50% / 1 s; large display (242,500 pixels or more) 30% / 1 s; video 50% of the ad's pixels / 2 s of play | Viewable, non-viewable and undetermined buckets; measured rate and viewable rate | The baseline every accreditation above is audited against |
 
 The thresholds are the same everywhere; the differences are in who may measure, on which surfaces, and through which integration.
 

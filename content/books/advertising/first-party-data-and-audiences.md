@@ -252,6 +252,8 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 - [FTC: Enforcement action to bar GoodRx from sharing consumers' sensitive health info for advertising (February 1, 2023)](https://www.ftc.gov/news-events/news/press-releases/2023/02/ftc-enforcement-action-bar-goodrx-sharing-consumers-sensitive-health-info-advertising), the $1.5 million penalty and ban on sharing health data for ads
 - [FTC: Ban on BetterHelp revealing consumers' data (March 2, 2023)](https://www.ftc.gov/news-events/news/press-releases/2023/03/ftc-ban-betterhelp-revealing-consumers-data-including-sensitive-mental-health-information-facebook), the $7.8 million order and the retargeting ban
+- [Maryland: Chapter 455 of 2024, enrolled text](https://mgaleg.maryland.gov/2024RS/Chapters_noln/CH_455_sb0541e.pdf), the ban on selling sensitive data and on targeted advertising to consumers known to be 13 to 17
+- [Regulation (EU) 2022/2065, Digital Services Act](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R2065), Art. 26(3) profiling ads using special categories and Art. 28(2) profiling ads to minors
 
 **Reference**
 
