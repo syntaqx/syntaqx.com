@@ -19,9 +19,9 @@ As of November 2026, from each tool's documentation:
 
 | Tool | Design | Metrics | Access and notes |
 | --- | --- | --- | --- |
-| **Google Conversion Lift** | User-based (groups from "aggregated user attributes") or geography-based (groups from aggregated geographic data, "supports offline data"); treatment "People who see your ads," control "People who don't see your ads" | User-based: incremental conversions, relative lift, incremental conversion value, iCPA, iROAS; geo-based: iROAS, incremental conversions, value and cost | "Conversion Lift isn't available for all Google Ads accounts"; requires a Google representative |
-| **Google Meridian GeoX** | "Cross-platform, geo-experiment solution" in the Meridian toolkit | Lift results fed into the MMM as calibration | "Now available globally" |
-| **Meta ad studies** (Marketing API `AdStudy`) | Types include `LIFT`, `SPLIT_TEST`, `CONTINUOUS_LIFT_CONFIG` and `GEO_LIFT`; cells with `treatment_percentage` and optional `control_percentage` | Objectives per study, a `confidence_level` for power and reporting, an observation period after the study | Each cell's treatment percentage at least 10; cell percentages and start time can't change once running |
+| **Google Conversion Lift** | User-based (groups from "aggregated user attributes") or geography-based (groups from "aggregated geographical data," which "support offline data"); treatment "People who see your ads," control "People who don't see your ads" | User-based: incremental conversions, relative lift, incremental conversion value, iCPA, iROAS; geo-based: iROAS, incremental conversions, value and cost | "Conversion Lift isn't available for all Google Ads accounts"; requires a Google representative |
+| **Google Meridian GeoX** | "Cross-platform, geo-experiment solution" in the Meridian toolkit | Lift results fed into the MMM through Meridian's automated calibration | "Now available globally" (the announcement is undated) |
+| **Meta ad studies** (Marketing API `AdStudy` reference) | The create call's `type` values include `LIFT`, `SPLIT_TEST`, `CONTINUOUS_LIFT_CONFIG` and `GEO_LIFT` (the field description itself names only split tests and lift); cells with `treatment_percentage` and `control_percentage` fields | Objectives per study, a `confidence_level` for power and reporting, an observation period after the study | Each cell's treatment percentage at least 10; start time and cell treatment percentages can't change once running. This is the API reference only; Meta's help pages for its lift tests didn't load for review |
 | **Meta GeoLift** (open source) | Geo experiments with synthetic control methods, power calculators and "data-driven market selection" | Geo-level lift | R (4.0.0 or newer), MIT licensed |
 | **Google research** (Vaver and Koehler 2011; Kerman, Wang and Vaver 2017) | Randomized geo experiments; time-based regression for few geos | ROAS from geo-level response | The published methods behind geo tools |
 
@@ -31,7 +31,7 @@ Brand lift studies (surveys of exposed and control groups about recall and consi
 
 The playbook's experiment vocabulary applies ([Randomization Units and Assignment](/docs/telemetry/experimentation#randomization-units-and-assignment)), with two estimands that advertising keeps apart:
 
-- **Intent-to-treat (ITT).** Compare everyone assigned to treatment with everyone assigned to control, whether or not they were ever exposed. It is always valid, cheap and compatible with geo randomization, but its precision is poor when most assigned users never see the ad: Johnson, Lewis and Nubbemeyer note that "ITT's precision is poor when the proportion of untreated users is high, as is often the case."
+- **Intent-to-treat (ITT).** Compare everyone assigned to treatment with everyone assigned to control, whether or not they were ever exposed. It is always valid, cheap and compatible with geo randomization, but its precision is poor when most assigned users never see the ad: Johnson, Lewis and Nubbemeyer note that "ITT's precision is poor when the proportion of untreated users is high, as is often the case in practice."
 - **Treatment-on-the-treated (TOT).** Compare the users who were exposed with the users in control who would have been exposed. This is what an advertiser means by "the effect of my ad," and it is far more precise, but it needs to know who in the control group would have been exposed, which is the hard part.
 
 From either, the reported numbers follow:
@@ -43,14 +43,14 @@ iCPA                    = spend / incremental_conversions
 iROAS                   = incremental_conversion_value / spend
 ```
 
-Google's definition of iCPA is exactly that: "total spend divided by incremental conversions." A study reports each with a confidence or credible interval; a point estimate without one is not a result.
+Google's definition of iCPA is exactly that: "the total spend divided by Incremental Conversions." A study reports each with a confidence or credible interval; a point estimate without one is not a result.
 
 ## User Holdouts, PSAs and Why They Break
 
 The classic design shows the control group a public service announcement (PSA) in place of the advertiser's ad: both groups are "exposed," so comparing exposed treatment users with PSA-exposed control users estimates the effect on the treated. Johnson, Lewis and Nubbemeyer's paper on ghost ads lays out why it fails on a modern platform:
 
 - **Cost and coordination.** "PSAs are expensive and prone to errors because they require coordination among advertisers, publishers, and third-party charities," which pushes advertisers to tiny control groups (in one study they cite, the advertiser wanted "less than 2% of users in the control group"), wrecking precision.
-- **Optimized delivery breaks the symmetry.** "To maximize performance of the treatment ad and PSA, the ad platform will assign different types of users to be exposed to the PSA or treatment ad," so "the PSA-exposed users are no longer a valid holdout group." The paper notes that two thirds of online display dollars at the time used performance-optimizing technology.
+- **Optimized delivery breaks the symmetry.** Performance-optimized campaigns break PSA tests: "to maximize performance of the treatment ad and PSA, the ad platform will assign different types of users to be exposed to the PSA or treatment ad," so "the PSA-exposed users are no longer a valid holdout group." The paper notes that two thirds of online display dollars at the time used performance-optimizing technology.
 - **PSAs aren't nothing.** A PSA displaces competitors' ads the control user would otherwise have seen, so the comparison isn't against the world without the campaign.
 
 A plain user holdout (control users simply don't get the advertiser's ads, and the platform logs nothing else) avoids PSAs but only supports ITT, with its dilution.
@@ -61,7 +61,7 @@ Ghost ads solve the counterfactual-exposure problem inside the ad platform. From
 
 The paper's results: relative to PSA and ITT tests, ghost ads "can reduce the cost of experimentation, improve measurement precision, and work with modern ad platforms that optimize ad delivery in real-time"; in an online retailer's retargeting campaign, a setting where "a PSA test would be severely biased," the ads "lifted website visits by 17% and purchases by 11%"; and advertisers "can measure ad lift just as precisely while spending at least an order of magnitude less."
 
-**Predicted ghost ads.** Running the full auction twice per control request isn't always possible, for example when the final decision happens in an exchange or another system. The variant predicts, at the platform's own decision point, whether the advertiser's ad would have been delivered, and uses that prediction (for both arms, so it stays symmetric) as an instrument. The paper describes it as "compatible with online display advertising platforms" and reports an implementation recording "more than 100 million predicted ghost ads per day." The cost of the prediction is noise; the gain is that no one has to coordinate a second auction.
+**Predicted ghost ads.** A plain ghost ad isn't always observable: when the platform suggests an ad to a downstream publisher that can reject it, the control group has no record of the cases where the publisher would have refused, and the arms stop being symmetric. The variant runs a simulated auction for both treatment and control users, before the real winner is chosen, to predict whether the advertiser's ad would be delivered, logs those predicted ghost impressions, and uses the prediction (for both arms, so it stays symmetric) as an instrument. The paper describes it as "compatible with online display advertising platforms" and reports an implementation recording "more than 100 million predicted ghost ads per day." The cost of the prediction is noise, since predicted and actual exposure differ; the gain is that it doesn't depend on seeing the final serve.
 
 What a ghost ad design requires of the platform's records:
 
@@ -77,8 +77,8 @@ When user-level randomization is impossible (no stable identifier, offline sales
 Geo tests need nothing but regional targeting from the platform, which is why they work for every channel and why they are the advertiser's default ([Incrementality and Geo Tests](/books/commerce/acquisition-and-attribution#incrementality-and-geo-tests)). The methods differ in how they build the counterfactual:
 
 - **Randomized geos with regression.** Many regions, random assignment, a regression of post-period response on pre-period response; Vaver and Koehler's approach.
-- **Time-based regression.** When few regions are available ("smaller countries, sub-regions, or matched-market tests with one control and one test region"), Kerman, Wang and Vaver forecast "the counterfactual trajectory of market response over time" from the control series and estimate the cumulative effect at the end.
-- **Synthetic control.** Build the counterfactual for the treated regions as a weighted combination of untreated regions that tracked them before the test. Meta's GeoLift is "built on the latest developments in Synthetic Control Methods" (it depends on the `augsynth` package) and adds power calculators and market selection.
+- **Time-based regression.** When few regions are available ("smaller countries, or subregions of larger countries," and matched-market tests comparing "a single control region" with "a single test region"), Kerman, Wang and Vaver's method "predicts the time series of the counterfactual market response" from the control series and estimates the cumulative effect at the end.
+- **Synthetic control.** Build the counterfactual for the treated regions as a weighted combination of untreated regions that tracked them before the test. Meta's GeoLift measures lift "at a Geo-level using the latest developments in Synthetic Control Methods" (it depends on the `augsynth` package) and adds power calculators and market selection.
 - **Matched markets.** Pair regions that look alike and treat one of each pair; simple, fragile when the match drifts.
 
 The geo design problems are interference problems ([Interference and Network Effects](/docs/telemetry/experimentation#interference-and-network-effects)): people commute, shop and stream across regional boundaries; targeting by IP-derived location leaks; national TV and press reach control regions anyway; and a handful of large regions can dominate the result. Platforms report geo results at the region level (iROAS, incremental conversions) because the unit is the region; there is no user-level answer.
@@ -87,11 +87,11 @@ The geo design problems are interference problems ([Interference and Network Eff
 
 A lift study is expensive (lost reach in control, analyst time, the opportunity cost of waiting), so it should be designed to answer its question:
 
-- **Power first.** The minimum detectable lift follows from baseline conversion rate, control share, exposure rate and duration ([Sample Size and Power](/docs/telemetry/experimentation#sample-size-and-power)). Meta's `AdStudy` takes a `confidence_level` used "in power calculations and the final report," and GeoLift ships power calculators. A study whose detectable lift is larger than any plausible effect is not worth running.
-- **Fix the window and the observation period.** Conversions keep arriving after the study's delivery ends; Meta's study has an `observation_end_time` after the study period. The outcome window is set before the start, as are the primary metric and the analysis method.
+- **Power first.** The minimum detectable lift follows from baseline conversion rate, control share, exposure rate and duration ([Sample Size and Power](/docs/telemetry/experimentation#sample-size-and-power)). Meta's `AdStudy` reference describes a `confidence_level` "used in power calculations and final study report," and GeoLift ships power calculators. A study whose detectable lift is larger than any plausible effect is not worth running.
+- **Fix the window and the observation period.** Conversions keep arriving after the study's delivery ends; Meta's study has an `observation_end_time` for an observation period that "starts when the study period ends." The outcome window is set before the start, as are the primary metric and the analysis method.
 - **Don't peek and stop.** Stopping when the result looks good inflates false positives unless the analysis is sequential by design ([Peeking and Sequential Testing](/docs/telemetry/experimentation#peeking-and-sequential-testing)).
-- **Lock the design.** Meta's API enforces it: after a study runs, "you can't change `start_time` or cell `treatment_percentage` values," associated objects "can't be removed," and studies "can't be deleted." A study whose split changed midway is two studies with a contaminated boundary.
-- **Multi-cell for comparisons.** Comparing two strategies (two creatives, prospecting versus retargeting) is several treatment cells with a shared or separate control; Meta's cells must each have a treatment percentage of at least 10, and the cells together "less or equal to 100."
+- **Lock the design.** Meta's API reference says "Once the study runs, you cannot update start_time, treatment_percentage for cells" and "You cannot remove associated objects such as adsets, adaccounts, campaigns," though `end_time` can still be moved later while the study hasn't ended, and its delete call on a study isn't supported. A study whose split changed midway is two studies with a contaminated boundary.
+- **Multi-cell for comparisons.** Comparing two strategies (two creatives, prospecting versus retargeting) is several treatment cells with a shared or separate control; Meta's reference says each cell's treatment percentage "should be at least 10" and that the sum across cells "should be less or equal to 100."
 
 ## What Counts as an Experiment
 
@@ -136,7 +136,8 @@ CREATE TABLE lift_study_cells (          -- a treatment strategy and its share o
   control_share_bp     INT NOT NULL CHECK (control_share_bp BETWEEN 1 AND 10000),
   test_geos            TEXT[],            -- geo designs: the assigned regions
   control_geos         TEXT[],
-  UNIQUE (lift_study_id, name)
+  UNIQUE (lift_study_id, name),
+  CHECK (treatment_share_bp + control_share_bp <= 10000)
 );
 
 CREATE TABLE lift_study_assignments (    -- which arm a unit landed in; written on first sight
@@ -333,10 +334,10 @@ GROUP BY u.arm;
 
 Design notes:
 
-- **Lock the design at start.** `locked_at` is set when the study starts, and an update trigger rejects changes to the design, salt, shares, cells and periods afterward; a study that must change is invalidated and a new one created, the same rule Meta's API enforces.
+- **Lock the design at start.** `locked_at` is set when the study starts, and an update trigger rejects changes to the design, salt, shares, cells and periods afterward; a study that must change is invalidated and a new one created, a stricter version of the start-time and cell-percentage lock in Meta's API.
 - **Never reuse a salt.** A new salt per study keeps a unit's arm in one study independent of its arm in the last; reusing one creates users who are always in control.
 - **Ghosts are not events.** `ghost_impressions` has its own partitioned log and never joins `ad_events`, `delivery_daily` or invoices; a ghost that leaks into delivery bills the advertiser for an ad no one saw.
-- **Keep the observational flag honest.** `random_assignment` is false for any design where someone chose the regions or the users, and every report shows it, as the MRC's outcomes standard requires.
+- **Keep the observational flag honest.** `random_assignment` is false for any design where someone chose the regions or the users, and every report shows it. The MRC's outcomes standard doesn't name such a flag, but it separates experiments from observational approaches and requires disclosure of biases, sample bases and sampling error with the results.
 - **Results are versioned, not overwritten.** Re-analysis with a new method writes a new `lift_study_results` row and sets `superseded_by` on the old one, so the result an advertiser acted on is still there.
 - **Unit keys are pseudonymous, not anonymous.** A keyed hash of a user ID is still personal data; assignments and ghost logs follow the same retention and consent rules as the events they derive from ([Pseudonymous Is Not Anonymous](/docs/telemetry/consent-and-privacy#pseudonymous-is-not-anonymous)), and units without consent to measurement are excluded from user-level studies, not silently put in control.
 - **The spend in iCPA is the study's spend.** `spend_micros` is the cell's media cost from `delivery_daily` over the study period, in the ad account's currency, so iCPA and iROAS divide like with like.
@@ -362,20 +363,20 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 
 ## References
 
-**Research**
+**Reference**
 
 - [Johnson, Lewis and Nubbemeyer: Ghost Ads, Improving the Economics of Measuring Ad Effectiveness (NBER working paper, February 18, 2016, PDF)](https://conference.nber.org/conf_papers/f84173.pdf), ghost ads and predicted ghost ads, the PSA and intent-to-treat problems, the 17% and 11% retargeting lifts and the order-of-magnitude cost reduction
 - [Google Research: Measuring Ad Effectiveness Using Geo Experiments (Vaver and Koehler, 2011)](https://research.google/pubs/measuring-ad-effectiveness-using-geo-experiments/), randomized non-overlapping regions assigned to control or treatment
 - [Google Research: Estimating Ad Effectiveness using Geo Experiments in a Time-Based Regression Framework (Kerman, Wang and Vaver, 2017)](https://research.google/pubs/estimating-ad-effectiveness-using-geo-experiments-in-a-time-based-regression-framework/), counterfactual forecasting for few geos and matched markets
 
-**Platform documentation**
+**In practice**
 
 - [Google Ads Help: About Conversion Lift](https://support.google.com/google-ads/answer/12003020), user-based and geography-based studies, treatment and control groups, the metrics and limited availability
-- [Google: Meridian updates](https://business.google.com/us/accelerate/announcements/meridian-updates/), GeoX as a cross-platform geo-experiment solution available globally
+- [Google: Meridian updates](https://business.google.com/us/accelerate/announcements/meridian-updates/), GeoX as a cross-platform geo-experiment solution available globally and automated calibration (undated page)
 - [Meta for Developers: Ad Study](https://developers.facebook.com/docs/marketing-api/reference/ad-study/), study types including LIFT and GEO_LIFT, cells and percentages, confidence level, observation period and the constraints once running
 - [Meta: GeoLift (GitHub)](https://github.com/facebookincubator/GeoLift), synthetic control geo experiments, power calculators, market selection, R and the MIT license
 
 **Specifications**
 
-- [MRC: Outcomes and Data Quality Standards (PDF)](https://mediaratingcouncil.org/sites/default/files/Standards/MRC%20Outcomes%20and%20Data%20Quality%20Standards%20%28Final%29.pdf), experiments as randomized and everything else as observational
+- [MRC: Outcomes and Data Quality Standards (September 2022, PDF)](https://mediaratingcouncil.org/sites/default/files/Standards/MRC%20Outcomes%20and%20Data%20Quality%20Standards%20%28Final%29.pdf), experiments as randomized and everything else as observational, and the disclosure requirements for results
 - [IAB and MRC: Retail Media Measurement Guidelines (January 2024, PDF)](https://mediaratingcouncil.org/sites/default/files/Standards/IAB_Retail_Media_Measurement_Guidelines_January2024.pdf), randomized trials, synthetic controls, matched markets and models for retail incrementality

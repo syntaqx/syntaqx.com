@@ -20,12 +20,12 @@ As of November 2026, from each standard and platform's documentation and the MRC
 | Platform or standard | Viewable definition | Reporting | Accreditation (MRC digital list) |
 | --- | --- | --- | --- |
 | **DoubleVerify** | MRC thresholds | Viewable display and video; attention metrics | Viewable display (D, MW, MA) and video (D, MW, MA, CTV certified apps only); attention metrics (D, MW, MA) |
-| **Google Ad Manager (Active View)** | Display: "at least 50% of the creative's pixels are in the viewport for 1 continuous second"; video: the same for 2 continuous seconds | Eligible impressions "assumed measurable and not viewable" until a pingback says otherwise | Viewable display and video (D, MW, MA) |
+| **Google Ad Manager (Active View)** | Display: "50% of a creative's pixels have been in the browser viewport area for 1 continuous second"; video: "the requirement is 2 seconds" | Eligible impressions "assumed to be measurable and not viewable" until a pingback says otherwise | Viewable display and video (D, MW, MA) |
 | **Integral Ad Science** | MRC thresholds | Viewable display and video, pre-bid viewability | Viewable display (D, MW, MA) and video (D, MW, MA, CTV, certified traffic) |
 | **Meta** | Not stated on the pages opened | First-party measurement | Viewable video in-app only; viewable display not listed |
 | **MRC Viewable Ad Impression Guidelines v2.0** (June 2014, updated August 2015) | Display 50% / 1 s; large display (242,500 pixels or more) 30% / 1 s; video 50% of the ad's pixels / 2 s of play | Viewable, non-viewable and undetermined buckets; measured rate and viewable rate | The baseline every accreditation above is audited against |
 | **MRC Cross-Media Phase I (Video)** (September 2019) | "100% of pixels on screen for at least two continuous seconds" for combined, deduplicated cross-media video | Duration weighted viewable impressions as an additional metric | Applies to cross-media audience services |
-| **IAB and MRC Attention Measurement Guidelines v1.0** (November 2025) | Attention accrues on a base of MRC-viewable, SIVT-filtered impressions with a confirmed user present | Non-viewable attention only as a separate, diagnostic presentation | DoubleVerify attention metrics are the one accredited entry on the digital list |
+| **IAB and MRC Attention Measurement Guidelines v1.0** (November 2025) | Attention accrues on a base of MRC-viewable, SIVT-filtered impressions with a user's presence indicated or confirmed | Non-viewable attention only as a separate, diagnostic presentation | DoubleVerify attention metrics are the one accredited entry on the digital list |
 
 The thresholds are the same everywhere; the differences are in who may measure, on which surfaces, and through which integration.
 
@@ -34,15 +34,15 @@ The thresholds are the same everywhere; the differences are in who may measure, 
 The MRC guideline sets the definitions, and its words are the ones contracts reference:
 
 - **Display.** "50% of the pixels in the advertisement were on an in-focus browser tab on the viewable space of the browser page" for "one continuous second," post ad render. The clock starts only once the pixel threshold is met.
-- **Large display.** "For display ads sized at 242,500 pixels (which is equivalent to 970x250)," the ad counts if 30% of its pixels are in view for one continuous second, because half of a billboard-sized unit can exceed a small screen's visible area.
-- **Video.** 50% of the ad's pixels in view while "2 continuous seconds of the video advertisement is played." The guideline's footnote distinguishes the ad's pixels from the player's: measuring 50% of the video player's pixels is a different criterion and must be disclosed, unless the player and ad are the same size so the difference is immaterial.
-- **Audio.** "Detection of audio is not currently a requirement," because measurers can't reliably detect unmuted audio, though audio presence is encouraged where it can be measured. (The cross-media standard tightens this, below.)
+- **Large display.** "for display ads sized at 242,500 pixels (which is equivalent to the size of a 970 x 250 pixel display ad) or greater," the ad counts if 30% of its pixels are in view for one continuous second, because half of a billboard-sized unit can exceed a small screen's visible area.
+- **Video.** 50% of the ad's pixels in view while "2 continuous seconds of the video advertisement is played." The guideline's footnote distinguishes the ad's pixels from the player's: measuring 50% of the video player's pixels is a different criterion that "should be prominently disclosed," supported by evidence that the difference is immaterial.
+- **Audio.** "detection of audio is not currently a requirement," because measurers can't reliably detect unmuted audio, though audio presence is encouraged where it can be measured. (The cross-media standard tightens this, below.)
 - **In focus.** An ad in a background tab is not viewable no matter where it sits on the page. Prefetched and prerendered pages aren't viewable until they are actually rendered and seen.
 
 Three rules turn the definition into counts:
 
-- **Every viewable impression is a served impression.** It must meet the served-impression criteria (client-side counting, invalid traffic filtration), and "In no case should viewable impressions exceed rendered served impressions."
-- **Once per session.** "Once an ad qualifies as a valid viewable impression, it should only be counted as one viewable impression within that user session," even if the user scrolls away and back; the extra exposure adds to time in view, not to the count.
+- **Every viewable impression is a served impression.** It must meet the served-impression criteria (client-side counting, invalid traffic filtration), and "In no case should viewable impressions exceed rendered served impressions counted on a campaign."
+- **Once per session.** "Once an ad qualifies as a valid viewable impression, it should only be counted as one viewable impression within that user session", even if the user scrolls away and back; the extra exposure adds to time in view, not to the count.
 - **Each ad on its own.** In a multi-ad buy such as a page takeover, "each ad should be measured independently for viewability, and reported independently," whatever the contract says about paying only when all units are viewable.
 
 Mobile has its own MRC guideline (Mobile Viewable Ad Impression Measurement Guidelines, June 2016), and the IAB and MRC retail media guidelines restate the general rule that a strong user interaction (a click or tap) can make an impression viewable before the time and pixel thresholds are met, as long as accidental clicks are accounted for.
@@ -53,12 +53,12 @@ A viewability measurement is a series of observations of the ad's geometry and t
 
 **Polling.** The guideline's minimums: "for viewable display impression processes, 100 milliseconds; for viewable video impression processes, 200 milliseconds," which "equate to 10 consecutive positive observations." A measurer may poll display at up to 200 ms only if it "can empirically validate" that this makes no material difference, revalidated at least annually and "prominently disclosed." Event-driven measurers that watch state changes (scroll position, window size and tab focus) instead of polling continuously may do so, polling at the minimums once a change is seen.
 
-**Techniques.** The guideline's appendix lists the families, and each has a cost:
+**Techniques.** The guideline's appendix lists the first three families, apps and players add a fourth, and each has a cost:
 
 - **Geometric measurement** of the ad's rectangle against the viewport, which works only when the script can see both, so it fails in cross-domain iframes unless something tells it the geometry.
 - **Direct communication** from the environment: browser APIs (the guideline mentions the Page Visibility API as supporting evidence of tab focus, but "neither ... should be considered as standalone solutions"), SafeFrame, which gives a contained creative its position from the host, and publisher communication.
-- **Browser optimization** techniques that infer visibility from how the browser schedules rendering of off-screen content, with full or partial browser coverage.
-- **Apps and players** through the Open Measurement SDK, where the app exposes the native view's geometry and the player's state through the OMID API, and the vendor's script decides. OM SDK's page lists what it provides: when ads appear on screen, "the percentage in view, and how long they stay visible," on-screen placement, overlay transparency and quartiles.
+- **Browser optimization** techniques, which the appendix lists with full or partial browser coverage, without describing the mechanism.
+- **Apps and players** through the Open Measurement SDK, where the app exposes the native view's geometry and the player's state through the OMID API, and the vendor's script decides. OM SDK's page lists what it provides: when ads appear on screen, "percentage in view, and for how long," on-screen placement, overlay transparency and quartiles.
 
 **Undetermined, not guessed.** If the only evidence is weak (a visibility API alone), "the ad should be classified as one with viewability undetermined." Extrapolations "should be fully disclosed along with pre-determined estimates of accuracy," and extrapolated counts are segregated from observed ones.
 
@@ -66,7 +66,7 @@ A viewability measurement is a series of observations of the ad's geometry and t
 
 ## Measured Rate and Viewable Rate
 
-The guideline requires three mutually exclusive counts, disclosed at least at the campaign level: viewable impressions, non-viewable served impressions, and impressions with viewable status undetermined, plus the total rendered served impressions that is their sum. The metrics computed from them, with the guideline's own example of 1,000 rendered served impressions of which 300 are viewable, 200 non-viewable and 500 undetermined:
+The guideline requires three mutually exclusive counts, disclosed at least at the campaign level: viewable impressions, non-viewable served impressions, and impressions with viewable status undetermined, and it recommends also reporting the total rendered served impressions that is their sum. The metrics computed from them, with the guideline's own example of 1,000 rendered served impressions of which 300 are viewable, 200 non-viewable and 500 undetermined:
 
 ```text
 measured rate          = (viewable + non_viewable) / rendered_served      = (300 + 200) / 1000 = 50%
@@ -114,10 +114,10 @@ The four method families, and what each produces:
 | --- | --- | --- | --- |
 | **Data signals** | Impression-level time in view, scroll, media plays, interactions, audio state | Attentive seconds or a modeled score per impression | Timestamps fit for the unit of analysis; viewability and SIVT as the base |
 | **Visual tracking** | Eye tracking and facial coding from consenting panels | Fixations, dwell, ground truth for models | Calibration for screen and device; gaze precision sufficient to map fixations to the ad |
-| **Physiological and neurological** | Heart rate, skin response, brain activity | Arousal, engagement | Lab conditions and sample representativeness |
-| **Panel and survey** | Brand studies, measurement panels | Recall, lift, sentiment | Panel controls; outcomes versus attention kept apart |
+| **Physiological and neurological** | Heart rate, skin response, brain activity | Arousal, engagement | Calibrated devices; controlled or semi-controlled environments |
+| **Panel and survey** | Brand studies, measurement panels | Recall, recognition, sentiment | Representative samples, bias mitigation, timely recall |
 
-Most commercial attention metrics are hybrids: a model trained on eye-tracking or outcome panels, applied at scale to impression-level signals. Adelaide, for example, describes its AU as a "0–100 score" from "a machine learning model trained to outcomes" across "19 channels." On the MRC's digital list, DoubleVerify's attention metrics (desktop, mobile web and in-app) are accredited, and XPLN's attention metrics are listed as "audit reviewed" (August 2026). For a platform, attention is a vendor's per-impression or per-placement score with a model version, stored beside viewability and never in place of it.
+Most commercial attention metrics are hybrids: a model trained on eye-tracking or outcome panels, applied at scale to impression-level signals. Adelaide, for example, describes its AU as a "0–100 score" from "a machine learning model trained to outcomes" across "19 channels." On the MRC's digital list, DoubleVerify's attention metrics (desktop, mobile web and in-app) are accredited, and on its services-under-review list XPLN, whose scope includes attention metrics (mobile web and in-app), is "Audit reviewed 8/2026", while Adelaide's AU is "Pre-audit reviewed 5/2026" with the audit not begun. For a platform, attention is a vendor's per-impression or per-placement score with a model version, stored beside viewability and never in place of it.
 
 ## How to Build It
 
@@ -139,7 +139,7 @@ CREATE TABLE viewability_standards (     -- a threshold set; the MRC's and anyon
 );
 
 CREATE TABLE viewability_measurements (  -- one measurer's verdict on one served impression
-  impression_id          TEXT NOT NULL,     -- the serve's ID, as on ad_events
+  impression_id          TEXT NOT NULL,     -- the serve's ID, the impression part of ad_events.dedupe_key
   occurred_at            TIMESTAMPTZ NOT NULL,  -- the impression's event time
   measurer_org_id        UUID NOT NULL,     -- this system, a verification vendor or a platform
   line_item_id           UUID NOT NULL,
@@ -389,6 +389,7 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 
 **In practice**
 
-- [Google Ad Manager Help: Monitor Active View measurement](https://support.google.com/admanager/answer/6123557), Active View's display and video criteria and impressions assumed measurable and not viewable until a pingback
-- [MRC: Digital accreditation](https://mediaratingcouncil.org/accreditation/digital), accredited viewability and attention metrics by vendor and environment, and XPLN's reviewed attention audit
+- [Google Ad Manager Help: Monitor Active View measurement](https://support.google.com/admanager/answer/6123557), Active View's display and video criteria and impressions assumed to be measurable and not viewable until a pingback
+- [MRC: Digital accreditation](https://mediaratingcouncil.org/accreditation/digital), accredited viewability and attention metrics by vendor and environment
+- [MRC: Digital services under review](https://mediaratingcouncil.org/accreditation/services-under-review/digital), XPLN's audit-reviewed attention metrics and Adelaide's pre-audit review
 - [Adelaide: Attention metrics](https://www.adelaidemetrics.com), AU as a 0–100 score from a model trained to outcomes across 19 channels

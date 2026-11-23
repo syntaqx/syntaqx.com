@@ -16,7 +16,7 @@ This chapter covers what the MRC is and does, the standards and guidelines it pu
 
 ## How the Platforms Do It
 
-As of November 2026, from the MRC's digital accreditation list (the scope letters are authoritative; the list itself warns that "the most recent letter may present a slightly different accreditation scope than the one listed"). Environments: D desktop, MW mobile web, MA mobile in-app, CTV connected TV.
+As of November 2026, from the MRC's digital accreditation list (the scope letters govern; the MRC's accreditation page warns that "the most recent letter may present a slightly different accreditation scope than the one listed"). Environments: D desktop, MW mobile web, MA mobile in-app, CTV connected TV.
 
 | Company and service | Accredited (selected) | Not listed or limited |
 | --- | --- | --- |
@@ -31,7 +31,7 @@ As of November 2026, from the MRC's digital accreditation list (the scope letter
 | **Snap** | Mobile in-app only: rendered and viewable display and video, clicks, reach metrics, video duration | |
 | **Walmart Connect** (Sponsored Search) | Rendered display and video, search clicks and CTR (D, MW, MA) | Onsite display listed as audit in process (as of November 2025) |
 
-The same page lists services in progress, which shows how long the pipeline is: IAS's YouTube brand safety classification has been "audit in process" since April 2023, Ogury's audience reporting since December 2024, and Adform's rendered and viewable impressions were listed with "Accreditation suspended effective November 10, 2026" while an audit is in process. Retail networks are entering the queue: Kroger is in pre-audit (as of June 2026) for impressions, clicks, viewable impressions, attributed and incremental sales and iROAS on onsite formats.
+A companion page lists digital services under review, which are not accredited, and it shows how long the pipeline is: IAS's YouTube brand safety classification has been "audit in process" since April 2023, Ogury's audience reporting since December 2024, and Adform's rendered and viewable impressions are listed as "Accreditation suspended, audit in process 11/26," with a footnote reading "Accreditation suspended effective November 10, 2026, due to a cybersecurity incident impacting in-scope systems." Retail networks are entering the queue: Kroger is in pre-audit (as of June 2026) for impressions, clicks, viewable impressions, attributed and incremental sales and iROAS on onsite formats.
 
 The MRC also publishes a digital platforms status chart for the large social and retail platforms its members asked about, updated quarterly (the version opened was dated October 22, 2026), with columns for first- and third-party viewability, SIVT, digital audience, first- and third-party content-level brand safety, outcomes, and auctions under the January 2026 Auction Transparency Standards. The chart "is not reflective of each digital platforms' full accreditation scope," so it is a map, not a source of record.
 
@@ -58,7 +58,7 @@ The MRC's standards page lists 29 documents as of November 2026. The ones digita
 | Digital Video Impression Measurement Guidelines | May 2006 | Jun 2018 | Video impressions and playback events |
 | Click Measurement Guidelines | May 2009 | | Click stages, valid clicks, filtration |
 | Conduct of Ad Verification Guidelines | Feb 2012 | | How verification vendors operate; the brand safety supplement (Sep 2018) extends it to content-level context |
-| Mobile Web and Mobile In-App Advertising Measurement Guidelines | Jul 2013 | Oct 2017 | Mobile counting; SDK-based measurement |
+| Mobile Web Advertising Measurement Guidelines; Mobile Application (In-App) Advertising Measurement Guidelines | Jul 2013 | Oct 2017 | Mobile counting; SDK-based measurement |
 | Audience Reach Measurement Guidelines | Aug 2013 | | Unique users, browsers, sessions |
 | Viewable Ad Impression Measurement Guidelines | Jun 2014 | Aug 2015 | The viewable impression for display and video |
 | Invalid Traffic Detection and Filtration Guidelines, IVT 2.0 Addendum | Oct 2015 | Jun 2020 | GIVT and SIVT; an interim update memo followed in April 2024 |
@@ -79,25 +79,25 @@ The MRC's standards page lists 29 documents as of November 2026. The ones digita
 How they nest is what an implementation needs:
 
 - **A viewable impression is a served impression first.** The viewability guideline says "In all cases a viewable impression must also meet pre-existing criteria for a served impression, for example, counted on the client side, filtered for non-human activity," and "In no case should viewable impressions exceed rendered served impressions." So viewability sits on top of the counting rules, and both sit on top of invalid-traffic filtration.
-- **Audience sits on top of viewability.** The cross-media standard makes viewable impressions "the minimum qualifying unit" for reach, frequency and GRPs, and the attention guidelines treat attention as "a measure of audience (a measure of persons, not devices, as persons generate attention)," requiring viewability, full SIVT filtration and a confirmed user presence underneath.
-- **Outcomes sit on top of everything.** The Outcomes and Data Quality Standard requires the exposure data feeding attribution or lift to meet the impression, viewability and IVT requirements it depends on.
+- **Audience sits on top of viewability.** The cross-media standard makes viewable impressions "the minimum required qualifying measurement unit" for reach, frequency and GRPs, and the attention guidelines treat attention as "a measure of audience (a measure of persons, not devices, as persons generate attention)," requiring viewability, full SIVT filtration and a confirmed user presence underneath.
+- **Outcomes sit on top of everything.** The Outcomes and Data Quality Standard requires SIVT filtration of the exposures feeding outcomes, and allows outcomes not limited to viewable impressions only when users can filter them to outcomes downstream of viewable impressions.
 
-The guidelines repeat one structural rule worth adopting everywhere: anything measured differently from the standard (a custom viewability threshold, a projected rather than observed count, a diagnostic attention metric) may be reported **in addition to** the standard metric, segregated and labeled, never instead of it. The retail media guidelines state it for viewability ("in addition to, not in place of"), the viewability guideline for extrapolated counts ("metrics originating from each method should be segregated"), and the attention guidelines for attention measured without viewability ("separately presented and distinguished in reporting as non-standard and diagnostic").
+The guidelines repeat one structural rule worth adopting everywhere: anything measured differently from the standard (a custom viewability threshold, a projected rather than observed count, a diagnostic attention metric) may be reported **in addition to** the standard metric, segregated and labeled, never instead of it. The retail media guidelines state it for custom viewability ("in addition to standard viewability reporting, not in lieu of it"), the viewability guideline for extrapolated counts ("metrics originating from each method should be segregated"), and the attention guidelines for attention measured without viewability ("separately presented and distinguished in reporting as non-standard and diagnostic").
 
 ## How an Audit Works
 
 The MRC's description of its process: audits are an annual external process performed by "a specialized team of independent CPA auditors." A service seeking accreditation must supply complete information to the MRC, comply with its minimum standards, submit to annual audits, and "Pay for the Audit Costs (internal & external)." Accredited services "have undergone successful completion of an audit including review by an audit committee," the MRC Board of Directors decides whether to grant accreditation, and services "must renew MRC accreditation every year through the completion of recurring annual MRC audits."
 
-The audit scope listed on the process page is broad: sample design and recruitment, demographic composition, data collection, metering or survey accuracy, IT general controls, client onboarding, invalid traffic filtration, editing and tabulation, data processing, and the accuracy of methodology disclosures. Audit reports are confidential among MRC members, the CPA firm and the service, but "the disclosures the MRC mandates must be available to all rating service customers." An accredited service may display the MRC logo on the audited product.
+The audit scope listed on the process page is broad: sample design and recruitment, demographic composition, data collection, metering or survey accuracy, IT general controls, client onboarding, invalid traffic filtration, editing and tabulation, data processing, and the service's disclosures of methodology and performance. Audit reports are "confidential among the MRC members, independent CPA firm, and the service," but the methodology and performance disclosures the MRC mandates must be available to all of the service's customers. An accredited service may display the MRC logo on the audited product.
 
 For an engineer at a measured company, an audit is a controls review of the pipeline:
 
 - **Every count reproducible from raw data.** Auditors trace a reported number back through processing to the events; a roll-up that can't be rebuilt from its inputs (the core's rule that `delivery_daily` is a replayable aggregate of `ad_events`) is a finding.
 - **Every filter documented and versioned.** IVT rules, bot and spider lists, viewability logic and data-center IP lists change; the audit needs to know which version applied to which period.
 - **Disclosure matches code.** The methodology document a service publishes to customers is audited against what the system does, so a silent change to counting logic is a disclosure failure even if the new logic is better.
-- **Change control.** Material methodology changes are notified and, in the MRC's TV practice, preceded by impact data; Nielsen's 2026 Big Data + Panel changes, covered in Audience & Cross-Media Measurement, show the MRC requiring impact data before implementation.
+- **Change control.** Material methodology changes are notified to customers and reviewed by the MRC; for Nielsen's 2026 Big Data + Panel changes, covered in Audience & Cross-Media Measurement, the MRC said it was reviewing the methodology updates and related impact data and planned to conclude that review prior to implementation.
 
-Accreditation can also be lost. The MRC suspended Nielsen's National TV accreditation in September 2021 and reinstated it on April 17, 2023, 19 months later, with several components still excluded; on its digital list, Adform's impressions show "Accreditation suspended effective November 10, 2026." A suspended service keeps operating and selling, so a contract that requires "MRC-accredited measurement" needs a rule for what happens mid-flight.
+Accreditation can also be lost. The MRC suspended Nielsen's National TV accreditation in September 2021 and reinstated it on April 17, 2023, 19 months later, with several components still excluded; on its list of digital services under review, Adform's impressions show "Accreditation suspended effective November 10, 2026." A suspended service keeps operating and selling, so a contract that requires "MRC-accredited measurement" needs a rule for what happens mid-flight.
 
 ## How Measurement Reaches an Impression
 
@@ -105,7 +105,7 @@ A verification vendor or an advertiser's ad server can only measure what it can 
 
 - **A tag in the creative.** The open web's default: the advertiser's ad server wraps the creative with the vendor's JavaScript, which runs in the ad's frame and measures geometry, visibility and the environment. Cross-domain iframes and SafeFrame limit what it can see (Viewability & Attention covers the techniques), and some publishers and retailers don't allow third-party tags at all; the retail media guidelines note that onsite viewability tagging by every advertiser partner "is generally not possible."
 - **The Open Measurement SDK.** In apps and some video players, scripts can't inspect native views, so the IAB Tech Lab's OM SDK provides "common code and libraries for facilitating third-party access to measurement data": the app or player integrates the SDK once, exposes signals through the Open Measurement Interface Definition (OMID) API, and each verification vendor's script receives them. Current API docs are OMID 1.6; the OM Web Video SDK was released in December 2020; Samsung and LG TVs were added in 1.5 through the web video SDK; Android TV and tvOS are supported in native builds; and the November 2026 release adds the CTV Ad Portfolio formats (menu and homescreen, pause, screensaver, overlay). The IAB Tech Lab certifies integrations through a compliance program with test cases and a Compliance API listing certified partners. Its Device Attestation work, adapted from the IETF's Privacy Pass, lets apps and players assert a device is genuine, aimed at device spoofing.
-- **Server-to-server reporting from a walled garden.** Platforms that don't allow third-party tags on their own surfaces expose event data to accredited vendors through an integration instead. The MRC list shows the shape: DoubleVerify's "Independent Reporting of Google YouTube ADH Data," IAS's "Integrated Third-party Facebook Reporting" (limited to placements audited for first-party measurement) and IAS's "S2S Integrated Third-party Amazon DSP Reporting." The vendor measures what the platform's data shows it, under the vendor's accreditation for that integration specifically.
+- **Server-to-server reporting from a walled garden.** Platforms that don't allow third-party tags on their own surfaces expose event data to accredited vendors through an integration instead. The MRC list shows the shape: DoubleVerify's "Independent Reporting of Google YouTube ADH Data," IAS's "Integrated Third-party Facebook reporting" (limited to placements audited for first-party measurement) and IAS's "Server to Server (S2S) Integrated Third-party Amazon DSP Reporting." The vendor measures what the platform's data shows it, under the vendor's accreditation for that integration specifically.
 - **First-party measurement by the platform.** The garden counts and reports its own impressions, clicks and viewability, accredited (or not) on its own audit: Meta's, Snap's, Netflix's and Google's entries above.
 
 The consequence for a platform's data model is that "vendor X measured line item Y" is incomplete without the integration method and the accreditation that covered that method for that metric and environment on that date. IAS's Facebook entry covers integrated reporting of Facebook placements, not a tag on them; a DoubleVerify CTV viewability count is accredited "for certified applications only"; Google's Ads Data Hub device ID matching excludes cookie matching.
@@ -126,7 +126,7 @@ The Outcomes and Data Quality Standard (September 2022, with the ANA, the 4A's a
 
 - **Direct and indirect outcomes are labeled.** It classifies leads, inquiries, search, purchase intent, interaction and traffic as "Not a Direct Measure of Sales," and conversions, CRM and sales data, ROI and ROAS as direct measures.
 - **Experiments and observational methods are distinguished.** "An experiment (RCT) uses randomization"; a method that doesn't randomly control treatment "would be considered an observational approach."
-- **Arithmetic ROAS is disclosed as such.** A ratio of spend to sales must be differentiated from attribution or MMM that isolates incremental return.
+- **Arithmetic ROAS is disclosed as such.** A ratio of sales to spend must be differentiated from attribution or MMM that isolates incremental return.
 - **Method parameters are disclosed.** The standard covers single-touch and multi-touch attribution, lookback windows, and MMM granularity, history and Bayesian priors, all as disclosures a buyer can read before trusting the number.
 
 For a platform, the standard implies every reported outcome carries its method (attributed, experimental, modeled), its window and model version, and whether it is a direct sales measure, the same metadata the How to Build It sections of the following chapters attach to `conversions`.
@@ -161,7 +161,8 @@ CREATE TABLE accreditations (            -- one body's decision on one product, 
   source_url       TEXT NOT NULL,         -- the list or letter this row was read from
   checked_on       DATE NOT NULL,         -- when someone last confirmed it against the source
   EXCLUDE USING gist (body WITH =, vendor_org_id WITH =, product_name WITH =, metric WITH =,
-    integration WITH =, valid_during WITH &&)  -- needs btree_gist; one status at a time
+    (COALESCE(integration, 'any')) WITH =, valid_during WITH &&)  -- one status at a time; NULL
+                                          -- never equals NULL, so COALESCE makes it compare
 );
 
 CREATE TABLE measurement_integrations (  -- a vendor measuring a buy, by one method
@@ -212,7 +213,8 @@ WHERE d.source = 'measurement_vendor'
       AND a.metric IN ('viewable_display', 'viewable_video')
       AND mi.environment = ANY (a.environments)
       AND (a.integration IS NULL OR a.integration = CASE mi.method
-             WHEN 'vast_verification' THEN 'om_sdk' ELSE mi.method END)
+             WHEN 'vast_verification' THEN 'om_sdk'  -- VAST <AdVerifications> loads OMID scripts
+             ELSE mi.method END)
       AND a.valid_during @> d.day
   );
 ```
@@ -231,7 +233,7 @@ Design notes:
 - **Every accreditation as it was,** with its source, scope notes and the day it was checked, so "was this vendor accredited for CTV viewability in March" has an answer that doesn't depend on today's web page.
 - **Every measurement integration on every buy,** with its method, environment, active period and whether it controlled billing.
 - **Which accreditations each billable day relied on,** frozen at computation, and the restatements when they changed.
-- **This system's own methodology,** if it is audited: disclosure versions, counting and filtration rule versions, and the change notices sent to customers, because the MRC audit tests "the accuracy of methodology disclosures" against the system.
+- **This system's own methodology,** if it is audited: disclosure versions, counting and filtration rule versions, and the change notices sent to customers, because the MRC audit includes "Assessment of measurement service disclosures of methodology and performance."
 
 The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/building-blocks/audit-trails).
 
@@ -264,7 +266,8 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 - [MRC: Mission](https://mediaratingcouncil.org/about-mrc/mission), the bylaws objectives
 - [MRC: Audit and accreditation process](https://mediaratingcouncil.org/about-mrc/audit-and-accreditation-process), annual audits by independent CPA auditors, service obligations including audit costs, audit scope, confidentiality and the logo
 - [MRC: Accreditation](https://mediaratingcouncil.org/accreditation), audit committee review, the Board's decision, annual renewal, letters as the authoritative scope and the quarterly digital platforms chart
-- [MRC: Digital accreditation](https://mediaratingcouncil.org/accreditation/digital), accredited services, metrics and environments, in-process audits and the Adform suspension
+- [MRC: Digital accreditation](https://mediaratingcouncil.org/accreditation/digital), accredited services, metrics, environments and footnotes
+- [MRC: Digital services under review](https://mediaratingcouncil.org/accreditation/services-under-review/digital), in-process and pre-audit services and the Adform suspension
 - [MRC: Digital platforms accreditation status chart (October 22, 2026, PDF)](https://mediaratingcouncil.org/sites/default/files/Digital%20Platforms%20Chart/Digital%20Platforms%20Accreditation%20Status_10.22.26.xlsx.pdf), the columns tracked for large social and retail platforms
-- [MRC: Nielsen National Big Data + Panel status update (May 27, 2026, PDF)](https://www.mediaratingcouncil.org/sites/default/files/News/GI052726%20-%20MRC%20Releases%20Nielsen%20National%20Big%20Data%20%2B%20Panel%20Status%20Update%20.pdf), impact data reviewed before methodology changes and the count of about 110 audited products
+- [MRC: Nielsen National Big Data + Panel status update (May 27, 2026, PDF)](https://www.mediaratingcouncil.org/sites/default/files/News/GI052726%20-%20MRC%20Releases%20Nielsen%20National%20Big%20Data%20%2B%20Panel%20Status%20Update%20.pdf), impact data reviewed before methodology changes, the member types and the count of about 110 audited products
 - [MRC: Statement on Nielsen National TV reinstatement (April 17, 2023, PDF)](https://mediaratingcouncil.org/sites/default/files/News/Accreditation-Matters/041723_Nielsen_Natl_Statement_Final.pdf), the September 2021 suspension and April 2023 reinstatement with exclusions
