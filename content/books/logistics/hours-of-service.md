@@ -86,7 +86,7 @@ If either becomes a rule, the calculator's window logic changes, which is the ar
 
 ## A Worked Calculation
 
-A driver for a carrier on the 70-hour, 8-day cycle, home terminal in Central time with days starting at midnight, has had 12 hours off duty before 06:00 Wednesday. Wednesday's log so far:
+An illustrative driver for a carrier on the 70-hour, 8-day cycle, home terminal in Central time with days starting at midnight, has had 12 hours off duty before 06:00 Wednesday. Wednesday's log so far:
 
 | Time | Status | Duration |
 | --- | --- | --- |

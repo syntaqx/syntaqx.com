@@ -20,7 +20,7 @@ ACE is CBP's system of record; everyone else connects to it. As of November 2026
 | **CBP ACE** | CBP, partner agencies, importers, brokers, carriers | "The United States' centralized digital system for processing imports and exports" and the US Single Window, "a single, centralized access point connecting CBP, Partner Government Agencies and the business community" |
 | **ABI and CATAIR** | Brokers and self-filing importers | The Automated Broker Interface is the filing channel; the CBP and Trade Automated Interface Requirements hold the "technical requirements for transmitting automated data" to ACE, by chapter (Cargo Release, Entry Summary, ISF, Daily Statement, Periodic Monthly Statement, Drawback, FTZ, In-Bond, eBond, PGA Message Set), with drafts published September to November 2026 |
 | **Descartes** | Brokers, forwarders, carriers | NetCHB connects brokers to ABI; importer security filing; Canada's ACI eManifest |
-| **WiseTech CargoWise** | Forwarders and brokers | A forwarding platform with customs filing; e2open's global trade products joined WiseTech on August 4, 2025 |
+| **WiseTech CargoWise** | Forwarders and brokers | A forwarding platform with customs filing; e2open's global trade products joined WiseTech on August 3, 2025 |
 
 The volume moved by these systems, from CBP's trade statistics for fiscal 2026 (updated as of July 27, 2026, on a page last modified November 18, 2026): $3.79 trillion of imported goods, 112,262,124 entry summaries, and $333.7 billion of duties, taxes and fees collected.
 
@@ -466,4 +466,5 @@ Design notes:
 **Vendors**
 
 - [Descartes Systems Group: Annual Information Form for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1050140/000110465926026450/dsgx-20260131xex99d1.htm), NetCHB and security filings
-- [WiseTech Global: FY26 results (August 26, 2026)](https://announcements.asx.com.au/asxpdf/20260826/pdf/07379lj9h8npgj.pdf), CargoWise and the e2open acquisition
+- [WiseTech Global: FY26 results (August 26, 2026)](https://announcements.asx.com.au/asxpdf/20260826/pdf/07379lj9h8npgj.pdf), CargoWise
+- [WiseTech Global: Completes strategic acquisition of e2open (August 3, 2025)](https://www.wisetechglobal.com/news/wisetech-global-completes-strategic-acquisition-of-e2open/), the completion date

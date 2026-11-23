@@ -307,12 +307,13 @@ A 210 is a carrier's freight bill for one shipment: a B3 header, references (N9)
 | Element | Meaning, per XPO's guide | Core model |
 | --- | --- | --- |
 | B3-02 | Invoice Number (mandatory) | `freight_invoices.number` |
-| B3-03 | Shipment Identification Number | Matched to the shipment or load |
+| B3-03 | Shipment Identification Number, assigned "by the shipper" and "not subject to modification" | Matched to the shipment (`shipments.bol_number`) or the payer's own reference |
 | B3-04 | Shipment Method of Payment: CC Collect, PP Prepaid (by Seller) | Checked against `shipments.payment_terms` |
 | B3-06 | "the billing date" | `freight_invoices.invoice_date` |
 | B3-07 | Net Amount Due, type N2 | `freight_invoices.stated_total` |
-| B3-09, B3-10 | Delivery date, qualified 017 Estimated Delivery or 035 Delivered | Whether the invoice preceded delivery |
+| B3-09, B3-10 | Delivery date, qualified 017 Estimated Delivery or 035 Delivered | `freight_invoices.delivered_on` and `delivery_estimated` (017), added in [Freight Invoicing & Settlement](/books/logistics/freight-invoicing#how-to-build-it) |
 | B3-11 | SCAC | `freight_invoices.issuer_party_id` via `carriers.scac` |
+| N9 | References such as `PO` purchase order number | The payer's load or PO number, for matching |
 | L1-02, L1-03 | Freight rate, and its qualifier: FR Flat Rate, MN Minimum, PH Per Hundred | `freight_invoice_lines.rate`, `kind` |
 | L1-04 | Charge, type N2 | `freight_invoice_lines.amount` |
 | L1-08 | Special charge or allowance code: DSC Discount, FUE Fuel Charge, HAZ Hazardous Cargo Charge, PYS Priority Service Charge | `freight_invoice_lines.code`, mapped to a `freight_charges` kind |
@@ -321,7 +322,7 @@ A 210 is a carrier's freight bill for one shipment: a B3 header, references (N9)
 Three details decide whether the invoice matches:
 
 - **N2 is cents.** An X12 N2 element is a number with two implied decimal places, so `B3*...*125075*...` is $1,250.75 and lands as 125075 minor units with no float in between ([Integer Minor Units](/docs/money/amounts#integer-minor-units)). A parser that reads it as a decimal number bills a hundred times too much.
-- **The invoice can come before the freight.** XPO's guide says that "On collect freight bills the data in B309 will be the actual delivery date. For the shipments invoiced prior to delivery, the B309 will be the estimated date of delivery." The delivery date qualifier (017 or 035) is stored, and an invoice for an undelivered shipment waits for proof of delivery before approval.
+- **The invoice can come before the freight.** XPO's guide says that "On collect freight bills the data in B309 will be the actual delivery date. For the shipments invoiced prior to delivery, the B309 will be the estimated date of delivery." The qualifier is stored (`delivery_estimated` for 017), and an invoice for an undelivered shipment waits for proof of delivery before approval.
 - **Codes become charge kinds through the map.** FUE is `fuel_surcharge`, DSC is `discount` (a negative line), HAZ and PYS are accessorials; another carrier uses other codes for the same charges. Every line keeps the code as billed in `freight_invoice_lines.code` and the kind it mapped to, so audit compares like with like.
 
 How the 210 is audited against the rate, matched to payable charges, short paid and rebilled is [Freight Invoicing & Settlement](/books/logistics/freight-invoicing) and [Freight Audit & Payment](/books/logistics/freight-audit-and-payment).
@@ -468,19 +469,14 @@ ALTER TABLE shipment_events ADD CONSTRAINT shipment_events_code_map_fkey
 
 ALTER TABLE freight_invoices
   ADD COLUMN payment_method          TEXT,  -- B3-04 as billed: 'CC', 'PP'
-  ADD COLUMN billed_delivery_date    DATE,  -- B3-09
-  ADD COLUMN delivery_date_qualifier TEXT,  -- B3-10: '017' estimated, '035' delivered
   ADD COLUMN shipment_ref            TEXT;  -- B3-03, as billed, before matching
-ALTER TABLE freight_invoices ADD CONSTRAINT freight_invoices_delivery_qualifier_check
-  CHECK (delivery_date_qualifier IS NULL
-         OR delivery_date_qualifier IN ('017', '035')) NOT VALID;
+-- B3-09 and B3-10 land in delivered_on and delivery_estimated (Freight Invoicing & Settlement).
 
 CREATE INDEX CONCURRENTLY documents_interchange_idx ON documents (interchange_id);
 CREATE INDEX CONCURRENTLY tenders_external_ref_idx ON tenders (carrier_party_id, external_ref);
 ALTER TABLE documents VALIDATE CONSTRAINT documents_interchange_fkey;
 ALTER TABLE documents VALIDATE CONSTRAINT documents_x12_set_check;
 ALTER TABLE shipment_events VALIDATE CONSTRAINT shipment_events_code_map_fkey;
-ALTER TABLE freight_invoices VALIDATE CONSTRAINT freight_invoices_delivery_qualifier_check;
 ```
 
 A partner scorecard reads 214 latency straight off the two clocks, against the partner's own promise:

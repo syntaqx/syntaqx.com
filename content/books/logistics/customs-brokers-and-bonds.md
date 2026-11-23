@@ -21,7 +21,7 @@ Customs brokerage is done by forwarders and brokers of every size, on software f
 | **Expeditors** | Forwarder and licensed customs broker | "Expeditors is licensed as a customs broker by the Customs and Border Protection (CBP) agency of DHS"; customs brokerage and other services were about 39% of 2025 revenue ($4.27 billion of $11.07 billion); "All United States customs brokers must maintain prescribed records and are subject to periodic audits by CBP"; pricing reflects "the number of declarations filed" |
 | **C.H. Robinson** | Broker, forwarder and licensed customs broker | Performs customs brokerage "pursuant to its customs brokerage license issued by U.S. Customs and Border Protection"; CTPAT certified "as both a customs broker and NVOCC"; customs adjusted gross profit of $132.8 million in 2025, up from $107.5 million in 2024; customs brokerage is recorded at the net amount |
 | **Descartes Systems Group** | Software | NetCHB connects brokers to ABI; importer security filing and Canada's ACI eManifest; denied party screening; fiscal 2026 revenue of $729.0 million |
-| **WiseTech Global** | Software | CargoWise, a forwarding and customs platform, earned $756.9 million in fiscal 2026 (to June 30); WiseTech completed its acquisition of e2open, whose global trade products include customs compliance, on August 4, 2025 |
+| **WiseTech Global** | Software | CargoWise, a forwarding and customs platform, earned $756.9 million in fiscal 2026 (to June 30); WiseTech completed its acquisition of e2open, whose global trade products include customs compliance, on August 3, 2025 |
 
 Three patterns:
 
@@ -364,4 +364,5 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 - [Expeditors International: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/746515/000119312526071569/expd-20251231.htm), its customs broker license, CBP audits, the share and amount of customs brokerage revenue and per-declaration pricing
 - [C.H. Robinson Worldwide: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1043277/000104327726000009/chrw-20251231.htm), its customs brokerage license, CTPAT certification, customs adjusted gross profit and net revenue recognition
 - [Descartes Systems Group: Annual Information Form for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1050140/000110465926026450/dsgx-20260131xex99d1.htm), NetCHB, security filings, screening and revenue
-- [WiseTech Global: FY26 results (August 26, 2026)](https://announcements.asx.com.au/asxpdf/20260826/pdf/07379lj9h8npgj.pdf), CargoWise revenue and the e2open acquisition date
+- [WiseTech Global: FY26 results (August 26, 2026)](https://announcements.asx.com.au/asxpdf/20260826/pdf/07379lj9h8npgj.pdf), CargoWise revenue
+- [WiseTech Global: Completes strategic acquisition of e2open (August 3, 2025)](https://www.wisetechglobal.com/news/wisetech-global-completes-strategic-acquisition-of-e2open/), the completion date
