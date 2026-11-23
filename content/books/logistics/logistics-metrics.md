@@ -9,7 +9,7 @@ tags = ["logistics", "metrics", "otif", "operating-ratio", "oee", "data-model"]
 
 Every company in this volume runs on a handful of numbers, and every one of those numbers has a fight attached. A carrier says it was on time because the driver arrived inside the appointment; the receiver says it was late because the truck sat at the gate for an hour; the retailer fines the supplier because the PO arrived a day early. A broker reports 92% tender acceptance from a carrier that rejected a third of its loads, because expired tenders weren't counted. A shipper's cost per mile falls when its TMS switches mileage engines. A warehouse's inventory accuracy is 99.8% by units and 94% by locations. None of these is a calculation error. Each is a definition nobody wrote down.
 
-The engineering is the same across all of them, and it is the playbook's: one definition per metric, versioned, computed from the same rows every time, with its numerator and denominator kept beside the result ([One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric)). What logistics adds is the specific definitions, the records each one reads, and the places they go wrong. This chapter covers how carriers, railroads and researchers publish their numbers, then OTIF (and how a retailer's OTIF differs), on-time pickup and delivery, tender acceptance, cost and revenue per mile, operating ratio, dwell and detention, inventory accuracy, dock-to-stock, and OEE, each with a formula and the tables it reads. It extends `loads`, `stops`, `tenders` and `shipment_events` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model) and the `metric_definitions` table that How Carriers, Brokers & 3PLs Make Money creates. The Commerce volume's [Commerce Metrics](/books/commerce/commerce-metrics#definitions-as-code-restatements-as-rows) is the same exercise for a store.
+The engineering is the same across all of them, and it is the playbook's: one definition per metric, versioned, computed from the same rows every time, with its numerator and denominator kept beside the result ([One Definition per Metric](/docs/data/data-pipelines#one-definition-per-metric)). What logistics adds is the specific definitions, the records each one reads, and the places they go wrong. This chapter covers how carriers, railroads and researchers publish their numbers, then OTIF (and how a retailer's OTIF differs), on-time pickup and delivery, tender acceptance, cost and revenue per mile, operating ratio, dwell and detention, inventory accuracy, dock-to-stock, and OEE, each with a formula and the tables it reads. It extends `loads`, `stops`, `tenders` and `shipment_events` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model) and the `metric_definitions` table that [How Carriers, Brokers & 3PLs Make Money](/books/logistics/logistics-economics#how-to-build-it) creates, and reads tables the visibility, warehouse and manufacturing chapters define. The Commerce volume's [Commerce Metrics](/books/commerce/commerce-metrics#definitions-as-code-restatements-as-rows) is the same exercise for a store.
 
 ## How the Companies Report
 
@@ -17,11 +17,11 @@ As of November 2026, from filings, regulations and published research:
 
 | Source | Metric | Definition, as published | Figure |
 | --- | --- | --- | --- |
-| **Old Dominion Freight Line** (10-K for 2025) | Operating ratio; on-time service; cargo claims ratio; revenue per hundredweight | Operating ratio "calculated by dividing total operating expenses by revenue" | 75.2% (73.4% in 2024); "99% on-time service and a cargo claims ratio of 0.1%"; $33.31 per hundredweight |
-| **Knight-Swift Transportation** (10-K for 2025) | Truckload operating ratio; empty miles; revenue per tractor; length of haul | Operating ratio "operating expenses as a percentage of total revenue, or the inverse of operating margin"; empty miles the "Percentage of miles without trailer cargo" | Truckload 97.0% GAAP, 94.8% adjusted; 13.9% empty; $199,897 per tractor; 368 miles; LTL segment 97.4% |
+| **Old Dominion Freight Line** (10-K for 2025) | Operating ratio; on-time service; cargo claims ratio; revenue per hundredweight | Operating ratio "calculated by dividing total operating expenses by revenue" | 75.2% (73.4% in 2024); "99% on-time service and a cargo claims ratio of 0.1%"; $33.31 per hundredweight including fuel surcharges |
+| **Knight-Swift Transportation** (10-K for 2025) | Truckload operating ratio; empty miles; revenue per tractor; length of haul | Operating ratio "operating expenses as a percentage of total revenue, or the inverse of operating margin"; empty miles the "Percentage of miles without trailer cargo" | Truckload 97.0% GAAP, 94.8% adjusted; 13.9% non-paid empty miles; $199,897 per tractor, excluding fuel surcharge; 368 miles; LTL segment 97.4% |
 | **Surface Transportation Board** (49 CFR 1250) | Class I railroad terminal dwell, train speed, cars online | "Terminal dwell is the average time a car resides at a specified terminal location expressed in hours"; train speed is train-miles over hours operated, between terminals | Reported weekly, for the system and its 10 largest terminals, due Wednesdays at 5 p.m. Eastern |
 | **ATRI** (Operational Costs of Trucking, 2026 update, July 15, 2026) | Cost per mile | "The industry-average cost to operate a truck" | $2.336 a mile in 2025, up 3.4%; $1.854 excluding fuel |
-| **DOT Office of Inspector General** (ST2018019, January 31, 2018) | Dwell and detention | Dwell is total time at a facility; detention is time beyond the contract limit | A 15-minute increase in average dwell raises the expected crash rate 6.2%; "accurate industrywide detention data do not currently exist" |
+| **DOT Office of Inspector General** (ST2018019, January 31, 2018) | Dwell and detention | Dwell is total time at a facility; detention is time beyond the contract limit | A 15-minute increase in average dwell raises the expected crash rate 6.2%; "Accurate industrywide data on driver detention do not currently exist" |
 | **Walmart, Target** (retail OTIF programs) | OTIF | The retailer's own rule, by case or unit, against its window | Owned by Commerce: [OTIF Programs](/books/commerce/wholesale-and-retail-distribution#otif-programs) |
 
 Three patterns:
@@ -135,33 +135,33 @@ Whether `Early` counts as on time is the definition's, not the function's. Old D
 
 The same name means three things:
 
-- **A carrier's cost per mile:** operating expense over total miles driven, loaded and empty, for a fleet and a period. ATRI's industry average was $2.336 a mile in 2025, $1.854 excluding fuel. Per load, it is the load's allocated costs (driver pay, fuel, equipment at standard rates, trued up) over its total miles, from the cost allocations in How Carriers, Brokers & 3PLs Make Money.
-- **A carrier's revenue per mile:** revenue over loaded miles, or over total miles; the definition says which, and whether fuel surcharge is in. Knight-Swift's $199,897 of revenue per tractor over 83,650 miles is about $2.39 per mile driven ([An Asset Carrier Load](/books/logistics/logistics-business#an-asset-carrier-load)).
+- **A carrier's cost per mile:** operating expense over total miles driven, loaded and empty, for a fleet and a period. ATRI's industry average was $2.336 a mile in 2025, $1.854 excluding fuel. Per load, it is the load's allocated costs (driver pay, fuel, equipment at standard rates, trued up) over its total miles, from `load_cost_allocations` in [How Carriers, Brokers & 3PLs Make Money](/books/logistics/logistics-economics#how-to-build-it).
+- **A carrier's revenue per mile:** revenue over loaded miles, or over total miles; the definition says which, and whether fuel surcharge is in. Knight-Swift's $199,897 of revenue per tractor (excluding fuel surcharge) over 83,650 total miles per tractor is about $2.39 per mile driven ([An Asset Carrier Load](/books/logistics/logistics-business#an-asset-carrier-load)).
 - **A shipper's or broker's cost per mile:** linehaul (and, if the definition says so, fuel surcharge and accessorials) over loaded miles, from `freight_charges` on the payable side and the load's miles.
 
 Every version needs a mileage source named in the definition. Practical routes, shortest routes, truck-legal routes and versions of the same engine give different miles for the same lane ([Mileage](/books/logistics/rating-and-accessorials#mileage)), and a change of engine moves every cost per mile without moving a dollar. The miles come from `loads.planned_miles` (planned, from the engine the rate used), from the carrier's ELD or settlement (actual), or from the billed quantity on the linehaul line; the definition picks one. Empty miles are a carrier's metric: `empty miles / total miles`, Knight-Swift's 13.9% ([Deadhead](/books/logistics/truckload#deadhead)).
 
 ## Operating Ratio
 
-`Operating ratio = operating expenses / operating revenue`, lower is better, and 100% is breakeven before interest and taxes; Old Dominion's was 75.2% in 2025 and Knight-Swift's truckload segment 97.0% on a GAAP basis. Carriers publish adjusted ratios that remove items such as acquired intangible amortization, so a definition says GAAP or adjusted and lists the adjustments. The ratio comes from the general ledger, not from freight records; what freight records add is attribution (the ratio by terminal, lane, customer or fleet), which needs revenue and allocated cost on each load, as How Carriers, Brokers & 3PLs Make Money builds. A railroad reports the same ratio; an asset-light broker's measure is adjusted gross profit over revenue instead ([A Brokered Truckload](/books/logistics/logistics-business#a-brokered-truckload)).
+`Operating ratio = operating expenses / operating revenue`, lower is better; what moves it, and why GAAP and adjusted ratios differ, is [Operating Ratio](/books/logistics/logistics-economics#operating-ratio) ([How Carriers, Brokers & 3PLs Make Money](/books/logistics/logistics-economics)). For the metric, the definition says GAAP or adjusted and lists the adjustments, and names the grain: the ratio comes from the general ledger, and attribution by terminal, lane, customer or fleet needs revenue and allocated cost on each load, from that chapter's `load_cost_allocations`. A railroad reports the same ratio; an asset-light broker's measure is adjusted gross profit over revenue instead ([A Brokered Truckload](/books/logistics/logistics-business#a-brokered-truckload)).
 
 ## Dwell and Detention
 
 - **Facility dwell,** per stop: `departed_at - arrived_at`. The DOT OIG's estimate that 15 more minutes of average dwell raises the expected crash rate 6.2% is why it is a safety number as well as a cost.
 - **Detention,** per stop: `max(0, dwell - free time)`, where free time comes from the agreement ([Detention](/books/logistics/rating-and-accessorials#detention) owns the rules and the charge). The clock may start at the appointment, not the arrival, when the truck arrived early; the definition says which, and it is the same rule the detention charge uses, or the metric and the invoice disagree.
-- **Where the times come from.** Gate in and gate out from the yard system, arrival and departure from geofences or the driver's app, check-in and check-out at the dock: each source gives a different dwell for the same visit. The OIG's finding that nobody measures detention consistently is a statement about this choice. My rule: the definition names the source in priority order, and the stop's `arrived_at` and `departed_at` record which source set them.
+- **Where the times come from.** Gate in and gate out from the yard system, arrival and departure from geofences or the driver's app, check-in and check-out at the dock: each source gives a different dwell for the same visit. The OIG's finding that accurate industrywide detention data don't exist is partly a statement about this choice. My rule: the definition names the source in priority order, and the stop records which evidence set `arrived_at` and `departed_at` (`arrival_basis`, `departure_basis` and the deciding event, from [Arrival and Departure at Facilities](/books/logistics/visibility-and-tracking#arrival-and-departure-at-facilities)); the yard's own gate times are [Detention Evidence](/books/logistics/yard-and-dock#detention-evidence).
 - **Rail terminal dwell:** the STB's definition, "the average time a car resides at a specified terminal location expressed in hours," reported weekly for each Class I's system and its 10 largest terminals. A shipper's own measure of a car's dwell at its siding is demurrage's question ([Rail Freight](/books/logistics/rail-freight#how-to-build-it)).
-- **Container dwell:** days from discharge to gate out at the terminal, and from gate out to empty return; the first meets demurrage and the second detention, each with its own free time (Detention & Demurrage covers the ocean clocks).
+- **Container dwell:** days from discharge to gate out at the terminal, and from gate out to empty return; the first meets demurrage and the second detention, each with its own free time ([Free Time](/books/logistics/detention-and-demurrage#free-time) covers the ocean clocks).
 
 ## Inventory Accuracy and Dock-to-Stock
 
-Warehouse metrics read the WMS tables (Warehouse Management Systems defines them):
+Warehouse metrics read the WMS tables ([Warehouse Management Systems](/books/logistics/warehouse-management#how-to-build-it) defines `cycle_counts`, `cycle_count_lines` and `warehouse_receipts`; [Cycle Counting](/books/logistics/warehouse-management#cycle-counting) owns how counts are planned and approved):
 
 - **Location accuracy:** `locations counted with no variance / locations counted`, from cycle count lines. A location with the right total but the wrong lot or LPN counts as a variance when the definition is by lot.
 - **Unit accuracy:** `1 - sum(|counted - system|) / sum(system)` over the lines counted. Absolute values matter: a +10 and a -10 in two locations are 20 units wrong, not zero.
 - **Value accuracy:** the same with `variance_value`, which is what finance's shrink reserve uses.
 - **Which counts count.** Planned cycle counts measure accuracy; counts triggered by a short pick or a threshold are biased toward error and are reported separately. A wall-to-wall count is the reference.
-- **Dock-to-stock time:** per receipt, from the trailer's check-in to the last unit put away and available, in hours; WMS receipts carry `checked_in_at` and `closed_at`, and the definition says whether the clock starts at gate in, door assignment or first scan. A 3PL's contract usually sets it as an SLA in hours from arrival, which makes the definition a contract term (Contract Logistics & 3PL Billing covers SLAs).
+- **Dock-to-stock time:** per receipt, from the trailer's check-in to the last unit put away and available, in hours; `warehouse_receipts` carries `checked_in_at` and `closed_at`, and the definition says whether the clock starts at gate in, door assignment or first scan. A 3PL's contract usually sets it as an SLA in hours from arrival, which makes the definition a contract term ([SLAs From the Operator's Side](/books/logistics/contract-logistics#slas-from-the-operator-s-side)).
 
 I have no public benchmark for either to cite here: published warehouse benchmarks exist behind association memberships, and their figures aren't quoted. <!-- source-gap: logistics-metrics-warehouse-benchmarks | missing | industry benchmark values for inventory accuracy and dock-to-stock time | closes with: a publicly readable WERC DC Measures summary or a vendor's published benchmark with method | checked: 2026-11-22 -->
 
@@ -169,15 +169,15 @@ I have no public benchmark for either to cite here: published warehouse benchmar
 
 Overall equipment effectiveness is the plant's measure of a work center: `OEE = Availability x Performance x Quality`, equivalently `(good count x ideal cycle time) / planned production time`, as Vorne's OEE reference states both forms.
 
-- **Availability** = run time / planned production time; it "takes into account all events that stop planned production long enough." Run time is planned production time less unplanned and changeover stops, from machine state events.
+- **Availability** = run time / planned production time; it "takes into account all events that stop planned production long enough." Run time is planned production time less stop time, unplanned stops and planned stops such as changeovers alike in Vorne's treatment, from machine state events.
 - **Performance** = (ideal cycle time x total count) / run time; anything that "causes the manufacturing process to run at less than the maximum possible speed."
 - **Quality** = good count / total count; parts "that do not meet quality standards," from production confirmations' good and scrap quantities.
 
-The definition choices are where plants differ: whether changeovers are planned stops (excluded from planned time) or availability losses, which ideal cycle time is used (the nameplate rate, the best demonstrated rate, or the routing's standard), and whether rework counts as good. ERP, MES & ISA-95 defines the machine state events (with the edge's clock and a sequence for gaps), and MRP, Scheduling & Work Orders the production confirmations; a gap in the state sequence is unknown time, not running time.
+The definition choices are where plants differ: whether changeovers count as availability losses (Vorne's treatment) or are taken out of planned production time, which ideal cycle time is used (the nameplate rate, the best demonstrated rate, or the routing's standard), and whether rework counts as good. [ERP, MES & ISA-95](/books/logistics/manufacturing-systems#how-to-build-it) defines `work_centers` and `equipment_state_events` (with the edge's clock and a sequence for gaps), and [MRP, Scheduling & Work Orders](/books/logistics/production-planning#how-to-build-it) the `production_confirmations`; a gap in the state sequence is unknown time, not running time.
 
 ## How to Build It
 
-The deltas extend `metric_definitions` with what a logistics definition needs (its owner, a partner's authorship, unit, direction, grain, sources and exclusions), add frozen values and per-record exclusions, attribute stop delays, and add the ideal rates OEE divides by:
+The deltas extend `metric_definitions` with what a logistics definition needs (its owner, a partner's authorship, unit, direction, grain, sources and exclusions), add frozen values and per-record exclusions, attribute stop delays (the evidence behind each stop time is already on `stops` from [Visibility & Tracking](/books/logistics/visibility-and-tracking#how-to-build-it)), and add the ideal rates OEE divides by:
 
 ```sql
 ALTER TABLE metric_definitions
@@ -241,9 +241,7 @@ CREATE TABLE metric_exclusions (         -- one record left out of a metric, and
   UNIQUE (metric_code, record_kind, record_id)
 );
 
-ALTER TABLE stops
-  ADD COLUMN arrival_source   TEXT,      -- which event source set arrived_at
-  ADD COLUMN departure_source TEXT,
+ALTER TABLE stops                        -- arrival_basis and departure_basis: Visibility & Tracking
   ADD COLUMN delay_reason     TEXT,      -- normalized from the 214 reason or the dispatcher
   ADD COLUMN delay_party_id   UUID;      -- who caused a late arrival, when known
 ALTER TABLE stops ADD CONSTRAINT stops_delay_party_fkey
@@ -255,13 +253,15 @@ ALTER TABLE tenders
 
 CREATE TABLE work_center_rates (         -- the ideal rate OEE divides by, versioned
   id              UUID PRIMARY KEY DEFAULT uuidv7(),
-  work_center_id  UUID NOT NULL,         -- ERP, MES & ISA-95's work_centers
+  work_center_id  UUID NOT NULL REFERENCES work_centers (id),
   item_id         UUID REFERENCES items (id),  -- null: the center's default
   ideal_cycle_seconds NUMERIC(10, 3) NOT NULL CHECK (ideal_cycle_seconds > 0),
   basis           TEXT NOT NULL CHECK (basis IN ('nameplate', 'best_demonstrated',
                     'routing_standard')),
   valid_during    TSTZRANGE NOT NULL,
-  EXCLUDE USING gist (work_center_id WITH =, item_id WITH =, valid_during WITH &&)
+  EXCLUDE USING gist (work_center_id WITH =,  -- btree_gist; a null item is the default row
+    (COALESCE(item_id, '00000000-0000-0000-0000-000000000000'::uuid)) WITH =,
+    valid_during WITH &&)
 );
 ```
 
@@ -304,7 +304,7 @@ Dwell and detention hours by facility, with the source that set each time, so a 
 
 ```sql
 SELECT s.facility_id,
-       s.arrival_source, s.departure_source,
+       s.arrival_basis, s.departure_basis,
        count(*) AS visits,
        round(avg(extract(epoch FROM s.departed_at - s.arrived_at)) / 3600, 2) AS avg_dwell_hours,
        round(avg(greatest(0, extract(epoch FROM s.departed_at
@@ -312,7 +312,7 @@ SELECT s.facility_id,
          AS avg_detention_hours            -- $2: free time in hours, from the agreement
 FROM stops s
 WHERE s.arrived_at <@ $1::tstzrange AND s.departed_at IS NOT NULL
-GROUP BY s.facility_id, s.arrival_source, s.departure_source;
+GROUP BY s.facility_id, s.arrival_basis, s.departure_basis;
 ```
 
 Location and unit accuracy from planned cycle counts (the WMS tables), and OEE for a work center and a shift:
@@ -356,9 +356,9 @@ JOIN work_center_rates r ON r.work_center_id = $1 AND r.item_id IS NULL
 
 Design notes:
 
-- **Values point at a version.** `metric_values.metric_definition_id` is the version used, so a scorecard from March and one from June are comparable only when they point at the same version, and a chart across a definition change shows the break (How Carriers, Brokers & 3PLs Make Money states the same rule).
+- **Values point at a version.** `metric_values.metric_definition_id` is the version used, so a scorecard from March and one from June are comparable only when they point at the same version, and a chart across a definition change shows the break ([Unit Metrics](/books/logistics/logistics-economics#unit-metrics) states the same rule).
 - **Exclusions are rows, approved.** A shipper-caused miss is excluded per stop with evidence and an approver, never by a filter in a query; a carrier disputing its score sees each exclusion and each miss.
-- **Record the source that set the time.** `stops.arrival_source` lets dwell and on-time be recomputed when a source is later found wrong, and lets two definitions with different source priorities coexist.
+- **Read the evidence behind the time.** `stops.arrival_basis` and `stops.arrived_event_id` ([Visibility & Tracking](/books/logistics/visibility-and-tracking#how-to-build-it)'s) let dwell and on-time be recomputed when a source is later found wrong, and let two definitions with different source priorities coexist.
 - **Freeze, then restate.** A reported value is final once its definition's `final_after` passes; a later correction is a new `metric_values` row with `restates_id`, and the scorecard document already sent stays as sent.
 - **Partner definitions are imported.** A retailer's OTIF rule is a definition authored by the retailer's party with its published text attached, computed from the retailer's receiving data where available, and shown under the retailer's name.
 - **Compute from the analytics copy.** Metrics run on the warehouse fed by change data capture, never against the transactional core at month end ([A Reference Architecture](/books/logistics/logistics-architecture#a-reference-architecture)).
