@@ -169,7 +169,7 @@ I have no public benchmark for either to cite here: published warehouse benchmar
 
 Overall equipment effectiveness is the plant's measure of a work center: `OEE = Availability x Performance x Quality`, equivalently `(good count x ideal cycle time) / planned production time`, as Vorne's OEE reference states both forms.
 
-- **Availability** = run time / planned production time; it "takes into account all events that stop planned production long enough." Run time is planned production time less stop time, unplanned stops and planned stops such as changeovers alike in Vorne's treatment, from machine state events.
+- **Availability** = run time / planned production time; it "takes into account all events that stop planned production long enough." Run time is planned production time less stop time, from machine state events; Vorne counts unplanned stops and planned stops such as changeovers alike as stop time.
 - **Performance** = (ideal cycle time x total count) / run time; anything that "causes the manufacturing process to run at less than the maximum possible speed."
 - **Quality** = good count / total count; parts "that do not meet quality standards," from production confirmations' good and scrap quantities.
 
@@ -358,7 +358,7 @@ Design notes:
 
 - **Values point at a version.** `metric_values.metric_definition_id` is the version used, so a scorecard from March and one from June are comparable only when they point at the same version, and a chart across a definition change shows the break ([Unit Metrics](/books/logistics/logistics-economics#unit-metrics) states the same rule).
 - **Exclusions are rows, approved.** A shipper-caused miss is excluded per stop with evidence and an approver, never by a filter in a query; a carrier disputing its score sees each exclusion and each miss.
-- **Read the evidence behind the time.** `stops.arrival_basis` and `stops.arrived_event_id` ([Visibility & Tracking](/books/logistics/visibility-and-tracking#how-to-build-it)'s) let dwell and on-time be recomputed when a source is later found wrong, and let two definitions with different source priorities coexist.
+- **Read the evidence behind the time.** `stops.arrival_basis` and `stops.arrived_event_id` (added by [Visibility & Tracking](/books/logistics/visibility-and-tracking#how-to-build-it)) let dwell and on-time be recomputed when a source is later found wrong, and let two definitions with different source priorities coexist.
 - **Freeze, then restate.** A reported value is final once its definition's `final_after` passes; a later correction is a new `metric_values` row with `restates_id`, and the scorecard document already sent stays as sent.
 - **Partner definitions are imported.** A retailer's OTIF rule is a definition authored by the retailer's party with its published text attached, computed from the retailer's receiving data where available, and shown under the retailer's name.
 - **Compute from the analytics copy.** Metrics run on the warehouse fed by change data capture, never against the transactional core at month end ([A Reference Architecture](/books/logistics/logistics-architecture#a-reference-architecture)).
