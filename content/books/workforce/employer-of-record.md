@@ -20,13 +20,12 @@ As of November 2026, from each provider's public pages (country counts and owner
 | --- | --- | --- | --- | --- |
 | **Deel** | From $599 per month | Contracts, terminations and local law handled "in 150+ countries" | "We own entities and payroll engine in 130+ countries" | Contractor management from $49; contractor of record $325; US PEO $125 |
 | **Globalization Partners (G-P)** | Not published | "180+ countries covered" | "200+ global partners" | G-P Gia, "AI-powered compliance intelligence" |
+| **Multiplier** | From $459 per employee per month on annual contracts, $499 monthly (Growth plan from $519 and $559) | Hire "in 160+ countries without establishing a local entity" | Operates "through owned legal entities in 160+ countries with no third-party partner dependency" | Contractor of record from $400 per contractor per month, billed annually |
 | **Oyster** | "USD 699" a month, with unpriced annual discounts | EOR in 120+ countries; contractors in 180+ | No owned-entity claim on the pages I read | Contractors from USD 29 |
 | **Papaya Global** | From $499 per employee per month | "In-country experts in 180+ countries" | Not stated on the pricing page | Contractor of record from $199; contractor payments from $5; Payroll Plus from $29 |
 | **Pebl (formerly Velocity Global)** | Not published | "185+ countries" | "90% of employees supported through Pebl-owned entities" | |
 | **Remote** | From $599 per employee per month on annual contracts; no setup or onboarding fee | EOR in "90+ countries" | "100% owned entities, no third parties" | Contractor management $29 and $99; contractor of record $325; global payroll $19; US PEO $99 |
 | **Rippling** | Not published | EOR in "115 countries" | Not stated | Global payroll "via Rippling entities" or "via your entities" |
-
-Multiplier's site returned a DNS error when I checked, so it isn't in the table. <!-- source-gap: wf-eor-papaya-multiplier | missing | Multiplier's EOR pricing, country count and entity model | closes with: Multiplier's pricing or EOR page, opened (Cloudflare origin DNS error in a browser on 2026-11-22; Papaya's pricing page was read then) | checked: 2026-11-22 -->
 
 The table shows where the market competes: owned entities as a quality claim (Remote's "no third parties," Pebl's 90%), coverage as a reach claim (G-P's 180 countries with 200 partners), and flat monthly pricing in a narrow band. Velocity Global's rebrand to Pebl is recent enough that both names appear in contracts and procurement records.
 
@@ -239,6 +238,8 @@ A client's finance team, a tax authority or an acquirer's diligence asks:
 - [Deel: Employer of Record](https://www.deel.com/employer-of-record/), countries, owned entities and equity by country
 - [Deel: AÜG license in Germany](https://deel.com/blog/aug-license-germany-hiring), Deel Germany GmbH as employer, the indefinite leasing license, the 18-month cap and the three-month reset (last updated January 31, 2025)
 - [Deel: Using an employer of record to mitigate permanent establishment risk](https://www.deel.com/blog/using-an-employer-of-record-to-mitigate-permanent-establishment-risk/), legal and tax responsibilities, partners and when EOR doesn't suit
+- [Multiplier: Pricing](https://www.usemultiplier.com/pricing), EOR from $459 (annual) and $499 (monthly), Growth from $519 and $559, 160+ countries, contractor of record $400 (read November 22, 2026)
+- [Multiplier: What is an Employer of Record?](https://www.usemultiplier.com/employer-of-record), owned legal entities in 160+ countries with no third-party partners (read November 22, 2026)
 - [Oyster: Pricing](https://www.oysterhr.com/pricing), EOR at USD 699 and coverage
 - [Oyster: Employer of record and permanent establishment](https://www.oysterhr.com/library/employer-of-record-permanent-establishment), PE triggers with an EOR and EOR versus entity
 - [Globalization Partners](https://www.globalization-partners.com/), coverage and partners

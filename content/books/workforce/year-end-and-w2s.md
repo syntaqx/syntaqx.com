@@ -96,8 +96,7 @@ An EFW2 file is a sequence of fixed-length records: a submitter record, then per
 - **RO and RU** split the combined uncollected employee tax on tips field into code A (Social Security or RRTA) and code B (Medicare); the combined field "will remain valid through tax year 2025."
 - **Codes J, K, L and P**, which had no EFW2 money field, now each have one, and the new box 12 codes TA (employer contributions under section 128 Trump account contribution programs), TP (cash tips reported to the employer) and TT (qualified overtime compensation) get their own.
 
-The EFW2C records (RCE, RCW, RCO, RCU) changed to match. Each record is 512 positions; Ohio's tax year 2025 W-2 specification, which follows SSA's EFW2 layout, puts its blank fillers out to position 512 and requires RA first, RE second and one RF last.
-<!-- source-gap: wf-efw2-layout | secondary | EFW2 record length and field positions (the TY2026 changes, dates and deadline are sourced to SSA Publication 42-007, read in a browser on 2026-11-22; the 512-position length and record order still come from Ohio's EFW2-based TY2025 spec) | closes with: the record layout sections of SSA Publication 42-007 (TY2026) | checked: 2026-11-22 -->
+The EFW2C records (RCE, RCW, RCO, RCU) changed to match. Publication 42-007 itself fixes the frame: "Each record is 512 bytes"; RA, RE, RW, RT and RF are required and RO, RS, RU and RV optional; RA "must be the first data record on the file," each RE is followed by its RW records (each RO immediately after its RW, RS records after those), then RT, RU and RV close the employer before the next RE, and RF "must be the last record on the file" and appear once; an organization filing for multiple employers should put no more than 1 million RW or 50,000 RE records in one submission (sections 3.1, 3.2 and 4.1).
 
 A file a provider submits for thousands of employers carries one RE per employer, and SSA's processing errors come back per employer through BSO; the system needs the submission ID per RE so a resubmission covers only the employers that failed. AccuWage Online is SSA's tool for checking a file before submission.
 
@@ -312,7 +311,7 @@ W-2s are audited by SSA's matching, the IRS's CAWR, state reconciliations and em
 
 **Agency guidance and forms**
 
-- [SSA: Publication 42-007, Specifications for Filing Forms W-2 Electronically (EFW2), tax year 2026 (PDF, version of November 12, 2026)](https://www.ssa.gov/employer/efw/26efw2.pdf), What's New (RE, RW, RO and RU changes and the new box 12 codes), the December 8, 2026 filing start and the February 1, 2027 deadline
+- [SSA: Publication 42-007, Specifications for Filing Forms W-2 Electronically (EFW2), tax year 2026 (PDF, version of November 12, 2026)](https://www.ssa.gov/employer/efw/26efw2.pdf), What's New (RE, RW, RO and RU changes and the new box 12 codes), the December 8, 2026 filing start and the February 1, 2027 deadline; sections 3.1, 3.2 and 4.1, required and optional records, record order, the 512-byte record and the per-submission limits
 - [IRS: General Instructions for Forms W-2 and W-3 (2026)](https://www.irs.gov/instructions/iw2w3), the February 1, 2027 deadline, what's new for 2026, boxes 1 to 20, box 12 codes, box 14b, the W-3, e-filing at 10 returns, Forms 8809 and 15397, VOID forms, W-2c rules, prior-year repayments and penalties
 - [IRS: Information return penalties](https://www.irs.gov/payments/information-return-penalties), the per-return amounts and annual maximums for returns due in 2027
 - [IRS: Publication 15 (2026), Employer's Tax Guide](https://www.irs.gov/publications/p15), final returns and W-2 deadlines, reconciling W-2 and W-3 with Forms 941, Additional Medicare and Form 945, and W-2c limits per BSO session
