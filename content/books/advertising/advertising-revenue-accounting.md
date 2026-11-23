@@ -63,7 +63,7 @@ Because the same activity can be reported two ways, the ad businesses report a m
 - **Traffic acquisition cost (TAC)** is what a gross reporter pays the owners of the inventory. Alphabet's TAC of $59,926 million was 20.3% of its advertising revenues; Magnite defines its TAC as what it "must pay sellers for the sale of advertising inventory through our platform for revenue reported on a gross basis."
 - **Contribution ex-TAC** is revenue minus TAC: Criteo's $1,944.9 million of revenue less $770.3 million of TAC is $1,174.6 million; Magnite's revenue of $714.0 million less its TAC on gross-booked business gives $669.6 million. For a pure net reporter, contribution ex-TAC equals revenue.
 
-A worked example shows why the measure exists. A DSP bills an agency for $10,000 of media, $2,000 of data and a $1,800 platform fee (the example in Demand-Side Platforms, in Programmatic):
+A worked example shows why the measure exists. A DSP bills an agency for $10,000 of media, $2,000 of data and a $1,800 platform fee (the example in [Demand-Side Platforms](/books/advertising/demand-side-platforms), in Programmatic):
 
 | | As agent (net) | As principal (gross) |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ A worked example shows why the measure exists. A DSP bills an agency for $10,000
 | Receivable from the agency | $13,800 | $13,800 |
 | Payable to the exchanges and the data vendor | $12,000 | $12,000 |
 
-Revenue differs by a factor of 7.7; everything that measures the business (gross profit, cash, receivables, payables) is identical. The rule for the system is the one the volume's other chapters state from their side: **store the buyer's price, each supplier's share and each fee as separate amounts**, per delivery row and invoice line, so either presentation is a query. An SSP that stores only its fee can't produce a gross-booked line for its managed campaigns; one that stores only gross can't show a publisher its share (SSPs & Ad Exchanges, in Programmatic, makes the same point).
+Revenue differs by a factor of 7.7; everything that measures the business (gross profit, cash, receivables, payables) is identical. The rule for the system is the one the volume's other chapters state from their side: **store the buyer's price, each supplier's share and each fee as separate amounts**, per delivery row and invoice line, so either presentation is a query. An SSP that stores only its fee can't produce a gross-booked line for its managed campaigns; one that stores only gross can't show a publisher its share ([SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges), in Programmatic, makes the same point).
 
 ## Recognizing Revenue as Ads Deliver
 
@@ -90,11 +90,11 @@ Advertising is an obligation satisfied as it is delivered, measured by an output
 
 The make-good doesn't create new revenue; it delivers what was already paid for, so the $1,800 stays a liability until it runs. If instead the parties agree a refund (the standard terms allow one when the agency prepaid and is current), the $1,800 becomes a refund owed and is never revenue. An unpaid invoice for delivered impressions is the mirror case: revenue recognized, a receivable outstanding.
 
-Not every buy is per unit. A flat-fee sponsorship of a section for a month is a stand-ready obligation recognized over the month, not per impression; a share-of-voice buy is recognized over its flight. The pricing model on the line item (Pricing Models, in Auctions and Pricing) tells finance which shape each line has, and the system keeps both the flight and the deliveries so either method can be computed ([Recognition Schedules](/docs/money/accounting#recognition-schedules)).
+Not every buy is per unit. A flat-fee sponsorship of a section for a month is a stand-ready obligation recognized over the month, not per impression; a share-of-voice buy is recognized over its flight. The pricing model on the line item ([Pricing Models](/books/advertising/pricing-models), in Auctions and Pricing) tells finance which shape each line has, and the system keeps both the flight and the deliveries so either method can be computed ([Recognition Schedules](/docs/money/accounting#recognition-schedules)).
 
 **Credits, make-goods and refunds are variable consideration.** IFRS 15 lists "discounts, rebates, refunds, credits, price concessions, incentives, performance bonuses, penalties" among the things that make consideration variable, and includes variable amounts in revenue only to the extent "it is highly probable that a significant reversal in the amount of cumulative revenue recognised will not occur." For an ad platform that means:
 
-- **Invalid traffic credits reduce revenue.** Traffic filtered before billing was never revenue; a credit issued after billing (Reconciliation & Discrepancies) reverses revenue already recognized, and a platform with a steady credit rate estimates it so recognized revenue isn't systematically too high.
+- **Invalid traffic credits reduce revenue.** Traffic filtered before billing was never revenue; a credit issued after billing ([Reconciliation & Discrepancies](/books/advertising/reconciliation-and-discrepancies)) reverses revenue already recognized, and a platform with a steady credit rate estimates it so recognized revenue isn't systematically too high.
 - **Discrepancy remedies reduce revenue.** A month invoiced on the controlling count plus 10% is the price; the difference from the publisher's own count is not revenue the publisher had and lost.
 - **Make-goods owed are a liability, not a cost.** Impressions owed for a shortfall defer the revenue they carry until they deliver, as in the table.
 

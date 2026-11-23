@@ -11,7 +11,7 @@ Social advertising is ads placed among the posts, videos and stories of a platfo
 
 The engineering is hard in ways search isn't. Without a query, relevance is entirely predicted, from what the person has done and what similar people did, so the ad system is a recommender with prices attached and its quality is the quality of its models. The ad competes with the organic feed for the same screen, so the platform has to decide how many ads to show and where, trading revenue now for attention later. Advertisers mostly can't say what they want in keywords, so they state an objective and let the platform find the audience, which makes the platform's optimization and measurement the product. And the targeting that makes it work is regulated: special categories of data can't be used for ads in the EU, housing, employment and credit ads are constrained in the US, and gatekeepers must offer a less personalized choice.
 
-This chapter covers the platforms, how a social delivery system works (retrieval, ranking and the total value auction), ad load and placement in feeds, objectives, optimization goals and billing events, automated campaigns (Advantage+, Smart+, Performance+), audiences and lookalikes at the system level, special ad categories and fairness constraints, and ad transparency, then the records. It extends `campaigns`, `line_items` and `auctions` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model). Auction theory and quality-weighted ranking are [Auction Mechanics](/books/advertising/auction-mechanics#quality-weighted-ranking); bid strategies (cost cap, bid cap, ROAS goal) are [Automated Bidding](/books/advertising/automated-bidding); billing events are [Pricing Models](/books/advertising/pricing-models#billing-events); the organic feeds the ads sit in are UGP's [Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations) and [Interest-Graph Feeds](/books/user-generated-platforms/interest-graph-feeds); ads on creators' content and content suitability labels are UGP's [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing); customer lists, hashing and lookalike mechanics are First-Party Data & Audiences, in Identity and Audiences; the models are Machine Learning for Ads; DSA ad repositories and political ads are DSA, DMA & Political Ads; discriminatory targeting is Sensitive Data & Discriminatory Targeting. Running Advantage+ sales campaigns as a store is Commerce's [Meta: Advantage+ Sales Campaigns](/books/commerce/acquisition-and-attribution#meta-advantage-sales-campaigns).
+This chapter covers the platforms, how a social delivery system works (retrieval, ranking and the total value auction), ad load and placement in feeds, objectives, optimization goals and billing events, automated campaigns (Advantage+, Smart+, Performance+), audiences and lookalikes at the system level, special ad categories and fairness constraints, and ad transparency, then the records. It extends `campaigns`, `line_items` and `auctions` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model). Auction theory and quality-weighted ranking are [Auction Mechanics](/books/advertising/auction-mechanics#quality-weighted-ranking); bid strategies (cost cap, bid cap, ROAS goal) are [Automated Bidding](/books/advertising/automated-bidding); billing events are [Pricing Models](/books/advertising/pricing-models#billing-events); the organic feeds the ads sit in are UGP's [Feeds & Recommendations](/books/user-generated-platforms/feeds-and-recommendations) and [Interest-Graph Feeds](/books/user-generated-platforms/interest-graph-feeds); ads on creators' content and content suitability labels are UGP's [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing); customer lists, hashing and lookalike mechanics are [First-Party Data & Audiences](/books/advertising/first-party-data-and-audiences), in Identity and Audiences; the models are [Machine Learning for Ads](/books/advertising/machine-learning-for-ads); DSA ad repositories and political ads are [DSA, DMA & Political Ads](/books/advertising/dsa-dma-and-political-ads); discriminatory targeting is [Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting). Running Advantage+ sales campaigns as a store is Commerce's [Meta: Advantage+ Sales Campaigns](/books/commerce/acquisition-and-attribution#meta-advantage-sales-campaigns).
 
 ## How the Platforms Do It
 
@@ -54,7 +54,7 @@ The ad competes with the feed for the same screen, and two decisions sit above e
 
 **Placement is a targeting dimension the platform increasingly chooses.** Feed, stories, short video, search results and an off-platform network have different formats, prices and outcomes. Automatic placement lets the platform choose per auction; manual placement restricts it. The record needs both the advertiser's allowed set and the surface each impression actually ran on.
 
-**Adjacency is the brand-safety question in feeds.** In a feed, the content above and below an ad is chosen per person in real time, so suitability controls are inventory filters (excluding categories of content near ads) and post-hoc reports, not page-level blocklists. UGP's [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#brand-safety-and-suitability) covers the labels; Brand Safety & Suitability, in Fraud and Brand Safety, covers the frameworks.
+**Adjacency is the brand-safety question in feeds.** In a feed, the content above and below an ad is chosen per person in real time, so suitability controls are inventory filters (excluding categories of content near ads) and post-hoc reports, not page-level blocklists. UGP's [Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing#brand-safety-and-suitability) covers the labels; [Brand Safety & Suitability](/books/advertising/brand-safety-and-suitability), in Fraud and Brand Safety, covers the frameworks.
 
 A feed inserter that applies the spacing rules and the organic comparison:
 
@@ -144,7 +144,7 @@ With a first position of 2, a gap of 4 and a cap of 3, a 20-item organic page ca
 
 ## Objectives, Optimization Goals and Billing Events
 
-A social campaign is structured as objective, then delivery unit, then ad: Meta's campaign, ad set and ad; TikTok's campaign, ad group and ad. Campaigns & Line Items maps the hierarchies. Three settings on the delivery unit are easy to conflate and must be stored apart:
+A social campaign is structured as objective, then delivery unit, then ad: Meta's campaign, ad set and ad; TikTok's campaign, ad group and ad. [Campaigns & Line Items](/books/advertising/campaigns-and-line-items) maps the hierarchies. Three settings on the delivery unit are easy to conflate and must be stored apart:
 
 - **Objective**, on the campaign: what the advertiser wants (awareness, traffic, engagement, leads, app promotion, sales). It constrains what can be set below. TikTok's Smart+ campaigns, for example, exist per objective: "driving sales, app promotion, leads, or traffic."
 - **Optimization goal**, on the ad set: the event the delivery system predicts and maximizes (Meta's `optimization_goal`).
@@ -160,32 +160,32 @@ Every large social platform now sells a campaign type where the platform chooses
 - **TikTok Smart+.** "A single campaign powered by AI for all of your performance objectives", automating targeting and optimization, refreshing ad combinations when fatigue is detected, shifting budget toward "the highest-performing creative" and pausing poor performers; advertisers supply KPIs, assets, geography and language, and can turn off Smart+ generated creatives (help page last updated June 2025).
 - **Pinterest Performance+.** A suite covering campaigns, bidding, budgets (the system "flexes spend up or down by 25% per day, across a rolling 7-day average"), targeting and creative generation from catalogs, with human review of AI-generated backgrounds; Pinterest says Performance+ campaigns need "50% fewer inputs" than standard setup.
 
-For the platform, an automated campaign is the same delivery system with the advertiser's settings replaced by defaults the platform controls, which has two modeling consequences. The platform's choices per impression (audience segment, placement, creative combination, budget allocation) must be logged because the advertiser didn't make them and can't infer them. And versioning the campaign type matters: when an API version retires a campaign type, existing campaigns keep running under old rules while new ones follow new ones, so the type and its API version belong on the campaign record. AI in Advertising, in Running the Platform, covers automated campaigns as a design.
+For the platform, an automated campaign is the same delivery system with the advertiser's settings replaced by defaults the platform controls, which has two modeling consequences. The platform's choices per impression (audience segment, placement, creative combination, budget allocation) must be logged because the advertiser didn't make them and can't infer them. And versioning the campaign type matters: when an API version retires a campaign type, existing campaigns keep running under old rules while new ones follow new ones, so the type and its API version belong on the campaign record. [AI in Advertising](/books/advertising/ai-in-advertising), in Running the Platform, covers automated campaigns as a design.
 
 ## Audiences and Lookalikes
 
 Social targeting has three sources, each with its own rules:
 
 - **Platform-derived interests and demographics,** inferred from activity on the platform, subject to the platform's own policy and to law on sensitive data.
-- **Advertiser-supplied audiences:** customer lists uploaded hashed, site and app visitors from the pixel or SDK, engagement audiences. First-Party Data & Audiences covers hashing, normalization and match rates; the data is personal data under the advertiser's consents ([Pseudonymous Is Not Anonymous](/docs/telemetry/consent-and-privacy#pseudonymous-is-not-anonymous)).
+- **Advertiser-supplied audiences:** customer lists uploaded hashed, site and app visitors from the pixel or SDK, engagement audiences. [First-Party Data & Audiences](/books/advertising/first-party-data-and-audiences) covers hashing, normalization and match rates; the data is personal data under the advertiser's consents ([Pseudonymous Is Not Anonymous](/docs/telemetry/consent-and-privacy#pseudonymous-is-not-anonymous)).
 - **Expansion and lookalikes:** the platform finds people similar to a seed audience, or expands beyond the advertiser's targeting when it predicts better results, which is what automated audiences do by default.
 
-Expansion is where fairness law reaches the system. In the US, the Department of Justice's 2022 settlement with Meta under the Fair Housing Act ended the "Special Ad Audience" tool (a lookalike for housing ads), required that housing ads not be targeted on FHA-protected characteristics, and required a Variance Reduction System that measures the demographics of each housing ad's delivered audience against its eligible audience and adjusts delivery; Meta says it launched VRS for US housing in January 2023 and, in October 2023, "for US employment and credit ads." Sensitive Data & Discriminatory Targeting covers the case and the method. The system point: for special ad categories, targeting options are restricted at setup and delivery is monitored and corrected after the fact, so the category must be a field on the campaign that both the targeting UI and the delivery system read.
+Expansion is where fairness law reaches the system. In the US, the Department of Justice's 2022 settlement with Meta under the Fair Housing Act ended the "Special Ad Audience" tool (a lookalike for housing ads), required that housing ads not be targeted on FHA-protected characteristics, and required a Variance Reduction System that measures the demographics of each housing ad's delivered audience against its eligible audience and adjusts delivery; Meta says it launched VRS for US housing in January 2023 and, in October 2023, "for US employment and credit ads." [Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting) covers the case and the method. The system point: for special ad categories, targeting options are restricted at setup and delivery is monitored and corrected after the fact, so the category must be a field on the campaign that both the targeting UI and the delivery system read.
 
-In the EU, the Digital Services Act forbids ads "based on profiling" using special categories of personal data (Art. 26(3)) and profiling-based ads to recipients a platform knows "with reasonable certainty" are minors (Art. 28(2)), and the Digital Markets Act requires a gatekeeper to get specific consent before combining personal data across services for ads (Art. 5(2)). The Commission fined Meta €200 million on April 23, 2025 over the absence of a less-personal-data choice, and Meta committed to offer EU users a less personalized ads option from January 2026. The delivery system therefore needs a per-person ads mode (personalized, less personalized, contextual only for minors) on the request, read by eligibility and ranking alike. GDPR & ePrivacy for Ads and DSA, DMA & Political Ads cover the law.
+In the EU, the Digital Services Act forbids ads "based on profiling" using special categories of personal data (Art. 26(3)) and profiling-based ads to recipients a platform knows "with reasonable certainty" are minors (Art. 28(2)), and the Digital Markets Act requires a gatekeeper to get specific consent before combining personal data across services for ads (Art. 5(2)). The Commission fined Meta €200 million on April 23, 2025 over the absence of a less-personal-data choice, and Meta committed to offer EU users a less personalized ads option from January 2026. The delivery system therefore needs a per-person ads mode (personalized, less personalized, contextual only for minors) on the request, read by eligibility and ranking alike. [GDPR & ePrivacy for Ads](/books/advertising/gdpr-and-eprivacy-for-ads) and [DSA, DMA & Political Ads](/books/advertising/dsa-dma-and-political-ads) cover the law.
 
 ## Ad Transparency
 
 Two regimes require social platforms to show who is advertising and why:
 
 - **At the ad.** DSA Art. 26(1) requires that a user see, in real time, that content is an ad, on whose behalf it is shown, who paid if different, and "meaningful information" about the main targeting parameters. That is a per-impression explanation, generated from the delivery decision, which only works if the decision recorded which parameters applied.
-- **In a repository.** DSA Art. 39 requires very large platforms to keep a searchable ad repository "until one year after the advertisement was presented for the last time", with the content, on whose behalf, who paid, the period, the targeting and exclusion parameters, and total reach broken down by member state. DSA, DMA & Political Ads covers the obligations and political ads; Ad Review, Policies & Malvertising covers ad libraries and transparency centers as products.
+- **In a repository.** DSA Art. 39 requires very large platforms to keep a searchable ad repository "until one year after the advertisement was presented for the last time", with the content, on whose behalf, who paid, the period, the targeting and exclusion parameters, and total reach broken down by member state. [DSA, DMA & Political Ads](/books/advertising/dsa-dma-and-political-ads) covers the obligations and political ads; [Ad Review, Policies & Malvertising](/books/advertising/ad-review-and-malvertising) covers ad libraries and transparency centers as products.
 
 Both read from records the delivery system already has if it keeps them: the advertiser and payer on the campaign, the targeting parameters that matched on each impression, and reach by country, which is why the decision log in this chapter stores the matched targeting rather than only the configured one.
 
 ## How to Build It
 
-A social delivery system adds the surfaces ads run on and their ad load rules, the advertiser's allowed placements per line item, the feed-level decision that put an ad in a slot, and on the campaign the objective type, special category and campaign type version. Audiences are referenced from `line_items.targeting` by ID (First-Party Data & Audiences owns the audience records); the auction and bids are the core's.
+A social delivery system adds the surfaces ads run on and their ad load rules, the advertiser's allowed placements per line item, the feed-level decision that put an ad in a slot, and on the campaign the campaign type and the API version it was created under. The campaign's special ad categories are `campaigns.special_ad_categories`, which [Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting#how-to-build-it) defines as a list with the countries it applies in; this chapter reads that field rather than keeping its own. Audiences are referenced from `line_items.targeting` by ID ([First-Party Data & Audiences](/books/advertising/first-party-data-and-audiences) owns the audience records); the auction and bids are the core's.
 
 ```sql
 CREATE TABLE ad_surfaces (               -- where ads run: a feed, stories, short video, search
@@ -207,7 +207,7 @@ CREATE TABLE ad_load_rules (             -- the ad load policy per surface, vers
   max_ads_per_page   SMALLINT NOT NULL CHECK (max_ads_per_page >= 0),
   max_ads_per_session SMALLINT,
   organic_comparison BOOLEAN NOT NULL DEFAULT TRUE,  -- an ad must beat the item it displaces
-  audience           JSONB NOT NULL DEFAULT '{}',     -- e.g. {"ads_mode":"less_personalized"}
+  audience           JSONB NOT NULL DEFAULT '{}',     -- e.g. {"ads_mode":"non_personalized"}
   effective          TSTZRANGE NOT NULL,
   approved_by        TEXT NOT NULL,
   UNIQUE (ad_surface_id, version)
@@ -230,29 +230,26 @@ CREATE TABLE feed_ad_decisions (         -- one eligible slot in one feed page: 
                        'no_eligible_ads', 'cap_reached', 'not_eligible_position')),
   ad_value_micro     BIGINT,              -- the winning ad's total value, in feed units x 1e6
   organic_value_micro BIGINT,             -- the displaced item's predicted value, same units
-  ads_mode           TEXT NOT NULL CHECK (ads_mode IN ('personalized', 'less_personalized',
-                       'contextual')),
+  ads_mode           TEXT NOT NULL CHECK (ads_mode IN ('personalized', 'non_personalized',
+                       'limited')),      -- the request's ads_mode, as the consent model sets it
   matched_targeting  JSONB,               -- the parameters that made the ad eligible, for Art. 26
   country            CHAR(2),
   PRIMARY KEY (decided_at, id)
 ) PARTITION BY RANGE (decided_at);
 
--- On the campaign: what kind of campaign, under which legal regime.
+-- On the campaign: what kind of campaign, and who paid. Special ad categories are
+-- campaigns.special_ad_categories (Sensitive Data & Discriminatory Targeting).
 ALTER TABLE campaigns
   ADD COLUMN campaign_type TEXT,          -- 'manual', 'advantage_plus_sales', 'smart_plus', ...
   ADD COLUMN campaign_type_api_version TEXT,  -- the API version the type was created under
-  ADD COLUMN special_category TEXT,       -- 'housing', 'employment', 'credit', 'issues_elections_politics'
   ADD COLUMN payer_name TEXT;             -- who paid, when not the advertiser (DSA Art. 26)
-ALTER TABLE campaigns ADD CONSTRAINT campaigns_special_category_check
-  CHECK (special_category IN ('housing', 'employment', 'credit', 'issues_elections_politics'))
-  NOT VALID;
 
 -- On the line item: the optimization goal and billing event, apart from the objective.
 ALTER TABLE line_items
   ADD COLUMN optimization_goal TEXT;      -- the event delivery predicts: 'link_click', 'purchase', ...
 ```
 
-Pricing Models adds `line_items.billing_event`; this chapter adds the optimization goal beside it. Ad load is reported from the decisions, per surface and day, including slots the ad lost:
+[Pricing Models](/books/advertising/pricing-models) adds `line_items.billing_event`; this chapter adds the optimization goal beside it. Ad load is reported from the decisions, per surface and day, including slots the ad lost:
 
 ```sql
 -- Per surface and day: eligible slots, ads shown, ads that lost to organic, and the ad rate.
@@ -274,8 +271,8 @@ Design notes:
 - **Ad load is a versioned rule.** `ad_load_rules` holds spacing, caps and the organic comparison with an effective range and an approver; a change in ad load is a new version, and every decision names the version it ran under ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Every eligible slot is a decision, ad or not.** `feed_ad_decisions` records slots where the ad lost to organic or no ad was eligible, so ad load and its revenue cost are measurable; it is a high-volume log, partitioned and sampled like the core's.
 - **The matched targeting is kept for transparency.** Art. 26's "meaningful information" on targeting and Art. 39's targeting parameters come from `matched_targeting` and the campaign's configuration; retention follows the one-year repository rule and the privacy limits on per-person logs ([Retention](/docs/telemetry/consent-and-privacy#retention)).
-- **The ads mode rides on the request.** Personalized, less personalized or contextual is decided before eligibility, from consent and age signals, and logged on the decision, so a regulator's question about a minor's feed is answerable.
-- **Special categories are a campaign field read by setup and delivery.** The targeting UI restricts options and the delivery system applies variance monitoring for campaigns with a special category; both read the same field.
+- **The ads mode rides on the request.** Personalized, non-personalized or limited, the request's `ads_mode` from [The Consent Signal Model](/books/advertising/consent-and-the-tcf#the-consent-signal-model), is decided before eligibility from consent and age signals and logged on the decision, so a regulator's question about a minor's feed is answerable.
+- **Special categories are a campaign field read by setup and delivery.** The targeting UI restricts options and the delivery system applies variance monitoring for campaigns with a special category; both read the same field, `campaigns.special_ad_categories` from [Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting#how-to-build-it).
 - **Placements default to automatic.** No `line_item_surfaces` rows means the platform chooses; rows restrict. The surface an impression ran on is in the decision log either way.
 
 ## Auditing

@@ -280,7 +280,7 @@ Design notes:
 - **Supply review writes determinations.** A job that reads app store categories and descriptions for every app in the exchange writes `store_category` or `classifier` determinations for review, and a human decision supersedes them: OpenX's order required exactly this re-review.
 - **Most restrictive wins, and says why.** The age band and its source are on every request; the reasons array says which signal set COPPA, which matters when a parent, a regulator or a publisher asks why a request was treated as a child's.
 - **Separate consent to disclose is a reason, not a mode.** Where a parent gave the amended rule's separate disclosure consent, the request carries a reason code allowing identifiers to the named third parties; without it, `StripIDs` holds.
-- **Ratings filter every source.** `creatives.content_rating` is set at review (Creative Production, Review & DCO's `creative_reviews` records the decision), and the auction drops creatives and bids above the request's ceiling.
+- **Ratings filter every source.** `creatives.content_rating` is set at review ([Creative Production, Review & DCO](/books/advertising/creative-production-and-dco)'s `creative_reviews` records the decision), and the auction drops creatives and bids above the request's ceiling.
 - **Logs from children's requests expire sooner.** Requests with `coppa` true go to partitions with the retention the written policy states, separately from general traffic.
 
 Child-flagged requests where an identifier still left in a callout, the OpenX failure as a monitor:

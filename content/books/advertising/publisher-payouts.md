@@ -92,7 +92,7 @@ The payer finds invalid traffic after it has credited the publisher, and sometim
 What that means for the ledger:
 
 - **A deduction is an entry, dated when it is taken, citing the period it corrects.** The publisher's March earnings stay as finalized; a deduction posted in June references March (or "the past 60 to 90 days") and the finding behind it. A payer that pays on net 60 can often take it before the money leaves; one that pays monthly will take it from a later month.
-- **Both sides of one finding reconcile.** The buyer's credit (an `ivt_credit` line on the buyer's invoice) and the publisher's deduction come from one `ivt_adjustments` record in Invalid Traffic & Ad Fraud; the deduction is the publisher's share of the credited amount, computed with the revenue share in force on the original day, not today's.
+- **Both sides of one finding reconcile.** The buyer's credit (an `ivt_credit` line on the buyer's invoice) and the publisher's deduction come from one `ivt_adjustments` record in [Invalid Traffic & Ad Fraud](/books/advertising/invalid-traffic-and-ad-fraud); the deduction is the publisher's share of the credited amount, computed with the revenue share in force on the original day, not today's.
 - **Advertiser non-payment is a different cause.** A clawback because the buyer never paid is not invalid traffic and should be labeled as such; it exists only where the payer's terms pass collection risk to the publisher, and a payer that guarantees payment (Raptive's stated policy) never posts it.
 - **A deduction larger than the balance makes it negative.** Recovery follows the published order (next earnings first, then other methods), the same as a merchant's in [Negative Balances](/books/payments/payouts-and-settlement#negative-balances); pulling money back from a bank account is a [Clawback](/books/payments/payouts-and-settlement#clawbacks) with its own failure modes.
 
@@ -211,7 +211,7 @@ CREATE INDEX payout_holds_active_idx
   ON payout_holds (payer_org_id, publisher_org_id) WHERE released_at IS NULL;
 ```
 
-Statements point at the period's earnings, and statement lines at their source delivery rows through Billing & Invoicing's `invoice_line_sources`. The publisher's payable balance on a cutoff date excludes estimates (superseded by finalization), and the holds are listed beside it:
+Statements point at the period's earnings, and statement lines at their source delivery rows through [Billing & Invoicing](/books/advertising/billing-and-invoicing)'s `invoice_line_sources`. The publisher's payable balance on a cutoff date excludes estimates (superseded by finalization), and the holds are listed beside it:
 
 ```sql
 -- payable balance and active holds for one publisher at one payer, as of a cutoff

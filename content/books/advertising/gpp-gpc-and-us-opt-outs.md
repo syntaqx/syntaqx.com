@@ -11,7 +11,7 @@ In Europe the default for ad personalization is no until the user says yes. In t
 
 It is hard because each form reaches a different set of parties, and the law treats a failure anywhere in the chain as the business's failure. The GPP string rides in the bid request and reaches every bidder; GPC reaches only the servers the browser talks to directly; a persistent opt-out reaches no one unless the company holding it sends it. The framework that standardizes the strings, IAB Tech Lab's Global Privacy Protocol, changed its US National section again in November 2026, and the contract behind it, the Multi-State Privacy Agreement (MSPA), is on its sixth version from January 2027. The enforcement record in California is a list of opt-outs that were collected and never applied: on the web but not in the app, on one device but not the account, in the CMP but not in the tags.
 
-This chapter covers the GPP string and its sections, the US National section and the MSPA, GPC and the states that require it, how Google, Meta and Prebid turn the signals into restricted processing, how an opt-out propagates through the programmatic chain and outside it, and the records that prove it did. It extends `ad_requests` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) and the consent signal model in [Consent Management & the TCF](/books/advertising/consent-and-the-tcf#the-consent-signal-model), whose `ads_mode` the US signals feed. What the state laws mean by sale, sharing and targeted advertising, which laws apply and how they're enforced is US State Privacy Law for Advertising; the playbook's [California: Opt-Out of Sale and Sharing](/docs/telemetry/consent-and-privacy#california-opt-out-of-sale-and-sharing) covers GPC in a telemetry pipeline, including the CPPA regulation that applies the signal to pseudonymous profiles. Data brokers' registration and California's DROP deletion platform are Data Brokers & Third-Party Data; identifier providers' own opt-outs (UID2 and others) are Identifiers After Cookies.
+This chapter covers the GPP string and its sections, the US National section and the MSPA, GPC and the states that require it, how Google, Meta and Prebid turn the signals into restricted processing, how an opt-out propagates through the programmatic chain and outside it, and the records that prove it did. It extends `ad_requests` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) and the consent signal model in [Consent Management & the TCF](/books/advertising/consent-and-the-tcf#the-consent-signal-model), whose `ads_mode` the US signals feed. What the state laws mean by sale, sharing and targeted advertising, which laws apply and how they're enforced is [US State Privacy Law for Advertising](/books/advertising/us-state-privacy-law); the playbook's [California: Opt-Out of Sale and Sharing](/docs/telemetry/consent-and-privacy#california-opt-out-of-sale-and-sharing) covers GPC in a telemetry pipeline, including the CPPA regulation that applies the signal to pseudonymous profiles. Data brokers' registration and California's DROP deletion platform are [Data Brokers & Third-Party Data](/books/advertising/data-brokers); identifier providers' own opt-outs (UID2 and others) are [Identifiers After Cookies](/books/advertising/identifiers-after-cookies).
 
 ## How the Platforms Do It
 
@@ -39,7 +39,7 @@ The section IDs, from the GPP's section registry:
 | ID | Key | What it is |
 | --- | --- | --- |
 | 1 | `tcfeuv1` | EU TCF v1 (deprecated) |
-| 2 | `tcfeuv2` | EU TCF v2, the TC string from Consent Management & the TCF |
+| 2 | `tcfeuv2` | EU TCF v2, the TC string from [Consent Management & the TCF](/books/advertising/consent-and-the-tcf) |
 | 3 | header | The GPP header |
 | 4 | signal integrity | Reserved for signal integrity |
 | 5 | `tcfcav1` | IAB Canada TCF |
@@ -83,7 +83,7 @@ A GPC subsection is always present, set from the `Sec-GPC` header or the `global
 
 What that means for a receiver:
 
-- **Check the signatory.** A `usnat` section with an `MspaId` that isn't on the MSPA Identification List is not covered by the contract, which means the receiver has no MSPA terms for the data and falls back to whatever agreement it has with the sender (`privacy_agreements`, in US State Privacy Law for Advertising).
+- **Check the signatory.** A `usnat` section with an `MspaId` that isn't on the MSPA Identification List is not covered by the contract, which means the receiver has no MSPA terms for the data and falls back to whatever agreement it has with the sender (`privacy_agreements`, in [US State Privacy Law for Advertising](/books/advertising/us-state-privacy-law)).
 - **Store the MSPA version.** A string made under the Fifth MSPA in December 2026 and one made under the Sixth in January 2027 are judged under different contracts.
 - **Expect churn.** Three amended MSPAs in eighteen months and a section format that changed its fields in November 2026 are the reason the decoding rules are data (`privacy_rule_versions`) and not code paths.
 
@@ -91,7 +91,7 @@ What that means for a receiver:
 
 The W3C specification defines the signal in two places: a request header, `Sec-GPC: 1`, sent by a browser or extension with the user's preference on, and a JavaScript property, `navigator.globalPrivacyControl`, true when it is on. A site may publish `/.well-known/gpc.json` to say it supports the signal. GPC was introduced at the W3C Privacy Community Group in April 2020 and became a W3C Privacy Working Group work item in November 2024.
 
-**California requires it.** The Attorney General's CCPA page says the signal "must be honored by covered businesses as a valid consumer request" to stop the sale or sharing of personal information, and the CPPA's regulations apply it to the browser or device and "any consumer profile associated with that browser or device, including pseudonymous profiles" ([California: Opt-Out of Sale and Sharing](/docs/telemetry/consent-and-privacy#california-opt-out-of-sale-and-sharing)). Not honoring GPC was among the violations in the Attorney General's Sephora (2022) and Healthline (2025) settlements and in the CPPA's Tractor Supply order (2025). On September 9, 2025 the CPPA and the Attorneys General of California, Colorado and Connecticut announced a joint investigative sweep of businesses that may not be processing GPC opt-out requests. Other states' laws recognize universal opt-out mechanisms on their own schedules; US State Privacy Law for Advertising has the per-state table.
+**California requires it.** The Attorney General's CCPA page says the signal "must be honored by covered businesses as a valid consumer request" to stop the sale or sharing of personal information, and the CPPA's regulations apply it to the browser or device and "any consumer profile associated with that browser or device, including pseudonymous profiles" ([California: Opt-Out of Sale and Sharing](/docs/telemetry/consent-and-privacy#california-opt-out-of-sale-and-sharing)). Not honoring GPC was among the violations in the Attorney General's Sephora (2022) and Healthline (2025) settlements and in the CPPA's Tractor Supply order (2025). On September 9, 2025 the CPPA and the Attorneys General of California, Colorado and Connecticut announced a joint investigative sweep of businesses that may not be processing GPC opt-out requests. Other states' laws recognize universal opt-out mechanisms on their own schedules; [US State Privacy Law for Advertising](/books/advertising/us-state-privacy-law) has the per-state table.
 
 **Browsers will have to offer it.** California's AB 566, the Opt Me Out Act, signed October 8, 2025, "requires browsers operating in California to offer easy-to-use opt-out preference signals," from January 2027 by the CPPA's account. Until now GPC came mostly from privacy-focused browsers and extensions; from 2027 every browser operating in California must offer a setting for it, and the share of traffic carrying `Sec-GPC: 1` will rise accordingly.
 
@@ -105,7 +105,7 @@ At the edge, the request's US signals combine into one set of opt-outs for the r
 2. **What does that section say?** `SaleOptOut`, `SharingOptOut` and `TargetedAdvertisingOptOut` where the section has them; `usnat`'s `MspaOptOut`; the sensitive-data fields.
 3. **Is GPC on?** From the header, the JavaScript property as relayed by the tag, or a section's GPC subsection. GPC adds `sale` and `sharing` wherever the jurisdiction honors it.
 4. **Is there a persistent opt-out** for this browser, device or account? A lookup against `opt_out_records` by the request's identifiers, below.
-5. **Is the person known to be a minor?** Children, Teens & Advertising covers the age rules, which can turn an opt-out regime into an opt-in one.
+5. **Is the person known to be a minor?** [Children, Teens & Advertising](/books/advertising/children-and-teens) covers the age rules, which can turn an opt-out regime into an opt-in one.
 
 The result is the request's `us_opt_outs` (`sale`, `sharing`, `targeted_advertising`) and its effect on `ads_mode`: any of them makes the request at most `non_personalized` for parties that would receive the data as a sale or share, with a reason code. The per-recipient question follows: a party the business discloses to as a **service provider** or **contractor** under a contract with the required terms (Google with RDP, Meta with LDU, an MSPA signatory in service provider terms) may still receive data to deliver and measure the ad, restricted to those purposes; a **third party** may not receive it at all for an opted-out person.
 
@@ -217,7 +217,7 @@ Two simplifications are deliberate. Whether a given state's law treats an opt-ou
 An opt-out has to reach every party that would otherwise sell, share or target with the data. Four channels do that, and a complete system uses all of them:
 
 - **In the request.** The GPP string in `regs.gpp`, with `gpp_sid`, from the first hop to the last. The first party (the publisher, or its ad server) writes GPC and any persistent opt-out it holds into the string, because downstream parties can't see either. An intermediary passes the string unchanged; rewriting it to remove an opt-out is the failure regulators look for.
-- **In the request's shape.** An exchange strips identifiers (`user.eids`, `user.buyeruid`, `device.ifa`) and precise geolocation for bidders that would receive them as a third party, and records what it removed (`bid_requests.fields_removed`, from How Programmatic Works). A bidder that never receives the identifier can't misuse it.
+- **In the request's shape.** An exchange strips identifiers (`user.eids`, `user.buyeruid`, `device.ifa`) and precise geolocation for bidders that would receive them as a third party, and records what it removed (`bid_requests.fields_removed`, from [How Programmatic Works](/books/advertising/how-programmatic-works)). A bidder that never receives the identifier can't misuse it.
 - **In the tags.** The same decision sets Google's `restrictDataProcessing`, Meta's `dataProcessingOptions` and any other platform's flag on the page, and gates any pixel that would send data to a party without a service provider contract ([Gating SDKs](/docs/telemetry/consent-and-privacy#gating-sdks)).
 - **Out of band.** A persistent opt-out (a form, an app toggle, an authorized agent's request) is attached to an account or device, and the parties the business already sold or shared that person's data with have to be told. The CCPA regulations (section 7026(f)) require a business to stop selling and sharing "as soon as feasibly possible, but no later than 15 business days", and to notify "all third parties to whom the business has sold or shared the consumer's personal information, after the consumer submits the request to opt-out of sale/sharing and before the business complies", directing them to comply and to forward the request onward. Their own illustration is ad tech: a business whose site "instantaneously sells and shares personal information of consumers viewing its website through real-time bidding" can stop instantly, and so "shall not take 15 business days". In ad tech that is an API call or a file to each partner (a DSP's audience platform, a data partner's suppression list), and the record that it was sent.
 
@@ -239,7 +239,7 @@ The pattern is that the opt-out existed somewhere and didn't reach the processin
 
 ## How to Build It
 
-The request gets the US fields beside the TCF fields from Consent Management & the TCF, and two tables hold the opt-outs that outlive a request: the opt-out itself, keyed by whatever identifies the person, and each delivery of it to a partner.
+The request gets the US fields beside the TCF fields from [Consent Management & the TCF](/books/advertising/consent-and-the-tcf), and two tables hold the opt-outs that outlive a request: the opt-out itself, keyed by whatever identifies the person, and each delivery of it to a partner.
 
 ```sql
 ALTER TABLE ad_requests
@@ -320,7 +320,7 @@ HAVING count(d.id) FILTER (WHERE d.status IN ('sent', 'failed')) > 0
     OR count(d.id) = 0;
 ```
 
-The share of US requests carrying GPC and the share where it was converted into the outgoing string, per ad unit (How Programmatic Works adds `entry_point`, the better grouping once it exists); a gap means GPC is honored at the edge and lost downstream:
+The share of US requests carrying GPC and the share where it was converted into the outgoing string, per ad unit ([How Programmatic Works](/books/advertising/how-programmatic-works) adds `entry_point`, the better grouping once it exists); a gap means GPC is honored at the edge and lost downstream:
 
 ```sql
 SELECT r.ad_unit_id,

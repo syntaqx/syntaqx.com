@@ -66,7 +66,7 @@ The objective is what the advertiser wants; the goal is how the line item is jud
 **Goals** come in two kinds that the model must not confuse:
 
 - **A delivery goal** is a quantity promised or capped: 2,000,000 impressions by the end date on a standard line item, 100% share of voice on a sponsorship, a cap of 500,000 on a bulk line item. It drives pacing and, when guaranteed, contracts and make-goods. The core holds it as `goal_quantity` and requires it on guaranteed line items.
-- **A performance goal** is a target for a ratio: a CPA of $40, a ROAS of 400%, a viewability rate above 70%. It drives bid optimization (Automated Bidding, in Auctions and Pricing) and reporting, and it is never guaranteed: the IAB/4A's terms say that for CPA, CPL and CPC deliverables "guaranteed delivery, even delivery, and makegoods are not available".
+- **A performance goal** is a target for a ratio: a CPA of $40, a ROAS of 400%, a viewability rate above 70%. It drives bid optimization ([Automated Bidding](/books/advertising/automated-bidding), in Auctions and Pricing) and reporting, and it is never guaranteed: the IAB/4A's terms say that for CPA, CPL and CPC deliverables "guaranteed delivery, even delivery, and makegoods are not available".
 
 A line item can carry both (deliver 1,000,000 impressions evenly while keeping CPA under $40), and the delivery goal wins when they conflict, because only the delivery goal is a promise.
 
@@ -227,7 +227,7 @@ A line item changes while it delivers: the budget rises, a creative is swapped, 
 
 The pattern is an append-only version history per line item: every change writes a new version row with the full configuration (targeting, bid or rate, caps, pacing, budget pointer) and its effective time, and the serving snapshot records which version of each line item it carried ([Versioned Entities](/docs/database/temporal-data#versioned-entities)). The `line_items` row stays the current state for the UI and the API; the version rows are the history. Ad events and decisions point at the version through the snapshot, so "what did this line item target when it served this impression?" is one join.
 
-Changes that alter what was sold need more than a version. Changing the targeting of a guaranteed line item mid-flight changes the inventory it was sized against ([Forecasting & Avails](/books/advertising/forecasting-and-avails) covers re-checking availability), and changing the rate on a signed insertion order changes the contract (Insertion Orders & Standard Terms, in Contracts and Money). Both should be blocked or routed through approval when the line item is guaranteed.
+Changes that alter what was sold need more than a version. Changing the targeting of a guaranteed line item mid-flight changes the inventory it was sized against ([Forecasting & Avails](/books/advertising/forecasting-and-avails) covers re-checking availability), and changing the rate on a signed insertion order changes the contract ([Insertion Orders & Standard Terms](/books/advertising/insertion-orders-and-terms), in Contracts and Money). Both should be blocked or routed through approval when the line item is guaranteed.
 
 ## Syncing External Platforms
 
