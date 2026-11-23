@@ -20,8 +20,8 @@ As of November 2026, from vendor documentation, product pages and results:
 
 | Vendor | What it says the product does | Public figure |
 | --- | --- | --- |
-| **Blue Yonder** | "Balance demand, supply and inventory with confidence"; "AI-powered forecasting, constraint-aware planning and multi-echelon inventory optimization"; for integrated business planning, "Evaluate scenarios, quantify business impact and guide revenue, margin and service decisions" | Private |
-| **Kinaxis** | "Maestro™ is the only AI-infused end-to-end supply chain platform" | 2025 revenue $548.0 million (up 13%), SaaS revenue $362.4 million (up 17%), ARR $433 million at December 31, 2025; Q3 2026 revenue $160.3 million (up 19%) and ARR $483.9 million (up 19%); 2026 revenue guidance raised to $640 to $650 million |
+| **Blue Yonder** | "Balance demand, supply and inventory with confidence"; "AI-powered forecasting, constraint-aware planning and multi-echelon inventory optimization"; for integrated business planning, "Evaluate scenarios, quantify business impact and guide revenue, margin and service decisions" | No standalone filing |
+| **Kinaxis** | "Maestro™ is the only AI-infused end-to-end supply chain platform" | 2025 revenue $548.0 million (up 13%), SaaS revenue $362.4 million (up 17%), ARR $433 million (up 20%) at December 31, 2025; Q3 2026 revenue $160.3 million (up 19%) and ARR $483.9 million (up 19%); 2026 revenue guidance raised to $640 to $650 million |
 | **Microsoft** | Dynamics 365 demand forecasting picks "a best fit among five time series forecasting methods to calculate a baseline forecast"; "Manual adjustments must be authorized before the forecasts can be used for planning"; a Demand planning app with "on-the-fly aggregation and disaggregation"; Planning Optimization for supply | Not broken out |
 | **o9 Solutions** | "a single, enterprise-wide IBP process and planning cadence"; "All planning functions operate on a single data foundation, eliminating the 'battle of the numbers'"; "Touchless planning" | Private |
 | **Oracle** | Plan types: a Demand Plan ("collaborative and statistical demand forecasting"), a Supply Plan, a Sales and Operations Plan ("for aggregate planning"), and a Demand and Supply Plan; S&OP cycles of product, demand, supply, financial and executive reviews | Not broken out |
@@ -53,7 +53,7 @@ A manufacturer forecasts demand it sees through customers: distributors' orders,
 
 ### Statistical Baseline
 
-The methods are those of Commerce's [Forecasting](/books/commerce/purchasing-and-replenishment#forecasting) section, applied per series. Microsoft's built-in forecasting is representative: it runs experiments that "look for a best fit among five time series forecasting methods," holding out a test set ("if you set the value to 20, the last 20 percent of the historical data will be used") and reporting accuracy as MAPE. What manufacturers add:
+The methods are those of Commerce's [Forecasting](/books/commerce/purchasing-and-replenishment#forecasting) section, applied per series. Microsoft's built-in demand forecasting shows the mechanics (Microsoft now recommends its newer Demand planning app instead): its machine learning experiments "look for a best fit among five time series forecasting methods," hold out a test set ("if you set the value to 20, the last 20 percent of the historical data will be used"), and report the model's accuracy as MAPE. What manufacturers add:
 
 - **Independent and dependent demand.** Microsoft forecasts "independent demand from sales orders and dependent demand at any decoupling point"; spare parts and service kits are independent demand for components MRP would otherwise see only as dependent.
 - **Customer-provided forecasts as inputs, not truth.** A customer's 830 or collaborative forecast is a signal with its own bias, measured like any other.

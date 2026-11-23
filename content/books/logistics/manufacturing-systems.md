@@ -24,8 +24,8 @@ As of November 2026, from vendor documentation, product pages and filings:
 | **ERPNext** (Frappe) | ERP with work orders and job cards (level 4, some 3) | "A Work Order is a document given to the manufacturing shop floor by the Production Planner"; job cards track operations; optional capacity planning | Open source |
 | **Microsoft** | Dynamics 365 Supply Chain Management (level 4, with an MES terminal) | Production orders, batch orders and kanbans in "mixed mode"; job scheduling with finite capacity; an "MES Terminal" for reporting progress | Not broken out in Microsoft's filings |
 | **Oracle** | Fusion Cloud Manufacturing (level 4) | A work definition "defines the manufacturing process for a product," a "template to create a work order," combining "an item structure and routing into a single view" | Not broken out |
-| **PTC** | Windchill, Arena (PLM); Creo, Onshape (CAD) | Windchill "manages all aspects of the product development lifecycle"; Kepware and ThingWorx (industrial connectivity and IoT) divested in fiscal Q2 2026 | FY2026 (to September 30, 2026) revenue $2,733.4 million; ARR $2.51 billion; about 95% recurring |
-| **Rockwell Automation** | FactoryTalk, Plex Systems, Fiix (levels 1 to 4) | Software & Control: "control and visualization software and hardware, digital twin, simulation and information software" | FY2026 (to September 30, 2026) sales $8,989 million: Intelligent Devices $4,185 million, Software & Control $2,818 million, Lifecycle Services $2,071 million; about 27,000 employees |
+| **PTC** | Windchill, Arena (PLM); Creo, Onshape (CAD) | Windchill "manages all aspects of the product development lifecycle"; Kepware and ThingWorx (industrial connectivity and IoT) divested in fiscal Q2 2026 | FY2026 (to September 30, 2026) revenue $2,733.4 million; ARR $2.51 billion; about 95% recurring; on October 4, 2026 agreed to become a wholly owned subsidiary of Schneider Electric (pending as of November 2026) |
+| **Rockwell Automation** | FactoryTalk, Plex Systems, Fiix (levels 1 to 4) | Software & Control: "control and visualization software and hardware, digital twin, simulation and information software" | FY2026 (to September 30, 2026) sales $8,989 million: Intelligent Devices $4,185 million, Software & Control $2,818 million, Lifecycle Services $2,071 million, less an $85 million unallocated tariff refund estimate; about 27,000 employees |
 | **Siemens** | Opcenter (level 3), Teamcenter (PLM), automation | Opcenter is "a unified manufacturing operations management (MOM) solutions portfolio," MOM being "the real-time software layer that links product lifecycle management (PLM) to automation"; Opcenter APS for scheduling | FY2026 group revenue €83.4 billion; Digital Industries software revenue €7.2 billion, up 13% comparable |
 | **Tulip** | Frontline operations platform (level 3) | "a secure, governed, composable platform" where apps are built "without writing any code" and machines, sensors and operator entries "connect to the same data model" | Private |
 
@@ -35,22 +35,22 @@ Four patterns:
 
 - **MES has become MOM.** Siemens, Dassault and AVEVA all describe their level-3 products as manufacturing operations management, which adds quality, materials handling and maintenance to execution. The scope of "the MES" in a given plant is a decision, and the integration has to say which of those functions it owns.
 - **ERPs reach down, MES products reach up.** Dynamics 365 ships an MES terminal and finite job scheduling; ERPNext has job cards and capacity planning; Opcenter has a scheduler and a quality system. The overlap is why a plant's system-of-record map (who owns which object) has to be explicit, per plant.
-- **Automation vendors own the floor and are buying the layers above.** Rockwell sells controllers, FactoryTalk software and the Plex cloud MES and ERP; Siemens sells automation, Opcenter and Teamcenter. PTC went the other way in 2026, selling its connectivity and IoT businesses to concentrate on PLM and CAD.
+- **Automation vendors own the floor and are buying the layers above.** Rockwell sells controllers, FactoryTalk software and the Plex cloud MES and ERP; Siemens sells automation, Opcenter and Teamcenter. PTC went the other way in fiscal 2026, selling its connectivity and IoT businesses to concentrate on PLM and CAD, and then agreed to be acquired by Schneider Electric.
 - **Composable platforms are the low-code alternative.** Tulip's apps on a shared data model compete with configured MES for plants that need operator workflows faster than an MES project delivers them.
 
 ## The ISA-95 Levels
 
-ISA-95 (also published as ANSI/ISA-95 and IEC 62264) is "an international set of standards aimed at integrating logistics systems with manufacturing control systems." It builds on the Purdue model's levels and gives "an abstract model for information exchange among manufacturing control functions and business functions," concentrating on the interface between levels 3 and 4:
+ISA-95 (also published as ANSI/ISA-95 and IEC 62264) is "an international set of standards aimed at integrating logistics systems with manufacturing control systems." It builds on the Purdue model's levels and gives "an abstract model for information exchange among manufacturing control functions and business functions," and "primarily deals with the interface between levels 3 and 4":
 
-| Level | What it is | Typical systems | Time scale (my rule of thumb) |
+| Level | What it is | Typical systems (my mapping) | Time scale (my rule of thumb) |
 | --- | --- | --- | --- |
 | **4: Business planning and logistics** | Orders, plans, purchasing, inventory value, shipping | ERP, supply planning, TMS, WMS | Days, weeks, months |
-| **3: Manufacturing operations management** | Dispatching work, tracking production, quality, materials on the floor, maintenance | MES, MOM, SCADA, historian, LIMS | Shifts, hours, minutes |
-| **2: Monitoring and supervisory control** | Supervising the process | PLCs, DCSs, HMIs | Seconds |
+| **3: Manufacturing operations management** | Dispatching work, tracking production, quality, materials on the floor, maintenance | MES, MOM, historian, LIMS (ISA lists SCADA here too) | Shifts, hours, minutes |
+| **2: Monitoring and supervisory control** | Monitoring and supervising the process | PLCs, DCSs, HMIs, SCADA | Seconds |
 | **1: Sensing and manipulating** | Sensors, smart devices, valves | Instruments, drives | Milliseconds |
 | **0: The physical process** | The machinery and assets on the floor | | |
 
-The standard has eight parts: Models and Terminology; Objects and Attributes for Enterprise-Control System Integration; Activity Models of Manufacturing Operations Management; Objects and Attributes for Manufacturing Operations Management Integration; Business-to-Manufacturing Transactions; Messaging Service Model; Alias Service Model; and Information Exchange Profiles. The OPC Foundation's "OPC UA for ISA-95 Common Object Model" companion specification, first released in 2013, models its physical assets, equipment, and personnel and material.
+The standard has eight parts: Models and Terminology; Objects and Attributes for Enterprise-Control System Integration; Activity Models of Manufacturing Operations Management; Objects and Attributes for Manufacturing Operations Management Integration; Business-to-Manufacturing Transactions; Messaging Service Model; Alias Service Model; and Information Exchange Profiles. The OPC Foundation's "OPC UA for ISA-95 Common Object Model" companion specification, first released in early 2013, models its physical asset, equipment, and personnel and material handling models.
 
 What the levels mean for a system design:
 
@@ -88,7 +88,7 @@ Dynamics 365's production life cycle shows the hand-offs the two levels share, w
 
 Machine data reaches level 3 through a small set of protocols:
 
-- **OPC UA** is "a platform independent service-oriented architecture," released in 2008, whose information modeling "turns data into information": a server exposes typed objects (a machine, its states, its counters) rather than bare register addresses. Clients and servers are "identified through X509 certificates" and sessions are encrypted; a PubSub mode "has been optimized for many-to-many configurations," with transports from a binary protocol to JSON over WebSockets.
+- **OPC UA** is "a platform independent service-oriented architecture," released in 2008, whose information modeling "turns data into information": a server exposes typed objects (a machine, its states, its counters) rather than bare register addresses. Clients and servers are "identified through X509 certificates" and sessions are encrypted; a PubSub mode is "optimized for many-to-many configurations," with transports from a binary protocol to JSON over WebSockets.
 - **MQTT** is "an OASIS standard messaging protocol for the Internet of Things (IoT)," "an extremely lightweight publish/subscribe messaging transport." Devices publish to a broker; consumers subscribe; neither knows the other.
 - **Sparkplug** (Eclipse, version 3.0, upgraded from 2.2) adds what bare MQTT lacks for industrial data: a defined payload and state awareness, in which "birth and death certificates provide subscribing clients confidence in data validity." A subscriber knows when a node came online, what it publishes, and when it went silent, so a stale value is distinguishable from a steady one.
 
@@ -243,7 +243,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails#what-a-re
 
 **Standards**
 
-- [ISA: ISA-95 standard](https://www.isa.org/standards-and-publications/isa-standards/isa-95-standard), the levels 0 to 4, the scope (the level 3 and 4 interface), the IEC 62264 designation and the eight parts
+- [ISA: ISA-95 standard](https://www.isa.org/standards-and-publications/isa-standards/isa-95-standard), the levels 0 to 4, the scope ("primarily deals with the interface between levels 3 and 4"), the IEC 62264 designation and the eight parts
 - [OPC Foundation: OPC UA](https://opcfoundation.org/about/opc-technologies/opc-ua/), the service-oriented architecture released in 2008, information modeling, X509 certificates, encryption and PubSub
 - [OPC Foundation: ISA-95](https://opcfoundation.org/markets-collaboration/isa-95/), the OPC UA for ISA-95 Common Object Model companion specification and its models
 - [MQTT.org](https://mqtt.org/), MQTT as an OASIS standard publish/subscribe transport
@@ -251,8 +251,8 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails#what-a-re
 
 **Filings and results**
 
-- [Rockwell Automation: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1024478/000102447826000048/rok-20260930.htm), sales by segment, employees, the Software & Control description and the FactoryTalk, Plex and Fiix marks
-- [PTC: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/857005/000119312526470217/ptc-20260930.htm), revenue, ARR, the recurring share, product descriptions and the Kepware and ThingWorx divestiture
+- [Rockwell Automation: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1024478/000102447826000048/rok-20260930.htm), sales by segment and the unallocated tariff refund estimate, employees, the Software & Control description and the FactoryTalk, Plex and Fiix marks
+- [PTC: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/857005/000119312526470217/ptc-20260930.htm), revenue, ARR, the recurring share, product descriptions, the Kepware and ThingWorx divestiture and the Schneider Electric merger agreement
 - [Siemens: Fiscal 2026 results (November 12, 2026)](https://press.siemens.com/global/en/pressrelease/outstanding-fiscal-2026-performance-industrial-ai-drive-future-growth), group revenue and Digital Industries software revenue
 - [Dassault Systèmes: Fourth quarter and full year 2025 results](https://www.3ds.com/assets/invest/2026-02/dassault-systemes-25q4-earnings_pr_va.pdf), revenue, Industrial Innovation software and the brand list
 

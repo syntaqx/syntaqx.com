@@ -20,10 +20,10 @@ As of November 2026, from each product's documentation:
 
 | System | Planning run | Lot sizing | Stability controls | Capacity |
 | --- | --- | --- | --- | --- |
-| **Microsoft Dynamics 365 Business Central** | Plans items "according to each item's low-level code (BOM position)"; "Calculate Regenerative Plan" (all items) or "Calculate Net Change Plan" (changed items) | Fixed Reorder Qty., Maximum Qty., Order, Lot-for-Lot; modifiers applied "down to the maximum order quantity," "up to the minimum," "up to meet the nearest order multiple" | Rescheduling period, lot accumulation period, dampener period; Planning Flexibility None on an order; a frozen zone before the planning start date | "doesn't include dedicated logic for capacity leveling or fine scheduling"; a rough-cut finite loading that splits operations into free slots |
+| **Microsoft Dynamics 365 Business Central** | Plans items "according to each item's low-level code (BOM position)"; "Calculate Regenerative Plan" (all items) or "Calculate Net Change Plan" (changed items) | Fixed Reorder Qty., Maximum Qty., Order, Lot-for-Lot; modifiers applied "down to the maximum order quantity," "up to the minimum order quantity," "up to meet the nearest order multiple" | Rescheduling period (Lot-for-Lot only), lot accumulation period, dampener period; Planning Flexibility None on an order; a frozen zone before the planning start date | "doesn't include dedicated logic for capacity leveling or fine scheduling"; a rough-cut finite loading that splits operations into free slots |
 | **Microsoft Dynamics 365 Supply Chain Management** | Planning Optimization runs master planning "outside Dynamics 365 Supply Chain Management and the related SQL database," holding data in memory, returning "planned orders and pegging information" | Coverage codes Manual, Per requirement, Per period, Min/Max, Priority, Decoupling point (DDMRP) | Firming planned orders into production orders, batch orders or kanbans | Operations scheduling ("a rough, long-term plan") and job scheduling ("a detailed plan," finite capacity, Gantt chart) |
-| **Odoo** | Master production schedule by year, month, week or day "against a manually-adjustable demand forecast," with indirect demand for components | Safety stock target; minimum and maximum to replenish per period, excess demand carrying "over to the next period" | Manual adjustment of the suggested replenishment | Operations on the BoM, timed once work orders are enabled |
-| **ERPNext** | Work orders issued by the production planner | Not on the pages cited | Overproduction percentage per work order | Optional capacity planning a set number of days ahead, with overtime and holiday settings |
+| **Odoo** | Master production schedule by year, month, week or day "against a manually-adjustable demand forecast," with indirect demand for components | Safety stock target; minimum and maximum to replenish per period; above the maximum, "the remaining quantity is automatically transferred to the next period" | Manual adjustment of the suggested replenishment | Operations on the BoM, timed once work orders are enabled |
+| **ERPNext** | Work orders issued by the production planner | Not on the pages cited | Overproduction percentage per work order | Optional capacity planning "the number of days in advance" set in Manufacturing Settings (30 by default, per the work order page), with overtime and holiday settings |
 | **Oracle Fusion Cloud Supply Planning** | Supply plans, unconstrained or constrained | Not on the pages cited | A planning time fence: a planned order's due date "is always greater than or equal to the planning time fence date"; a natural time fence "at the latest date of firm supplies" | In constrained plans, "resource and supplier capacities are soft constraints that the planning process violates only when necessary," lead times hard; constrained plans run "only … in batch mode" |
 | **Siemens Opcenter APS** | Scheduling after planning | n/a | n/a | "production planning and scheduling products help synchronize manufacturing processes" |
 
@@ -283,7 +283,7 @@ Then the modifiers, in order: down to the maximum order quantity, up to the mini
 
 A rerun doesn't just add orders; it changes existing ones. Business Central's actions are New, Change Quantity, Reschedule, Reschedule and Change Quantity, and Cancel, and the planner accepts or rejects each. A plan that emits hundreds a night is "nervous," and the controls that calm it:
 
-- **A rescheduling period:** within it an order is moved; outside it, it's cancelled and a new one suggested.
+- **A rescheduling period:** within it an order is moved; outside it, it's cancelled and a new one suggested (in Business Central, only for Lot-for-Lot items).
 - **A dampener period:** "Changes from the supply date until one dampener period from the supply date don't generate action messages," so a one-day slip isn't a message.
 - **Firm orders:** a planned order the planner has firmed is netted but not resized or moved; Dynamics 365 creates production orders "by firming planned orders."
 - **Time fences:** no new planned orders inside the fence (Oracle's planning time fence; Business Central's frozen zone).
@@ -324,7 +324,7 @@ A work order (a production order, a manufacturing order, a job) is the instructi
 
 Two quantity rules every plant has to set:
 
-- **Overproduction.** ERPNext's "allowable percentage by which the actual production quantity can exceed the planned quantity"; above it, a report is refused.
+- **Overproduction.** ERPNext's "allowable percentage by which the actual production quantity can exceed the planned quantity specified in a work order"; my rule is to refuse a report above it rather than warn.
 - **Underproduction.** ERPNext allows partial completion; Dynamics 365 leaves an order open for "additional quantities" until "End job" is set. Whether a short order is closed (the shortfall becomes new demand at the next MRP run) or held open (its remaining quantity stays a scheduled receipt) is a rule per item, and MRP's view of supply depends on it.
 
 The output of a work order is usually a lot: the core `lots` row, made at the plant, with its production date. Which component lots went into it is the genealogy that Lot & Serial Traceability records; this chapter records quantities consumed per component, and traceability records them per lot.
@@ -493,7 +493,7 @@ CREATE TABLE production_confirmations (  -- good and scrap reported against an o
 Notes on the choices:
 
 - **A planned order belongs to a run.** Each run writes its own suggestions; the previous run's unaccepted suggestions expire, accepted and firmed ones carry forward as supply. That keeps a planner's decisions from being overwritten by a rerun, and lets a run be compared with the last.
-- **The run records what it read.** `inputs_as_of` and `engine_version` make a run reproducible in the same way as the load plans in [Load Planning & Optimization](/books/logistics/load-planning).
+- **The run records what it read.** `inputs_as_of` and `engine_version` make a run reproducible in the same way as the load plans in [Plans as Runs](/books/logistics/load-planning#plans-as-runs).
 - **The work order fixes its versions at creation.** A BOM change applied later doesn't rewrite an open order; the ECO's open-order action decides whether it changes ([BOMs, PLM & Engineering Change](/books/logistics/boms-and-engineering-change#engineering-change)).
 - **Confirmations are idempotent and carry both times.** The MES retries; `(work_order_id, source, source_ref)` makes a replay a no-op, and `occurred_at` versus `received_at` separates when the line made the parts from when the ERP heard ([Idempotency](/docs/requests/idempotency)).
 - **Scrap needs a reason.** Unreported scrap is the commonest cause of backflush shortages.
@@ -513,7 +513,7 @@ WHERE m.work_order_id = $1
 
 ## Auditing
 
-- **Every MRP run, with its inputs snapshot, engine version, suggestions and the decisions on them,** so "why did the plan tell us to buy 500" is answerable a month later.
+- **Every MRP run, with its inputs snapshot, engine version, suggestions and the decisions on them,** so "why did the plan say to buy 500" is answerable a month later.
 - **Every work order's versions, quantities and status changes,** with who released, short-closed or cancelled it ([Transition History](/docs/building-blocks/workflows#transition-history)).
 - **Every confirmation as received,** with both times, its source ID and its scrap reason.
 - **Every consumption posting and the rule that produced it** (manual, preflush or backflush), because inventory accuracy audits and cost variances trace to them.
@@ -535,13 +535,13 @@ WHERE m.work_order_id = $1
 
 - [Microsoft Learn: Design details, central concepts of the planning system (Business Central)](https://learn.microsoft.com/en-us/dynamics365/business-central/design-details-central-concepts-of-the-planning-system), planning by low-level code, regenerative and net change plans, the frozen zone, order tracking, planning flexibility, warnings and finite loading
 - [Microsoft Learn: Design details, planning parameters (Business Central)](https://learn.microsoft.com/en-us/dynamics365/business-central/design-details-planning-parameters), reordering policies, safety lead time, rescheduling, lot accumulation and dampener periods, order modifiers and low-level codes
-- [Microsoft Learn: Design details, balancing supply and demand (Business Central)](https://learn.microsoft.com/en-us/dynamics365/business-central/design-details-balancing-demand-and-supply), the planning goals, what can't be replanned, forecast consumption, demand priorities, safety stock, emergency orders and the action messages
+- [Microsoft Learn: Design details, balancing supply and demand (Business Central)](https://learn.microsoft.com/en-us/dynamics365/business-central/design-details-balancing-demand-and-supply), the planning goals, what can't be replanned, forecast consumption, demand priorities, safety stock, emergency orders, the order modifiers' sequence and the action messages
 - [Microsoft Learn: Coverage settings (Dynamics 365 Supply Chain Management)](https://learn.microsoft.com/en-us/dynamics365/supply-chain/master-planning/coverage-settings), coverage codes and demand-specified BOM versions
 - [Microsoft Learn: Master planning system architecture](https://learn.microsoft.com/en-us/dynamics365/supply-chain/master-planning/master-planning-architecture), Planning Optimization outside the database, in memory, with pegging
 - [Microsoft Learn: Production process overview](https://learn.microsoft.com/en-us/dynamics365/supply-chain/production-control/production-process-overview), the production life cycle, firming, operations and job scheduling, preflushing and back-flushing
 - [Odoo: Master production schedule](https://www.odoo.com/documentation/18.0/applications/inventory_and_mrp/manufacturing/workflows/use_mps.html), the MPS, its periods, safety stock target, minimum and maximum, and indirect demand
 - [Odoo: Bill of materials](https://www.odoo.com/documentation/18.0/applications/inventory_and_mrp/manufacturing/basic_setup/bill_configuration.html), operations on the BoM and the work orders setting
-- [Frappe: ERPNext Work Order](https://docs.frappe.io/erpnext/user/manual/en/work-order), work orders, material transfer, job cards, backflush and partial completion
+- [Frappe: ERPNext Work Order](https://docs.frappe.io/erpnext/user/manual/en/work-order), work orders, material transfer, job cards, backflush, partial completion and the 30-day capacity planning default
 - [Frappe: ERPNext Manufacturing Settings](https://docs.frappe.io/erpnext/user/manual/en/manufacturing-settings), backflush basis, overproduction percentage and capacity planning
 - [Oracle: Time fence options (Fusion Cloud Supply Planning 26C)](https://docs.oracle.com/en/cloud/saas/supply-chain-and-manufacturing/26c/fausp/time-fence-options.html), the planning and natural time fences
 - [Oracle: Overview of constraint-based supply planning (26C)](https://docs.oracle.com/en/cloud/saas/supply-chain-and-manufacturing/26c/fausp/overview-of-constraint-based-supply-planning.html), soft capacity and hard lead time constraints and batch-only constrained runs

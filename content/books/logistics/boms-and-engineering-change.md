@@ -21,13 +21,13 @@ As of November 2026, from each product's documentation and filings:
 | System | BOM structure | Versions and effectivity | Change control |
 | --- | --- | --- | --- |
 | **Microsoft Dynamics 365 Supply Chain Management** | "A single BOM describes a single level"; line types Item, Phantom, Pegged supply and Vendor (subcontract); formulas add co-products and by-products | BOM versions whose validity "can be constrained by period, quantity, site, specific product dimensions"; a version must be approved, and activation checks uniqueness: "You receive an error message if the version that you're trying to activate conflicts with a version that is already active" | Engineering change management: product versions, "readiness checks," engineering change requests and orders run by workflow; one engineering company releases products to other legal entities |
-| **Odoo** | BoM lines with "Consumed in Operation," "Apply on Variants," by-products and "Flexible Consumption"; a kit BoM type | One production BoM at a time; revisions numbered "V2, V3, …" | Engineering change orders by type and stage; verification stages "require approval before the revised changes can be applied"; effectivity "As soon as possible" or "At Date"; the old BoM is archived |
-| **ERPNext** | "A list of items and sub-assemblies with quantities required to manufacture an Item"; multi-level; an exploded items table; "Do Not Explode" per row; scrap and process loss | Several BOMs per item; one "Is Default," others active as alternates | Not described on the BOM page cited |
+| **Odoo** | BoM lines with "Consumed in Operation," "Apply on Variants," by-products and "Flexible Consumption"; a kit BoM type | An ECO works on a revised BoM that doesn't affect production until applied; revisions numbered "V2", "V3" and so on | Engineering change orders by type and stage; verification stages "require approval before the revised changes can be applied"; effectivity "As soon as possible" or "At Date"; applying archives the original and "the revised BoM becomes the new production BoM" |
+| **ERPNext** | "A list of items and sub-assemblies with quantities required to manufacture an Item"; multi-level; an exploded items table; "Do Not Explode" per row; scrap and process loss (scrap items become Secondary Items in ERPNext v16) | Several BOMs per item; one "Is Default," others active as alternates | Not described on the BOM page cited |
 | **Oracle Fusion Cloud Manufacturing** | The item structure, combined with routing in a work definition; "a single buildable level of the item structure" per work definition | A primary work definition (priority 1) and alternates | Not on the page cited |
 | **Arena (PTC)** | EBOM: "parts or assemblies that are designed by the engineering team"; MBOM: "a structured list of subassemblies that are needed to produce a shippable product" | Not on the glossary pages cited | An ECO "lists all affected parts and assemblies" and is reviewed by "internal product teams and their external supply chain partners" |
-| **PTC Windchill** | PLM that "manages all aspects of the product development lifecycle" | (Product documentation not opened) | (Product documentation not opened) |
+| **PTC Windchill** | PLM that "manages all aspects of the product development lifecycle" | Not in the filing cited | Not in the filing cited |
 
-PLM is a concentrated market: PTC's fiscal 2026 revenue was $2,733.4 million with ARR of $2.51 billion; Dassault Systèmes's 2025 revenue was €6,239.6 million, with ENOVIA among the strongest contributors to Industrial Innovation software growth; Siemens's Digital Industries software business had €7.2 billion of fiscal 2026 revenue.
+The PLM vendors' scale, from their filings: PTC's fiscal 2026 revenue was $2,733.4 million with ARR of $2.51 billion (and PTC agreed on October 4, 2026 to become a wholly owned subsidiary of Schneider Electric, pending as of November 2026); Dassault Systèmes's 2025 revenue was €6,239.6 million, with ENOVIA among the strongest contributors to Industrial Innovation software growth; Siemens's Digital Industries software business had €7.2 billion of fiscal 2026 revenue.
 
 Four patterns:
 
@@ -41,9 +41,9 @@ Four patterns:
 A line belongs to one parent at one level. Its fields, from Arena's list and the ERPs':
 
 - **The component** (an item, by part number) and **the quantity per** parent, in a unit of measure. Quantity per can be per batch rather than per unit for process items (a 1,000 kg batch of resin compound takes 620 kg of base resin); ERPNext states a BOM's output quantity and each row's quantity against it.
-- **Scrap or yield:** the extra the line consumes because some is lost. ERPNext records scrap items, and when the scrap item is the item being made, it "is set as a Process Loss Item."
+- **Scrap or yield:** the extra the line consumes because some is lost. ERPNext records scrap items, and when the scrap item is the item being made, "it is set as a Process Loss Item and its quantity is subtracted from the manufactured Item quantity."
 - **Where it is consumed:** the routing operation that takes it (Odoo's "Consumed in Operation"), which decides when it must be at the line.
-- **Reference designators** in electronics: "where a particular part fits on the board."
+- **Reference designators** in electronics: "where a particular part fits on the board within the BOM."
 - **The line type:** a normal component, a phantom, a pegged or subcontracted supply.
 - **Procurement type,** "how each part is purchased or made," which for this volume lives per plant ([What the ERP Owns in a Plant](/books/logistics/manufacturing-systems#what-the-erp-owns-in-a-plant)).
 - **Effectivity,** if the system dates lines rather than versions.
@@ -72,7 +72,7 @@ A product with options (a pump in three motor sizes and two seal materials) eith
 
 Effectivity says when a structure applies. The common kinds:
 
-- **Date effectivity:** a version valid from one date to another. It's the default in every ERP above, and Odoo's ECO applies "At Date" or as soon as approved.
+- **Date effectivity:** a version valid from one date to another. It's the default in every ERP above, and Odoo's ECO applies "At Date" or "As soon as possible," when an authorized user applies the changes.
 - **Quantity effectivity:** a version valid for a quantity band, in Dynamics 365's constraints; useful when a large order is built differently from a small one.
 - **Site effectivity:** a version valid at one plant.
 - **Serial or lot effectivity:** a change that applies from a given unit or lot onward, used where each unit's configuration must be known (aircraft, vehicles, medical devices). Of the systems above, none documents serial effectivity on the pages cited; it is common practice in PLM for configured products, and where it is needed the effectivity has to be checked at the unit, not the date. <!-- source-gap: logistics-boms-serial-effectivity | missing | serial or unit effectivity as a vendor-documented BOM feature | closes with: a readable PLM or ERP help page describing serial or unit effectivity | checked: 2026-11-22 -->
@@ -84,7 +84,7 @@ Two decisions sit under every effectivity design:
 
 ## Engineering Change
 
-A change starts as a request and becomes an order. Arena's steps for handling an engineering change request are to gather supporting material, check the change is in scope, assess its priority, approve or reject it, and decide the course of action; an approved change becomes an engineering change order (ECO), which "outlines new product designs or proposed changes to existing designs," "lists all affected parts and assemblies," and is reviewed by "internal product teams and their external supply chain partners." Dynamics 365 runs both requests and orders "that workflows support," with readiness checks that stop a product version being activated before its required data is in; Odoo moves ECOs through typed stages with approval gates and, on "Apply Changes," makes "the revised BoM … the new production BoM."
+A change starts as a request and becomes an order. Arena's steps for handling an engineering change request are to gather supporting material, check the change is in scope, assess its priority, approve or reject it, and decide the course of action; an approved change becomes an engineering change order (ECO), which "outlines new product designs or proposed changes to existing designs," "lists all affected parts and assemblies," and is reviewed by "internal product teams and their external supply chain partners." Dynamics 365 runs both requests and orders "that workflows support," with readiness checks that stop a product version being activated before its required data is in; Odoo moves ECOs through stages configured per ECO type, where verification stages "require approval before the revised changes can be applied" and, when the changes are applied, archives the original so that "the revised BoM becomes the new production BoM."
 
 What an ECO has to carry for the rest of the supply chain:
 
@@ -94,7 +94,7 @@ What an ECO has to carry for the rest of the supply chain:
 - **Approvals,** in sequence, by role.
 - **The reason,** which quality and recalls later read.
 
-A part's revision changes when the change is compatible (form, fit and function unchanged, so old and new interchange); a new part number is issued when they don't. That is the common convention rather than a standard, and every company writes its own rule; my rule is to store the rule's outcome on the ECO line (`interchangeable`), because MRP must not net stock of an old, non-interchangeable part against demand for the new one.
+My convention: a part's revision changes when the change is compatible (form, fit and function unchanged, so old and new interchange), and a new part number is issued when they don't. No standard cited here fixes the rule and each company writes its own; whatever it is, I store its outcome on the ECO line (`interchangeable`), because MRP must not net stock of an old, non-interchangeable part against demand for the new one.
 
 ## From PLM to the ERP
 
@@ -228,6 +228,7 @@ WITH RECURSIVE explode AS (
   JOIN bom_headers h ON h.parent_item_id = e.item_id AND h.usage = 'manufacturing'
     AND h.status IN ('active', 'superseded') AND h.effective_during @> $3::TIMESTAMPTZ
     AND (h.facility_id = $2 OR h.facility_id IS NULL)
+    AND (h.quantity_band IS NULL OR h.quantity_band @> e.quantity)
   JOIN bom_lines l ON l.bom_header_id = h.id
   WHERE e.line_type = 'phantom'          -- descend only through phantoms
     AND NOT l.component_item_id = ANY (e.path)  -- a cycle is a data error, not an infinite loop
@@ -269,13 +270,13 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails#amend-don
 - [Odoo: Engineering change orders](https://www.odoo.com/documentation/18.0/applications/inventory_and_mrp/plm/manage_changes/engineering_change_orders.html), ECO types and stages, verification, revision numbering, effectivity and archiving
 - [Odoo: Bill of materials](https://www.odoo.com/documentation/18.0/applications/inventory_and_mrp/manufacturing/basic_setup/bill_configuration.html), components consumed in operations, variants, by-products and flexible consumption
 - [Odoo: Kits](https://www.odoo.com/documentation/18.0/applications/inventory_and_mrp/manufacturing/advanced_configuration/kit_shipping.html), kits sold as one line and delivered as components
-- [Frappe: ERPNext Bill of Materials](https://docs.frappe.io/erpnext/user/manual/en/bill-of-materials), multi-level BOMs, default and active BOMs, exploded items, scrap and process loss
+- [Frappe: ERPNext Bill of Materials](https://docs.frappe.io/erpnext/user/manual/en/bill-of-materials), multi-level BOMs, default and active BOMs, exploded items, scrap and process loss, and Secondary Items in v16
 - [Oracle: Overview of work definitions (Fusion Cloud Manufacturing 26C)](https://docs.oracle.com/en/cloud/saas/supply-chain-and-manufacturing/26c/faumf/overview-of-work-definitions.html), item structures by buildable level, primary and alternate work definitions
 - [Arena: Bill of materials](https://www.arenasolutions.com/resources/glossary/bill-of-materials/), the EBOM and MBOM definitions and BOM fields
 - [Arena: Engineering change order](https://www.arenasolutions.com/resources/glossary/engineering-change-order/), the ECO definition, affected items, supplier review and the change request steps
 
 **Filings and results**
 
-- [PTC: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/857005/000119312526470217/ptc-20260930.htm), Windchill and Arena, revenue and ARR
+- [PTC: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/857005/000119312526470217/ptc-20260930.htm), Windchill and Arena, revenue, ARR and the Schneider Electric merger agreement
 - [Dassault Systèmes: Fourth quarter and full year 2025 results](https://www.3ds.com/assets/invest/2026-02/dassault-systemes-25q4-earnings_pr_va.pdf), revenue and ENOVIA's contribution to Industrial Innovation software
 - [Siemens: Fiscal 2026 results (November 12, 2026)](https://press.siemens.com/global/en/pressrelease/outstanding-fiscal-2026-performance-industrial-ai-drive-future-growth), Digital Industries software revenue

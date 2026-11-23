@@ -8,7 +8,7 @@ part = "Manufacturing"
 tags = ["logistics", "manufacturing", "edi", "automotive", "jit", "kanban", "suppliers", "data-model"]
 +++
 
-A plant that builds a thousand vehicles a day doesn't send its seat supplier a thousand purchase orders. It signs one agreement for the part, for the model year, and then sends schedules against it: a weekly planning schedule with twenty-six weeks of requirements, the first few firm and the rest forecast, with an authorization for how much material the supplier may buy and how much it may fabricate at the buyer's risk; a daily shipping schedule with the exact quantities and times for the next days; and, for parts built to match each vehicle (a seat in the right color and trim), a sequence that says which seat goes on which truck in which slot, hours before the vehicle reaches the line. The supplier ships against them, sends a ship notice within minutes of the truck leaving, labels every container to the industry's standard, and is measured on every delivery.
+A plant that builds a thousand vehicles a day doesn't send its seat supplier a thousand purchase orders. It signs one agreement for the part, for the model year, and then sends schedules against it: a planning schedule, often weekly, with months of requirements, the nearest firm and the rest forecast, with an authorization for how much material the supplier may buy and how much it may fabricate at the buyer's risk; a daily shipping schedule with the exact quantities and times for the next days; and, for parts built to match each vehicle (a seat in the right color and trim), a sequence that says which seat goes on which truck in which slot, hours before the vehicle reaches the line. The supplier ships against them, sends a ship notice within the hour the truck leaves, labels every container to the industry's standard, and is measured on every delivery.
 
 It is hard because the schedule is a moving target expressed as differences. Each release replaces or changes the one before; quantities can be discrete per period or cumulative from a start date that both sides must agree on; the buyer's count of what it received and the supplier's count of what it shipped drift apart with every in-transit truck, rejected container and missed ASN, and the next release's net requirement is computed from the buyer's cum. The forecast is not an order and the authorization is a financial commitment, so which line is which decides who pays when a program is cancelled. And the formats differ by region and customer: X12 in North America, EDIFACT and VDA in Europe, each OEM with its own implementation guide.
 
@@ -16,18 +16,19 @@ This chapter covers scheduling agreements, the planning schedule (830) and its s
 
 ## How the Standards Do It
 
-As of November 2026, from the standards bodies, the X12 reference and a published supplier manual:
+As of November 2026, from the standards bodies, Stedi's X12 reference (the element names and notes here are as Stedi publishes them for release 8010), one vehicle maker's public EDI guides and one Tier 1 supplier's manual:
 
 | Source | What it defines | As published |
 | --- | --- | --- |
 | **X12** | 830 "Planning Schedule with Release Capability," 862 "Shipping Schedule," 866 "Production Sequence," 856 "Ship Notice/Manifest," 824 "Application Advice" | The 830 serves as "(1) a simple forecast; (2) a forecast with the buyer's authorization for the seller to commit to resources, such as labor or material; (3) a forecast that is also used as an order release mechanism"; the 862 "does not replace the 830" and "shall not be used to authorize labor, materials or other resources" |
 | **UN/EDIFACT** | DELFOR (delivery schedule), DELJIT (delivery just in time) | DELFOR covers "short term delivery and/or medium to long scheduling" and "can be used to authorize manufacturing and or the provision of materials"; DELJIT conveys "precise delivery sequence and Just In Time schedule requirements" and supplements DELFOR |
-| **AIAG** | B-10 Trading Partner Labels (version 3, June 2004), B-16 Global Transport Label (version 3, November 2010), the global EDI implementation guideline, MMOG/LE | AIAG adopted ASC X12, harmonized it with Odette and JAMA/JAPIA, and "published the industry's first global EDI Implementation Guideline"; its Global DESADV guideline "corresponds to the ASC X12 856" |
+| **AIAG** | B-10 Trading Partner Labels (version 3, June 2004), B-16 Global Transport Label (version 3, November 2010), the global EDI implementation guideline, MMOG/LE | AIAG adopted ASC X12, worked with its European counterparts and JAMA/JAPIA "to harmonize this standard globally," and "published the industry's first global EDI Implementation Guideline"; its Global DESADV guideline "corresponds to the ASC X12 856" |
 | **Odette** | OFTP2 (RFC 5024), the Global Transport Label (Odette profile, version 2.4, August 2026), MMOG/LE | OFTP2 adds "session encryption (SSL/TLS)," "file encryption & signing," compression and "signed end-to-end responses"; MMOG/LE, "developed by Odette and AIAG," has "more than 25,000 users" at "more than 10,000 sites" |
 | **Magna** (Global Supplier Operational Requirements, revision 1.1, January 2024, a Tier 1 supplier's manual) | What it requires of its own suppliers | EDI in "VDA, ANSI and EDIFACT"; an ASN "within 30 minutes of each shipment leaving the supplier's location"; responsible "for only those production releases identified as firm or locked"; labels to AIAG B-10, B-16 or VDA 4994; MMOG ratings A, B or C |
+| **Volvo Group** (truck, bus and construction equipment maker; public EDI guides: Global DELFOR D04A issue 2.2.2, February 2025; Global DESADV D07A issue 1.4, March 2026) | What it sends its suppliers and requires back | DELFOR carries "Firm delivery dates," "Forecast delivery dates," a "Commitment for material," "Backorder and in-transit quantities," and the cumulative quantity received with its accumulation start date; a schedule "should be replaced by a new one" for the same part, order, ship-from and ship-to; the despatch advice goes "no later than one hour after the goods have been despatched" |
 | **Microsoft Dynamics 365** (lean manufacturing) | Kanban rules | "A pull system produces goods only when goods are needed"; fixed-quantity, scheduled and event kanban rules |
 
-No OEM's supplier EDI implementation guide could be opened for this chapter: the supplier portals of the vehicle and heavy-equipment makers tried were behind logins or refused automated fetches. The rules below come from the X12 reference, the standards bodies and the Tier 1 manual above. <!-- source-gap: logistics-supplier-oem-guides | missing | an OEM's own 830/862 implementation guide (cum rules, horizons, ASN timing) | closes with: a publicly readable OEM supplier EDI guide | checked: 2026-11-22 -->
+The X12 rules below come from Stedi's reference and the standards bodies; the practice (firm against forecast, cums, ASN timing) is anchored in Volvo Group's public EDIFACT guides and Magna's manual. No North American vehicle maker's X12 830 or 862 guide could be opened for this chapter: the supplier portals tried were behind logins or refused automated fetches, so the firm and forecast horizons quoted below are an illustration, not any OEM's published rule. <!-- source-gap: logistics-supplier-oem-guides | missing | a North American OEM's own X12 830/862 implementation guide (horizons, cum rules, ASN timing) | closes with: a publicly readable GM, Ford, Stellantis, Toyota or Honda supplier EDI guide | checked: 2026-11-22 -->
 
 Four patterns:
 
@@ -44,18 +45,18 @@ The contract behind the schedules is a long-running agreement for a part: price,
 
 The 830 carries, per part, the requirements over a horizon and the commitments that go with them. Its structure, from the X12 reference (release 8010):
 
-- **BFR, the header.** BFR-01 is the purpose: 00 "Original," 01 "Cancellation," 04 "Change" (net change, which requires a reference to the release it changes), 05 "Replace." BFR-04 is the schedule type: among them DL "Delivery Based," SH "Shipment Based," PD "Planned Delivery Based," KB "Kanban Signal" and JS "Buyer Production Sequence Schedule." BFR-05 is the quantity basis: A "Actual Discrete Quantities," C "Cumulative Quantities," D "Net Change Quantities," R "Replacement Quantities." BFR-06 and 07 bound the horizon; BFR-08 "is the date forecast generated."
+- **BFR, the header.** BFR-01 is the purpose: 00 "Original," 01 "Cancellation," 04 "Change" (net change, which makes BFR-09, "The date the forecast was updated with 'net change' data," required), 05 "Replace." BFR-04 is the schedule type: among them DL "Delivery Based," SH "Shipment Based," PD "Planned Delivery Based," KB "Kanban Signal" and JS "Buyer Production Sequence Schedule." BFR-05 is the quantity basis: A "Actual Discrete Quantities," C "Cumulative Quantities," D "Net Change Quantities," R "Replacement Quantities." BFR-06 and 07 bound the horizon; BFR-08 "is the date forecast generated."
 - **LIN, the part,** with unit, price status and references.
 - **FST, the forecast lines.** FST-01 is the quantity, FST-02 the forecast qualifier, FST-03 the timing, and FST-04 and 05 the dates. FST-02's codes include C "Firm," D "Planning," A "Immediate," H "First Time Reported Firm," L "Engineering Change Pending," P "Prototype," Q "Order Release Authorization" and S "Strike Protection." FST-03's include D "Discrete," C "Daily," W "Weekly Bucket (Monday through Sunday)," X "Weekly Bucket (7 day interval)," M "Monthly Bucket (Calendar Months)," and F "Flexible Interval (from Date X through Date Y)," which requires both dates.
 - **SDP, the delivery pattern:** the routine days and times shipments or deliveries happen, with FST lines beneath it.
 - **ATH, the authorizations** (the next section).
 - **SHP, what the buyer has received or the supplier shipped:** SHP-01 01 "Discrete Quantity," 02 "Cumulative Quantity," 87 "Quantity Received," with the cumulative start and end dates when it is a cum.
 
-A typical release, read as the supplier's planner reads it: requirements for the next four weeks as discrete daily quantities qualified C (firm), weeks five to twenty-six as weekly buckets qualified D (planning), months seven to twelve as monthly buckets qualified D, an ATH for finished goods through week four and raw material through week eight, and an SHP with the last receipt and the cum received since the model-year start.
+An illustrative release (the horizons vary by buyer), read as the supplier's planner reads it: requirements for the next four weeks as discrete daily quantities qualified C (firm), weeks five to twenty-six as weekly buckets qualified D (planning), months seven to twelve as monthly buckets qualified D, an ATH for finished goods through week four and raw material through week eight, and an SHP with the last receipt and the cum received since the model-year start.
 
 ## Firm and Forecast
 
-The qualifier on each line is the commercial rule. The Tier 1 manual cited above states it as most buyers do: it is "responsible for only those production releases identified as firm or locked releases," "Forecast volumes are for forecasting purposes only" and do not constitute "a binding release authorization," and "Suppliers assume the risk associated with lead times … where quantities extend beyond those required to support Material Releases." What a supplier does with each kind:
+The qualifier on each line is the commercial rule. Volvo Group's DELFOR codes each quantity as "Firm order" or "Forecast demand" and gives the material commitment separately; the Tier 1 manual cited above states what that means for money: Magna is "responsible for only those production releases identified as firm or locked releases," "Forecast volumes are for forecasting purposes only" and do not constitute "a binding release authorization," and "Suppliers assume the risk associated with lead times … where quantities extend beyond those required to support Material Releases." What a supplier does with each kind:
 
 - **Firm** quantities are orders: plan production and freight, and ship.
 - **Planning** quantities drive the supplier's own MRP and its 830s to its suppliers, at its own risk except where an authorization covers them.
@@ -89,7 +90,7 @@ The rule for a receiving system: within the 862's horizon, its quantities replac
 
 Some parts are built or picked to the buyer's exact production order: seats, cockpits, bumpers, wheels and tires, in the color and option mix of each vehicle. The 866 lets "the receiver of goods … request the order in which shipments of goods arrive" or "specify the order in which the goods are to be unloaded," "the sequence in which the goods are to enter the materials handling process or are to be consumed in the production process"; like the 862, it "shall not be used to authorize labor, materials, or other resources." Its EDIFACT counterpart is DELJIT. Each line carries a sequence number and the part (with options), usually tied to the buyer's build identifier for the vehicle.
 
-Just-in-sequence (JIS) delivery turns the sequence into freight: the supplier's plant, often minutes from the buyer's, builds in sequence, loads racks in sequence, and ships on a fixed cadence; the truck is a moving buffer of a few hours of production. The Tier 1 manual notes the supplier "may be asked to support local warehousing" to support JIT schedules. A sequence error stops the buyer's line, so the systems that run JIS check the sequence at three points (build, rack load, truck load) and treat a missing or out-of-order unit as an exception with its own fast path, a hot shot or a swap at the line.
+Just-in-sequence (JIS) delivery turns the sequence into freight: the supplier's plant, usually close to the buyer's, builds in sequence, loads racks in sequence, and ships on a fixed cadence, so the truck is a moving buffer of production; Volvo Group publishes a separate DELJIT subset for sequence deliveries. The Tier 1 manual notes the supplier "may be asked to support local warehousing" to support JIT schedules. A sequence error stops the buyer's line, so my default is to check the sequence at three points (build, rack load, truck load) and treat a missing or out-of-order unit as an exception with its own fast path, a hot shot or a swap at the line.
 
 ## Kanban
 
@@ -99,9 +100,9 @@ The loop size is a calculation the plant owns and reviews: demand during the rep
 
 ## Ship Notices and Labels
 
-The ASN (856, or DESADV in EDIFACT) is what lets the buyer receive by scan instead of by count, and what updates the cum. The Tier 1 manual requires it "within 30 minutes of each shipment leaving the supplier's location," a contingency to send it "in the event of a system failure," and, for cross-border full truckloads, the high-security seal number. The buyer answers a rejected or partly accepted ASN with an 824, which X12 defines as reporting "the acceptance, rejection, acceptance with change, or partial acceptance or rejection of any transaction set." An ASN that fails is a receiving problem the next morning and a cum discrepancy the next week, so suppliers monitor 824s as closely as the schedules themselves.
+The ASN (856, or DESADV in EDIFACT) is what lets the buyer receive by scan instead of by count, and what updates the cum. Buyers set the window: Volvo Group's guide wants it "no later than one hour after the goods have been despatched" and only once loading is complete; the Tier 1 manual requires it "within 30 minutes of each shipment leaving the supplier's location," a contingency to send it "in the event of a system failure," and, for cross-border full truckload and dedicated loads, the high-security seal number. The buyer answers a rejected or partly accepted ASN with an 824, which X12 defines as reporting "the acceptance, rejection, acceptance with change, or partial acceptance or rejection of any transaction set." An ASN that fails is a receiving problem the next morning and a cum discrepancy the next week, so suppliers monitor 824s as closely as the schedules themselves.
 
-Containers carry the industry's transport label. AIAG's B-10 "Describes the template for bar code labels on shipping containers - both unit loads and transport packages," its B-16 "describes the format for a common transport label design," and the Global Transport Label combines ISO 15394, ANSI MH10.8.1, the Odette Transport Label and the B-10, with the ISO "Licence plate" and "Linear Bar Code 128 and 2D Data Matrix, QR Code and PDF417." The licence plate plays the role the SSCC plays in retail ([GS1-128 Labels and SSCC](/books/commerce/edi#gs1-128-labels-and-sscc)): one identifier per container that the ASN lists and the receiver scans. Automotive programs also use returnable containers (racks, totes, dunnage) that are themselves tracked assets owned by the buyer or a pool, and the ASN lists them.
+Containers carry the industry's transport label. AIAG's B-10 "Describes the template for bar code labels on shipping containers - both unit loads and transport packages," its B-16 "describes the format for a common transport label design," and the Global Transport Label combines ISO 15394, ANSI MH10.8.1, the Odette Transport Label and the B-10, with the ISO "Licence plate" and "Linear Bar Code 128 and 2D Data Matrix, QR Code and PDF417." The licence plate plays the role the SSCC plays in retail ([GS1-128 Labels and SSCC](/books/commerce/edi#gs1-128-labels-and-sscc)): one identifier per container that the ASN lists and the receiver scans. Many programs also use returnable containers (racks, totes, dunnage) that are themselves tracked assets owned by the buyer or a pool, which is why `handling_units` below carries the container reference.
 
 ## Transport and Partners
 
@@ -134,15 +135,19 @@ ALTER TABLE handling_units ADD CONSTRAINT handling_units_label_standard_check
   CHECK (label_standard IN ('gs1_128', 'aiag_b10', 'global_transport_label', 'vda_4994',
     'odette')) NOT VALID;
 
-ALTER TABLE documents                    -- the schedule kinds join the core list
+ALTER TABLE documents                    -- the schedule kinds join the list so far
   DROP CONSTRAINT documents_kind_check,
   ADD CONSTRAINT documents_kind_check CHECK (kind IN ('bill_of_lading', 'rate_confirmation',
     'proof_of_delivery', 'delivery_receipt', 'lumper_receipt', 'freight_invoice',
     'ocean_bill_of_lading', 'sea_waybill', 'air_waybill', 'arrival_notice',
     'commercial_invoice', 'packing_list', 'customs_entry', 'notice_of_assignment',
     'certificate_of_insurance', 'load_tender', 'tender_response', 'status_message',
-    'ship_notice', 'planning_schedule', 'shipping_schedule', 'production_sequence',
-    'application_advice', 'other')) NOT VALID;
+    'ship_notice',                          -- the core list
+    'power_of_attorney', 'customs_bond', 'bond_insufficiency_notice',
+    'client_error_notice',                  -- Customs Brokers & Bonds
+    'planning_schedule', 'shipping_schedule', 'production_sequence',
+    'application_advice',                   -- this chapter
+    'other')) NOT VALID;
 ALTER TABLE orders VALIDATE CONSTRAINT orders_order_form_check;
 ALTER TABLE handling_units VALIDATE CONSTRAINT handling_units_label_standard_check;
 ALTER TABLE documents VALIDATE CONSTRAINT documents_kind_check;
@@ -242,7 +247,7 @@ Notes on the choices:
 - **Releases are kept as sent and superseded, never merged.** The current requirement is the latest release's lines; the history is every release, which is what an authorization claim, a premium freight dispute or a cum reconciliation reads.
 - **Codes are kept as sent and mapped.** `qualifier_code` and `schedule_type` hold the partner's codes; `qualifier` is the meaning after a per-partner map, as tendering's partner codes are ([Tendering & Acceptance](/books/logistics/tendering#how-the-platforms-do-it)).
 - **The buyer's cum is on the release.** `reported_cum_received` is what the buyer counted, as of a date; the supplier's own cum shipped is a sum over its shipments; the reconciliation compares the two.
-- **Widening `documents.kind` repeats the core list.** The constraint is replaced whole, `NOT VALID` then validated; when several chapters add kinds, the migration that runs last must carry all of them.
+- **Widening `documents.kind` repeats the list so far.** The constraint is replaced whole, `NOT VALID` then validated, so it carries the core kinds, the kinds [Customs Brokers & Bonds](/books/logistics/customs-brokers-and-bonds#how-to-build-it) added, and this chapter's; whichever chapter widens it next must carry all of them.
 
 The supplier's next shipping requirement and its cum check, for one agreement line, from the current release:
 
@@ -258,13 +263,14 @@ WITH rel AS (
          END AS cum_required
   FROM rel JOIN supplier_schedule_lines l ON l.release_id = rel.id
   WHERE l.qualifier IN ('firm', 'immediate', 'first_time_firm')
-), shipped AS (                          -- our cum shipped since the cum start
+), shipped AS (                          -- the supplier's cum shipped since the cum start
   SELECT COALESCE(SUM(sl.quantity), 0) AS cum_shipped,
-         COALESCE(SUM(sl.quantity) FILTER (WHERE s.status NOT IN ('delivered')), 0) AS in_transit
+         COALESCE(SUM(sl.quantity) FILTER (WHERE s.status <> 'delivered'), 0) AS in_transit
   FROM shipment_lines sl
   JOIN shipments s ON s.id = sl.shipment_id
   JOIN order_lines ol ON ol.id = sl.order_line_id
-  WHERE sl.order_line_id = $1 AND s.status <> 'cancelled'
+  WHERE sl.order_line_id = $1
+    AND s.status IN ('picked_up', 'in_transit', 'delivered', 'exception')  -- left the dock
     AND s.created_at >= ol.cum_start_on
 )
 SELECT r.cum_required, s.cum_shipped,
@@ -329,6 +335,9 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails#what-a-re
 
 **In practice**
 
+- [Volvo Group: Global DELFOR D04A guidelines (issue 2.2.2, February 2025)](https://www.edi.volvogroup.com/content/dam/volvo-group/markets/edi/specifications-and-guidelines/delivery-schedule-and-mrl/volvo-delfor-d04a-2-2-implementation-guideline.pdf), firm and forecast quantities, material commitment, in-transit and cumulative received quantities with the accumulation start date, and replacement of schedules
+- [Volvo Group: Global DESADV D07A guidelines (issue 1.4, March 2026)](https://www.edi.volvogroup.com/content/dam/volvo-group/markets/edi/specifications-and-guidelines/despatch-advice-and-asn/volvo-desadv-d07a-implementation-guideline-v1-4.pdf), despatch advice timing and packaging labels
+- [Volvo Group: JIT/JIS specifications](https://www.edi.volvogroup.com/en-en/specifications-and-guidelines/jit-jis.html), the DELJIT subsets for sequence and kanban deliveries
 - [Magna: Global Supplier Operational Requirements (revision 1.1, January 2024)](https://www.magna.com/docs/default-source/suppliers/2024-global-supply-chain-requirements/magna-global-supply-chain-requirements_1-1_jan24-01.pdf?sfvrsn=5ee1d80b_11), accepted EDI standards, ASN timing and contingency, firm versus forecast releases, label standards, seal numbers, JIT warehousing, on-time expectation and MMOG ratings
 - [Toyota: Toyota Production System](https://global.toyota/en/company/vision-and-philosophy/production-system/), the definition of just-in-time and the pull loop
 - [Microsoft Learn: Lean manufacturing overview (Dynamics 365)](https://learn.microsoft.com/en-us/dynamics365/supply-chain/production-control/lean-manufacturing-overview), pull systems and kanban rule types
