@@ -54,7 +54,7 @@ A context owns its data, its vocabulary and its invariants; other parts reach it
 Three boundaries are the ones teams get wrong:
 
 - **Rating is not tendering.** A rate is what a lane costs under an agreement; a tender is an offer to one carrier, with an expiry, at an amount that may differ from the rate (a spot premium, a negotiated bump). Storing the tender's amount on the lane rate, or recomputing the tender from today's rates, loses what was actually offered.
-- **Visibility is not the load.** The visibility context owns what partners reported; the load owns what the system decided. A 214 that says delivered sets the stop's `arrived_at` through a decision (the event the system trusts), never by the parser writing to `stops` directly, because a second source may contradict it an hour later ([One Timeline Across Sources](/books/logistics/visibility-and-tracking#one-timeline-across-sources) keeps the precedence rule and the event that won).
+- **Visibility is not the load.** The visibility context owns what partners reported; the load owns what the system decided. A 214 that says the truck arrived sets the stop's `arrived_at` through a decision (the event the system trusts), never by the parser writing to `stops` directly, because a second source may contradict it an hour later ([One Timeline Across Sources](/books/logistics/visibility-and-tracking#one-timeline-across-sources) keeps the precedence rule and the event that won).
 - **Freight money is not execution.** Dispatch knows a stop took five hours; billing knows whether detention is owed, at what rate, to whom, and whether the proof exists. A detention charge is created by the money context from the stop's times and the agreement, not typed into the load by the dispatcher.
 
 My default is one database and one deployable with these contexts as modules: each module owns its tables, no module writes another's, and cross-module reads go through an interface or an event. The transactions that must be atomic (a tender acceptance and the load's carrier, a delivery and the accrual it triggers, a state change and its outbox row) stay inside one database ([Start With a Modular Monolith](/docs/architecture/service-boundaries#start-with-a-modular-monolith)). The first contexts worth splitting out are the ones with a different scaling profile: visibility ingestion, which takes positions every few minutes from every truck whether or not anything is decided, and the integration layer, whose load follows partners' batch windows rather than users ([When to Split](/docs/architecture/service-boundaries#when-to-split)).
@@ -64,7 +64,7 @@ My default is one database and one deployable with these contexts as modules: ea
 Two streams cross the platform, and they are different things:
 
 - **Facts reported in.** A carrier's 214, an ocean carrier's DCSA event, an ELD position, a geofence crossing, a terminal's gate-out, a driver app's photo. They arrive at least once, out of order, late (a 14:05 arrival reported at 17:20) and sometimes wrong. They land as `shipment_events` rows with `occurred_at`, `received_at`, `source` and `dedupe_key`, and the raw message stays in `documents` or the integration tables. Nothing about them is a decision yet.
-- **Decisions published out.** `tender.accepted`, `stop.arrived`, `shipment.delivered`, `freight_charge.accrued`, `freight_invoice.approved`: what this system concluded, written in the same transaction as the state change into `outbox_events` and relayed to the broker ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)).
+- **Decisions published out.** `tender.accepted`, `stop.arrived`, `shipment.delivered`, `freight_charge.accrued`, `freight_invoice.approved`: what this system concluded, written in the same transaction as the state change into `outbox_events` and relayed to the message broker ([The Transactional Outbox](/docs/architecture/events#the-transactional-outbox)).
 
 The path from one to the other is a short pipeline, the same for every source:
 
@@ -74,7 +74,7 @@ The path from one to the other is a short pipeline, the same for every source:
 4. **Decide.** The visibility context applies its trust rules (which source wins for an arrival, whether a position contradicts a reported delivery; [Arrival and Departure at Facilities](/books/logistics/visibility-and-tracking#arrival-and-departure-at-facilities)) and, when a stop's state changes, writes the stop and the outbox event in one transaction.
 5. **Fan out.** Billing listens for `shipment.delivered` and a POD to release the invoice ([The Proof That Gates the Bill](/books/logistics/freight-invoicing#the-proof-that-gates-the-bill)); accounting for accruals; notifications for exceptions; metrics for everything. Each consumer is idempotent by event ID ([Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent)).
 
-Ordering is per movement: partition the broker by load ID (or shipment ID where no load exists yet), so one load's events are consumed in order while thousands of loads proceed in parallel, and carry the load's version on each event so a consumer can drop a stale one after a replay ([Ordering](/docs/architecture/events#ordering)). Never partition by carrier or customer: a large carrier's burst of 214s at midnight then blocks every other load it hauls.
+Ordering is per movement: partition the message broker's topics by load ID (or shipment ID where no load exists yet), so one load's events are consumed in order while thousands of loads proceed in parallel, and carry the load's version on each event so a consumer can drop a stale one after a replay ([Ordering](/docs/architecture/events#ordering)). Never partition by carrier or customer: a large carrier's burst of 214s at midnight then blocks every other load it hauls.
 
 Replays are routine. A carrier resends a day of 214s; an ELD vendor backfills positions after an outage; a mapping fix means last week's unmapped codes can now be applied. The pipeline handles all three the same way: `dedupe_key` drops exact repeats, the decide step is a function of the events known so far (so re-running it is safe), and a decision that changes (a delivery time corrected by a later, more trusted source) publishes a new event with a higher version rather than editing the old one.
 
@@ -124,7 +124,7 @@ Built yourself, for one company or as a platform, the system this volume describ
 
 - **A transactional core.** One relational database holding the contexts as modules: parties, orders and planning, rating, tendering, execution, freight money, compliance and customs. The tender acceptance, the load's carrier, the estimated payables and the outbox row commit together.
 - **An ingestion tier.** Receivers for EDI, webhooks, polled APIs and documents, writing raw messages and normalized `shipment_events` at whatever rate partners send. It scales with trucks and partners, not users, and it is the first thing to split out.
-- **An outbox, a relay and a broker.** Every module's decisions go out through `outbox_events`, partitioned by load or shipment, to internal consumers, outbound renderers and cross-tenant delivery.
+- **An outbox, a relay and a message broker.** Every module's decisions go out through `outbox_events`, partitioned by load or shipment, to internal consumers, outbound renderers and cross-tenant delivery.
 - **Workers.** Waterfalls and tender expiry, ETA recomputation, accrual runs, audit runs ([Freight Audit & Payment](/books/logistics/freight-audit-and-payment#accruals)), invoice release on POD, settlement, screening reruns, metric computation and retention purges ([Background Jobs](/docs/architecture/background-jobs)).
 - **Optimizers as services.** Load planning, routing and network design are compute-heavy, run in batches, and call solvers; they read a snapshot and return a plan the core accepts or rejects ([Load Planning & Optimization](/books/logistics/load-planning)).
 - **A document store.** Object storage for every BOL, POD, rate confirmation, EDI interchange and photo, keyed from `documents`, with retention by kind ([Data Retention](/docs/building-blocks/data-retention)).
@@ -206,7 +206,7 @@ CREATE TABLE cross_tenant_deliveries (   -- one projected event into another ten
 );
 ```
 
-Every owner-scoped table in the volume takes a `tenant_id`, added to a live database in the order [The Core Data Model](/books/logistics/logistics-business#the-core-data-model) sets out: the nullable column, a backfill from `owner_party_id`, a `NOT VALID` check, validation, then the policy. For `loads`; the same five steps run for `parties`, `facilities`, `items`, `orders`, `shipments`, `rate_agreements`, `tenders`, `freight_charges`, `freight_invoices`, `shipment_events`, `documents` and each chapter's tables:
+Every owner-scoped table in the volume takes a `tenant_id`, added to a live database in the order [The Core Data Model](/books/logistics/logistics-business#the-core-data-model) sets out: the nullable column, a backfill from `owner_party_id`, a `NOT VALID` check, validation, then the policy. Here they are for `loads`; the same five steps run for `parties`, `facilities`, `items`, `orders`, `shipments`, `rate_agreements`, `tenders`, `freight_charges`, `freight_invoices`, `shipment_events`, `documents` and each chapter's tables:
 
 ```sql fragment
 ALTER TABLE loads ADD COLUMN tenant_id UUID;
@@ -237,7 +237,7 @@ ALTER TABLE outbox_events
 
 `network_identities`, `tenant_links`, `movement_links` and `cross_tenant_deliveries` are platform tables, outside row-level security, and only the cross-tenant delivery worker and platform tooling read them ([Tenant Context](/docs/architecture/multi-tenancy#tenant-context): cross-tenant operations are separate code paths with their own audit trail).
 
-The cross-tenant worker consumes each outbox event, finds active links for its subject, and projects it under the link's field policy. Allowed fields only: a field the policy doesn't name never crosses, so adding `buy_rate` to an event later can't leak it.
+The cross-tenant worker consumes each outbox event, finds active links for its subject, and projects it under the link's field policy. Allowed fields only: a field the policy doesn't name never crosses, so adding `buy_rate` to an event later can't leak it. The sketches below leave out the event, link and movement-link types, which mirror the tables above.
 
 ```go tab="Go"
 type FieldPolicy map[string][]string // topic -> allowed top-level fields

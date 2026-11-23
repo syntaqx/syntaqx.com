@@ -65,7 +65,7 @@ Each set travels in a functional group whose GS-01 identifier names its kind: SM
 
 ## The 204 Load Tender
 
-A 204 is one load: a header naming the carrier, the shipment ID and the payment terms; references, dates, equipment and parties for the whole load; and a stop loop with each stop's reason, dates, weight and parties. CN's published sample, trimmed and with its placeholders kept:
+A 204 is one load: a header naming the carrier, the shipment ID and the payment terms; references, dates, equipment and parties for the whole load; and a stop loop with each stop's reason, dates, weight and parties. CN's published sample, trimmed and with its placeholders kept (SE-01, the segment count, is still the untrimmed original's, so a validator would reject this excerpt as it stands):
 
 ```text
 ISA*00*    *00*KNSX *01*GENERIC *02*CNBH        *250116*0911*U*00401*000014741*1*P*>
@@ -138,7 +138,7 @@ The rules:
 
 ## The 214 Shipment Status
 
-A 214 reports one or more statuses for one shipment: a B10 header (the carrier's reference, the shipment ID and the SCAC), references (L11), parties (N1 loops), and an LX loop per status, each with an AT7 (the status), an MS1 (where), an MS2 (the equipment) and an AT8 (weight and quantity). C.H. Robinson's LTL guide sample, trimmed (its N3, N4 and second L11 removed):
+A 214 reports one or more statuses for one shipment: a B10 header (the carrier's reference, the shipment ID and the SCAC), references (L11), parties (N1 loops), and an LX loop per status, each with an AT7 (the status), an MS1 (where), an MS2 (the equipment) and an AT8 (weight and quantity). C.H. Robinson's LTL guide sample, trimmed (its N3, N4 and second L11 removed, with the original SE count kept):
 
 ```text
 ST*214*0001~

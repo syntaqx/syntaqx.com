@@ -66,17 +66,17 @@ A bill flagged as a possible duplicate is held, never auto-rejected: a balance-d
 
 Few bills match the rating to the cent, and chasing every cent costs more than it saves. Every audit program therefore has tolerances: an amount or a percentage, per charge kind and often per carrier, inside which a difference is accepted. Outside it, the line is an exception with one of three dispositions: **approve at rated** (pay what the audit computed, short paying the difference with a reason), **hold** (wait for evidence or a rebill), or **approve as billed** by a person with authority, recorded with the reason. The tolerances are rules as data with effective dates, because a buyer that tightens them in March must still be able to explain February's approvals ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 
-A worked match, on the carrier side of the business chapter's brokered truckload ([A Brokered Truckload](/books/logistics/logistics-business#a-brokered-truckload)): the confirmed lines are $1,700.00 linehaul, $624.00 fuel and $100.00 detention. The carrier's 210 bills $1,700.00 linehaul, $640.00 fuel (800 miles at $0.80, the prior week's index), $150.00 detention (three hours) and a $75.00 lumper charge. With illustrative tolerances (linehaul exact; fuel the greater of $5.00 or 1%; detention exact; an unrated accessorial always an exception):
+A worked match, on the carrier side of the business chapter's brokered truckload ([A Brokered Truckload](/books/logistics/logistics-business#a-brokered-truckload)): the confirmed lines are $1,700.00 linehaul, $624.00 fuel and $100.00 detention. The carrier's 210 bills $1,700.00 linehaul, $648.00 fuel (800 miles at $0.81, from the prior week's $6.127 index: 81 whole steps), $150.00 detention (three hours) and a $75.00 lumper charge. With illustrative tolerances (linehaul exact; fuel the greater of $5.00 or 1%; detention exact; an unrated accessorial always an exception):
 
 | Line | Rated | Billed | Difference | Tolerance | Result | Approved now |
 | --- | --- | --- | --- | --- | --- | --- |
 | Linehaul | $1,700.00 | $1,700.00 | $0.00 | $0.00 | Match | $1,700.00 |
-| Fuel surcharge | $624.00 | $640.00 | +$16.00 | $6.24 | Over: approve at rated | $624.00 |
+| Fuel surcharge | $624.00 | $648.00 | +$24.00 | $6.24 | Over: approve at rated | $624.00 |
 | Detention | $100.00 | $150.00 | +$50.00 | $0.00 | Over: hold for stop times | $100.00 |
 | Lumper | none | $75.00 | +$75.00 | none | Unrated: hold for receipt | $0.00 |
-| **Total** | **$2,424.00** | **$2,565.00** | **+$141.00** | | | **$2,424.00** |
+| **Total** | **$2,424.00** | **$2,573.00** | **+$149.00** | | | **$2,424.00** |
 
-The approved amount pays on terms; $16.00 is short paid with a fuel-index reason; $125.00 waits for evidence (stop times showing a third billable hour, the lumper receipt), and becomes payable or disputed when it arrives. The matcher, in integer minor units and basis points:
+The approved amount pays on terms; $24.00 is short paid with a fuel-index reason; $125.00 waits for evidence (stop times showing a third billable hour, the lumper receipt), and becomes payable or disputed when it arrives. The matcher, in integer minor units and basis points:
 
 ```go tab="Go"
 // Tolerance is the accepted difference for one charge kind: the greater of an
@@ -228,7 +228,7 @@ pub fn match_lines(
 }
 ```
 
-On the table's inputs, with fuel at 500 minor units or 100 basis points and detention in the hold set, both return linehaul `match` (170,000 approved), fuel `over_short_pay` (62,400 approved, 1,600 short paid), detention `over_hold` (10,000 approved, 5,000 held) and lumper `unrated` (7,500 held): 242,400 approved of 256,500 billed. Two choices are policy, not code, and belong in the rules: whether an underbilled line is paid as billed (the default above, flagged so the rating can be fixed) or as rated, and which kinds hold rather than short pay. The kinds are compared after the billed codes are mapped, so an unmapped code (a carrier's new accessorial code) arrives as its own kind and lands in `unrated`, which is the right answer.
+On the table's inputs, with fuel at 500 minor units or 100 basis points and detention in the hold set, both return linehaul `match` (170,000 approved), fuel `over_short_pay` (62,400 approved, 2,400 short paid), detention `over_hold` (10,000 approved, 5,000 held) and lumper `unrated` (7,500 held): 242,400 approved of 257,300 billed. Two choices are policy, not code, and belong in the rules: whether an underbilled line is paid as billed (the default above, flagged so the rating can be fixed) or as rated, and which kinds hold rather than short pay. The kinds are compared after the billed codes are mapped, so an unmapped code (a carrier's new accessorial code) arrives as its own kind and lands in `unrated`, which is the right answer.
 
 ## GL Coding and Allocation
 
