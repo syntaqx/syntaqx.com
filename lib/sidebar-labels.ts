@@ -25,6 +25,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Contractors and Global": "Contractors",
   "Creators and Money": "Creator Money",
   "Customers and Billing": "Billing",
+  "Customs and Trade": "Customs",
   "Decentralized Finance": "DeFi",
   "Design and Visual Collaboration": "Design",
   "Docs, Wikis and Files": "Docs and Files",
