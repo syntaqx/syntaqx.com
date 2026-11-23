@@ -21,7 +21,7 @@ As of November 2026, from the platforms' help centers and filings:
 | Platform | Card or automatic billing | Prepaid | Invoice and credit |
 | --- | --- | --- | --- |
 | **Amazon Ads** | Card or debit card kept as a backup payment method | Ad costs deducted from the seller's or vendor's account balance, the default for some advertisers from August 1, 2026 | Pay by Invoice: "an invoice at the end of each month, and payment is due 30 days later" |
-| **Google Ads** | Postpay: charged when costs reach the payment threshold or on the first of the month; thresholds "automatically raised" as costs reach them; can be charged "multiple times a month" | Prepay, "only available in certain countries"; "When your payment is used up, your ads will stop running" | Monthly invoicing, a "line of credit"; eligibility "not limited to" a business registered for a year, an account in good standing for 6 months, and $5,000 a month (varies by country) in 3 of the last 12 months |
+| **Google Ads** | Postpay: charged when costs reach the payment threshold or on the first of the month; thresholds "automatically raised" as costs reach them; can be charged "multiple times a month" | Prepay, not offered in the countries the page lists; "When your payment is used up, your ads will stop running" | Monthly invoicing, a "line of credit"; eligibility criteria "include, but aren't limited to" a business registered for a year, an account in good standing for 6 months, and $5,000 a month (varies by country) in 3 of the last 12 months |
 | **Meta** | Threshold billing with a monthly bill date, from its help center | Manual payments, deducted from funds the advertiser added | Monthly invoicing credit lines and credit limits |
 | **Microsoft Advertising** | Postpay threshold: charged at the threshold or the monthly billing date, whichever comes first; a USD threshold starts at $50, rises with successful payments and falls after payment problems; requires verified advertiser identity | Prepay with cards, prepaid cards and, in some currencies, bank transfer | Monthly invoice, paid by bank transfer in the US payments table |
 | **TikTok** | Automatic payment at the billing threshold or bill date, "whichever comes first"; weekly or monthly bill dates set by registration time and spend history | Manual payment | Credit line with monthly invoices; six months in good standing "including a positive payment history"; limit "determined on a case-by-case basis" |
@@ -32,7 +32,7 @@ Meta's help center pages are rendered by script and could not be opened for this
 Three patterns hold across the gardens:
 
 - **Thresholds start low and earn their way up.** Microsoft's starts at $50 in USD and rises after successful payments; Google's is raised automatically when costs reach it before month end. A threshold is a credit limit for card accounts, sized by payment history.
-- **Credit lines are for proven accounts.** Google and TikTok both require months of good standing before monthly invoicing, Microsoft adds a credit check, and every platform sets the limit itself. Self-serve advertisers start on cards or prepay.
+- **Credit lines are for proven accounts.** Google and TikTok both require months of good standing before monthly invoicing, and the platforms set the limit themselves (TikTok "on a case-by-case basis"). Self-serve advertisers start on cards or prepay.
 - **The billing date is a backstop, not the trigger.** Every threshold scheme also charges on a calendar date, so a small account that never reaches its threshold still pays monthly.
 
 ## Three Ways to Pay
@@ -76,12 +76,12 @@ Prepay changes the hard part from collection to accuracy:
 
 ## Monthly Invoicing and Credit Lines
 
-Monthly invoicing is a credit line: the platform delivers for a month, invoices, and waits for payment on net terms. Google describes it as "a line of credit for your advertising costs"; TikTok calls the product a credit line; Microsoft requires a credit check and pays-by-bank-transfer setup; Amazon's Pay by Invoice sends "an invoice at the end of each month, and payment is due 30 days later."
+Monthly invoicing is a credit line: the platform delivers for a month, invoices, and waits for payment on net terms. Google describes it as "a line of credit for your advertising costs"; TikTok calls the product a credit line; Microsoft's monthly invoice is paid by bank transfer; Amazon's Pay by Invoice sends "an invoice at the end of each month, and payment is due 30 days later."
 
 What a credit line record has to say:
 
 - **Who is the borrower.** A monthly invoice line is extended to the payer, which is often an agency paying for many advertisers' accounts; Google's monthly invoicing for agencies runs through manager accounts ([Agencies & Media Buying](/books/advertising/agencies-and-media-buying#how-to-build-it) cites the help page). The line belongs to the payer's billing profile, and the ad accounts it covers draw on it.
-- **The limit and the terms.** A credit limit in the line's currency, net payment days, and the invoice period. TikTok sets the limit "on a case-by-case basis"; Google's published eligibility (a business registered for a year, an account in good standing for six months, $5,000 a month in three of the last twelve months, varying by country) is a floor, "not limited to" those criteria.
+- **The limit and the terms.** A credit limit in the line's currency, net payment days, and the invoice period. TikTok sets the limit "on a case-by-case basis"; Google's published eligibility (a business registered for a year, an account in good standing for six months, $5,000 a month in three of the last twelve months, varying by country) is a floor: the requirements "include, but aren't limited to" those criteria.
 - **The basis for granting it.** Payment history on threshold billing, a credit check, financial statements, a parent company or holding company guarantee, or a deposit. The decision, its approver and its evidence are records, because a line granted on a guarantor's strength must be reviewed when the guarantor's credit changes.
 - **A review date.** Credit is re-decided periodically and on events: a late payment, a jump in spend, a change of agency, a news event about the borrower.
 
@@ -98,7 +98,7 @@ The filings show what that means at scale:
 - **The agency names where it ends.** Omnicom's 10-K says many of its agencies' contracts with media providers state the agencies are "not liable to the media and production providers under the theory of sequential liability" until and to the extent the client has paid, and that where agencies buy as principal or sequential liability doesn't apply, the risk from a client's payment default "could increase significantly."
 - **Concentration is in holding companies.** The Trade Desk reports that "two holding companies would have each represented more than 10% of our gross billings in 2025." Credit decided client by client still rolls up to a handful of agency groups whose payment practices move the whole receivable.
 
-For the system, three consequences. **Credit belongs to the advertiser as well as the agency.** A credit line for an agency's billing profile carries per-advertiser exposure, because under sequential liability the collectible party for an unpaid client is the advertiser, not the agency. **The cleared date is a fact to record.** The agency's liability starts when the advertiser's money clears to it; a payable or receivable that can't say whether that happened can't say who owes it. Agencies & Media Buying's design notes make the same point from the agency's side. **Impaired credit switches the mode.** The terms allow requiring prepayment when credit is impaired; the account's billing mode changes to `prepay` with a dated reason, and delivery continues only against funds.
+For the system, three consequences. **Credit belongs to the advertiser as well as the agency.** A credit line for an agency's billing profile carries per-advertiser exposure, because under sequential liability the collectible party for an unpaid client is the advertiser, not the agency. **The cleared date is a fact to record.** The agency's liability starts when the advertiser's money clears to it; a payable or receivable that can't say whether that happened can't say who owes it. [Agencies & Media Buying](/books/advertising/agencies-and-media-buying#how-to-build-it)'s design notes make the same point from the agency's side. **Impaired credit switches the mode.** The terms allow requiring prepayment when credit is impaired; the account's billing mode changes to `prepay` with a dated reason, and delivery continues only against funds.
 
 ## Fraud on the Platform's Own Billing
 
@@ -221,14 +221,14 @@ ALTER TABLE ad_accounts
   ADD COLUMN billing_mode_reason TEXT;
 ALTER TABLE ad_accounts ADD CONSTRAINT ad_accounts_credit_line_fk
   FOREIGN KEY (credit_line_id) REFERENCES credit_lines (id) NOT VALID;
-ALTER TABLE ad_accounts ADD CONSTRAINT ad_accounts_invoice_needs_credit_check
+ALTER TABLE ad_accounts ADD CONSTRAINT ad_accounts_invoice_needs_credit_line
   CHECK (billing_mode <> 'invoice' OR credit_line_id IS NOT NULL) NOT VALID;
 CREATE INDEX CONCURRENTLY ad_accounts_credit_line_idx
   ON ad_accounts (credit_line_id) WHERE credit_line_id IS NOT NULL;
 
 -- after attaching existing invoice accounts to their credit lines
 ALTER TABLE ad_accounts VALIDATE CONSTRAINT ad_accounts_credit_line_fk;
-ALTER TABLE ad_accounts VALIDATE CONSTRAINT ad_accounts_invoice_needs_credit_check;
+ALTER TABLE ad_accounts VALIDATE CONSTRAINT ad_accounts_invoice_needs_credit_line;
 ```
 
 Exposure on a credit line is unbilled accrued cost on its accounts plus issued invoices not yet paid, in minor units; a past-due invoice is reported separately because it stops delivery on its own:
@@ -323,8 +323,8 @@ func Gate(a Account) Decision {
 	return Decision{Action: "serve"}
 }
 
-// Gate(Account{Mode: CardThreshold, AccruedMicros: 50_120_000, ThresholdMinor: 5_000})
-//   == Decision{Action: "charge", ChargeMinor: 5_012, Reason: "threshold"}
+// Gate(Account{Mode: CardThreshold, AccruedMicros: 50_012_000, ThresholdMinor: 5_000})
+//   == Decision{Action: "charge", ChargeMinor: 5_001, Reason: "threshold"}
 ```
 
 ```rust tab="Rust"
@@ -368,8 +368,8 @@ pub fn gate(mode: &Mode, accrued_micros: i64) -> Decision {
     }
 }
 
-// gate(&Mode::CardThreshold { threshold_minor: 5_000, advertiser_cap_minor: None }, 50_120_000)
-//   == Decision::Charge { amount_minor: 5_012 }
+// gate(&Mode::CardThreshold { threshold_minor: 5_000, advertiser_cap_minor: None }, 50_012_000)
+//   == Decision::Charge { amount_minor: 5_001 }
 ```
 
 In the example, a $50.00 threshold is crossed with $50.012 accrued: the charge is $50.01 and the remaining 2,000 micros stay accrued for the next one, so nothing is lost or rounded twice.

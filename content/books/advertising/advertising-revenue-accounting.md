@@ -25,7 +25,7 @@ As of November 2026, how the public companies in this volume report advertising 
 | **Magnite** | SSP | Net for most transactions; gross for managed campaigns on insertion orders | "For the majority of transactions executed through our platform, we act as an agent on behalf of the publisher"; gross for "managed advertising campaigns that are transacted through insertion orders" | Revenue $714.0; contribution ex-TAC $669.6 |
 | **Meta** | Social | Recognized on delivery; net where not principal | Impression-based ads recognized as "an ad is displayed to a user", action-based when "a user takes the action the marketer contracted for"; "where we are not the principal, we recognize revenue on a net basis" | Advertising and total revenue in the 10-K |
 | **Omnicom** | Holding company | Principal on some services | "Third-party service costs include vendor costs when we act as principal in providing services to our clients"; agencies otherwise buy "as an agent for a disclosed principal" | Revenue in the 10-K |
-| **PubMatic** | SSP | Net | Revenue "represents gross billings to buyers, net of amounts we pay publishers", because "we do not control the advertising inventory and do not set the price" | Revenue $282.9; receivables $358.2 and payables $343.6 at year end |
+| **PubMatic** | SSP | Net | Revenue "represents gross billings to buyers, net of amounts we pay publishers and rebates associated with SPO agreements with buyers", because "we do not control the advertising inventory and do not set the price" | Revenue $282.9; receivables $358.2 and payables $343.6 at year end |
 | **The Trade Desk** | DSP | Net | "we report revenue as an agent on a net basis, which represents gross billings net of amounts we pay suppliers"; it "does not control the Supplier Components" | Revenue $2,896 on gross spend of $13.4 billion (21.6%, derived) |
 
 Three patterns:
@@ -36,13 +36,13 @@ Three patterns:
 
 ## Principal or Agent
 
-The standards are converged. IFRS 15 (and ASC 606's matching paragraphs, 606-10-55-36 through 55-40) say an entity "determines whether it is a principal or an agent for each specified good or service promised to the customer," that it is a principal if "it controls the specified good or service before" it is transferred, and that a principal recognizes the gross amount while an agent recognizes "any fee or commission to which it expects to be entitled." The test has two steps (identify the specified good or service, then assess control of it before transfer), and three indicators support the control assessment:
+The standards are converged on this guidance (ASC 606 carries it in 606-10-55-36 through 55-40; the quotes here are from IFRS 15 as clarified in 2016, and from the ASC text where PwC's guide excerpts it). IFRS 15 says an entity "determines whether it is a principal or an agent for each specified good or service promised to the customer," that it is a principal if "it controls the specified good or service before" it is transferred, and that a principal recognizes the gross amount while an agent recognizes "any fee or commission to which it expects to be entitled." The test has two steps (identify the specified good or service, then assess control of it before transfer), and three indicators support the control assessment:
 
 1. **Primary responsibility.** "The entity is primarily responsible for fulfilling the promise to provide the specified good or service," including its acceptability.
 2. **Inventory risk.** "The entity has inventory risk before the specified good or service has been transferred to a customer."
 3. **Pricing discretion.** "The entity has discretion in establishing the price for the specified good or service."
 
-The indicators are evidence, not a checklist: ASC 606-10-55-39 says "No single indicator is individually determinative," and IFRS 15 B37A says their relevance depends on the nature of the good and the contract. Momentarily holding title to something doesn't by itself make an entity its principal. For advertising the specified good is usually the ad space (or the impression in it), and the analysis runs per arrangement:
+The indicators are evidence, not a checklist: PwC's guide to ASC 606-10-55-39 notes that "No single indicator is individually determinative," and IFRS 15 B37A says their relevance depends on the nature of the good and the contract. Momentarily holding title to something doesn't by itself make an entity its principal. For advertising the specified good is usually the ad space (or the impression in it), and the analysis runs per arrangement:
 
 | Arrangement | Specified good | Who controls it before the advertiser | Usual conclusion in the filings |
 | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ The indicators are evidence, not a checklist: ASC 606-10-55-39 says "No single i
 | DSP buying through exchanges | The publisher's ad space; the DSP's service is the platform | The publisher and exchange; the DSP "does not control the Supplier Components" | Agent, net (The Trade Desk) |
 | SSP or exchange running an auction | The publisher's ad space | The publisher, which sets floors; the price comes from the auction | Agent, net (PubMatic, most of Magnite) |
 | SSP or network selling a managed IO | A campaign it is responsible for delivering | The seller, which commits to the advertiser | Principal, gross (Magnite's managed campaigns) |
-| Agency principal media buy | Inventory the agency bought and resells | The agency, which bears the risk of not reselling it | Principal (Omnicom when it acts as principal) |
+| Agency principal media buy | Inventory the agency bought and resells | The agency, when it controls the buying process and contracts with the media vendor | Principal (Omnicom when it acts as principal) |
 
 Two questions in the analysis are less obvious than the indicators. **Who is the customer?** A DSP's contract is with an agency or advertiser for the use of its platform; an SSP's customers may be publishers (for whom it sells) or buyers. The answer decides what "the specified good" is. **What does a guarantee change?** A seller that guarantees delivery, takes the risk of a shortfall and sets the price is showing the indicators of a principal; the same company acting only as an auction venue is not. The system's job is to record, per arrangement, which of these facts holds; the conclusion, its approver and its memo are finance's records, kept with effective dates because a product change (adding guaranteed buys to an exchange, a fixed-price curated deal, a principal media offering) can change the answer from a date.
 
@@ -102,7 +102,7 @@ Closing the month on these numbers, and never reopening it, is the playbook's [M
 
 ## Rebates: Consideration Payable to a Customer
 
-Sellers pay agencies and advertisers in ways that aren't media: volume rebates, agency bonuses, free inventory, co-marketing payments. In the seller's books, payments like these to a customer are **consideration payable to a customer**. ASC 606-10-32-25 and IFRS 15 paragraph 70 say it is accounted for "as a reduction of the transaction price" unless it is a payment for a distinct good or service the customer provides; and it reaches beyond the direct customer to "other parties that purchase the entity's goods or services from the customer." The reduction is recognized at "the later of" when the related revenue is recognized and when "the entity pays or promises to pay the consideration (even if the payment is conditional on a future event)" (ASC 606-10-32-27, IFRS 15 paragraph 72). PwC's guide treats a rebate paid to the end customer of a retailer as if paid to the retailer directly.
+Sellers pay agencies and advertisers in ways that aren't media: volume rebates, agency bonuses, free inventory, co-marketing payments. In the seller's books, payments like these to a customer are **consideration payable to a customer**. IFRS 15 paragraph 70 (ASC 606-10-32-25 is its US counterpart, and PwC's guide states the same treatment) says it is accounted for "as a reduction of the transaction price" unless it is a payment for a distinct good or service the customer provides; and it reaches beyond the direct customer to "other parties that purchase the entity's goods or services from the customer." The reduction is recognized at "the later of" when the related revenue is recognized and when "the entity pays or promises to pay the consideration (even if the payment is conditional on a future event)" (ASC 606-10-32-27, IFRS 15 paragraph 72). PwC's guide treats a rebate paid to the end customer of a retailer as if paid to the retailer directly.
 
 Three consequences for an ad seller:
 
@@ -117,7 +117,7 @@ A worked tiered rebate: a seller's agreement with an agency pays 2% of the year'
 | Q1 | $600,000 | $2,400,000, 3% | $18,000 | $18,000 |
 | Q2 | $500,000 | $1,500,000, 2% | $1,100,000 × 2% = $22,000 | $4,000 (a catch-up, not $10,000) |
 
-Each quarter's accrual reduces that quarter's revenue; the Q2 catch-up reflects the lower expected tier. The agency's side of the same agreement is a `vendor_incentives` row in Agencies & Media Buying, allocated to the advertisers whose spend earned it and passed through or retained under the agency agreement ([Rebates and Transparency](/books/advertising/agencies-and-media-buying#rebates-and-transparency)); the seller's side is the accrual here. The two records describe one contract and should carry the same reference.
+Each quarter's accrual reduces that quarter's revenue; the Q2 catch-up reflects the lower expected tier. The agency's side of the same agreement is a `vendor_incentives` row in [Agencies & Media Buying](/books/advertising/agencies-and-media-buying#rebates-and-transparency), allocated to the advertisers whose spend earned it and passed through or retained under the agency agreement ([Rebates and Transparency](/books/advertising/agencies-and-media-buying#rebates-and-transparency)); the seller's side is the accrual here. The two records describe one contract and should carry the same reference.
 
 ## How to Build It
 
@@ -335,7 +335,7 @@ The mechanics are the playbook's [Audit Trails](/docs/building-blocks/audit-trai
 
 **Regulation**
 
-- [EUR-Lex: Commission Regulation (EU) 2016/1905 adopting IFRS 15](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R1905), consideration payable to a customer (paragraphs 70 to 72), variable consideration and its constraint (51 and 56), contract liabilities (106 and Appendix A), and output methods (B15)
+- [EUR-Lex: Commission Regulation (EU) 2016/1905 adopting IFRS 15](https://eur-lex.europa.eu/eli/reg/2016/1905/oj/eng), consideration payable to a customer (paragraphs 70 to 72), variable consideration and its constraint (51 and 56), contract liabilities (106 and Appendix A), and output methods (B15)
 - [EUR-Lex: Commission Regulation (EU) 2017/1987 adopting the Clarifications to IFRS 15](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32017R1987), principal versus agent considerations B34 to B38, control before transfer, gross and net, and the three indicators
 
 **Filings**
@@ -345,7 +345,7 @@ The mechanics are the playbook's [Audit Trails](/docs/building-blocks/audit-trai
 - [Magnite: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000007/mgni-20251231.htm), agent for most transactions, gross for managed insertion-order campaigns, and the contribution ex-TAC and TAC definitions
 - [Magnite: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000010/a991-earningsq42025.htm), 2025 revenue and contribution ex-TAC
 - [Meta Platforms: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1326801/000162828026003942/meta-20251231.htm), recognition of impression-based and action-based ads and net recognition where not the principal
-- [Omnicom: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/29989/000002998926000006/omc-20251231.htm), vendor costs when acting as principal and buying as agent for a disclosed principal
+- [Omnicom: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/29989/000002998926000006/omc-20251231.htm), vendor costs when acting as principal, principal when it controls the media buying process, and buying as agent for a disclosed principal
 - [PubMatic: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1422930/000142293026000010/pubm-20251231.htm), net revenue reporting and its reasons, and receivables and payables against net revenue
 - [PubMatic: Fourth quarter and fiscal year 2025 results](https://www.sec.gov/Archives/edgar/data/1422930/000142293026000008/fy25pressrelease.htm), 2025 revenue
 - [The Trade Desk: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000014/ttd-20251231.htm), net reporting as agent, not controlling the supplier components, gross spend and receivables at gross billings
@@ -353,5 +353,5 @@ The mechanics are the playbook's [Audit Trails](/docs/building-blocks/audit-trai
 
 **Reference**
 
-- [PwC Viewpoint: Principal versus agent framework](https://viewpoint.pwc.com/dt/us/en/pwc/accounting_guides/revenue_from_contrac/revenue_from_contrac_US/chapter_10_principa_US/10_2_principal_versus.html), ASC 606-10-55-37A and 55-39, the indicators and that no single indicator is determinative
+- [PwC Viewpoint: Principal versus agent framework](https://viewpoint.pwc.com/dt/us/en/pwc/accounting_guides/revenue_from_contrac/revenue_from_contrac_US/chapter_10_principa_US/10_2_principal_versus.html), the ASC 606-10-55-39 indicators, PwC's note that no single indicator is determinative, and flash title
 - [PwC Viewpoint: Consideration payable to a customer](https://viewpoint.pwc.com/dt/us/en/pwc/accounting_guides/revenue_from_contrac/revenue_from_contrac_US/chapter_4_determinin_US/46consideration_paya_US.html), ASC 606-10-32-27 timing, reduction of the transaction price unless for a distinct good or service, and the rebate to a customer's customer
