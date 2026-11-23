@@ -99,7 +99,7 @@ For food other than infant formula, FDA can go further (21 U.S.C. 350l): where t
 
 ### Devices: Corrections and Removals
 
-Device manufacturers and importers have a separate reporting duty. A correction or removal initiated "to reduce a risk to health posed by the device," or to remedy a violation that may present a risk to health, is reported to FDA in writing "within 10-working days of initiating" it (806.10). The report carries a number built from the registrant's seven-digit registration number, the date, a sequence number and a "C" or "R" for correction or removal; the device's names and marketing status; the unique device identifier or other identification and the lot or serial numbers; the events and the actions taken or planned; illnesses or injuries with any medical device report numbers; quantities distributed and the affected lots; manufacture or distribution dates and expiration or expected life; and the "names, addresses, and phone numbers" of domestic and foreign consignees with dates and quantities shipped to each, plus copies of the communications. Information not yet available is explained with a date it will come. The UDI's production identifier is what makes device scope precise ([FSMA 204, DSCSA & UDI](/books/logistics/regulated-traceability#udi)).
+Device manufacturers and importers have a separate reporting duty. A correction or removal initiated "to reduce a risk to health posed by the device," or to remedy a violation that may present a risk to health, is reported to FDA in writing "within 10-working days of initiating" it (806.10). The report carries a number built from the registrant's seven-digit registration number, the date, a sequence number and a "C" or "R" for correction or removal; the device's names and marketing status; the unique device identifier or other identification and the lot or serial numbers; the events and the actions taken or planned; illnesses or injuries with any medical device report numbers; quantities distributed and the affected lots; manufacture or distribution dates and expiration or expected life; and the "names, addresses, and telephone numbers" of domestic and foreign consignees with dates and quantities shipped to each, plus copies of the communications. Information not yet available is explained with a date it will come. The UDI's production identifier is what makes device scope precise ([FSMA 204, DSCSA & UDI](/books/logistics/regulated-traceability#udi)).
 
 ### The Public Record
 
@@ -356,9 +356,8 @@ ALTER TABLE documents
     'ppap_submission', 'corrective_action_report', 'epcis_document', 'recall_notice',
     'recall_report', 'mock_recall_report', 'other')) NOT VALID;
 ALTER TABLE documents VALIDATE CONSTRAINT documents_kind_check;
-
--- Distribution records must answer by lot in minutes.
-CREATE INDEX CONCURRENTLY IF NOT EXISTS shipment_lines_lot_id_idx ON shipment_lines (lot_id);
+-- Distribution records must answer by lot in minutes: the shipment_lines (lot_id) index
+-- comes from Lot & Serial Traceability.
 ```
 
 Scope is written from the where-used trace. The sketch assumes the `lot_consumptions` columns of [Lot & Serial Traceability](/books/logistics/lot-traceability#how-to-build-it) (an input lot consumed into an output lot), and stores what it found with the time and the trace version:
