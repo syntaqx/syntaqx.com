@@ -256,7 +256,7 @@ The design point is that errors are reported to everyone already in the chain: a
 
 VAST's events are what video billing and reporting are built from. From section 3.14 of VAST 4.3:
 
-- **Linear ad metrics:** `loaded` (enough buffered to play), `start`, `firstQuartile`, `midpoint`, `thirdQuartile` and `complete` (played "continuously" to 25, 50, 75 and 100 percent "at normal speed"), `progress` with an `offset` (a set time or percentage, linear only), `otherAdInteraction`, and `closeLinear`.
+- **Linear ad metrics:** `loaded` (enough buffered to play), `start`, `firstQuartile`, `midpoint` and `thirdQuartile` (played "continuously" for at least 25, 50 and 75 percent of the duration "at normal speed"), `complete` (played to the end at normal speed, so 100% was played), `progress` with an `offset` (a set time or percentage, linear only), `otherAdInteraction`, and `closeLinear`.
 - **Player operation:** `mute`, `unmute`, `pause`, `resume`, `rewind`, `skip`, `playerExpand`, `playerCollapse`, and `notUsed` (prefetched but never played, a terminal event).
 - **Non-linear:** `creativeView` (also the only event for companions), `acceptInvitation`, `adExpand`, `adCollapse`, `minimize`, `close` and `overlayViewDuration`.
 - **Interactive:** `interactiveStart`, timed by the interactive spec (SIMID).
@@ -278,7 +278,7 @@ Three rules turn events into counts. The impression is the `<Impression>` URLs, 
 | `[GDPRCONSENT]`, `[GPPSTRING]`, `[REGULATIONS]` | The TCF string, the GPP string and the regulations that apply | 4.1, 4.x |
 | `[BREAKMAXDURATION]`, `[BREAKMAXADS]` | The break's maximum seconds and ads | 4.2 |
 
-Values a player knows but may not share are replaced with -2, unknown values with -1, where a macro allows it. A counter receiving video beacons stores `[SERVERSIDE]` with the event, because 1 and 2 are different trust levels: a server acting on a client's playback signal can meet the MRC's client-initiated counting requirement; a server acting on its own cannot.
+Values a player knows but may not share are replaced with -2, unknown values with -1, where a macro allows it. A counter receiving video beacons stores `[SERVERSIDE]` with the event, because 1 and 2 are different trust levels: a server acting on a client's playback signal keeps the link to client initiation that the MRC's counting rules require; a server acting on its own has none, and the MRC warns that server-to-server tracking "may be limited and not fully able to satisfy client-initiated measurement requirements."
 
 ## Error Codes
 
@@ -309,7 +309,7 @@ Support lags the standard: Google's HTML5 IMA SDK still lists VPAID 2 alongside 
 
 The player picks one `<MediaFile>` by type, size and bitrate; a creative that ships only a 1080p MP4 at 8 Mbps fails on a weak connection and wastes bandwidth on a phone. Ad servers therefore transcode an uploaded video into a ladder of renditions, much as content is encoded ([Encoding Ladders and Per-Title Encoding](/books/user-generated-platforms/video-on-demand#encoding-ladders-and-per-title-encoding)).
 
-Server-side insertion raises the bar: the ad must match the content stream's encoding (resolution steps, codecs, segment duration, audio loudness) or the stitched stream glitches. So stitchers transcode every ad themselves, from the mezzanine where one exists. Google's DAI says all video ads must be transcoded into HLS variants and that if ingestion doesn't happen before launch, it occurs "on the first monetizable impression"; MediaTailor says that if an ad "hasn't yet been transcoded to match the content, MediaTailor will skip inserting it" and prepares it "for the next request." Both mean the first serve of a new creative in SSAI is often lost, which is why ad servers pre-register creatives with stitchers by `UniversalAdId` before a campaign starts.
+Server-side insertion raises the bar: the ad must match the content stream's encoding (resolution steps, codecs, segment duration, audio loudness) or the stitched stream glitches. So stitchers transcode every ad themselves, from the mezzanine where one exists. Google's DAI says all video ads must be transcoded into HLS variants and that if ingestion doesn't happen before launch, it occurs "on the first monetizable impression"; MediaTailor says that if an ad "hasn't yet been transcoded to match the content, MediaTailor will skip inserting it" and prepares it "for the next request." Both mean the first serve of a new creative in SSAI is often lost (the CTV guide has the stitcher skip it with error 407 and reuse the transcode for later serves of the same creative ID), which is why my default is to pre-register creatives with stitchers by `UniversalAdId` before a campaign starts.
 
 ## How to Build It
 
@@ -387,7 +387,7 @@ ALTER TABLE ad_events
   ADD COLUMN progress_offset_ms INT;        -- for kind 'progress'
 ```
 
-The core `ad_events.kind` check lists only the impression, click, video start, quartile and reward events. Widening it to VAST's vocabulary (`loaded`, `progress`, `skip`, `mute`, `unmute`, `pause`, `resume`, `close_linear`, `creative_view`, `interactive_start`, `not_used`) works on the partitioned log like on any table: a check added `NOT VALID` on the parent is added to every partition, also unvalidated, and `VALIDATE CONSTRAINT` on the parent then scans each partition under a lock that doesn't block reads or writes. Postgres rejects `ALTER TABLE ONLY` for the check, because a partitioned table's check has to hold on all of its partitions.
+The core `ad_events.kind` check lists only the impression, click, video start, quartile and reward events. Widening it to VAST's vocabulary (`loaded`, `progress`, `skip`, `mute`, `unmute`, `pause`, `resume`, `close_linear`, `creative_view`, `interactive_start`, `not_used`) works on the partitioned log like on any table: a check added `NOT VALID` on the parent is added to every partition, also unvalidated, and `VALIDATE CONSTRAINT` on the parent then scans each partition under a lock that doesn't block reads or writes. Postgres won't mark the parent's check valid unless it is valid on every partition, and rejects `ALTER TABLE ONLY` for that reason.
 
 ```sql
 ALTER TABLE ad_events DROP CONSTRAINT ad_events_kind_check;
@@ -439,7 +439,7 @@ Design notes:
 - [IAB Tech Lab: VAST 4 macros data](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/VAST/master/vast4macros/data/macros-data.json), macro definitions, values and the version each was introduced
 - [IAB Tech Lab: SIMID](https://iabtechlab.com/standards/simid/), SIMID 1.2, the secure enclosure, player control, secure session IDs and SSAI use cases
 - [IAB Tech Lab: Open Measurement SDK](https://iabtechlab.com/standards/open-measurement-sdk/), OMID 1.6 and the web video SDK
-- [IAB Tech Lab: CTV Programmatic Guide](https://iabtechlab.com/standards-old/ctv-programmatic-guide/), extracting the InLine from wrappers in SSAI, the need for a universal creative identifier
+- [IAB Tech Lab: CTV Programmatic Guide](https://iabtechlab.com/standards-old/ctv-programmatic-guide/), extracting the InLine from wrappers in SSAI, the need for a universal creative identifier, skipping an untranscoded creative with error 407
 - [MRC: Server-Side Ad Insertion and OTT Guidance (August 2021, PDF)](https://mediaratingcouncil.org/sites/default/files/Standards/083021%20SSAI%20and%20OTT%20Guidance%20%20FINAL.pdf), counting server-side tracking on client-initiated signals
 
 **In practice**

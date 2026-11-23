@@ -410,7 +410,7 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 
 ## References
 
-**Platform documentation**
+**Specifications**
 
 - [Apple Developer: Verifying a postback](https://developer.apple.com/tutorials/data/documentation/adattributionkit/verifying-a-postback.json), JWS postbacks, the production and development key IDs, verification steps, deduplication by postback identifier, did-win and the 200 response with nine retries over nine days
 - [Apple Developer: Identifying the parameters in a postback](https://developer.apple.com/tutorials/data/documentation/adattributionkit/identifying-the-parameters-in-a-postback.json), the top-level, header and payload fields, conversion types, sequence index, source identifier digits and crowd anonymity-controlled fields
@@ -422,7 +422,7 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 - [Android Developers: Google Play Install Referrer](https://developer.android.com/google/play/installreferrer), the referrer URL, click and install-begin timestamps and first-install version
 - [TikTok Ads Help: About the attribution window](https://ads.tiktok.com/help/article/about-the-attribution-window-on-tiktok-ads-manager), self-attributing network windows and their independence from MMP reporting
 
-**Vendor documentation**
+**In practice**
 
 - [Adjust: Attribution windows](https://help.adjust.com/en/article/attribution-windows), device matching, probabilistic and temporary attribution windows, reattribution and the industry standard default
 - [Adjust: Enable fraud prevention features](https://help.adjust.com/en/article/fraud-prevention-features), anonymous IP, click injection with strict and normal modes, and distribution modeling

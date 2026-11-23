@@ -37,7 +37,7 @@ The MRC also publishes a digital platforms status chart for the large social and
 
 ## What the MRC Is
 
-The MRC's objectives, from its bylaws: "To secure for the industry and related users measurement services that are valid, reliable and effective," "To evolve and determine minimum disclosure and ethical criteria for measurement services," and "To provide and administer an audit system designed to inform users." Its members are media companies, advertisers, agencies and trade associations, and it describes itself as auditing "approximately 110 research products" (as of May 2026).
+The MRC's objectives, from its bylaws: "To secure for the industry and related users measurement services that are valid, reliable and effective," "To evolve and determine minimum disclosure and ethical criteria for measurement services," and "To provide and administer an audit system designed to inform users as to whether such measurements are conducted in conformance with the criteria and procedures developed." Its members are media companies, advertisers, agencies and trade associations, and it describes itself as auditing "approximately 110 research products" (as of May 2026).
 
 Three things the MRC is not, which matter when reading a contract or a sales claim:
 

@@ -96,7 +96,7 @@ The first and last slots matter because viewers are most likely to see them: the
 
 Filling a dynamic pod is a small optimization problem: choose a set of ads whose durations fit in `poddur`, at most `maxseq` of them, each above its floor (`mincpmpersec` times its duration, or the matching `durfloors` range), no two that conflict, maximizing what the pod earns. Each ad is one impression, so a 30-second spot at a $30 CPM earns the same as a 15-second spot at $30; per second, the 15 is worth twice as much. A filler that ranks by CPM fills the pod with long ads; one that ranks by CPM per second fills it with short ones; the right answer depends on what else fits.
 
-Google Ad Manager's optimized pods show the practical rules a seller layers on top: pod durations may be a maximum (ads must fit) or exact ("the sum of all ad durations must equal the value set"), using "the duration found in the VAST, not the media file duration"; "the same line item cannot serve multiple times in an optimized ad pod"; higher-priority line items have higher value, remnant ones compete on CPM; and an **ad buffet** of extra ads (3 by default, up to 9) stands by to replace pod ads that fail to play, though once a line item with a competitive exclusion label serves in the pod, other line items with the same label can't serve to the buffet, and programmatic guaranteed is not eligible either.
+Google Ad Manager's optimized pods show the practical rules a seller layers on top: pod durations may be a maximum (ads must fit) or exact ("the sum of all ad durations must equal the value set"), using "the duration found in the VAST, not the media file duration"; "the same line item cannot serve multiple times in an optimized ad pod"; higher-priority line items have higher value, remnant ones compete on CPM; and an **ad buffet** of extra ads (3 by default, up to 9) stands by to replace pod ads that fail to play, though "line items with competitive exclusion labels are not eligible to serve to the ad buffet," and programmatic guaranteed is not eligible either.
 
 With `maxseq` small (most pods hold two to six ads), an exact search is affordable. A filler that maximizes total price under duration, count, floor and separation constraints:
 
@@ -339,7 +339,7 @@ ALTER TABLE bids
   ADD COLUMN displaced_by_bid_id UUID;    -- the bid that held the separation key or slot
 ```
 
-The `auctions` and `bids` alters are on partitioned logs. A check added `NOT VALID` on a partitioned parent is added to every partition, unvalidated, and a later `VALIDATE CONSTRAINT` on the parent checks each partition; `ALTER TABLE ONLY` is rejected for a check on a partitioned table, so there is no per-partition step to script.
+The `auctions` and `bids` alters are on partitioned logs. A check added `NOT VALID` on a partitioned parent is added to every partition, unvalidated, and a later `VALIDATE CONSTRAINT` on the parent checks each partition under a `SHARE UPDATE EXCLUSIVE` lock; the parent's check can't be marked valid unless every partition's is, and `ALTER TABLE ONLY` is rejected for that, so there is no per-partition step to script.
 
 Design notes:
 
@@ -371,6 +371,7 @@ Design notes:
 
 **Specifications**
 
+- [PostgreSQL 18: ALTER TABLE](https://www.postgresql.org/docs/18/sql-altertable.html), CHECK constraints recursing to partitions, the parent valid only when its descendants are, and the VALIDATE CONSTRAINT lock
 - [IAB Tech Lab: CTV Programmatic Guide](https://iabtechlab.com/standards-old/ctv-programmatic-guide/), SSAI definition, X-Device headers, ad pod definition, extracting InLine responses from wrappers
 - [IAB Tech Lab: OpenRTB 2.6](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb2.x/main/2.6.md), pod fields on Video, Bid.slotinpod and Bid.dur, DurFloors
 - [IAB Tech Lab: OpenRTB 2.6 implementation guide](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb2.x/main/implementation.md), structured, dynamic and hybrid pods, slotinpod guidance, mincpmpersec fallback, rqddurs, the pod examples, live event signaling for guaranteed deals

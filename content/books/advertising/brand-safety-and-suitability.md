@@ -21,8 +21,8 @@ As of November 2026:
 | Platform or vendor | Controls offered | Where they run | Notes |
 | --- | --- | --- | --- |
 | **Display & Video 360** (Google) | Inventory modes Maximum, Moderate and Limited; content category exclusions (profanity, sexualized content, violence, drugs, hurtful language); content theme exclusions (politics, religion, sensitive news, mature games); digital content labels; app and URL exclusions; advertiser-level keyword targeting, which also applies to programmatic guaranteed deals | At the advertiser level, applying to all its campaigns, insertion orders and line items (not editable below it), and pre-bid through third-party verification | Third-party pre-bid from Integral Ad Science, DoubleVerify and Scope3 (formerly Adloox); selected deals can bypass the advertiser-level settings, but Google's automatic protections still apply |
-| **Integral Ad Science** | "Pre-bid filtering and post bid blocking"; "100+ industry-specific and topical segments for content avoidance"; Total Media Quality reporting with viewability and invalid traffic | Open web and direct buys, social platforms such as YouTube and Facebook, "40+ languages" | Vendor's own description |
 | **IAB Tech Lab** | Content Taxonomy 3.1, the shared vocabulary for "contextual targeting and brand safety" | In bid requests (`cattax`, category IDs) and in vendor classifications | 3.0 (June 2022) expanded about 400 categories to more than 1,500 and is not backward compatible |
+| **Integral Ad Science** | "Pre-bid filtering and post bid blocking"; "100+ industry-specific and topical segments for content avoidance"; Total Media Quality reporting with viewability and invalid traffic | Open web and direct buys, social platforms such as YouTube and Facebook, "40+ languages" | Vendor's own description |
 | **MRC** | Brand Safety Ad Verification Guidelines (September 2018), a supplement for content-level context and brand safety | Applies to verification vendors seeking accreditation | Requires disclosure of property-level versus content-level granularity and an "unknown" class buyers can avoid |
 | **YouTube** | Inventory types Maximum, Moderate and Limited for advertisers; advertiser-friendly guidelines for creators | On the platform | UGP's [How Platforms Sell It](/books/user-generated-platforms/ads-and-data-licensing#how-platforms-sell-it) covers the tiers |
 
@@ -62,7 +62,7 @@ The MRC's Brand Safety Ad Verification Guidelines, a September 2018 supplement t
 - **Freshness is part of the classification.** Because content changes, "the timing of the verification service and underlying data assumptions must be disclosed and ad verification services must have stated data refresh policies," including "maximum data life or 'time to live' policies" adapted to each platform. A classification has an expiry.
 - **Minimum evidence before a verdict.** Vendors are "encouraged to establish minimum reporting thresholds (a required minimum number of data points or observations before reporting Context and Brand Safety determinations)."
 - **DSPs are in scope where they shape the decision.** "In certain pre-bid situations, Demand Side Platforms (DSPs) may have a material impact on Context and Brand Safety data and determinations," and the data-quality guidance applies to them.
-- **User-generated content pages differ in the contract too.** The IAB/4A's standard terms (below) carve out pages "that primarily consist of user-generated content" from the adjacency remedy.
+- **User-generated content pages differ in the contract too.** The IAB/4A's standard terms (below) carve out "any page on the Site that primarily consists of user-generated content" from the adjacency remedy.
 
 ## Pre-Bid, Post-Bid and Reporting
 
@@ -103,7 +103,7 @@ Under the IAB/4A's Standard Terms and Conditions version 3.0, a publisher acknow
 - The advertiser's "sole and exclusive remedy is to request in writing that Media Company remove the Ads and provide makegoods or, if no makegood can be agreed upon, issue a credit to Advertiser equal to the value of such Ads, or not bill Agency for such Ads."
 - After notice, the publisher makes "commercially reasonable efforts to correct such violation within 24 hours."
 - For network properties the publisher's only obligation is to obtain the same representations from network publishers and provide the remedy.
-- For pages that "primarily consist of user-generated content" the obligation is only to keep ads away from content that violates the site's terms of use, and the remedy is a written complaint.
+- For "any page on the Site that primarily consists of user-generated content," the obligation is only to keep ads away from content that violates the site's terms of use, and the remedy is a written complaint.
 
 The remedy maps onto records the volume already has: a make-good is a `make_goods` row ([Pacing & Frequency Capping](/books/advertising/pacing-and-frequency), in Ad Serving and Creative) and a credit is an `invoice_lines` row. What a system adds is the evidence: which impressions ran beside which content, under which classification, at what time, so the "value of such Ads" can be computed from delivery rather than argued. The new IAB terms and how they handle adjacency are in [Insertion Orders & Standard Terms](/books/advertising/insertion-orders-and-terms).
 
@@ -339,6 +339,9 @@ Design notes:
 **Reference**
 
 - [WFA: About GARM](https://wfanet.org/leadership/garm/about-garm), GARM's 2019 launch, the Brand Safety Floor and Adjacency Standards Framework, the August 9, 2024 discontinuation and its self-reported 6.1% to 1.7% figures
+- [GARM: Brand Safety Floor + Suitability Framework (PDF, copy hosted by ISBA)](https://www.isba.org.uk/media/1074), the floor, the categories including misinformation and the high, medium and low risk tiers
+- [Silicon Republic: GARM shuts down after X lawsuit (August 2024)](https://siliconrepublic.com/?p=1089642), X's August 6, 2024 suit and the August 9 discontinuation (secondary)
+- [UK Government Communication Service: Brand safety in action, Reddit](https://www.communications.gov.uk/case-study/brand-safety-in-action-reddit/), government advertising only on a pre-approved list of subreddits
 - [Engadget: X and an advertising trade group settle a legal dispute over an alleged boycott (July 2026)](https://www.engadget.com/2226171/x-and-an-advertising-trade-group-settle-a-legal-dispute-over-an-alleged-boycott), the July 29, 2026 settlement, the WFA's agreement not to revive GARM, the earlier dismissal (secondary)
 
 **In practice**

@@ -230,10 +230,6 @@ Design notes:
 
 ## References
 
-**Court records**
-
-- [US Department of Justice: Department of Justice Wins Significant Remedies Against Google (September 2, 2025)](https://www.justice.gov/opa/pr/department-justice-wins-significant-remedies-against-google), the August 2024 liability opinion, monopolization in search and search advertising, and the remedies including search text ads syndication
-
 **Filings**
 
 - [Alphabet: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm), Search & other revenue and the change in paid clicks and cost per click
@@ -242,6 +238,7 @@ Design notes:
 
 **Reference**
 
+- [US Department of Justice: Department of Justice Wins Significant Remedies Against Google (September 2, 2025)](https://www.justice.gov/opa/pr/department-justice-wins-significant-remedies-against-google), the August 2024 liability opinion, monopolization in search and search advertising, and the remedies including search text ads syndication
 - [IAB: Digital ad revenue climbs to nearly $300B (April 16, 2026)](https://www.iab.com/news/digital-ad-revenue-climbs-to-nearly-300b-as-iab-celebrates-30-year-anniversary/), US search advertising in 2025 and its growth
 
 **In practice**

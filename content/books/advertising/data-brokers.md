@@ -156,7 +156,7 @@ Location data from apps and ad tech has been the FTC's main data broker target. 
 - **Avast (February 22, 2024).** $16.5 million and a ban on selling browsing data for advertising; its Jumpshot subsidiary had sold browsing data to more than 100 parties from 2014 to 2020.
 - **Mobilewalla (December 3, 2024).** The FTC alleged Mobilewalla collected location data "from real-time bidding exchanges and third-party aggregators", more than 500 million advertising IDs with precise location from January 2018 to June 2020, and that "it unfairly collected and retained the information in the bid request, even when it didn't have a winning bid." The proposed order bans use, sale and disclosure of sensitive location data and bars collecting or retaining auction data "for any other purpose than participating in the auction".
 - **Gravy Analytics and Venntel (final January 14, 2025).** Barred from selling, disclosing or using sensitive location data except in limited national security or law enforcement circumstances; the FTC said Gravy used geofencing to build and sell lists of people who visited health care facilities and places of worship.
-- **Kochava and Collective Data Solutions (May 4, 2026).** After litigation that began with a 2022 complaint, a stipulated order (approved by the Commission 2-0, entered June 26, 2026) bars both from selling, licensing, transferring, sharing or disclosing sensitive location data unless consumers give "affirmative express consent" and the data serves a service they directly requested; no monetary amount was stated.
+- **Kochava and Collective Data Solutions (May 4, 2026).** After litigation that began with a 2022 complaint, a stipulated order (approved by the Commission 2-0; the FTC case page lists it on June 26, 2026, with the case still marked pending) bars both from selling, licensing, transferring, sharing or disclosing sensitive location data unless consumers give "affirmative express consent" and the data serves a service they directly requested; no monetary amount was stated.
 
 What these mean for ad tech engineering:
 
@@ -308,7 +308,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); retenti
 
 **Regulation**
 
-- [California Privacy Protection Agency: Data brokers](https://cppa.ca.gov/data_brokers/), the definition, January registration window, $6,000 fee, SB 361 disclosures, request metrics, audits from 2028 and DROP obligations
+- [California Privacy Protection Agency: Data brokers](https://cppa.ca.gov/data_brokers/), the definition, January registration window, $6,000 fee, SB 361 disclosures, request metrics, audits from 2028, DROP obligations and the DROP access fee from August 1
 - [California: Delete Request and Opt-out Platform (DROP)](https://privacy.ca.gov/drop/), the January 1, 2026 launch, over 600 brokers, the 45-day access and deletion cycle and status timing
 - [California Privacy Protection Agency: Announcements](https://cppa.ca.gov/announcements/), the Data Broker Enforcement Strike Force and the custom audiences registration fine
 - [California Privacy Protection Agency: Regulations](https://cppa.ca.gov/regulations/), the proposed Data Broker Updates and DROP Audit regulations and comment period
@@ -320,7 +320,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); retenti
 - [FTC: Action against Mobilewalla for collecting and selling sensitive location data (December 3, 2024)](https://www.ftc.gov/news-events/news/press-releases/2024/12/ftc-takes-action-against-mobilewalla-collecting-selling-sensitive-location-data), data from RTB exchanges, retained losing-bid data and the auction-data limit
 - [FTC: Finalizes order prohibiting Gravy Analytics and Venntel from selling sensitive location data (January 14, 2025)](https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-finalizes-order-prohibiting-gravy-analytics-venntel-selling-sensitive-location-data), the ban, geofenced lists and the sensitive data program
 - [FTC: Ban on Kochava and subsidiary selling sensitive location data (May 4, 2026)](https://www.ftc.gov/news-events/news/press-releases/2026/05/ftc-ban-kochava-subsidiary-selling-sensitive-location-data-settle-charges-they-sold-location-data), the stipulated order, consent requirement and 2-0 vote
-- [FTC: Kochava case page](https://www.ftc.gov/legal-library/browse/cases-proceedings/ftc-v-kochava-inc), the 2022 complaint, litigation history and the June 26, 2026 stipulated order
+- [FTC: Kochava case page](https://www.ftc.gov/legal-library/browse/cases-proceedings/ftc-v-kochava-inc), the 2022 complaint, litigation history, the June 26, 2026 stipulated order entry and pending status
 - [FTC: Reminds data brokers of their obligations to comply with PADFAA (February 9, 2026)](https://www.ftc.gov/news-events/news/press-releases/2026/02/ftc-reminds-data-brokers-their-obligations-comply-padfaa), what PADFAA prohibits, the countries, sensitive data, 13 letters and the per-violation penalty
 - [US Department of Justice: Data Security Program](https://www.justice.gov/nsd/data-security), 28 CFR Part 202 in effect April 8, 2025, covered data and the October 5, 2025 requirements
 
