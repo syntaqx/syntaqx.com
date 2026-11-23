@@ -18,7 +18,7 @@ As of November 2026:
 
 | Program | Authority | Administered by | What it does | 2026 status |
 | --- | --- | --- | --- | --- |
-| **Drawback** | 19 U.S.C. 1313; 19 CFR part 190 | CBP, in ACE (entry type 47) | Refunds 99% of duties, taxes and fees on imports exported or destroyed, or used to make exports | Section 301 and Section 338 duties eligible; IEEPA refunds through CAPE take priority on designated entries |
+| **Drawback** | 19 U.S.C. 1313; 19 CFR part 190 | CBP, in ACE (entry type 47) | Refunds 99% of duties, taxes and fees on imports exported or destroyed, or used to make exports | Section 301 and Section 338 duties eligible; CBP encourages IEEPA refund declarations in CAPE before an entry is designated |
 | **Foreign trade zones** | 19 U.S.C. 81c; 19 CFR part 146 | CBP supervises zones the Foreign-Trade Zones Board has authorized | Defers duty until goods enter US commerce, charges duty only on the foreign merchandise used, none on exports | Section 301 and Section 338 goods require privileged foreign status on admission |
 | **USMCA** | The agreement; 19 CFR part 182; HTSUS General Note 11 | USTR (the agreement), CBP (claims) | Preferential rates for originating goods of Canada, Mexico and the US | First joint review on July 1, 2026 ended without a 16-year extension; annual reviews follow |
 | **GSP** | 19 U.S.C. 2465 | USTR | Duty-free treatment for designated developing countries | Lapsed: "No duty-free treatment provided under this subchapter shall remain in effect after December 31, 2020" |
@@ -52,11 +52,11 @@ Substitution is where drawback became practical for distributors: the export doe
 - **The "other" rule.** Substitution at the eight-digit level is barred where the eight-digit description "begins with the term 'other'," unless the goods match at the ten-digit statistical reporting number (1313(j)(5)). Many basket provisions begin with "other," so the classification of both the import and the export decides whether a claim exists at all ([The Tariff Schedule](/books/logistics/classification-valuation-origin#the-tariff-schedule)).
 - **The lesser-of rule.** Where substitution occurs and the export is an article, the refund is based on the lesser of the duty paid on the imported merchandise or "the amount of duties, taxes, and fees that would apply to the exported article if the exported article were imported" (1313(l)(2)).
 
-A worked substitution unused claim, with illustrative numbers: an importer brought in 1,000 cast fittings of China origin on an entry in March 2026, paying $3,000 of general duty, $15,000 of Section 301 duty and $34.64 of merchandise processing fee ($18,034.64 in all, $18.03464 a unit). In October 2026 it exports 400 fittings of the same eight-digit subheading, made in Mexico, from stock. Had those 400 been imported, they would have owed $1.20 a unit (illustrative). The lesser-of rule caps the claim at $1.20 times 400, $480, and the refund is 99% of that, $475.20. The same 400 exported fittings, if they were the Chinese units themselves (unused merchandise under (j)(1)), would return 99% of $7,213.86, or $7,141.72. The difference is a tracking question: which units left. A substitution claim is easier to support; a direct identification claim pays more when the imported goods carried the additional duties.
+A worked substitution unused claim, with illustrative numbers: an importer brought in 1,000 cast fittings of China origin, entered at $100,000, on an entry in March 2026, paying $3,000 of general duty, $15,000 of Section 301 duty and $346.40 of merchandise processing fee at 0.3464% ($18,346.40 in all, $18.3464 a unit). In October 2026 it exports 400 fittings of the same eight-digit subheading, made in Mexico, from stock. Had those 400 been imported, they would have owed $1.20 a unit (illustrative). The lesser-of rule caps the claim at $1.20 times 400, $480, and the refund is 99% of that, $475.20. The same 400 exported fittings, if they were the Chinese units themselves (unused merchandise under (j)(1)), would return 99% of $7,338.56, or $7,265.17. The difference is a tracking question: which units left. A substitution claim is easier to support; a direct identification claim pays more when the imported goods carried the additional duties.
 
 ### Claims, Liquidation and Accelerated Payment
 
-Claims are filed in ACE as drawback entries (type 47) that designate import entry lines against export records. The import entry must be liquidated or reliquidated before it can appear on a drawback claim, and CBP encourages importers to file IEEPA refund declarations in CAPE for drawback-eligible entries before claiming drawback, since drawback-designated entries are a later CAPE deployment ([Refunds Through CAPE](/books/logistics/tariff-programs#refunds-through-cape)). A claimant approved for accelerated payment can be paid before liquidation of the claim, if it furnishes "a properly executed bond in an amount sufficient to cover the estimated amount" of drawback (activity code 1a); CBP notifies the applicant in writing within 90 days, and approval applies to unliquidated claims filed before and after the notice (19 CFR 190.92). Drawback records are kept until the third anniversary of "the date of payment of the claim" (19 CFR 163.4), which, for a claim filed near the five-year limit and paid after review, can be eight years or more after the import.
+Claims are filed in ACE as drawback entries (type 47) that designate import entry lines against export records. The import entry must be liquidated or reliquidated before it can appear on a drawback claim, and CBP encourages importers to file IEEPA refund declarations in CAPE for drawback-eligible entries before claiming drawback, since CAPE rejects entries already designated on a drawback claim ("Entry on Drawback") and CBP lists them among the entry types it is still evaluating for later deployments ([Refunds Through CAPE](/books/logistics/tariff-programs#refunds-through-cape)). A claimant approved for accelerated payment can be paid before liquidation of the claim, if it furnishes "a properly executed bond in an amount sufficient to cover the estimated amount" of drawback (activity code 1a); CBP notifies the applicant in writing within 90 days, and approval applies to unliquidated claims filed before and after the notice (19 CFR 190.92). Drawback records are kept until the third anniversary of "the date of payment of the claim" (19 CFR 163.4), which, for a claim filed near the five-year limit and paid after review, can be eight years or more after the import.
 
 Recent programs state eligibility in their guidance: "Section 301 duties are eligible for duty drawback" (CBP Section 301 FAQs), and the Section 338 duties on Canadian goods "are eligible for drawback" (CSMS 70314289). Whether a program's duties can be drawn back is a field on the tariff measure, not an assumption.
 
@@ -64,7 +64,7 @@ Recent programs state eligibility in their guidance: "Section 301 duties are eli
 
 ### How a Zone Defers and Reduces Duty
 
-A foreign trade zone is an area treated, for customs duty, as outside the customs territory until goods leave it for US commerce. Foreign merchandise can be admitted, stored, manipulated and manufactured without duty; when goods are entered for consumption from a zone, the duty attaches to the foreign merchandise used (19 U.S.C. 81c(a)), which is the basis for the zone's classic saving on an inverted tariff, where the finished product's rate is lower than its parts' and the importer elects to pay on the finished product. Goods exported from the zone never pay. CBP may allow a zone operator to file one consumption entry for "the estimated removals of merchandise during the calendar week" rather than an entry per shipment (19 CFR 146.63(c)), which also cuts merchandise processing fees. The entry types are 26 for zone admission and 06 for zone consumption entries ([Entry Types](/books/logistics/import-entry#entry-types)), and a zone operator posts a continuous bond under activity code 4 ([Bond Types and Codes](/books/logistics/customs-brokers-and-bonds#bond-types-and-codes)).
+A foreign trade zone is an area treated, for customs duty, as outside the customs territory until goods leave it for US commerce. Foreign merchandise can be admitted, stored, manipulated and manufactured without duty; when goods are entered for consumption from a zone, the duty attaches to the foreign merchandise used (19 U.S.C. 81c(a)), which is the basis for the zone's classic saving on an inverted tariff, where the finished product's rate is lower than its parts' and the importer elects to pay on the finished product. Goods exported from the zone never pay. The port director may allow the person making entry to file one entry for "the estimated removals of merchandise during the calendar week" rather than an entry per shipment (19 CFR 146.63(c)(1)), which also cuts merchandise processing fees. The entry types are 26 for zone admission and 06 for zone consumption entries ([Entry Types](/books/logistics/import-entry#entry-types)), and a zone operator posts a continuous bond under activity code 4 ([Bond Types and Codes](/books/logistics/customs-brokers-and-bonds#bond-types-and-codes)).
 
 ### Zone Status
 
@@ -76,7 +76,7 @@ Every lot in a zone has a status that decides how it will be classified and valu
 | **Non-privileged foreign** | Foreign merchandise without privileged status, waste from manipulating privileged merchandise, and domestic merchandise that has lost its identity (19 CFR 146.42) | The default for foreign goods; entered in the condition it leaves the zone in, which is where the inverted-tariff election lives |
 | **Domestic** | Merchandise eligible for domestic status under 19 CFR 146.43 | The status the 2026 programs let goods keep instead of privileged foreign status |
 
-The 2026 tariff programs took the choice away for their goods. Goods subject to the Section 301 duties, unless eligible for domestic status, "may only be admitted as 'privileged foreign status,'" effective the date the duty is imposed (CSMS 69326983), and the same rule appears in CBP's guidance for Section 301 China and for Section 338. Privileged foreign status fixes the merchandise's classification at admission, so a manufacturer can no longer avoid an additional duty on a component by paying the finished product's rate; the zone still defers the duty and still exempts exports. Partner agency data follows goods into zones too: CPSC's certificate eFiling applies to zone admissions from January 8, 2027 ([CPSC eFiling](/books/logistics/forced-labor-and-partner-agencies#cpsc-efiling)).
+The 2026 tariff programs took the choice away for their goods. Goods subject to the Section 301 duties, unless eligible for domestic status, "only may be admitted as 'privileged foreign status,'" effective the date the duty is imposed (CSMS 69326983), and the same rule appears in CBP's guidance for Section 301 China and for Section 338. Privileged foreign status fixes the merchandise's classification at admission, so a manufacturer can no longer avoid an additional duty on a component by paying the finished product's rate; the zone still defers the duty and still exempts exports. Partner agency data follows goods into zones too: CPSC's certificate eFiling applies to products admitted to a zone and then entered for consumption or warehousing from January 8, 2027 ([CPSC eFiling](/books/logistics/forced-labor-and-partner-agencies#cpsc-efiling)).
 
 ### What the Zone's System Must Know
 
@@ -215,8 +215,10 @@ The drawback question an importer asks every month: which exports in the last pe
 SELECT x.id AS export_shipment_line, l.id AS import_entry_line,
        e.declaration_number, l.tariff_number,
        e.entry_time::date + INTERVAL '5 years' AS file_by,
-       sum(d.amount) FILTER (WHERE d.stage IN ('liquidated', 'deposit'))
-         / NULLIF(l.quantity, 0) AS duty_per_unit
+       sum(d.amount) FILTER (WHERE d.stage = 'liquidated')  -- not deposit too: no double count
+         / NULLIF(l.quantity, 0) AS duty_per_unit,
+       l.quantity - COALESCE((SELECT sum(c.quantity) FROM drawback_claim_lines c
+                              WHERE c.customs_entry_line_id = l.id), 0) AS undesignated_qty
 FROM shipment_lines x
 JOIN item_classifications ic ON ic.item_id = x.item_id AND ic.jurisdiction = 'US'
  AND ic.nomenclature = 'HTSUS' AND ic.valid_during @> CURRENT_DATE
@@ -227,12 +229,13 @@ JOIN customs_entries e ON e.id = l.customs_entry_id
  AND e.entry_time > NOW() - INTERVAL '5 years'
 JOIN entry_line_duties d ON d.customs_entry_line_id = l.id
 WHERE x.shipment_id = $1
-  AND NOT EXISTS (SELECT 1 FROM drawback_claim_lines c WHERE c.customs_entry_line_id = l.id)
-GROUP BY x.id, l.id, e.declaration_number, l.tariff_number, e.entry_time
+  AND l.quantity > COALESCE((SELECT sum(c.quantity) FROM drawback_claim_lines c
+                             WHERE c.customs_entry_line_id = l.id), 0)  -- units still free
+GROUP BY x.id, l.id, e.declaration_number, l.tariff_number, e.entry_time, l.quantity
 ORDER BY duty_per_unit DESC NULLS LAST;
 ```
 
-The query finds candidates; the "other" rule, the lesser-of comparison and partially used designations are applied by the claim builder, which records each rule it applied on the claim line.
+The query finds candidates and the units each import line still has undesignated; the "other" rule, the lesser-of comparison and the split of a partially used line are applied by the claim builder, which records each rule it applied on the claim line.
 
 Design notes:
 
@@ -264,11 +267,12 @@ Design notes:
 **Statutes and regulations**
 
 - [19 U.S.C. 1313: Drawback and refunds](https://www.law.cornell.edu/uscode/text/19/1313), drawback types, the five-year limits, the 8-digit and "other" substitution tests, the 99% refund and the lesser-of rule
+- [19 CFR 24.23: Merchandise processing fee](https://www.law.cornell.edu/cfr/text/19/24.23), the 0.3464% ad valorem rate in the worked claim
 - [19 CFR 190.92: Accelerated payment of drawback](https://www.law.cornell.edu/cfr/text/19/190.92), the bond, approval and timing
 - [19 CFR 163.4: Record retention period](https://www.law.cornell.edu/cfr/text/19/163.4), drawback records to the third anniversary of payment
 - [19 U.S.C. 81c: Exemption from customs laws of merchandise in zones](https://www.law.cornell.edu/uscode/text/19/81c), duty on the foreign merchandise used when entered from a zone
 - [19 CFR 146.41: Privileged foreign status](https://www.law.cornell.edu/cfr/text/19/146.41), the application, its timing and the bar on abandonment
-- [19 CFR 146.42: Nonprivileged foreign status](https://www.law.cornell.edu/cfr/text/19/146.42), what has it
+- [19 CFR 146.42: Nonprivileged foreign status](https://www.law.cornell.edu/cfr/text/19/146.42), what has it, including domestic merchandise that lost its identity
 - [19 CFR 146.63: Entry for consumption](https://www.law.cornell.edu/cfr/text/19/146.63), weekly entry for estimated removals
 - [19 CFR 182.12: Certification of origin](https://www.law.cornell.edu/cfr/text/19/182.12), the claim, who certifies, the minimum data elements, blanket periods and four-year validity
 - [19 U.S.C. 2465: Termination of GSP duty-free treatment](https://www.law.cornell.edu/uscode/text/19/2465), the December 31, 2020 lapse
@@ -279,7 +283,7 @@ Design notes:
 - [CBP CSMS 69326983: Section 301 forced labor import duties (July 23, 2026)](https://content.govdelivery.com/accounts/USDHSCBP/bulletins/421d887), privileged foreign status for zone admissions and the Canada and Mexico conditions
 - [CBP CSMS 70314289: Further modifying Section 338 duties on goods of Canada (October 29, 2026)](https://content.govdelivery.com/accounts/USDHSCBP/bulletins/430e931), drawback eligibility and zone status
 - [CBP: Section 301 FAQs](https://www.cbp.gov/trade/programs-administration/entry-summary/section-301-trade-remedies/faqs), drawback eligibility and privileged foreign status
-- [CBP: IEEPA duty refunds](https://www.cbp.gov/trade/programs-administration/trade-remedies/ieepa-duty-refunds), drawback-designated entries, liquidation before designation and CAPE priority
+- [CBP: IEEPA duty refunds](https://www.cbp.gov/trade/programs-administration/trade-remedies/ieepa-duty-refunds), liquidation before designation, CAPE's rejection of drawback-designated entries and the encouragement to declare first
 - [CBP: Form 7501 and instructions (rev. 11/26)](https://www.cbp.gov/document/forms/form-7501-entry-summary-continuation-sheets), zone admission and consumption entry types
 - [USITC: General Rules of Interpretation, HTSUS Revision 23 (2026)](https://hts.usitc.gov/reststop/file?release=currentRelease&filename=General%20Rules%20of%20Interpretation), the compiler's note on USMCA rules in HS 2012 terms
 - [Federal Register: Proclamation 11012 (February 25, 2026)](https://www.govinfo.gov/content/pkg/FR-2026-02-25/html/2026-03824.htm), the USMCA exclusion from the Section 122 surcharge

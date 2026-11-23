@@ -18,7 +18,7 @@ Four bodies own the vocabulary, as of November 2026:
 
 | Body | What it owns | The record |
 | --- | --- | --- |
-| **World Customs Organization** | The Harmonized System: six-digit headings and subheadings used by "more than 200 countries and economies" | HS 2022 in force; HS 2028, with 299 sets of amendments, adopted January 2026 and in force January 1, 2028 |
+| **World Customs Organization** | The Harmonized System: six-digit headings and subheadings used by "more than 200 countries and economies" | HS 2022 in force; HS 2028, with 299 sets of amendments, accepted as of January 21, 2026 and in force January 1, 2028 |
 | **US International Trade Commission** | Publishes the Harmonized Tariff Schedule of the United States: the HS extended to eight-digit rate lines and ten-digit statistical reporting numbers, with the General Rules of Interpretation and general notes | "Harmonized Tariff Schedule of the United States Revision 23 (2026)," the edition current in November 2026 |
 | **CBP** | Classifies, values and determines origin at entry; issues binding rulings under 19 CFR part 177, searchable in CROSS (the Customs Rulings Online Search System) | A ruling letter per request, cited on the entry line as "RLNG" plus the number |
 | **Census Bureau** | Schedule B, the ten-digit export classification, and the statistical use of import data | A yearly edition for exports |
@@ -52,7 +52,7 @@ A worked GRI 3(b) case, with illustrative goods and no rate claimed: a retail gi
 
 ## Binding Rulings
 
-A ruling is "a written statement issued by the Headquarters Office or the appropriate office of Customs" that applies the law to a specific set of facts; an importer or exporter with "a direct and demonstrable interest" may request one, and "Oral opinions or advice of Customs Service personnel are not binding" (19 CFR 177.1). A ruling "represents the official position of the Customs Service with respect to the particular transaction or issue described therein," and its principle "may be cited as authority in the disposition of transactions involving the same circumstances"; a classification ruling applies to "transactions involving articles identical to the sample submitted," a valuation ruling to "the same merchandise and like facts" (19 CFR 177.9). Others "should not rely on the ruling letter," and CBP may modify or revoke it without notice to anyone but the holder, except where the notice-and-comment procedure of 177.12 applies.
+A ruling is "a written statement issued by the Headquarters Office or the appropriate office of Customs" that applies the law to a specific set of facts; an importer or exporter with "a direct and demonstrable interest" may request one, and "Oral opinions or advice of Customs Service personnel are not binding" (19 CFR 177.1). A ruling "represents the official position of the Customs Service with respect to the particular transaction or issue described therein," and its principle "may be cited as authority in the disposition of transactions involving the same circumstances"; a classification ruling applies to "transactions involving articles identical to the sample submitted," a valuation ruling to "the same merchandise and like facts" (19 CFR 177.9). "No other person should rely on the ruling letter," and CBP may modify or revoke it without notice to anyone but the holder, except where the notice-and-comment procedure of 177.12 applies.
 
 For the system, a ruling is evidence with a scope: the holder, the product described (with the sample or specification), the number it sets, the date, and its status (in force, modified, revoked). Classifying an item "per ruling" means linking the classification to the ruling and checking that the item is the product the ruling describes; a ruling for another importer's product is research, not authority. Rulings are public in CROSS, and the entry line cites the ruling number when one applies.
 
@@ -84,7 +84,7 @@ An importer buys 10,000 molded housings at $4.80 each, CIF Los Angeles, from an 
 | Assist: the mold, $36,000 over 60,000 units, for 10,000 units | Added, apportioned | $6,000.00 |
 | **Transaction value** | | **$52,860.00** |
 
-The statute adds the assist's value but leaves the apportionment method to the importer's records; spreading it over the expected production, as here, is one of several methods, and whichever one the importer uses has to be the one it can document, applied consistently across entries. <!-- source-gap: logistics-classification-assist-apportionment | missing | the regulatory rule for apportioning an assist's value across entries (19 CFR 152.103(e)) | closes with: 19 CFR 152.103(e) opened and quoted on apportionment methods | checked: 2026-11-22 --> The data point that matters: the assist's value and apportionment live outside the invoice, in the importer's tooling records, and must be pulled into each entry line's value until the mold's value is used up.
+The regulation apportions an assist "in a reasonable manner appropriate to the circumstances": when the whole anticipated production is for export to the United States, the importer may put the full value on the first shipment, spread it over the units produced up to the first shipment, or spread it over the entire anticipated production, as here, or ask for another method consistent with generally accepted accounting principles; when only part of the production comes to the United States, the method depends on the documentation the importer submits (19 CFR 152.103(e)). Whichever method is chosen has to be documented and applied consistently across entries. The data point that matters: the assist's value and apportionment live outside the invoice, in the importer's tooling records, and must be pulled into each entry line's value until the mold's value is used up.
 
 ### Related Parties
 
@@ -94,7 +94,7 @@ Buyer and seller are related under a list that includes family, officers and dir
 
 ### Substantial Transformation
 
-Origin for most purposes is where the goods were wholly obtained or last substantially transformed. Work in a second country changes origin only if it effects "a substantial transformation," and the marking rules are written for the "ultimate purchaser," "the last person in the United States who will receive the article in the form in which it was imported" (19 CFR 134.1(b)). For goods of Canada and Mexico, CBP's Part 102 rules (a tariff-shift test, product by product) "also determine the country of origin for marking purposes" under USMCA (19 CFR 102.0).
+Origin for most purposes is where the goods were wholly obtained or last substantially transformed. Work in a second country changes origin only if it effects "a substantial transformation," and the marking rules are written for the "ultimate purchaser," "the last person in the United States who will receive the article in the form in which it was imported" (19 CFR 134.1(b) and (d)). For goods of Canada and Mexico, CBP's Part 102 rules (a tariff-shift test, product by product) "also determine the country of origin for marking purposes" under USMCA (19 CFR 102.0).
 
 Origin is what the 2025 and 2026 tariff programs key on. CBP's Section 301 guidance says the China duties "only apply to articles that are products of the People's Republic of China" and that "Section 301 duties are based on country of origin, not country of export"; the Section 301 forced labor duties of July 2026 are set per economy of origin; and steel, aluminum and copper lines report the country where the metal was melted and poured or smelted and cast, a different origin from the article's ([Tariff Programs](/books/logistics/tariff-programs)). A product finished in a third country may be that country's for duty and China's for its steel, and a minor operation (repacking, labeling, simple assembly) moves nothing. Every origin claim is therefore a determination with a basis and evidence: the bill of materials, the operations performed where, the suppliers of each input.
 
@@ -104,7 +104,7 @@ Every article of foreign origin must be marked "in a conspicuous place as legibl
 
 ## How to Build It
 
-Four tables hold the decisions: the tariff schedule as data, an item's classifications by jurisdiction and edition, rulings, and origin determinations; a fifth carries the value additions on each entry line. `items` and `shipment_lines` gain the origin and manufacturer the entry needs:
+Four tables hold the decisions: the tariff schedule as data, an item's classifications by jurisdiction and edition, rulings, and origin determinations; a fifth carries the value additions on each entry line. `shipment_lines` gains the origin, manufacturer and unit price the entry needs:
 
 ```sql
 -- The tariff schedule as published, one row per number per edition.
@@ -265,6 +265,7 @@ Design notes:
 - [19 U.S.C. 1304: Marking of imported articles and containers](https://www.law.cornell.edu/uscode/text/19/1304), the marking standard and the 10% additional duty
 - [19 U.S.C. 1313: Drawback and refunds](https://www.law.cornell.edu/uscode/text/19/1313), the eight-digit substitution test and the "other" rule
 - [19 CFR 152.102: Definitions (valuation)](https://www.law.cornell.edu/cfr/text/19/152.102), assists, price actually paid or payable and related persons
+- [19 CFR 152.103: Transaction value](https://www.law.cornell.edu/cfr/text/19/152.103), apportioning an assist's value across production and shipments
 - [19 CFR 177.1: General ruling practice and definitions](https://www.law.cornell.edu/cfr/text/19/177.1), what a ruling is, who may ask, and oral advice
 - [19 CFR 177.9: Effect of ruling letters](https://www.law.cornell.edu/cfr/text/19/177.9), the scope of reliance, modification and revocation
 - [19 CFR 134.1: Definitions (country of origin marking)](https://www.law.cornell.edu/cfr/text/19/134.1), substantial transformation and the ultimate purchaser

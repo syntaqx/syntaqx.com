@@ -33,7 +33,7 @@ Three patterns:
 
 The statute defines a customs broker as "any person granted a customs broker's license" and customs business as "those activities involving transactions with U.S. Customs and Border Protection concerning the entry and admissibility" of merchandise, including classification, valuation, duties and the documents that support them (19 U.S.C. 1641(a)). "No person may conduct customs business (other than solely on behalf of that person)" without a license (1641(b)(1)). The parenthetical matters: an importer may file its own entries, and some large importers do, but a company filing for anyone else needs a license, and transacting customs business without one carries a penalty "not to exceed $10,000 for each such transaction" (1641(b)(6)).
 
-A license is personal or corporate; a permit is what lets a licensed broker work. Since CBP's broker modernization rules took effect on December 19, 2022, "CBP eliminated broker districts and district permits," and "a national permit is required for the purpose of transacting customs business throughout the customs territory" (19 CFR 111.19(a)), with an individual broker qualifying the permit and supervising activity under it (111.19(f)). Three recurring obligations keep a license and permit alive, each of which revokes by operation of law if missed:
+A license is personal or corporate; a permit is what lets a licensed broker work. Since CBP's broker modernization rules took effect on December 19, 2022, "CBP eliminated broker districts and district permits" (CBP's modernization page), and "a national permit is required for the purpose of transacting customs business throughout the customs territory" (19 CFR 111.19(a)), with an individual broker qualifying the permit and supervising activity under it (111.19(f)). Three recurring obligations keep a license and permit alive, each of which revokes by operation of law if missed:
 
 - **The license exam.** CBP gives the customs broker license examination "on the fourth Wednesday in April and October" (19 CFR 111.13).
 - **The permit user fee.** For 2027, $190.88 per active permit, payable through the eCBP portal from November 30, 2026 and due January 29, 2027; missing it means "automatic permit revocation by operation of law," as of CBP's November 13, 2026 page.
@@ -43,7 +43,7 @@ For a system, these are dated obligations per license and permit, each with a du
 
 ## Responsible Supervision and Control
 
-"A customs broker shall exercise responsible supervision and control over the customs business that it conducts" (19 U.S.C. 1641(b)(4)), defined as "that degree of supervision and control necessary to ensure the proper transaction of the customs business of a broker" (19 CFR 111.1). The regulation doesn't set a ratio; it says a brokerage must employ "a sufficient number of licensed brokers relative to the job complexity" and lists what CBP weighs (111.28): training of employees, the volume and type of business, reject rates on filings, access to the tariff schedule and regulations, audits of employee transactions, timeliness of processing, and responsiveness to CBP. Since the modernization rules, a broker reports new and terminated employees "within 30 days of employment or termination" and other changes within 30 days.
+"A customs broker shall exercise responsible supervision and control over the customs business that it conducts" (19 U.S.C. 1641(b)(4)), defined as "that degree of supervision and control necessary to ensure the proper transaction of the customs business of a broker" (19 CFR 111.1). The regulation doesn't set a ratio; it says a brokerage must employ "a sufficient number of licensed brokers relative to the job complexity" and lists what CBP weighs (111.28): training of employees, the volume and type of business, reject rates on filings, access to the tariff schedule and regulations, audits of employee transactions, timeliness of processing, and responsiveness to CBP. Since the modernization rules, a broker reports new and terminated employees, and changes to current employees' information, "within thirty (30) calendar days" (111.28(b)).
 
 Those factors are data a broker's system already has or should: who prepared and who reviewed each entry, which filings ABI rejected and why, how long entries took from arrival to filing, and how fast CBP's requests were answered. My rule: record the preparer and the licensed reviewer on every filing as typed actors ([Typed Actors](/docs/building-blocks/audit-trails#typed-actors)), and make reject rate and review coverage reports a query over those records, not a spreadsheet assembled for an audit.
 
@@ -51,7 +51,7 @@ Those factors are data a broker's system already has or should: who prepared and
 
 "Before transacting Customs business in the name of his principal, a customhouse broker is required to obtain a valid power of attorney," which the broker keeps with its records rather than filing with CBP (19 CFR 141.46). CBP Form 5291 "may be used" but isn't required; a power of attorney on other paper must be a general or limited power "executed in the same manner as a Customs Form 5291," and the form's own text runs "until and including" a date "or until notice of revocation in writing is duly given" (141.32).
 
-The modernization rules closed the forwarder gap. "The broker must execute a customs power of attorney directly with the importer of record or drawback claimant," signed by the importer "and not via a freight forwarder or other third party," and an agreement with a forwarder can't prevent the importer and broker from communicating directly (19 CFR 111.36(c)(3)); CBP applied this to existing active clients from February 17, 2023. When a forwarder engages the broker, the importer must be told in advance which broker the forwarder chose, and the broker must send its charges to the importer directly (111.36(c)(1) and (2)). The broker keeps each power of attorney until it is revoked and then for five years after revocation or after the client stops being active (111.23).
+The modernization rules closed the forwarder gap. "The broker must execute a customs power of attorney directly with the importer of record or drawback claimant," signed by the importer "and not via a freight forwarder or other third party," and an agreement with a forwarder can't prevent the importer and broker from communicating directly (19 CFR 111.36(c)(3)); brokers holding powers of attorney for existing active clients had until February 17, 2023 to meet it (CBP's modernization page). When a forwarder engages the broker, the importer must be told in advance which broker the forwarder chose, and the broker must send its charges to the importer directly (111.36(c)(1) and (2)). The broker keeps each power of attorney until it is revoked and then for five years after revocation or after the client stops being active (111.23).
 
 In the data model the power of attorney is a dated grant from one party to another with a scope (general, or limited to named ports, activities or a drawback claim), a signer and a document. A broker's filing system checks it on every filing: no active power of attorney from this importer, no entry.
 
@@ -96,7 +96,7 @@ The entry summary carries the bond type in block 5: "0" for government entries o
 
 ### How CBP Sizes a Bond
 
-For a continuous activity code 1 bond, "the minimum Activity Code 1 continuous bond amount is $50,000 or 10% of the total estimated duties, taxes, and fees in the previous 12-month period, whichever is greater," set "in increments of $10,000 up to $100,000 and then in increments of $100,000 for larger bonds"; CBP calls this the Reviewer formula. Informal entries, foreign trade zone admissions, warehouse withdrawals, drawback and the old Type 86 entries are left out of the base. CBP then adds the Analytical formula: 10% of delinquent bills that are unprotested and under 210 days past due or protested, 100% of delinquent bills over 210 days or tied to a denied protest, and 100% of unpaid debit vouchers. An importer with no prior imports estimates the coming year, and "in no event can the bond amount be less than $50,000."
+For a continuous activity code 1 bond, "the minimum Activity Code 1 continuous bond amount is $50,000 or 10% of the total estimated duties, taxes, and fees in the previous 12-month period, whichever is greater," set "in increments of $10,000 up to $100,000 and then in increments of $100,000 for larger bonds"; CBP calls this the Reviewer formula. Informal entries, foreign trade zone admissions, warehouse withdrawals, drawback, vessel repair, Defense Contract Management Agency entries and the old Type 86 entries are left out of the base. CBP then adds the Analytical formula to that rounded amount: 10% of delinquent bills that are unprotested and under 210 days past due or protested, 100% of delinquent bills over 210 days or tied to a denied protest, and 100% of unpaid debit vouchers, and rounds the total up again in the same increments (the guide's Appendix B worksheet). An importer with no prior imports estimates the coming year, and "in no event can the bond amount be less than $50,000."
 
 Worked, with numbers that are illustrative:
 
@@ -104,9 +104,9 @@ Worked, with numbers that are illustrative:
 | --- | --- | --- | --- | --- |
 | A | $310,000 | $31,000 | None | $50,000 (the floor) |
 | B | $612,000 | $61,200 | None | $70,000 (next $10,000 step) |
-| C | $2,340,000 | $234,000 | $40,000 protested (adds $4,000) | $300,000 (next $100,000 step) |
+| C | $2,340,000 | $234,000 | $40,000 protested (adds $4,000) | $400,000 ($300,000 rounded, plus $4,000, rounded up again) |
 
-The guide states the increments but not the rounding direction; I round up, because a bond below the computed minimum is insufficient by definition. <!-- source-gap: logistics-customs-brokers-bond-rounding | missing | whether CBP rounds a computed continuous bond amount up to the next increment | closes with: CBP's Appendix B bond formula worksheet or an OF-RD statement on rounding | checked: 2026-11-22 --> A single transaction bond is generally "not less than the total entered value, plus all duties, taxes, and fees," 10% of entered value for unconditionally duty-free goods, three times the value for restricted merchandise, and never less than $100; an ISF-only continuous bond is at least $50,000 and a single transaction ISF bond at least $10,000.
+The worksheet rounds up at both steps ("rounded up by increments of $10,000 up to $100,000 and then by increments of $100,000"), and any bond amount is stated in whole dollars, fractions rounded to "the next highest dollar." A single transaction bond is generally "not less than the total entered value, plus all duties, taxes, and fees," 10% of entered value for unconditionally duty-free goods, three times the value for restricted merchandise, and never less than $100; an ISF-only continuous bond is at least $50,000 and a single transaction ISF bond at least $10,000.
 
 ### Sufficiency and Exhaustion
 
@@ -168,7 +168,7 @@ CREATE TABLE customs_bonds (
   surety_code        CHAR(3),            -- CBP's surety code; '998' cash, '999' waived
   bond_number        TEXT NOT NULL,
   bond_type          CHAR(1) NOT NULL CHECK (bond_type IN ('8', '9')),  -- continuous, single
-  activity_code      TEXT NOT NULL CHECK (activity_code IN ('1', '1a', '2', '3', '3a', '4',
+  activity_code      TEXT NOT NULL CHECK (activity_code IN ('1', '1a', '2', '3', '3a', '3a3', '4',
                        '5', '6', '7', '8', '9', '10', '11', '12', '15', '16', '17')),
   amount             BIGINT NOT NULL CHECK (amount >= 10000),  -- minor units; $100 minimum
   currency           CHAR(3) NOT NULL DEFAULT 'USD',
@@ -251,29 +251,31 @@ No row means no entry: the filing waits for a power of attorney, a bond or a per
 
 ```go tab="Go"
 // ContinuousBondMinimum applies CBP's Reviewer and Analytical formulas to amounts in
-// cents: 10% of the prior 12 months' duties, taxes and fees, plus additions for
-// delinquent bills, with a $50,000 floor, rounded up to $10,000 steps below $100,000
-// and $100,000 steps above.
+// cents: 10% of the prior 12 months' duties, taxes and fees with a $50,000 floor,
+// rounded up, plus additions for delinquent bills and unpaid debit vouchers, rounded
+// up again ($10,000 steps through $100,000, $100,000 steps above).
 func ContinuousBondMinimum(dutiesTaxesFees, delinquentProtestedOrRecent, delinquentOld, unpaidDebitVouchers int64) int64 {
 	const floor = 5_000_000 // $50,000.00 in cents
-	base := dutiesTaxesFees / 10
-	base += delinquentProtestedOrRecent / 10
-	base += delinquentOld + unpaidDebitVouchers
-	if base < floor {
-		return floor
-	}
+	reviewer := max(dutiesTaxesFees/10, floor)
+	reviewer = roundUpBond(reviewer) // Appendix B, line A
+	total := reviewer + delinquentProtestedOrRecent/10 + delinquentOld + unpaidDebitVouchers
+	return roundUpBond(total) // lines A + B + C + D, rounded up again
+}
+
+// roundUpBond rounds up to $10,000 steps through $100,000 and $100,000 steps above.
+func roundUpBond(cents int64) int64 {
 	step := int64(1_000_000) // $10,000
-	if base > 10_000_000 {   // above $100,000
+	if cents > 10_000_000 {   // above $100,000
 		step = 10_000_000
 	}
-	return (base + step - 1) / step * step
+	return (cents + step - 1) / step * step
 }
 ```
 
 ```rust tab="Rust"
 /// Applies CBP's Reviewer and Analytical formulas to amounts in cents: 10% of the
-/// prior 12 months' duties, taxes and fees, plus additions for delinquent bills, with
-/// a $50,000 floor, rounded up to $10,000 steps below $100,000 and $100,000 above.
+/// prior 12 months' duties, taxes and fees with a $50,000 floor, rounded up, plus
+/// additions for delinquent bills and unpaid debit vouchers, rounded up again.
 pub fn continuous_bond_minimum(
     duties_taxes_fees: i64,
     delinquent_protested_or_recent: i64,
@@ -281,15 +283,18 @@ pub fn continuous_bond_minimum(
     unpaid_debit_vouchers: i64,
 ) -> i64 {
     const FLOOR: i64 = 5_000_000; // $50,000.00 in cents
-    let base = duties_taxes_fees / 10
+    let reviewer = round_up_bond((duties_taxes_fees / 10).max(FLOOR)); // Appendix B, line A
+    let total = reviewer
         + delinquent_protested_or_recent / 10
         + delinquent_old
         + unpaid_debit_vouchers;
-    if base < FLOOR {
-        return FLOOR;
-    }
-    let step: i64 = if base > 10_000_000 { 10_000_000 } else { 1_000_000 };
-    (base + step - 1) / step * step
+    round_up_bond(total) // lines A + B + C + D, rounded up again
+}
+
+/// Rounds up to $10,000 steps through $100,000 and $100,000 steps above.
+fn round_up_bond(cents: i64) -> i64 {
+    let step: i64 = if cents > 10_000_000 { 10_000_000 } else { 1_000_000 };
+    (cents + step - 1) / step * step
 }
 ```
 
