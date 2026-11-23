@@ -108,7 +108,7 @@ The data model consequence is the gross-versus-net split from [The Core Data Mod
 
 The share between them is not published in one number. What the filings show is direction: Alphabet's Network line (its open-web business: AdSense, AdMob and Ad Manager) fell to $29,792 million while Search and YouTube grew, and Google Network impressions fell 7% in 2025 while cost per impression rose 7%; Meta's impressions rose 12%. On the open-web side, CTV is where the growth is: 45% of Magnite's contribution ex-TAC, 45.6% of programmatic spend in the ANA's third-quarter 2025 benchmark, and over 50% growth in PubMatic's CTV revenue excluding political.
 
-The court in United States v. Google drew the boundary for antitrust purposes: it found Google had monopolized an "open-web display publisher ad server market" and an "open-web display ad exchange market" and unlawfully tied the two, and rejected a third market for advertiser ad networks. The remedies memorandum opinion, filed September 2, 2026, found structural remedies "neither realistic nor needed" and rejected divesting AdX, open-sourcing DFP's final auction logic and the contingent divestiture of the rest of DFP, adopting behavioral remedies instead and ordering the parties to file one jointly proposed final judgment. The European Commission fined Google €2.95 billion on September 5, 2025 for self-preferencing AdX. [The Google Ad Tech Cases](/books/advertising/google-ad-tech-cases), in Programmatic, covers both and what changes for engineers.
+The court in United States v. Google drew the boundary for antitrust purposes: it found Google had monopolized an "open-web display publisher ad server market" and an "open-web display ad exchange market" and unlawfully tied the two, and rejected a third market for advertiser ad networks. The remedies memorandum opinion, filed September 2, 2026, rejected divesting AdX, which it found "neither realistic nor needed", open-sourcing DFP's final auction logic and the contingent divestiture of the rest of DFP, adopting behavioral remedies instead and ordering the parties to present one agreed version of the final judgment. The European Commission fined Google €2.95 billion on September 5, 2025 for self-preferencing AdX. [The Google Ad Tech Cases](/books/advertising/google-ad-tech-cases), in Programmatic, covers both and what changes for engineers.
 
 ## Ad Tech Companies by Layer
 
@@ -299,7 +299,7 @@ Design notes:
 **Court records**
 
 - [United States v. Google LLC, E.D. Va. No. 1:23-cv-00108, Memorandum Opinion (April 17, 2025)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1410.0.pdf), the open-web display markets, the rejected advertiser ad network market, AdX market shares and the DoubleClick acquisition
-- [United States v. Google LLC, Remedies Memorandum Opinion (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date, the rejected structural remedies and the jointly proposed final judgment
+- [United States v. Google LLC, Remedies Memorandum Opinion (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date, AdX divestiture found "neither realistic nor needed", the other rejected structural remedies and the order to present one agreed final judgment
 
 **Regulation**
 
@@ -310,6 +310,7 @@ Design notes:
 **Reference**
 
 - [IAB: Digital ad revenue climbs to nearly $300B](https://www.iab.com/news/digital-ad-revenue-climbs-to-nearly-300b-as-iab-celebrates-30-year-anniversary/), 2025 US internet advertising revenue by format and cut, the release date and top-ten concentration
+- [IAB: Internet Advertising Revenue Report, full year 2025](https://www.iab.com/insights/internet-advertising-revenue-report-full-year-2025/), the report as the benchmark for US advertising revenue, prepared by PwC
 - [ANA: Programmatic transparency benchmark, third quarter 2025](https://www.ana.net/content/show/id/pr-2025-11-transparency), CTV's share of programmatic spend
 - [Publicis Groupe: Full year 2025 results](https://www.publicisgroupe.com/sites/default/files/press-releases/2026-02/CP_FY%202025_ENG.pdf), revenue, net revenue and pass-through revenue, organic growth, the net revenue definition and the business mix
 - [WPP: Strategy update and 2025 preliminary results](https://www.wpp.com/en/news/2026/02/strategy-update-and-2025-preliminary-results), revenue and revenue less pass-through costs, WPP Media

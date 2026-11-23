@@ -29,7 +29,7 @@ As of November 2026, from each company's pages and filings. The roles overlap: m
 | **Prebid.org** | Open-source header bidding (Prebid.js, Prebid Server, Prebid Mobile) | Supports "more than 300 demand partners" |
 | **PubMatic** | SSP and exchange, buy-side tools (Activate) | "nearly 336.8 trillion impressions processed in 2025" |
 | **The Trade Desk** | DSP | 2025 revenue $2,896 million on $13.4 billion of gross spend; OpenPath is "a simplified, direct connection to publishers" |
-| **Yahoo** | DSP (Yahoo DSP), curated supply (Backstage) | Channels across CTV, native, audio, digital out-of-home and display |
+| **Yahoo** | DSP (Yahoo DSP), premium supply access (Backstage) | Channels across CTV, native, audio, digital out-of-home and display; Backstage offers "a direct path to top-tier supply" |
 
 Three patterns run through the table:
 
@@ -311,7 +311,7 @@ An auction produces one price and several shares of it. With a DSP winning at a 
 | DSP platform fee on top, 20% of media | $0.001000 | Charged to the advertiser by the DSP, outside the auction |
 | Advertiser's cost | $0.006000 | The DSP's gross spend for this impression |
 
-The publisher sees $4.25 CPM, the advertiser pays $6.00 CPM, and $1.75 CPM goes to the two platforms; the ratio of what the publisher receives to what the advertiser pays is the "working media" share the ANA and ISBA studies measure. In Google Ad Manager the floor applies to the net value: on an 80/20 revenue share, a $1.00 bid is worth $0.80 against the floor. In a second-price auction (OpenRTB's `at = 2`, "Second Price Plus"), the winner pays the second-highest bid plus a small increment, so the clearing price differs from the bid and both are recorded; the industry moved to first price, and Google Ad Manager, having announced a unified first-price auction in March 2019, began its full rollout to all partners in a September 5, 2019 post. The fee mechanics are in [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) and the take-rate studies in [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality).
+The publisher sees $4.25 CPM, the advertiser pays $6.00 CPM, and $1.75 CPM goes to the two platforms; the ratio of what the publisher receives to what the advertiser pays is the "working media" share the ANA and ISBA studies measure. In Google Ad Manager the floor applies to the net value: on an 80/20 revenue share, a $1.00 bid is worth $0.80 against the floor. In a second-price auction (OpenRTB's `at = 2`, "Second Price Plus"), the winner pays the second-highest bid plus a small increment, so the clearing price differs from the bid and both are recorded; the industry moved to first price, and Google Ad Manager, having announced a unified first-price auction in March 2019, said on September 5, 2019 that the full rollout to all partners would begin the following week. The fee mechanics are in [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) and the take-rate studies in [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality).
 
 Every party also keeps its own count. The exchange counts on the billing notice it fires; the DSP counts on its impression pixel or on the exchange's billing notice; the publisher counts in its ad server; the advertiser's ad server and verification vendor count again. These counts are `delivery_daily` rows with different `source` values, and they never agree exactly ([How the Money Splits](/books/advertising/advertising-business#how-the-money-splits)).
 
@@ -434,7 +434,8 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 - [IAB Tech Lab: OpenRTB 2.6 specification](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb2.x/main/2.6.md), tmax, at, bidfloor, pmp, source.tid and schain, user.buyeruid and eids, nurl, lurl and burl, the auction price and minimum-to-win macros, HTTP POST and 204 for no bid
 - [IAB Tech Lab: AdCOM 1.0](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/AdCOM/main/AdCOM%20v1.0%20FINAL.md), agent types and ID match methods including browser cookie sync
-- [IAB Tech Lab: Programmatic Auction Definitions](https://iabtechlab.com/standards/programmatic-auction-definitions/), the auction definition and multi-hop supply chains, finalized June 24, 2026
+- [IAB Tech Lab: Programmatic Auction Definitions](https://iabtechlab.com/standards/programmatic-auction-definitions/), finalized June 24, 2026
+- [IAB Tech Lab: Programmatic Auction Definitions on GitHub](https://github.com/InteractiveAdvertisingBureau/programmatic-auction-definitions), the auction definition and multi-hop supply chains
 - [MRC: Digital Advertising Auction Transparency Standards (January 2026)](https://mediaratingcouncil.org/sites/default/files/Standards/MRC_Digital_Advertising_Auction_Transparency_Standards_FINAL_0.pdf), disclosure of auction type and bid-to-clearing conversion for closed-loop auctions, tid, gpid and schain for OpenRTB
 
 **Reference**
@@ -443,7 +444,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 - [Google Authorized Buyers: Pretargeting](https://developers.google.com/authorized-buyers/rtb/target-guide), pretargeting, four trading locations, up to 8 endpoints, callout limits and load reduction on high error rates
 - [Google Authorized Buyers: Cookie matching](https://developers.google.com/authorized-buyers/rtb/cookie-guide), match tag flows, google_gid and google_hm, hosted match tables, buyeruid, the 14-day freshness guidance, the 90% response rule and US state omissions
 - [Google Ad Manager Help: Floors and revenue share](https://support.google.com/admanager/answer/9298211?hl=en), floors applied to the bid's value after revenue share
-- [Google Ad Manager: Rolling out first price auctions (September 5, 2019)](https://blog.google/products/admanager/rolling-out-first-price-auctions-google-ad-manager-partners/), the move to a unified first-price auction
+- [Google Ad Manager: Rolling out first price auctions (September 5, 2019)](https://blog.google/products/admanager/rolling-out-first-price-auctions-google-ad-manager-partners/), the move to a unified first-price auction announced in March and the full rollout starting the following week
 - [Prebid.org: Introduction to Prebid](https://docs.prebid.org/overview/intro.html), Prebid.js, Prebid Server and Prebid Mobile and more than 300 demand partners
 - [Prebid.org: Prebid Server overview](https://docs.prebid.org/prebid-server/overview/prebid-server-overview.html), server-to-server header bidding for app, AMP, CTV, DOOH and audio
 - [Prebid.org: setConfig reference](https://docs.prebid.org/dev-docs/publisher-api-reference/setConfig.html), bidderTimeout and user sync settings
@@ -458,14 +459,14 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 - [Index Exchange](https://www.indexexchange.com/), self-description and Index Cloud
 - [Magnite](https://www.magnite.com/), self-description and channels
 - [OpenX](https://www.openx.com/), self-description and OpenXSelect
-- [Yahoo DSP](https://www.yahooinc.com/yahoo-dsp), channels and Backstage curated supply
+- [Yahoo DSP](https://www.yahooinc.com/yahoo-dsp), channels and Backstage premium supply access
 
 **Filings**
 
 - [IAB and PwC: Internet Advertising Revenue Report, full year 2025](https://www.iab.com/news/digital-ad-revenue-climbs-to-nearly-300b-as-iab-celebrates-30-year-anniversary/), $294.6 billion total and $162.4 billion programmatic
 - [Alphabet: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm), Google Network revenue
 - [The Trade Desk: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000014/ttd-20251231.htm), gross spend, net revenue reporting and OpenPath
-- [The Trade Desk: Fourth quarter 2025 results](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000009/ttd-20260225x8kexx991.htm), 2025 revenue
+- [The Trade Desk: Fourth quarter 2025 results](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000009/ttd-20260225x8kexx991.htm), 2025 revenue and gross spend
 - [Magnite: Fourth quarter 2025 results](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000010/a991-earningsq42025.htm), contribution ex-TAC and the CTV share
 - [PubMatic: Fourth quarter and full year 2025 results](https://www.sec.gov/Archives/edgar/data/1422930/000142293026000008/fy25pressrelease.htm), impressions processed in 2025
 

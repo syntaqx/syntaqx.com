@@ -21,8 +21,8 @@ As of November 2026, from each product's public documentation:
 | --- | --- | --- | --- | --- |
 | **Amazon Transparent Ad Marketplace (TAM)** | Amazon's servers, from "a single call" made by the page's APS tag | Contracted demand partners; the publisher needs its own contracts with them | Through the APS tag into the publisher's ad server (Amazon's integration guide is behind a publisher login) | "A transparent 2.5% service fee charged to bidders" |
 | **Amazon Unified Ad Marketplace (UAM)** | Amazon's servers | Partners Amazon adds for the publisher, "a turn-key monetization solution for publishers of all sizes" | As TAM | Not published on the product page |
-| **Google Ad Manager Open Bidding** | Ad Manager's servers, inside its own auction during dynamic allocation | Third-party exchanges as yield partners in yield groups, through the existing Google tag | No key-values: bids compete directly in the ad server's auction | Not on the help page; the court record found "a 5% fee" on rivals' bids |
 | **Google Ad Manager header bidding trafficking** | The page (Prebid.js), read by Google Publisher Tag | The publisher's Prebid bidders | GPT reads the Prebid wrapper's bids directly, which Google describes as more granular than price priority line items; web display only | Not stated |
+| **Google Ad Manager Open Bidding** | Ad Manager's servers, inside its own auction during dynamic allocation | Third-party exchanges as yield partners in yield groups, through the existing Google tag | No key-values: bids compete directly in the ad server's auction | Not on the help page; the court record found "a 5% fee" on rivals' bids |
 | **Prebid Mobile** | Prebid Server, called from the iOS or Android SDK | Prebid Server's bidders | Into Google Ad Manager as key-values, or through AdMob and AppLovin MAX adapters, or rendered with no ad server | Open source; Prebid Server hosting is the host's terms |
 | **Prebid Server** | A server the publisher or a host runs, in Go or Java | Bidders configured in stored requests or in the request | Targeting keys in the OpenRTB response (`hb_pb`, `hb_bidder`, `hb_size`, `hb_cache_id`) | Open source; hosted by Prebid.org members on their own terms |
 | **Prebid.js** | The reader's browser | Each configured bidder adapter in parallel, plus any server-side bidders through Prebid Server | Key-values on the ad server request (`hb_pb`, `hb_adid`, `hb_size`, `hb_deal`) | Open source; "more than 300 demand partners" in the ecosystem |
@@ -31,7 +31,7 @@ Three patterns:
 
 - **Everything converges on one ad server decision.** Whatever runs the header auction, the publisher's ad server still makes the final call against direct-sold line items, and the header winner reaches it either as key-values matched by price-bucketed line items (Prebid's classic setup, Amazon), or as a bid the ad server reads natively (Open Bidding, Ad Manager's header bidding trafficking).
 - **Server-side moves the fan-out, not the decision.** Prebid Server, TAM and Open Bidding all trade a dozen browser requests for one call to a server that fans out, which cuts page weight and lets apps and CTV take part, at the cost of the browser's own cookies: a server can't read the reader's cookies for each exchange, so match rates depend on user syncs and shared identifiers.
-- **Prebid is the open standard everyone else integrates with.** Prebid is "free and fully open source", run by a membership organization, and the remedies ordered against Google in September 2026 were reported to require integrations that let Prebid "solicit real-time AdX bids for all indirect open-web display inventory", which makes a Prebid integration the reference path for exchanges as well as publishers ([The Google Ad Tech Cases](/books/advertising/google-ad-tech-cases) covers the remedies; the detail here is from secondary reporting).
+- **Prebid is the open standard everyone else integrates with.** Prebid is "free and fully open source", run by a membership organization, and the remedies ordered against Google in September 2026 require an interface between AdX and Prebid that will "enable Prebid to solicit real-time bids from AdX for all indirect open-web display ad inventory", which makes a Prebid integration the reference path for exchanges as well as publishers ([The Google Ad Tech Cases](/books/advertising/google-ad-tech-cases) covers the remedies).
 
 ## From Waterfalls to Header Auctions
 
@@ -182,7 +182,7 @@ In the classic integration, the publisher's ad server holds one price priority l
 - **Type and priority.** "Price priority (12)", the same priority value Ad Manager gives network, bulk, AdSense and Ad Exchange demand, so the header line items compete on price with the ad server's exchange under dynamic allocation; for deals the priority "will most likely be higher".
 - **Rate and targeting.** Each line item's rate is its bucket, and its key-value targeting is that bucket. Long-form video adds a category and duration key (`hb_pb_cat_dur_BIDDERCODE`).
 - **Creatives.** One creative per size, duplicated because "GAM will display only one creative per line item per page"; the creative calls Prebid with `hb_adid` (or the cached ID) to render the bid.
-- **How many.** Send-top-price: 200 prices for one bidder is 200 line items. Send-all-bids: 200 prices for 10 bidders is 2,000 line items. Prebid's guide notes that combining Prebid.js and Prebid Mobile groups means creating line items 1,002 times.
+- **How many.** Send-top-price: 200 prices for one bidder is 200 line items. Send-all-bids: 200 prices for 10 bidders is 2,000 line items. Prebid's guide's own worked example, two banner sets at medium granularity (201 each) and two video sets at a 300-bucket custom granularity, comes to 1,002 line items.
 
 Deal line items work the same way with a deal key: a key per bidder (`hb_deal_BIDDERCODE`), a line item targeting it with the deal ID ("`hb_deal_BidderA=BDA_123`"), start and end dates matching the deal agreement, and a higher priority than open-market Prebid line items. [Deals, PMPs & Curation](/books/advertising/deals-and-curation) covers the deal itself.
 
@@ -454,7 +454,7 @@ Design notes:
 - [Prebid: Timeouts](https://docs.prebid.org/features/timeouts.html), the failsafe, auction and Prebid Server timeouts and the 50% to 75% range
 - [Prebid: Price granularity for ad ops](https://docs.prebid.org/adops/price-granularity.html), rounding down, that rounding doesn't change the price paid, line item counts for auto and dense, and currency notes
 - [Prebid: Send all bids versus top price](https://docs.prebid.org/adops/send-all-vs-top-price.html), bidder-suffixed keys, 20-character truncation and line item counts
-- [Prebid: Google Ad Manager step-by-step setup](https://docs.prebid.org/adops/step-by-step.html), 450 line items per order, price priority 12, rates per bucket, one creative per size, and the 201 and 1,002 line item counts
+- [Prebid: Google Ad Manager step-by-step setup](https://docs.prebid.org/adops/step-by-step.html), 450 line items per order, price priority 12, rates per bucket, one creative per size, and the 201 and 1,002 line item counts of its worked example
 - [Prebid: Deals for ad ops](https://docs.prebid.org/adops/deals.html), `hb_deal_BIDDERCODE` keys, deal line item dates and priority
 - [Prebid: Ad server key-values](https://docs.prebid.org/features/adServerKvps.html), hb_pb, hb_deal, hb_format, hb_adid, hb_size, hb_uuid, hb_source, auctionKeyMaxChars and alwaysIncludeDeals
 - [Prebid Server: OpenRTB auction endpoint](https://docs.prebid.org/prebid-server/endpoints/openrtb2/pbs-endpoint-auction.html), the request extensions, stored requests, bidder parameters, tmax handling on PBS-Go and PBS-Java, response times and error codes, the targeting and cache keys, hb_env and price granularity ranges
@@ -467,6 +467,7 @@ Design notes:
 - [Prebid.js: Events](https://docs.prebid.org/dev-docs/publisher-api-reference/getEvents.html), the auction, bid, targeting and render events
 - [Prebid.js: Analytics adapters](https://docs.prebid.org/overview/analytics.html), enabling an analytics adapter
 - [Prebid.js: Releases](https://github.com/prebid/Prebid.js/releases), 11.53.0 on November 20, 2026 and the release cadence
+- [National Law Review: Court declines to order AdX divestiture (September 18, 2026)](https://natlawreview.com/article/court-declines-order-adx-divestiture-google-ad-tech-case), a summary of the remedies: Prebid integrations to solicit AdX bids, AdX bids for rival ad servers, and the ban on First Look, Last Look and Unified Pricing Rules for indirect transactions
 
 **In practice**
 
@@ -479,7 +480,4 @@ Design notes:
 **Court records**
 
 - [United States v. Google LLC, E.D. Va. No. 1:23-cv-00108, Memorandum Opinion (April 17, 2025)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1410.0.pdf), header bidding's adoption in 2015, the header bid as a floor against AdX, First Look and Last Look, and Open Bidding's 5% fee and why it was not a substitute
-
-**Secondary**
-
-- [National Law Review: Court declines to order AdX divestiture (September 18, 2026)](https://natlawreview.com/article/court-declines-order-adx-divestiture-google-ad-tech-case), the reported remedies: Prebid integrations to solicit AdX bids, AdX bids for rival ad servers, and the ban on First Look, Last Look and Unified Pricing Rules for indirect transactions
+- [United States v. Google LLC, E.D. Va. No. 1:23-cv-00108, Remedies Memorandum Opinion, Dkt. 1858 (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the AdX-Prebid interface for all indirect open-web display ad inventory

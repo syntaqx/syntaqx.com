@@ -114,7 +114,7 @@ A deal is configured three times, by three parties, and every copy has to agree.
 
 **On the buy side (DSP).** The buyer enters the deal ID in the DSP (often as an "inventory source" or "deal" object, with the exchange it lives on), and a line item or ad group targets it. The line item's own targeting, frequency caps, budget and pacing apply on top: a line item limited to one city buying a national deal will see only that city's requests. For a programmatic guaranteed deal, the DSP line item must bid on every eligible request at the fixed price, because the publisher has reserved the inventory and `guar = 1` obliges the bid.
 
-**On the publisher ad server, when it isn't the seller.** When the deal runs through header bidding, the publisher also creates a deal line item targeting `hb_deal_BIDDERCODE` with the deal ID, dates "to match the deal agreement" and a priority above open-market Prebid line items, and configures Prebid to send deal bids even when they aren't the top bid (`alwaysIncludeDeals` in Prebid.js; `alwaysincludedeals` and `preferdeals` in Prebid Server, both off by default).
+**On the publisher ad server, when it isn't the seller.** When the deal runs through header bidding, the publisher also creates a deal line item targeting `hb_deal_BIDDERCODE` with the deal ID, date ranges "in accordance with the agreement" and a priority above open-market Prebid line items, and configures Prebid to send deal bids even when they aren't the top bid (`alwaysIncludeDeals` in Prebid.js; `alwaysincludedeals` and `preferdeals` in Prebid Server, both off by default).
 
 **The Deals API.** Retyping a deal in each system is where mismatches start. IAB Tech Lab's Deals API v1.0, finalized February 6, 2026 after public comment until January 31, 2026, is "a one-party design for the origin system to PUSH information about the deal" to receiving systems (an SSP to a DSP): a description of what the deal includes, which "parties were involved in curating and selling the package", and status queries after the first send. It is deliberately narrow: v1 doesn't support differential overrides, proposals, revisions, negotiations or marketplace discovery, and it doesn't decide whether a deal applies to a given bid request, so implementers still validate deal conditions against each OpenRTB request. My default is to treat a deal sync as an integration with a status per destination ([Connection Health and Reconnect](/docs/building-blocks/integrations#connection-health-and-reconnect)), and to keep the seller's record as the source of truth that each destination's copy is checked against.
 
@@ -193,7 +193,7 @@ type Finding struct {
 	Owner string // "seller", "buyer" or "both"
 }
 
-// Diagnose returns the first stage at which the funnel breaks, using
+// Diagnose returns every stage at which the funnel breaks, using
 // thresholds a platform tunes; minBidRate and minWinRate are fractions.
 func Diagnose(c DayCounts, minBidRate, minWinRate float64) []Finding {
 	var out []Finding
@@ -466,5 +466,6 @@ Design notes:
 - [Magnite: Deal Discovery (April 27, 2022)](https://www.magnite.com/press/magnite-launches-deal-discovery/), self-service PMP and auction package creation
 - [Index Exchange: Key questions media owners should ask about programmatic curation](https://www.indexexchange.com/index-explains/key-questions-media-owners-should-ask-about-programmatic-curation/), curators building on publishers' rules and fee transparency
 - [PubMatic: Connect platform for curation (March 20, 2025)](https://markets.financialcontent.com/minstercommunitypost/article/gnwcq-2025-3-20-pubmatics-connect-platform-for-curation-delivers-for-publishers-drives-25-higher-ecpms-incremental-revenue-and-diverse-demand), Connect's integration with Activate and PubMatic's claimed curated deal results
-- [Prebid: Deals for ad ops](https://docs.prebid.org/adops/deals.html), hb_deal keys and deal line items
+- [Prebid: Deals for ad ops](https://docs.prebid.org/adops/deals.html), hb_deal keys, deal line item priority and date ranges
+- [Prebid.js: setConfig](https://docs.prebid.org/dev-docs/publisher-api-reference/setConfig.html), targetingControls.alwaysIncludeDeals, sending deals along with the winning bid
 - [Prebid Server: OpenRTB auction endpoint](https://docs.prebid.org/prebid-server/endpoints/openrtb2/pbs-endpoint-auction.html), the preferdeals and alwaysincludedeals targeting options

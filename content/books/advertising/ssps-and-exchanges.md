@@ -236,6 +236,7 @@ Design notes:
 - [Index Exchange](https://www.indexexchange.com/), self-description, channels, Index Cloud and inventory packages
 - [Magnite](https://www.magnite.com/), self-description, channels, products and Showcase
 - [OpenX](https://www.openx.com/), self-description and products
+- [ISBA: Programmatic Supply Chain Transparency Study, executive summary (2020)](https://www.isba.org.uk/system/files/media/documents/2020-12/executive-summary-programmatic-supply-chain-transparency-study.pdf), SSP and Exchange Bidding fees as shares of spend
 
 **Filings**
 
@@ -244,10 +245,6 @@ Design notes:
 - [Magnite: Third quarter 2026 results](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000039/a991-earningsq32026.htm), contribution ex-TAC and CTV growth
 - [PubMatic: Fourth quarter and full year 2025 results](https://www.sec.gov/Archives/edgar/data/1422930/000142293026000008/fy25pressrelease.htm), revenue, impressions processed, CTV growth and the top DSP buyer impact
 - [Criteo: Fourth quarter 2025 results](https://www.sec.gov/Archives/edgar/data/1576427/000157642726000004/exhibit991q42025.htm), revenue against contribution ex-TAC
-
-**Industry studies**
-
-- [ISBA: Programmatic Supply Chain Transparency Study, executive summary (2020)](https://www.isba.org.uk/system/files/media/documents/2020-12/executive-summary-programmatic-supply-chain-transparency-study.pdf), SSP and Exchange Bidding fees as shares of spend
 
 **Court records**
 
