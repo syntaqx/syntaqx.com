@@ -11,6 +11,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   // Book parts
   "Abuse, Trust and the Law": "Abuse and Law",
   "Accounts and Positions": "Accounts",
+  "Ad Serving and Creative": "Ad Serving",
   "Backend and Live Services": "Live Services",
   "Benefits Administration": "Benefits",
   "Carrier Regulation": "Carrier Rules",
