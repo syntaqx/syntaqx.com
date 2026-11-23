@@ -48,6 +48,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Other Property Types": "Property Types",
   "Peer-to-Peer Marketplaces": "P2P Marketplaces",
   "Pharma and Clinical Trials": "Pharma & Trials",
+  "Planning and Execution": "Planning",
   "Point of Sale and Stores": "Point of Sale",
   "Policy Administration": "Policy Admin",
   "Practice Management and Patient Engagement": "Practices",

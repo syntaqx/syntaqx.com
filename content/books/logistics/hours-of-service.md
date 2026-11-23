@@ -348,15 +348,11 @@ What the sketch leaves out, and a production calculator needs, in order of how o
 Hours data extends the core `drivers` and `loads` rows and adds the duty log and the clocks. The log is the ELD's, received through the vendor ([ELDs & Telematics](/books/logistics/electronic-logging-devices#how-to-build-it) holds the raw events); this chapter's tables are the derived duty periods a planner reads and the clocks a vendor or the calculator reports.
 
 ```sql
-ALTER TABLE drivers
-  ADD COLUMN home_terminal_facility_id UUID,   -- where the driver is normally dispatched from
+ALTER TABLE drivers                          -- home_terminal_facility_id is Truckload's
   ADD COLUMN hos_ruleset TEXT,                 -- 'us_property_70_8', 'us_property_60_7', ...
   ADD COLUMN short_haul  TEXT;                 -- 'none', 'cdl_150', 'non_cdl_150'
-ALTER TABLE drivers ADD CONSTRAINT drivers_home_terminal_fkey
-  FOREIGN KEY (home_terminal_facility_id) REFERENCES facilities (id) NOT VALID;
 ALTER TABLE drivers ADD CONSTRAINT drivers_short_haul_check
   CHECK (short_haul IN ('none', 'cdl_150', 'non_cdl_150')) NOT VALID;
-ALTER TABLE drivers VALIDATE CONSTRAINT drivers_home_terminal_fkey;
 ALTER TABLE drivers VALIDATE CONSTRAINT drivers_short_haul_check;
 
 ALTER TABLE carriers
