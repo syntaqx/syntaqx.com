@@ -112,7 +112,7 @@ ALTER TABLE freight_invoices
   ADD COLUMN payment_hold       TEXT;  -- why payment waits, while it waits
 ALTER TABLE freight_invoices ADD CONSTRAINT freight_invoices_payment_hold_check
   CHECK (payment_hold IN ('new_payee', 'fraud_case', 'delivery_unconfirmed',
-    'notice_unverified')) NOT VALID;
+    'notice_unverified', 'conflicting_notices')) NOT VALID;
 
 ALTER TABLE carriers
   ADD COLUMN fraud_status TEXT NOT NULL DEFAULT 'none';

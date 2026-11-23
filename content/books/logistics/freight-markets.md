@@ -70,7 +70,7 @@ Capacity indicators a system can compute from its own data: tender acceptance on
 
 **Rate tables go stale.** A lane rate is a price with a validity; the validity is a contract term, not a statement that the price is still the market. Systems should store, beside each contracted rate, the benchmark at award and the benchmark now, and report the lanes where they have drifted apart, which are the lanes about to fail.
 
-**Tender rejections climb, and the routing guide falls through.** In a tight market the primary carrier rejects or lets tenders expire, the TMS tenders to the backups, and the load reaches spot. Each rejection is a record with a reason and the market at that moment; a TMS that stores only the final carrier can't tell a shipper why its freight cost 20% more than the bid. Tendering & Acceptance owns the state machine; this chapter adds the market context.
+**Tender rejections climb, and the routing guide falls through.** In a tight market the primary carrier rejects or lets tenders expire, the TMS tenders to the backups, and the load reaches spot. Each rejection is a record with a reason and the market at that moment; a TMS that stores only the final carrier can't tell a shipper why its freight cost 20% more than the bid. [Tendering & Acceptance](/books/logistics/tendering#the-tender-state-machine) owns the state machine; this chapter adds the market context.
 
 **Spot fallback needs a price.** When the guide is exhausted, the load needs a spot price, which in a TMS means a benchmark lookup, a quote request to brokers, or a posting. The benchmark at that moment belongs on the tender.
 
@@ -218,7 +218,7 @@ Design notes:
 - **Observations carry their vintage.** A revised reading is a new row with a later `published_at`; a rate reset computed in March uses the reading published before the reset, and re-running it later reproduces the same answer ([Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections)).
 - **Licenses are part of the data.** Vendor benchmarks come under terms that limit display and redistribution; `license` on the series decides whether a value may appear in a shipper-facing report, an internal screen or nowhere.
 - **Benchmarks are snapshots, never joins to "latest."** A tender points at the benchmark row in force when it was sent, so the market context of a rejection can't change after the fact ([Snapshots](/docs/database/temporal-data#snapshots)).
-- **Rejection reasons are normalized at the edge.** Carriers answer in 990 codes, portal choices and free text; the TMS maps them to a small set and keeps the original in `response_code` (Tendering & Acceptance defines the set). With the benchmark on the same row, a rejection report can group reasons by how far the tender sat below the market.
+- **Rejection reasons are normalized at the edge.** Carriers answer in 990 codes, portal choices and free text; the TMS maps them to a small set and keeps the original in `response_code` ([Tendering & Acceptance](/books/logistics/tendering#rejections-and-reasons) defines the set). With the benchmark on the same row, a rejection report can group reasons by how far the tender sat below the market.
 - **Own history is a source.** A broker's or shipper's paid rates on a lane are a benchmark like any vendor's, labeled `own_history`, with its window and sample size.
 
 ## What This Means for the System You Build
