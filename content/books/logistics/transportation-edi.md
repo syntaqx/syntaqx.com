@@ -65,7 +65,7 @@ Each set travels in a functional group whose GS-01 identifier names its kind: SM
 
 ## The 204 Load Tender
 
-A 204 is one load: a header naming the carrier, the shipment ID and the payment terms; references, dates, equipment and parties for the whole load; and a stop loop with each stop's reason, dates, weight and parties. CN's published sample, trimmed and with its placeholders kept (SE-01, the segment count, is still the untrimmed original's, so a validator would reject this excerpt as it stands):
+A 204 is one load: a header naming the carrier, the shipment ID and the payment terms; references, dates, equipment and parties for the whole load; and a stop loop with each stop's reason, dates, weight and parties. CN's published sample, trimmed and with its placeholders kept (SE-01, the segment count including ST and SE, is recounted for the trimmed transaction: 19 where the original had 32):
 
 ```text
 ISA*00*    *00*KNSX *01*GENERIC *02*CNBH        *250116*0911*U*00401*000014741*1*P*>
@@ -88,7 +88,7 @@ G62*68*20250112
 AT8*G*L*27912.83*1365
 N1*ST*Customer Name
 L3*27912.83*G*******200*L*1365*L
-SE*32*0001
+SE*19*0001
 ```
 
 How the segments land:
@@ -138,7 +138,7 @@ The rules:
 
 ## The 214 Shipment Status
 
-A 214 reports one or more statuses for one shipment: a B10 header (the carrier's reference, the shipment ID and the SCAC), references (L11), parties (N1 loops), and an LX loop per status, each with an AT7 (the status), an MS1 (where), an MS2 (the equipment) and an AT8 (weight and quantity). C.H. Robinson's LTL guide sample, trimmed (its N3, N4 and second L11 removed, with the original SE count kept):
+A 214 reports one or more statuses for one shipment: a B10 header (the carrier's reference, the shipment ID and the SCAC), references (L11), parties (N1 loops), and an LX loop per status, each with an AT7 (the status), an MS1 (where), an MS2 (the equipment) and an AT8 (weight and quantity). C.H. Robinson's LTL guide sample, trimmed (its N3, N4 and second L11 removed, and SE-01 recounted from 15 to 10):
 
 ```text
 ST*214*0001~
@@ -150,7 +150,7 @@ LX*1~
 AT7*D1*NS***20220717*1748*LT~
 MS1*Edinburg*TX*US~
 AT8*Z*L*43539*43500~
-SE*15*0001~
+SE*10*0001~
 ```
 
 The AT7 carries the meaning, in seven elements with syntax rules that the parser has to enforce: "Only one of AT701 or AT703 may be present"; AT701 and AT702 come as a pair, and so do AT703 and AT704; AT705 is the date (CCYYMMDD), AT706 the time (HHMM), and AT707 the time code.
