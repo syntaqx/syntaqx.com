@@ -39,7 +39,7 @@ The **contract** market runs on annual bids (often with quarterly or ad hoc mini
 
 The **spot** market prices each load when it's needed: a load that fell through the routing guide, a surge the bid didn't foresee, a lane the shipper has no contract on, or freight that a broker buys from carriers load by load even when it sold on contract. Spot rates respond within days; contract rates respond at the next bid.
 
-The **spread** between them is the cycle's gauge. DAT's October 2026 figures put van contract linehaul at $2.45 a mile and spot linehaul at $2.22, a spread of $0.23, down from $0.34 a year earlier. When the spread narrows and inverts (spot above contract), carriers' incentive to honor contract tenders weakens and rejection rates climb; when contract sits far above spot, shippers' incentive to rebid grows. A broker is long one market and short the other: it sells on contract and buys on spot, so a narrowing spread is a margin squeeze, which is what RXO described in its 2025 10-K ("buy rates to increase faster than our contractual sell rates").
+The **spread** between them is the cycle's gauge. DAT's October 2026 figures put van contract linehaul at $2.45 a mile and spot linehaul at $2.22, a spread of $0.23 (the release gives no year-earlier contract figure to compare). When the spread narrows and inverts (spot above contract), carriers' incentive to honor contract tenders weakens and rejection rates climb; when contract sits far above spot, shippers' incentive to rebid grows. A broker is long one market and short the other: it sells on contract and buys on spot, so a narrowing spread is a margin squeeze, which is what RXO described in its 2025 10-K ("buy rates to increase faster than our contractual sell rates").
 
 ## The 2021 to 2026 Cycle
 
@@ -61,8 +61,8 @@ Supply in trucking is the number of trucks with drivers and authority, and it ad
 
 - **Fleet structure.** The ATA counts 91.5% of carriers at 10 trucks or fewer, so capacity is millions of small decisions to enter, park or leave, each visible only as an authority granted or revoked, an insurance filing lapsed, or a truck that stops posting on a board.
 - **Equipment on the boards.** DAT reported equipment posts "running about 22% to 26% below last year depending on the equipment type" in October 2026, and that carriers were "in a position to be selective."
-- **Regulatory removals.** English language proficiency became an out-of-service violation under CVSA's criteria from June 25, 2025, and FMCSA's August 10, 2026 proposal to codify it counts 19,045 out-of-service orders on 60,399 violations from then to March 19, 2026, against 33 on 7,812 in the months before (Drivers: CDLs, Qualification & the Clearinghouse covers the rule); FMCSA's final rule limiting non-domiciled CDLs to H-2A, H-2B and E-2 status took effect March 16, 2026, and its preamble describes more than 30 states issuing "tens of thousands" of non-domiciled CDLs contrary to the regulations. How many drivers these rules have removed from the market in total, as opposed to placed out of service at a roadside, is not in a source I opened. <!-- source-gap: logistics-freight-markets-capacity-removed | missing | number of drivers or carriers removed from service by ELP enforcement and the non-domiciled CDL rule in 2025-2026 | closes with: FMCSA or DOT data on out-of-service orders and CDL downgrades under both rules | checked: 2026-11-22 -->
-- **Brokers say the same thing.** RXO's 2025 10-K says "the market tightened during 2025, with capacity rapidly exiting in certain regions."
+- **Regulatory removals.** English language proficiency became an out-of-service violation under CVSA's criteria from June 25, 2025, and FMCSA's August 10, 2026 proposal to codify it counts 19,045 out-of-service orders on 60,399 violations from then to March 19, 2026, against 33 on 7,812 in the months before ([English Language Proficiency](/books/logistics/drivers-and-qualification#english-language-proficiency) covers the rule); FMCSA's final rule limiting non-domiciled CDLs to H-2A, H-2B and E-2 status took effect March 16, 2026 and is still under review in the D.C. Circuit ([Non-Domiciled CDLs](/books/logistics/drivers-and-qualification#non-domiciled-cdls)), and its preamble describes more than 30 states issuing "tens of thousands" of non-domiciled CDLs contrary to the regulations. How many drivers these rules have removed from the market in total, as opposed to placed out of service at a roadside, is not in a source I opened. <!-- source-gap: logistics-freight-markets-capacity-removed | missing | number of drivers or carriers removed from service by ELP enforcement and the non-domiciled CDL rule in 2025-2026 | closes with: FMCSA or DOT data on out-of-service orders and CDL downgrades under both rules | checked: 2026-11-22 -->
+- **Brokers say the same thing.** RXO's 2025 10-K describes 2025 "with capacity rapidly exiting in certain regions driven primarily by regulatory changes and enforcement."
 
 Capacity indicators a system can compute from its own data: tender acceptance on its lanes, the number of distinct carriers responding to its spot postings, the share of loads that fall to spot, days from tender to cover, and the carriers whose authority or insurance lapsed. They are leading indicators for a shipper's next bid and a broker's pricing, and they come from records the system already keeps if it keeps them as history.
 
@@ -141,13 +141,11 @@ ALTER TABLE lane_rates ADD CONSTRAINT lane_rates_index_share_bp_check
 ALTER TABLE lane_rates ADD CONSTRAINT lane_rates_collar_check
   CHECK (rate_floor IS NULL OR rate_ceiling IS NULL OR rate_floor <= rate_ceiling) NOT VALID;
 
+-- The guide position a tender was sent from (tenders.guide_position) belongs to
+-- Freight Procurement & Routing Guides, and the normalized rejection reason
+-- (tenders.reason_code) to Tendering & Acceptance; this chapter adds only the market.
 ALTER TABLE tenders
-  ADD COLUMN guide_position        SMALLINT,  -- 1 for the primary, 2 for the first backup
-  ADD COLUMN benchmark_id          UUID REFERENCES lane_benchmarks (id),  -- the market when sent
-  ADD COLUMN rejection_reason      TEXT;      -- normalized from the 990 or portal
-ALTER TABLE tenders ADD CONSTRAINT tenders_rejection_reason_check
-  CHECK (rejection_reason IS NULL OR rejection_reason IN ('no_capacity', 'rate', 'lane',
-    'equipment', 'lead_time', 'expired_no_response', 'other')) NOT VALID;
+  ADD COLUMN benchmark_id UUID REFERENCES lane_benchmarks (id);  -- the market when sent
 ```
 
 Each `ALTER` with `NOT VALID` is validated after backfill, as [The Core Data Model](/books/logistics/logistics-business#the-core-data-model) describes. The lanes drifting away from their awards, a report a shipper runs before its next mini-bid:
@@ -220,7 +218,7 @@ Design notes:
 - **Observations carry their vintage.** A revised reading is a new row with a later `published_at`; a rate reset computed in March uses the reading published before the reset, and re-running it later reproduces the same answer ([Recorded Time and Corrections](/docs/database/temporal-data#recorded-time-and-corrections)).
 - **Licenses are part of the data.** Vendor benchmarks come under terms that limit display and redistribution; `license` on the series decides whether a value may appear in a shipper-facing report, an internal screen or nowhere.
 - **Benchmarks are snapshots, never joins to "latest."** A tender points at the benchmark row in force when it was sent, so the market context of a rejection can't change after the fact ([Snapshots](/docs/database/temporal-data#snapshots)).
-- **Rejection reasons are normalized at the edge.** Carriers answer in 990 codes, portal choices and free text; the TMS maps them to a small set and keeps the original in `response_code`.
+- **Rejection reasons are normalized at the edge.** Carriers answer in 990 codes, portal choices and free text; the TMS maps them to a small set and keeps the original in `response_code` (Tendering & Acceptance defines the set). With the benchmark on the same row, a rejection report can group reasons by how far the tender sat below the market.
 - **Own history is a source.** A broker's or shipper's paid rates on a lane are a benchmark like any vendor's, labeled `own_history`, with its window and sample size.
 
 ## What This Means for the System You Build

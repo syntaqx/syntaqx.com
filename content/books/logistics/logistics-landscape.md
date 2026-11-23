@@ -9,7 +9,7 @@ tags = ["logistics", "supply-chain", "carriers", "brokers", "logistics-software"
 
 US freight is a few very large companies on top of a very long tail. Trucks moved "more than 72% of all domestic freight tonnage" in 2024, 11.27 billion tons for $906 billion of revenue, and 91.5% of the carriers that moved it run 10 or fewer trucks, according to the American Trucking Associations. Above that tail sit asset carriers with tens of thousands of tractors, LTL networks with hundreds of terminals, Class I railroads, parcel networks, brokers that arrange millions of loads without owning a truck, forwarders that consolidate ocean and air freight across continents, contract warehouse operators, and a software industry that sells each of them a system and connects them to each other.
 
-The landscape matters to an engineer because it decides who the counterparties are. A shipper's TMS talks to a handful of large carriers by API and EDI and to thousands of small ones through a broker; a broker's TMS talks to 450,000 carriers, most with one or two trucks, through load boards, apps and email; a carrier's dispatch system talks to the brokers and shippers that tender to it, each with its own formats. And the companies change: carriers fail (Yellow, August 2023), software vendors are bought and renamed (MercuryGate into Körber's supply chain software business, now Infios; e2open into WiseTech), business units are spun off (FedEx Freight, June 1, 2026). This chapter maps the companies by role and mode with their filed figures, the software categories and their vendors, and the 2023 to 2026 consolidation, and adds the records that keep a party graph true as the companies change. It extends `parties` and `carriers` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model).
+The landscape matters to an engineer because it decides who the counterparties are. A shipper's TMS talks to a handful of large carriers by API and EDI and to thousands of small ones through a broker; a large broker's TMS has hundreds of thousands of carriers on its platform (C.H. Robinson counted more than 450,000 transportation providers in 2025), most of them very small, through load boards, apps and email; a carrier's dispatch system talks to the brokers and shippers that tender to it, each with its own formats. And the companies change: carriers fail (Yellow, August 2023), software vendors are bought and renamed (MercuryGate into Körber's supply chain software business, now Infios; e2open into WiseTech), business units are spun off (FedEx Freight, June 1, 2026). This chapter maps the companies by role and mode with their filed figures, the software categories and their vendors, and the 2023 to 2026 consolidation, and adds the records that keep a party graph true as the companies change. It extends `parties` and `carriers` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model).
 
 How these companies make money is [How Carriers, Brokers & 3PLs Make Money](/books/logistics/logistics-economics); what the market cycle did to them is [Freight Markets & Cycles](/books/logistics/freight-markets). The roles themselves (shipper, carrier, broker, forwarder, customs broker) are defined in [Who's Who](/books/logistics/logistics-business#who-s-who).
 
@@ -19,7 +19,7 @@ As of November 2026, from 2025 annual filings (calendar 2025 unless noted):
 
 | Company | Role | 2025 revenue | What the filing says about the model |
 | --- | --- | --- | --- |
-| **C.H. Robinson** | Broker, forwarder, managed services | $16.2 billion; adjusted gross profit $2.59 billion | About 37 million shipments, more than 450,000 transportation providers, gross recognition for most transportation |
+| **C.H. Robinson** | Broker, forwarder, managed services | $16.2 billion; adjusted gross profit $2.59 billion | About 37 million shipments, more than 450,000 transportation providers on its platform, gross recognition for most transportation |
 | **GXO Logistics** | Contract logistics | $13.2 billion | 1,043 facilities, about 221 million square feet, about 154,000 team members in 26 countries; "Most of our customer contracts contain both fixed and variable components" |
 | **J.B. Hunt** | Intermodal, dedicated, brokerage, final mile, truckload | $12.00 billion | Intermodal the largest segment ($5,975 million), most moves on BNSF and Norfolk Southern |
 | **XPO** | LTL | $8,157 million | An LTL carrier first |
@@ -53,19 +53,19 @@ The patterns:
 
 ## Carriers by Mode
 
-**Truckload.** The largest segment and the most fragmented. A handful of public fleets (Knight-Swift, Schneider, Werner, Heartland, J.B. Hunt's dedicated and truckload units) run tens of thousands of tractors; the ATA's figures put 91.5% of carriers at 10 trucks or fewer, and its January 2026 outlook cites "roughly 580,000 authorized interstate motor carriers." Truckload covers dry van, reefer, flatbed and dedicated fleets (Truckload covers the equipment and operations).
+**Truckload.** The largest segment and the most fragmented. A handful of public fleets (Knight-Swift, Schneider, Werner, Heartland, J.B. Hunt's dedicated and truckload units) run tens of thousands of tractors; the ATA's figures put 91.5% of carriers at 10 trucks or fewer, and its January 2026 outlook cites "roughly 580,000 authorized interstate motor carriers." Truckload covers dry van, reefer, flatbed and dedicated fleets ([Truckload](/books/logistics/truckload) covers the equipment and operations).
 
-**LTL.** A concentrated network business: Old Dominion, Saia, XPO, FedEx Freight, ArcBest's ABF and Estes run national terminal networks, with regional carriers beneath them. Yellow, once among the largest, filed for Chapter 11 on August 6, 2023 and liquidated (LTL Networks covers its failure). FedEx Freight became a separate NYSE company, FDXF, on June 1, 2026, with FedEx distributing one share for every two FedEx shares held on May 15, 2026 and keeping 19.9% to dispose of within 24 months.
+**LTL.** A concentrated network business: Old Dominion, Saia, XPO, FedEx Freight, ArcBest's ABF and Estes run national terminal networks, with regional carriers beneath them. Yellow, once among the largest, filed for Chapter 11 on August 6, 2023 and liquidated ([Yellow's Failure](/books/logistics/ltl-networks#yellow-s-failure) covers it). FedEx Freight became a separate NYSE company, FDXF, on June 1, 2026, with FedEx distributing one share for every two FedEx shares held on May 15, 2026 and keeping 19.9% to dispose of within 24 months.
 
-**Intermodal and rail.** Six Class I railroads (BNSF, Union Pacific, CSX, Norfolk Southern, CPKC and CN) own the track; intermodal marketing companies and asset-light intermodal carriers (J.B. Hunt, Hub Group, Schneider) own or control the containers and sell door to door. Union Pacific and Norfolk Southern's proposed merger is before the Surface Transportation Board (Rail Freight covers its status).
+**Intermodal and rail.** Six Class I railroads (BNSF, Union Pacific, CSX, Norfolk Southern, CPKC and CN) own the track; intermodal marketing companies and asset-light intermodal carriers (J.B. Hunt, Hub Group, Schneider) own or control the containers and sell door to door ([Intermodal & Drayage](/books/logistics/intermodal-and-drayage)). Union Pacific and Norfolk Southern's proposed merger is before the Surface Transportation Board on a revised application, after the Board rejected the first one without prejudice in January 2026 ([The Union Pacific and Norfolk Southern Merger](/books/logistics/rail-freight#the-union-pacific-and-norfolk-southern-merger) has the dated steps).
 
-**Parcel.** UPS, FedEx, the Postal Service and Amazon run the national networks, with regional carriers beneath them (Parcel Networks From the Carrier Side; the shipper's view is [Shipping & Carriers](/books/commerce/shipping-and-carriers)).
+**Parcel.** UPS, FedEx, the Postal Service and Amazon run the national networks, with regional carriers beneath them ([Parcel Networks From the Carrier Side](/books/logistics/parcel-networks); the shipper's view is [Shipping & Carriers](/books/commerce/shipping-and-carriers)).
 
 **Ocean and air.** Ocean liner shipping is concentrated in a few carriers (MSC, Maersk, CMA CGM, COSCO, Hapag-Lloyd) and their alliances; air cargo moves in passenger bellies and freighters, mostly booked by forwarders (Ocean Shipping and Air Cargo).
 
 ## Brokers, 3PLs and Forwarders
 
-**Freight brokers** arrange motor carriage without hauling it: C.H. Robinson, RXO (which bought Coyote in 2024), Uber Freight, TQL, Echo, Arrive and the brokerage divisions of asset carriers. TQL, Echo and Arrive are private and file nothing. A broker's register is in FMCSA's records (broker authority and the $75,000 bond); what it does is [How Freight Brokerage Works](/books/logistics/freight-brokerage).
+**Freight brokers** arrange motor carriage without hauling it: C.H. Robinson, RXO (which bought Coyote in 2024), Uber Freight, TQL, Echo, Arrive and the brokerage divisions of asset carriers. TQL, Echo and Arrive are private and file nothing. A broker's register is in FMCSA's records (broker authority, [Operating Authority & Registration](/books/logistics/operating-authority), and the $75,000 bond, [Broker and Forwarder Security](/books/logistics/financial-security-and-insurance#broker-and-forwarder-security)); what it does is [How Freight Brokerage Works](/books/logistics/freight-brokerage).
 
 **Agent networks** are a variant: Landstar's "approximately 960 independent commission sales agents" sell freight and choose capacity under Landstar's authority, insurance and credit, and 457 agents with $1 million or more of revenue each produced 95% of its revenue. The agent is a party with a contract, not an employee, and the system has to record which agent owns each customer and load.
 
@@ -99,7 +99,7 @@ Category lines blur: a broker TMS includes visibility, a shipper TMS includes fr
 
 The movements that changed counterparties, with dates from filings and the companies' own releases:
 
-- **August 6, 2023: Yellow files for Chapter 11.** LTL Networks covers what followed.
+- **August 6, 2023: Yellow files for Chapter 11.** [Yellow's Failure](/books/logistics/ltl-networks#yellow-s-failure) covers what followed.
 - **2023: Convoy shuts down;** Flexport buys its technology (reported November 1, 2023) and sells the relaunched Convoy Platform to DAT (announced July 28, 2025).
 - **September 16, 2024: RXO closes its acquisition of Coyote** for $1.038 billion in cash.
 - **October 1, 2024: Körber Supply Chain Software, "a joint venture between Körber AG and KKR," completes its acquisition of MercuryGate;** the business has since rebranded as Infios.
@@ -115,7 +115,7 @@ For software that integrates with these companies, each movement is a migration 
 
 ## How to Build It
 
-The deltas record corporate events with effective dates, which software a partner runs, and a few classification columns:
+The deltas record corporate events with effective dates, which software a partner runs, a few classification columns, and a size band read from the power units [Operating Authority & Registration](/books/logistics/operating-authority#how-to-build-it) stores:
 
 ```sql
 ALTER TABLE parties
@@ -126,10 +126,17 @@ ALTER TABLE parties
 ALTER TABLE parties ADD CONSTRAINT parties_parent_not_self_check
   CHECK (parent_party_id IS DISTINCT FROM id) NOT VALID;
 
-ALTER TABLE carriers
-  ADD COLUMN size_band TEXT;  -- power units, banded for routing and vetting rules
-ALTER TABLE carriers ADD CONSTRAINT carriers_size_band_check
-  CHECK (size_band IN ('1', '2_10', '11_100', '101_1000', '1001_plus')) NOT VALID;
+-- A carrier's size band is derived, not stored: carriers.power_units (from the MCS-150,
+-- added in Operating Authority & Registration) banded at read time.
+CREATE VIEW carrier_size_bands AS
+SELECT party_id,
+       CASE WHEN power_units IS NULL THEN NULL
+            WHEN power_units <= 1    THEN '1'
+            WHEN power_units <= 10   THEN '2_10'
+            WHEN power_units <= 100  THEN '11_100'
+            WHEN power_units <= 1000 THEN '101_1000'
+            ELSE '1001_plus' END AS size_band
+FROM carriers;
 
 CREATE TABLE party_corporate_events (      -- acquisitions, mergers, spin-offs, renames, failures
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -222,7 +229,7 @@ Design notes:
 - **Effective time, not announcement time.** A deal announced in one quarter and closed in another changes invoices, tax IDs and remit-to addresses only from closing; `effective_at` is what records follow, and the source is kept.
 - **Parents are a pointer, history is events.** `parent_party_id` answers "who owns this carrier now"; the events answer "who owned it when this load moved." Ownership percentages for sanctions screening are Export Compliance & Screening's.
 - **A party never becomes another party.** When companies merge, both rows survive with a successor link, because every old load, invoice and claim names the one that existed then ([Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible)).
-- **Size bands are inputs, not judgments.** A banded power unit count drives routing and vetting rules (a one-truck carrier on a five-load-a-day lane), and its source is the registry.
+- **Size bands are inputs, not judgments.** A banded power unit count drives routing and vetting rules (a one-truck carrier on a five-load-a-day lane); the count comes from the registry's MCS-150 data, so the band is a view over it rather than a second copy that can drift.
 
 ## What This Means for the System You Build
 
@@ -269,6 +276,8 @@ Design notes:
 - [WiseTech Global: Completes acquisition of e2open](https://www.wisetechglobal.com/news/wisetech-global-completes-strategic-acquisition-of-e2open/), date, price and enterprise value
 - [Modern Materials Handling: Körber Supply Chain Software completes acquisition of MercuryGate](https://www.mmh.com/article/koerber_supply_chain_software_completes_acquisition_of_tms_provider_mercurygate/software_tech), date, the Körber and KKR joint venture, and the Infios rebrand
 - [Trimble: Platform Science completes acquisition of Trimble's telematics units](https://news.trimble.com/2025-02-10-Platform-Science-Completes-Acquisition-of-Trimbles-Global-Transportation-Telematics-Business-Units), date, what was sold and what Trimble kept
+- [DAT: Company](https://www.dat.com/company), the product lines, including factoring
+- [Truckstop: Factoring](https://truckstop.com/product/factoring/), Truckstop Factoring for carriers
 - [Descartes: Descartes acquires MyCarrierPortal](https://www.descartes.com/resources/news/press-release-descartes-acquires-mycarrierportal), carrier onboarding and monitoring
 - [TechCrunch: Flexport acquires technology of former digital freight unicorn Convoy (November 1, 2023)](https://techcrunch.com/2023/11/01/flexport-acquires-technology-of-former-digital-freight-unicorn-convoy), Convoy's end and the technology sale
 - [GeekWire: Flexport is selling Convoy's technology to DAT (July 28, 2025)](https://www.geekwire.com/2025/flexport-is-selling-convoys-technology-to-freight-giant-dat/), the sale to DAT

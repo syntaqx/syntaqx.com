@@ -12,7 +12,7 @@ Freight fraud is theft by paperwork. A criminal doesn't break into a trailer; th
 
 It's hard because every control a broker has is built on records someone else controls. The carrier's identity lives in FMCSA's registry, which says what was filed and, until recently, never who filed it; contact details come from the applicant; the rate confirmation goes to an email address; the driver who arrives at the dock is whoever shows up with the right load number; and the remit-to address and bank account are a form the carrier, or someone pretending to be the carrier, fills in. Each step is ordinary, and fraud is an ordinary step done by the wrong person. This chapter covers the schemes (identity theft, double brokering, fictitious pickups, payment diversion and straight theft), what the public data says about them, the controls at onboarding, at tender, at pickup and at payment, and the records that let a broker detect, stop and later prove what happened. It extends `carriers`, `tenders` and `freight_invoices` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model).
 
-Vetting is [Carrier Onboarding & Vetting](/books/logistics/carrier-onboarding); the contract terms that make re-brokering a breach are in [The Broker-Carrier Agreement](/books/logistics/freight-brokerage#the-broker-carrier-agreement); bank-detail change controls belong to [Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account); notices of assignment and factors as payees are Paying Carriers, Quick Pay & Factoring; cargo claims after a theft are Cargo Liability & Claims; and the general case of consumer and business scams is in [Account Takeover & Scams](/books/banking-and-lending/account-takeover-and-scams#how-the-platforms-do-it).
+Vetting is [Carrier Onboarding & Vetting](/books/logistics/carrier-onboarding); the contract terms that make re-brokering a breach are in [The Broker-Carrier Agreement](/books/logistics/freight-brokerage#the-broker-carrier-agreement); bank-detail change controls belong to [Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account); notices of assignment and factors as payees are Paying Carriers, Quick Pay & Factoring; cargo claims after a theft are [Cargo Liability & Claims](/books/logistics/cargo-claims); the registry and Motus are [Operating Authority & Registration](/books/logistics/operating-authority); and the general case of consumer and business scams is in [Account Takeover & Scams](/books/banking-and-lending/account-takeover-and-scams#how-the-platforms-do-it).
 
 ## How the Platforms Do It
 
@@ -21,10 +21,10 @@ As of November 2026, from vendor pages, press releases and FMCSA's notice:
 | Platform or actor | Where it acts | What it does, in its own words |
 | --- | --- | --- |
 | **Carrier Assure** | Carrier vetting | Flags "indicators of double brokering, poor visibility, and instability"; publishes SuspectCarrier and SuspectBroker reports |
-| **FMCSA (Motus)** | Registration | Identity document capture and face scan through IDEMIA since April 2025, and business verification through CLEAR; FMCSA reports "a significant increase in the occurrence of presumed fraudulent activity," some "perpetrated by foreign actors" |
+| **FMCSA (Motus)** | Registration | Identity document capture and face scan through IDEMIA since April 2025, and business verification through CLEAR since September 2025; FMCSA reports "a significant increase in the occurrence of presumed fraudulent activity," some "perpetrated by foreign actors" |
 | **Highway** | Carrier identity, tender and pickup | Verifies identity, authority and insurance before award; Load Lock; Secure Rate Con Delivery; Know Your Driver confirms "that the person arriving for pickup is the authorized driver" and flags "cross-network overlap before freight changes hands" |
 | **MyCarrierPortal (Descartes)** | Carrier onboarding and monitoring | Acquired, per Descartes, to help brokers and shippers address carrier fraud and cargo theft |
-| **RMIS (Truckstop)** | Onboarding and monitoring, with Carrier Assure scores | Carrier Assure's data in RMIS is meant to help identify "risks such as double brokering and cargo theft," per the 2023 partnership announcement |
+| **RMIS (Truckstop)** | Onboarding and monitoring, with Carrier Assure scores | Carrier Assure's data in RMIS is meant to "help identify risk factors for double brokering, cargo theft and other nefarious activities," per the 2023 partnership announcement |
 | **Verisk CargoNet** | Theft reporting and recovery | Has "collected and analyzed reported cargo theft incidents across the U.S. and Canada since 2010"; quarterly analyses |
 
 The patterns:
@@ -38,12 +38,12 @@ The patterns:
 Public data on freight fraud is thin and mostly from one source. Verisk CargoNet's third-quarter 2026 analysis, released November 4, 2026:
 
 - **Incidents:** 547 in the quarter, "down 33 percent year over year and 19 percent from the previous quarter"; 2,072 through September against 2,755 a year earlier (down 25%).
-- **Losses:** $230.1 million in the quarter (up 12% from $205.1 million) and $718.9 million through September (up 39%). The average value of incidents with a documented value rose "approximately 72 percent, from $261,115 to $448,456."
+- **Losses:** $230.1 million in the quarter (up 12% from $205.1 million) and $718.9 million through September (up 39%). Through September, the average value of incidents with a documented value rose "approximately 72 percent, from $261,115 to $448,456."
 - **Fictitious pickups:** 138 incidents against 147 a year earlier, "raising their share of reported activity from 18 percent to approximately 25 percent."
 - **High-value targeting:** 19 thefts with documented values of $1 million or more, against nine in the third quarter of 2025, "many involving high-value electronics and data center materials."
 - **Commodities:** food and beverage led with 94 incidents (down from 178); metals second with 63, copper 34 of them; cosmetics thefts up from nine to 14.
 - **Places:** California, Illinois, New Jersey and Texas were 57% of incidents, with California about a third (182).
-- **Methods:** CargoNet documented "compromised business email accounts, internet-based phone systems and transportation industry applications" used "to impersonate legitimate companies, obtain shipment information or redirect freight."
+- **Methods:** earlier in 2026, CargoNet documented "compromised business email accounts, internet-based phone systems and transportation industry applications" used "to impersonate legitimate companies, obtain shipment information or redirect freight."
 
 For the full year 2025 Verisk estimated losses of $725 million. Its figures cover reported incidents, are filtered by report date, and are revised as late reports arrive, so a quarter's numbers change after publication.
 
@@ -51,13 +51,13 @@ What no public source counts: double-brokered loads, carrier identity takeovers,
 
 ## The Schemes
 
-**Carrier identity theft.** The criminal poses as a real, established carrier: one with years of authority, clean safety data and insurance on file, because that's what passes vetting. The forms vary: a lookalike email domain and a new phone number put on the carrier's FMCSA record through a compromised registry account (the gap Motus's identity proofing is meant to close); a dormant carrier's account taken over; or a carrier's packet copied from a broker portal. The tell is change: contacts that don't match those the broker verified, a registry contact or address updated days before the carrier asks for loads, a carrier that hauled reefer in Ohio suddenly bidding high-value van freight out of Southern California.
+**Carrier identity theft.** The criminal poses as a real, established carrier: one with years of authority, clean safety data and insurance on file, because that's what passes vetting. The forms vary: a lookalike email domain and a new phone number put on the carrier's FMCSA record through a compromised registry account (the gap Motus's identity proofing is meant to close, [Motus and the Rules in Flux](/books/logistics/operating-authority#motus-and-the-rules-in-flux)); a dormant carrier's account taken over; or a carrier's packet copied from a broker portal. The tell is change: contacts that don't match those the broker verified, a registry contact or address updated days before the carrier asks for loads, a carrier that hauled reefer in Ohio suddenly bidding high-value van freight out of Southern California.
 
-**Double brokering.** A carrier, or someone posing as one, accepts a load and re-tenders it to a second carrier without the broker's consent, often under the first carrier's name and paperwork. The second carrier hauls it, the first invoices the broker (or sells the invoice to a factor), and the second is never paid; it then claims against the broker, the shipper, or the cargo. The term is the industry's, not the statute's. It breaches the broker-carrier agreement ("shall not re-broker, co-broker, subcontract, assign, interline, or transfer the transportation," in Flock Freight's; "forfeiture of payment," in Arrive's), and a carrier that brokers without broker authority and a bond is brokering unlawfully, with personal liability for its officers (49 U.S.C. 14916). The broker usually learns of it when the real hauler calls asking to be paid, or when tracking shows a truck the broker never saw.
+**Double brokering.** A carrier, or someone posing as one, accepts a load and re-tenders it to a second carrier without the broker's consent, often under the first carrier's name and paperwork. The second carrier hauls it, the first invoices the broker (or sells the invoice to a factor), and the second is never paid; it then claims against the broker, the shipper, or the cargo. The term is the industry's, not the statute's. It breaches the broker-carrier agreement ("shall not re-broker, co-broker, subcontract, assign, interline, or transfer the transportation," in Flock Freight's; "forfeiture of payment," in Arrive's), and a carrier that brokers without broker registration and financial security is brokering unlawfully: whoever knowingly permits it owes civil penalties and every valid claim of the injured parties, jointly and severally with the entity's "individual officers, directors, and principals" (49 U.S.C. 14916). The broker usually learns of it when the real hauler calls asking to be paid, or when tracking shows a truck the broker never saw.
 
 **Fictitious pickups.** The freight is the target. A criminal books the load (often after identity theft), sends a driver and truck that look right, signs the bill of lading and drives away; the shipper believes it released freight to the broker's carrier. A variant works from the shipper side: an email that appears to come from the broker changes the pickup carrier at the last minute.
 
-**Payment diversion.** The freight moves correctly and the money goes wrong: an email from the carrier's "accounting" changes the remit-to and bank account; a forged notice of assignment names a factor the carrier never used; or a real factor's notice is ignored and the carrier is paid twice, once directly and once by the broker to the factor it should have paid ([How the Money Splits](/books/logistics/logistics-business#how-the-money-splits) explains why a notice moves the obligation, under UCC 9-406). The defenses are the payee controls in Payments ([Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account)) applied to carriers and factors.
+**Payment diversion.** The freight moves correctly and the money goes wrong: an email from the carrier's "accounting" changes the remit-to and bank account; a forged notice of assignment names a factor the carrier never used; or a real factor's notice is ignored, the broker pays the carrier directly, and it still owes the factor, paying the same invoice twice ([How the Money Splits](/books/logistics/logistics-business#how-the-money-splits) explains why a notice moves the obligation, under UCC 9-406). The defenses are the payee controls in Payments ([Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account)) applied to carriers and factors.
 
 **Straight and strategic theft.** Trailers stolen from yards, truck stops and drop lots, and organized crews that target specific commodities, lanes and times (holidays, weekends, when facilities are closed). CargoNet's quarter shows food and beverage and metals as perennial targets and electronics and data center materials at the top of the high-value list.
 
@@ -101,7 +101,7 @@ The deltas add verification state to tenders and invoices, a pickup verification
 
 ```sql
 ALTER TABLE tenders
-  ADD COLUMN delivered_to_contact_id UUID,  -- carrier_contacts row the offer and rate con went to
+  ADD COLUMN delivered_to_contact_id UUID REFERENCES carrier_contacts (id),  -- where the offer and rate con went
   ADD COLUMN tracking_required       BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN risk_tier               TEXT;  -- 'standard', 'elevated', 'high'
 ALTER TABLE tenders ADD CONSTRAINT tenders_risk_tier_check
@@ -153,7 +153,7 @@ CREATE TABLE fraud_signals (                -- one observation that may mean fra
   detail             JSONB NOT NULL,
   observed_at        TIMESTAMPTZ NOT NULL,
   received_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  case_id            UUID                -- set when grouped into a case
+  case_id            UUID                -- set when grouped into a case; FK added below
 );
 CREATE INDEX ON fraud_signals (carrier_party_id, observed_at);
 
@@ -174,6 +174,8 @@ CREATE TABLE fraud_cases (                  -- an investigation, from suspicion 
   outcome_note       TEXT,
   CHECK (status NOT IN ('cleared', 'closed') OR outcome_note IS NOT NULL)
 );
+ALTER TABLE fraud_signals ADD CONSTRAINT fraud_signals_case_id_fkey
+  FOREIGN KEY (case_id) REFERENCES fraud_cases (id);
 ```
 
 Two queries the controls depend on. Contacts shared across carriers, the strongest single impersonation signal:
@@ -276,7 +278,7 @@ Design notes:
 - **Every rate confirmation delivery,** to which verified contact and through which channel.
 - **Every payee change and notice of assignment,** with how it was verified, by whom and when the first payment to it was released.
 - **Every signal and case,** with its sources, the actions taken (blocked carrier, held payment, notified shipper) and the reports made with their reference numbers.
-- **What the registry showed** when the carrier was approved and when the load was booked, from the registration checks onboarding keeps.
+- **What the registry showed** when the carrier was approved and when the load was booked, from the `carrier_registration_checks` rows ([Operating Authority & Registration](/books/logistics/operating-authority#how-to-build-it)) that onboarding and tendering write.
 
 The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 

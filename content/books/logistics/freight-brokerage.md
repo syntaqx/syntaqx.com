@@ -12,7 +12,7 @@ A freight broker sells a shipper a truck it doesn't own. The shipper agrees a pr
 
 It's hard because the broker sits between two contracts that are written separately, priced separately and enforced separately, and it carries the risk of both. The shipper contract promises service the broker can't perform itself; the carrier contract is often signed minutes before pickup with a company the broker has never used, whose identity, insurance and safety record it has to trust on the evidence of public registries and a certificate from an insurance agent. The rules that bind it are thin: a federal registration and a $75,000 bond, a three-year record of each transaction, a ban on calling itself a carrier, and, since May 14, 2026, the Supreme Court's holding that a state negligence suit for choosing an unsafe carrier is not preempted. This chapter covers what a broker is in the statute and how it differs from a carrier, a forwarder and a dispatcher; the broker-carrier agreement and the rate confirmation; how brokers price and where margin comes from; the transaction record and the transparency rule still in proposal; negligent selection after *Montgomery v. Caribe Transport II*; and the records that come from all of it. It extends `loads`, `rate_agreements` and `freight_charges` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model).
 
-Vetting the carrier before the load is [Carrier Onboarding & Vetting](/books/logistics/carrier-onboarding); the fraud that targets brokers is [Freight Fraud & Cargo Theft](/books/logistics/freight-fraud); finding carriers on load boards and booking them automatically is [Load Boards & Digital Freight Matching](/books/logistics/load-boards-and-matching). Broker registration and the bond are in Operating Authority & Registration and Bonds & Insurance Minimums; tender messages are in Tendering & Acceptance; paying carriers, quick pay and factors are in Paying Carriers, Quick Pay & Factoring; and gross versus net revenue for a broker is in Logistics Accounting.
+Vetting the carrier before the load is [Carrier Onboarding & Vetting](/books/logistics/carrier-onboarding); the fraud that targets brokers is [Freight Fraud & Cargo Theft](/books/logistics/freight-fraud); finding carriers on load boards and booking them automatically is [Load Boards & Digital Freight Matching](/books/logistics/load-boards-and-matching). Broker registration and the bond are in [Operating Authority & Registration](/books/logistics/operating-authority) and [Broker and Forwarder Security](/books/logistics/financial-security-and-insurance#broker-and-forwarder-security); tender messages are in Tendering & Acceptance; paying carriers, quick pay and factors are in Paying Carriers, Quick Pay & Factoring; and gross versus net revenue for a broker is in Logistics Accounting.
 
 ## How the Brokers Do It
 
@@ -30,7 +30,7 @@ As of November 2026, from 10-K filings, carrier terms the brokers publish and th
 The pattern bullets:
 
 - **Two layers of contract.** Every broker publishing terms uses a master broker-carrier agreement signed at onboarding and a per-load rate confirmation that prices one load and points back to the master. Which wins in a conflict is the broker's choice and it differs: Arrive's confirmation governs; Flock's agreement makes conflicting bill of lading terms "subordinate."
-- **Requirements above the federal floor.** The federal minimum for a general freight carrier is $750,000 of liability and no cargo insurance at all; C.H. Robinson, TQL, Arrive and Flock all ask for $1,000,000 auto and $100,000 cargo, with certificates from the agent rather than the carrier. Those numbers are a market convention, not a rule, and a shipper contract can raise them.
+- **Requirements above the federal floor.** The federal minimum for a general freight carrier is $750,000 of liability and no cargo insurance at all; C.H. Robinson, TQL, Arrive and Flock all ask for $1,000,000 auto and $100,000 cargo, and C.H. Robinson and TQL take the certificate or the verification from the insurance agent rather than the carrier. Those numbers are a market convention, not a rule, and a shipper contract can raise them.
 - **Thirty days and a fee to be faster.** Standard terms run about 30 days from a complete invoice with a signed POD; faster payment is a percentage fee (2.0% at C.H. Robinson). The clock starts on paperwork, not delivery.
 - **Gross revenue, compared on the spread.** The principal brokers report gross revenue; the comparable number is revenue less purchased transportation (adjusted gross profit or net revenue), and How Carriers, Brokers & 3PLs Make Money compares them on it.
 
@@ -50,7 +50,7 @@ The same guidance says that handling the money "is not an essential requirement 
 
 The penalty for brokering without authority and the bond is set by statute: a person may broker interstate only if registered and financially secure, the government may recover up to $10,000 per violation, an injured party may recover "for all valid claims incurred without regard to amount," and the liability runs "jointly and severally" to the company's officers, directors and principals (49 U.S.C. 14916). A shipper using an unregistered broker, or a broker re-brokering to one, is dealing with a company whose owners are personally exposed and whose bond doesn't exist.
 
-Two more rules in part 371 shape the product. A broker may not broker "under any name other than" the one its registration is in, may not "represent its operations to be that of a carrier," and "any advertising shall show the broker status of the operation" (371.7): the shipper-facing app, the quote email and the invoice name the broker as a broker. And a broker may not accept carrier compensation on freight it owns or controls through common ownership with the shipper, or give shippers anything of value beyond "inexpensive advertising items" (371.9), which is why an asset carrier's brokerage arm and a shipper's in-house logistics subsidiary need the relationships recorded.
+Two more rules in part 371 shape the product. A broker may not offer brokerage service "in any name other than that in which its registration is issued", may not "represent its operations to be that of a carrier," and "any advertising shall show the broker status of the operation" (371.7): the shipper-facing app, the quote email and the invoice name the broker as a broker. And a broker may not accept carrier compensation on freight it owns or controls through common ownership with the shipper, or give shippers anything of value beyond "inexpensive advertising items" (371.9), which is why an asset carrier's brokerage arm and a shipper's in-house logistics subsidiary need the relationships recorded.
 
 The roles live on the party, not the company type. An asset carrier with a brokerage division is one party with the `carrier` and `broker` roles and two dockets; the load says which hat it wore. Whether a given load was brokered or hauled on the company's own trucks decides which records, which insurance and which revenue line apply, so `loads` records it explicitly rather than inferring it from whether a carrier row is set.
 
@@ -59,11 +59,11 @@ The roles live on the party, not the company type. An asset carrier with a broke
 No regulation prescribes what the master contract says; the content is the brokers' and their trade association's convention, visible in the agreements brokers publish. Flock Freight's, as one published example, covers:
 
 - **Status.** "the relationship between Broker and Carrier is that of independent contractor," and the carrier controls its drivers and equipment.
-- **Insurance.** "Auto liability $1,000,000.00 combined single limit per occurrence," "All Risk Broad Form Motor Truck Cargo Legal Liability Coverage minimum $100,000.00 per Occurrence," and general liability of $1,000,000 per occurrence and $2,000,000 aggregate. The products are [Commercial Lines](/books/insurance/commercial-lines#the-lines); the federal minimums and filings are Bonds & Insurance Minimums.
+- **Insurance.** "Auto liability $1,000,000.00 combined single limit per occurrence," "All Risk Broad Form Motor Truck Cargo Legal Liability Coverage minimum $100,000.00 per Occurrence," and general liability of $1,000,000 per occurrence and $2,000,000 aggregate. The products are [Commercial Lines](/books/insurance/commercial-lines#the-lines); the federal minimums and filings are [Bonds & Insurance Minimums](/books/logistics/financial-security-and-insurance#public-liability-minimums).
 - **Safety.** The carrier "represents that it does not have an 'Unsatisfactory' or 'Conditional' safety rating," and must stop if it gets one.
 - **No re-brokering.** The carrier "shall not re-broker, co-broker, subcontract, assign, interline, or transfer the transportation" without consent, the clause that makes double brokering a breach as well as a fraud ([Freight Fraud & Cargo Theft](/books/logistics/freight-fraud)).
-- **Cargo liability.** "Carrier's liability shall be determined under the Carmack Amendment, 49 U.S.C. §14706," with claims accepted within nine months, the statutory floor on a carrier's claim period (Cargo Liability & Claims).
-- **Payment.** Thirty days from an undisputed invoice, POD within 24 hours of delivery, and a notice of assignment to a factor that takes effect 15 days after receipt.
+- **Cargo liability.** "Carrier's liability shall be determined under the Carmack Amendment, 49 U.S.C. §14706," with claims accepted within nine months, the statutory floor on a carrier's claim period ([Cargo Liability & Claims](/books/logistics/cargo-claims#the-carmack-amendment)).
+- **Payment.** Thirty days from an undisputed invoice, POD within 24 hours of delivery, and a notice redirecting payment to a factor (the agreement calls it a Notice of Release) that takes effect 15 days after receipt.
 - **Indemnity and non-solicitation.** The carrier indemnifies the broker for its own performance, and may not solicit the broker's customers during the agreement or for 24 months after.
 - **Term.** One year, renewing, terminable by either side on 30 days' notice.
 
@@ -85,7 +85,7 @@ Confirmations are also a fraud surface: a criminal who intercepts or forges one 
 
 ## Pricing and Margin
 
-A broker prices twice, on different clocks. The **sell** is a contract rate agreed with the shipper in a bid for months of volume on a lane, or a spot quote for one load that day; the **buy** is almost always a spot price for one carrier, negotiated when the load is covered. Contract sell rates go stale as the market moves while spot buy rates follow it daily, which is why broker margins compress when the market tightens and widen when it loosens. RXO's 2025 10-K says it directly: "the market tightened during 2025, with capacity rapidly exiting in certain regions," which "caused buy rates to increase faster than our contractual sell rates." Its revenue less cost of transportation and services was about 19.7% of revenue in 2025 against about 21.6% in 2024 (my division of the filed figures, which include its managed transportation and last mile businesses).
+A broker prices twice, on different clocks. The **sell** is a contract rate agreed with the shipper in a bid for months of volume on a lane, or a spot quote for one load that day; the **buy** is almost always a spot price for one carrier, negotiated when the load is covered. Contract sell rates go stale as the market moves while spot buy rates follow it daily, which is why broker margins compress when the market tightens and widen when it loosens. RXO's 2025 10-K says it directly: the market tightened in 2025, "with capacity rapidly exiting in certain regions driven primarily by regulatory changes and enforcement," which "caused buy rates to increase faster than our contractual sell rates." Its revenue less cost of transportation and services was about 19.7% of revenue in 2025 against about 21.6% in 2024 (my division of the filed figures, which include its managed transportation and last mile businesses).
 
 The inputs to a buy price:
 
@@ -227,8 +227,7 @@ SELECT l.id AS load_id,
        s.bol_number,
        m.currency,
        m.revenue, m.purchased_transportation,
-       m.margin AS broker_compensation,
-       (SELECT max(paid_at) FROM carrier_payments p WHERE p.load_id = l.id) AS carrier_paid_on
+       m.margin AS broker_compensation
 FROM loads l
 JOIN load_shipments ls ON ls.load_id = l.id
 JOIN shipments s ON s.id = ls.shipment_id
@@ -237,7 +236,7 @@ LEFT JOIN load_margins m ON m.load_id = l.id
 WHERE l.arrangement IN ('brokered', 'co_brokered');
 ```
 
-`carrier_payments` stands for whatever records the payment; Paying Carriers, Quick Pay & Factoring defines it, and until then the view reads the payment date from the payables system.
+The one field the view leaves out is the date the broker paid the carrier, which 371.3 also requires. It belongs to the payment record, not to the load; the export joins it by load from wherever payments are recorded (Paying Carriers, Quick Pay & Factoring defines that table), so the view stays valid on the core model alone.
 
 Design notes:
 
