@@ -7,7 +7,7 @@ part = "Walled Gardens"
 tags = ["advertising", "retail-media", "commerce-media", "walled-gardens", "measurement", "data-model"]
 +++
 
-A retail media network is a retailer selling advertising on its own shelves and with its own shoppers' data: sponsored products among its search results, display on its site and app, screens in its stores, and the same audiences carried to streaming TV, social platforms and the open web. Amazon's advertising services were $68.6 billion across the four quarters of 2025; Walmart's global advertising business "grew 46% to nearly $6.4 billion, including VIZIO" in its fiscal year ended January 2026; Instacart's advertising and other revenue was $1,065 million in 2025. IAB and PwC put US commerce media (retail media plus the banks, delivery apps and travel companies that sell ads the same way) at $63.4 billion in 2025, up 18%.
+A retail media network is a retailer selling advertising on its own shelves and with its own shoppers' data: sponsored products among its search results, display on its site and app, screens in its stores, and the same audiences carried to streaming TV, social platforms and the open web. Amazon's advertising services were $68.6 billion across the four quarters of 2025; Walmart's global advertising business "grew 46% to nearly $6.4 billion, including VIZIO" in its fiscal year ended January 2026; Instacart's advertising and other revenue was $1,065 million in 2025. IAB and PwC put US commerce media, which IAB calls "a core performance channel powered by first-party data", at $63.4 billion in 2025, up 18%.
 
 This chapter is the operator's side: what a retailer, marketplace or commerce platform builds to run a network. The seller's side (buying Sponsored Products, reading ACoS, cost-per-sale fees as order charges, reconciling ad charges on a settlement) is Commerce's [Retail Media & Marketplace Ads](/books/commerce/retail-media), and the two map record for record: Commerce's `ad_spend_daily` is the advertiser's import of this volume's `delivery_daily`, and its `attributed_sales` is the advertiser's copy of the network's attributed conversions.
 
@@ -21,10 +21,10 @@ As of November 2026, from filings and network documentation:
 
 | Network | Onsite | Offsite and other | Measurement and data | Scale disclosed |
 | --- | --- | --- | --- | --- |
-| **Amazon Ads** | Sponsored Products, Sponsored Brands (CPC, vCPM, reserved share of voice), display | Amazon Ads Agent (launched in the third quarter of 2026) and Full-Funnel Campaigns combining sponsored ads, display, video and streaming TV | A clean room (Commerce covers Amazon Marketing Cloud) | Advertising services $68.6 billion in 2025 |
+| **Amazon Ads** | Sponsored Products, Sponsored Brands (CPC, vCPM, reserved share of voice), display | Amazon Ads Agent (introduced in the third quarter of 2026) and Full-Funnel Campaigns combining sponsored ads, display, video and streaming TV | A clean room (Commerce covers Amazon Marketing Cloud) | Advertising services $68.6 billion in 2025 |
 | **Chase Media Solutions** | Offers in the Chase app and site | Card-linked offers with cash back | Chase's first-party transaction data | Launched April 3, 2024; about 80 million customers |
 | **Criteo** | Retail media technology for retailers | Performance Media reported as a separate segment | Retail Media reported as a segment | Retail Media contribution ex-TAC $259.7 million in 2025 |
-| **DoorDash** | Ads in the DoorDash app | Advertising partners through Symbiosis | Not covered here | No run rate disclosed; Smart Campaigns launched in the fourth quarter of 2025 |
+| **DoorDash** | Ads in the DoorDash app | Advertising partners through Symbiosis | Not covered here | No run rate disclosed; Smart Campaigns launched in 2025 |
 | **Instacart Ads** | Sponsored products and other formats (Commerce covers them) | Carrot Ads on retailers' own storefronts; audiences on Google, Meta, Pinterest, TikTok and The Trade Desk | Data Hub clean room | Advertising and other revenue $1,065 million in 2025; 9,000+ active brands; 310+ Carrot Ads partners |
 | **Walmart Connect** | Onsite formats (Commerce covers them) | VIZIO TVs as an owned surface | Not covered here | Global advertising nearly $6.4 billion in fiscal 2026, including VIZIO |
 
@@ -42,7 +42,7 @@ A sponsored product is an offer the shopper could already buy, shown higher. The
 
 **Relevance gates the query.** A sponsored product shown for a query it doesn't answer looks like a bad search result. Operators apply a relevance threshold between the query (or the page's product) and the advertised item before the auction, from the same models organic search uses, and Amazon says its ranking "has increasingly given greater weight to relevancy over bid amount", with "the highest ranked ad" being "the one that best balances relevancy and bid value." A threshold is a quality floor in relevance units; the price floor is separate.
 
-**Targeting is keywords, products and categories.** Advertisers bid on search terms (with match types, as in [Keywords and Match Types](/books/advertising/search-advertising#keywords-and-match-types)), on specific products or categories to appear on their pages, or let automatic targeting choose. The auction and price follow general search: Amazon describes "a form of generalized 'second-price' auction" since 2006, with a "hard reserve" to enter and a "soft reserve" the winner may pay, and eBay's Priority listings pay per click "depending on second-price auction results." The FTC's August 2026 complaint alleges that Amazon's soft reserves converted most Sponsored Products auctions into effectively first-price ones, which Amazon denies ([Reserve Prices](/books/advertising/auction-mechanics#reserve-prices)).
+**Targeting is keywords, products and categories.** Advertisers bid on search terms (with match types, as in [Keywords and Match Types](/books/advertising/search-advertising#keywords-and-match-types)), on specific products or categories to appear on their pages, or let automatic targeting choose. The auction and price follow general search: Amazon describes "a form of generalized 'second-price' auction" since 2006, with a "hard reserve" to enter and a "soft reserve" the winner may pay, and eBay's Priority listings pay per click "depending on the second price auction results." The complaint the FTC and 22 states filed on August 31, 2026 alleges that Amazon's soft reserves charged Sponsored Products advertisers their own winning bid "close to 80% of the time", effectively converting most of those auctions into first-price ones; Amazon calls the claim of deception "patently false" ([Reserve Prices](/books/advertising/auction-mechanics#reserve-prices)).
 
 **Placement and ad load are the operator's product decision.** How many of the first results may be sponsored, where in the grid, how often on a product page, and whether sponsored items can displace the organic result for the same item: these set both revenue and the shopping experience, and a network that shows the same product as an ad and as the organic result next to it has paid twice for one slot. My rules: deduplicate an advertised item against its own organic result on the page, cap sponsored slots per results page by a versioned rule (the same shape as feed ad load in [Ad Load and Placement in Feeds](/books/advertising/social-advertising#ad-load-and-placement-in-feeds)), and log each slot's outcome, including slots where no ad cleared the relevance bar.
 
@@ -50,13 +50,13 @@ The onsite ad is also where retail media meets the supplier relationship. The ad
 
 ## Onsite Display and Brand Formats
 
-Beyond sponsored products, networks sell display and video on the site and app (homepage banners, category page takeovers, brand stores, shoppable video), usually as guaranteed buys or programmatic deals rather than per-click auctions. These run through a conventional ad server with priorities and pacing (Ad Servers, in Ad Serving and Creative) and are priced per thousand impressions or viewable impressions, as Amazon's Sponsored Brands offers vCPM and reserved share of voice "with a minimum spend commitment" ([Pricing Models](/books/advertising/pricing-models#flat-fees-sponsorships-and-share-of-voice)). Retailer sites restrict third-party tags for performance and privacy reasons, so the IAB/MRC guidelines acknowledge that onsite viewability tagging by every advertiser partner "is generally not possible", which is one reason networks seek MRC accreditation for their own counting.
+Beyond sponsored products, networks sell display and video on the site and app (homepage banners, category page takeovers, brand stores, shoppable video), usually as guaranteed buys or programmatic deals rather than per-click auctions. These run through a conventional ad server with priorities and pacing (Ad Servers, in Ad Serving and Creative) and are priced per thousand impressions or viewable impressions, as Amazon's Sponsored Brands offers vCPM and a reserved share of voice that "requires a minimum spend commitment" ([Pricing Models](/books/advertising/pricing-models#flat-fees-sponsorships-and-share-of-voice)). Retailer sites restrict third-party tags for performance and privacy reasons, so the IAB/MRC guidelines acknowledge that onsite viewability tagging by every advertiser partner "is generally not possible", which is one reason networks seek MRC accreditation for their own counting.
 
 ## Offsite Extension
 
 Offsite, the network carries its shopper audiences into other companies' inventory: streaming TV, social platforms, the open web. Three models, often combined:
 
-- **Buying as an advertiser on the brand's behalf.** The network buys through a DSP (its own or a partner's) using its audiences, and charges the brand for media plus a fee, then attributes sales from its own transactions. Amazon launched Amazon Ads Agent and Full-Funnel Campaigns combining sponsored ads, display, video and streaming TV in the third quarter of 2026; Instacart partners with Google, Meta, Pinterest, TikTok and The Trade Desk "using our first-party grocery data."
+- **Buying as an advertiser on the brand's behalf.** The network buys through a DSP (its own or a partner's) using its audiences, and charges the brand for media plus a fee, then attributes sales from its own transactions. Amazon introduced Amazon Ads Agent in the third quarter of 2026 and launched Full-Funnel Campaigns in it, combining sponsored ads, display, video and streaming TV; Instacart partners with Google, Meta, Pinterest, TikTok and The Trade Desk "using our first-party grocery data."
 - **Licensing audiences into another platform.** The network makes segments available in a DSP or social platform for the brand's own buys, priced as a data fee.
 - **Selling the network's owned media off the store.** Walmart's VIZIO televisions are an ad surface of their own; Amazon's Prime Video and Fire TV are streaming inventory it owns.
 
@@ -74,23 +74,23 @@ A network's pitch is that it saw the ad and the sale. What it reports is an attr
 - **Outcomes need viewable impressions and filtered traffic.** "The MRC requires viewable impressions for attribution of outcomes to ad exposures"; sophisticated invalid traffic must be filtered for outcomes, and unfiltered outcomes labeled and reported separately. Viewability follows the MRC's 50% of pixels for one continuous second (display) or two seconds (video).
 - **Halo and extrapolation are labeled.** Attributed sales must disclose whether they rest on viewability or extrapolation, and how halo products (the brand's other items) are counted.
 - **Incrementality is a separate claim.** The guidelines cover randomized controlled trials, synthetic controls, matched-market tests and machine-learning models, and encourage outcomes used for pricing or optimization to be "subject to third-party audit", with tools calibrated at least annually.
-- **Accreditation is recommended, not yet common.** The guidelines recommend MRC compliance and accreditation and acknowledge that most retail media organizations don't yet have it.
+- **Accreditation is recommended.** The guidelines recommend that retail media measurement be MRC compliant and "ultimately, accredited", and acknowledge that "the majority of retail media organizations may not reflect or consider viewability in attribution today."
 
 The operator's rules follow directly. An attribution rule is a versioned record (window by click and view, same product or brand halo, online or in-store, viewable-only, invalid traffic filtered) disclosed to the advertiser before the campaign runs, and every attributed sale names the rule it was attributed under. Online and in-store sales are separate sources (in-store sales arrive by loyalty ID or payment card match, later and less completely). And the network keeps its claim separate from incrementality: a sponsored product shown to a shopper who searched the brand by name often buys a sale the organic listing would have won, which only a holdout measures ([Holdouts](/docs/telemetry/experimentation#holdouts)). Commerce's [Measurement](/books/commerce/retail-media#measurement) makes the same point from the brand's side, and recommends total advertising cost of sales against the brand's own order book as the check.
 
 ## Clean Rooms
 
-Networks don't hand brands shopper-level data, so they offer clean rooms where a brand can join its data with the network's and get aggregates back. Amazon Marketing Cloud is the familiar model, with pseudonymized inputs and aggregated outputs above thresholds (Commerce's [Measurement](/books/commerce/retail-media#measurement) covers it and what a brand may upload). Instacart launched Data Hub as a clean room in which brands analyze their customer data against Instacart's first-party data to build audiences and measure off-platform ads. The guidelines refer clean-room measurement to IAB Tech Lab's clean room guidance. For the operator a clean room is a query service with thresholds, noise and audit logs on its outputs; Data Clean Rooms, in Identity and Audiences, covers the models and the privacy techniques.
+Networks don't hand brands shopper-level data, so they offer clean rooms where a brand can join its data with the network's and get aggregates back. Amazon Marketing Cloud is the familiar model, with pseudonymized inputs and aggregated outputs above thresholds (Commerce's [Measurement](/books/commerce/retail-media#measurement) covers it and what a brand may upload). Instacart launched Data Hub, "a privacy-first clean room solution that lets brands analyze their own customer data" alongside Instacart's first-party data; its launch partners use it to build off-platform audiences and measure ad performance across channels. The guidelines refer clean-room measurement to IAB Tech Lab's clean room guidance. For the operator a clean room is a query service with thresholds, noise and audit logs on its outputs; Data Clean Rooms, in Identity and Audiences, covers the models and the privacy techniques.
 
 ## Build or Rent
 
-A retailer starting a network chooses between building the stack (catalog-aware ad server, auction, self-serve tools, attribution, billing) and renting one. Instacart's Carrot Ads "brings the best of Instacart Ads to retailers' and other partners' owned and operated online storefronts and apps", and some grocers launch "leveraging Carrot Ads as their retail media network"; Criteo sells retail media technology to retailers and reports the business as its own segment.
+A retailer starting a network chooses between building the stack (catalog-aware ad server, auction, self-serve tools, attribution, billing) and renting one. Instacart's ad capabilities extend to "retailers' own e-commerce sites powered by our Carrot Ads technology", and grocers such as Associated Food Stores launch "leveraging Carrot Ads as their retail media network"; Criteo sells retail media technology to retailers and reports the business as its own segment.
 
 What the rented model means for the records:
 
 - **The provider is multi-tenant; the retailer is the tenant.** Each retailer's catalog, advertisers, auctions and attribution are isolated, and a brand that advertises on several retailers through the same provider has a separate ad account per retailer, because the inventory, rules and money belong to each retailer ([Multi-Tenancy](/docs/architecture/multi-tenancy)).
 - **The provider's share is a fee.** The provider charges the retailer a revenue share or a platform fee, which is a `fee_terms` row in this volume's model (the one table for every fee a party charges another, from Take Rates & Supply Quality), and the retailer's statement from the provider is an invoice of kind `payable`.
-- **Brands may buy across retailers.** A provider can offer brands one buying interface across its retailers (Instacart's 9,000 brands buy across many grocers' shelves), which means the provider runs auctions per retailer but reports per brand across them, with each retailer's attribution rule applied to its own sales.
+- **Brands may buy across retailers.** A provider can offer brands one buying interface across its retailers (Instacart's ad capabilities "extend across our marketplace and retailers' own e-commerce sites"), which means the provider runs auctions per retailer but reports per brand across them, with each retailer's attribution rule applied to its own sales.
 - **The retailer owns the shopper data.** The provider processes it under the retailer's instructions; offsite activation of one retailer's shoppers for another retailer's advertisers is a different legal relationship that the contract must allow.
 
 My default for a mid-size retailer is to rent the auction and tooling and own three things from day one: the attribution rules and their disclosure, the ad load and relevance policy on its own pages, and the contracts with brands, because those are what its advertisers and regulators will hold it to.
@@ -99,15 +99,15 @@ My default for a mid-size retailer is to rent the auction and tooling and own th
 
 The same model (ads sold against owned transaction data, attributed to transactions the seller observes) runs outside retail:
 
-- **Delivery and mobility apps.** DoorDash launched Smart Campaigns for ads in the fourth quarter of 2025 and said it "nearly doubled the number of advertising partners through Symbiosis from June to December"; it disclosed no advertising run rate. Uber reports an advertising business with a run rate in the billions; its figures were available to me only through secondary summaries. <!-- source-gap: adv-uber-ads-run-rate | secondary | Uber's disclosed advertising revenue run rate in 2025-2026 | closes with: an Uber filing or earnings release text stating the figure | checked: 2026-11-22 -->
-- **Banks and card issuers.** Chase launched Chase Media Solutions on April 3, 2024, "its new digital media business", reaching its roughly 80 million customers with offers that pay cash back, built on Figg, the card-linked marketing platform it acquired in 2022. A bank's ad is an offer; the conversion is a card transaction the bank sees directly.
+- **Delivery and mobility apps.** DoorDash launched Smart Campaigns for ads in 2025 and said it "nearly doubled the number of advertising partners through Symbiosis from June to December"; it disclosed no advertising run rate. Uber reports an advertising business with a run rate in the billions; its figures were available to me only through secondary summaries. <!-- source-gap: adv-uber-ads-run-rate | secondary | Uber's disclosed advertising revenue run rate in 2025-2026 | closes with: an Uber filing or earnings release text stating the figure | checked: 2026-11-22 -->
+- **Banks and card issuers.** Chase launched Chase Media Solutions on April 3, 2024, "its new digital media business", reaching its roughly 80 million customers with offers that pay cash back, after integrating Figg, the card-linked marketing platform JPMorgan Chase acquired in 2022. A bank's ad is an offer; the conversion is a card transaction the bank sees directly.
 - **Travel.** Airlines, hotel groups and booking platforms sell media against travelers' bookings, onsite and offsite. I didn't open a primary source on a travel network's scale or products for this chapter. <!-- source-gap: adv-travel-media-networks | missing | a travel company's media network (airline, hotel or booking platform) products and scale from its own filing or site | closes with: a filing or the network's own product page | checked: 2026-11-22 -->
 
 For engineers the variants differ in the conversion source (an order, a ride, a card transaction, a booking) and in the law that governs the data: card transaction data in particular is financial data under privacy laws that treat it more strictly, and a bank's ad network runs under its banking privacy obligations as well as advertising law (Sensitive Data & Discriminatory Targeting covers sensitive categories).
 
 ## How the Money Is Booked
 
-The network books ad revenue as ads deliver; Amazon recognizes it "as ads are delivered based on the number of clicks or impressions." A retailer that also buys from the advertiser must separate the two relationships: Walmart records advertising "in either net sales or as a reduction to cost of sales", the second when the consideration from a supplier isn't for a distinct service. The accounting test is whether the brand bought a distinct advertising service ([ASC 606 and IFRS 15 in Five Steps](/docs/money/accounting#asc-606-and-ifrs-15-in-five-steps)); Advertising Revenue Accounting, in Contracts and Money, covers it. For the system the rule is that a media buy (an IO or self-serve spend, invoiced by the ad business) and a trade allowance (a deduction on the supplier's invoice, negotiated by merchandising) are different records that never share a line, even when both fund ads.
+The network books ad revenue as ads deliver; Amazon recognizes it "as ads are delivered based on the number of clicks or impressions." A retailer that also buys from the advertiser must separate the two relationships: Walmart records advertising "in either net sales or as a reduction to cost of sales, depending on the nature of the advertising arrangement." The accounting test is whether the brand bought a distinct advertising service ([ASC 606 and IFRS 15 in Five Steps](/docs/money/accounting#asc-606-and-ifrs-15-in-five-steps)); Advertising Revenue Accounting, in Contracts and Money, covers it. For the system the rule is that a media buy (an IO or self-serve spend, invoiced by the ad business) and a trade allowance (a deduction on the supplier's invoice, negotiated by merchandising) are different records that never share a line, even when both fund ads.
 
 ## How to Build It
 
@@ -169,7 +169,7 @@ ALTER TABLE conversions ADD CONSTRAINT conversions_catalog_item_fk
 ALTER TABLE conversions ADD CONSTRAINT conversions_retail_rule_fk
   FOREIGN KEY (retail_attribution_rule_id) REFERENCES retail_attribution_rules (id) NOT VALID;
 ALTER TABLE conversions ADD CONSTRAINT conversions_retail_rule_required_check
-  CHECK (source <> 'retail_sales' OR retail_attribution_rule_id IS NOT NULL) NOT VALID;
+  CHECK (source <> 'retailer_sales' OR retail_attribution_rule_id IS NOT NULL) NOT VALID;
 
 CREATE TABLE audience_activations (      -- an offsite push of shopper audiences
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -202,7 +202,7 @@ FROM conversions c
 JOIN retail_attribution_rules r ON r.id = c.retail_attribution_rule_id
 JOIN ad_events e  ON e.id = c.attributed_event_id   -- sketch: production joins on (occurred_at, id)
 JOIN line_items li ON li.id = e.line_item_id
-WHERE c.source = 'retail_sales'
+WHERE c.source = 'retailer_sales'
   AND c.occurred_at >= date_trunc('month', now()) - interval '3 months'
 GROUP BY 1, 2, 3, 4, 5
 ORDER BY 1, 2, 4, 5;
@@ -247,7 +247,7 @@ Design notes:
 
 **Court records**
 
-- [FTC et al. v. Amazon.com, Inc., No. 2:26-cv-03097 (W.D. Wash.), Complaint (August 31, 2026)](https://ag.ny.gov/sites/default/files/court-filings/federal-trade-commission-et-al-v-amazon.com-inc-complaint-2026_0.pdf), the soft reserve allegations on Sponsored Products
+- [FTC et al. v. Amazon.com, Inc., No. 2:26-cv-03097 (W.D. Wash.), Complaint (August 31, 2026)](https://ag.ny.gov/sites/default/files/court-filings/federal-trade-commission-et-al-v-amazon.com-inc-complaint-2026_0.pdf), the FTC and 22 states as plaintiffs and the soft reserve allegations on Sponsored Products, including winning-bid pricing close to 80% of the time
 
 **Filings**
 
@@ -265,7 +265,8 @@ Design notes:
 
 **In practice**
 
-- [Amazon: Amazon's response to the FTC's lawsuit regarding Sponsored Ads](https://www.aboutamazon.com/md/company-news/amazon-ftc-sponsored-ads-lawsuit-response), the generalized second-price auction since 2006, hard and soft reserves, and relevance-weighted ranking
+- [Amazon: Amazon's response to the FTC's lawsuit regarding Sponsored Ads](https://www.aboutamazon.com/md/company-news/amazon-ftc-sponsored-ads-lawsuit-response), the generalized second-price auction since 2006, hard and soft reserves, relevance-weighted ranking and Amazon's denial
+- [Amazon Ads: Sponsored Products](https://advertising.amazon.com/solutions/products/sponsored-products), eligible categories and Featured Offer eligibility
 - [Amazon Ads: Sponsored Brands](https://advertising.amazon.com/solutions/products/sponsored-brands), CPC, vCPM and reserved share of voice with a minimum commitment
 - [eBay Developers: Promoted Listings overview](https://developer.ebay.com/api-docs/sell/static/marketing/pl-overview.html), Priority cost per click by second-price auction
 - [Chase: Chase launches Chase Media Solutions (April 3, 2024)](https://media.chase.com/news/chase-launches-chase-media-solutions), the media business, its customer reach, cash-back offers and the Figg acquisition
