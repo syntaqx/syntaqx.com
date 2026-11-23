@@ -21,7 +21,7 @@ As of November 2026, from each platform's help pages and the regulators' sites.
 | Platform or regime | What it is | Money or obligation | What the buyer or broker must do |
 | --- | --- | --- | --- |
 | **California Delete Act and DROP** | Registry of data brokers plus the Delete Request and Opt-out Platform, live January 1, 2026, reaching "over 600 registered data brokers" | Annual registration fee "$6,000 plus an associated third-party processing fee"; separate DROP access fees from August 1, 2026 | Register January 1 to 31; from August 1, 2026, access DROP "at least once every 45 days" and process deletions |
-| **Display & Video 360** | Third-party audience lists from data providers, and commerce audiences from commerce media networks | Third-party list fees, which Google says "can range between $0.50 to more than $2 CPM"; commerce audiences "billed as a percent of media cost", optionally with a CPM cap | Read the per-list cost; expect per-provider maximums under AND and exclusions, a random provider under OR |
+| **Display & Video 360** | Third-party audience lists from data providers, and commerce audiences from commerce media networks | Third-party list fees, which Google says "can range between $0.50 to more than $2 CPM"; commerce audiences "billed as a percent of media cost", optionally with a CPM cap | Read data costs by provider and list in the Third-Party Data Provider report; expect per-provider maximums under AND and exclusions, a random provider under OR |
 | **FTC (federal)** | Orders against brokers selling sensitive location data (X-Mode, InMarket, Gravy Analytics and Venntel, Mobilewalla, Kochava) and PADFAA enforcement | Civil penalties under PADFAA "up to $53,088 per violation" | No sale of sensitive location data without consent; no retention of bid request data beyond the auction (Mobilewalla) |
 | **IAB Tech Lab Data Transparency Standard** | A label for audience segments, "up to 20" standardized disclosure fields | Compliance program with "an annual business audit" | Publish a label per segment; listing in the Transparency Center |
 | **Oregon** | Data broker registry since January 1, 2024 | $600 a year | Register before brokering Oregon residents' data; renew before year end |
@@ -37,7 +37,7 @@ Three patterns run through the table:
 
 The paths, from most to least direct:
 
-- **DSP data marketplaces.** Providers list segments in a DSP; the buyer adds them to a line item's targeting; the DSP charges the data fee per impression with the media and pays the provider. DV360's third-party audience lists work this way, with the per-list cost shown at targeting and a Third-Party Data Provider report of costs by provider and list.
+- **DSP data marketplaces.** Providers list segments in a DSP; the buyer adds them to a line item's targeting; the DSP charges the data fee per impression with the media and pays the provider. DV360's third-party audience lists work this way, with a Third-Party Data Provider report of costs by provider and list.
 - **Exchange and curator deals.** The segment is applied on the sell side: a curator or SSP packages inventory with audience data into a deal, and the data cost is in the deal price or the curator's fee (Deals, PMPs & Curation covers curation fees).
 - **Seller-defined and curated segments.** The publisher or its data partner sends segment IDs in `user.data` with a `segtax` (Targeting & Taxonomies), so the buyer receives the audience without an identifier.
 - **Onboarding to a platform.** A broker's file is matched to a platform's users and appears as an audience in the buyer's account, priced per use or by license.
@@ -127,7 +127,7 @@ Worked example: an impression bought at a $4.00 CPM (4,000 micros of media) unde
 
 ## What a Segment Label Should Say
 
-A buyer cannot audit a broker's segment directly, so the industry's answer is disclosure. IAB Tech Lab's Data Transparency Standard "establishes minimum disclosure requirements for audience data providers", covering standalone providers, providers that bundle data with media, and data marketplaces, with "up to 20 new standardized disclosure fields" on matters like recency, provenance and segmentation criteria; the field list is in the standard's version 1.2 document. It explicitly does not grade a segment's efficacy or quality. Organizations can complete a compliance program that "requires an annual business audit to confirm that the information provided within the labelling is reliable", typically 2 to 5 months, which earns a seal and a listing in the Tech Lab Transparency Center, a member-only repository that "will only house descriptive segment labels instead of the segment IDs themselves." The Audience Taxonomy 1.1 is the vocabulary the labels use (Targeting & Taxonomies).
+A buyer cannot audit a broker's segment directly, so the industry's answer is disclosure. IAB Tech Lab's Data Transparency Standard "establishes minimum disclosure requirements for audience data providers", covering standalone providers, providers that bundle data with media, and data marketplaces, with "up to 20 new standardized disclosure fields" on matters like recency, provenance and segmentation criteria; the field list is in the standard's version 1.2 document. It explicitly does not grade a segment's efficacy or quality. Organizations can complete a compliance program that "requires an annual business audit to confirm that the information provided within the labelling is reliable", typically 2 to 5 months, which earns a seal and a listing in the Tech Lab Transparency Center, a member-only repository that "will only house descriptive segment labels instead of the segment IDs themselves." The standard's page points to IAB Tech Lab's Audience Taxonomy as the matching vocabulary (Targeting & Taxonomies).
 
 For a platform listing segments, the label fields become columns on the segment record (below), so buyers can filter on them and the platform can refuse segments whose label says something its policy forbids (a precise-location source, a sensitive category, a modeled segment presented as observed).
 
@@ -154,9 +154,9 @@ Location data from apps and ad tech has been the FTC's main data broker target. 
 - **X-Mode Social and Outlogic (January 9, 2024).** The FTC's "first settlement with a data broker concerning the collection and sale of sensitive location information"; banned from selling sensitive location data.
 - **InMarket (January 18, 2024).** Banned from selling or licensing any precise location data; the FTC cited nearly 2,000 audience lists such as "wealthy and not healthy".
 - **Avast (February 22, 2024).** $16.5 million and a ban on selling browsing data for advertising; its Jumpshot subsidiary had sold browsing data to more than 100 parties from 2014 to 2020.
-- **Mobilewalla (December 3, 2024).** The FTC alleged Mobilewalla collected location data "from real-time bidding exchanges and third-party aggregators", more than 500 million advertising IDs with precise location from January 2018 to June 2020, and that "it unfairly collected and retained the information in the bid request, even when it didn't have a winning bid." The proposed order bans use, sale and disclosure of sensitive location data and bars collecting or retaining auction data "for any purpose other than participating in the auction".
+- **Mobilewalla (December 3, 2024).** The FTC alleged Mobilewalla collected location data "from real-time bidding exchanges and third-party aggregators", more than 500 million advertising IDs with precise location from January 2018 to June 2020, and that "it unfairly collected and retained the information in the bid request, even when it didn't have a winning bid." The proposed order bans use, sale and disclosure of sensitive location data and bars collecting or retaining auction data "for any other purpose than participating in the auction".
 - **Gravy Analytics and Venntel (final January 14, 2025).** Barred from selling, disclosing or using sensitive location data except in limited national security or law enforcement circumstances; the FTC said Gravy used geofencing to build and sell lists of people who visited health care facilities and places of worship.
-- **Kochava and Collective Data Solutions (May 4, 2026).** After litigation that began with a 2022 complaint, a stipulated order (approved 2-0) bars both from selling, licensing, transferring, sharing or disclosing sensitive location data unless consumers give "affirmative express consent" and the data serves a service they directly requested; no monetary amount was stated.
+- **Kochava and Collective Data Solutions (May 4, 2026).** After litigation that began with a 2022 complaint, a stipulated order (approved by the Commission 2-0, entered June 26, 2026) bars both from selling, licensing, transferring, sharing or disclosing sensitive location data unless consumers give "affirmative express consent" and the data serves a service they directly requested; no monetary amount was stated.
 
 What these mean for ad tech engineering:
 
@@ -183,7 +183,7 @@ CREATE TABLE data_segments (             -- a third-party segment offered for ta
   marketplace_org_id  UUID REFERENCES organizations (id),  -- the DSP or exchange listing it
   external_code       TEXT NOT NULL,      -- the provider's segment ID
   name                TEXT NOT NULL,
-  taxonomy_node_id    UUID,               -- Targeting & Taxonomies: Audience Taxonomy node
+  taxonomy_node_id    UUID REFERENCES taxonomy_nodes (id),  -- an Audience Taxonomy node
   build_method        TEXT NOT NULL CHECK (build_method IN ('observed', 'declared',
                         'inferred', 'modeled')),
   data_sources        TEXT[] NOT NULL,    -- e.g. {'purchase','survey','app_location','offline'}
@@ -194,11 +194,11 @@ CREATE TABLE data_segments (             -- a third-party segment offered for ta
   geography           TEXT[] NOT NULL,    -- countries or regions the members are in
   label_ref           TEXT,               -- the Data Transparency Standard label, if published
   label_audited_on    DATE,               -- last annual audit, if in the compliance program
-  fee_term_id         UUID,               -- the price, in fee_terms
+  fee_term_id         UUID REFERENCES fee_terms (id),  -- the current price, a 'data_fee' row
   policy_status       TEXT NOT NULL DEFAULT 'pending' CHECK (policy_status IN ('pending',
                         'approved', 'restricted', 'rejected')),
   status              TEXT NOT NULL CHECK (status IN ('active', 'paused', 'retired')),
-  UNIQUE (provider_org_id, marketplace_org_id, external_code),
+  UNIQUE NULLS NOT DISTINCT (provider_org_id, marketplace_org_id, external_code),
   CHECK (NOT sensitive_category OR policy_status <> 'approved'),
   CHECK (NOT ('bidstream' = ANY (data_sources)))   -- bid requests are not a data source
 );
@@ -212,7 +212,7 @@ CREATE TABLE data_segment_usage_daily (  -- the impressions a data fee bills on
   impressions_charged BIGINT NOT NULL CHECK (impressions_charged >= 0),
   fee_micros          BIGINT NOT NULL CHECK (fee_micros >= 0),  -- sum of per-impression fees, rounded once
   currency            CHAR(3) NOT NULL,
-  fee_term_id         UUID NOT NULL,      -- the fee_terms row and version priced on
+  fee_term_id         UUID NOT NULL REFERENCES fee_terms (id),  -- the row priced on; a price change is a new row
   version             INT NOT NULL DEFAULT 1,  -- restated with delivery_daily
   PRIMARY KEY (day, line_item_id, data_segment_id)
 );
@@ -250,6 +250,11 @@ CREATE TABLE broker_deletion_runs (      -- one DROP cycle, or another registry'
   CHECK (due_by > list_downloaded_at)
 );
 
+-- A percent-of-media data fee can carry a CPM cap (DV360 commerce audiences).
+ALTER TABLE fee_terms ADD COLUMN cap_cpm_micros BIGINT;
+ALTER TABLE fee_terms ADD CONSTRAINT fee_terms_cap_check
+  CHECK (cap_cpm_micros IS NULL OR (method = 'percent' AND cap_cpm_micros >= 0)) NOT VALID;
+
 -- Which segments a line item uses comes from its targeting expression; billing joins usage to fees.
 ALTER TABLE invoice_lines ADD COLUMN data_segment_id UUID;
 ALTER TABLE invoice_lines ADD CONSTRAINT invoice_lines_data_segment_fk
@@ -272,7 +277,7 @@ HAVING max(r.list_downloaded_at) + interval '45 days' < now() + interval '7 days
 Design notes:
 
 - **The segment record is its label.** Build method, sources, location use, sensitivity, refresh, lookback and geography are columns, not marketing copy, so a buyer filters on them and the platform's policy check reads them; a sensitive segment can never be `approved`.
-- **Prices live in `fee_terms`.** A segment points at its fee term, and usage records which version it was priced on, so a provider's price change does not rewrite past invoices and every party's fees stay in one table.
+- **Prices live in `fee_terms`.** A segment points at its current `data_fee` row (a CPM, or a percent of `media_cost` with `cap_cpm_micros`), and usage records the row it was priced on, so a provider's price change does not rewrite past invoices and every party's fees stay in one table.
 - **Usage bills like delivery.** `data_segment_usage_daily` is computed from the same impression events and day rule as `delivery_daily`, restated with it when late data or IVT arrives, and becomes `invoice_lines` of kind `data_fee` tied to the segment; the per-provider maximum rules are applied when usage is computed, so a provider's charge is never the sum of its lists.
 - **Registrations are per state and year.** A broker's compliance calendar and a marketplace's provider screening both read the same table; a lapsed California registration should pause that provider's segments for California inventory.
 - **Deletion is a clocked batch.** Each DROP cycle has a due date 45 days out; matched people are deleted and suppressed from sale (a suppression list is the only way not to re-collect them from the next file), exceptions are counted and justified, and a late cycle is a status, not a silent gap.
@@ -315,7 +320,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails); retenti
 - [FTC: Action against Mobilewalla for collecting and selling sensitive location data (December 3, 2024)](https://www.ftc.gov/news-events/news/press-releases/2024/12/ftc-takes-action-against-mobilewalla-collecting-selling-sensitive-location-data), data from RTB exchanges, retained losing-bid data and the auction-data limit
 - [FTC: Finalizes order prohibiting Gravy Analytics and Venntel from selling sensitive location data (January 14, 2025)](https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-finalizes-order-prohibiting-gravy-analytics-venntel-selling-sensitive-location-data), the ban, geofenced lists and the sensitive data program
 - [FTC: Ban on Kochava and subsidiary selling sensitive location data (May 4, 2026)](https://www.ftc.gov/news-events/news/press-releases/2026/05/ftc-ban-kochava-subsidiary-selling-sensitive-location-data-settle-charges-they-sold-location-data), the stipulated order, consent requirement and 2-0 vote
-- [FTC: Kochava case page](https://www.ftc.gov/legal-library/browse/cases-proceedings/ftc-v-kochava-inc), the 2022 complaint and litigation history
+- [FTC: Kochava case page](https://www.ftc.gov/legal-library/browse/cases-proceedings/ftc-v-kochava-inc), the 2022 complaint, litigation history and the June 26, 2026 stipulated order
 - [FTC: Reminds data brokers of their obligations to comply with PADFAA (February 9, 2026)](https://www.ftc.gov/news-events/news/press-releases/2026/02/ftc-reminds-data-brokers-their-obligations-comply-padfaa), what PADFAA prohibits, the countries, sensitive data, 13 letters and the per-violation penalty
 - [US Department of Justice: Data Security Program](https://www.justice.gov/nsd/data-security), 28 CFR Part 202 in effect April 8, 2025, covered data and the October 5, 2025 requirements
 

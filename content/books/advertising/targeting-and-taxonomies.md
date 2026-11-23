@@ -39,7 +39,7 @@ There are four levels of context, from coarse to fine:
 - **Property and section.** The site or app and its section, from the publisher's ad unit hierarchy and `site.cat`/`sectioncat` in the request. Cheap, stable, declared by the seller.
 - **Page or content item.** The article, video or episode: `pagecat` and `content.cat` with `cattax`, `content.keywords` (or `kwarray`, never both), `genre` and `genres` with `gtax`, `language`. Declared by the seller or a classifier it uses.
 - **Classifier output.** A vendor's categories for the URL or content ID, often with brand safety and suitability labels alongside, available pre-bid through a segment or post-bid in reports. Brand Safety & Suitability covers the verification vendors.
-- **Semantic and keyword matching.** The buyer's own keywords or concepts matched against page text. Google's content keywords work this way: "This method of targeting uses the keywords or topics you've chosen to match your ads to relevant sites/videos", with Google analyzing each page's "text, language, link structure, and page structure to determine its central theme", and for YouTube "text, metadata, visual content, audio, and channel information".
+- **Semantic and keyword matching.** The buyer's own keywords or concepts matched against page text. Google's content keywords work this way: "This method of targeting uses the keywords or topics you've chosen to match your ads to relevant sites/videos", with Google analyzing each page's text, language, link structure and page structure, and each YouTube video's text, metadata, visual content, audio content and channel information, to determine its central theme.
 
 The engineering consequences:
 
@@ -50,7 +50,7 @@ The engineering consequences:
 
 ## The IAB Tech Lab Taxonomies
 
-**Content Taxonomy.** The shared vocabulary of what content is about. IAB Tech Lab lists 3.1 (December 2024, which adds Thriller to the genre category), 3.0 with Descriptive Vectors (June 2022), 2.2 (December 2020), 2.1 (October 2020), 2.0 (November 2017) and a deprecated 1.0 that "should not be used" for categorization without SCD (sensitive content) flags. Version 3.0 expanded coverage from about 400 categories to over 1,500, improved support for news, video and CTV, podcasts, radio, games and app stores, and removed some items, making it "non-backwards compatible with previous releases." Tech Lab publishes mapping files (Content 1.0 to 2.0 and 2.1, Content 1.0 to Ad Product 2.0 and back, CTV and podcast genre mappings) and an open-source Taxonomy Mapper for converting 2.x codes to 3.0.
+**Content Taxonomy.** The shared vocabulary of what content is about. IAB Tech Lab lists 3.1 (December 2024, which adds Thriller to the genre category), 3.0 (June 2022, with a companion Descriptive Vectors file), 2.2 (December 2020), 2.1 (October 2020), 2.0 (November 2017) and a deprecated 1.0 that "should not be used" for categorization without SCD (sensitive content) flags. Version 3.0 expanded coverage from about 400 categories to over 1,500, improved support for news, video and CTV, podcasts, radio, games and app stores, and "includes some deletions which make this version of the taxonomy non-backwards compatible with previous releases." Tech Lab publishes mapping files (Content 1.0 to 2.0 and 2.1, Content 1.0 to Ad Product 2.0 and back, CTV and podcast genre mappings) and an open-source Taxonomy Mapper for converting 2.x codes to 3.0.
 
 **Audience Taxonomy.** The shared vocabulary of who a segment describes. The current version is 1.1, released October 2020 after a public comment period, with consumer privacy features added; its top tier labels each segment as demographic, interest-based or purchase-intent based, which is how a buyer tells how a segment was built. Tech Lab calls it "a key element in IAB Tech Lab's Data Transparency Standard", which "facilitates consistent labeling of audience data by first-party and third-party sources" (Data Brokers & Third-Party Data covers the data label).
 
@@ -94,7 +94,7 @@ My rules for taxonomies in a platform:
 
 ## Curated Audiences
 
-IAB Tech Lab's Seller Defined Audiences specification was renamed Curated Audiences in December 2024. It is incubated in Project Rearc and built on Prebid, OpenRTB 2.6 community extensions, the Transparency Center and the Data Transparency Standard: a publisher, data management platform or data provider assigns users to segments in a standard taxonomy (Audience Taxonomy 1.1 or a registered vendor taxonomy) and sends only the segment IDs in `user.data` with `segtax`, so the buyer gets the audience without an identifier. The specification was last updated August 25, 2025, per Tech Lab's page.
+IAB Tech Lab's Seller Defined Audiences specification was renamed Curated Audiences in December 2024. It is incubated in Project Rearc and built on Prebid, OpenRTB 2.6 community extensions, the Transparency Center and the Data Transparency Standard: a publisher, data management platform or data provider assigns users to segments in a standard taxonomy (Audience Taxonomy 1.1 or a registered vendor taxonomy) and sends only the segment IDs in `user.data` with `segtax`, so the buyer gets the audience without an identifier. Tech Lab's page was last updated August 25, 2025.
 
 Deals, PMPs & Curation covers Curated Audiences as deal terms (a curated audience is a deal targeting clause naming a taxonomy and segment IDs). For targeting generally, the points are that a curated segment is only as good as the label describing how it was built (Data Brokers & Third-Party Data covers the Data Transparency Standard's label), that the seller decides membership so the buyer cannot verify it, and that segment IDs travel without a user identifier but are still about a person, so sending them is subject to the same consent and opt-out signals as any targeting data ([Pseudonymous Is Not Anonymous](/docs/telemetry/consent-and-privacy#pseudonymous-is-not-anonymous)).
 
@@ -125,7 +125,7 @@ The engineering rules:
 - **Keep the location's source, accuracy and age.** A geofence or ZIP target evaluated on an IP-derived location is a different product from one on a fresh GPS fix; the request record keeps `type`, `accuracy` and `lastfix`, and line items can require a minimum.
 - **Coarsen before you store.** The core model's `ad_requests` keeps only country and coarse region "no precise location without consent"; precise coordinates are used in the request path, if at all, and not logged ([Location Tracking](/docs/building-blocks/location-tracking) covers measurement error and fences in general).
 - **Mind the code systems.** OpenRTB's `country` is alpha-3 and most databases use alpha-2; `metro` is Google's code, not a licensed Nielsen DMA; a conversion table belongs in the geo catalog.
-- **Sensitive places are a targeting rule.** Washington's My Health My Data Act bans geofencing around in-person health care facilities within 2,000 feet, and other states restrict selling precise location; Sensitive Data & Discriminatory Targeting covers them, and the targeting validator enforces them.
+- **Sensitive places are a targeting rule.** Washington's My Health My Data Act makes it unlawful to geofence (a virtual boundary of 2,000 feet or less) an entity that provides in-person health care services to track consumers, collect health data or send them ads, and other states restrict selling precise location; Sensitive Data & Discriminatory Targeting covers them, and the targeting validator enforces them.
 
 ## Device and Technology
 
@@ -371,3 +371,4 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 **Regulation**
 
 - [Washington RCW 19.373.010: Definitions](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373.010), the 2,000-foot geofence definition in the My Health My Data Act
+- [Washington RCW 19.373.080: Geofence restrictions](https://app.leg.wa.gov/RCW/default.aspx?cite=19.373.080), the ban on geofencing in-person health care providers to track, collect data or send ads
