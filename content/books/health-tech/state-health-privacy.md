@@ -48,7 +48,7 @@ Washington set the template, and its definitions are broad enough to catch most 
 
 **California** reaches the same data through two laws. The California Consumer Privacy Act makes "personal information collected and analyzed concerning a consumer's health" sensitive personal information (Civil Code 1798.140), with a right to limit its use. And the Confidentiality of Medical Information Act deems certain consumer products to be health care providers (next section).
 
-What follows for a product: **build for Washington everywhere.** A consumer app or direct-pay telehealth service can't reliably tell in advance which users a given state's law covers, and the strictest rule (separate opt-ins to collect and share, a signed authorization to sell, no geofenced ads near clinics) is also the cheapest one to operate nationally.
+What follows for a product: **build for Washington everywhere.** A consumer app or direct-pay telehealth service can't reliably tell in advance which users a given state's law covers, and the strictest rule (separate opt-ins to collect and share, a signed authorization to sell, no geofenced ads near clinics) is also the cheapest one to operate nationally. The geofence bans as an ad system enforces them, alongside the other states' sensitive-place rules, are the Advertising volume's [Location and Sensitive Places](/books/advertising/sensitive-data-and-discriminatory-targeting#location-and-sensitive-places).
 
 ## California: CMIA and Sensitive Services
 

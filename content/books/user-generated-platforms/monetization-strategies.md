@@ -42,7 +42,7 @@ Two shapes come out of the table. **Content platforms monetize attention and sel
 
 **How it shapes the product.** Ads make the platform want time spent and sessions above all, which pulls ranking toward engagement and the product toward feeds over directed tasks. They make logged-out traffic worth serving (Reddit monetizes visitors arriving from search with conversation-page ads), they make every new country a growth bet with low near-term revenue, and they introduce a third party with a veto over content: advertisers who won't appear next to certain posts. Ad suitability turns into a content-rating system, and creators whose work is unsuitable earn less or nothing ([Ads, Brand Safety & Data Licensing](/books/user-generated-platforms/ads-and-data-licensing)). Ad load is the main dial and has diminishing returns: Pinterest served 49% more ads in 2025 while the average price per ad fell 22%.
 
-**What it needs.** Scale before it pays, an ads system (auction, targeting, measurement, billing) that most platforms rent at first and build later, an ad review pipeline, and privacy compliance that varies by country and age (profiling-based ads to known minors are banned in the EU under the Digital Services Act).
+**What it needs.** Scale before it pays, an ads system (auction, targeting, measurement, billing) that most platforms rent at first and build later (the Advertising volume's [Self-Serve Ad Platforms](/books/advertising/self-serve-ad-platforms) covers building one), an ad review pipeline, and privacy compliance that varies by country and age (profiling-based ads to known minors are banned in the EU under the Digital Services Act).
 
 ## Premium Subscriptions
 
@@ -104,7 +104,7 @@ Three models share one shape: the platform collects money because of a creator a
 
 **How it shapes the product.** Seller ads are a second take rate that sellers opt into, and they compete for the same slots as organic results. Priced per sale, they make the platform's incentive close to the buyer's (show what sells); priced per click, they pay for traffic whether or not it converts. Either way they push sellers who don't buy ads down, so promoted listings become a cost of doing business on mature marketplaces, and the effective take rate rises without a fee change. They need labels ("Sponsored" or "Ad"), relevance floors so paid results still match the query, and ranking that keeps an organic result from being displaced by a worse paid one ([Listings, Search & Ranking](/books/user-generated-platforms/listings-search-and-ranking#promoted-listings)).
 
-**What it needs.** A campaign per seller with a model (cost per sale or per click), a rate or bid, a budget and a validity; attribution from impression and click to the sale or booking; and a charge posted as a fee line against the seller's balance, reversed when the sale is refunded.
+**What it needs.** A campaign per seller with a model (cost per sale or per click), a rate or bid, a budget and a validity; attribution from impression and click to the sale or booking; and a charge posted as a fee line against the seller's balance, reversed when the sale is refunded. The operator's decisions behind the slot (where it sits, how the auction blends bid and relevance) are the Advertising volume's [Onsite Sponsored Products](/books/advertising/retail-media-networks#onsite-sponsored-products).
 
 ## Seller Subscriptions
 
@@ -179,7 +179,7 @@ Mixing models is normal and every pair conflicts somewhere. The ones that shape 
 
 | Collision | What goes wrong | How platforms manage it |
 | --- | --- | --- |
-| **Ads against user experience** | More ads per session earn less each (Pinterest: ads served up 49%, price per ad down 22%) and drive users away | Ad load caps per surface, frequency caps, quality floors on ads, measuring retention alongside revenue |
+| **Ads against user experience** | More ads per session earn less each (Pinterest: ads served up 49%, price per ad down 22%) and drive users away | Ad load caps per surface, frequency caps ([Frequency Capping](/books/advertising/pacing-and-frequency#frequency-capping)), quality floors on ads, measuring retention alongside revenue |
 | **Ads against premium** | The users most likely to buy ad-free are the most valuable ad viewers | Price premium above the ad revenue those users would have produced; Reddit's US fourth-quarter ARPU of $10.79 is about $3.60 a month, the floor for a US ad-free price before engagement skew |
 | **Ads against creators** | Ad suitability demonetizes creators; ad shares tied to ad minutes pay creators for heavier ad loads | Published suitability rules with appeal; ad shares with a minimum load, as Twitch's three-minute rule |
 | **Promoted listings against relevance** | Paid results that don't match the query cost buyer trust; sellers who don't pay sink | Relevance floors, labels, caps on sponsored slots, pricing per sale rather than per click |
