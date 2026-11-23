@@ -170,7 +170,7 @@ The remedies trade variance for validity:
 
 ## Holdouts
 
-A **holdout** keeps a small share of users on the old experience across many launches, for months, to check that a quarter of "wins" added up to something. Statsig describes holdouts as measuring "the features' combined effect over months," recommends "a low single-digit holdout percentage, such as 1% to 2%," and running them "for three to six months, then releasing it." Holdouts cost something real: those users miss improvements, and the old code paths must keep working for them. Keep them small, time-boxed, and out of anything safety- or compliance-related.
+A **holdout** keeps a small share of users on the old experience across many launches, for months, to check that a quarter of "wins" added up to something. Statsig describes holdouts as measuring "the features' combined effect over months," recommends "a low single-digit holdout percentage, such as 1% to 2%," and running them "for three to six months, then releasing it." Holdouts cost something real: those users miss improvements, and the old code paths must keep working for them. Keep them small, time-boxed, and out of anything safety- or compliance-related. Advertising lift tests are holdouts from a campaign, with an extra problem: finding which control users would have seen the ad ([Ghost Ads](/books/advertising/incrementality-and-lift#ghost-ads)).
 
 ## Tools
 

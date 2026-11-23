@@ -44,7 +44,7 @@ On August 31, 2026 the Commission designated Reddit and Roblox as very large onl
 | Risk mitigation | 35 | Reasonable, proportionate measures against the assessed risks, including design and recommender changes |
 | Independent audit | 37 | An audit at least once a year by an independent organization, and an implementation report within one month of recommendations in an audit that isn't positive |
 | Recommender option | 38 | "At least one option for each of their recommender systems which is not based on profiling" |
-| Ad repository | 39 | A searchable repository of the ads shown, who paid and whom they targeted |
+| Ad repository | 39 | A searchable repository of the ads shown, who paid and whom they targeted ([Ad Repositories](/books/advertising/dsa-dma-and-political-ads#ad-repositories)) |
 | Researcher data access | 40 | Access to data for vetted researchers, and no terms that block access to publicly accessible data |
 | Six-monthly transparency reports | 42 | Reports every six months, with content moderation staff per official language, their qualifications, accuracy indicators per language, and recipients per member state; risk assessments, mitigation measures and audit reports published within three months of each audit report |
 

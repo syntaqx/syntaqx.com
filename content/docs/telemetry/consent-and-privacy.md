@@ -34,7 +34,7 @@ Where consent is required, it has to come first. The ICO puts it plainly: "If no
 - **Refusing is as easy as accepting,** with "reject all" as prominent as "accept all."
 - **Nothing is pre-enabled.** Purpose toggles start off.
 - **Continued use is not consent,** and neither are browser settings alone.
-- **Purposes are separate:** analytics, personalization and advertising are distinct choices, not one bundle.
+- **Purposes are separate:** analytics, personalization and advertising are distinct choices, not one bundle. For ads in Europe, the IAB's Transparency and Consent Framework fixes the list of purposes and how the choice travels to every vendor ([Consent Management & the TCF](/books/advertising/consent-and-the-tcf#purposes-features-and-legal-bases)).
 - **Withdrawal is as easy as giving consent,** and stops the technology.
 - **You can prove it.** Keep a record of what was chosen, when and against which version of the notice.
 

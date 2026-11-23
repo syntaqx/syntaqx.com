@@ -72,7 +72,7 @@ Static assets get content-hashed filenames and `Cache-Control: public, max-age=3
 
 ## Third-Party Scripts
 
-Every tag, widget and pixel runs on your users' devices and counts against your Core Web Vitals. Each needs an owner and a reason, loads after the content, and goes when nobody can say what it's for.
+Every tag, widget and pixel runs on your users' devices and counts against your Core Web Vitals. Each needs an owner and a reason, loads after the content, and goes when nobody can say what it's for. Ads are among the largest contributors to layout shift, and how ad tags affect layout, loading and responsiveness is in [Core Web Vitals and Ads](/books/advertising/ad-tags-and-rendering#core-web-vitals-and-ads).
 
 ## References
 

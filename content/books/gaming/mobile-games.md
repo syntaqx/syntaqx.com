@@ -131,7 +131,7 @@ Most mobile games are free, so growth is bought: the studio pays ad networks for
 
 ### iOS: ATT and AdAttributionKit
 
-Since iOS 14.5, "your app must request tracking authorization before it can get the advertising identifier" (IDFA), through App Tracking Transparency. If the app hasn't asked, or the user declined, the identifier is all zeros. Device-level attribution on iOS therefore works only for users who opt in on both the advertising app and the publishing app. What ATT did to a store's ad measurement is the Commerce volume's [Signals After ATT](/books/commerce/acquisition-and-attribution#signals-after-att).
+Since iOS 14.5, "your app must request tracking authorization before it can get the advertising identifier" (IDFA), through App Tracking Transparency. If the app hasn't asked, or the user declined, the identifier is all zeros. Device-level attribution on iOS therefore works only for users who opt in on both the advertising app and the publishing app. What ATT did to a store's ad measurement is the Commerce volume's [Signals After ATT](/books/commerce/acquisition-and-attribution#signals-after-att), and the identifier, the postbacks and the ATT competition cases from the ad networks' side are the Advertising volume's [Mobile Ad IDs, ATT & SKAdNetwork](/books/advertising/mobile-ad-ids-and-att#idfa-and-app-tracking-transparency).
 
 For everyone else, Apple provides aggregated, privacy-preserving attribution: SKAdNetwork, and its successor **AdAttributionKit** (iOS 17.4 and later), which also covers alternative app marketplaces; Apple's SKAdNetwork documentation now directs app ad campaigns to AdAttributionKit. Apps "don't need to use" App Tracking Transparency before calling these APIs. How it works, from Apple's documentation:
 
@@ -152,7 +152,7 @@ Google had planned a replacement: the Privacy Sandbox on Android, with the Attri
 
 ### Measurement Partners
 
-In practice almost every mobile game uses a **mobile measurement partner** (MMP), such as AppsFlyer or Adjust, an SDK in the client and a service that receives ad clicks and impressions from networks, matches installs to them, collects the iOS postbacks the networks forward, and reports per campaign. Their defaults are the industry's: AppsFlyer opens "a click lookback window" with "a default duration of 7 days" (configurable from 1 to 30) and calls seven days "the industry standard"; Adjust's click-based window also defaults to 7 days, with 24 hours for impression-based attribution.
+In practice almost every mobile game uses a **mobile measurement partner** (MMP), such as AppsFlyer or Adjust, an SDK in the client and a service that receives ad clicks and impressions from networks, matches installs to them, collects the iOS postbacks the networks forward, and reports per campaign. Their defaults are the industry's: AppsFlyer opens "a click lookback window" with "a default duration of 7 days" (configurable from 1 to 30) and calls seven days "the industry standard"; Adjust's click-based window also defaults to 7 days, with 24 hours for impression-based attribution. How an MMP is built, self-attributing networks and postback forwarding included, is the Advertising volume's [Mobile Measurement Partners](/books/advertising/mobile-measurement-partners#the-architecture).
 
 What the MMP doesn't do is own your numbers. My rules:
 
@@ -162,7 +162,7 @@ What the MMP doesn't do is own your numbers. My rules:
 
 ## Ad Mediation and Rewarded Ads
 
-A game that shows ads rarely talks to one ad network. A **mediation** layer sits between the game and many networks and picks the best-paying ad for each slot. AppLovin MAX describes automating "waterfall management through a combination of in-app bidding and CPM updating," with networks competing in a "unified auction"; Unity LevelPlay (formerly ironSource) does the same job. The game integrates one SDK and one set of callbacks; the mediation dashboard decides which networks fill.
+A game that shows ads rarely talks to one ad network. A **mediation** layer sits between the game and many networks and picks the best-paying ad for each slot. AppLovin MAX describes automating "waterfall management through a combination of in-app bidding and CPM updating," with networks competing in a "unified auction"; Unity LevelPlay (formerly ironSource) does the same job. The game integrates one SDK and one set of callbacks; the mediation dashboard decides which networks fill. How that auction works from the ad side, waterfalls against in-app bidding and impression-level revenue, is the Advertising volume's [Waterfalls and In-App Bidding](/books/advertising/in-app-advertising#waterfalls-and-in-app-bidding).
 
 The form that suits games is the **rewarded ad**, where the player chooses to watch in exchange for an in-game item ([Ads in Mobile Games](/books/gaming/monetization#ads-in-mobile-games) covers the design and AdMob's server-side verification). Mediation platforms offer the same server-to-server callback, and their details show what a robust reward endpoint has to handle:
 
