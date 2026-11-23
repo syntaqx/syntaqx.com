@@ -15,11 +15,11 @@ This chapter owns the volume's metric definitions: one definition per metric, th
 
 Six choices change most numbers in this chapter, and each definition below states them:
 
-- **Whose count.** The publisher's ad server, the exchange, the DSP, the advertiser's ad server or a measurement vendor; `delivery_daily.source` keeps one row per source, and the insertion order names the controlling one (Insertion Orders & Standard Terms). An impression count without a source is not a number anyone can bill or reconcile.
+- **Whose count.** The publisher's ad server, the exchange, the DSP, the advertiser's ad server or a measurement vendor; `delivery_daily.source` keeps one row per source, and the insertion order names the controlling one ([Insertion Orders & Standard Terms](/books/advertising/insertion-orders-and-terms)). An impression count without a source is not a number anyone can bill or reconcile.
 - **Whose money.** Gross (what the advertiser paid, fees included), media cost (what the DSP paid the exchange), or seller net (what the publisher received). The core model's gross-versus-net split ([The Core Data Model](/books/advertising/advertising-business#the-core-data-model)) applies to every price metric.
 - **The denominator.** Impressions served, measured, viewable or valid; bids or bid requests; clicks or interactions; page views, sessions or ad requests. A ratio with an unstated denominator is two different metrics sharing a name.
 - **Invalid traffic.** Before or after filtering, general only or sophisticated as well, as of which classification run. Billable metrics are after filtering; diagnostic ones are often before.
-- **The attribution setting.** Every conversion-based metric (CVR, CPA, ROAS, ACoS) depends on the model and windows (Attribution); Google's conversion rate "might be over 100%" when counting "Every" conversion per interaction.
+- **The attribution setting.** Every conversion-based metric (CVR, CPA, ROAS, ACoS) depends on the model and windows ([Attribution](/books/advertising/attribution)); Google's conversion rate "might be over 100%" when counting "Every" conversion per interaction.
 - **The clock.** Event time or arrival time; the ad account's, the contract's or the publisher's time zone; the day of the impression or the day of the conversion. A ROAS computed by impression day and one computed by conversion day are both right and different.
 
 My rule, as in the other volumes ([Why the Same Metric Disagrees](/books/commerce/commerce-metrics#why-the-same-metric-disagrees) in Commerce): every metric is a versioned definition with its source, money basis, denominator, IVT treatment, attribution setting and clock; every report names the definition and version it used; a reported period is frozen, and late events, IVT findings and attribution updates create restatements rather than silent changes.
@@ -47,15 +47,15 @@ All prices are in the core's units: CPMs and bids in integer micros of the curre
 
 | Metric | Definition | Over | Owning chapter |
 | --- | --- | --- | --- |
-| **CPM** (cost per mille) | Cost ÷ impressions × 1,000, on one source's billable count, after IVT filtering | `delivery_daily.cost_micros`, `impressions` | Pricing Models |
-| **Clearing CPM** | The price the winner paid in the auction, before downstream fees | `auctions.clearing_cpm_micros` | Auction Mechanics |
-| **Bid CPM** | The price bid, after shading | `bids.price_cpm_micros` | Demand-Side Platforms |
+| **CPM** (cost per mille) | Cost ÷ impressions × 1,000, on one source's billable count, after IVT filtering | `delivery_daily.cost_micros`, `impressions` | [Pricing Models](/books/advertising/pricing-models) |
+| **Clearing CPM** | The price the winner paid in the auction, before downstream fees | `auctions.clearing_cpm_micros` | [Auction Mechanics](/books/advertising/auction-mechanics) |
+| **Bid CPM** | The price bid, after shading | `bids.price_cpm_micros` | [Demand-Side Platforms](/books/advertising/demand-side-platforms) |
 | **eCPM** (effective CPM) | Revenue (seller side) or cost (buyer side) ÷ impressions × 1,000, whatever the pricing model the buyer used | `delivery_daily`, or the publisher's earnings | [Publishers & Yield](/books/advertising/publishers-and-yield#the-yield-metrics) |
-| **vCPM** | Cost ÷ viewable impressions × 1,000, under a named viewability standard | `delivery_daily.viewable_impressions` | Pricing Models; Viewability & Attention |
+| **vCPM** | Cost ÷ viewable impressions × 1,000, under a named viewability standard | `delivery_daily.viewable_impressions` | Pricing Models; [Viewability & Attention](/books/advertising/viewability-and-attention) |
 | **CPC** | Cost ÷ valid clicks | `delivery_daily.clicks` | Pricing Models |
-| **CPA** | Cost ÷ attributed conversions of the named action, under a named attribution setting | `attribution_credits`, `conversions` | Attribution; Automated Bidding |
-| **CPI** | Cost ÷ attributed installs; eCPI when bought on another basis | `conversions` with `kind = 'install'` | Mobile Measurement Partners; [Gaming](/books/gaming/mobile-games#cpi-roas-and-payback) |
-| **CPV, CPCV** | Cost ÷ views under the line item's view definition; cost ÷ completed views | `delivery_daily.views`, `completed_views` | Pricing Models; VAST & Video Ads |
+| **CPA** | Cost ÷ attributed conversions of the named action, under a named attribution setting | `attribution_credits`, `conversions` | [Attribution](/books/advertising/attribution); [Automated Bidding](/books/advertising/automated-bidding) |
+| **CPI** | Cost ÷ attributed installs; eCPI when bought on another basis | `conversions` with `kind = 'install'` | [Mobile Measurement Partners](/books/advertising/mobile-measurement-partners); [Gaming](/books/gaming/mobile-games#cpi-roas-and-payback) |
+| **CPV, CPCV** | Cost ÷ views under the line item's view definition; cost ÷ completed views | `delivery_daily.views`, `completed_views` | Pricing Models; [VAST & Video Ads](/books/advertising/vast-and-video-ads) |
 | **Take rate** | One intermediary's fees ÷ the spend that passed through it, on matched logs | `log_match_runs`, `fee_terms` | [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality#how-to-build-it) |
 
 Notes on the variants:
@@ -82,12 +82,12 @@ Page RPM is the product of requests per page view, fill rate and eCPM ([The Form
 
 | Metric | Definition | Over | Owning chapter |
 | --- | --- | --- | --- |
-| **Bid rate** | Callouts answered with at least one bid ÷ callouts sent | `bid_requests.status` | How Programmatic Works |
+| **Bid rate** | Callouts answered with at least one bid ÷ callouts sent | `bid_requests.status` | [How Programmatic Works](/books/advertising/how-programmatic-works) |
 | **Timeout rate** | Callouts that timed out ÷ callouts sent | `bid_requests.status = 'timeout'` | How Programmatic Works; [Real-Time Bidding at Scale](/books/advertising/bidding-at-scale#the-latency-budget) |
-| **Win rate** | Auctions won ÷ auctions bid in | `bids.outcome` | Demand-Side Platforms |
+| **Win rate** | Auctions won ÷ auctions bid in | `bids.outcome` | [Demand-Side Platforms](/books/advertising/demand-side-platforms) |
 | **Render rate** | Impressions counted ÷ auctions won | `ad_events`, `bids` | [Counting Impressions & Clicks](/books/advertising/counting-impressions-and-clicks) |
 | **Shading** | 1 − bid ÷ unshaded bid, averaged over bids | `bids.price_cpm_micros`, `unshaded_cpm_micros` | Demand-Side Platforms |
-| **Floor clearance** | Auctions with a bid at or above the floor ÷ auctions with a floor | `auctions.status` | Floors & Yield Optimization |
+| **Floor clearance** | Auctions with a bid at or above the floor ÷ auctions with a floor | `auctions.status` | [Floors & Yield Optimization](/books/advertising/floors-and-yield-optimization) |
 
 The two denominators of win rate are the commonest disagreement on the buy side. Display & Video 360's help defines it over "all impressions bid on"; some reports divide by bid requests received, which mixes the bidder's selectivity into its competitiveness. The volume's definition is wins over bids; bids over bid requests is the bid rate, and the product of the two is wins over requests, a third metric with its own name (win rate on requests) when it is needed. A win is also not an impression: the render rate measures the gap, which is where lost creatives, page exits and invalid traffic show up.
 
@@ -96,12 +96,12 @@ The two denominators of win rate are the commonest disagreement on the buy side.
 | Metric | Definition | Over | Owning chapter |
 | --- | --- | --- | --- |
 | **CTR** | Valid clicks ÷ impressions, same source | `delivery_daily.clicks`, `impressions` | [Counting Impressions & Clicks](/books/advertising/counting-impressions-and-clicks) |
-| **CVR** (conversion rate) | Attributed conversions ÷ interactions that can be tracked to a conversion, same period, named action and setting | `attribution_credits`, `ad_events` | Attribution |
-| **Video completion rate (VCR)** | Completed views ÷ video starts | `ad_events` kinds `video_start`, `complete` | VAST & Video Ads |
-| **ROAS** | Attributed conversion value ÷ cost, as a ratio | `conversions.value_micros`, `attribution_credits.credit_ppm`, `delivery_daily.cost_micros` | Attribution; Automated Bidding |
-| **ACoS** | Cost ÷ attributed sales, as a ratio; the inverse of ROAS | Same inputs | Retail Media Networks; [Commerce](/books/commerce/retail-media#measurement) |
+| **CVR** (conversion rate) | Attributed conversions ÷ interactions that can be tracked to a conversion, same period, named action and setting | `attribution_credits`, `ad_events` | [Attribution](/books/advertising/attribution) |
+| **Video completion rate (VCR)** | Completed views ÷ video starts | `ad_events` kinds `video_start`, `complete` | [VAST & Video Ads](/books/advertising/vast-and-video-ads) |
+| **ROAS** | Attributed conversion value ÷ cost, as a ratio | `conversions.value_micros`, `attribution_credits.credit_ppm`, `delivery_daily.cost_micros` | Attribution; [Automated Bidding](/books/advertising/automated-bidding) |
+| **ACoS** | Cost ÷ attributed sales, as a ratio; the inverse of ROAS | Same inputs | [Retail Media Networks](/books/advertising/retail-media-networks); [Commerce](/books/commerce/retail-media#measurement) |
 | **Total ACoS (TACoS)** | Cost ÷ all sales of the advertised items, attributed or not | Cost, the advertiser's order book | [Commerce](/books/commerce/retail-media#measurement) |
-| **Incremental ROAS (iROAS)** | Incremental conversion value from a lift test ÷ cost of the test cell | `lift_study_results` | Incrementality & Lift |
+| **Incremental ROAS (iROAS)** | Incremental conversion value from a lift test ÷ cost of the test cell | `lift_study_results` | [Incrementality & Lift](/books/advertising/incrementality-and-lift) |
 
 Notes on the variants:
 
@@ -114,13 +114,13 @@ Notes on the variants:
 
 | Metric | Definition | Over | Owning chapter |
 | --- | --- | --- | --- |
-| **Measured rate** | Impressions measured as viewable or non-viewable ÷ rendered served impressions (the MRC's "Measured Rate") | `viewability_measurements.status` | Viewability & Attention |
+| **Measured rate** | Impressions measured as viewable or non-viewable ÷ rendered served impressions (the MRC's "Measured Rate") | `viewability_measurements.status` | [Viewability & Attention](/books/advertising/viewability-and-attention) |
 | **Viewability rate** | Viewable impressions ÷ measured (viewable plus non-viewable) impressions, under a named standard | `viewability_measurements`, `delivery_daily.viewable_impressions` | Viewability & Attention |
 | **Viewable impressions per impression** | Viewable ÷ all impressions | Same | Viewability & Attention |
-| **IVT rate** | Invalid impressions ÷ gross impressions (valid plus invalid), by class (GIVT, SIVT) and measurer | `delivery_daily.invalid_impressions`, `sivt_impressions` | Invalid Traffic & Ad Fraud |
+| **IVT rate** | Invalid impressions ÷ gross impressions (valid plus invalid), by class (GIVT, SIVT) and measurer | `delivery_daily.invalid_impressions`, `sivt_impressions` | [Invalid Traffic & Ad Fraud](/books/advertising/invalid-traffic-and-ad-fraud) |
 | **Invalid click rate** | Invalid clicks ÷ gross clicks | `delivery_daily.invalid_clicks` | Invalid Traffic & Ad Fraud |
-| **Brand-safe rate** | Impressions classified within the advertiser's suitability profile ÷ measured impressions | `brand_safety_daily` | Brand Safety & Suitability |
-| **Discrepancy** | (Controlling count − compared count) ÷ the named denominator count | `reconciliation_runs` | Reconciliation & Discrepancies |
+| **Brand-safe rate** | Impressions classified within the advertiser's suitability profile ÷ measured impressions | `brand_safety_daily` | [Brand Safety & Suitability](/books/advertising/brand-safety-and-suitability) |
+| **Discrepancy** | (Controlling count − compared count) ÷ the named denominator count | `reconciliation_runs` | [Reconciliation & Discrepancies](/books/advertising/reconciliation-and-discrepancies) |
 
 Notes on the variants:
 
@@ -133,10 +133,10 @@ Notes on the variants:
 
 | Metric | Definition | Over | Owning chapter |
 | --- | --- | --- | --- |
-| **Reach** | Unique audience with a viewable impression ÷ universe × 100 (or as a count) | Person- or household-level exposures, universe estimates | Audience & Cross-Media Measurement |
+| **Reach** | Unique audience with a viewable impression ÷ universe × 100 (or as a count) | Person- or household-level exposures, universe estimates | [Audience & Cross-Media Measurement](/books/advertising/audience-measurement) |
 | **Average frequency** | Viewable impressions ÷ unique audience with a viewable impression | Same | Audience & Cross-Media Measurement |
 | **Rating** | Viewable impressions in a period ÷ universe × 100 | Same | Audience & Cross-Media Measurement |
-| **GRP** (gross rating points) | Sum of ratings across a schedule; reach × frequency; viewable impressions ÷ universe × 100 | Same | Audience & Cross-Media Measurement; Linear TV, Upfronts & Addressable TV |
+| **GRP** (gross rating points) | Sum of ratings across a schedule; reach × frequency; viewable impressions ÷ universe × 100 | Same | Audience & Cross-Media Measurement; [Linear TV, Upfronts & Addressable TV](/books/advertising/linear-tv-and-upfronts) |
 | **TRP** (target rating points) | GRPs against the buy's target demographic's universe | Same | Audience & Cross-Media Measurement |
 | **Unique reach** (platform) | Distinct users or devices reached, as the platform deduplicates | Platform reports | Reporting & Data Pipelines |
 

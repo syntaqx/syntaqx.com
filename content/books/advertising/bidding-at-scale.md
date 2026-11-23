@@ -12,7 +12,7 @@ A real-time bidder answers far more requests than it wins. Every bid request is 
 
 That is what makes it hard. The latency budget is fixed by the protocol and the exchange, and every stage inside it (parsing, filtering, looking up the user, scoring with a model, pricing, serializing) spends part of it; the traffic volume is set by partners and grows faster than revenue; and the cheapest request to process is the one never sent, which means the exchange and the bidder both need models of what the other will do. This chapter covers how traffic is metered between exchanges and bidders (QPS and callout quotas), how the latency budget is spent, the stages inside a bidder and where to cut, traffic shaping on both sides, caching, the cost of the wire, and cost per query as the number that decides whether traffic is worth taking. It extends `ad_requests` and `bids` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) and the callout and connection records the Programmatic part adds.
 
-Other chapters own the protocol and the parties. How Programmatic Works (in Programmatic) owns the bid request lifecycle and `bid_requests`; OpenRTB owns the objects; SSPs & Ad Exchanges owns `bidder_connections` and `connection_filters`; Demand-Side Platforms owns the bidder's pipeline from the buyer's side, bid shading and `supply_sources`; Machine Learning for Ads owns the models the bidder calls. The previous chapter, [Ad Platform Architecture](/books/advertising/ad-platform-architecture), owns the request path and data path split this chapter assumes. Generic capacity and cost engineering belong to Hosting & Cloud: [Autoscaling & Cost](/books/hosting-and-cloud/autoscaling-and-cost), [Transit, Peering and Interconnection](/books/hosting-and-cloud/networks-peering-and-ip-addresses#transit-peering-and-interconnection) and [FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills); the playbook owns [Admission Control](/docs/architecture/admission-control) and [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
+Other chapters own the protocol and the parties. [How Programmatic Works](/books/advertising/how-programmatic-works) (in Programmatic) owns the bid request lifecycle and `bid_requests`; [OpenRTB](/books/advertising/openrtb) owns the objects; [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) owns `bidder_connections` and `connection_filters`; [Demand-Side Platforms](/books/advertising/demand-side-platforms) owns the bidder's pipeline from the buyer's side, bid shading and `supply_sources`; [Machine Learning for Ads](/books/advertising/machine-learning-for-ads) owns the models the bidder calls. The previous chapter, [Ad Platform Architecture](/books/advertising/ad-platform-architecture), owns the request path and data path split this chapter assumes. Generic capacity and cost engineering belong to Hosting & Cloud: [Autoscaling & Cost](/books/hosting-and-cloud/autoscaling-and-cost), [Transit, Peering and Interconnection](/books/hosting-and-cloud/networks-peering-and-ip-addresses#transit-peering-and-interconnection) and [FinOps & Surprise Bills](/books/hosting-and-cloud/finops-and-surprise-bills); the playbook owns [Admission Control](/docs/architecture/admission-control) and [Retries & Timeouts](/docs/architecture/retries-and-timeouts).
 
 ## How the Platforms Do It
 
@@ -30,7 +30,7 @@ Two things are common to every exchange that publishes rules. Capacity is alloca
 
 ## QPS, Quotas and Who Pays for a Callout
 
-The unit of traffic is the **callout**: one bid request to one bidder for one auction, recorded as a `bid_requests` row in How Programmatic Works. QPS is callouts per second per connection, and it is metered from the exchange's side because the exchange chooses what to send.
+The unit of traffic is the **callout**: one bid request to one bidder for one auction, recorded as a `bid_requests` row in [How Programmatic Works](/books/advertising/how-programmatic-works). QPS is callouts per second per connection, and it is metered from the exchange's side because the exchange chooses what to send.
 
 How a quota is set, on Authorized Buyers as the documented example:
 
@@ -39,7 +39,7 @@ How a quota is set, on Authorized Buyers as the documented example:
 - **Priority within the quota.** "Programmatic Guarantee requests are always prioritized", with requests the bidder is likely to bid on favored next; above the quota, other pretargeting matches "are dropped".
 - **Inaccuracy at small volume.** The system "is less accurate at small volumes": a limit of "about 1,000 QPS or less" can be exceeded, sometimes doubled, so a small bidder sizes for more than its quota.
 
-The economics are asymmetric. The exchange pays to build and send each callout and to wait for it; the bidder pays to receive, parse and decide. Neither is paid until an impression bills, so both want the other to filter: the exchange wants bidders to declare what they will buy (pretargeting, `connection_filters` in SSPs & Ad Exchanges), and the bidder wants the exchange to send only what it is likely to buy (shaping, below). A quota is the negotiated ceiling between them, and spend-based quotas make the ceiling follow value.
+The economics are asymmetric. The exchange pays to build and send each callout and to wait for it; the bidder pays to receive, parse and decide. Neither is paid until an impression bills, so both want the other to filter: the exchange wants bidders to declare what they will buy (pretargeting, `connection_filters` in [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges)), and the bidder wants the exchange to send only what it is likely to buy (shaping, below). A quota is the negotiated ceiling between them, and spend-based quotas make the ceiling follow value.
 
 My rule for a bidder: size capacity per region for the quota plus a margin, never for the average, because a quota is a ceiling the exchange can fill at any second, and a bidder that falls behind starts timing out, which lowers its quota through error throttling. For an exchange: record the quota and its source on every connection, so a drop in a bidder's volume can be traced to its own limit, its spend, its errors or shaping.
 
@@ -126,11 +126,11 @@ Two practices follow. **Measure the network, don't assume it**: the return-trip 
 A bidder is a funnel of stages ordered by cost, so that most requests exit before the expensive ones. The order that every public description converges on:
 
 1. **Parse and validate.** Decode JSON or protobuf, reject malformed requests with HTTP 400, answer obvious non-matches with 204. OpenRTB says calls with no content return 204 and "an empty bid response" is another way to say no-bid.
-2. **Pre-filter on the request alone.** Supply rules (`supply_sources` in Demand-Side Platforms: blocked sellers, unauthorized paths, MFA lists), ads.txt authorization, the consent signals, the channel and format. These need no user lookup and remove a large share of traffic.
+2. **Pre-filter on the request alone.** Supply rules (`supply_sources` in [Demand-Side Platforms](/books/advertising/demand-side-platforms): blocked sellers, unauthorized paths, MFA lists), ads.txt authorization, the consent signals, the channel and format. These need no user lookup and remove a large share of traffic.
 3. **Retrieve candidates.** Find the line items whose targeting matches, from an inverted index over targeting expressions in the line item snapshot ([Ad Servers](/books/advertising/ad-servers#building-one) describes the index). A few thousand line items can be scanned; a few million can't.
 4. **Check budget, pacing and frequency.** Each candidate's regional budget allocation and pacing participation rate, and the user's frequency counts where the consent mode allows a user key.
 5. **Look up the user.** The user store (segments, recency, syncs), keyed by the identifier the request carries and the mode allows. This is the stage most likely to blow the budget, so it is bounded by a timeout and allowed to miss.
-6. **Score.** Predict click, conversion or view probabilities per candidate with the models from Machine Learning for Ads; at scale this is the largest compute cost per bid.
+6. **Score.** Predict click, conversion or view probabilities per candidate with the models from [Machine Learning for Ads](/books/advertising/machine-learning-for-ads); at scale this is the largest compute cost per bid.
 7. **Price.** Value per impression from the line item's goal and the predictions, then bid shading against the win-rate model; the result is written to `bids` with `value_cpm_micros`, `unshaded_cpm_micros`, `win_probability_ppm` and `bid_model_version`.
 8. **Respond.** Serialize the bid with creative, deal and notice URLs.
 
@@ -145,7 +145,7 @@ Traffic shaping is the exchange deciding, per callout, whether a bidder is likel
 - **Keep exploring.** Monetize sends "New and low-scoring traffic ... in controlled amounts, enabling bidders to explore new opportunities". Without an exploration share, a shaping model only ever sees traffic it already predicted well and can't learn that a bidder's appetite changed.
 - **Deals weigh heavily.** Smart Throttling counts "Deal presence" among its inputs, and Authorized Buyers prioritizes programmatic guaranteed requests within the quota; neither page says deal requests bypass shaping entirely.
 
-SSPs & Ad Exchanges records the mechanism: `bidder_connections.exploration_bp` is the exploration share and `bid_requests.shaping` says whether each callout went because it scored, because it was exploration, or because it carried a deal. Two consequences for a bidder. Its volume can fall without any change on its side, because the exchange's model of it changed; and a new campaign that wants inventory the bidder never bought before will see little of it until exploration traffic shows the bidder now bids there. A bidder that changes strategy should tell its exchanges, or widen its declared filters, rather than wait for the models to notice.
+[SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) records the mechanism: `bidder_connections.exploration_bp` is the exploration share and `bid_requests.shaping` says whether each callout went because it scored, because it was exploration, or because it carried a deal. Two consequences for a bidder. Its volume can fall without any change on its side, because the exchange's model of it changed; and a new campaign that wants inventory the bidder never bought before will see little of it until exploration traffic shows the bidder now bids there. A bidder that changes strategy should tell its exchanges, or widen its declared filters, rather than wait for the models to notice.
 
 Shaping on the bidder's side is the declared filter (pretargeting): telling the exchange in advance what not to send. It is cheaper than any model because the request is never built. My rule: keep declared filters in step with what the bidder actually buys (formats, countries, publishers it blocks), review them when supply rules change, and leave value-based selection to the exchange's shaping, which sees traffic the bidder never does.
 
@@ -159,7 +159,7 @@ What can and can't be cached on the request path:
 | Model weights and embeddings for ads | Yes | Loaded with the model version | Fixed for the model's life |
 | User profile lookups | Briefly, with negative caching | Per-node LRU with a short TTL; cache misses too | A user seen once is often seen again within seconds; most IDs are unknown ([Negative Caching](/docs/architecture/application-caching#negative-caching)) |
 | Seller, domain and app metadata | Yes | Snapshot or long TTL | Slow-changing reference data |
-| ads.txt and sellers.json results | Yes | Crawl results, versioned | ads.txt's default cache expiry is 7 days (ads.txt, sellers.json & SupplyChain) |
+| ads.txt and sellers.json results | Yes | Crawl results, versioned | ads.txt's default cache expiry is 7 days ([ads.txt, sellers.json & SupplyChain](/books/advertising/ads-txt-sellers-json-and-schain)) |
 | Budget remaining | No | Regional allocation counters | A cached budget is an overspend |
 | Frequency counts | No (read-through only) | Home-region key-value store | A cached count is a cap violation |
 | Bids and VAST for later rendering | Yes, by the seller | Prebid Cache: bids cached by UUID with a `ttlseconds`, and PBS-Go adds "A 60-second buffer" | The ad server or player fetches the winning markup after the auction |
@@ -202,7 +202,7 @@ A bidder's correctness and its performance are both tested on real traffic shape
 
 ## How to Build It
 
-How Programmatic Works defines `bid_requests` (one callout, with `latency_ms`, `status`, `request_bytes`), SSPs & Ad Exchanges defines `bidder_connections` (endpoint, region, protocol, `tmax_ms`, `max_qps`, `gzip`, `exploration_bp`) and `connection_filters`, and Demand-Side Platforms adds the pricing columns to `bids`. This chapter adds the quota history per connection, the bidder's funnel by stage and reason, and the request-path cost that cost per query is computed from.
+[How Programmatic Works](/books/advertising/how-programmatic-works) defines `bid_requests` (one callout, with `latency_ms`, `status`, `request_bytes`), [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) defines `bidder_connections` (endpoint, region, protocol, `tmax_ms`, `max_qps`, `gzip`, `exploration_bp`) and `connection_filters`, and [Demand-Side Platforms](/books/advertising/demand-side-platforms) adds the pricing columns to `bids`. This chapter adds the quota history per connection, the bidder's funnel by stage and reason, and the request-path cost that cost per query is computed from.
 
 ```sql
 CREATE TABLE callout_quotas (            -- the QPS ceiling in force on a connection, and why
@@ -306,7 +306,7 @@ Design notes:
 ## Auditing
 
 - **Why volume changed.** For every connection, the quota in force by source, the shaping share and the error rate by hour, so a partner's question about lost traffic has a dated answer.
-- **What was sent to whom.** The callouts with their shaping reason, region and the consent-based fields removed, from How Programmatic Works' `bid_requests`.
+- **What was sent to whom.** The callouts with their shaping reason, region and the consent-based fields removed, from [How Programmatic Works](/books/advertising/how-programmatic-works)' `bid_requests`.
 - **What the bidder did with it.** The funnel by stage and reason, and the bids with their model versions and shading.
 - **What it cost.** Request-path cost by service, region and counterparty, with the allocation rule, next to the revenue it produced.
 
