@@ -11,7 +11,7 @@ A deal is an agreement between a seller and a buyer that rides on the programmat
 
 Deals are hard because a deal ID is a promise that every system in the chain has to keep the same way, and none of them can see the others' configuration. The seller sets the deal up in its SSP or ad server, the buyer types the same ID into a DSP line item, and the impression only transacts if the SSP's targeting, the deal's floor, the buyer's targeting, budget, frequency caps and creative approval, and the publisher ad server's priorities all line up on the same request. When they don't, the deal "doesn't spend", and the seller sees "buyer did not bid" while the buyer sees "no matching requests". Curation adds a party between them whose fee comes out of the same price, which the standards on auction transparency only partly cover.
 
-This chapter covers the transaction types and how each is signaled in OpenRTB, deal IDs and how deals are set up on SSPs, ad servers and DSPs (including the IAB Tech Lab Deals API), curation and curators, Curated Audiences (the specification that was Seller Defined Audiences until December 2024), curator fees and what the MRC's auction transparency standards say about fees, and how to troubleshoot a deal that doesn't spend. It extends `deals` and `buyer_seats` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model): the core `deals` row already holds the deal ID, kind, floor or fixed price and terms; this chapter adds the OpenRTB terms as columns, the allowed seats as rows, the deal's inventory and audience targeting, curation packages, deal syncs and a daily deal health record. OpenRTB owns the `pmp` and `deal` objects in the full protocol; [Demand-Side Platforms](/books/advertising/demand-side-platforms) owns how a DSP's line items buy deals and its supply paths (its `supply_sources`); [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) owns the exchange's auction and the fee applied to it; Floors & Yield Optimization owns how deal floors are priced; Auction Mechanics owns first- and second-price behavior inside a private auction; Targeting & Taxonomies owns the audience and content taxonomies; and Insertion Orders & Standard Terms owns the contract around a programmatic guaranteed deal. [How the Money Splits](/books/advertising/advertising-business#how-the-money-splits) shows where deal fees land in the programmatic dollar.
+This chapter covers the transaction types and how each is signaled in OpenRTB, deal IDs and how deals are set up on SSPs, ad servers and DSPs (including the IAB Tech Lab Deals API), curation and curators, Curated Audiences (the specification that was Seller Defined Audiences until December 2024), curator fees and what the MRC's auction transparency standards say about fees, and how to troubleshoot a deal that doesn't spend. It extends `deals` and `buyer_seats` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model): the core `deals` row already holds the deal ID, kind, floor or fixed price and terms; this chapter adds the OpenRTB terms as columns, the allowed seats as rows, the deal's inventory and audience targeting, curation packages, deal syncs and a daily deal health record, and records curator and curation platform fees as `fee_terms` rows ([Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality#how-to-build-it)). OpenRTB owns the `pmp` and `deal` objects in the full protocol; [Demand-Side Platforms](/books/advertising/demand-side-platforms) owns how a DSP's line items buy deals and its supply paths (its `supply_sources`); [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) owns the exchange's auction and the fee applied to it; Floors & Yield Optimization owns how deal floors are priced; Auction Mechanics owns first- and second-price behavior inside a private auction; Targeting & Taxonomies owns the audience and content taxonomies; and Insertion Orders & Standard Terms owns the contract around a programmatic guaranteed deal. [How the Money Splits](/books/advertising/advertising-business#how-the-money-splits) shows where deal fees land in the programmatic dollar.
 
 ## How the Platforms Do It
 
@@ -344,17 +344,14 @@ CREATE TABLE curation_packages (         -- a curator's product: inventory plus 
   curator_org_id      UUID NOT NULL REFERENCES organizations (id),
   platform_org_id     UUID NOT NULL REFERENCES organizations (id),  -- the SSP it runs on
   name                TEXT NOT NULL,
-  fee_model           TEXT NOT NULL CHECK (fee_model IN ('percent_of_bid', 'fixed_cpm')),
-  fee_rate_bp         INT CHECK (fee_rate_bp BETWEEN 0 AND 10000),    -- percent_of_bid, in basis points
-  fee_cpm_micros      BIGINT CHECK (fee_cpm_micros >= 0),             -- fixed_cpm
-  platform_fee_bp     INT CHECK (platform_fee_bp BETWEEN 0 AND 10000),
   fees_applied        TEXT NOT NULL DEFAULT 'pre_auction' CHECK (fees_applied IN ('pre_auction',
                         'post_auction')),  -- net bidding, as the MRC standard encourages
   agreement_ref       TEXT NOT NULL,      -- the curator terms version
-  status              TEXT NOT NULL CHECK (status IN ('draft', 'active', 'paused', 'ended')),
-  CHECK ((fee_model = 'percent_of_bid') = (fee_rate_bp IS NOT NULL)),
-  CHECK ((fee_model = 'fixed_cpm') = (fee_cpm_micros IS NOT NULL))
+  status              TEXT NOT NULL CHECK (status IN ('draft', 'active', 'paused', 'ended'))
 );
+-- The fees themselves are fee_terms rows of kind 'curation_fee' scoped to each curated deal
+-- (fee_terms.deal_id): the curator's margin, charged by the curator, and the platform's tech fee,
+-- charged by the platform to the curator, each a percent of 'clearing_price' or a CPM.
 
 ALTER TABLE deals ADD CONSTRAINT deals_curation_package_fk
   FOREIGN KEY (curation_package_id) REFERENCES curation_packages (id) NOT VALID;
@@ -397,7 +394,7 @@ CREATE TABLE deal_health_daily (         -- the funnel, per deal, day and source
 ALTER TABLE invoice_lines DROP CONSTRAINT invoice_lines_kind_check;
 ALTER TABLE invoice_lines ADD CONSTRAINT invoice_lines_kind_check
   CHECK (kind IN ('media', 'platform_fee', 'data_fee', 'verification_fee', 'ad_serving_fee',
-    'revenue_share', 'curator_fee', 'ivt_credit', 'make_good_credit', 'discrepancy_adjustment',
+    'revenue_share', 'curation_fee', 'ivt_credit', 'make_good_credit', 'discrepancy_adjustment',
     'rebate', 'tax')) NOT VALID;
 
 CREATE INDEX CONCURRENTLY deals_curator_idx ON deals (curator_org_id) WHERE curator_org_id IS NOT NULL;
@@ -409,7 +406,7 @@ Design notes:
 - **Terms are versioned.** A changed floor, seat list or targeting clause is a new `terms_version`, and `deal_syncs.terms_version` records what each destination has. A destination behind the current version is `out_of_date`, which is the most common reason a "fixed" deal still doesn't spend.
 - **Targeting clauses name their taxonomy.** Curated audience and content segments carry the `segtax` value they came from, so a segment ID is never read in the wrong taxonomy and the request path can put the same value in `ext.segtax`.
 - **Floors say what they're net of.** `floor_basis` makes the comparison explicit, and the bid path computes the net bid on the same basis before comparing it to the floor.
-- **Every fee is its own amount.** `deal_health_daily` carries gross, curator fee, platform fee and net per day, and `invoice_lines` gains a `curator_fee` kind, so a curator's statement, a publisher's payout and a buyer's invoice are all sums of recorded amounts.
+- **Every fee is its own amount.** The curator's margin and the platform's tech fee are `fee_terms` rows scoped to each curated deal, `deal_health_daily` carries gross, curator fee, platform fee and net per day, and `invoice_lines` gains a `curation_fee` kind (the same word as the fee term's), each line pointing at its term through `fee_term_id`, so a curator's statement, a publisher's payout and a buyer's invoice are all sums of recorded amounts.
 - **Both sides' funnels land in one place.** `deal_health_daily` has a `source` so the seller's and the buyer's counts sit side by side; a DSP that shares deal reporting (or a Deals API status) fills the buyer row. The `findings` array holds the diagnosis, and `deal.health_changed` events notify the owning side.
 - **Guaranteed deals are checked as guarantees.** A programmatic guaranteed deal carries `booked_impressions`, links to its insertion order through the line item that books it, and is paced and reported like a guaranteed line item; Pacing & Frequency Capping covers delivery.
 

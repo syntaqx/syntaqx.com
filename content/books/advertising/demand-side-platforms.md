@@ -153,7 +153,7 @@ The inputs are public files and the DSP's own logs:
 - **Duplicates.** `source.tid` is the same transaction ID across every copy of one opportunity, so the DSP can count how many paths offered the same impression.
 - **Cost and quality per path.** The exchange's fee (where disclosed), win rates, clearing prices, the share of spend that becomes viewable, non-invalid impressions, and the share that reaches the publisher.
 
-The policies follow: prefer DIRECT paths, cap the number of hops, prefer exchanges with lower fees for the same inventory, block paths through unknown or confidential sellers, and drop made-for-advertising and invalid-traffic-heavy supply. The industry measurement shows why this matters: the ANA and TAG TrustNet benchmark for the third quarter of 2025 measured 47.1% of participants' programmatic spend reaching publishers, up 11 points since 2023, and 81.6% of spend in private marketplaces; by the first quarter of 2026, made-for-advertising inventory had risen to 1.1% of spend, from 0.4-0.6% through 2025. The ISBA and PwC 2020 study found 15% of UK spend in an "unknown delta" that couldn't be traced; the second study cut it to 3%. Take Rates & Supply Quality covers the studies; the DSP's job is to turn them into supply rules it can apply per bid request.
+The policies follow: prefer DIRECT paths, cap the number of hops, prefer exchanges with lower fees for the same inventory, block paths through unknown or confidential sellers, and drop made-for-advertising and invalid-traffic-heavy supply. The industry measurement shows why this matters: the ANA and TAG TrustNet benchmark for the third quarter of 2025 measured 47.1% of participants' programmatic spend reaching publishers, up 11 points since 2023, and 81.6% of spend in private marketplaces; by the first quarter of 2026, made-for-advertising inventory had risen to 1.1% of spend, from 0.4-0.6% through 2025. The ISBA and PwC 2020 study found 15% of UK spend in an "unknown delta" that couldn't be traced; the second study cut it to 3%. [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality) covers the studies; the DSP's job is to turn them into supply rules it can apply per bid request.
 
 DSPs also sell shorter paths as products: The Trade Desk's OpenPath connects it "directly" to publishers, and Yahoo's Backstage is "a direct path to top-tier supply." For an engineer, these are additional supply sources with their own connection, and the same records apply.
 
@@ -176,7 +176,7 @@ For $10,000 of media won at clearing prices, with a $1.00 CPM data segment on 2,
 | Platform fee | 15% × ($10,000 + $2,000) | $1,800.00 |
 | **Total billed** | | **$13,800.00** |
 
-The DSP's revenue is $1,800; the data vendor is owed $2,000 and the exchanges $10,000. Each is an `invoice_lines` row (`media`, `data_fee`, `platform_fee`) on the receivable invoice, with the fee schedule that produced it; the payables to the exchanges and the data vendor are their own invoices. A DSP that cannot show this split per line item cannot answer the first question in an agency audit.
+The DSP's revenue is $1,800; the data vendor is owed $2,000 and the exchanges $10,000. Each is an `invoice_lines` row (`media`, `data_fee`, `platform_fee`) on the receivable invoice, with the fee term that produced it (`fee_term_id`); the payables to the exchanges and the data vendor are their own invoices. A DSP that cannot show this split per line item cannot answer the first question in an agency audit.
 
 ## Microsoft's Exit and Amazon's Consolidation
 
@@ -186,7 +186,7 @@ For an engineer, a DSP closing or renaming is a migration: seats, deals, creativ
 
 ## How to Build It
 
-A DSP adds four things to the core model: its seats as a hierarchy that names whose money each sub-seat bids, the supply it will and won't buy (by exchange, seller account and property), fee schedules that turn delivery into invoice lines, and, on each bid, the value and shading that produced the price. The callouts arrive as `bid_requests` rows from the exchange's perspective; on the DSP side the same table records requests received, with `bidder_org_id` set to the DSP itself.
+A DSP adds four things to the core model: its seats as a hierarchy that names whose money each sub-seat bids, the supply it will and won't buy (by exchange, seller account and property), its fees as rows of `fee_terms` ([Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality#how-to-build-it)), the one table for every fee one party charges another, and, on each bid, the value and shading that produced the price. The callouts arrive as `bid_requests` rows from the exchange's perspective; on the DSP side the same table records requests received, with `bidder_org_id` set to the DSP itself.
 
 ```sql
 ALTER TABLE buyer_seats
@@ -217,25 +217,13 @@ CREATE TABLE supply_sources (            -- what a buyer will and won't buy, and
 CREATE INDEX supply_sources_lookup_idx
   ON supply_sources (buyer_org_id, exchange_org_id, seller_account_id, property_id);
 
-CREATE TABLE fee_schedules (             -- a fee one party charges another, one concept for every chain
-  id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  charged_by_org_id   UUID NOT NULL REFERENCES organizations (id),
-  charged_to_org_id   UUID REFERENCES organizations (id),  -- null: every customer on standard terms
-  ad_account_id       UUID REFERENCES ad_accounts (id),
-  seller_account_id   UUID REFERENCES seller_accounts (id),
-  deal_id             UUID REFERENCES deals (id),
-  kind                TEXT NOT NULL CHECK (kind IN ('dsp_platform', 'data', 'verification',
-                        'exchange_buy_side', 'exchange_sell_side', 'curator', 'ad_serving')),
-  basis               TEXT NOT NULL CHECK (basis IN ('percent_of_media', 'percent_of_media_and_data',
-                        'percent_of_clearing', 'cpm', 'flat_monthly')),
-  rate_bp             INT CHECK (rate_bp BETWEEN 0 AND 10000),   -- basis points for percentages
-  rate_cpm_micros     BIGINT CHECK (rate_cpm_micros >= 0),        -- for per-thousand fees
-  currency            CHAR(3) NOT NULL,
-  effective           TSTZRANGE NOT NULL,
-  agreement_ref       TEXT NOT NULL,     -- the contract or rate card version; lands in invoice_lines.rule_ref
-  CHECK ((basis = 'cpm') = (rate_cpm_micros IS NOT NULL)),
-  CHECK ((basis LIKE 'percent%') = (rate_bp IS NOT NULL))
-);
+-- fee_terms (Take Rates & Supply Quality) holds every fee one party charges another: the DSP's
+-- platform fee, data and verification fees, both sides of an exchange's take, a curator's fee.
+-- A DSP fee charged on media and data together needs one more basis.
+ALTER TABLE fee_terms DROP CONSTRAINT fee_terms_basis_check;
+ALTER TABLE fee_terms ADD CONSTRAINT fee_terms_basis_check
+  CHECK (basis IN ('budget', 'gross_spend', 'media_cost', 'media_and_data', 'net_media',
+    'clearing_price')) NOT VALID;
 
 ALTER TABLE bids
   ADD COLUMN value_cpm_micros BIGINT,    -- the line item's estimated value for this impression
@@ -272,7 +260,7 @@ Design notes:
 
 - **Seats name whose money they bid.** A sub-seat points at its ad account, so a deal granted to an agency's seat (`deal.wseat`) is matched to that agency's line items only, and a seat's blocks and approvals are scoped correctly.
 - **Supply rules are data with dates and authors.** Every allow, block and preference has a reason, an effective range and who decided (a person, an SPO job version, a vendor's list version), so a spend change can be traced to the rule that caused it ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
-- **One fee table for every chain.** DSP fees, exchange fees on either side, curator fees and data fees are all `fee_schedules` rows, so an invoice line's `rule_ref` points at one place and a take-rate report is a sum over one table. [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges#how-to-build-it) reuses it.
+- **One fee table for every chain.** DSP fees, exchange fees on either side, curator fees and data fees are all `fee_terms` rows, so an invoice line's `fee_term_id` points at one place and a take-rate report is a sum over one table. The DSP's fee is `kind = 'dsp_platform_fee'`, and this chapter adds the one basis the invoice above needs (its 15% is `basis = 'media_and_data'`); [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges#how-to-build-it) and [Deals, PMPs & Curation](/books/advertising/deals-and-curation#how-to-build-it) reuse it.
 - **The bid records its reasoning.** Value, unshaded bid, win probability and model versions on each bid row are what a shading audit, a pass-through check and a model rollback need; the check that the price never exceeds the unshaded bid catches a sign error before it costs money.
 - **Reserve on bid, spend on billing.** Budget counters reserve the bid price when a bid is sent and convert to spend at the clearing price on the billing notice; reservations expire after the exchange's window. The ledger of record is the billing notices rolled into `delivery_daily`.
 - **Gross and net are both columns.** The advertiser's cost and the DSP's revenue come from the same delivery rows through different fee lines; neither is stored as a typed total.
@@ -281,7 +269,7 @@ Design notes:
 
 - **Every supply decision.** Allow, block and preference rules with reasons, dates and authors, and which rule applied to each request, for the advertiser asking why a publisher got no spend and the publisher asking the same.
 - **Every bid's price formation.** Value, shading, model versions, the floor and the line item maximum, for a pass-through audit and for a dispute about bidding behavior; the court record in the US ad tech case turned partly on how one DSP shaded bids on rival exchanges.
-- **Every fee as a line.** Media, data, verification and platform fees per line item and invoice, with the schedule and agreement version, so an agency can reconcile the DSP's invoice to the exchanges' and the vendors'.
+- **Every fee as a line.** Media, data, verification and platform fees per line item and invoice, with the fee term and agreement version, so an agency can reconcile the DSP's invoice to the exchanges' and the vendors'.
 - **Every seat and its owner.** Which agency or advertiser each sub-seat bid for, so deal access and billing stay attached to the right money.
 
 ## What This Means for the System You Build

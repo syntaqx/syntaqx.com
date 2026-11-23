@@ -11,7 +11,7 @@ A supply-side platform (SSP) sells a publisher's ad impressions to programmatic 
 
 The sell side is hard for different reasons than the buy side. An SSP has to know, for every request, who is really selling (the publisher, or one of several resellers), what the publisher allows (floors, blocked advertisers and categories, deals), which of hundreds of buyers want this impression enough to be worth a callout, and how to run an auction whose rules it must be able to disclose and defend. It takes its fee from the clearing price, so its revenue depends on the publisher's trust that the fee is what was agreed, and on the buyer's trust that the auction is what was described. And it is paid by DSPs on net terms while it pays publishers on its own, so it carries money between them.
 
-This chapter covers what an SSP runs, seller onboarding and inventory mapping, floors and blocks, traffic shaping, the exchange auction and what it must disclose, fees and how SSPs report revenue (gross, net and contribution ex-TAC), ad quality on the sell side, CTV, and reporting and payouts, then the records. It extends `seller_accounts` and `auctions` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model), adds the bidder connection that [How Programmatic Works](/books/advertising/how-programmatic-works#how-to-build-it) leaves open, and reuses `fee_schedules` from [Demand-Side Platforms](/books/advertising/demand-side-platforms#how-to-build-it). Floors and yield management in depth are Floors & Yield Optimization; auction theory is Auction Mechanics; header bidding is [Header Bidding & Prebid](/books/advertising/header-bidding-and-prebid); deals are [Deals, PMPs & Curation](/books/advertising/deals-and-curation); sellers.json and ads.txt are [ads.txt, sellers.json & SupplyChain](/books/advertising/ads-txt-sellers-json-and-schain); publisher payouts as money movement are Payments' [Payouts & Settlement](/books/payments/payouts-and-settlement); query-per-second engineering is Real-Time Bidding at Scale.
+This chapter covers what an SSP runs, seller onboarding and inventory mapping, floors and blocks, traffic shaping, the exchange auction and what it must disclose, fees and how SSPs report revenue (gross, net and contribution ex-TAC), ad quality on the sell side, CTV, and reporting and payouts, then the records. It extends `seller_accounts` and `auctions` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model), adds the bidder connection that [How Programmatic Works](/books/advertising/how-programmatic-works#how-to-build-it) leaves open, and reuses `fee_terms` from [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality#how-to-build-it), as [Demand-Side Platforms](/books/advertising/demand-side-platforms#how-to-build-it) does. Floors and yield management in depth are Floors & Yield Optimization; auction theory is Auction Mechanics; header bidding is [Header Bidding & Prebid](/books/advertising/header-bidding-and-prebid); deals are [Deals, PMPs & Curation](/books/advertising/deals-and-curation); sellers.json and ads.txt are [ads.txt, sellers.json & SupplyChain](/books/advertising/ads-txt-sellers-json-and-schain); publisher payouts as money movement are Payments' [Payouts & Settlement](/books/payments/payouts-and-settlement); query-per-second engineering is Real-Time Bidding at Scale.
 
 ## How the Platforms Do It
 
@@ -87,7 +87,7 @@ How an SSP books that money depends on whether it acts as principal or agent, an
 - **Revenue** may be gross (the whole clearing price, with the publisher's share as cost) where the SSP is principal, or net (only its fee) where it is agent. Magnite's revenue ($714.0 million in 2025) is higher than its contribution ex-TAC by the traffic acquisition cost on business it books gross.
 - **Contribution ex-TAC** (revenue less traffic acquisition cost, the amount paid to publishers on gross-booked business) is the figure the SSPs steer by: Magnite's was $669.6 million in 2025, up 10%, with a 2026 target of at least 11% growth. Criteo, a buy-side company with the same accounting choice, reported $1,944.9 million of revenue and $1,174.6 million of contribution ex-TAC.
 
-For an engineer the rule is the same as on the buy side: store the clearing price, the fee schedule applied and the publisher's share as separate amounts per impression or per delivery row, and let finance decide which total is revenue under its principal-versus-agent judgment (Advertising Revenue Accounting). An SSP that stores only its fee cannot produce a gross-booked revenue line, and one that stores only the gross cannot show a publisher its share.
+For an engineer the rule is the same as on the buy side: store the clearing price, the fee term applied and the publisher's share as separate amounts per impression or per delivery row, and let finance decide which total is revenue under its principal-versus-agent judgment (Advertising Revenue Accounting). An SSP that stores only its fee cannot produce a gross-booked revenue line, and one that stores only the gross cannot show a publisher its share.
 
 ## Ad Quality on the Sell Side
 
@@ -152,14 +152,14 @@ ALTER TABLE bid_requests ADD CONSTRAINT bid_requests_shaping_check
 ALTER TABLE auctions
   ADD COLUMN seller_account_id UUID,     -- whose inventory this exchange sold
   ADD COLUMN floor_basis TEXT,           -- 'gross' (buyer pays) or 'net' (after this exchange's fee)
-  ADD COLUMN fee_schedule_id UUID,       -- the fee applied to the clearing price
+  ADD COLUMN fee_term_id UUID,           -- the fee_terms row applied to the clearing price
   ADD COLUMN fee_cpm_micros BIGINT,      -- this exchange's fee on the winning price
   ADD COLUMN seller_net_cpm_micros BIGINT,  -- clearing price less the fee: what the seller is owed
   ADD COLUMN eligible_bidders INT;       -- bidders whose filters matched, before capacity and shaping
 ALTER TABLE auctions ADD CONSTRAINT auctions_seller_account_fk
   FOREIGN KEY (seller_account_id) REFERENCES seller_accounts (id) NOT VALID;
-ALTER TABLE auctions ADD CONSTRAINT auctions_fee_schedule_fk
-  FOREIGN KEY (fee_schedule_id) REFERENCES fee_schedules (id) NOT VALID;
+ALTER TABLE auctions ADD CONSTRAINT auctions_fee_term_fk
+  FOREIGN KEY (fee_term_id) REFERENCES fee_terms (id) NOT VALID;
 ALTER TABLE auctions ADD CONSTRAINT auctions_floor_basis_check
   CHECK (floor_basis IN ('gross', 'net')) NOT VALID;
 ALTER TABLE auctions ADD CONSTRAINT auctions_net_check
@@ -193,16 +193,16 @@ Design notes:
 
 - **The connection is configuration with a history.** Endpoints, deadlines, caps and filters change often and are negotiated with the bidder; versioned `connection_filters` with effective ranges answer "why did our volume drop on Tuesday" ([Effective Dates and Versions](/docs/building-blocks/rules-as-data#effective-dates-and-versions)).
 - **Shaping is recorded on the callout.** `shaping` says whether a request went out because it matched, because it was in the exploration share, or because it carried the bidder's deal; the exploration share is what keeps a shaping model honest.
-- **The publisher's net is computed and checked.** `seller_net_cpm_micros` equals the clearing price less the fee from a named schedule, enforced by a check, so a publisher statement line is a sum of auction rows and never a typed number.
+- **The publisher's net is computed and checked.** `seller_net_cpm_micros` equals the clearing price less the fee from a named fee term, enforced by a check, so a publisher statement line is a sum of auction rows and never a typed number.
 - **Floors carry their basis.** `floor_basis` records whether the floor was compared against the buyer's price or the seller's net, which is the first question in any floor dispute.
-- **Fees come from the shared fee table.** The exchange's sell-side and buy-side fees, a curator's fee and Open Bidding-style fees are all `fee_schedules` rows ([Demand-Side Platforms](/books/advertising/demand-side-platforms#how-to-build-it)), so the take on any path is one query.
+- **Fees come from the shared fee table.** The exchange's sell-side and buy-side fees are `fee_terms` rows (`exchange_sell_side_fee` charged to the publisher, `exchange_buy_side_fee` charged to the DSP or, for an Open Bidding-style fee, to the bidding exchange), and a curator's fee is a `curation_fee` row ([Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality#how-to-build-it)), so the take on any path is one query.
 - **Billable is the billing notice.** Invoices to DSPs and statements to publishers read the billing notices rolled into `delivery_daily` with `source = 'exchange'`, not auction wins.
 
 ## Auditing
 
 - **Every auction's rules and outcome.** Type, floor and its basis, bids, winner, clearing price, fee and the seller's net, kept for the dispute window, because the MRC's standards and the US court record both make the auction's rules the thing to prove.
 - **Every callout and why it was sent.** Eligible bidders, the ones called, the shaping reason, and the ones dropped by capacity, for the DSP asking where its volume went.
-- **Every fee as applied.** The schedule and agreement version on each auction and statement line, so a publisher can verify the fee it agreed to and an auditor can recompute the take.
+- **Every fee as applied.** The fee term and agreement version on each auction and statement line, so a publisher can verify the fee it agreed to and an auditor can recompute the take.
 - **Every seller account and its sellers.json state.** Seller type, confidentiality and the onboarding checks, for the buyer tracing a supply path and the regulator asking who was paid.
 
 ## What This Means for the System You Build
@@ -212,7 +212,7 @@ Design notes:
 - **Shape traffic with declared filters and capacity first,** keep an exploration share, and never shape away a deal.
 - **Disclose the auction:** type, bid-to-clearing rule, floors not set per buyer, and fees, as the MRC's standards require of closed-loop auctioneers, and send `tid`, `gpid` and a complete `schain`, as they require over OpenRTB.
 - **Return the net price to whoever compares it,** so ad servers compare like with like.
-- **Store clearing price, fee and seller net as separate amounts** from a named fee schedule, and let finance choose gross or net.
+- **Store clearing price, fee and seller net as separate amounts** from a named fee term, and let finance choose gross or net.
 - **Bill and pay on billing notices,** not auction wins, and point at the Payments model for payouts.
 
 ## References
