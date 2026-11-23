@@ -74,6 +74,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "The Stack, Bottom to Top": "The Stack",
   "Time and Wage-Hour": "Wage-Hour",
   "Trading and Markets": "Trading",
+  "Warehouses and Yards": "Warehouses",
   "Wealth and Advice": "Wealth",
   "Wholesale and B2B": "Wholesale",
   "Workers' Compensation": "Workers' Comp",
