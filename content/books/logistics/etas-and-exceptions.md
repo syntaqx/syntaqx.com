@@ -18,12 +18,12 @@ As of November 2026, from developer documentation, product pages and published g
 
 | Platform or standard | ETA | Range or confidence | Exceptions | Notes |
 | --- | --- | --- | --- | --- |
-| **C.H. Robinson** (as a consumer of LTL 214s) | G62 date qualifier 17, Estimated Delivery Date | None | AT702 status reason: "NS - Normal Status or see Late Reason Code List" (86 codes in 4010) | Appointment statuses AA (pickup) and AB (delivery) in AT703 |
+| **C.H. Robinson** (as a consumer of LTL 214s) | G62 date qualifier 17, Estimated Delivery Date | None | AT702 status reason: "NS - Normal Status or see Late Reason Code List" (the guide accepts all 86 standard codes) | Appointment statuses AA (pickup) and AB (delivery) in AT703 |
 | **DCSA Track & Trace** (ocean standard) | Events classified `EST`, beside `PLN` and `ACT` | None in the classifier | Not a separate object | Estimated vessel and equipment events |
 | **FourKites** | "ML-powered ETAs" from "GPS data, check-call history and patterns across the network"; markets "FourKites Dynamic ETA" | Not publicly documented | "exception detection"; "Each affected load is tagged with the disruption reason" | Public API documentation not found |
 | **NMFTA Digital Standards** | LTL Pickup Request and Visibility carries updated arrival times | Not stated | Delay reasons; LTL In-Transit Visibility has exception alerts for delays, damages and reweighs | FTL In-Transit Visibility is meant to flag delays early for exception management and customer communication |
-| **project44** | `estimateDateTime` and `estimateLastCalculatedDateTime` on events; legacy `arrivalEstimate` with `estimatedArrivalWindow` and `lastCalculatedDateTime`; `externalArrivalEstimate` with a `source` on stops | A start and end window (legacy payload) | `exceptions` with `category`, `reason`, `status` and a `timeline` | ETA or ATA can come on any event type |
-| **Samsara** (route stops) | `RouteStopEtaUpdated` (beta) with `eta` "if this stop is currently en-route" and `scheduledArrivalTime` | `ontimeWindowBeforeArrivalMs`, `ontimeWindowAfterArrivalMs` around the schedule | `RouteStopEarlyLateArrival` with `arrivalStatus` early or late and `deviationMinutes` | Stop arrival payloads carry the driver's HOS `clocks` |
+| **project44** | `estimateDateTime` and `estimateLastCalculatedDateTime` on events; legacy `arrivalEstimate` with `estimatedArrivalWindow` and `lastCalculatedDateTime`; `externalArrivalEstimate` with a `source` on stops | A start and end window (legacy payload) | `exceptions` with `category`, `reason`, `status` and a `timeline` | "All Event Types can sometimes return an ETA or ATA" |
+| **Samsara** (route stops, beta webhooks) | `RouteStopEtaUpdated` with `eta` "if this stop is currently en-route" and `scheduledArrivalTime` | `ontimeWindowBeforeArrivalMs`, `ontimeWindowAfterArrivalMs` around the schedule | `RouteStopEarlyLateArrival` with `arrivalStatus` early or late and `deviationMinutes` | Stop arrival payloads carry the driver's HOS `clocks` |
 | **Trucker Tools** | ETA used for alerts | Not stated | "'running late' statuses and automated email alerts"; "Off Route Alerts"; "Out of Range" when a driver "is likely to miss a pickup" | Pings every five minutes |
 
 FourKites' ETA and exception APIs aren't publicly documented, so the volume describes only what its product pages state. <!-- source-gap: logistics-etas-and-exceptions-fourkites-eta | missing | FourKites ETA fields, confidence and exception types in its API | closes with: a public FourKites developer or help-center page | checked: 2026-11-22 -->
@@ -32,7 +32,7 @@ Four patterns:
 
 - **An ETA carries its own age.** project44 stamps when an estimate was last calculated, separately from the event; Samsara populates an ETA only while the stop is en route; a 214's estimated delivery date is as old as the message. An ETA without the time it was computed can't be compared with another one.
 - **Several ETAs coexist, labeled by source.** project44 keeps its own estimate and an `externalArrivalEstimate` with its source side by side; a shipper receiving a carrier's 214 and a network's feed holds two. Every one is kept; one is chosen to show.
-- **Exceptions are records with a life, not alerts.** project44's exceptions have a status and a timeline; FourKites tags each affected load with a reason; the NMFTA standards carry delay reasons and missed deliveries as data. A message about an exception is one output of the record, not the record.
+- **Exceptions are records with a life, not alerts.** project44's exceptions have a status and a timeline; FourKites tags each affected load with a reason; the NMFTA standards carry delay reasons and exception notifications as data. A message about an exception is one output of the record, not the record.
 - **On time is a window defined as data.** Samsara puts an explicit on-time window before and after each scheduled arrival, and reports early or late with the deviation in minutes. Late is computed against a stored window, never against a judgment made in code.
 
 ## What an ETA Is Made Of
@@ -40,7 +40,7 @@ Four patterns:
 For a truck, an ETA is the current position, plus drive time on the remaining route, plus the time the driver must stop, plus the time spent at any stops before this one, constrained by when the facility can receive. The playbook's version (travel time plus remaining work, recomputed on meaningful change) is the base ([ETAs](/docs/building-blocks/location-tracking#etas)); freight adds four terms:
 
 - **Truck routing.** Drive time comes from a routing engine that knows truck restrictions and traffic. Mapbox's Directions API, for example, takes `max_height`, `max_width` and `max_weight` and, with `depart_at` on its traffic profile, returns a duration that "is a prediction for travel time based on historical travel data and live traffic." A car route under a 12-foot bridge is not an ETA for a 13-foot-6 trailer.
-- **Hours of service.** A property-carrying driver may drive 11 hours inside a 14-hour on-duty window after 10 consecutive hours off, and needs a 30-minute break after 8 hours of driving (49 CFR 395.3). A truck 500 miles out with 2 hours of driving left today isn't arriving tonight, whatever the router says. The driver's remaining clocks come from the ELD vendor (Samsara's stop arrival payloads carry them) and the rules from [Hours of Service](/books/logistics/hours-of-service#the-limits).
+- **Hours of service.** A property-carrying driver may drive 11 hours inside a 14-hour on-duty window after 10 consecutive hours off, and may not drive once 8 hours of driving have passed without a 30-minute interruption in driving, which may be off duty, in the sleeper berth or on duty not driving (49 CFR 395.3). A truck 500 miles out with 2 hours of driving left today isn't arriving tonight, whatever the router says. The driver's remaining clocks come from the ELD vendor (Samsara's stop arrival payloads carry them) and the rules from [Hours of Service](/books/logistics/hours-of-service#the-limits).
 - **Stops before this one.** A multi-stop truckload's ETA to stop 3 includes the unloading time at stop 2, which the broker estimates from the facility's history; an LTL shipment's ETA is the carrier's published transit for the lane through its terminals ([LTL Networks](/books/logistics/ltl-networks#how-to-build-it) keeps `ltl_transit_lanes`), adjusted by scans.
 - **The facility's hours.** A truck arriving at 03:00 at a DC that receives from 06:00 arrives, for planning, at 06:00 or at its appointment. An ETA to the gate and an ETA to the door are different numbers, and the second is what the consignee needs.
 
@@ -236,7 +236,7 @@ An exception is a condition on a load, stop or shipment that someone has to act 
 | `no_tracking` | No tracking session has started by a lead time before pickup | `tracking_sessions` |
 | `stale_tracking` | A session in tracking has had no signal for N hours while the load is in transit | `tracking_sessions.last_signal_at` |
 | `off_route` | Positions outside a corridor around the planned route for a duration | `positions`, the planned route |
-| `dwell` | Time at a stop past its free time, the start of detention or storage | Arrival, departure, `stops.free_time_ends_at` |
+| `dwell` | Time at a stop past its free time, the start of detention or storage | Arrival, departure, `stops.free_time_ends_at` ([Intermodal & Drayage](/books/logistics/intermodal-and-drayage#how-to-build-it)) |
 | `temperature` | Reefer readings outside the setpoint band for a duration | `reefer_readings` ([Truckload](/books/logistics/truckload#how-to-build-it)) |
 | `hold` | A hold event: customs, a partner agency, a carrier or a terminal | `shipment_events` with code `hold` |
 | `os_and_d` | An overage, shortage, damage or refusal recorded | `osd_exceptions` ([LTL Networks](/books/logistics/ltl-networks#pickup-delivery-and-exceptions)) |
@@ -247,7 +247,7 @@ Trucker Tools' "Off Route Alerts" and "Out of Range" alerts, FourKites' disrupti
 - **One open exception per condition.** A stale-tracking rule evaluated every few minutes finds the same load quiet each time; it updates the open exception's last-seen time, it doesn't open twenty. A partial unique index on kind and subject among open exceptions enforces it.
 - **Exceptions are a workflow.** Open, acknowledged, resolved or cancelled, with every transition recorded and guarded in the database ([Make the States Explicit](/docs/building-blocks/workflows#make-the-states-explicit), [Transition History](/docs/building-blocks/workflows#transition-history)). Acknowledgment has a deadline per severity, and an unacknowledged critical exception escalates to the next owner on a timer ([Timers, Deadlines and Escalations](/docs/building-blocks/workflows#timers-deadlines-and-escalations)); working one is a human step with an assignee ([Human Steps](/docs/building-blocks/workflows#human-steps)).
 - **Some resolve themselves, on the record.** A stale-tracking exception resolves when signals resume, and a late-delivery risk when the ETA recovers; the system resolves it with `resolution` set and the event that cleared it, so the team's queue shows only what needs a person and the history still shows that it happened.
-- **Cause is separate from symptom.** A late delivery is the symptom; the cause (carrier, shipper not ready, consignee refused the appointment, facility congestion, weather, customs) decides who pays detention, whether a retailer's OTIF chargeback is disputable ([OTIF Programs](/books/commerce/wholesale-and-retail-distribution#otif-programs)) and which carrier's scorecard takes the hit. A carrier's 214 states its reason in AT702 ("NS - Normal Status or see Late Reason Code List," 86 codes in 4010), mapped through [Partner Code Maps](/books/logistics/transportation-edi#partner-code-maps) into the exception's cause; the partner's own code is kept beside it, because the carrier's reason is a claim.
+- **Cause is separate from symptom.** A late delivery is the symptom; the cause (carrier, shipper not ready, consignee refused the appointment, facility congestion, weather, customs) decides who pays detention, whether a retailer's OTIF chargeback is disputable ([OTIF Programs](/books/commerce/wholesale-and-retail-distribution#otif-programs)) and which carrier's scorecard takes the hit. A carrier's 214 states its reason in AT702 ("NS - Normal Status or see Late Reason Code List," with all 86 standard 4010 codes accepted in C.H. Robinson's LTL guide), mapped through [Partner Code Maps](/books/logistics/transportation-edi#partner-code-maps) into the exception's cause; the partner's own code is kept beside it, because the carrier's reason is a claim.
 - **The exception holds the evidence.** The events, positions, readings and messages that opened it and that resolved it are linked, because exceptions become detention invoices, claims ([Cargo Claims](/books/logistics/cargo-claims)) and chargeback disputes months later.
 
 ## Telling the Customer
@@ -474,7 +474,7 @@ Design notes:
 
 **Regulations**
 
-- [49 CFR 395.3: Maximum driving time for property-carrying vehicles](https://www.law.cornell.edu/cfr/text/49/395.3), 10 consecutive hours off, the 14-hour window, 11 hours of driving and the 30-minute break after 8 hours
+- [49 CFR 395.3: Maximum driving time for property-carrying vehicles](https://www.law.cornell.edu/cfr/text/49/395.3), 10 consecutive hours off, the 14-hour window, 11 hours of driving and the 30-minute interruption after 8 hours of driving
 
 **Standards**
 
@@ -488,9 +488,9 @@ Design notes:
 **Vendors**
 
 - [project44: Shipment webhook data](https://developers.project44.com/api-reference/api-docs/shipment-webhook-data), `estimateDateTime` and `estimateLastCalculatedDateTime` on events, the legacy `arrivalEstimate` with `estimatedArrivalWindow`, `externalArrivalEstimate` with a source, and exceptions with category, reason, status and timeline
-- [project44: FTL appendix](https://developers.project44.com/guides/shippers/visibility/ftl/appendix), ETA or ATA returned on any event type
-- [Samsara: RouteStopEtaUpdated event](https://developers.samsara.com/docs/routestopetaupdated), the stop ETA while en route, scheduled arrival and the on-time windows before and after it
-- [Samsara: RouteStopEarlyLateArrival event](https://developers.samsara.com/docs/routestopearlylatearrival), early or late arrival status and deviation in minutes
+- [project44: FTL appendix](https://developers.project44.com/guides/shippers/visibility/ftl/appendix), "All Event Types can sometimes return an ETA or ATA"
+- [Samsara: RouteStopEtaUpdated event](https://developers.samsara.com/docs/routestopetaupdated), a beta webhook; the stop ETA while en route, scheduled arrival and the on-time windows before and after it
+- [Samsara: RouteStopEarlyLateArrival event](https://developers.samsara.com/docs/routestopearlylatearrival), a beta webhook; early or late arrival status and deviation in minutes
 - [Samsara: RouteStopArrival event](https://developers.samsara.com/docs/routestoparrival), HOS clocks and duty status on stop arrival payloads
 - [Mapbox: Directions API](https://docs.mapbox.com/api/navigation/directions/), vehicle height, width and weight restrictions and traffic-aware durations "based on historical travel data and live traffic"
 - [FourKites: Real-time visibility](https://www.fourkites.ai/platform/real-time-visibility), ML-powered ETAs from GPS data, check-call history and network patterns, Dynamic ETA, exception detection and disruption reason tags

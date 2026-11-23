@@ -7,11 +7,11 @@ part = "Data and Visibility"
 tags = ["logistics", "edi", "x12", "load-tender", "shipment-status", "freight-invoice", "data-model"]
 +++
 
-Transportation EDI is how shippers, brokers and carriers exchange the four documents that run a truckload or LTL move without anyone retyping them: the load tender (X12 204, "Motor Carrier Load Tender"), the answer to it (990, "Response to a Load Tender"), the status messages while the freight moves (214, "Transportation Carrier Shipment Status Message") and the bill at the end (210, "Motor Carrier Freight Details and Invoice"). Around them sit a few dozen less common sets for bills of lading, pickup manifests, ocean bookings and statuses, rail waybills and claims. A broker with a few thousand carriers and a few hundred shipper customers maintains a 204, 990, 214 and 210 map for each partner that trades electronically, and every load's tender, coverage, milestones and invoice pass through them.
+Transportation EDI is how shippers, brokers and carriers exchange the four documents that run a truckload or LTL move without anyone retyping them: the load tender (X12 204, "Motor Carrier Load Tender"), the answer to it (990, "Response to a Load Tender"), the status messages while the freight moves (214, "Transportation Carrier Shipment Status Message") and the bill at the end (210, "Motor Carrier Freight Details and Invoice"). Around them sit a few dozen less common sets for bills of lading, pickup manifests, ocean bookings and statuses, rail waybills and claims. A broker maintains a 204, 990, 214 and 210 map for each carrier and shipper that trades with it electronically, and every load's tender, coverage, milestones and invoice pass through them.
 
 The messages are old and stable; what makes them hard is that every partner implements them differently, and the differences are in meaning rather than syntax. CN marks a changed tender with purpose code 04; Kroger's Harris Teeter 204 uses 05. The X12 code for declining a tender is D, "Reservation Cancelled," but C.H. Robinson's truckload guide treats R as a decline and U as an accept. Delivery arrives as CD from one partner and D1 from another, and the same two letters mean a status in one element and a late reason in the next (AF is "Departed Pickup Location" as a status and "Accident" as a reason). Times are local, without a zone. Invoices arrive before delivery with an estimated delivery date. A parser that reads the X12 code list instead of the partner's guide gets loads covered that weren't, deliveries that didn't happen and invoices that don't match.
 
-This chapter covers the transportation sets and where each lands in the core model, the 204, 990, 214 and 210 segment by segment against published implementation guides, the ocean and rail sets, versions, partner code maps, and onboarding. It extends `documents`, `tenders`, `shipment_events` and `freight_invoices` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model). The generic X12 machinery is the Commerce volume's: the interchange, group and transaction set envelopes and their control numbers ([Envelopes and Acknowledgments](/books/commerce/edi#envelopes-and-acknowledgments)), the 997 and 999, VANs, AS2 and SFTP ([Transport: VANs, AS2, SFTP and APIs](/books/commerce/edi#transport-vans-as2-sftp-and-apis)), partner testing ([Partner Testing](/books/commerce/edi#partner-testing)), and the retail sets (850, 856, 810). The tender's life cycle that the 204 and 990 drive is Tendering & Acceptance; rail EDI is in [Rail Freight](/books/logistics/rail-freight#waybills-interchange-and-car-events); what the status messages feed is [Visibility & Tracking](/books/logistics/visibility-and-tracking) and [ETAs & Exception Management](/books/logistics/etas-and-exceptions).
+This chapter covers the transportation sets and where each lands in the core model, the 204, 990, 214 and 210 segment by segment against published implementation guides, the ocean and rail sets, versions, partner code maps, and onboarding. It extends `documents`, `tenders`, `shipment_events` and `freight_invoices` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model). The generic X12 machinery is the Commerce volume's: the interchange, group and transaction set envelopes and their control numbers ([Envelopes and Acknowledgments](/books/commerce/edi#envelopes-and-acknowledgments)), the 997 and 999, VANs, AS2 and SFTP ([Transport: VANs, AS2, SFTP and APIs](/books/commerce/edi#transport-vans-as2-sftp-and-apis)), partner testing ([Partner Testing](/books/commerce/edi#partner-testing)), and the retail sets (850, 856, 810). The tender's life cycle that the 204 and 990 drive is [Tendering & Acceptance](/books/logistics/tendering#the-tender-state-machine); rail EDI is in [Rail Freight](/books/logistics/rail-freight#waybills-interchange-and-car-events); what the status messages feed is [Visibility & Tracking](/books/logistics/visibility-and-tracking) and [ETAs & Exception Management](/books/logistics/etas-and-exceptions).
 
 ## How the Partners Do It
 
@@ -20,7 +20,7 @@ Transportation EDI has no single standard implementation; it has published guide
 | Partner | Sets and versions, as published | Rules that differ from the bare standard |
 | --- | --- | --- |
 | **CN** (rail carrier taking truckload tenders) | 204 version 004010, which "closely complies with the official published Motor Carrier Industry Guide to Electronic Data Interchange Implementation and Conventions" | A 990 "is generated for every EDI 204 Load Tender received by CN within a half hour of receipt"; "All orders are automatically accepted"; B2A-01 codes 00 original, 01 cancellation, 04 update; G62 qualifier 64 "Must Respond By"; connects through its MFT server, an FTP push, or "all major VAN's" |
-| **C.H. Robinson** (broker) | Truckload 990 version 4010; LTL 214 version 4010 (guide dated October 12, 2021); dray 214 version 4010 | 990 B1-04 limited to A, D, R and U: "If you use R we will consider this as a Decline," "If you use U will consider this as an Accept"; B1-02 is "CHR Load Number (Sent in the B2_04 on the 204 Load Tender)"; LTL 214 must carry X3 and AF for every pickup and X1 and CD for every delivery, in-transit X6 "every 15 minutes," one location per 214; dray 214 completes delivery with D1 and adds OA and I1 gate moves |
+| **C.H. Robinson** (broker) | Truckload 990 version 4010; LTL 214 version 4010 (guide dated October 12, 2021); dray 214 version 4010 (guide dated May 30, 2017) | 990 B1-04 limited to A, D, R and U: "If you use R we will consider this as a Decline," "If you use U will consider this as an Accept"; B1-02 is "CHR Load Number (Sent in the B2_04 on the 204 Load Tender)"; LTL 214 must carry X3 and AF for every pickup and X1 and CD for every delivery, in-transit X6 "every 15 minutes," one location per 214; dray 214 completes delivery with D1 and adds OA and I1 gate moves |
 | **Kroger** (shipper, Harris Teeter freight) | 204 version 4030 (modified December 15, 2025); 214 version 4010 | B2A-01 codes 00 Original, 01 Cancellation, 05 Replace; stop G62 carries dates only (10 Requested Ship Date/Pick-up Date, 68 Requested Delivery Date); the 214 uses AT7-01 CD "Carrier Departed Delivery Location" with reason NS |
 | **XPO** (LTL carrier) | 990 version 4010; 210 version 4010 (guide dated September 25, 2015) | 990 B1-04 lists all seven codes (A, B, C, D, N, R, U); 210 method of payment CC Collect or PP Prepaid (by Seller), delivery date qualified 017 Estimated Delivery or 035 Delivered, special charge codes DSC, FUE, HAZ and PYS |
 
@@ -29,7 +29,7 @@ Four patterns:
 - **The guide is the contract, not the standard.** Every partner publishes which segments, elements and codes it sends and accepts, and narrows or reinterprets the X12 code list. A map is built from the partner's guide and tested against its samples; the X12 dictionary is only the vocabulary.
 - **Partners disagree on meaning, not on syntax.** The parsers are the easy part; the 04 and 05 change codes, R as a decline, CD and D1 as delivery are meaning, and meaning lives in a per-partner code map with dates ([Partner Code Maps](#partner-code-maps)).
 - **Version 4010 still dominates.** Every guide surveyed except Kroger's 204 is 4010, a release from 1997, and partners pin it in their guides; a newer version is a partner project, not an upgrade.
-- **Timeliness is part of the spec.** CN answers within half an hour, C.H. Robinson wants statuses within 15 minutes and in-transit pings every 15; the received time of every message is as much a contract measure as its content.
+- **Timeliness is part of the spec.** CN answers within half an hour, C.H. Robinson wants statuses ideally within 15 minutes (and within an hour at most) and in-transit updates every 15; the received time of every message is as much a contract measure as its content.
 
 ## The Transportation Sets
 
@@ -96,9 +96,9 @@ How the segments land:
 | Segment | Elements, as CN and Kroger document them | Core model |
 | --- | --- | --- |
 | **B2** | B2-02 SCAC (`CNBH`), B2-04 shipment identification number, B2-05 weight unit (`L` pounds), B2-06 method of payment (`PP` prepaid) | `tenders.carrier_party_id` via `carriers.scac`; `tenders.external_ref`; `shipments.payment_terms` |
-| **B2A** | B2A-01 purpose: 00 original, 01 cancellation, 04 update (CN) or 05 replace (Kroger); B2A-02 `LT`, "Load Tender - Truckload (TL) Carrier Only" | A new tender, a cancellation, or a new revision of the tender |
+| **B2A** | B2A-01 purpose: 00 original, 01 cancellation, 04 update (CN) or 05 replace (Kroger); B2A-02 `LT`, "Load Tender - Truckload (TL) Carrier Only" | A new tender, a withdrawal or cancellation, or a new revision of the tender |
 | **L11** | Reference numbers with qualifiers (`CR` customer reference, `PO` purchase order) | `shipments` and `orders` references, `external_refs` |
-| **G62** (header) | Qualifier 64 "Must Respond By," date CCYYMMDD, time HHMM, time code `LT` | `tenders.expires_at`, converted from local time |
+| **G62** (header) | Qualifier 64 "Must Respond By," date CCYYMMDD, time HHMM, time code `LT` | `tenders.expires_at`, converted from local time, with `respond_by_source` `edi_g62_64` |
 | **N1, N3, N4** (header) | Parties: SH shipper, BT bill-to, OB ordered by | `shipments.shipper_party_id`, `bill_to_party_id`, matched to `parties` |
 | **N7** | Equipment: length and type | `loads.equipment_type` |
 | **S5** | Stop sequence and reason: CL "complete" (load), CU "complete unload" | `stops.sequence`, `stops.kind` |
@@ -110,7 +110,7 @@ How the segments land:
 Rules that come from the guides rather than the standard:
 
 - **The shipment ID is the join key for everything after.** C.H. Robinson's 990 guide says B1-02 carries its load number "Sent in the B2_04 on the 204 Load Tender"; the 214's B10 and the 210's B3-03 carry the same number back. Store it on the tender (`tenders.external_ref`) and the load, and match every later message on it plus the sender, never on this system's key ([Mapping Their Schema to Yours](/docs/building-blocks/integrations#mapping-their-schema-to-yours)).
-- **A change is a revision, whatever its code.** 04 at CN and 05 at Kroger both mean "this replaces the tender you have"; the partner map turns either into a new revision of the tender that needs a new answer, and 01 into a withdrawal or cancellation. Tendering & Acceptance owns the states; this chapter owns reading the code.
+- **A change is a revision, whatever its code.** 04 at CN and 05 at Kroger both mean "this replaces the tender you have"; the partner map turns either into a new `tenders` row with the next `revision` and `previous_tender_id` pointing at the one it replaces (which becomes `superseded`), and 01 into `withdrawn` for an open tender or `cancelled` for an accepted one. Each 204 sent is a `tender_events` row (`sent`, `revised` or `cancelled`) with the B2A-01 value as `partner_code` and the 204 as `document_id`. [Changes and Cancellations](/books/logistics/tendering#changes-and-cancellations) owns the states and what a cancellation owes the carrier; this chapter owns reading the code.
 - **Times are local, zones are inferred.** CN's G62 carries time code `LT`, local time, with no offset; Kroger's stop G62s carry no time at all. The respond-by time is converted with the zone the trading partner agreement names, and stop dates with the facility's zone ([Time Zone From the Place](/docs/fundamentals/addresses#time-zone-from-the-place)); a date with no time is a day-long window in that zone, not midnight UTC.
 - **Stop parties are facilities to match, not to create.** N1 SF and ST name a place by name, address and often a partner's own location code. Matching to an existing `facilities` row (by the partner's code, then by address) comes first; an unmatched stop is a review task, because a new facility row silently created from every spelling of a dock splits its history.
 - **Totals are checks.** L3's weight and quantity should equal the sum of the stops' AT8s; a mismatch is a data error to flag before the tender is accepted, not after the carrier reweighs.
@@ -122,8 +122,8 @@ The 990 is short: a B1 segment with the carrier's SCAC (B1-01), the shipment ID 
 | B1-04 | X12 name | XPO | C.H. Robinson | Tender state it maps to |
 | --- | --- | --- | --- | --- |
 | A | Reservation Accepted | Used | Used | `accepted` |
-| B | Conditional Acceptance | Used | Not used | `conditionally_accepted`, conditions from K1 |
-| C | Counter Proposal Made | Used | Not used | `countered` |
+| B | Conditional Acceptance | Used | Not used | `conditionally_accepted`, K1 remarks into `tenders.conditions` |
+| C | Counter Proposal Made | Used | Not used | `countered`, the proposed rate into `tenders.counter_amount` |
 | D | Reservation Cancelled | Used | Used | `rejected` |
 | N | New | Used | Not used | Partner-specific; review |
 | R | Delete | Used | "we will consider this as a Decline" | `rejected` at C.H. Robinson |
@@ -131,14 +131,14 @@ The 990 is short: a B1 segment with the carrier's SCAC (B1-01), the shipment ID 
 
 The rules:
 
-- **D is the decline.** The X12 name "Reservation Cancelled" reads like a cancellation of an accepted load, and a parser that treats it that way leaves rejected tenders open until they expire. Partners then add their own readings (R and U above), so B1-04 goes through the partner's code map, with the raw code kept in `tenders.response_code`.
+- **D is the decline.** The X12 name "Reservation Cancelled" reads like a cancellation of an accepted load, and a parser that treats it that way leaves rejected tenders open until they expire. Partners then add their own readings (R and U above), so B1-04 goes through the partner's code map, with the raw code kept in `tenders.response_code` and any reason the 990 carries (in N9 or K1) normalized into `tenders.reason_code` ([Rejections and Reasons](/books/logistics/tendering#rejections-and-reasons)).
 - **Some answers are automatic.** CN accepts every 204 and returns the 990 within half an hour; an acceptance rate measured on that partner measures nothing. The partner map records that the partner auto-accepts.
-- **An answer applies once.** The same 990 resent, or arriving after the tender expired or was withdrawn, is stored and applied by the tender's transition rules, never by overwriting its status; Tendering & Acceptance owns those rules.
+- **An answer applies once.** Every 990 is a `tender_events` row (`answer_received`, the B1-04 as `partner_code`, the 990 as `document_id`) followed by `answer_applied` or `answer_ignored` with a note; the same 990 resent, or one arriving after the tender expired or was withdrawn, is decided by the tender's transition rules, never by overwriting its status ([The Tender State Machine](/books/logistics/tendering#the-tender-state-machine)).
 - **The 997 is not the answer.** A 997 for the 204 says the carrier's translator parsed it; only the 990 says what the carrier decided. A tender with a 997 and no 990 by its expiry has expired.
 
 ## The 214 Shipment Status
 
-A 214 reports one or more statuses for one shipment: a B10 header (the carrier's reference, the shipment ID and the SCAC), references (L11), parties (N1 loops), and an LX loop per status, each with an AT7 (the status), an MS1 (where), an MS2 (the equipment) and an AT8 (weight and quantity). C.H. Robinson's LTL guide sample:
+A 214 reports one or more statuses for one shipment: a B10 header (the carrier's reference, the shipment ID and the SCAC), references (L11), parties (N1 loops), and an LX loop per status, each with an AT7 (the status), an MS1 (where), an MS2 (the equipment) and an AT8 (weight and quantity). C.H. Robinson's LTL guide sample, trimmed (its N3, N4 and second L11 removed):
 
 ```text
 ST*214*0001~
@@ -155,11 +155,11 @@ SE*15*0001~
 
 The AT7 carries the meaning, in seven elements with syntax rules that the parser has to enforce: "Only one of AT701 or AT703 may be present"; AT701 and AT702 come as a pair, and so do AT703 and AT704; AT705 is the date (CCYYMMDD), AT706 the time (HHMM), and AT707 the time code.
 
-- **AT701, shipment status code** (42 codes in 4010, per C.H. Robinson's guide): X3 Arrived at Pickup Location, AF Departed Pickup Location, X1 Arrived at Delivery Location, CD Departed Delivery Location (delivery complete), D1 Completed Delivery (or "Completed Unloading at Delivery Location"), X6 En Route to Location, I1 In-Gate, OA Out-Gate.
-- **AT702, status reason code** (86 codes in 4010): NS "Normal Status," or a late reason such as AF Accident, AG Consignee Related, AH Driver Related or AI Mechanical Breakdown from C.H. Robinson's dray code list.
+- **AT701, shipment status code** (C.H. Robinson's guide accepts all 42 standard codes): X3 Arrived at Pickup Location, AF Departed Pickup Location, X1 Arrived at Delivery Location, CD Departed Delivery Location (delivery complete), D1 Completed Delivery (or "Completed Unloading at Delivery Location"), X6 En Route to Location, I1 In-Gate, OA Out-Gate.
+- **AT702, status reason code** (all 86 standard codes accepted): NS "Normal Status," or a late reason such as AF Accident, AG Consignee Related, AH Driver Related or AI Mechanical Breakdown from C.H. Robinson's dray code list.
 - **AT703, appointment status code**: AA "Pick-up Appointment Date and/or Time," AB "Delivery Appointment Date and/or Time," with AT704 its reason.
 - **AT707, time code**: C.H. Robinson includes only `LT` Local Time and says "The date/time in AT7_05 & 06 are local time. Noadjustments should be made for time zones."
-- **MS1**: city, state and country, or longitude and latitude, of the event.
+- **MS1**: city, state and country, or longitude and latitude, of the event; C.H. Robinson adds that "Sending Lat/Long does not replace the requirement for sending city/state in the MS1."
 
 The partners' rules on top:
 
@@ -338,7 +338,7 @@ The same structure, different sets, and in ocean a standard that is replacing th
 
 ## Versions and Envelopes
 
-Every transportation guide surveyed for this chapter pins a version: CN's 204, C.H. Robinson's 990 and 214s, XPO's 990 and 210, and Kroger's 214 are 4010 (GS-08 `004010`, ISA-12 `00401`, described in the guides as "Draft Standards for Trial Use Approved for Publication by ASC X12 Procedures Review Board through October 1997"); Kroger's 204 is 4030. X12 publishes a release every year, and transportation, like retail, runs decades behind it ([Versions](/books/commerce/edi#versions)). Where 5010 appears in transportation, the public evidence is EDI providers' sample guides rather than a carrier's or shipper's own published requirement. <!-- source-gap: logistics-transportation-edi-5010 | secondary | How widely 5010 is used for 204/214/210 in North American trucking | closes with: a carrier or shipper implementation guide on its own site that requires 5010 for a motor carrier set | checked: 2026-11-22 -->
+Every transportation guide surveyed for this chapter pins a version: CN's 204, C.H. Robinson's 990 and 214s, XPO's 990 and 210, and Kroger's 214 are 4010 (GS-08 `004010`, ISA-12 `00401`, the latter described in C.H. Robinson's guide as "Draft Standards for Trial Use Approved for Publication by ASC X12 Procedures Review Board through October 1997"); Kroger's 204 is 4030. X12 publishes a release every year, and transportation, like retail, runs decades behind it ([Versions](/books/commerce/edi#versions)). Where 5010 appears in transportation, the public evidence is EDI providers' sample guides rather than a carrier's or shipper's own published requirement. <!-- source-gap: logistics-transportation-edi-5010 | secondary | How widely 5010 is used for 204/214/210 in North American trucking | closes with: a carrier or shipper implementation guide on its own site that requires 5010 for a motor carrier set | checked: 2026-11-22 -->
 
 The version is a property of the partner map, per set and direction, because one partner can send 4030 tenders and 4010 statuses. The envelope rules are the Commerce volume's and apply unchanged: store every interchange's bytes before parsing, reject a repeated ISA-13 from the same sender at the envelope and acknowledge again, track every outbound group's 997 against a due time, and keep the transport receipt with it ([Envelopes and Acknowledgments](/books/commerce/edi#envelopes-and-acknowledgments)). Two transportation specifics: a tender's 997 has a due time shorter than its respond-by time, or it's useless; and an invoice group with no 997 is the first thing to check when a carrier says it billed and the payer says it didn't receive it.
 
@@ -371,11 +371,11 @@ The rules:
 
 Onboarding a transportation partner is the Commerce volume's process ([Partner Testing](/books/commerce/edi#partner-testing)) with a different set list: exchange IDs and the connection (CN offers its MFT server, an FTP push or a VAN interconnect), build maps from the partner's guide, test each set under test usage with the partner's sample cases (a tender, a change, a cancellation; an acceptance and a rejection; every required 214 milestone; an invoice with a discount and fuel), certify, and watch the first weeks in production. Transportation adds two tests retail doesn't need: a load with three or more stops, because stop loops are where maps break, and a clock test, sending statuses near midnight and across a daylight-saving change in the partner's zone, because local times are where events land on the wrong day.
 
-Most brokers and carriers don't run their own translators for every partner. TMS vendors include EDI modules, EDI networks and API providers translate X12 to JSON, and visibility networks take 214s on a shipper's behalf ([Visibility Networks](/books/logistics/logistics-apis#visibility-networks)). The maps and codes are the same work wherever they run, and the records this chapter describes are needed whichever does it, because the evidence in a dispute is the message as exchanged.
+The translation doesn't have to run in-house: it can run in the TMS, at an EDI network or API provider that converts X12 to JSON, or at a visibility network that takes carriers' 214s on a shipper's behalf ([Visibility Networks](/books/logistics/logistics-apis#visibility-networks)). The maps and codes are the same work wherever they run, and the records this chapter describes are needed whichever does it, because the evidence in a dispute is the message as exchanged.
 
 ## How to Build It
 
-The Commerce volume's EDI tables carry over with a party in place of its trading partner: partner maps, interchanges and functional acknowledgments. This chapter adds the partner code maps, links documents to their envelopes, links tenders to the messages that carried them, records which map row decided an event, and keeps the 210's payment and delivery qualifiers on the invoice. `ALTER`s run on a live database as the business chapter describes ([Lock-Aware DDL](/docs/database/zero-downtime-migrations#lock-aware-ddl)):
+The Commerce volume's EDI tables carry over with a party in place of its trading partner: partner maps, interchanges and functional acknowledgments. This chapter adds the partner code maps, links documents to their envelopes, records which map row decided an event, and keeps the 210's payment and delivery qualifiers on the invoice. Tenders need no new columns: [Tendering & Acceptance](/books/logistics/tendering#how-to-build-it) already links each 204, 990 and 997 to its tender through `tender_events.document_id`, keeps the partner's code in `tender_events.partner_code`, and has the revision, conditions, counter and reason columns a 990 fills; `partner_code_maps` rows for B1-04 resolve to the statuses its `tenders_status_check_v2` allows. `ALTER`s run on a live database as the business chapter describes ([Lock-Aware DDL](/docs/database/zero-downtime-migrations#lock-aware-ddl)):
 
 ```sql
 CREATE TABLE edi_partner_maps (          -- how one partner exchanges one set, versioned
@@ -461,15 +461,6 @@ ALTER TABLE documents ADD CONSTRAINT documents_interchange_fkey
 ALTER TABLE documents ADD CONSTRAINT documents_x12_set_check
   CHECK (format <> 'x12' OR transaction_set IS NOT NULL) NOT VALID;
 
-ALTER TABLE tenders
-  ADD COLUMN tender_document_id   UUID,  -- the 204 (or API payload) that offered it
-  ADD COLUMN response_document_id UUID,  -- the 990 that answered it
-  ADD COLUMN edi_purpose_code     TEXT;  -- B2A-01 as sent or received
-ALTER TABLE tenders ADD CONSTRAINT tenders_tender_document_fkey
-  FOREIGN KEY (tender_document_id) REFERENCES documents (id) NOT VALID;
-ALTER TABLE tenders ADD CONSTRAINT tenders_response_document_fkey
-  FOREIGN KEY (response_document_id) REFERENCES documents (id) NOT VALID;
-
 ALTER TABLE shipment_events
   ADD COLUMN partner_code_map_id UUID;   -- the map row that translated source_code
 ALTER TABLE shipment_events ADD CONSTRAINT shipment_events_code_map_fkey
@@ -488,8 +479,6 @@ CREATE INDEX CONCURRENTLY documents_interchange_idx ON documents (interchange_id
 CREATE INDEX CONCURRENTLY tenders_external_ref_idx ON tenders (carrier_party_id, external_ref);
 ALTER TABLE documents VALIDATE CONSTRAINT documents_interchange_fkey;
 ALTER TABLE documents VALIDATE CONSTRAINT documents_x12_set_check;
-ALTER TABLE tenders VALIDATE CONSTRAINT tenders_tender_document_fkey;
-ALTER TABLE tenders VALIDATE CONSTRAINT tenders_response_document_fkey;
 ALTER TABLE shipment_events VALIDATE CONSTRAINT shipment_events_code_map_fkey;
 ALTER TABLE freight_invoices VALIDATE CONSTRAINT freight_invoices_delivery_qualifier_check;
 ```
@@ -497,7 +486,7 @@ ALTER TABLE freight_invoices VALIDATE CONSTRAINT freight_invoices_delivery_quali
 A partner scorecard reads 214 latency straight off the two clocks, against the partner's own promise:
 
 ```sql
--- 214 latency by carrier over the last 30 days, against a 60-minute requirement
+-- 214 latency by carrier over the last 30 days, against C.H. Robinson's one-hour requirement
 SELECT c.scac,
        count(*)                                                        AS statuses,
        percentile_cont(0.5)  WITHIN GROUP (ORDER BY e.received_at - e.occurred_at) AS p50,
@@ -533,7 +522,7 @@ Design notes:
 
 - **Bytes, then envelope, then parse.** The interchange is stored and hashed as received, the envelope's control number catches the duplicate, and only then are transaction sets parsed into `documents.parsed` and the owning tables, so a parse failure loses nothing ([Consumers Are Idempotent](/docs/architecture/events#consumers-are-idempotent)).
 - **One translator, many sources.** A 214, a provider's webhook and a carrier API all resolve their codes through `partner_code_maps`; `source` distinguishes them, and the shipment event is the same row whichever way it came ([Visibility Networks](/books/logistics/logistics-apis#visibility-networks)).
-- **The tender keeps its messages.** `tender_document_id` and `response_document_id` point at the 204 and 990 as exchanged, so "we never got your tender" and "we rejected it at 14:02" are answered from the record.
+- **The tender keeps its messages.** Each `tender_events` row points at the 204, 990 or 997 as exchanged, so "we never got your tender" and "we rejected it at 14:02" are answered from the record.
 - **Local time is converted once, at the edge.** The parse converts with the facility's zone (or the map's `local_time_zone`), stores the instant in `occurred_at` and the zone in `reported_tz`, and nothing downstream sees local text.
 - **Amounts are N2 integers.** The 210 parser reads implied-decimal elements straight into minor units; the stated total stays on `freight_invoices.stated_total` and audit compares it with the sum of the lines.
 - **Events.** `edi.interchange_received`, `edi.parse_failed`, `edi.code_unmapped`, `edi.ack_overdue`, `tender.answer_received` and `freight_invoice.received` go through the [outbox](/docs/architecture/events#the-transactional-outbox) to tendering, visibility, billing and the integration support queue.
@@ -543,7 +532,7 @@ Design notes:
 - **Every interchange as exchanged,** with its hash, control numbers, transport receipt and timestamps, for as long as any tender, claim, detention bill or invoice dispute it could support is open, and at least the three years a broker keeps transaction records under 49 CFR 371.3 ([Auditing](/books/logistics/logistics-business#auditing)).
 - **Every acknowledgment,** with when it was due and when it came, because a carrier's "the tender was late" and a shipper's "your invoice never arrived" are answered with a 997's time.
 - **Every partner map and code map version,** with the guide it came from and its validity, and the map row that translated each tender answer, status and invoice line.
-- **Every tender's 204 and 990,** linked from the tender, so who offered what and who answered what is never reconstructed from memory.
+- **Every tender's 204 and 990,** linked from its `tender_events`, so who offered what and who answered what is never reconstructed from memory.
 - **Both clocks on every status,** occurred and received, so a partner's latency and an on-time measure can each be recomputed from the record.
 
 ## What This Means for the System You Build
@@ -562,7 +551,7 @@ Design notes:
 
 **Standards**
 
-- [X12: Transaction sets](https://x12.org/products/transaction-sets), the official titles of the 204, 210 to 217, 990, 300, 301, 303, 304, 309, 310, 315, 317, 322, 323, 404, 410, 417, 418, 426, 820, 824, 858, 859, 920, 924, 997 and 999
+- [X12: Transaction sets](https://x12.org/products/transaction-sets), the official titles of the 204, 210 to 217, 990, 300, 301, 303, 304, 310, 315, 317, 322, 323, 404, 410, 417, 418, 426, 820, 824, 858, 859, 920, 924, 997 and 999
 
 **Published implementation guides**
 
@@ -570,7 +559,7 @@ Design notes:
 - [Kroger: Harris Teeter 204 Motor Carrier Load Tender, X12 4030](https://edi.kroger.com/EDIPortal/documents/Maps/ht/HT_204_X12_4030_Guidelines.pdf), version 4030, modified December 15, 2025, B2A codes 00, 01 and 05, stop G62 dates 10 and 68 without times, S5 CL and CU
 - [Kroger: Harris Teeter 214, X12 4010](https://edi.kroger.com/EDIPortal/documents/Maps/ht/HT_214_X12_4010_Guidelines.pdf), version 4010, AT7-01 CD Carrier Departed Delivery Location with NS
 - [C.H. Robinson: Truckload Carrier X12 990](https://www.chrobinson.com/en-US/-/media/ChRobinson/documents/carrier-specs-docs/truckload-carrier-specs/CHR990IB.pdf), version 4010, B1-02 as the load number from the 204's B2-04, B1-04 codes A, D, R and U, R treated as a decline and U as an accept
-- [C.H. Robinson: LTL Carrier X12 214](https://www.chrobinson.com/en//en-US/-/media/ChRobinson/documents/carrier-specs-docs/CHR%20LTL%20Carrier%20X12-214.pdf), version 4010 dated October 12, 2021, required X3, AF, X1 and CD, X6 every 15 minutes, 15-minute and one-hour latency, one location per 214, the 997 it returns, AT7 syntax rules and code counts, AA and AB appointment codes, local time, the MS1 location, QM functional group, ISA-12 00401 and GS-08 004010, and the sample 214
-- [C.H. Robinson: Dray Carrier X12 214](https://www.chrobinson.com/en//en-US/-/media/ChRobinson/documents/carrier-specs-docs/CHR%20Dray%20Carrier%20X12-214.pdf), version 4010, X3, AF, D1, OA and I1 status codes and AF, AG, AH and AI late reason codes
+- [C.H. Robinson: LTL Carrier X12 214](https://www.chrobinson.com/en//en-US/-/media/ChRobinson/documents/carrier-specs-docs/CHR%20LTL%20Carrier%20X12-214.pdf), version 4010 dated October 12, 2021, required X3, AF, X1 and CD, X6 every 15 minutes, 15-minute and one-hour latency, one location per 214, the 997 it returns, AT7 syntax rules and code counts, AA and AB appointment codes, local time, the MS1 location and its latitude and longitude rule, QM functional group, ISA-12 00401 and GS-08 004010, and the sample 214
+- [C.H. Robinson: Dray Carrier X12 214](https://www.chrobinson.com/en//en-US/-/media/ChRobinson/documents/carrier-specs-docs/CHR%20Dray%20Carrier%20X12-214.pdf), version 4010 dated May 30, 2017, X3, AF, D1, OA and I1 status codes and AF, AG, AH and AI late reason codes
 - [XPO: 990 specification, X12 4010](https://www.xpo.com/cdn/files/s8/990_spec_x12_4010.pdf), the seven B1-04 codes, B1-01 SCAC and B1-03 booking date, N9 and K1, GF functional group
 - [XPO: 210 specification, X12 4010](https://www.xpo.com/cdn/files/s8/210_spec.pdf), guide dated September 25, 2015, B3 elements, CC and PP, the billing date, N2 net amount due, delivery date qualifiers 017 and 035 and invoicing before delivery, L1 qualifiers FR, MN and PH, special charge codes DSC, FUE, HAZ and PYS, L3 totals, IM functional group
