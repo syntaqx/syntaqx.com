@@ -203,7 +203,7 @@ Design notes:
 
 **Regulators and guidance**
 
-- [FinCEN: Application of FinCEN's Regulations to Certain Business Models Involving Convertible Virtual Currencies (FIN-2019-G001, May 9, 2019)](https://www.fincen.gov/sites/default/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), hosted wallet providers as account-based money transmitters
+- [FinCEN: Application of FinCEN's Regulations to Certain Business Models Involving Convertible Virtual Currencies (FIN-2019-G001, May 9, 2019)](https://www.fincen.gov/system/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), hosted wallet providers as account-based money transmitters
 - [NYDFS: Virtual Currency Businesses](https://www.dfs.ny.gov/apps_and_licensing/virtual_currency_businesses), virtual currency business activity, the June 24, 2015 effective date and the limited purpose trust company alternative
 - [California DFPI: Digital Financial Assets Law FAQ](https://dfpi.ca.gov/regulated-industries/digital-financial-assets/digital-financial-assets-law-frequently-asked-questions/), the July 1, 2026 licensing date, NMLS and exemptions
 - [CSBS: Money Transmission Modernization Act](https://www.csbs.org/csbs-money-transmission-modernization-act-mtma), 31 states enacting in full or in part as of September 2026

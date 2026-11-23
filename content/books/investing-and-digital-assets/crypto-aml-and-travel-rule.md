@@ -271,7 +271,7 @@ Design notes:
 **Regulators and guidance**
 
 - [FATF: FATF updates Standards on Recommendation 16 on Payment Transparency (June 18, 2025, updated October 28, 2025)](https://www.fatf-gafi.org/en/publications/Fatfrecommendations/update-Recommendation-16-payment-transparency-june-2025.html), the June 2025 changes, the end-2030 effective date and the assessment methodology annex
-- [FinCEN: FIN-2019-G001 (May 9, 2019)](https://www.fincen.gov/sites/default/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), crypto transfers as transmittals, timing and protocols, pseudonyms, hosted wallets' position in the chain, correspondent treatment and anonymizing services
+- [FinCEN: FIN-2019-G001 (May 9, 2019)](https://www.fincen.gov/system/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), crypto transfers as transmittals, timing and protocols, pseudonyms, hosted wallets' position in the chain, correspondent treatment and anonymizing services
 - [Treasury: Binance settlement (November 21, 2023)](https://home.treasury.gov/news/press-releases/jy1925), FinCEN's and OFAC's findings, the monitorship and the exit from the US
 - [CFTC: Release 8412-21](https://www.cftc.gov/PressRoom/PressReleases/8412-21), the BitMEX order, the $100 million penalty and offset, the registration, CIP and AML failures and the certifications
 

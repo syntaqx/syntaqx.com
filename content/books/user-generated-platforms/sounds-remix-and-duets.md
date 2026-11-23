@@ -583,7 +583,7 @@ Notes on the sketch:
 
 **Labels, publishers and collectives**
 
-- [Universal Music Group: An open letter to the artist and songwriter community](https://www.universalmusic.com/an-open-letter-to-the-artist-and-songwriter-community-why-we-must-call-time-out-on-tiktok/), the 31 January 2024 expiry, the three issues, about 1% of revenue, selective removal of developing artists
+- [Universal Music Group: An open letter to the artist and songwriter community (Wayback Machine, February 1, 2024)](https://web.archive.org/web/20240201235752/https://www.universalmusic.com/an-open-letter-to-the-artist-and-songwriter-community-why-we-must-call-time-out-on-tiktok/), the 31 January 2024 expiry, the three issues, about 1% of revenue, selective removal of developing artists
 - [Music Business Worldwide: Universal Music Group and TikTok strike new multi-year licensing deal](https://www.musicbusinessworldwide.com/universal-music-group-and-tiktok-strike-new-multi-year-licensing-deal/), the 22 May 2026 renewal, AI protections, attribution, commerce
 - [NMPA: NMPA and TikTok announce global multi-year partnership agreement](https://www.nmpa.org/?p=1237), past use, opt-in for members, retroactive to 1 May 2020 (23 July 2020)
 - [Music Business Worldwide: The NMPA's TikTok deal has officially ended](https://www.musicbusinessworldwide.com/the-nmpas-tiktok-deal-has-officially-ended-what-does-that-mean-for-independent-publishers-in-the-us), the 30 April 2024 expiry, the NMPA memo and enforcement offer, TikTok's direct deals statement (1 May 2024)

@@ -48,6 +48,7 @@ describe("classify()", () => {
     for (const status of [401, 403, 429, 500, 503]) expect(classify({ status })).toBe("uncertain");
     expect(classify({ errorCode: "TIMEOUT" })).toBe("uncertain");
     expect(classify({ errorCode: "ECONNRESET" })).toBe("uncertain");
+    expect(classify({ errorCode: "ECONNREFUSED" })).toBe("uncertain");
   });
 });
 
