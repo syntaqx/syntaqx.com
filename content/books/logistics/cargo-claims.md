@@ -54,7 +54,7 @@ These are the clocks a carrier's claims system runs on, and they're the clocks a
 
 ## Released Values in LTL
 
-LTL is the mode where released values matter most, because almost every LTL shipment moves under a carrier's rules tariff and the uniform bill of lading. A worked claim under Old Dominion's Item 594 limits: a shipper sends one pallet of 24 cartons of new small appliances, each carton 25 pounds and invoiced at $180, and four cartons arrive crushed.
+LTL is the mode where released values matter most, because almost every LTL shipment moves under a carrier's rules tariff and the uniform bill of lading. A worked claim under Old Dominion's Item 594 limits, with illustrative shipment figures: a shipper sends one pallet of 24 cartons of new small appliances, each carton 25 pounds and invoiced at $180, and four cartons arrive crushed.
 
 | Line | Basis | Amount |
 | --- | --- | --- |

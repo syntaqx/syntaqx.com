@@ -190,7 +190,7 @@ Forwarders run on an operational platform that holds the job (the house shipment
 
 | System | Publisher | What it says it does |
 | --- | --- | --- |
-| **CargoWise** | WiseTech Global | A forwarding and customs platform; CargoWise revenue grew 11% to $756.9 million in WiseTech's fiscal year ended June 30, 2026, inside group revenue of $1,395.9 million that includes e2open (acquired August 4, 2025), with more than 95% of CargoWise customers on its new Value Packs commercial model |
+| **CargoWise** | WiseTech Global | A forwarding and customs platform; CargoWise revenue grew 11% to $756.9 million in WiseTech's fiscal year ended June 30, 2026, inside group revenue of $1,395.9 million that includes e2open (acquired August 3, 2025), with more than 95% of CargoWise customers on its new Value Packs commercial model |
 | **Descartes** (Broker & Forwarder Enterprise Systems) | Descartes Systems Group | OneView Forwarder Enterprise and Customs House Brokerage, to "coordinate air, truck and ocean import/export shipments" with customs and security filings, Rate Builder to manage "a global rate network," ocean tariff compliance with FMC rules, and manifest filing for forwarders and NVOCCs, on a network "more than 160 countries" wide |
 | **In-house platforms** | Expeditors and other large forwarders | Expeditors builds its own core platforms rather than depending on third parties |
 | **Magaya** | Magaya | A freight management platform for forwarders and customs brokers, with built-in warehouse management, rate management, a branded customer portal and "an ACE-certified ABI solution," at "2,300+ Magaya customers in 100+ countries" |
@@ -363,7 +363,8 @@ Design notes:
 - [Expeditors International: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/746515/000119312526071569/expd-20251231.htm), revenue by service, tonnage and container changes, non-asset model, IAC, NVOCC and customs broker roles, offices and employees, in-house systems, house bills, agent role, revenue presentation, cash advances as pass-through and purchase obligations for guaranteed space
 - [C.H. Robinson Worldwide: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1043277/000104327726000009/chrw-20251231.htm), Global Forwarding services, OTI, IAC and customs broker roles, consolidation, and the segment's ocean, air and customs adjusted gross profit
 - [Landstar System: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/853816/000119312526064756/d66072d10k.htm), air and ocean share of revenue and its IATA-certified IAC, OTI and customs broker roles
-- [WiseTech Global: FY26 results announcement (August 26, 2026)](https://announcements.asx.com.au/asxpdf/20260826/pdf/07379lj9h8npgj.pdf), group and CargoWise revenue, the e2open acquisition and CargoWise Value Packs
+- [WiseTech Global: FY26 results announcement (August 26, 2026)](https://announcements.asx.com.au/asxpdf/20260826/pdf/07379lj9h8npgj.pdf), group and CargoWise revenue, e2open in the group and CargoWise Value Packs
+- [WiseTech Global: Completes strategic acquisition of e2open (August 3, 2025)](https://www.wisetechglobal.com/news/wisetech-global-completes-strategic-acquisition-of-e2open/), the completion date
 - [Descartes Systems Group: Annual Information Form for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1050140/000110465926026450/dsgx-20260131xex99d1.htm), Broker & Forwarder Enterprise Systems, Rate Builder, ocean tariff compliance, security filings and the Global Logistics Network
 
 **Vendors**

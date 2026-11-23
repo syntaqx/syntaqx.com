@@ -28,7 +28,7 @@ Three patterns:
 
 - **The proof is part of the bill.** Every broker above names the signed bill of lading or POD as a condition of payment, and Flock Freight's agreement makes late paperwork a forfeiture. A bill without its documents isn't late; it isn't a bill yet.
 - **The invoice must point at the payer's record.** C.H. Robinson wants its load number, TQL wants its PO number in the email subject, and a retailer wants its own shipment reference in the 210's reference segment. A carrier's invoice number means nothing to the payer's system until it is matched to the payer's load.
-- **Terms are the contract's, and speed costs money.** Standard terms around 28 to 30 days, with quick pay as a discount on the carrier's side, are the published pattern; the regulation's 15-day credit period is a default that contracts and tariffs replace.
+- **Terms are the contract's.** Standard terms around 28 to 30 days are the published pattern, and the regulation's 15-day credit period is a default that contracts and tariffs replace; quick pay and factoring, which change when and to whom the bill is paid, are [Terms, Quick Pay and Offsets](/books/logistics/paying-carriers#terms-quick-pay-and-offsets).
 
 ## Who Bills Whom
 
@@ -59,20 +59,7 @@ Billing before delivery exists, mainly in LTL, where prepaid freight is often bi
 
 ## The 210 as the Bill
 
-The X12 210, "Motor Carrier Freight Details and Invoice," is the bill in EDI; rail (410) and ocean (310) have their own sets, and the segment-by-segment detail, partner variance and versions are [Transportation EDI](/books/logistics/transportation-edi)'s. The parts that map to the core tables, from XPO's 4010 guide:
-
-| 210 element | Meaning | Maps to |
-| --- | --- | --- |
-| B3-02 Invoice Number | "Identifying number assigned by issuer" | `freight_invoices.number` |
-| B3-03 Shipment Identification Number | Assigned "by the shipper," identifying the shipment from origin to destination, "not subject to modification" | `shipments.bol_number` or the payer's own reference, for matching |
-| B3-04 Shipment Method of Payment | `CC` collect, `PP` prepaid | Checked against `shipments.payment_terms` |
-| B3-06 Date | "the billing date" | `freight_invoices.invoice_date` |
-| B3-07 Net Amount Due | "Total charges to be paid by the receiver of this transaction set," type N2 (two implied decimals) | `freight_invoices.stated_total`, already in cents |
-| B3-09 and B3-10 | Delivery date, qualified `035` Delivered or `017` Estimated Delivery | The delivery the bill claims |
-| B3-11 SCAC | The issuing carrier | Resolves `issuer_party_id` through `carriers.scac` |
-| N9 | References such as `PO` purchase order number | The payer's load or PO number |
-| L1 | Per line: rate, rate qualifier (`FR` flat, `MN` minimum, `PH` per hundred), charge, special charge code (`DSC` discount, `FUE` fuel, `HAZ` hazardous cargo, `PYS` priority service) | One `freight_invoice_lines` row each; the code maps to a `freight_charges` kind |
-| L3 | Total weight and charges | A check against the sum of L1 charges |
+The X12 210, "Motor Carrier Freight Details and Invoice," is the bill in EDI; rail (410) and ocean (310) have their own sets. Its segments, from the B3 header (invoice number, shipment ID, method of payment, billing date, net amount due, delivery date and its qualifier, SCAC) to the L1 charge lines and L3 totals, and how each maps to `freight_invoices` and `freight_invoice_lines`, are in [The 210 Freight Invoice](/books/logistics/transportation-edi#the-210-freight-invoice), with partner variance and versions. Billing adds two columns from it: the delivery the bill claims (B3-09, `delivered_on`) and whether it was billed before delivery (B3-10 qualifier `017`, `delivery_estimated`), which the proof gate above reads.
 
 Two mapping rules matter more than any field. **The code as billed is kept.** `freight_invoice_lines.code` stores `FUE` or the carrier's accessorial code as received, and the mapping to a charge kind is a versioned table per partner, because two carriers' codes for the same accessorial differ and one carrier's code changes meaning between guides ([Mapping Their Schema to Yours](/docs/building-blocks/integrations#mapping-their-schema-to-yours)). **The stated total is not the truth.** B3-07 is what the carrier says is due; the lines are what the audit checks; a 210 whose lines don't sum to its total is accepted and flagged, never silently corrected.
 
@@ -166,7 +153,7 @@ The practices that keep short pays from becoming write-offs:
 - **Short pay per line, not per invoice.** The payer's remittance should say which line it reduced and why; a lump short pay against a 12-line invoice leaves the carrier guessing. When the payer is the system's own customer, the remittance advice usually doesn't say; the cash application step below has to infer it and record the inference.
 - **Reason codes are data.** Each side keeps its own list (the payer's audit exception codes, the carrier's dispute codes) and a mapping between them for its large partners, because an aging report of disputes by reason is how a carrier finds which customer's process or which of its own documents is failing.
 - **Deadlines from the rule.** The 180-day windows in 13710(a)(3), the contract's own dispute period, and a claim filing period each set when a dispute must be raised or answered; the dispute row carries them.
-- **Offsets are explicit.** A broker that holds back money from a carrier's invoice for a cargo claim or another load's overpayment is applying a contract right (Flock Freight's agreement gives the broker the right "to withhold and/or set off any payment owing to Carrier"); the offset is a line on the payment, linked to what it offsets, never a lower approved amount.
+- **Offsets are explicit.** A broker that holds back money from a carrier's invoice for a cargo claim or another load's overpayment is applying a contract right; the offset is a line on the payment, linked to what it offsets, never a lower approved amount ([Terms, Quick Pay and Offsets](/books/logistics/paying-carriers#terms-quick-pay-and-offsets)).
 
 ## Overcharges and Duplicate Payments
 

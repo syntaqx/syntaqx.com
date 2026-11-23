@@ -208,7 +208,7 @@ Steps 1 to 5 run at quote and tender time and produce `estimated` charges; step 
 
 ## How to Build It
 
-Rating extends `lane_rates` with a real fuel schedule and mileage terms, `rate_agreements` with accessorial schedules and a priority, and `freight_charges` with the inputs each line was computed from. New tables hold the fuel index, fuel schedules, accessorial rates, mileage lookups and quotes. LTL base tariffs, density scales and FAK bands are already [Freight Class, Density & LTL Pricing](/books/logistics/freight-classification#how-to-build-it)'s. `ALTER`s run on a live database as the business chapter describes ([Lock-Aware DDL](/docs/database/zero-downtime-migrations#lock-aware-ddl)):
+Rating extends `lane_rates` with a real fuel schedule and mileage terms, `rate_agreements` with accessorial schedules and a priority, and `freight_charges` with the inputs each line was computed from. New tables hold the fuel index, fuel schedules, accessorial rates, mileage lookups and quotes. The diesel series is a published index like the ones in [Freight Markets & Cycles](/books/logistics/freight-markets#how-to-build-it)'s `market_index_series`; my default keeps it in its own table because every fuel surcharge line points at the exact series and week it used through a foreign key, and a system that already stores EIA diesel as a market series loads this table from it. LTL base tariffs, density scales and FAK bands are already [Freight Class, Density & LTL Pricing](/books/logistics/freight-classification#how-to-build-it)'s. `ALTER`s run on a live database as the business chapter describes ([Lock-Aware DDL](/docs/database/zero-downtime-migrations#lock-aware-ddl)):
 
 ```sql
 CREATE TABLE fuel_price_indexes (        -- a published index value, as published

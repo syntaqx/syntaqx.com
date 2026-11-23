@@ -62,7 +62,7 @@ Rules that change the answer:
 
 ### A Worked Explosion
 
-A pump (P) is a housing (H) and two seal kits (S); the housing also takes one seal kit. Weekly buckets; P has 40 on hand and a one-week lead time, lot-for-lot; H has 20 on hand, a one-week lead time, and an order multiple of 50; S has 300 on hand, a two-week lead time and a minimum order of 500. Low-level codes: P is 0, H is 1, S is 2 (because it sits under H). Demand for P: 100 in week 3, 150 in week 5.
+A pump (P) is a housing (H) and two seal kits (S); the housing also takes one seal kit. Weekly buckets; P has 40 on hand and a one-week lead time, lot-for-lot; H has 20 on hand, a one-week lead time, and an order multiple of 50; S has 300 on hand, a two-week lead time and a minimum order of 500. Low-level codes: P is 0, H is 1, S is 2 (because it sits under H). Demand for P: 100 in week 3, 150 in week 5. The figures are illustrative.
 
 | Item | Week | Gross | Receipts (planned) | Projected on hand | Planned release |
 | --- | --- | --- | --- | --- | --- |
