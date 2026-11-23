@@ -47,15 +47,16 @@ My rule for a bidder: size capacity per region for the quota plus a margin, neve
 
 `tmax` is the whole budget, measured at the exchange and "including Internet latency". It is spent in pieces, and the bidder controls only some of them:
 
-| Stage | Who controls it | Illustrative share of a 120 ms `tmax` |
-| --- | --- | --- |
-| Exchange builds and sends the request | Exchange | 5 ms |
-| Network, exchange to bidder | Peering, region choice | 5 to 40 ms |
-| Bidder: parse, pre-filter, retrieve, score, price, serialize | Bidder | 20 to 40 ms |
-| Network, bidder to exchange | Peering, region choice | 5 to 40 ms |
-| Exchange margin for its own auction and response | Exchange | 10 to 20 ms |
+| Stage | Who controls it | Same region, illustrative | Cross-region, illustrative |
+| --- | --- | --- | --- |
+| Exchange builds and sends the request | Exchange | 5 ms | 5 ms |
+| Network, exchange to bidder | Peering, region choice | 5 ms | 40 ms |
+| Bidder: parse, pre-filter, retrieve, score, price, serialize | Bidder | 35 ms | 35 ms |
+| Network, bidder to exchange | Peering, region choice | 5 ms | 40 ms |
+| Exchange margin for its own auction and response | Exchange | 15 ms | 15 ms |
+| **Total against a 120 ms `tmax`** | | **65 ms, 55 ms to spare** | **135 ms, 15 ms late** |
 
-The shares are illustrative, not any exchange's published split; what is published is the total deadline (80 to 1,000 ms on Authorized Buyers, by format and auction type) and the requirement that most responses arrive in time. The point of the table is the network rows: a bidder in the wrong region can spend most of the budget on round trips, which is why Authorized Buyers tells bidders to "locate your servers close to the trading locations" and to peer when volume is large.
+The numbers are illustrative, not any exchange's published split; what is published is the total deadline (80 to 1,000 ms on Authorized Buyers, by format and auction type) and the requirement that most responses arrive in time. The point of the table is the network rows: the same bidder code that answers with room to spare in the exchange's region misses the deadline from across a continent, which is why Authorized Buyers tells bidders to "locate your servers close to the trading locations" and to peer when volume is large.
 
 An exchange that calls other exchanges, or a header bidding server calling SSPs, has to subtract its own share before passing the deadline on. Prebid Server's formula is the published version: the bidder's deadline is the request's `tmax` less the server's own processing time, a configured network latency buffer and a minimum response duration, and a bidder whose computed deadline is below what the server needs to prepare its own response isn't called at all. Each hop shrinks the budget, which is one of the costs of long supply chains that Take Rates & Supply Quality measures in money ([Supply Path Optimization](/books/advertising/take-rates-and-supply-quality#supply-path-optimization)).
 
