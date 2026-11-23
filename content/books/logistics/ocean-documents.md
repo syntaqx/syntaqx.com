@@ -9,7 +9,7 @@ tags = ["logistics", "ocean", "bill-of-lading", "ebl", "dcsa", "documents-of-tit
 
 An ocean bill of lading is three things at once. It is the carrier's receipt for the goods, with the container numbers, seals, piece count and weights the shipper declared; it is the evidence of the contract of carriage, with the carrier's terms on the back or by reference; and, when it is made out "to order," it is a document of title, so that whoever holds an original, properly endorsed, can demand the goods at destination and can sell them, or pledge them to a bank, while they are at sea. ZIM's 20-F defines a bill of lading as "a document issued by or on behalf of a carrier as evidence of a contract carriage." DCSA counts about 45 million bills issued by ocean carriers a year, of which 1.2% were electronic in 2021.
 
-The software is hard because the document's legal weight depends on details that look cosmetic. Whether a consignee is named or the bill is "to order" decides whether the carrier may deliver to the named party or only against a surrendered original. Whether the bill says "shipped on board" with a date or only "received for shipment" decides whether a bank will pay under a letter of credit. A house bill issued by an NVOCC to its customer and the master bill issued by the line to the NVOCC describe the same container under two contracts, with two shippers and two consignees. And an electronic bill only works as a document of title if the platform can prove one party, and only one, controls it at any moment. This chapter covers the bill of lading and the sea waybill, negotiable and straight bills, house and master bills, the document's life from shipping instructions to surrender, electronic bills of lading and the laws that recognize them, and the tables that hold them. It extends `documents` and `shipments` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model); the booking that precedes the bill is [Ocean Shipping](/books/logistics/ocean-shipping#booking), the NVOCCs that issue house bills are [Freight Forwarders & NVOCCs](/books/logistics/forwarders-and-nvoccs), the liability limits the bill carries are Cargo Liability & Claims, and the air waybill is [Air Cargo](/books/logistics/air-cargo).
+The software is hard because the document's legal weight depends on details that look cosmetic. Whether a consignee is named or the bill is "to order" decides whether the carrier may deliver to the named party or only against a surrendered original. Whether the bill says "shipped on board" with a date or only "received for shipment" decides whether a bank will pay under a letter of credit. A house bill issued by an NVOCC to its customer and the master bill issued by the line to the NVOCC describe the same container under two contracts, with two shippers and two consignees. And an electronic bill only works as a document of title if the platform can prove one party, and only one, controls it at any moment. This chapter covers the bill of lading and the sea waybill, negotiable and straight bills, house and master bills, the document's life from shipping instructions to surrender, electronic bills of lading and the laws that recognize them, and the tables that hold them. It extends `documents` and `shipments` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model); the booking that precedes the bill is [Ocean Shipping](/books/logistics/ocean-shipping#booking), the NVOCCs that issue house bills are [Freight Forwarders & NVOCCs](/books/logistics/forwarders-and-nvoccs), the liability limits the bill carries are [Cargo Liability & Claims](/books/logistics/cargo-claims#ocean-and-air), and the air waybill is [Air Cargo](/books/logistics/air-cargo).
 
 ## How the Carriers and Lawmakers Do It
 
@@ -17,7 +17,7 @@ As of November 2026, the frameworks a transport document system has to satisfy:
 
 | Source | What it governs | The rule, as published |
 | --- | --- | --- |
-| **DCSA Bill of Lading standard** (eBL API 3.0.0, public) | Shipping instructions and the transport document as data, paper or electronic | `transportDocumentTypeCode` is `BOL` (bill of lading) or `SWB` (sea waybill); `isToOrder` "Indicates whether the B/L is issued `to order` or not" and must be false for a sea waybill; for an electronic bill, the number of originals is one or zero |
+| **DCSA Bill of Lading standard** (eBL API 3.0.0, public) | Shipping instructions and the transport document as data, paper or electronic | `transportDocumentTypeCode` is `BOL` (bill of lading) or `SWB` (sea waybill); `isToOrder` "Indicates whether the B/L is issued `to order` or not" and must be false for a sea waybill; for an electronic bill, each count of originals is one or zero |
 | **DCSA member carriers' commitment** (February 15, 2023) | Adoption | MSC, Maersk, CMA CGM, Hapag-Lloyd, ONE, Evergreen, Yang Ming, HMM and ZIM committed to 50% of original bills electronic within five years and 100% by 2030, on DCSA standards |
 | **Federal bills of lading law** (49 U.S.C. 80103) | Bills issued by common carriers in the US | A bill is negotiable when it says the goods go to the "order of a consignee" and has no agreement on its face that it is not negotiable; a nonnegotiable bill must say "nonnegotiable" or "not negotiable" |
 | **UCC Article 7** (section 7-106) | Electronic documents of title under state law | A person has control when a system reliably establishes it as the person to which the document was issued or transferred; the safe harbor is "a single authoritative copy" that is "unique, identifiable" and unalterable except as permitted |
@@ -46,13 +46,13 @@ A **sea waybill** is a receipt and evidence of the contract, never a document of
 | `isElectronic` | Whether "the transport document is electronically transferred"; required on shipping instructions |
 | `numberOfOriginalsWithCharges`, `numberOfOriginalsWithoutCharges` | The originals the customer asks for, with and without the freight charges printed; for an electronic bill "accepted value is `1` (one) or `0` (zero)" |
 | `isShippedOnBoardType` | Whether the document "is a received for shipment, or shipped on board" |
-| `shippedOnBoardDate` | The date the goods were loaded, on a shipped-on-board bill |
+| `shippedOnBoardDate` | The "Date when the last container that is linked to the transport document is physically loaded onboard the vessel" |
 
-The notify party is not a consignee: under the federal statute, naming a person to be notified of arrival does not limit negotiability (80103(a)(2)). The parties on a DCSA document include the shipper, the consignee or endorsee, notify parties, and other functions with their own codes, among them `SCO` (service contract owner), `DDR` and `DDS` (the consignor's and consignee's freight forwarders), `CS` (consolidator), `MF` (manufacturer) and `WH` (warehouse keeper). Each prints as the party asked for it to print; DCSA lets a party supply a displayed address that "must be included in the `Transport Document`" in place of its structured address, so the printed text and the structured party are both kept.
+The notify party is not a consignee: under the federal statute, naming a person to be notified of arrival does not limit negotiability (80103(a)(2)). The parties on a DCSA document include the shipper, the consignee or endorsee, notify parties, and other functions with their own codes, among them `SCO` (service contract owner), `DDR` and `DDS` (the consignor's and consignee's freight forwarders), `CS` (consolidator), `MF` (manufacturer) and `WH` (warehouse keeper). Each party carries its structured name and address, and may also carry a `displayedAddress`, "the address of the party to be displayed on the `Transport Document`," which "may be used to match the address provided in the `Letter of Credit`"; if provided it "must be included in the `Transport Document`," in at most 2 lines of 35 characters on a paper bill and 6 on an electronic one. The printed text and the structured party are both kept.
 
 ## Negotiable and Straight Bills
 
-A negotiable bill makes the original the key to the cargo. The consignee, or a bank holding the bill under a letter of credit, presents an original properly endorsed; the carrier delivers against it and collects the original as surrendered; the other originals of the set become void. In DCSA's life cycle the surrender is its own state, `SURRENDER_FOR_DELIVERY`, and a booking is `COMPLETED` when "the related Transport Document has been surrendered for delivery." Three consequences for a system:
+A negotiable bill makes the original the key to the cargo. The consignee, or a bank holding the bill under a letter of credit, presents an original properly endorsed; the carrier delivers against it and collects the original as surrendered; the other originals of the set become void. In DCSA's life cycle the surrender is its own state, `SURRENDER_FOR_DELIVERY`, and a booking is `COMPLETED` when "The Transport Document this Booking is connected to has been Surrendered for Delivery." Three consequences for a system:
 
 - **Delivery is gated on surrender, not arrival.** An import under a negotiable bill can sit at the terminal accruing demurrage while the original travels by courier or waits for a bank to be paid. The release from the carrier is a separate event from customs release and from container availability, and [Detention & Demurrage](/books/logistics/detention-and-demurrage#free-time) shows why each needs its own timestamp.
 - **Endorsement is a chain.** Each transfer of a negotiable bill (blank endorsement, or to a named endorsee) changes who may demand the goods. On paper the chain is ink on the back; on an eBL platform it is a ledger of transfers, and the system that consumes it should keep each transfer with its time, not only the current holder.
@@ -64,7 +64,7 @@ A bank financing a shipment under a letter of credit usually requires an on-boar
 
 ## House and Master Bills
 
-When an NVOCC carries a customer's goods, two bills describe the same container. The line issues a **master** bill to the NVOCC, which is the shipper on it (an NVOCC is "a shipper in its dealings with an ocean common carrier," 46 CFR 515.2); the NVOCC issues a **house** bill to its customer, as carrier. Expeditors' ocean subsidiary, for example, issues "House Ocean Bills of Lading or House Sea Waybills" as an NVOCC, and acts as its customers' agent, earning handling fees, when they contract with the line directly.
+When an NVOCC carries a customer's goods, two bills describe the same container. The line issues a **master** bill to the NVOCC, which is the shipper on it (an NVOCC "is a shipper in its relationship with an ocean common carrier," 46 CFR 515.2); the NVOCC issues a **house** bill to its customer, as carrier. Expeditors' ocean subsidiary, for example, "issues a House Ocean Bill of Lading (HOBL) or a House Sea Waybill to customers as the contract of carriage" as an NVOCC, and when customers contract with the line directly it "acts as an agent of the customer and derives its revenues from handling fees."
 
 | | Master bill | House bill |
 | --- | --- | --- |
@@ -75,13 +75,13 @@ When an NVOCC carries a customer's goods, two bills describe the same container.
 | Cargo | Containers as tendered to the line; for LCL, the consolidated container | The customer's goods: for FCL the whole container, for LCL its pieces in a shared box |
 | Released by | The line, to the NVOCC's agent | The NVOCC's agent, to the importer |
 
-For a full container, house and master are one to one and describe the same box; for a consolidation, one master covers many houses, each with its own shipper, consignee, pieces and weight inside a container whose seal and VGM belong to the consolidator. Liability follows each contract separately, so a claim against the NVOCC runs under the house bill and the NVOCC's claim against the line under the master (Cargo Liability & Claims owns the limits). US advance filings follow the same split: the line declares the master and an NVOCC with automated access declares its house bills, as Import Entry & ACE describes.
+For a full container, house and master are one to one and describe the same box; for a consolidation, one master covers many houses, each with its own shipper, consignee, pieces and weight inside a container whose seal and VGM belong to the consolidator. Liability follows each contract separately, so a claim against the NVOCC runs under the house bill and the NVOCC's claim against the line under the master ([Cargo Liability & Claims](/books/logistics/cargo-claims#ocean-and-air) owns the limits). US advance filings follow the same split: the line declares the master and an NVOCC with automated access declares its house bills, as Import Entry & ACE describes.
 
 My rule: model house and master as two documents with a parent link, never as two number columns on one record, because each has its own parties, terms, status and surrender, and a consolidation's house bills share one master. The core `shipments.house_bill_number` and `master_bill_number` stay as the identifiers a message carries; the documents behind them are rows.
 
 ## The Life of a Transport Document
 
-The document starts as the shipper's **shipping instructions**, sent before the documentation cut-off: parties, cargo descriptions, packages, weights, containers and seals, freight terms, the document type and how many originals. DCSA's shipping instructions are `RECEIVED` or `PENDING_UPDATE` (the carrier has asked for an update), with updates tracked as `UPDATE_RECEIVED`, `UPDATE_CONFIRMED`, `UPDATE_DECLINED` or `UPDATE_CANCELLED`. The carrier answers with a draft, and the document moves through the states DCSA's eBL 3.0 defines:
+The document starts as the shipper's **shipping instructions**, sent before the documentation cut-off: parties, cargo descriptions, packages, weights, containers and seals, freight terms, the document type and how many originals. DCSA's shipping instructions are `RECEIVED`, `PENDING_UPDATE` (the carrier has asked for an update) or `COMPLETED` (no longer modifiable, because the transport document has been surrendered for delivery), with updates tracked as `UPDATE_RECEIVED`, `UPDATE_CONFIRMED`, `UPDATE_DECLINED` or `UPDATE_CANCELLED`. The carrier answers with a draft, and the document moves through the states DCSA's eBL 3.0 defines:
 
 | State | Meaning, per the standard |
 | --- | --- |
@@ -123,13 +123,13 @@ var allowed = map[DocState][]DocState{
 }
 
 type TransportDoc struct {
-	Type      string // "BOL" or "SWB"
-	ToOrder   bool
-	Consignee string
-	Endorsee  string
-	Originals int
+	Type       string // "BOL" or "SWB"
+	ToOrder    bool
+	Consignee  string
+	Endorsee   string
+	Originals  int
 	Electronic bool
-	State     DocState
+	State      DocState
 }
 
 // Validate applies the DCSA data rules before a draft can be approved.
@@ -279,7 +279,7 @@ CREATE TABLE transport_documents (       -- an ocean bill of lading or sea waybi
   UNIQUE (issuer_party_id, number, version),
   CHECK (document_type <> 'sea_waybill' OR NOT is_to_order),
   CHECK (ebl_platform IS NULL OR (is_electronic AND document_type = 'bill_of_lading')),
-  CHECK (NOT is_electronic OR originals_with_charges + originals_without_charges <= 1),
+  CHECK (NOT is_electronic OR (originals_with_charges <= 1 AND originals_without_charges <= 1)),
   CHECK (level = 'house' OR parent_id IS NULL),  -- a house may wait for its master
   CHECK (NOT shipped_on_board OR shipped_on_board_on IS NOT NULL)
 );
@@ -292,8 +292,8 @@ CREATE TABLE transport_document_parties (  -- parties as structured and as print
                           'warehouse_keeper', 'invoice_payer')),
   sequence              SMALLINT NOT NULL DEFAULT 1,  -- notify parties can repeat
   party_id              UUID REFERENCES parties (id),  -- null when only printed text is known
-  displayed_name        TEXT[] NOT NULL,  -- up to five lines of 35, in order, as printed
-  displayed_address     TEXT[],
+  displayed_name        TEXT NOT NULL,   -- the party name as printed (DCSA partyName, 70 characters)
+  displayed_address     TEXT[],          -- DCSA displayedAddress: 2 lines of 35 on paper, 6 on an eBL
   PRIMARY KEY (transport_document_id, function, sequence)
 );
 
@@ -358,7 +358,7 @@ ORDER BY m.number, h.number;
 Design notes:
 
 - **House and master are rows, linked.** `parent_id` joins a house bill to its master; one master can carry many houses in a consolidation, and each has its own parties, status and surrender. The number columns on `shipments` stay for matching messages.
-- **Printed text is kept beside structured parties.** A bill prints the party as the shipper asked (up to five lines of 35 characters in DCSA's model), and the printed text is what a bank compares; the party row is what the system matches on. Neither replaces the other.
+- **Printed text is kept beside structured parties.** A bill prints the party as the shipper asked (a displayed address of up to 2 lines of 35 characters on paper and 6 on an eBL, in DCSA's model), and the printed text is what a bank compares against the letter of credit; the party row is what the system matches on. Neither replaces the other.
 - **An amendment is a new version.** After issuance a change produces a reissued document with a higher `version`; the earlier version stays, because it may already be in a bank's hands or on a platform.
 - **Title is the platform's, data is yours.** For an eBL, store each transfer and endorsement as reported by the platform in `transport_document_events`, and treat the platform's current controller as authoritative; the system's own record proves what it was told and when.
 - **Package counts are liability fields.** `packages` on each container line is what a per-package limit is counted on, so it is validated against the booking and the shipping instructions before approval.

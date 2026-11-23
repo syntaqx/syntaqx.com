@@ -9,7 +9,7 @@ tags = ["logistics", "air-cargo", "awb", "one-record", "acas", "tsa", "data-mode
 
 Air cargo sells speed by the kilogram. An airline carries freight in the lower deck of passenger flights and on freighters, and sells the space mostly to forwarders, which consolidate their customers' shipments under one master air waybill per flight, build them onto pallets and containers (unit load devices, or ULDs), and tender them screened and documented to the airline's cargo terminal hours before departure. Expeditors, a forwarder that owns no aircraft, earned $3.98 billion from airfreight in 2025 on tonnage up 6%; IATA says the electronic air waybill is now used for "more than 2 out of 3 shipments."
 
-The software is hard because a flight is a hard deadline with many gates in front of it. The forwarder's data has to reach the airline as a message that passes the airline's validation, the cargo has to be screened under a TSA program and its chain of custody kept, inbound to the United States its advance data has to clear CBP's risk assessment before the aircraft is loaded, and the pieces have to match the documents at acceptance or the shipment goes on hand. Then the shipment is split across flights, offloaded, rebooked, and reported piece by piece in status messages whose codes date from Cargo-IMP teletype. This chapter covers the parties, the air waybill and the e-AWB, chargeable weight, ULDs, security screening, air cargo advance screening (ACAS), status messages and IATA's ONE Record, and dangerous goods in brief, and it extends `shipments`, `equipment_units` and `shipment_events` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model). Forwarders' licensing and consolidation are [Freight Forwarders & NVOCCs](/books/logistics/forwarders-and-nvoccs#consolidation), the airline's liability under the Montreal Convention is Cargo Liability & Claims, the ACAS filing as a customs record is Import Entry & ACE, and the dangerous goods rules from the carrier's side are Hazardous Materials in Transport.
+The software is hard because a flight is a hard deadline with many gates in front of it. The forwarder's data has to reach the airline as a message that passes the airline's validation, the cargo has to be screened under a TSA program and its chain of custody kept, inbound to the United States its advance data has to clear CBP's risk assessment before the aircraft is loaded, and the pieces have to match the documents at acceptance or the shipment goes on hand. Then the shipment is split across flights, offloaded, rebooked, and reported piece by piece in status messages whose codes date from Cargo-IMP teletype. This chapter covers the parties, the air waybill and the e-AWB, chargeable weight, ULDs, security screening, air cargo advance screening (ACAS), status messages and IATA's ONE Record, and dangerous goods in brief, and it extends `shipments`, `equipment_units` and `shipment_events` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model). Forwarders' licensing and consolidation are [Freight Forwarders & NVOCCs](/books/logistics/forwarders-and-nvoccs#consolidation), the airline's liability under the Montreal Convention is [Cargo Liability & Claims](/books/logistics/cargo-claims#ocean-and-air), the ACAS filing as a customs record is Import Entry & ACE, and the dangerous goods rules from the carrier's side are [Hazardous Materials in Transport](/books/logistics/hazmat-in-transport).
 
 ## How the Industry Does It
 
@@ -17,12 +17,12 @@ As of November 2026:
 
 | Party | Role | What its filing or rule says |
 | --- | --- | --- |
-| **C.H. Robinson** | Forwarder | A "certified Indirect Air Carrier and freight forwarder" that organizes "air shipments and provide[s] door-to-door service"; air adjusted gross profit of $136.7 million in 2025 |
+| **C.H. Robinson** | Forwarder | "As a certified Indirect Air Carrier" and freight forwarder, it organizes "air shipments and provide[s] door-to-door service"; air adjusted gross profit of $136.7 million in 2025 across the company ($134.7 million in its Global Forwarding segment) |
 | **CBP** | Inbound security data | ACAS filings "prior to loading of the cargo onto the aircraft," ten mandatory data elements at the lowest air waybill level since November 21, 2025, referrals resolved before departure, and Do-Not-Load |
-| **Descartes** | Software | webDocs web forms for air bookings that "send electronic waybills to air carriers," Air Shipment Management and Cargo iQ tools |
-| **Expeditors** | Forwarder | An "indirect air carrier" under TSA with IATA-licensed overseas offices; buys capacity on a volume basis, consolidates and issues a house air waybill as the contract of carriage; airfreight revenue $3.98 billion, up 9%, with tonnage up 6% |
+| **Descartes** | Software | webDocs web forms that forwarders use for air bookings and to "send electronic waybills" and messages to air carriers, Air Shipment Management as a central repository for electronic document exchange, and Cargo iQ monitoring at master air waybill level |
+| **Expeditors** | Forwarder | An indirect air carrier under TSA, "licensed as an airfreight forwarder" by IATA; buys capacity on a volume basis, consolidates and issues a house air waybill as the contract of carriage; airfreight revenue $3.98 billion, up 9%, with tonnage up 6% |
 | **IATA** | Standards | Resolution 672, the Multilateral e-AWB Agreement, signed "once with IATA"; ONE Record "the preferred data-sharing standard for air cargo from 1 January 2026"; the ULD Regulations; the Dangerous Goods Regulations, a new edition every year |
-| **Landstar** | Forwarder | An "IATA certified Indirect Air Carrier" for international air freight, with air and ocean at 5% of revenue |
+| **Landstar** | Forwarder | An IATA-certified indirect air carrier for international air freight, with air and ocean at 5% of consolidated revenue in fiscal 2025 |
 | **TSA** | Air cargo security | "100% of cargo transported on passenger aircraft" screened; indirect air carriers on a "TSA-approved security program" renewed annually; known shipper status through its Known Shipper Management System |
 
 Three patterns:
@@ -36,8 +36,8 @@ Three patterns:
 Air capacity is sold by four kinds of party:
 
 - **Airlines,** with belly capacity on passenger flights and freighters, sell space by flight, on allotments and on block space agreements, and run or contract the cargo terminals where freight is accepted, built up and loaded.
-- **Integrators,** which own the aircraft, the hubs and the pickup and delivery, sell door-to-door service under their own air waybills; parcel-scale integrator networks are Parcel Networks From the Carrier Side, and a merchant's view of them is [Shipping & Carriers](/books/commerce/shipping-and-carriers#how-the-platforms-do-it).
-- **Forwarders,** as indirect air carriers in the US and IATA cargo agents elsewhere, buy space and resell it, consolidating many house shipments under one master. Expeditors buys capacity "on a volume basis" and has $192 million of short-term commitments "reserving space on a guaranteed basis" with carriers.
+- **Integrators,** which own the aircraft, the hubs and the pickup and delivery, sell door-to-door service under their own air waybills; parcel-scale integrator networks are [Parcel Networks From the Carrier Side](/books/logistics/parcel-networks), and a merchant's view of them is [Shipping & Carriers](/books/commerce/shipping-and-carriers#how-the-platforms-do-it).
+- **Forwarders,** as indirect air carriers in the US and IATA cargo agents elsewhere, buy space and resell it, consolidating many house shipments under one master. Expeditors buys capacity "on a volume basis" and enters into unconditional purchase obligations with carriers, generally short-term, "reserving space on a guaranteed basis."
 - **General sales agents (GSAs)** sell an airline's cargo capacity in markets where it has no sales office of its own, under the airline's air waybill stock and rules. <!-- source-gap: logistics-air-cargo-gsa | missing | the role of cargo general sales agents and their share of airline sales | closes with: an IATA or airline publication describing cargo GSA arrangements, or a GSA's annual report | checked: 2026-11-22 --> Their role is widely described in trade sources, but this chapter couldn't open a primary one.
 
 A ground handler, often not the airline, accepts the freight, weighs and measures it, checks it against the documents, builds or receives the ULDs and loads the aircraft; its warehouse events are most of the status messages the forwarder sees.
@@ -53,7 +53,7 @@ The message flow, from IATA's recommended e-AWB guidelines:
 1. The forwarder sends the electronic air waybill (FWB, or XFWB in Cargo-XML) and, for a consolidation, the house manifest (FHL or XFHL) before tendering the freight.
 2. The airline replies with an acknowledgment (FMA) or a rejection (FNA), "almost instantly after system checks" against its validation rules; on an FNA the forwarder corrects and resends.
 3. At acceptance the airline compares the FWB with the freight. If they match, it sends a status (FSU) of `RCS`, ready for carriage; if not, it records the shipment as freight on hand (`FOH`) and asks for a corrected FWB, and sends `RCS` once the data matches.
-4. There is "no physical Master Air Waybill (MAWB) or House Manifest (FHL)" for e-AWB shipments, though documents that must travel with the cargo (health certificates, a dangerous goods declaration) still go in a pouch, flagged in the FWB with the codes `EAW` and `EAP`, and the airline marks a shipment that also has a paper AWB in the pouch with `ECC` or `ECP`.
+4. There is "no physical Master Air Waybill (MAWB) or House Manifest (FHL)" for e-AWB shipments, though documents that must travel with the cargo (health certificates, a dangerous goods declaration) still go in a pouch. The forwarder enters `EAP` in the FWB when a pouch of original documents is tendered and `EAW` when there is none; the airline enters `ECC` when no paper AWB accompanies the shipment and `ECP` (or `ECX`, by agreement with the airline) when a copy of a paper AWB travels only to meet local customs requirements.
 
 The FWB is the forwarder's chance to be right once: pieces, weight, volume, the shipper's security status (known or unknown consignor), special handling codes and the routing it carries are what acceptance, screening, ACAS and the bill all run on. The guidelines call FWB message quality "a pre-requisite for e-AWB implementation."
 
@@ -109,7 +109,7 @@ The ten mandatory elements, "at the lowest air waybill level" (the house where t
 
 Before the amendment there were six (shipper and consignee names and addresses, description, quantity, weight and AWB number). The 2025 rule also added conditional elements, among them the shipper's email and phone when the shipper is not a Verified Known Consignor, customer account data, and the unmasked IP or MAC address of the device used to create the account for accounts established after November 21, 2025, under a phased enforcement approach. The master air waybill number for each flight leg is conditional on who files and how.
 
-CBP answers with referrals that must be resolved before departure: a **referral for information**, when the data is too inaccurate, insufficient or vague to assess, resolved by the last party to file; and a **referral for screening**, when the risk warrants enhanced screening by TSA-approved methods, resolved by the inbound carrier unless a TSA-recognized filer handles it. A **Do-Not-Load** instruction, for a potential bomb or other immediate, lethal threat, means "the inbound air carrier may not transport cargo with a Do-Not-Load (DNL) instruction," and the party in possession follows the DNL protocols and law enforcement directions. Import Entry & ACE stores the filing and its status as an advance cargo filing of kind `us_acas`, with `do_not_load` as a status; the air side needs the referral, its resolution and the screening that resolved it on the house air waybill, because the forwarder can't tender it until both are clear.
+CBP answers with referrals that must be resolved before departure: a **referral for information**, when the data is too inaccurate, insufficient or vague to assess, resolved by the last party to file; and a **referral for screening**, when the risk warrants enhanced screening by TSA-approved methods, resolved by the inbound carrier unless a TSA-recognized filer handles it. A **Do-Not-Load** instruction, for a potential bomb or other immediate, lethal threat, means "the inbound air carrier may not transport cargo with a Do-Not-Load (DNL) instruction," and the party in possession follows the DNL protocols and law enforcement directions. Import Entry & ACE stores the filing as an `advance_cargo_filings` row of kind `us_acas`, with `do_not_load` among its statuses, and EU, UK & Canada Customs adds the referral (`request_for_information`, `request_for_screening`, `do_not_load`) and when it was answered; the air side needs the referral, its resolution and the screening that resolved it on the house air waybill, because the forwarder can't tender it until both are clear.
 
 ## Status Messages and ONE Record
 
@@ -131,7 +131,7 @@ Air status arrives as FSU messages (XFSU in Cargo-XML), one code per milestone, 
 | `DIS` | A handling or documentation discrepancy, with a discrepancy code | `exception` |
 | `AWR`, `AWD`, `DOC`, `CRC`, `OSI`, `OCI` | Documents received or delivered, reported to customs, other service or customs information | Kept on the air waybill, not as movement events |
 
-IATA calls ONE Record "a standard for data sharing" that "creates a single record view of the shipment," over a "standardized and secured web API" with a JSON-LD data model. Instead of each party sending messages, each party's ONE Record server holds logistics objects (shipment, pieces, waybill, booking, transport movements) that others read and subscribe to. In it, most FSU codes become a `StatusUpdateEvent`, a subtype of `LogisticsEvent`, attached to the `Shipment` with the FSU code in `eventCode`; a split shipment sets `partialEventIndicator` with `recordedPieceCount`, `recordedWeight` and `recordedVolume`, and links the flight as a `TransportMovement`; `BKD` becomes a `Booking`, and `OCI` updates customs or security information directly. As of November 2026 IATA's documentation is at data model 3.3.0 and API 2.3.0, both endorsed by its Cargo Operations Technology Board on July 25, 2026. IATA's December 2025 survey found awareness "above 70%" and readiness for adoption near half.
+IATA calls ONE Record "a standard for data sharing" that "creates a single record view of the shipment," over a "standardized and secured web API" with a JSON-LD data model. Instead of each party sending messages, each party's ONE Record server holds logistics objects (shipment, pieces, waybill, booking, transport movements) that others read and subscribe to. In it, most FSU codes become a `StatusUpdateEvent`, a subtype of `LogisticsEvent`, attached to the `Shipment` with the FSU code in `eventCode`; a split shipment sets `partialEventIndicator` with `recordedPieceCount`, `recordedWeight` and `recordedVolume`, and links the flight as a `TransportMovement`; `BKD` becomes a `Booking`, and `OCI` updates customs or security information directly. As of November 2026 IATA's documentation is at data model 3.3.0 and API 2.3.0, both endorsed by its Cargo Operations Technology Board on July 25, 2026. IATA's December 2025 survey found "over 70%" of respondents aware of ONE Record and "nearly 50%" ready to adopt it.
 
 The mapping has to keep partial events as partial. A `DEP` for 12 of 20 pieces is not the shipment departing:
 
@@ -332,7 +332,7 @@ CREATE TABLE air_cargo_screenings (      -- a security screening and its chain o
   screened_at        TIMESTAMPTZ NOT NULL,
   custody_ref        TEXT,               -- seal or chain-of-custody reference until tender
   custody_broken_at  TIMESTAMPTZ,        -- set if the cargo was opened; requires rescreening
-  advance_cargo_filing_ref TEXT,         -- the ACAS referral this screening resolved, if any
+  advance_cargo_filing_ref TEXT,         -- the ACAS filing whose screening referral this resolved
   result             TEXT NOT NULL CHECK (result IN ('cleared', 'alarm_resolved', 'refused'))
 );
 
@@ -348,13 +348,9 @@ ALTER TABLE equipment_units
 ALTER TABLE equipment_units ADD CONSTRAINT equipment_units_uld_check
   CHECK (kind <> 'uld' OR uld_type_code IS NOT NULL) NOT VALID;
 
-ALTER TABLE shipment_events DROP CONSTRAINT shipment_events_code_check,
-  ADD CONSTRAINT shipment_events_code_check CHECK (code IN ('booked', 'pickup_arrived',
-    'picked_up', 'departed', 'position', 'arrived', 'out_for_delivery', 'delivery_arrived',
-    'delivered', 'gate_in', 'gate_out', 'loaded', 'discharged', 'available',
-    'customs_released', 'hold', 'exception', 'eta_updated', 'stuffed', 'stripped',
-    'inspected', 'resealed', 'removed', 'dropped_off', 'received', 'manifested',
-    'transferred', 'notified')) NOT VALID;
+INSERT INTO shipment_event_codes (code, added_by) VALUES
+  ('received', 'air'), ('manifested', 'air'), ('transferred', 'air'), ('notified', 'air')
+ON CONFLICT (code) DO NOTHING;
 ALTER TABLE shipment_events
   ADD COLUMN pieces INT,                 -- pieces a partial status covers
   ADD COLUMN partial BOOLEAN NOT NULL DEFAULT FALSE;
@@ -363,10 +359,9 @@ CREATE INDEX CONCURRENTLY air_waybills_parent_idx ON air_waybills (parent_id);
 CREATE INDEX CONCURRENTLY air_flight_segments_load_idx ON air_flight_segments (load_id);
 ALTER TABLE shipments VALIDATE CONSTRAINT shipments_chargeable_weight_check;
 ALTER TABLE equipment_units VALIDATE CONSTRAINT equipment_units_uld_check;
-ALTER TABLE shipment_events VALIDATE CONSTRAINT shipment_events_code_check;
 ```
 
-The shipment events code list here is the full one, including the codes [Ocean Shipping](/books/logistics/ocean-shipping#how-to-build-it) added, so the two chapters' migrations run in order.
+The four air codes are rows in `shipment_event_codes`, the table [Ocean Shipping](/books/logistics/ocean-shipping#how-to-build-it) creates in place of the core model's code `CHECK`; the insert names only the codes air adds, so it composes with any other chapter's.
 
 A forwarder's export desk question an hour before a flight's cut-off, which house air waybills on it aren't ready to tender, reads:
 
@@ -429,15 +424,15 @@ Design notes:
 
 **Filings**
 
-- [Expeditors International: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/746515/000119312526071569/expd-20251231.htm), airfreight revenue and tonnage, IAC and IATA roles, volume purchasing, house air waybills and space commitments
-- [C.H. Robinson Worldwide: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1043277/000104327726000009/chrw-20251231.htm), indirect air carrier role and air adjusted gross profit
+- [Expeditors International: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/746515/000119312526071569/expd-20251231.htm), airfreight revenue and tonnage, IAC and IATA roles, volume purchasing, house air waybills and guaranteed-space purchase obligations
+- [C.H. Robinson Worldwide: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1043277/000104327726000009/chrw-20251231.htm), indirect air carrier role and air adjusted gross profit by mode and in Global Forwarding
 - [Landstar System: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/853816/000119312526064756/d66072d10k.htm), indirect air carrier role and air and ocean share of revenue
-- [Descartes Systems Group: Annual Information Form for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1050140/000110465926026450/dsgx-20260131xex99d1.htm), webDocs electronic waybills, Air Shipment Management and Cargo iQ
+- [Descartes Systems Group: Annual Information Form for fiscal 2026](https://www.sec.gov/Archives/edgar/data/1050140/000110465926026450/dsgx-20260131xex99d1.htm), webDocs air booking forms and electronic waybills, Air Shipment Management and Cargo iQ
 
 **Standards**
 
 - [IATA: Electronic air waybill](https://www.iata.org/en/programs/cargo/e/eawb/), Resolution 672, the Multilateral e-AWB Agreement and activation under article 3.1
-- [IATA: Recommended guidelines for e-AWB (ex-Delhi)](https://www.iata.org/contentassets/b559d10aeb734d5196332b4953dcf312/e-awb-sop-del.pdf), the FWB, FHL, FMA, FNA, FOH and RCS flow, no physical MAWB, pouch codes, dangerous goods and lithium statements, and FWB quality
+- [IATA: Recommended guidelines for e-AWB (ex-Delhi)](https://www.iata.org/contentassets/b559d10aeb734d5196332b4953dcf312/e-awb-sop-del.pdf), the FWB, FHL, FMA, FNA, FOH and RCS flow, no physical MAWB, the EAW, EAP, ECC and ECP codes, dangerous goods and lithium statements, and FWB quality
 - [IATA: ONE Record](https://www.iata.org/en/programs/cargo/e/one-record/), single record view, the web API, linked data, and the e-AWB on more than two of three shipments
 - [IATA: Survey shows growing awareness of ONE Record (December 10, 2025)](https://www.iata.org/en/pressroom/2025-releases/2025-12-10-02/), the preferred standard from January 1, 2026, and survey results
 - [IATA: Cargo Tracker, ONE Record updates (September 2026)](https://www.iata.org/en/publications/newsletters/tracker/cargo-tracker-september-2026/one-record-updates/), coexistence with legacy messaging and gradual migration

@@ -13,22 +13,23 @@ The software is hard because a booking is a promise about a moving schedule made
 
 ## How the Carriers Do It
 
-As of November 2026, from carriers' 2025 annual reports and filings:
+As of November 2026, from carriers' 2025 annual reports and filings; vessel capacity for lines whose own reports aren't cited is the Drewry and MDS Transmodal ranking that Hapag-Lloyd's report reproduces (share of world capacity in parentheses):
 
 | Carrier | Cooperation | Scale (2025) | Fleet | What its filing stresses |
 | --- | --- | --- | --- | --- |
-| **CMA CGM, COSCO (with OOIL), Evergreen** | The Ocean Alliance, per Hapag-Lloyd's description of the market | Not opened for this chapter | Not opened | Alliance membership from Hapag-Lloyd's report only |
-| **Hapag-Lloyd** | The Gemini Cooperation with Maersk on the East-West trades from February 1, 2025, replacing THE Alliance with ONE, HMM and Yang Ming | 13,486 TTEU transported, up 8.2%; average freight rate USD 1,376 per TEU, down 7.8% | 301 vessels, 2,450 TTEU of capacity, 60% owned; 2.1 million containers with 3.7 million TEU of capacity, 69% owned by capacity | Gemini's "hub and spoke model" and schedule reliability of "around 90%" in its first year |
-| **Maersk** | The Gemini Cooperation with Hapag-Lloyd | Annual report not retrievable for this chapter | Not opened | Partner in Gemini, per Hapag-Lloyd |
-| **ONE, HMM, Yang Ming** | The Premier Alliance, "founded out of THE Alliance" | Not opened | Not opened | Membership from Hapag-Lloyd's report |
-| **ZIM** | "Not a party to any strategic alliances"; a strategic operational agreement with MSC on Asia to the US East and Gulf Coasts, and other agreements with MSC | 3.66 million TEU carried (3.75 million in 2024); about 30,500 customers, the top 10 about 12% of freight revenue | 128 vessels, 112 of them chartered; capacity "exceeds 708,000 TEUs" | A merger agreement with Hapag-Lloyd entered into in February 2026 |
+| **CMA CGM, COSCO (with OOIL), Evergreen** | The Ocean Alliance, per Hapag-Lloyd's description of the market | Own reports not opened for this chapter | 4,110 TTEU (13%), 3,483 TTEU (11%) and 1,929 TTEU (6%) of vessel capacity, per the ranking | Alliance membership from Hapag-Lloyd's report only |
+| **Hapag-Lloyd** | The Gemini Cooperation with Maersk on the East-West trades from February 1, 2025, replacing THE Alliance with ONE, HMM and Yang Ming | 13,486 TTEU transported, up 8.2%; average freight rate USD 1,376 per TEU, down 7.8% | 301 vessels, 2,450 TTEU of capacity, 60% owned by capacity; 2.1 million containers with 3.7 million TEU of capacity, 69% owned by capacity | Gemini's "hub and spoke model" and schedule reliability of "around 90%" in its first year |
+| **Maersk** | The Gemini Cooperation with Hapag-Lloyd | Own report not opened for this chapter | 4,492 TTEU (14%), per the ranking | Partner in Gemini, per Hapag-Lloyd |
+| **MSC** | Outside the alliances since the 2M with Maersk ended on January 31, 2025; operational agreements with ZIM | Own report not opened | 7,063 TTEU (22%), the largest, per the ranking | Not a public filer |
+| **ONE, HMM, Yang Ming** | The Premier Alliance, "founded out of THE Alliance" | Own reports not opened | 2,090 TTEU (6%), 1,037 TTEU (3%) and 720 TTEU (2%), per the ranking | Membership from Hapag-Lloyd's report |
+| **ZIM** | "Not a party to any strategic alliances"; a strategic operational agreement with MSC on Asia to the US East and Gulf Coasts, and other agreements with MSC | 3.66 million TEU carried (3.75 million in 2024); about 30,500 customers, the top 10 about 12% of freight revenue | 128 vessels, 112 of them chartered; capacity "exceeds 708,000 TEUs" | A merger agreement with Hapag-Lloyd entered into on February 16, 2026, at $35.00 a share in cash |
 
-<!-- source-gap: logistics-ocean-shipping-alliance-figures | secondary | fleet and volume figures for Maersk, MSC, CMA CGM, COSCO, ONE and the alliances as a whole | closes with: Maersk, CMA CGM and COSCO 2025 annual reports opened in full, or the FMC agreement filings for Gemini, Premier and Ocean Alliance | checked: 2026-11-22 -->
-The other large lines' 2025 volumes and fleets aren't in this table because their annual reports couldn't be opened for this chapter; alliance-wide vessel counts and capacities circulate only in trade press. <!-- source-gap: logistics-ocean-shipping-zim-merger | status | whether the ZIM and Hapag-Lloyd merger agreement of February 2026 has closed | closes with: a ZIM 6-K or Hapag-Lloyd release announcing completion or termination | checked: 2026-11-22 --> The ZIM merger's status after its 20-F isn't confirmed here.
+<!-- source-gap: logistics-ocean-shipping-alliance-figures | secondary | 2025 volumes for Maersk, MSC, CMA CGM, COSCO and ONE, and their capacity from their own reports rather than the Drewry and MDS Transmodal ranking in Hapag-Lloyd's report | closes with: Maersk, CMA CGM and COSCO 2025 annual reports opened in full (their investor sites refused automated fetches on 2026-11-22) | checked: 2026-11-22 -->
+The other large lines' own 2025 volumes aren't in this table because their annual reports couldn't be opened for this chapter, and their capacity is a third-party ranking, not their own figure. The ZIM merger hadn't closed as of ZIM's third-quarter results on November 18, 2026: shareholders approved it on April 30, 2026, Israel's original application under the special state share was terminated with Hapag-Lloyd intending to file a new one, other regulatory approvals were outstanding, and closing was targeted for the first quarter of 2027.
 
 Three patterns:
 
-- **Ten lines run the trade, through three groupings and some independents.** Hapag-Lloyd puts the ten largest carriers at "approximately 85%" of world capacity. Since the 2M Alliance between Maersk and MSC ended on January 31, 2025, the East-West trades run on Gemini (Maersk and Hapag-Lloyd), the Ocean Alliance (CMA CGM, COSCO with OOIL, and Evergreen) and the Premier Alliance (ONE, HMM, Yang Ming), with MSC and smaller lines such as ZIM operating outside them through bilateral agreements. A booking with one carrier often rides a vessel another carrier operates.
+- **Ten lines run the trade, through three groupings and some independents.** Hapag-Lloyd puts the ten largest carriers at "approximately 85%" of world capacity, MSC alone at 22%. Since the 2M Alliance between Maersk and MSC ended on January 31, 2025, the East-West trades run on Gemini (Maersk and Hapag-Lloyd), the Ocean Alliance (CMA CGM, COSCO with OOIL, and Evergreen) and the Premier Alliance (ONE, HMM, Yang Ming), with MSC and smaller lines such as ZIM operating outside them through bilateral agreements. A booking with one carrier often rides a vessel another carrier operates.
 - **Most of the fleet is chartered.** ZIM charters 112 of its 128 ships and Hapag-Lloyd owns 60% of its capacity; vessels change operators and services during their lives, so a vessel is identified by its IMO number, never by its name or the service it is on.
 - **Reliability is now the product.** Gemini's design separates long-haul mainline services calling "a limited number of high-performance hubs" from regional shuttles, and Hapag-Lloyd sells the resulting schedule reliability of about 90% as the reason to book. A system that plans inland moves on a carrier's published arrival needs to know which carrier and network it is relying on, and how often that carrier's estimates have held.
 
@@ -93,7 +94,7 @@ Rolling (moving a confirmed booking to a later sailing) arrives as an updated co
 
 ## Containers and VGM
 
-A container's number is its owner code, equipment category, serial number and check digit under ISO 6346, and its size and type code (`22G1` for a 20-foot general purpose box, `45G1` for a 40-foot high cube) says what it is; Intermodal & Drayage carries the same code on `equipment_units` for the inland legs. The equipment the shipper books is a type; the container it receives is a unit, assigned when the empty is released, so the booking's equipment lines and the units on the bill of lading are separate records joined late.
+A container's number is its owner code, equipment category, serial number and check digit under ISO 6346, and its size and type code (`22G1` for a 20-foot general purpose box, `45G1` for a 40-foot high cube) says what it is; [Intermodal & Drayage](/books/logistics/intermodal-and-drayage#containers-and-chassis) carries the same code on `equipment_units` as `size_type_code` for the inland legs. The equipment the shipper books is a type; the container it receives is a unit, assigned when the empty is released, so the booking's equipment lines and the units on the bill of lading are separate records joined late.
 
 Since July 1, 2016, SOLAS regulation VI/2, as amended by resolution MSC.380(94), makes a verified gross mass (VGM) "a condition for loading a packed container onto a ship." The shipper obtains it by one of two methods: weighing the packed container (Method 1), or weighing every package and cargo item, pallets, dunnage and securing material included, and adding the container's tare (Method 2), the second by "a certified method approved by the competent authority" of the state where the container was packed. The shipper states the VGM in a shipping document and submits it to the master and the terminal in time for stowage planning; a VGM entitles nothing, since the master keeps the final say, and a container that arrives without one may be weighed on the shipper's behalf at a cost the parties agree. IMO's guidance is MSC.1/Circ.1475, and DCSA publishes a VGM standard for the exchange.
 
@@ -111,7 +112,7 @@ A marine terminal operator runs the berth, the yard and the gate. For one import
 
 Each event carries a classifier: `PLN` (planned), `EST` (estimated) or `ACT` (actual), the same split as `shipment_events.classifier`. An estimated arrival is restated many times before the vessel berths, so estimates are kept as a series, not overwritten; Visibility & Tracking and ETAs & Exception Management take that series apart.
 
-The event that starts the import clocks isn't on the list: the date the container is available for pickup, which depends on discharge, customs and carrier holds being released and the terminal making the box deliverable. FMC rules require it on every import demurrage invoice (46 CFR 541.6), and [Detention & Demurrage](/books/logistics/detention-and-demurrage#free-time) builds on it. The dray, the terminal appointment and the out-gate interchange receipt belong to Intermodal & Drayage; the hold and release by CBP or a partner agency belong to Customs and Trade.
+The event that starts the import clocks isn't on the list: the date the container is available for pickup, which depends on discharge, customs and carrier holds being released and the terminal making the box deliverable. FMC rules require it on every import demurrage invoice (46 CFR 541.6), and [Detention & Demurrage](/books/logistics/detention-and-demurrage#free-time) builds on it. The dray, the terminal appointment and the out-gate interchange receipt belong to [Intermodal & Drayage](/books/logistics/intermodal-and-drayage#drayage); the hold and release by CBP or a partner agency belong to Customs and Trade.
 
 ## The DCSA Standards
 
@@ -124,9 +125,9 @@ DCSA develops its standards with its member carriers, which it calls "founding m
 | Across | Document Exchange, Track & Trace |
 | Equipment | VGM |
 
-Access matters for a builder. The OpenAPI specifications on DCSA's public SwaggerHub account stop at Track & Trace 2.2.0, Booking 2.0.0 and Bill of Lading (eBL) 3.0.0; DCSA's reference site lists Track & Trace v3.0.0 and Bill of Lading v3.0.4 as "available via DCSA Standards Member and Partner Access," and Booking's current release as 2.0.5. A platform that isn't a member builds against the public versions and maps each carrier's deviations, which is most of the work: a carrier's conformance to a DCSA standard is something DCSA tracks on a conformance dashboard, not something to assume.
+Access matters for a builder. The OpenAPI specifications on DCSA's public SwaggerHub account stop at Track & Trace 2.2.0, Booking 2.0.0 and Bill of Lading (eBL) 3.0.0; DCSA's reference site lists Track & Trace v3.0.0 and Bill of Lading v3.0.4 as "available via DCSA Standards Member and Partner Access," and Booking's current release as 2.0.5. A platform that isn't a member builds against the public versions and maps each carrier's deviations, which is most of the work: DCSA publishes its founding members' implementation progress per standard, and whether a given carrier has implemented one is something to check there and test, not assume.
 
-Track & Trace 2.2 delivers events two ways: `GET /v2/events` with filters (event type, codes, booking or bill or equipment reference), and subscriptions (`/v2/event-subscriptions`), where the publisher POSTs batches of events to the subscriber's `callbackUrl`, the subscriber answers 204, and a shared secret signs each callback in a `Notification-Signature` header ([Signatures](/docs/api-design/webhooks#signatures)). Each event has an `eventID`, which is the deduplication key a consumer needs, because a publisher resends on any non-204 answer and carriers re-emit corrected events.
+Track & Trace 2.2 delivers events two ways: `GET /v2/events` with filters (event type, codes, booking or bill or equipment reference), and subscriptions (`/v2/event-subscriptions`), where the publisher POSTs batches of events to the subscriber's `callbackUrl`, the subscriber answers 204, and a shared secret signs each callback in a `Notification-Signature` header ([Signatures](/docs/api-design/webhooks#signatures)). Each event has an `eventID`, which is the deduplication key a consumer needs, because a callback can arrive more than once and carriers re-emit corrected events; the public 2.2 specification defines the 204 answer but not a retry policy.
 
 Mapping DCSA events into the core model is a table, and the unmapped codes are kept rather than dropped:
 
@@ -252,7 +253,7 @@ In the core model an ocean shipment is a `shipments` row of mode `ocean_fcl` or 
 CREATE TABLE vessel_voyages (            -- one vessel's trip on a service, as a carrier names it
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
   operator_party_id   UUID NOT NULL REFERENCES parties (id),  -- the carrier operating the vessel
-  vessel_imo          CHAR(7) NOT NULL,  -- the IMO number; names and services change
+  vessel_imo          TEXT NOT NULL CHECK (vessel_imo ~ '^[0-9]{7,8}$'),  -- DCSA allows 7 or 8 digits
   vessel_name         TEXT NOT NULL,     -- as published for this voyage
   service_code        TEXT,              -- the operator's service code
   voyage_number       TEXT NOT NULL,     -- the operator's; partners may publish their own
@@ -358,12 +359,24 @@ ALTER TABLE equipment_units
   ADD COLUMN shipper_owned      BOOLEAN NOT NULL DEFAULT FALSE,  -- SOC containers
   ADD COLUMN max_gross_weight_g BIGINT;  -- from the safety approval plate
 
-ALTER TABLE shipment_events DROP CONSTRAINT shipment_events_code_check,
-  ADD CONSTRAINT shipment_events_code_check CHECK (code IN ('booked', 'pickup_arrived',
-    'picked_up', 'departed', 'position', 'arrived', 'out_for_delivery', 'delivery_arrived',
-    'delivered', 'gate_in', 'gate_out', 'loaded', 'discharged', 'available',
-    'customs_released', 'hold', 'exception', 'eta_updated', 'stuffed', 'stripped',
-    'inspected', 'resealed', 'removed', 'dropped_off')) NOT VALID;
+-- Event codes become rows: a later chapter adds its codes with an INSERT
+-- instead of restating every earlier chapter's list in a new CHECK.
+CREATE TABLE shipment_event_codes (      -- the codes shipment_events may carry
+  code     TEXT PRIMARY KEY,
+  added_by TEXT NOT NULL                 -- the chapter or migration that introduced it
+);
+INSERT INTO shipment_event_codes (code, added_by) VALUES
+  ('booked', 'core'), ('pickup_arrived', 'core'), ('picked_up', 'core'), ('departed', 'core'),
+  ('position', 'core'), ('arrived', 'core'), ('out_for_delivery', 'core'),
+  ('delivery_arrived', 'core'), ('delivered', 'core'), ('gate_in', 'core'),
+  ('gate_out', 'core'), ('loaded', 'core'), ('discharged', 'core'), ('available', 'core'),
+  ('customs_released', 'core'), ('hold', 'core'), ('exception', 'core'),
+  ('eta_updated', 'core'),
+  ('stuffed', 'ocean'), ('stripped', 'ocean'), ('inspected', 'ocean'), ('resealed', 'ocean'),
+  ('removed', 'ocean'), ('dropped_off', 'ocean');
+ALTER TABLE shipment_events ADD CONSTRAINT shipment_events_code_fkey
+  FOREIGN KEY (code) REFERENCES shipment_event_codes (code) NOT VALID;
+ALTER TABLE shipment_events DROP CONSTRAINT shipment_events_code_check;
 
 CREATE INDEX CONCURRENTLY port_calls_facility_arrival_idx
   ON port_calls (facility_id, estimated_arrival);
@@ -371,7 +384,7 @@ CREATE INDEX CONCURRENTLY ocean_bookings_number_idx
   ON ocean_bookings (carrier_party_id, booking_number);
 ALTER TABLE shipments VALIDATE CONSTRAINT shipments_ocean_booking_check;
 ALTER TABLE loads VALIDATE CONSTRAINT loads_ocean_voyage_check;
-ALTER TABLE shipment_events VALIDATE CONSTRAINT shipment_events_code_check;
+ALTER TABLE shipment_events VALIDATE CONSTRAINT shipment_events_code_fkey;
 ```
 
 The question a shipper's export desk asks every morning, which containers face a VGM cut-off in the next 48 hours with no current VGM, reads straight off these tables:
@@ -405,6 +418,7 @@ ORDER BY c.cutoff_at;
 
 Design notes:
 
+- **Event codes are rows.** The core model's `CHECK` on `shipment_events.code` gives way to a foreign key to `shipment_event_codes`, which holds the core codes and the six ocean equipment codes; a later chapter that needs a code ([Air Cargo](/books/logistics/air-cargo#how-to-build-it) adds four) inserts it, and no chapter restates another's list. The key is added before the check is dropped, so new rows stay checked throughout.
 - **A booking is a version chain.** Every confirmation, update and amendment is a new `ocean_bookings` row with the same booking number and a higher version; the current one is the highest, and a roll, an equipment swap or a changed cut-off is a difference between two rows ([Versioned Entities](/docs/database/temporal-data#versioned-entities)).
 - **The vessel is its IMO number.** Names change, chartered ships change operators, and partners in an alliance publish different voyage numbers for the same sailing; `partner_voyage_refs` lets a message from any partner find the voyage.
 - **Cut-offs are instants at a facility.** Stored as `TIMESTAMPTZ` with the terminal's facility, displayed in its zone, and versioned with the booking, so a missed cut-off can be judged against the one in force when the truck was dispatched.
@@ -437,8 +451,9 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 **Filings and reports**
 
-- [Hapag-Lloyd: Annual Report 2025](https://www.hapag-lloyd.com/content/dam/website/downloads/ir/HLAG_FY_2025_EN.pdf), transport volume, freight rate, fleet and container figures, services, the Gemini Cooperation and its reliability, the end of THE Alliance and the 2M, the Ocean and Premier Alliances, and the top ten carriers' share
-- [ZIM Integrated Shipping Services: Form 20-F for 2025](https://www.sec.gov/Archives/edgar/data/1654126/000117891326000784/zk2634463.htm), TEU carried, fleet and chartered share, capacity, customers, no alliance membership, the MSC operational agreements, the end of the 2M and the Hapag-Lloyd merger agreement
+- [Hapag-Lloyd: Annual Report 2025](https://www.hapag-lloyd.com/content/dam/website/downloads/ir/HLAG_FY_2025_EN.pdf), transport volume, freight rate, fleet and container figures, services, the Gemini Cooperation and its reliability, the end of THE Alliance and the 2M, the Ocean and Premier Alliances, the top ten carriers' share, and their vessel capacity from Drewry (Q4 2025) and MDS Transmodal (January 2026)
+- [ZIM Integrated Shipping Services: Form 20-F for 2025](https://www.sec.gov/Archives/edgar/data/1654126/000117891326000784/zk2634463.htm), TEU carried, fleet and chartered share, capacity, customers, no alliance membership, the MSC operational agreements, the end of the 2M and the Hapag-Lloyd merger agreement of February 16, 2026 at $35.00 a share
+- [ZIM Integrated Shipping Services: Third quarter 2026 results, Form 6-K exhibit 99.1 (November 18, 2026)](https://www.sec.gov/Archives/edgar/data/1654126/000117891326005268/exhibit_99-1.htm), the merger's shareholder approval on April 30, 2026, the terminated Israeli application, outstanding regulatory approvals and the targeted first-quarter 2027 closing
 
 **Statutes and regulations**
 
@@ -449,8 +464,8 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 
 **Standards**
 
-- [DCSA: Standards](https://dcsa.org/standards), the standards by journey and founding members
-- [DCSA: Booking API 2.0.0](https://api.swaggerhub.com/apis/dcsaorg/DCSA_BKG/2.0.0), endpoints, booking, amendment and cancellation statuses, references, receipt and delivery types, cargo movement types, ISO equipment codes, shipper-owned containers, the transport plan and cut-off codes
+- [DCSA: Standards](https://dcsa.org/standards), the standards by journey, founding members and their implementation progress
+- [DCSA: Booking API 2.0.0](https://api.swaggerhub.com/apis/dcsaorg/DCSA_BKG/2.0.0), endpoints, the 7 or 8 digit IMO number, booking, amendment and cancellation statuses, references, receipt and delivery types, cargo movement types, ISO equipment codes, shipper-owned containers, the transport plan and cut-off codes
 - [DCSA: Track & Trace API 2.2.0](https://api.swaggerhub.com/apis/dcsaorg/DCSA_TNT/2.2.0), event queries, subscriptions, callbacks, the 204 answer and the Notification-Signature header
 - [DCSA: Event domain 1.0.4](https://api.swaggerhub.com/domains/dcsaorg/EVENT_DOMAIN/1.0.4), transport, equipment and shipment event codes and classifiers
 - [DCSA: Track & Trace v3 release](https://reference.dcsa.org/content/standards/releases/track-and-trace/v3), v3.0.0 available via member and partner access
