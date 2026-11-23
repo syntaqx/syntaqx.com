@@ -88,7 +88,7 @@ Advertising is an obligation satisfied as it is delivered, measured by an output
 | February | 950,000 | $11,400 | $1,800 (150,000 impressions undelivered) |
 | March, make-good flight delivers 150,000 | 150,000 | $1,800 | $0 |
 
-The make-good doesn't create new revenue; it delivers what was already paid for, so the $1,800 stays a liability until it runs. If instead the parties agree a refund (the standard terms allow one when the agency prepaid and is current), the $1,800 becomes a refund owed and is never revenue. An unpaid invoice for delivered impressions is the mirror case: revenue recognized, a receivable outstanding.
+The make-good doesn't create new revenue; it delivers what was already paid for, so the $1,800 stays a liability until it runs. If instead the parties agree a refund (the standard terms allow one when the agency prepaid and is current: [Reporting, Make-Goods and Bonus Impressions](/books/advertising/insertion-orders-and-terms#reporting-make-goods-and-bonus-impressions)), the $1,800 becomes a refund owed and is never revenue. An unpaid invoice for delivered impressions is the mirror case: revenue recognized, a receivable outstanding.
 
 Not every buy is per unit. A flat-fee sponsorship of a section for a month is a stand-ready obligation recognized over the month, not per impression; a share-of-voice buy is recognized over its flight. The pricing model on the line item ([Pricing Models](/books/advertising/pricing-models), in Auctions and Pricing) tells finance which shape each line has, and the system keeps both the flight and the deliveries so either method can be computed ([Recognition Schedules](/docs/money/accounting#recognition-schedules)).
 
@@ -335,7 +335,7 @@ The mechanics are the playbook's [Audit Trails](/docs/building-blocks/audit-trai
 
 **Regulation**
 
-- [EUR-Lex: Commission Regulation (EU) 2016/1905 adopting IFRS 15](https://eur-lex.europa.eu/eli/reg/2016/1905/oj/eng), consideration payable to a customer (paragraphs 70 to 72), variable consideration and its constraint (51 and 56), contract liabilities (106 and Appendix A), and output methods (B15)
+- [EUR-Lex: Commission Regulation (EU) 2016/1905 adopting IFRS 15](https://eur-lex.europa.eu/eli/reg/2016/1905/oj/eng), consideration payable to a customer (paragraphs 70 to 72), variable consideration and its constraint (51 and 56), contract liabilities (106 and Appendix A), and output methods (B15); no longer in force since October 2023, when Regulation (EU) 2023/1803 consolidated the adopted standards
 - [EUR-Lex: Commission Regulation (EU) 2017/1987 adopting the Clarifications to IFRS 15](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32017R1987), principal versus agent considerations B34 to B38, control before transfer, gross and net, and the three indicators
 
 **Filings**

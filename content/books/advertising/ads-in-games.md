@@ -19,8 +19,8 @@ As of November 2026, from each company's documentation and the published guideli
 
 | Format | What the player experiences | Platform rules, by their own pages |
 | --- | --- | --- |
-| **Intrinsic in-game** | An ad on an object in the game world, part of the scene | IAB/MRC Intrinsic In-Game Advertising Measurement Guidelines 2.0 (August 2022): 50% of the creative visible for one continuous second (two for video), at least 1.5% of the screen, angle no greater than 55 degrees per axis, polling every 200 ms |
 | **Interstitial** | A full-screen ad at a break, dismissed by the player | Apple 2.5.18: must "clearly indicate that they are an ad" and have "easily accessible and visible close/skip buttons"; Google Play Families bans interstitials "displayed immediately upon app launch" in children's apps |
+| **Intrinsic in-game** | An ad on an object in the game world, part of the scene | IAB/MRC Intrinsic In-Game Advertising Measurement Guidelines 2.0 (August 2022): 50% of the creative visible for one continuous second (two for video), at least 1.5% of the screen, a recommended angle no greater than 55 degrees per axis, polling every 200 ms |
 | **Playable** | A short interactive demo of another game, usually ending in an install button | Google Ads: a ZIP "with a maximum size of 5MB and no more than 512 files," relative paths only, no sound before interaction, `ExitApi.exit()` or an MRAID equivalent for the call to action |
 | **Rewarded** | The player opts in to watch and receives an item | AdMob: rewards granted on server-side verification callbacks signed with ECDSA; Gaming covers MAX's and LevelPlay's callbacks |
 | **Rewarded interstitial** | A rewarded ad shown at a transition without an opt-in, after an intro screen | AdMob: the intro screen must state the reward and offer "A clear, unobstructed option to skip the ad before it starts"; "Only skippable ads will be served" |
@@ -38,7 +38,7 @@ A rewarded ad is the format games prefer because the player chooses it. Google's
 
 The rule for both sides is that the reward is earned on the network's signed word, not the client's. A client that says "I watched the ad, give me 50 coins" can be replayed or forged; a network's signed callback keyed by a unique transaction ID can be verified and granted once. The game's verification endpoint and the grant as a ledger transaction are the Gaming volume's ([Ad Mediation and Rewarded Ads](/books/gaming/mobile-games#ad-mediation-and-rewarded-ads)); what follows is what the network has to build.
 
-**What AdMob sends.** AdMob's SSV callback carries `ad_network`, `ad_unit`, `custom_data`, `key_id`, `reward_amount`, `reward_item`, `signature`, `timestamp`, `transaction_id` and `user_id`. The signature is ECDSA with SHA-256 over all query parameters before `signature`, and "Content from the SSV callback should not be modified in any way (including keeping the order of query parameters)." The game fetches public keys from a published key file and selects one by `key_id`; "public keys should not be cached for longer than 24 hours," because keys rotate on a variable schedule. The app sets the user ID and custom data on the ad before showing it, and "If no user identifier is provided by the app, this query parameter will not be present." If the game's server doesn't answer with 200 OK, "Google will re-attempt to send SSV callbacks up to five times in one-second intervals."
+**What AdMob sends.** AdMob's SSV callback carries `ad_network`, `ad_unit`, `custom_data`, `key_id`, `reward_amount`, `reward_item`, `signature`, `timestamp`, `transaction_id` and `user_id`. Parameters arrive in alphabetical order, with `signature` and `key_id` always last, in that order; the signature is ECDSA with SHA-256 over the query parameters before `signature`, and "Content from the SSV callback should not be modified in any way (including keeping the order of query parameters)." The game fetches public keys from a published key file and selects one by `key_id`; "public keys should not be cached for longer than 24 hours," because keys rotate on a variable schedule. The app sets the user ID and custom data on the ad before showing it, and "If no user identifier is provided by the app, this query parameter will not be present." If the game's server doesn't answer with 200 OK, "Google will re-attempt to send SSV callbacks up to five times in one-second intervals."
 
 **What a network must build.** The same contract, from the sending side:
 
@@ -69,7 +69,7 @@ type Signer struct {
 	Key   *ecdsa.PrivateKey // P-256; the public half is published under KeyID before first use
 }
 
-// Query builds the exact parameter order, signs those bytes, and appends key_id and signature.
+// Query builds the exact parameter order, signs those bytes, and appends signature and key_id, last, in that order.
 func (s Signer) Query(e RewardEvent) (string, error) {
 	parts := []string{
 		"ad_network=" + url.QueryEscape(e.AdNetwork),
@@ -93,7 +93,7 @@ func (s Signer) Query(e RewardEvent) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return msg + "&key_id=" + s.KeyID + "&signature=" + base64.RawURLEncoding.EncodeToString(sig), nil
+	return msg + "&signature=" + base64.RawURLEncoding.EncodeToString(sig) + "&key_id=" + s.KeyID, nil
 }
 
 // Deliver sends one queued callback; the outbox worker calls it until it returns true or the event expires.
@@ -148,7 +148,7 @@ impl Signer {
         if let Some(u) = &e.user_id { parts.push(format!("user_id={}", enc(u))); }
         let msg = parts.join("&");
         let sig: DerSignature = self.key.sign(msg.as_bytes()); // ECDSA P-256 with SHA-256, DER
-        format!("{msg}&key_id={}&signature={}", self.key_id, URL_SAFE_NO_PAD.encode(sig.as_bytes()))
+        format!("{msg}&signature={}&key_id={}", URL_SAFE_NO_PAD.encode(sig.as_bytes()), self.key_id)
     }
 }
 
@@ -199,7 +199,7 @@ The IAB, IAB Tech Lab and MRC published the **Intrinsic In-Game Advertising Meas
 
 - **Pixels, then time.** At least 50% of the intended creative visible "from the game player's perspective or on the game player's screen," and that condition held for "one continuous second, post ad render" for display, or "2 continuous seconds" of video meeting the same pixel requirement. The clock starts only once the pixel threshold is met.
 - **Screen share.** "The ad must be a minimum of 1.5% of screen coverage to be considered viewable," measured on the visible portion of the ad.
-- **Angle.** Where angles can be measured on X, Y and Z, "an ad angle no greater than 55 degrees for any one coordinate (on an absolute basis)," with combined-axis distortion an area for further study.
+- **Angle.** Where angles can be measured on X, Y and Z, the guidelines recommend "an ad angle no greater than 55 degrees for any one coordinate (on an absolute basis)," with combined-axis distortion an area for further study.
 - **Polling.** Measurers sample visibility every "200 milliseconds (ms) for both Display and Video ads," which "equates to five and ten consecutive positive observations" for display and video, with guidance allowing a majority-of-observations approach (at least three of five polls in a second) for partial occlusions.
 - **Disclosure and IVT.** The ad unit's physical attributes and placement in the game are disclosed to the buyer, and impressions are filtered for invalid activity.
 
@@ -213,7 +213,7 @@ Many games are directed to children or have mixed audiences, and the rules are t
 
 - **Google Play Families policy.** If an app's target audience is only children, "you must use only Families self-certified ads SDK versions"; mixed-audience apps must screen ages and make sure ads to children "come exclusively from Google Play self-certified ads SDK versions." Ads to children or users of unknown age must not involve interest-based advertising or remarketing, must be appropriate for children, and must follow the Families ad format rules above.
 - **Apple Kids Category.** "Apps in the Kids Category should not include third-party analytics or third-party advertising," with a narrow exception: "Third-party contextual advertising may also be permitted in limited cases provided that the services have publicly documented practices and policies for Kids Category apps that include human review of ad creatives for age appropriateness." Kids Category apps "may not send personally identifiable information or device information to third parties."
-- **SDK signals.** The ad SDK must receive and pass the child-directed state on every request. AdMob's (now deprecated in favor of an age-restricted treatment setting) child-directed tag is a COPPA setting under which Google takes "steps to disable IBA and remarketing ads on that ad request" and prevents transmission of the Android advertising ID; a separate under-age-of-consent tag for EEA users disables personalized advertising and "requests to third-party ad vendors, such as ad measurement pixels and third-party ad servers"; and a maximum ad content rating (G, PG, T, MA) limits the creative's rating. OpenRTB carries the child-directed state as `regs.coppa`, set from the property's `child_directed` flag in the core model.
+- **SDK signals.** The ad SDK must receive and pass the child-directed state on every request. AdMob's (now deprecated in favor of an age-restricted treatment setting) child-directed tag is a COPPA setting under which Google takes "steps to disable IBA and remarketing ads on that ad request" and prevents transmission of the Android advertising ID; a separate under-age-of-consent tag for EEA users (deprecated the same way) disables personalized advertising and "requests to third-party ad vendors, such as ad measurement pixels and third-party ad servers"; and a maximum ad content rating (G, PG, T, MA) limits the creative's rating. OpenRTB carries the child-directed state as `regs.coppa`, set from the property's `child_directed` flag in the core model.
 
 The decision of who is a child belongs to the game's backend, which holds the age band from its age screen, not to an ad SDK's guess ([Ratings, Age & Children](/books/gaming/ratings-and-age)). The ad platform's job is to treat a child-directed or unknown-age request as contextual only, with no identifiers sent to any partner, a creative category and rating filter, and only partners certified for children.
 
