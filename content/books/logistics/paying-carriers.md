@@ -19,7 +19,7 @@ As of November 2026, from carrier pages, a published broker-carrier agreement, a
 | Company | Role | Standard terms | Faster pay | Factoring and notices |
 | --- | --- | --- | --- | --- |
 | **Apex Capital** | Factor | n/a | The factor's advance | A notice of assignment is "a legal document that tells brokers to send invoice payments directly to your factoring company"; a broker that pays the carrier anyway "may still be legally responsible for paying the factoring company"; a release letter is issued when the carrier leaves |
-| **C.H. Robinson** | Broker | Not stated on its FAQ | Quick pay "standardized at 2.0%"; LoadPay as a funding option | Factoring through C.H. Robinson Financial by Triumph at "1.5% on C.H. Robinson loads and 2.5% on load with other providers"; the factor "will collect payment from the shippers or brokers they hauled for" |
+| **C.H. Robinson** | Broker | Not stated on its FAQ | Quick pay "standardized at 2.0%"; LoadPay as a funding option | Factoring through C.H. Robinson Factoring by Triumph at "1.5% on C.H. Robinson loads and 2.5% on load with other providers"; the factor "will collect payment from the shippers or brokers they hauled for" |
 | **Flock Freight** | Broker | "within thirty (30) days of receipt of Carrier's undisputed invoice" | Not addressed | A written "Notice of Release" with remittance instructions is required before assigning, and the assignment "shall not take effect until fifteen (15) days after Broker receives" it; complying with one of several conflicting notices releases the broker for those amounts |
 | **TQL** | Broker | "Our standard pay terms are 28-days" | 1-day pay at 5%, 7-day pay at 3% | "If you factor, please send all documents to your factoring company and not to TQL" |
 | **Triumph Financial** | Factor and payments network | Its clients' invoices are "typically paid 30 to 60 days after delivery" | Quick pay "at a discount in advance of the standard payment term" through its network; LoadPay funds approved invoices "without the need for such payments to be processed through traditional payment rails" | Small owner-operators typically non-recourse, larger fleets recourse; $11.699 billion of invoices purchased in 2025; its network covers "the management of notices of assignment and maintenance of carrier wallets" |
@@ -32,7 +32,7 @@ Three patterns:
 
 ## Terms, Quick Pay and Offsets
 
-**Terms** are the contract's: the broker-carrier agreement or the shipper's carrier contract sets them, usually from receipt of an undisputed invoice with its documents, and the rate confirmation can override them per load. The regulatory credit rules in 49 CFR 377 run the other way (a carrier extending credit to its shipper, [Presentment, Credit and the Clocks](/books/logistics/freight-invoicing#presentment-credit-and-the-clocks)); nothing federal sets how fast a broker pays a carrier, which is why the broker's own record of "the date it paid the carrier" (49 CFR 371.3) and its bond are what a carrier has.
+**Terms** are the contract's: the broker-carrier agreement or the shipper's carrier contract sets them, usually from receipt of an undisputed invoice with its documents, and the rate confirmation can override them per load. The regulatory credit rules in 49 CFR 377 run the other way (a carrier extending credit to its shipper, [Presentment, Credit and the Clocks](/books/logistics/freight-invoicing#presentment-credit-and-the-clocks)); nothing federal sets how fast a broker pays a carrier, which is why the broker's own record of "the date of payment to the carrier" (49 CFR 371.3(a)(6)) and its bond are what a carrier has.
 
 **Quick pay** is modeled as an election and a line:
 
@@ -44,7 +44,7 @@ Three patterns:
 
 ## Owner-Operators on Lease
 
-A leased owner-operator isn't a carrier the broker pays; it's paid by the motor carrier it leases to, on a settlement, and the regulation sets the clock: payment "within 15 days after submission of the necessary delivery documents," and the carrier may not set time limits for submitting them (49 CFR 376.12(f)). When pay is a percentage of revenue, the owner-operator is entitled to the rated freight bill, and every deduction (fuel advances, insurance, escrow) is listed with its basis ([Owner-Operators and Leases](/books/logistics/truckload#owner-operators-and-leases)). The settlement statement and its lines are Carrier Dispatch & Asset Management's `driver_settlements`; what this chapter adds is that the settlement's payment is a carrier payment like any other, to a payee who may also have factored, on a rail, with the same payee controls.
+A leased owner-operator isn't a carrier the broker pays; it's paid by the motor carrier it leases to, on a settlement, and the regulation sets the clock: payment "within 15 days after submission of the necessary delivery documents," and the carrier may not set time limits for submitting them (49 CFR 376.12(f)). The rated freight bill, the chargebacks and the escrow rules the settlement must honor are in [Settlements](/books/logistics/carrier-operations#settlements), whose `driver_settlements` and `driver_settlement_lines` hold the statement, and the lease terms in [Owner-Operators and Leases](/books/logistics/truckload#owner-operators-and-leases). What this chapter adds is that the settlement's payment is a carrier payment like any other, to a payee who may also have factored, on a rail, with the same payee controls.
 
 ## Factoring From the Payer's Side
 
@@ -165,7 +165,7 @@ The two versions encode the same decisions: a notice counts from receipt (not fr
 
 ## Payment Diversion Controls
 
-The fraud aims at the payee: a spoofed email from the carrier's "accounting" changing the bank account, a forged notice naming a factor the carrier never used, a real factor's notice ignored so the carrier is paid twice. The general controls on changing a payee's bank details (verify out of band, validate the account, hold the first payment, separate duties) are Payments' ([Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account)). What freight adds:
+The fraud aims at the payee: a spoofed email from the carrier's "accounting" changing the bank account, a forged notice naming a factor the carrier never used, a real factor's notice ignored so the carrier is paid twice. The general controls on changing a payee's bank details (verify out of band, validate the account, hold the first payment, separate duties) are Payments' ([Stopping the Changed Bank Account](/books/payments/vendor-payouts#stopping-the-changed-bank-account)), and the invoice-level state they produce, `freight_invoices.payee_verified_at` and `payment_hold`, is Freight Fraud & Cargo Theft's: the notices and remit accounts below are the evidence that sets those two columns, and the resolver's holds are `payment_hold` values, not a second hold field. What freight adds:
 
 - **Verify every notice with the factor, not the sender.** Call or message the factor through contact details already on file for that factor (from its own website or a prior relationship), never the phone number or email on the notice. A factor the system has never seen is verified as a party first: its legal name, its address and its own bank account ownership.
 - **Know the factors.** Factors are a small, repeat population; keep them as parties with the `factor` role and verified remit accounts, so a notice naming an unknown "factor" stands out.
@@ -184,7 +184,7 @@ Carriers are paid by ACH most often, by check where they still ask for it, by ca
 
 ## The Broker's Credit
 
-A carrier's protection when a broker doesn't pay is narrow: the broker's $75,000 bond or trust fund, claims on which now trigger suspension of the broker's authority within days of a drawdown ([Broker and Forwarder Security](/books/logistics/financial-security-and-insurance#broker-and-forwarder-security)). A $75,000 fund split among a failed broker's unpaid carriers pays little, so carriers and factors treat a broker's payment behavior as credit risk: factors underwrite the account debtor ("account debtors represent the substantive underlying credit risk," in Triumph's words), and carriers check how fast a broker pays. For the broker's system the consequence is that payment timeliness is a measured, exposed fact: days from complete documents to payment, by carrier and by month, and the date of every payment in the record 49 CFR 371.3 requires, open to each party to the transaction.
+A carrier's protection when a broker doesn't pay is narrow: the broker's $75,000 bond or trust fund, claims on which now trigger suspension of the broker's authority within days of a drawdown ([Broker and Forwarder Security](/books/logistics/financial-security-and-insurance#broker-and-forwarder-security)). A $75,000 fund split among a failed broker's unpaid carriers pays little, so carriers and factors treat a broker's payment behavior as credit risk: factors underwrite the account debtor ("account debtors represent the substantive underlying credit risk," in Triumph's words), and carriers check how fast a broker pays. For the broker's system the consequence is that payment timeliness is a measured, exposed fact: days from complete documents to payment, by carrier and by month, and the date of every payment in the record 49 CFR 371.3 requires, which "each party to a brokered transaction has the right to review" (371.3(c)).
 
 ## How to Build It
 
@@ -283,11 +283,9 @@ CREATE TABLE carrier_payments (                -- one invoice paid, to one payee
   currency              CHAR(3) NOT NULL,
   scheduled_on          DATE NOT NULL,
   paid_at               TIMESTAMPTZ,           -- when it left; 371.3's "date of payment"
-  status                TEXT NOT NULL CHECK (status IN ('scheduled', 'held', 'sent', 'settled',
-                          'returned', 'cancelled')),
-  hold_reason           TEXT,
-  CHECK (net_amount = approved_amount - quick_pay_fee - offset_amount),
-  CHECK (status <> 'held' OR hold_reason IS NOT NULL)
+  status                TEXT NOT NULL CHECK (status IN ('scheduled', 'sent', 'settled',
+                          'returned', 'cancelled')),  -- a held invoice has no payment row yet
+  CHECK (net_amount = approved_amount - quick_pay_fee - offset_amount)
 );
 CREATE INDEX ON carrier_payments (load_id);
 CREATE UNIQUE INDEX carrier_payments_one_live_per_invoice ON carrier_payments (freight_invoice_id)
@@ -324,10 +322,11 @@ WHERE fi.side = 'payable'
 Design notes:
 
 - **The payee is resolved, recorded and re-resolved.** `freight_invoices.payee_party_id` is set by the resolver with the notice that decided it; any later notice or release sends the invoice back through it before payment, never after.
+- **Holds live on the invoice.** A resolver hold, or a first payment to a remit account still under `first_payment_hold`, is written to the `payment_hold` Freight Fraud & Cargo Theft adds (`notice_unverified`, `new_payee`; a conflict between notices needs its own value in that check), and the payment run schedules a `carrier_payments` row only once the invoice's hold is clear and `payee_verified_at` is set.
 - **One live payment per invoice.** The partial unique index stops a second payment while the first is live; a returned or cancelled payment frees the invoice for a new one, and both rows stay.
 - **Account numbers live in a vault.** `party_remit_accounts.account_ref` points at it; the row keeps the last four digits, the validated owner name and how it was verified ([Validating the Account](/books/payments/ach#validating-the-account)).
 - **Fees and offsets are lines, not discounts.** The quick pay fee is also a `quick_pay_fee` charge on the load and offsets are their own rows, so margin, the carrier's statement and the remittance agree.
-- **Emit the events.** `assignment_notice.received`, `assignment_notice.verified`, `assignment_notice.released`, `party_remit_account.changed`, `carrier_payment.held`, `carrier_payment.sent` and `carrier_payment.returned` feed payment runs, carrier notifications, fraud review and the broker's record.
+- **Emit the events.** `assignment_notice.received`, `assignment_notice.verified`, `assignment_notice.released`, `party_remit_account.changed`, `carrier_payment.sent` and `carrier_payment.returned` feed payment runs, carrier notifications, fraud review and the broker's record.
 
 ## Auditing
 
@@ -353,7 +352,7 @@ Design notes:
 
 - [UCC 9-406: Discharge of account debtor; notification of assignment](https://www.law.cornell.edu/ucc/9/9-406), discharge after notification, reasonable identification and proof of assignment
 - [49 CFR 376.12: Written lease requirements](https://www.law.cornell.edu/cfr/text/49/376.12), payment within 15 days of delivery documents for leased owner-operators
-- [49 CFR 371.3: Records to be kept by brokers](https://www.law.cornell.edu/cfr/text/49/371.3), the date of payment to the carrier in the broker's record
+- [49 CFR 371.3: Records to be kept by brokers](https://www.law.cornell.edu/cfr/text/49/371.3), the date of payment to the carrier in the broker's record and each party's right to review it
 
 **Filings**
 
