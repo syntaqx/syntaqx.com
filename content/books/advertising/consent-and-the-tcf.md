@@ -29,7 +29,7 @@ Three patterns:
 
 - **The framework describes; each vendor decides.** The TCF defines what the user agreed to. Google, Microsoft and Prebid each turn that into their own rules (which purposes each kind of ad needs, which fallback applies), and those rules are not identical. A system that receives TC strings has to encode its own declared bases, not copy another vendor's table.
 - **There is always a fallback, and it is three-tiered.** Personalized, non-personalized (contextual, with device storage allowed) and limited (no device storage, no identifiers) are the shape Google documents and Prebid's purpose gates produce. This volume uses the same three values for `ads_mode`.
-- **Strings expire by version, not by date.** A string written under an older policy version stays valid only as far as the policy says: v2.3 kept strings created before February 28, 2026 valid without `disclosedVendors`, and Google may default requests with non-compliant strings generated from March 1, 2026 to limited ads. The policy version is a column, not a guess.
+- **Strings expire by version, not by date.** A string written under an older policy version stays valid only as far as the policy says: v2.3 kept strings created before February 28, 2026 valid without `disclosedVendors`, and Google may default requests with non-compliant strings generated from March 1, 2026 to limited ads. The two dates leave one day in dispute, and a string's `Created` field records only the day, so a string dated February 28 is valid to Google and invalid to IAB Europe. My rule is the stricter date: require the segment on strings created from February 28, which satisfies both. The policy version is a column, not a guess.
 
 ## What a CMP Does
 
@@ -124,7 +124,7 @@ Two deadlines per version matter more than the publication dates. A vendor has t
 A vendor receiving a string runs the same check for each purpose it wants to use:
 
 1. **Does the framework apply?** `gdprApplies` (or `regs.gdpr` in a bid request) is 1, or unknown and the request comes from the EEA, UK or Switzerland. Where it is 0 the TCF check is skipped, and the US rules in [GPP, GPC & US Opt-Outs](/books/advertising/gpp-gpc-and-us-opt-outs) apply instead.
-2. **Is the string valid?** It decodes; its policy version is supported; if created after February 28, 2026 it carries `disclosedVendors`; the CMP ID is registered.
+2. **Is the string valid?** It decodes; its policy version is supported; if created on or after February 28, 2026 it carries `disclosedVendors`; the CMP ID is registered.
 3. **Was this vendor disclosed?** Its bit is set in `disclosedVendors`.
 4. **What basis does this vendor declare for this purpose,** in the GVL version the string names, after publisher restrictions? Consent, legitimate interest, or not allowed.
 5. **Is that basis present?** For consent: the purpose bit in `PurposesConsent` and the vendor bit in the vendor consent section. For legitimate interest: the purpose bit in `PurposesLITransparency` and the vendor bit in the legitimate interest section.
@@ -164,7 +164,7 @@ type TCData struct {
 // Declared is this vendor's basis per purpose after publisher restrictions.
 type Declared map[int]Basis
 
-const v23Cutoff = 1772323200 // 2026-03-01T00:00:00Z: strings created after Feb 28 need the segment
+const v23Cutoff = 1772236800 // 2026-02-28T00:00:00Z: strings created from Feb 28 need the segment (IAB Europe's date, stricter than Google's Mar 1)
 
 func hasBasis(tc TCData, vendor, purpose int, d Declared) bool {
 	switch d[purpose] {
@@ -219,7 +219,7 @@ pub struct TcData {
 /// This vendor's basis per purpose after publisher restrictions.
 pub type Declared = HashMap<u16, Basis>;
 
-const V23_CUTOFF: i64 = 1_772_323_200; // 2026-03-01T00:00:00Z: strings created after Feb 28 need the segment
+const V23_CUTOFF: i64 = 1_772_236_800; // 2026-02-28T00:00:00Z: strings created from Feb 28 need the segment (IAB Europe's date, stricter than Google's Mar 1)
 
 fn has_basis(tc: &TcData, vendor: u16, purpose: u16, d: &Declared) -> bool {
     match d.get(&purpose).copied().unwrap_or(Basis::NotAllowed) {
@@ -351,7 +351,7 @@ CREATE TABLE privacy_rule_versions (      -- the decision rules every request is
   version                 INT NOT NULL UNIQUE,
   tcf_policy_versions     SMALLINT[] NOT NULL,       -- accepted TcfPolicyVersion values
   gvl_version             INT NOT NULL REFERENCES gvl_versions (version),
-  tcf_disclosed_vendors_required_from TIMESTAMPTZ NOT NULL,  -- 2026-03-01 under v2.3 (created after Feb 28)
+  tcf_disclosed_vendors_required_from TIMESTAMPTZ NOT NULL,  -- 2026-02-28 under v2.3 (IAB Europe's date)
   mode_rules              JSONB NOT NULL,            -- signal-to-mode mapping, per regime
   jurisdiction_rules_ref  TEXT,                      -- privacy_jurisdictions snapshot (US state law)
   effective_at            TIMESTAMPTZ NOT NULL,
