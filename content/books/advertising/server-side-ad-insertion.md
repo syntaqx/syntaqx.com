@@ -329,8 +329,7 @@ ALTER TABLE auctions
 ALTER TABLE auctions ADD CONSTRAINT auctions_pod_kind_check
   CHECK (pod_kind IN ('structured', 'dynamic', 'hybrid')) NOT VALID;
 
-ALTER TABLE bids
-  ADD COLUMN duration_s INT,              -- Bid.dur
+ALTER TABLE bids                          -- duration_s (Bid.dur) comes from OpenRTB
   ADD COLUMN slot_in_pod SMALLINT,        -- Bid.slotinpod as bid
   ADD COLUMN separation_key TEXT,         -- the label or category the filler applied
   ADD COLUMN universal_ad_id TEXT;        -- for creative deduplication across bidders
