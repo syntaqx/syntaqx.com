@@ -224,7 +224,7 @@ This is not legal advice, and the rules change quickly. [Consumer Contact](/docs
 **Reference**
 
 - [Mayer Brown: FCC declares authority and intent to regulate AI-generated calls under the TCPA](https://www.mayerbrown.com/en/insights/publications/2024/02/fcc-declares-authority-and-intent-to-regulate-ai-generated-calls-under-the-tcpa), AI voices as "artificial," prior express consent, identification and opt-out
-- [Digital Media Law Project: Recording phone calls and conversations](https://www.dmlp.org/legal-guide/recording-phone-calls-and-conversations), one-party and all-party consent states
+- [Digital Media Law Project: Recording phone calls and conversations (Wayback Machine, January 12, 2024)](https://web.archive.org/web/20240112111252/https://www.dmlp.org/legal-guide/recording-phone-calls-and-conversations), one-party and all-party consent states
 - [Anthropic: Create strong empirical evaluations](https://platform.claude.com/docs/en/docs/test-and-evaluate/develop-tests), task-specific evals, edge cases, automated grading and volume over quality
 - [Goodwin: EU AI Act transparency obligations now in force](https://goodwinlaw.com/en/insights/publications/2026/08/alerts-technology-dpc-eu-ai-act-transparency-obligations-now-in-force), Article 50 applying from 2 August 2026 and the Digital Omnibus grace period to 2 December 2026 for marking synthetic output
 - [NIST: AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework), governing AI risk, and its Generative AI Profile

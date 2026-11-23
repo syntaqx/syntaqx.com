@@ -196,7 +196,7 @@ Checks are audited by your bank against its RDC agreement and the FFIEC's expect
 - [Federal Register: Fed fee schedules for 2026](https://www.govinfo.gov/content/pkg/FR-2025-12-09/html/2025-22268.htm), check service prices and the end of the foreign and Canadian check service
 - [FFIEC: Risk Management of Remote Deposit Capture](https://fdic.gov/news/news/financial/2009/fil09004a.pdf), RDC risks and expected controls
 - [Nacha: ACH file details](https://achdevguide.nacha.org/ach-file-details), SEC codes including ARC, BOC, POP and RCK
-- [FinCEN: Alert on mail theft-related check fraud](https://www.fincen.gov/sites/default/files/shared/FinCEN%20Alert%20Mail%20Theft-Related%20Check%20Fraud%20FINAL%20508.pdf), SAR counts and red flags, February 2023
+- [FinCEN: Alert on mail theft-related check fraud](https://www.fincen.gov/system/files/shared/FinCEN%20Alert%20Mail%20Theft-Related%20Check%20Fraud%20FINAL%20508.pdf), SAR counts and red flags, February 2023
 - [FinCEN: Analysis of check fraud related to mail theft](https://www.fincen.gov/news/news-releases/fincen-issues-depth-analysis-check-fraud-related-mail-theft), $688 million in six months and how stolen checks are used
 - [Nacha: AFP survey on check fraud](https://www.nacha.org/news/afp-survey-businesses-may-be-misled-risks-check-fraud), 63% of organizations hit in 2024
 - [California Civil Code 1947.3](https://california.public.law/codes/ca_civ_code_section_1947.3), landlords must accept a non-cash, non-electronic payment

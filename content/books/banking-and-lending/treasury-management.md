@@ -317,7 +317,7 @@ Treasury management records are read by the bank's operational risk and audit fu
 
 **Regulators and guidance**
 
-- [FinCEN: Alert on Nationwide Surge in Mail Theft-Related Check Fraud (FIN-2023-Alert003, February 27, 2023)](https://www.fincen.gov/sites/default/files/shared/FinCEN%20Alert%20Mail%20Theft-Related%20Check%20Fraud%20FINAL%20508.pdf), check fraud SARs in 2021 and 2022 and why business checks are targeted
+- [FinCEN: Alert on Nationwide Surge in Mail Theft-Related Check Fraud (FIN-2023-Alert003, February 27, 2023)](https://www.fincen.gov/system/files/shared/FinCEN%20Alert%20Mail%20Theft-Related%20Check%20Fraud%20FINAL%20508.pdf), check fraud SARs in 2021 and 2022 and why business checks are targeted
 - [Federal Reserve: Reserve requirements](https://www.federalreserve.gov/monetarypolicy/reservereq.htm), ratios reduced to zero effective March 26, 2020
 
 **Specifications**

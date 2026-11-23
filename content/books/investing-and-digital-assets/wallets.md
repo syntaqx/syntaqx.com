@@ -213,7 +213,7 @@ Notes on the sketch:
 
 **Regulators and guidance**
 
-- [FinCEN: Application of FinCEN's regulations to certain business models involving convertible virtual currencies (FIN-2019-G001, May 9, 2019)](https://www.fincen.gov/sites/default/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), the four criteria, hosted wallet providers as money transmitters, unhosted wallets and multisig providers (section 4.2)
+- [FinCEN: Application of FinCEN's regulations to certain business models involving convertible virtual currencies (FIN-2019-G001, May 9, 2019)](https://www.fincen.gov/system/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), the four criteria, hosted wallet providers as money transmitters, unhosted wallets and multisig providers (section 4.2)
 - [OCC, Federal Reserve and FDIC: Crypto-Asset Safekeeping by Banking Organizations (July 14, 2025)](https://www.federalreserve.gov/newsevents/pressreleases/files/bcreg20250714a1.pdf), possession of existing keys may not be control
 
 **Standards and protocols**

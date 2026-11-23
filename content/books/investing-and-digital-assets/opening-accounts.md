@@ -315,7 +315,7 @@ FINRA examiners sample new accounts, and state regulators and NYDFS examine cryp
 - [FINRA Rule 2264: Margin Disclosure Statement](https://www.finra.org/rules-guidance/rulebooks/finra-rules/2264), delivery at or before opening, annual delivery and the statement's key points
 - [FINRA Regulatory Notice 26-02 (January 8, 2026)](https://www.finra.org/rules-guidance/notices/26-02), proposed Rule 2166 temporary delays of up to five business days for customers 18 or older, comments due March 9, 2026
 - [SEC: Press release 2024-58 (May 16, 2024)](https://www.sec.gov/newsroom/press-releases/2024-58), Regulation S-P incident response program, 30-day notice and the 18 and 24 month compliance periods
-- [FinCEN: Application of FinCEN's Regulations to Certain Business Models Involving Convertible Virtual Currencies (FIN-2019-G001, May 9, 2019)](https://www.fincen.gov/sites/default/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), hosted wallet providers as account-based money transmitters
+- [FinCEN: Application of FinCEN's Regulations to Certain Business Models Involving Convertible Virtual Currencies (FIN-2019-G001, May 9, 2019)](https://www.fincen.gov/system/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), hosted wallet providers as account-based money transmitters
 - [IRS: Backup withholding](https://www.irs.gov/businesses/small-businesses-self-employed/backup-withholding), the 24% rate, its triggers and the 1099 payments it covers
 - [IRS: Instructions for Form W-8BEN](https://www.irs.gov/instructions/iw8ben), who gives the form, validity through the third succeeding calendar year, 30-day change notice and 30% withholding
 

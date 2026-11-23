@@ -193,7 +193,7 @@ Design notes:
 - [Salesforce: Completes acquisition of Demandware](https://investor.salesforce.com/news/news-details/2016/Salesforce-Completes-Acquisition-of-Demandware/default.aspx), July 11, 2016 and Commerce Cloud
 - [Permira: Completes acquisition of Squarespace](https://www.permira.com/news-and-insights/announcements/permira-completes-acquisition-of-squarespace), October 17, 2024
 - [cyber_Folks: Investor relations](https://investors.cyberfolks.pl/en/?p=3794), the 100% acquisition of PrestaShop jointly with Sylius and BitBag
-- [Spree Commerce: Developer covenant](https://spreecommerce.org/spree-commerce-developer-covenant), the license history from AGPL-3.0 back to BSD-3-Clause
+- [Spree Commerce: Developer covenant (Wayback Machine, June 18, 2025)](https://web.archive.org/web/20250618051830/https://spreecommerce.org/spree-commerce-developer-covenant/), Spree 4.10 and later under AGPLv3, and the covenant not to enforce Section 13 against single-tenant stores
 - [RubyGems: spree_core](https://rubygems.org/gems/spree_core), version 6.0.0 on October 27, 2026 under BSD-3-Clause
 
 **Platform documentation**

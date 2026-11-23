@@ -27,8 +27,11 @@ export function extractLinks(markdown: string): string[] {
   return [...urls];
 }
 
-/** DNS and connection failures that mean the host is gone, not just unhappy with us. */
-const DEAD_ERROR_CODES = new Set(["ENOTFOUND", "EAI_AGAIN", "ECONNREFUSED", "ERR_INVALID_URL"]);
+/**
+ * DNS failures that mean the host is gone, not just unhappy with us. A refused
+ * connection is not one: web.archive.org and others refuse CI runner IPs.
+ */
+const DEAD_ERROR_CODES = new Set(["ENOTFOUND", "EAI_AGAIN", "ERR_INVALID_URL"]);
 
 /**
  * Classify one check. Only a definite "this doesn't exist" is dead. Bot walls

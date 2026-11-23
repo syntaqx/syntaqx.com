@@ -268,7 +268,7 @@ Design notes:
 
 **Regulators and guidance**
 
-- [FinCEN: FIN-2019-G001 (May 9, 2019)](https://www.fincen.gov/sites/default/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), hosted and unhosted wallets, P2P exchangers, kiosks, DApps and anonymizing services and software providers
+- [FinCEN: FIN-2019-G001 (May 9, 2019)](https://www.fincen.gov/system/files/2019-05/FinCEN%20Guidance%20CVC%20FINAL%20508.pdf), hosted and unhosted wallets, P2P exchangers, kiosks, DApps and anonymizing services and software providers
 - [CSBS: Money Transmission Modernization Act](https://www.csbs.org/csbs-money-transmission-modernization-act-mtma), the nationwide standards, 31 states and the virtual currency and stablecoin guidance
 - [California DFPI: Digital Financial Assets Law FAQ](https://dfpi.ca.gov/regulated-industries/digital-financial-assets/digital-financial-assets-law-frequently-asked-questions/), the July 1, 2026 date, AB 1934, NMLS, exemptions, capital and bonds, kiosk limits, the fee cap example and stablecoins
 - [SEC: Custody of Digital Asset Securities by Special Purpose Broker-Dealers (published February 26, 2021)](https://www.federalregister.gov/api/v1/documents.json?conditions[term]=%22special%20purpose%20broker-dealer%22&order=newest&per_page=10), the statement's publication and the October 6, 2026 crypto custody proposal
