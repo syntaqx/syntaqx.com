@@ -26,7 +26,7 @@ As of November 2026, the published payout terms of networks, SSPs and managed pa
 | **Magnite** (SSP) | Collects the full price from buyers; "in some cases" pays sellers before it has collected | Not published | Not published |
 | **Mediavine** (managed network) | "Net65 Terms"; payment date "the 5th of each month", issued on the first business day | Not on the page opened | Not on the page opened |
 | **Microsoft Monetize** (SSP) | A fixed period such as net 60 or net 90 "from the last day of the month", disbursed on the last day of each month | $50 for the month; below it, held until $50 accumulates | Invalid traffic adjustments quoted on the seller remittance statement; payment withheld if the seller has unpaid invoices for buying |
-| **PubMatic** (SSP) | Publisher agreements with payment terms "(typically ninety days or less)"; buyers invoiced monthly | Not published | Not published |
+| **PubMatic** (SSP) | Agreements with each publisher and buyer set payment terms "(typically ninety days or less)"; buyers invoiced at the end of each month | Not published | Not published |
 | **Raptive** (managed network) | Guarantees payment to creators "whether we ultimately get paid or not" | Not on the page opened | Not on the page opened |
 
 Raptive's help center returned an error to automated requests, so I could not confirm its net terms to creators or the terms its own partners pay it on, and no term from it is used here. <!-- source-gap: adv-raptive-payment-terms | missing | Raptive's net payment terms to creators and its partners' terms to Raptive | closes with: an openable Raptive help center or terms page stating both | checked: 2026-11-22 -->
@@ -100,7 +100,7 @@ Detail is often limited by design. AdSense warns that "you may not view line ite
 
 ## Net Terms and Paying Before Collecting
 
-Net terms are the payer's working capital decision. An SSP invoices buyers monthly, collects on their terms, and pays publishers on its own; PubMatic's publisher agreements have terms "(typically ninety days or less)", and it notes that "the timing of cash receipts from buyers and payments to publishers can significantly impact our cash flows." Microsoft Advertising pays Monetize sellers "within a fixed period of time (e.g. Net 60, Net 90) from the last day of the month in which the reselling activity occurs." Magnite says that "in some cases, we may be required or elect to pay sellers for impressions delivered before we have collected", which uses working capital to fund its payables until buyers pay.
+Net terms are the payer's working capital decision. An SSP invoices buyers monthly, collects on their terms, and pays publishers on its own; PubMatic's agreements with each publisher and buyer set payment terms "(typically ninety days or less)", and it notes that "the timing of cash receipts from buyers and payments to publishers can significantly impact our cash flows." Microsoft Advertising pays Monetize sellers "within a fixed period of time (e.g. Net 60, Net 90) from the last day of the month in which the reselling activity occurs." Magnite says that "in some cases, we may be required or elect to pay sellers for impressions delivered before we have collected", which uses working capital to fund its payables until buyers pay.
 
 Two things follow for the system. **The due date is computed from the earnings period, not from the statement.** Net 60 from the last day of March is May 30; a payout run that counts from the statement's issue date pays late. The terms record names the basis (days after the month end, or a fixed day of a later month) and the run computes each period's due date from it. **Whether payment depends on collection is a term.** A payer that pays only from collected funds ("pay when paid") holds the publisher's money until each buyer pays and needs a per-buyer collection status on every earnings entry; one that pays regardless carries the credit risk itself, as Raptive's guarantee and Magnite's disclosure describe. I found no public standard term setting which applies between SSPs and publishers; each agreement does. <!-- source-gap: adv-ssp-pay-when-paid | missing | the prevalence of pay-when-paid terms in SSP and network agreements with publishers | closes with: a published industry survey or standard terms document for SSP publisher agreements | checked: 2026-11-22 -->
 
@@ -349,13 +349,14 @@ The mechanics are the playbook's [Audit Trails](/docs/building-blocks/audit-trai
 **Filings**
 
 - [Magnite: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000007/mgni-20251231.htm), collecting the full purchase price from buyers and paying sellers before collection in some cases
-- [PubMatic: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1422930/000142293026000010/pubm-20251231.htm), monthly buyer invoicing, publisher payment terms of ninety days or less, and the cash flow effect of their timing
+- [PubMatic: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1422930/000142293026000010/pubm-20251231.htm), buyer invoicing at month end, payment terms of ninety days or less in its publisher and buyer agreements, and the cash flow effect of their timing
 
 **In practice**
 
 - [Google AdSense: Payment thresholds](https://support.google.com/adsense/answer/1709871?hl=en), the tax, identity, address, payment method selection, payment and cancellation thresholds by currency
 - [Google AdSense: Payment timelines](https://support.google.com/adsense/answer/7164703?hl=en), finalization on the 3rd, the 20th balance check, payment between the 21st and 26th, rollover and deductions not shown as line items
 - [Google AdSense: Common payment hold issues](https://support.google.com/adsense/answer/1714364?hl=en), the hold reasons and what releases each
+- [Google AdSense: Deductions from earnings FAQs](https://support.google.com/adsense/answer/2808531?hl=en), deductions for traffic within the past 60 to 90 days, advertiser reimbursement, no appeal and deductions for advertiser non-payment
 - [Google AdSense: FAQs about submitting US tax info](https://support.google.com/adsense/answer/10735961?hl=en), why tax information is collected, W-9 and W-8 forms, and refreshing non-US forms every three years
 - [Google AdMob: Payments and transactions](https://support.google.com/admob/answer/2772140?hl=en), the monthly cycle, payment around the 21st, the threshold on the 20th, rollover and finalization deductions
 - [Ezoic: Net 30/60/90 payment terms](https://support.ezoic.com/kb/article/net-306090-payment-terms?lang=en-US), the default net 30, the net 60 and net 90 bonuses with examples, the $20 minimum and the 15th deadline

@@ -268,5 +268,5 @@ Design notes:
 
 - [AD-ID](https://www.ad-id.org/), the industry's ad registry, its ownership by a company of the 4A's and the ANA, cross-platform identification of creative
 - [MRC: Update on the Nielsen National Big Data + Panel service (March 3, 2026, PDF)](https://www.mediaratingcouncil.org/sites/default/files/News/MRC%20Releases%20Update%20on%20the%20MRC-Accredited%20Nielsen%20National%20Big%20Data%20%2B%20Panel%20Television%20Service.pdf), "seemingly unusual changes in measurement results" in the first half of 2025
-- [Netflix: Upfront 2026 (May 13, 2026)](http://about.netflix.com/en/news/netflix-upfront-2026-get-closer), the 2026 upfront and its audience figure
+- [Netflix: Upfront 2026 (May 13, 2026)](https://about.netflix.com/en/news/netflix-upfront-2026-get-closer), the 2026 upfront and its audience figure
 - [The Walt Disney Company: Upfront 2025 (May 14, 2025)](https://thewaltdisneycompany.com/news/upfront-2025/), the cross-service upfront and ad-supported audience

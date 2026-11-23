@@ -98,9 +98,9 @@ The other states use similar lists with additions (Kentucky, for example, adds a
 | --- | --- | --- |
 | **Right to limit use** | California | Honor a limit request by stopping uses beyond those the regulations permit, including inferring characteristics for ads |
 | **Opt-in consent** | Virginia and other opt-in states (Virginia's GPP section encodes it as consent) | No sensitive-data targeting without a recorded consent for that state |
-| **Ban on sale** | Maryland; Oregon and Virginia for precise geolocation by 2025 and 2026 amendments (secondary sources) | No sensitive segments for sale, consent or not |
+| **Ban on sale** | Maryland; Oregon (HB 2008 of 2025, location within 1,750 feet) and Virginia (a 2026 amendment, by a secondary source) for precise geolocation | No sensitive segments for sale, consent or not |
 
-<!-- source-gap: adv-geo-sale-bans | secondary | Oregon HB 2008 and Virginia 2026 amendment banning the sale of precise geolocation data | closes with: the enrolled bills on oregonlegislature.gov and lis.virginia.gov | checked: 2026-11-22 -->
+<!-- source-gap: adv-geo-sale-bans | secondary | Virginia 2026 amendment banning the sale of precise geolocation data | closes with: the enrolled bill on lis.virginia.gov | checked: 2026-11-22 -->
 
 The engineering form is a flag on the data, not on the campaign. A taxonomy node, a targeting key or an audience built from sensitive data is marked sensitive where it's defined ([Targeting & Taxonomies](/books/advertising/targeting-and-taxonomies)' `taxonomy_nodes.sensitive`, [Campaigns & Line Items](/books/advertising/campaigns-and-line-items)' `targeting_keys.sensitive`, [First-Party Data & Audiences](/books/advertising/first-party-data-and-audiences)' sensitive review on `audiences`), and the jurisdiction rules decide what that flag means for a request from each state. [Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting) covers health and location data in depth.
 
@@ -278,6 +278,7 @@ The result is not by itself a violation: a bidder without a service provider agr
 - [CPPA: California finalizes regulations (September 23, 2025)](https://cppa.ca.gov/announcements/2025/20250923.html), the ADMT, risk assessment and cybersecurity audit rules, effective dates and attestation deadlines
 - [Maryland General Assembly: SB 541 (2024), Maryland Online Data Privacy Act](https://mgaleg.maryland.gov/mgawebsite/Legislation/Details/sb0541?ys=2024RS), approval and effective date
 - [Maryland: Chapter 455 of 2024, enrolled text](https://mgaleg.maryland.gov/2024RS/Chapters_noln/CH_455_sb0541e.pdf), minimization, sensitive data, the sale ban, the teen targeting ban, thresholds and the April 1, 2026 processing date
+- [Oregon Legislature: HB 2008 (2025)](https://olis.oregonlegislature.gov/liz/2025R1/Measures/Overview/HB2008), the precise geolocation sale ban and its 1,750-foot radius, chapter 251
 - [California Attorney General: Privacy enforcement actions](https://oag.ca.gov/privacy/privacy-enforcement-actions), the Disney, DoorDash, General Motors, Jam City, Lyft, Sling TV and Tilting Point settlements
 - [California Attorney General: Sephora settlement (August 24, 2022)](https://oag.ca.gov/news/press-releases/attorney-general-bonta-announces-settlement-sephora-part-ongoing-enforcement), trackers as a sale, GPC and the cure period
 - [California Attorney General: Healthline settlement (July 1, 2025)](https://oag.ca.gov/news/press-releases/attorney-general-bonta-announces-largest-ccpa-settlement-date-secures-155), targeted advertising opt-out, purpose limitation and contract terms
@@ -290,7 +291,7 @@ The result is not by itself a violation: a bidder without a service provider agr
 **Reference**
 
 - [IAPP: US State Privacy Legislation overview](https://iapp.org/resources/article/us-state-privacy-laws-overview), the count of 19 states and the years each passed
-- [MultiState: Comprehensive privacy laws that take effect in 2026](https://multistate.us/insider/2026/2/4/all-of-the-comprehensive-privacy-laws-that-take-effect-in-2026), Oregon's cure period and geolocation rules (secondary)
+- [MultiState: Comprehensive privacy laws that take effect in 2026](https://multistate.us/insider/2026/2/4/all-of-the-comprehensive-privacy-laws-that-take-effect-in-2026), Oregon's cure period (secondary)
 - [Benesch: Alabama, Louisiana, Oklahoma and Vermont join the compliance landscape (October 12, 2026)](https://www.beneschlaw.com/insight/the-privacy-patchwork-grows-alabama-louisiana-oklahoma-and-vermont-join-the-compliance-landscape/), the four 2026 laws and their effective dates (secondary)
 - [Moore & Van Allen: Privacy in bloom, four states reshape the landscape](https://www.mvalaw.com/data-points/privacy-in-bloom-four-states-reshape-the-data-protection-landscape-this-spring), Virginia's geolocation sale ban and Kentucky's ACR amendment (secondary)
 

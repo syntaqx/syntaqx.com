@@ -264,7 +264,7 @@ The string reaches partners three ways:
 
 Google layers two requirements over the TCF.
 
-**Certified CMPs.** Publishers using Ad Manager, AdSense or AdMob "are required to use a consent management platform (CMP) that has been certified by Google" and integrates with the TCF to serve personalized ads in the EEA and UK from January 16, 2024 and in Switzerland from July 31, 2024. "Traffic from a non-certified CMP may be eligible for non-personalized ads or limited ads", and a request from those regions with no TC string from a certified CMP gets limited ads. Google's EU User Consent Policy, which covers the EEA, UK and Switzerland, requires legally valid consent for cookies or local storage and for ads personalization, records of consent, revocation instructions and identification of each party that will use the data. For a publisher, the CMP choice is a revenue decision as much as a compliance one.
+**Certified CMPs.** Publishers using Ad Manager, AdSense or AdMob "are required to use a consent management platform (CMP) that has been certified by Google" and integrates with the TCF to serve personalized ads in the EEA and UK from January 16, 2024 and in Switzerland from July 31, 2024. "Traffic from a non-certified CMP may be eligible for non-personalized ads or limited ads", and Google's limited ads page lists a request from those regions without a TC string from a certified CMP among the cases that serve limited ads. Google's EU User Consent Policy, which covers the EEA, UK and Switzerland, requires legally valid consent for cookies or local storage and for ads personalization, records of consent, revocation instructions and identification of each party that will use the data. For a publisher, the CMP choice is a revenue decision as much as a compliance one.
 
 **Purposes Google needs.** Personalized ads need consent for Purposes 1, 3 and 4 and legitimate interest (or consent, if the publisher's CMP asks for it) for Purposes 2, 7, 9 and 10; Google is "not flexibly registered for purposes 1, 3, and 4 and always requires consent for these purposes." Non-personalized ads need Purpose 1 consent and a basis for 2, 7, 9 and 10. Limited ads, its third tier, "disable the collection, sharing, and use of personal data for personalization of ads", and give up audience targeting, remarketing, frequency capping and unique reach measurement; they use no cookies or local storage except for invalid traffic detection.
 
@@ -274,9 +274,9 @@ Microsoft has the same structure with fewer fields: its UET consent mode carries
 
 ## The TCF in Court
 
-The framework itself has been the subject of an enforcement case since 2019, and its outcome changed how the string is treated:
+The framework itself has been the subject of a Belgian enforcement case for years, and its outcome changed how the string is treated:
 
-- **The Belgian decision.** The Belgian data protection authority (APD/GBA) found in decision 21/2022 (February 2022) that the TC string is personal data and that IAB Europe is a controller for it, and imposed corrective measures and a fine.
+- **The Belgian decision.** The Belgian data protection authority (APD/GBA) found in its 2022 decision 21/2022 that the TC string is personal data and that IAB Europe is a controller for it, and imposed corrective measures and a fine.
 - **CJEU C-604/22 (March 7, 2024).** On a reference from the Brussels Court of Appeal (its Market Court section), the Court of Justice held that the TC string "constitutes personal data" where it can be associated with an identifier such as an IP address, and that IAB Europe can be a "joint controller" with its members for the recording of preferences in the string, but not for subsequent processing by vendors unless it influenced the purposes and means of that processing.
 - **The Market Court (May 14, 2025).** Applying the ruling, the Market Court found the string personal data and IAB Europe a joint controller for the TCF preferences, but not a controller for processing "entirely within the OpenRTB protocol", and confirmed the €250,000 fine although it annulled decision 21/2022 on procedural grounds.
 - **The action plan (January 2026).** IAB Europe announced that the Market Court had annulled the APD's validation of IAB Europe's action plan as "legally flawed", returning the matter to the APD. That account is from IAB Europe, a party to the case; the court's own text wasn't available to me. <!-- source-gap: adv-tcf-action-plan-ruling | secondary | Market Court annulled the APD validation of IAB Europe's TCF action plan (January 2026) | closes with: the Market Court judgment or an APD statement | checked: 2026-11-22 -->
@@ -461,8 +461,8 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 
 **Regulation**
 
-- [CJEU: Press release 44/24 on Case C-604/22, IAB Europe (March 7, 2024)](https://curia.europa.eu/jcms/upload/docs/application/pdf/2024-03/cp240044en.pdf), the TC string as personal data, IAB Europe as joint controller, the Belgian decision 21/2022
-- [Belgian Data Protection Authority: The Market Court rules in the IAB Europe case](https://www.dataprotectionauthority.be/citizen/the-market-court-rules-in-the-iab-europe-case), the May 14, 2025 judgment, OpenRTB processing and the €250,000 fine
+- [CJEU: Press release 44/24 on Case C-604/22, IAB Europe (March 7, 2024)](https://curia.europa.eu/jcms/upload/docs/application/pdf/2024-03/cp240044en.pdf), the TC string as personal data, IAB Europe as joint controller, the 2022 Belgian decision and the reference from the Brussels Court of Appeal
+- [Belgian Data Protection Authority: The Market Court rules in the IAB Europe case](https://www.dataprotectionauthority.be/citizen/the-market-court-rules-in-the-iab-europe-case), decision 21/2022, the May 14, 2025 judgment, OpenRTB processing and the €250,000 fine
 
 **Reference**
 

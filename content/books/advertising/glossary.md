@@ -544,8 +544,8 @@ Advertising borrows its words from media buying, auctions, statistics and privac
 - **EU political advertising regulation:** Regulation (EU) 2024/900 on the transparency and targeting of political advertising, applying from October 10, 2025 ([DSA, DMA & Political Ads](/books/advertising/dsa-dma-and-political-ads#eu-political-advertising)).
 - **Geofence ban:** a state rule forbidding virtual boundaries within a set distance of sensitive facilities to track, collect from or advertise to people there ([Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting#location-and-sensitive-places)).
 - **Global Privacy Control (GPC):** a browser signal (`Sec-GPC: 1`, `navigator.globalPrivacyControl`) that California requires businesses to honor as an opt-out of sale and sharing ([GPP, GPC & US Opt-Outs](/books/advertising/gpp-gpc-and-us-opt-outs#global-privacy-control)).
-- **Global Privacy Platform (GPP):** IAB Tech Lab's container string for privacy signals from many jurisdictions, a header plus tilde-separated sections, carried in `regs.gpp` ([GPP, GPC & US Opt-Outs](/books/advertising/gpp-gpc-and-us-opt-outs#the-gpp-string)).
-- **Global Vendor List (GVL):** IAB Europe's published list of registered vendors with the purposes, legal bases, features and retention each declares, versioned weekly ([Consent Management & the TCF](/books/advertising/consent-and-the-tcf#purposes-features-and-legal-bases)).
+- **Global Privacy Protocol (GPP):** IAB Tech Lab's container string (formerly Global Privacy Platform, the name OpenRTB 2.6 still uses) for privacy signals from many jurisdictions, a header plus tilde-separated sections, carried in `regs.gpp` ([GPP, GPC & US Opt-Outs](/books/advertising/gpp-gpc-and-us-opt-outs#the-gpp-string)).
+- **Global Vendor List (GVL):** IAB Europe's published list of registered vendors with the purposes, legal bases, features and retention each declares, versioned so a TC string names the list it was made against ([Consent Management & the TCF](/books/advertising/consent-and-the-tcf#purposes-features-and-legal-bases)).
 - **gpp_sid:** the OpenRTB field listing which GPP section IDs govern the transaction ([GPP, GPC & US Opt-Outs](/books/advertising/gpp-gpc-and-us-opt-outs#the-gpp-string)).
 - **Joint controller:** one of two or more controllers that jointly determine the purposes and means of processing (GDPR Article 26) ([GDPR & ePrivacy for Ads](/books/advertising/gdpr-and-eprivacy-for-ads#controllers-in-the-ad-chain)).
 - **Lanham Act (false advertising):** the federal law under which a competitor can sue over false or misleading claims about its own or a rival's products ([Advertising Content Law](/books/advertising/advertising-content-law#competitors-and-self-regulation)).
@@ -581,7 +581,7 @@ Advertising borrows its words from media buying, auctions, statistics and privac
 - **Transparency notice:** the EU political ads regulation's per-ad disclosure of sponsor, amounts, period and methodology, kept seven years ([DSA, DMA & Political Ads](/books/advertising/dsa-dma-and-political-ads#eu-political-advertising)).
 - **Triggering term:** a credit ad term (down payment, number or amount of payments, finance charge) that requires further Regulation Z disclosures ([Advertising Content Law](/books/advertising/advertising-content-law#consumer-credit-and-deposits)).
 - **US National section (usnat):** GPP section 7, the MSPA's signal: MSPA version, notice, opt-outs and the first party's signatory status, plus GPC ([GPP, GPC & US Opt-Outs](/books/advertising/gpp-gpc-and-us-opt-outs#the-us-national-section-and-the-mspa)).
-- **Variance Reduction System (VRS):** Meta's settlement-required system that measures and reduces demographic differences between a housing, employment or credit ad's eligible and actual audiences ([Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting#special-ad-categories)).
+- **Variance Reduction System (VRS):** Meta's settlement-required system that measures and reduces demographic differences between a housing, employment or credit ad's eligible and actual audiences ([Sensitive Data & Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting#targeting-versus-delivery)).
 
 ## Contracts and Money
 
@@ -662,9 +662,15 @@ Advertising borrows its words from media buying, auctions, statistics and privac
 
 - [IAB Tech Lab: OpenRTB 2.6 specification](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb2.x/main/2.6.md), win, billing and loss notices, loss reason codes, deal auction types, ad pods and the SupplyChain object
 - [IAB Tech Lab: ads.txt 1.1 specification (PDF)](https://iabtechlab.com/wp-content/uploads/2022/04/Ads.txt-1.1.pdf), DIRECT and RESELLER records, OWNERDOMAIN, MANAGERDOMAIN and the placeholder record
+- [IAB Tech Lab: AdCOM 1.0](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/AdCOM/main/AdCOM%20v1.0%20FINAL.md), agent types, ID match methods and location types
+- [IAB Tech Lab: ads.cert](https://iabtechlab.com/ads-cert/), ads.cert 2.0, Call Signs and Authenticated Connections
+- [IAB Tech Lab: OpenRTB Dynamic Native Ads API 1.2](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/Native-Ads/main/OpenRTB-Native-Ads-Specification-Final-1.2.md), native assets and Native 1.2
+- [IAB Tech Lab: GPP Section Information](https://github.com/InteractiveAdvertisingBureau/Global-Privacy-Platform/blob/main/Sections/Section%20Information.md), section IDs including usnat as section 7
+- [IAB Tech Lab: Global Privacy Protocol](https://iabtechlab.com/gpp/), the current name of GPP
+- [W3C: Global Privacy Control](https://w3c.github.io/gpc/), the `Sec-GPC` header and `navigator.globalPrivacyControl`
 - [IAB Tech Lab: Deals API](https://iabtechlab.com/standards/dealsapi/), v1.0 finalized in February 2026
 - [IAB Tech Lab: Curated Audiences](https://iabtechlab.com/sda/), the December 2024 rename from Seller Defined Audiences
-- [IAB Tech Lab: MRAID](https://iabtechlab.com/standards/mraid/), MRAID 3.0
+- [IAB Tech Lab: MRAID](https://iabtechlab.com/standards/mobile-rich-media-ad-interface-definitions-mraid/), MRAID 3.0 as the latest version
 - [IAB Tech Lab: Content Taxonomy](https://iabtechlab.com/standards/content-taxonomy/), version 3.1 as current and 3.0's break with 2.x
 - [IAB Tech Lab: VAST 4.3 specification (GitHub)](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/VAST4.x/main/4.3.md), VAST 4.3 and its wrapper and tracking rules
 - [IAB Tech Lab: Podcast Measurement Technical Guidelines v2.3 (GitHub)](https://github.com/IABTechLab/Podcast-Technical-Measurement/blob/main/PTM-Guidelines_v2.3.md), the download definition, the one-minute partial rule and the consumer term
@@ -722,6 +728,7 @@ Advertising borrows its words from media buying, auctions, statistics and privac
 - [Apple Newsroom: iOS 14.5 (April 26, 2021)](https://www.apple.com/newsroom/2021/04/ios-14-5-offers-unlock-iphone-with-apple-watch-diverse-siri-voices-and-more/), App Tracking Transparency's permission requirement
 - [Apple Developer: Receiving ad attributions and postbacks (SKAdNetwork)](https://developer.apple.com/tutorials/data/documentation/storekit/receiving-ad-attributions-and-postbacks.json), SKAdNetwork 4's three postbacks
 - [Apple Developer: AdAttributionKit](https://developer.apple.com/tutorials/data/documentation/adattributionkit.json), iOS 17.4, alternative marketplaces and no ATT requirement
-- [Apple Developer: AdAttributionKit, receiving ad attributions and postbacks](https://developer.apple.com/tutorials/data/documentation/adattributionkit/receiving-ad-attributions-and-postbacks.json), conversion values and source identifiers
+- [Apple Developer: AdAttributionKit, receiving ad attributions and postbacks](https://developer.apple.com/tutorials/data/documentation/adattributionkit/receiving-ad-attributions-and-postbacks.json), setting fine and coarse conversion values
+- [Apple Developer: Identifying the parameters in a postback](https://developer.apple.com/tutorials/data/documentation/adattributionkit/identifying-the-parameters-in-a-postback.json), the 6-bit fine value, the low, medium and high coarse values and the two- to four-digit source identifier
 - [Meta for Business: Click attribution update (March 3, 2026)](https://business.meta.com/news/click-attribution/), engage-through attribution
 - [Triton Digital: Yahoo, PubMatic and others launch new standard for agentic advertising (October 15, 2025)](https://tritondigital.com/news-item/October-15-2025/yahoo-pubmatic-and-others-launch-new-standardfor-agentic-advertising), AdCP's launch

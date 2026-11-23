@@ -230,7 +230,7 @@ What the California enforcement record says about each channel:
 | **Todd Snyder** (CPPA, 2025, $345,178) | Out of band: a misconfigured privacy portal left opt-outs unprocessed for 40 days; "Using a consent management platform doesn't get you off the hook" |
 | **Healthline** (Attorney General, 2025, $1.55 million) | Tags: a banner that didn't disable trackers, no working opt-out of targeted advertising |
 | **Sling TV** (Attorney General, 2025, $530,000) | Apps: no opt-out "within its apps" on a streaming service |
-| **Lyft** (Attorney General, $1.8 million) | Apps: no "native in-app opt-out" |
+| **Lyft** (Attorney General, $1.8 million; the enforcement page gives no date) | Apps: no "native in-app opt-out" |
 | **Disney** (Attorney General, 2026, $2.75 million) | Profiles: opt-outs not applied across Disney+, Hulu and ESPN+ accounts and linked devices |
 
 The pattern is that the opt-out existed somewhere and didn't reach the processing. The architecture lesson is the same as for consent: one decision, made once, read everywhere, with the persistent opt-outs looked up on every request by every identifier the request carries.
@@ -386,4 +386,5 @@ GROUP BY r.ad_unit_id;
 
 - [Google Ad Manager Help: Restricted data processing in Google's publisher ad tags](https://support.google.com/admanager/answer/9598414?hl=en), how to set RDP and what Google does under it
 - [Meta for Developers: Data Processing Options](https://developers.facebook.com/docs/marketing-apis/data-processing-options), Limited Data Use, its parameters and the states it covers
-- [Prebid: GPP Control, US National](https://docs.prebid.org/dev-docs/modules/gppControl_usnat.html), the activity controls and configuration
+- [Prebid: GPP Control, US National](https://docs.prebid.org/dev-docs/modules/gppControl_usnat.html), the activity controls, configuration and the separate US State module
+- [Prebid: US Compliance Support](https://docs.prebid.org/features/mspa-usnat.html), the default activities suppressed on an opt-out (user syncs, EIDs, first-party data, precise geolocation)
