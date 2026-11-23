@@ -19,8 +19,8 @@ As of November 2026, from each platform's documentation:
 
 | Platform | Hierarchy, top to delivery | Where the budget lives | Daily budget rule | Targeting lives on | Published limits |
 | --- | --- | --- | --- | --- | --- |
-| **Display & Video 360** (Google) | Partner, advertiser, campaign, insertion order, line item (and ad groups for YouTube) | The insertion order; "line items in an insertion order share the same budget" | Pacing per period (`PACING_PERIOD_DAILY` or `PACING_PERIOD_FLIGHT`) with types ASAP, even or ahead, and `dailyMaxMicros` | Line items, with partner and advertiser brand safety enforced above | Not stated on the hierarchy page |
-| **Google Ad Manager** | Order, line item, creative | The line item's goal (impressions, a percentage) or cost cap | Delivery speed evenly, frontloaded or as fast as possible | Line item, required to "target at least one ad unit or placement" | 450 line items per order, 260 creatives per line item, 800 targeted criteria per entity |
+| **Display & Video 360** (Google) | Partner, advertiser, campaign, insertion order, line item (and ad groups for YouTube) | The insertion order; "Line items in an insertion order share the same budget" | Pacing per period (`PACING_PERIOD_DAILY` or `PACING_PERIOD_FLIGHT`) with types ASAP, even or ahead, and `dailyMaxMicros` | Line items, with partner and advertiser brand safety enforced above | Not stated on the hierarchy page |
+| **Google Ad Manager** | Order, line item, creative | The line item's goal (impressions, a percentage) or cost cap | Delivery evenly or frontloaded, with catch-up on the next day | Line item, required to "target at least one ad unit or placement" | 450 line items per order, 260 creatives per line item, 800 targeted criteria per entity |
 | **Google Ads** | Account, campaign, ad group, ad | The campaign: "campaigns have their own budget and settings" | An average: up to two times on a day, 30.4 times in a month | Campaign and ad group criteria | Not stated on the structure page |
 | **Kevel** | Advertiser, campaign, flight, ad | The flight's goal | Paced goals including daily revenue | The flight and ad | Not stated |
 | **Meta** | Ad account, campaign, ad set, ad (with an ad creative) | The ad set, or the campaign when an Advantage campaign budget is on | An average: up to 75% over on a day, no more than seven times the daily budget in a Sunday-to-Saturday week (API v24.0 and later) | The ad set | 500 custom audiences included and 500 excluded per targeting spec |
@@ -39,7 +39,7 @@ The levels differ in name, number and what they own. Side by side, mapped to the
 
 | Volume | Google Ads | Microsoft Advertising | Meta | DV360 | Ad Manager | Kevel |
 | --- | --- | --- | --- | --- | --- | --- |
-| `ad_accounts` | Account | Account (under a customer) | Ad account | Advertiser (under a partner) | Network, then the advertiser company | Network, advertiser |
+| `ad_accounts` | Account | Account (under a customer) | Ad account | Advertiser (under a partner) | Network, then the advertiser company | Advertiser |
 | `campaigns` | Campaign | Campaign | Campaign | Campaign, and its insertion orders | Order | Campaign |
 | `line_items` | Ad group | Ad group | Ad set | Line item | Line item | Flight |
 | `creatives` | Ad | Ad | Ad and ad creative | Creative | Creative | Ad (creative) |
@@ -48,8 +48,8 @@ Notes on the fit:
 
 - **Google Ads.** "Google Ads is organized into three layers: account, campaigns, and ad groups"; campaigns "have their own budget and settings that determine where your ads appear", ad groups "contain a set of similar ads and keywords". Keywords are targeting on the ad group (a line item's targeting criteria), not a level.
 - **Microsoft Advertising.** A customer holds "between one and six accounts"; the campaign "is the top level object of an advertising campaign and is where you set the campaign's budget"; an ad group "specifies the default bid values for each match type" and the networks it serves on. Performance Max campaigns replace ad groups with **asset groups**, "up to 100" per campaign, which are line items whose creative is assembled from assets.
-- **Meta.** A campaign "should represent a single objective" and that objective "validates any ads added to the campaign"; "The budget, billing, and duration are set at the ad set level and apply to all ads in the set", and "All ads contained within an ad set should also have the same targeting and optimization goal". Ad creatives "contain only the visual elements of the ad, and you can't change them once they're created": creative is immutable and an ad points at a version of it.
-- **DV360.** Partners own advertisers and "enforce further brand safety targeting"; advertisers own campaigns and creatives; "Campaigns contain multiple insertion orders" and serve "as a framework for measuring the progress"; "Insertion orders contain multiple line items" and "provide default values for absent line item settings"; line items "control which ads are served, when they are served, and to whom". The objective is on the insertion order, and it "determines the key performance indicators (KPI), bid strategies, and line item types that are available".
+- **Meta.** A campaign "should represent a single objective" and setting that objective "enforces validation on any ads you add to that campaign"; "The budget, billing, and duration are set at the ad set level and apply to all ads in the set", and "All ads contained within an ad set should also have the same targeting and optimization goal". Ad creatives "contain only the visual elements of the ad, and you can't change them once they're created": creative is immutable and an ad points at a version of it.
+- **DV360.** Partners own advertisers and "enforce further brand safety targeting"; advertisers own campaigns and creatives; "Campaigns contain multiple insertion orders" and their settings "serve as a framing by which to measure the progress and success" of their ads; "Insertion orders contain multiple line items" and "provide default values for absent line item settings"; line items "control which ads are served, when they are served, and to whom". The objective is on the insertion order, and it "determines the key performance indicators (KPI), bid strategies, and line item types that are available".
 - **Ad Manager.** The order is the contract (one advertiser, often one insertion order's worth of line items) and the line item is the delivery unit with its type, priority, goal and targeting ([Ad Servers](/books/advertising/ad-servers#priority-classes)).
 - **Kevel.** Advertiser, campaign, flight and ad; the flight carries the goal, the weight and the priority the decision engine reads.
 
@@ -61,7 +61,7 @@ Retail media fits the same shape: an Amazon Sponsored Products campaign holds th
 
 The objective is what the advertiser wants; the goal is how the line item is judged and, increasingly, what the platform's bidding optimizes.
 
-**Objectives** are a short fixed list per platform, set at the top and constraining everything below. Meta's campaign objective validates the ads under it. DV360's insertion order objective picks the KPIs and line item types available: "Brand awareness, Clicks, Conversion, Custom, and Insertion order without objective", with KPIs such as CPA, click and impression conversion rates and value per cost for conversion goals. The core's `campaigns.objective` (awareness, reach, traffic, engagement, video views, app installs, leads, sales) is a superset that each platform's list maps into.
+**Objectives** are a short fixed list per platform, set at the top and constraining everything below. Meta's campaign objective validates the ads under it. DV360's insertion order objective picks the KPIs and line item types available: "Brand awareness, Clicks, Conversion, Custom, and Insertion order without objective", with KPIs such as CPA, click and impression conversion rates and value/cost for conversion goals. The core's `campaigns.objective` (awareness, reach, traffic, engagement, video views, app installs, leads, sales) is a superset that each platform's list maps into.
 
 **Goals** come in two kinds that the model must not confuse:
 
@@ -402,10 +402,11 @@ Design notes:
 - [Meta Marketing API: Advantage campaign budget](https://developers.facebook.com/docs/marketing-api/bidding/guides/advantage-campaign-budget), the campaign-level budget distributed across ad sets
 - [Meta Marketing API: Advanced targeting](https://developers.facebook.com/docs/marketing-api/audiences/reference/advanced-targeting), OR within combinations, flexible_spec requirements, 500 included and 500 excluded custom audiences
 - [Microsoft Advertising API: Entity limits](https://learn.microsoft.com/en-us/advertising/guides/entity-hierarchy-limits?view=bingads-13), customers and accounts, campaigns, ad groups, keywords, asset groups, shared budgets, day-and-time criteria
-- [Display & Video 360 API: Resource hierarchy](https://developers.google.com/display-video/api/guides/concepts/campaign-resources/resource-hierarchy?hl=en), partners to line items and what each level enforces
+- [Display & Video 360 API: Resource hierarchy](https://developers.google.com/display-video/api/guides/concepts/campaign-resources/resource-hierarchy?hl=en), partners to line items, ad groups for YouTube, and what each level enforces
 - [Display & Video 360: Create an insertion order](https://support.google.com/displayvideo/answer/2696705?hl=en), shared insertion order budgets, objectives and KPIs
 - [Display & Video 360 API: Pacing](https://developers.google.com/display-video/api/reference/rest/v4/Pacing), pacing periods and types, daily maximums in micros
 - [Google Ad Manager API: Targeting](https://developers.google.com/ad-manager/api/reference/v202508/LineItemService.Targeting), the OR-of-ANDs custom targeting tree, typed dimensions, required inventory targeting
 - [Google Ad Manager: System maximums and limits](https://support.google.com/admanager/answer/1628457?hl=en), key-value limits, line items per order, creatives per line item, targeted criteria
 - [Google Ad Manager: Pacing](https://support.google.com/admanager/answer/2669484?hl=en), catch-up on the next civil day in the account's time zone
 - [Kevel: Ad Decision Engine overview](https://dev.kevel.com/docs/delivery-basics), flights, weights and paced goals
+- [Kevel API: Advertisers](https://dev.kevel.com/reference/advertisers), advertisers with campaigns under them

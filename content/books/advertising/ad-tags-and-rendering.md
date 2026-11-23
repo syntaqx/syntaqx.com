@@ -67,11 +67,11 @@ The steps:
 
 **Define slots early.** GPT's best practices define above-the-fold slots "in the `<head>` of your document," and every slot that should share a request is defined before the first `display()`. Each slot names its ad unit path and its sizes (one fixed size, a list that may include `"fluid"`, or a list plus a size mapping).
 
-**Map sizes to viewports.** A size mapping is a list of viewport sizes to ad sizes; GPT "uses the largest viewport mapping that fits," comparing width then height, and falls back to the sizes passed to `defineSlot()` when the mapping is invalid or the viewport can't be read. An empty size list for a viewport means no ad there; in GPT's own example, viewports under 640x480 get no ad.
+**Map sizes to viewports.** A size mapping is a list of viewport sizes to ad sizes; GPT will "use the largest mapping that fits," considering width first, then height, and falls back to the sizes passed to `defineSlot()` when the mapping is invalid or the viewport can't be read. An empty size list for a viewport means no ad there; in GPT's own example, viewports under 640x480 get no ad.
 
-**Request once.** Single Request Architecture (SRA) bundles every slot into one request, so "page-level competitive exclusions and roadblocks are honored": a roadblock (one advertiser in every slot) and a competitive exclusion (no two airlines on the page) can only be enforced by a server that sees all the slots at once. Microsoft's AST does the same, sending all slots "in a single ad request whenever possible." The cost is that the request waits for every slot's configuration, which is why slots are defined first.
+**Request once.** Single Request Architecture (SRA) bundles every slot into one request, so "competitive exclusions and roadblocks configured for your page will be honored": a roadblock (one advertiser in every slot) and a competitive exclusion (no two airlines on the page) can only be enforced by a server that sees all the slots at once. Microsoft's AST does the same, sending all slots "in a single ad request whenever possible." The cost is that the request waits for every slot's configuration, which is why slots are defined first.
 
-**Lazy fetch and lazy render.** `lazyLoad` takes `fetchMarginPercent` ("the minimum distance from the current viewport a slot must be before we request an ad"), `renderMarginPercent` (the same, before rendering) and `mobileScaling` (a multiplier on mobile). Setting a margin to `-1` disables it. GPT's defaults are not published as numbers: omitted values use Google's defaults, which "will be tuned over time," so a publisher that needs stable behavior sets them explicitly. With SRA, lazy fetching only works when all slots start outside the fetch margin, because one request carries them all. Fetching earlier than rendering lets the auction finish before the slot is close, so the ad is ready when it scrolls in; rendering late saves the creative's CPU and bandwidth for slots nobody may reach.
+**Lazy fetch and lazy render.** `lazyLoad` takes `fetchMarginPercent` ("the minimum distance from the current viewport a slot must be before we request an ad"), `renderMarginPercent` (the same, before rendering) and `mobileScaling` (a multiplier on mobile). GPT's defaults are not published as numbers: omitted values use Google's defaults, which "may be tuned over time," so a publisher that needs stable behavior sets them explicitly. With SRA, the request goes "when the first ad slot comes within the viewport specified by the fetchMarginPercent property," and it carries every slot, so lazy fetching saves little when one slot starts near the viewport. Fetching earlier than rendering lets the auction finish before the slot is close, so the ad is ready when it scrolls in; rendering late saves the creative's CPU and bandwidth for slots nobody may reach.
 
 **Render into a frame.** The markup goes into an iframe, friendly (same-origin, scriptable by the page) or cross-origin, which is SafeFrame's subject below. GPT emits `slotRenderEnded`, `slotOnload` and `impressionViewable` events per slot, which the page listens to for rendering, empty slots and viewability.
 
@@ -81,12 +81,11 @@ The steps:
 
 ## Refresh
 
-Refreshing a slot replaces its ad without reloading the page, and it is where revenue and policy pull hardest. GPT's `refresh()` "populates registered slots, including slots that haven't loaded yet or slots with existing content," works only for slots registered with `display()`, and generates a new correlator by default. GPT's guidance:
+Refreshing a slot replaces its ad without reloading the page, and it is where revenue and policy pull hardest. GPT's `refresh()` "Fetches and displays new ads for specific or all slots on the page," and "only slots which have been registered by calling `display()` are eligible to be refreshed." GPT's guidance:
 
 - **No faster than 30 seconds.** "Avoid refreshing slots more frequently than once every 30 seconds" to avoid throttling.
-- **Only viewable slots.** Refreshing slots nobody saw lowers the ActiveView rate; GPT's sample waits for `impressionViewable` and then 60 seconds before refreshing.
+- **Only viewable slots.** Refreshing slots that are never viewable "can significantly lower your ActiveView rate"; GPT's sample waits for `impressionViewable` and then 60 seconds before refreshing.
 - **No `clear()` before `refresh()`,** which only lengthens the time a blank slot is visible.
-- **Use refresh, not page reloads.** "Refreshing ads inappropriately can lead to performance issues and negatively impact viewability rates."
 
 Ad Manager's policy adds declaration. Publishers declare refreshing inventory under Inventory rules, targeting only the ad units, placements or key-values that actually refresh and selecting the trigger types; not declaring, or declaring incorrectly, "is a violation of Google policy." The declared minimum is 30 seconds for event-triggered and time-based refresh on desktop and mobile web and for time-based refresh in apps (where 60 is recommended), with no minimum for refreshes caused by user action. A refresh at an interval the interface doesn't offer is declared at the next shorter one (180 seconds for a 220-second refresh), because declaring longer than the real rate is a violation. User-action refreshes must come from "user-guided navigation" that surfaces substantially new content: hovering, scrolling, gameplay clicks or new comments don't qualify. Declarations apply to open and private auctions, First Look and Open Bidding, and Google applies buyer demand restrictions to every request matching the declaration's targeting, including non-refreshing units if the targeting is too broad. Declaring in the interface "doesn't implement refreshes"; the page does that.
 
@@ -111,7 +110,7 @@ My default is cross-origin for every third-party creative, sandboxed against top
 
 Chrome unloads ads that use too many resources. Since Chrome 85, an ad frame that the user has not interacted with (no tap or click) is heavy if it uses the main thread "for more than 60 seconds in total," "more than 15 seconds in any 30 second window," or "more than 4 megabytes of network bandwidth." The CPU limits count execution time, not elapsed time. Chrome adds noise and variability to the thresholds by default to protect privacy, so an ad near a limit may be unloaded on one load and not the next; developers can disable the noise with the `#heavy-ad-privacy-mitigations` flag to test deterministically.
 
-When an ad is unloaded, Chrome sends an `intervention` report through the Reporting API, with `body.id` of `HeavyAdIntervention` and a message such as "Ad was removed because its CPU usage exceeded the limit." The report goes to "the root ad-tagged iframe and its descendants," which means a cross-site ad's own provider receives it, not the publisher. `sourceFile`, `lineNumber` and `columnNumber` are often `null` because the limit is reached somewhere other than the cause. Reports arrive two ways:
+When an ad is unloaded, Chrome sends an `intervention` report through the Reporting API, with `body.id` of `HeavyAdIntervention` and a message such as "Ad was removed because its CPU usage exceeded the limit." The report is triggered "on the root ad-tagged iframe along with all of its descendants," which means a cross-site ad's own provider receives it, not the publisher. `sourceFile`, `lineNumber` and `columnNumber` are often `null` because the limit is reached somewhere other than the cause. Reports arrive two ways:
 
 - **By header:** the ad frame's response sets `Reporting-Endpoints`, and intervention reports go to the endpoint named `default` without any policy header. Chrome sends them as a JSON array of objects with `age`, `body`, `type`, `url` and `user_agent`, as `application/reports+json`, delayed "up to a minute" to batch them.
 - **In JavaScript:** a `ReportingObserver` in the ad frame sees the report before the frame is removed. Because the frame may go before the report is sent, Chrome's guidance is a `pagehide` handler that calls `takeRecords()` and sends with `navigator.sendBeacon()` (best-effort), never `unload` or `beforeunload`.
@@ -126,7 +125,7 @@ Core Web Vitals judge the page at the 75th percentile of real loads: LCP of 2.5 
 
 A layout shift's score is "impact fraction * distance fraction," and CLS is the largest session window of shifts, a burst with "less than 1-second in between each shift and a maximum of 5 seconds" in total. An ad that arrives after the content below it has painted pushes that content down by the ad's height: a 250-pixel ad inserted at the top of a phone screen moves everything below it. Shifts within 500 ms of a tap, click or keypress get `hadRecentInput` and don't count; scrolling doesn't qualify, so an ad that lands as the reader scrolls does count. Shifts inside iframes count toward the metric even though the Layout Instability API in the parent page doesn't see them, and cross-origin frames may be impossible to measure from JavaScript.
 
-The fix is space reserved in CSS before the ad loads. GPT's guide: "reserve a sufficient amount of space for a given ad slot using CSS," with `min-height` and `min-width` per breakpoint; "Reserving space with JavaScript should be avoided." For a multi-size slot it offers four strategies: reserve for the largest size (no shift, blank space around smaller ads), reserve for the smallest (larger creatives shift), reserve an average, or reserve from fill data: if most creatives are 300x250, "reserving `250px` vertically can greatly reduce CLS." Centering softens the blank space. GPT's other rules:
+The fix is space reserved in CSS before the ad loads. GPT's guide: "reserve a sufficient amount of space for a given ad slot using CSS," with `min-height` and `min-width` per breakpoint; "Reserving space with JavaScript should be avoided." For a multi-size slot it offers three strategies: reserve for the largest size (no shift, blank space around smaller ads), reserve for the smallest (larger creatives shift), or reserve for "the size most likely to serve," from fill data: if most creatives are 300x250, "reserving `250px` vertically can greatly reduce CLS." Centering softens the blank space. GPT's other rules:
 
 - Without CSS dimensions, a multi-size slot is sized to the shortest declared height and widest declared width when `display()` is called, which then shifts when a taller ad arrives.
 - "fluid sized ads always cause layout shifts": only below the fold, fetched early.
@@ -147,7 +146,7 @@ Ad blockers remove ad requests and elements by filter lists. The Acceptable Ads 
 - **Distinction:** ads are labeled "advertisement" or an equivalent and clearly distinguishable from content.
 - **Desktop size and placement:** up to 200px high above the primary content, 350px wide beside it, 400px high below it, 250px high within it; ads above the fold "must not occupy in total more than 15 percent of the visible portion of the web page," and 25% below the fold.
 - **Mobile:** total ad space no more than 50% of the visible page; sticky ads at most 75px (or 15%) high; ads over 300px high only below the primary content.
-- **Excluded:** animated ads (except a 6x1 mobile sticky ad following LEAN animation with a close button), autoplay sound or video, pop-ups and pop-unders, expanding, overlay and interstitial page ads, rich media and pre-roll video.
+- **Excluded:** animated ads (except a 6x1 sticky ad at the bottom of a mobile screen whose animation follows LEAN, with a close button), autoplay sound or video, pop-ups and pop-unders, expanding, overlay and interstitial page ads, rich media and pre-roll video.
 
 Participation is free for about 90% of participants; large entities pay eyeo a fee, and "participants cannot pay to avoid the criteria." For engineering, the point is that an acceptable-ads inventory is a different set of ad units with different formats, configured separately and reported separately, so a blocked user's impressions are not mistaken for unfilled ones.
 
@@ -170,7 +169,7 @@ CREATE TABLE ad_unit_render_configs (    -- how the tag requests and renders one
   reserved_heights_px    JSONB NOT NULL DEFAULT '{}',  -- min-height per breakpoint, e.g. {"0": 50, "728": 90}
   collapse               TEXT NOT NULL DEFAULT 'disabled' CHECK (collapse IN ('disabled',
                            'before_fetch', 'on_no_fill')),
-  lazy_fetch_margin_pct  INT,                   -- null: tag default; -1: disabled
+  lazy_fetch_margin_pct  INT,                   -- null: tag default
   lazy_render_margin_pct INT,
   lazy_mobile_scaling_milli INT,                -- 2000 = 2.0x
   single_request         BOOLEAN NOT NULL DEFAULT TRUE,
@@ -367,7 +366,7 @@ new PerformanceObserver((list) => {
 }).observe({ type: "layout-shift", buffered: true });
 ```
 
-The `sources` list names the elements that moved, which "may only be indirectly related to the root cause": content below a slot that grew is a source, and so is the slot. Attribution by containment is a heuristic, which is why `ad_render_reports.source` is `rum` and the dashboards say so.
+The `sources` list names the elements that moved, which may be "only indirectly related to the 'root cause'" of the instability: content below a slot that grew is a source, and so is the slot. Attribution by containment is a heuristic, which is why `ad_render_reports.source` is `rum` and the dashboards say so.
 
 Design notes:
 
@@ -427,9 +426,9 @@ The mechanics (typed actors, append-only history) are in [Audit Trails](/docs/bu
 - [Google Publisher Tag: Reference](https://developers.google.com/publisher-tag/reference), PageSettingsConfig (collapseDiv, lazyLoad, singleRequest, safeFrame, threadYield), LazyLoadConfig, SafeFrameConfig, refresh and the deprecations
 - [Google Publisher Tag: Ad sizes](https://developers.google.com/publisher-tag/guides/ad-sizes), multi-size sizing without CSS, fluid rendering and size mapping rules
 - [Google Publisher Tag: Minimize layout shift](https://developers.google.com/publisher-tag/guides/minimize-layout-shift), reserving space, the multi-size strategies, fluid, collapsing and above-the-fold slots
-- [Google Publisher Tag: Control ad loading and refresh](https://developers.google.com/publisher-tag/guides/control-ad-loading), the 30-second guidance, viewable-only refresh and disableInitialLoad
+- [Google Publisher Tag: Control ad loading and refresh](https://developers.google.com/publisher-tag/guides/control-ad-loading), the 30-second guidance, refreshing only displayed slots, viewable-only refresh, the ActiveView rate and disableInitialLoad
 - [Google Publisher Tag: Best practices](https://developers.google.com/publisher-tag/guides/ad-best-practices), defining slots in the head, SRA and roadblocks, lazy loading and refresh
-- [Google Publisher Tag: Lazy loading sample](https://developers.google.com/publisher-tag/samples/lazy-loading), lazy fetching with SRA
+- [Google Publisher Tag: Lazy loading sample](https://developers.google.com/publisher-tag/samples/lazy-loading), lazy fetching with SRA triggered by the first slot
 - [Google Ad Manager Help: Declare inventory that refreshes](https://support.google.com/admanager/answer/6286179), declarations, minimum intervals, user-action refresh and buyer restrictions
 - [Microsoft Learn: Seller Tag (AST)](https://learn.microsoft.com/en-us/xandr/seller-tag/seller-tag), single request, asynchronous loading, SafeFrame and begin-to-render counting
 - [Prebid.js: setConfig](https://docs.prebid.org/dev-docs/publisher-api-reference/setConfig.html), expired bids with lazy load and suppressStaleRender with auto-refresh

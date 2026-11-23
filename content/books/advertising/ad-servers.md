@@ -19,13 +19,13 @@ As of November 2026, from each product's public documentation:
 
 | Ad server | Kind | Hierarchy | Priority model | How guaranteed and auction demand compete | Disclosed limits |
 | --- | --- | --- | --- | --- | --- |
-| **Campaign Manager 360** (Google) | Advertiser | Advertiser, campaign, placement, ad, creative | Not a publisher priority system; serves or tracks the ad already bought elsewhere | Not applicable: it serves the creative after the publisher's or DSP's decision | Described as "a web-based ad management system for advertisers and agencies" |
+| **Campaign Manager 360** (Google) | Advertiser | Advertisers, campaigns, placements, ads and creatives are named in the overview; their nesting is not | Not a publisher priority system; serves or tracks the ad already bought elsewhere | Not applicable: it serves the creative after the publisher's or DSP's decision | Described as "a web-based ad management system for advertisers and agencies" |
 | **Flashtalking and Innovid** (Mediaocean) | Advertiser | Not published in public docs | Not applicable | Not applicable | Combined after Mediaocean closed its acquisition of Innovid on February 13, 2025, spanning "ad serving, creative, measurement, and optimization" |
 | **FreeWheel** | Publisher, video and TV | Not published in public docs | Not published | "Streaming Hub combines FreeWheel SSP with our industry-leading ad server" | Not published |
 | **Google Ad Manager** | Publisher | Order, line item, creative | Numeric, lower wins: sponsorship 4, standard 6, 8 or 10, remnant and exchange 12, house 16 | Dynamic allocation: guaranteed line items compete with a temporary CPM, "the opportunity cost of not serving the guaranteed line item" | 300 contending line items per request, 450 line items per order, 260 creatives per line item, 200 active keys |
-| **Kevel** | Publisher, API-first | Advertiser, campaign, flight, ad | Named priorities in order, "such as showing Sponsorship ads first, then Auction ads, then House Ads" | Within a priority, a weighted lottery or an auction on eCPM times a relevancy score; requests with no winner "fall through to the next priority" | "25K+ requests per second" stated for the platform |
+| **Kevel** | Publisher, API-first | Advertiser, campaign, flight, ad | Named priorities in order, for example Sponsorship ads first, then Auction ads, then House ads | Within a priority, a weighted lottery or an auction on eCPM times a relevancy score; requests with no winner "fall through to the next priority" | "25K+ requests per second" stated for the platform |
 | **Microsoft Monetize** (formerly Xandr) | Publisher | Insertion order, line item, creative | Numeric 1 to 20, higher wins; standard default 5, guaranteed default 14 ("Impressions") and 19 ("Exclusive") | Open Dynamic Allocation: one guaranteed bid with a priority CPM (pCPM) representing "the risk that the line item will not deliver in full", competing with up to 14 non-guaranteed bids | Reselling priority set per network gates RTB access |
-| **Revive Adserver** | Publisher, open source | Advertiser, campaign, banner, zone | Not described on the pages opened | Not described on the pages opened | "free, open source ad serving system" under GPL-2.0 |
+| **Revive Adserver** | Publisher, open source | Advertisers and campaigns, on the page opened | Not described on the pages opened | Not described on the pages opened | "free, open source ad serving system" under the GPL-2.0 license |
 
 Four patterns hold across them:
 
@@ -38,11 +38,11 @@ Four patterns hold across them:
 
 The two kinds sit at opposite ends of the same impression and exist for different reasons.
 
-**The publisher ad server** owns the inventory decision. The publisher traffics its direct-sold orders into it, connects its programmatic demand to it, and points every ad tag, SDK and video player at it. It decides which line item wins, and its log is the publisher's record of what it sold. Ad Manager traces back to DoubleClick, which Google bought in 2008 for $3.1 billion when its publisher ad server (DFP) held 60% of publisher ad serving and nine of the top ten US sites, according to the court in the US ad tech case; the court found Google had monopolized an "open-web display publisher ad server market", which is why the ad server's decision rules are now part of a remedies record (The Google Ad Tech Cases, in the Programmatic part, covers it).
+**The publisher ad server** owns the inventory decision. The publisher traffics its direct-sold orders into it, connects its programmatic demand to it, and points every ad tag, SDK and video player at it. It decides which line item wins, and its log is the publisher's record of what it sold. Ad Manager traces back to DoubleClick, which Google bought in 2008 for $3.1 billion when its publisher ad server (DFP) had a 60% share of the publisher ad serving market and counted nine of the top ten US websites among its customers, according to the court in the US ad tech case; the court found Google had monopolized an "open-web display publisher ad server market", which is why the ad server's decision rules are now part of a remedies record (The Google Ad Tech Cases, in the Programmatic part, covers it).
 
 **The advertiser ad server** owns the creative and the count. An agency uploads its creatives to it, creates placements matching each publisher's or DSP's buy, and gets back tags. When the publisher's ad server (or a DSP's winning bid) returns one of those tags, the browser calls the advertiser ad server, which serves the real creative (or redirects to it), counts the impression, wraps the click and logs both against the agency's placement. The advertiser gets one count across every publisher, in one place, under its own rules.
 
-That is the source of the industry's oldest discrepancy. Each impression is counted twice: once by the publisher's ad server when it returns the tag, once by the advertiser's ad server when the tag calls it. Anything that happens between the two (a slow page, a user who scrolls away, a blocked request, a redirect chain) makes the numbers differ. The IAB/4A's Standard Terms and Conditions 3.0 settle whose count wins: the third-party ad server is the controlling measurement when it is IAB/AAAA-compliant and gives the publisher automated daily reporting, and a gap over 10% for the invoice period triggers reconciliation ([A Direct-Sold Insertion Order](/books/advertising/advertising-business#a-direct-sold-insertion-order)). Counting Impressions & Clicks covers why the two counts drift and how to narrow them; Reconciliation & Discrepancies, in Contracts and Money, covers settling them.
+That is the source of the industry's oldest discrepancy. Each impression is counted twice: once by the publisher's ad server when it returns the tag, once by the advertiser's ad server when the tag calls it. Anything that happens between the two (a slow page, a user who scrolls away, a blocked request, a redirect chain) makes the numbers differ. The IAB/4A's Standard Terms and Conditions 3.0 settle whose count wins: the third-party ad server is the controlling measurement when it is IAB/AAAA-compliant and gives the publisher automated daily reporting, and a gap over 10% for the invoice period, with the controlling count lower, triggers reconciliation ([A Direct-Sold Insertion Order](/books/advertising/advertising-business#a-direct-sold-insertion-order)). Counting Impressions & Clicks covers why the two counts drift and how to narrow them; Reconciliation & Discrepancies, in Contracts and Money, covers settling them.
 
 Walled gardens and retailers run both roles inside one system: the platform decides and counts, and the advertiser's own ad server, where allowed, sees only a tracking pixel. A platform building its own ads business (a retailer, a marketplace, a streaming service, a social app) is building a publisher ad server whether it calls it that or not.
 
@@ -62,7 +62,7 @@ The response is the beginning of the impression, not the impression: the creativ
 
 ## Decisioning
 
-The decision is a pipeline of filters followed by a ranking. Ad Manager's ad selection white paper lays it out in five stages (ad request, matching, best line item, best creative, serve), and Kevel's decision engine docs follow the same shape: filter "by the right criteria", rank "by Priority", choose "a winner based on your Ad Selection Methods within each Priority", and let requests with no winner "fall through to the next priority". The vocabulary differs, the pipeline doesn't.
+The decision is a pipeline of filters followed by a ranking. Ad Manager's ad selection white paper lays it out in five stages (ad request, matching, best line item, best creative, serve), and Kevel's decision engine docs follow the same shape: filter the ads that match the request, rank them by Priority level, choose "a winner based on your Ad Selection Methods within each Priority", and let requests with no winner "fall through to the next priority". The vocabulary differs, the pipeline doesn't.
 
 ### Eligibility filters
 
@@ -86,8 +86,8 @@ After filtering, the survivors are tiered. Ad Manager's published values, lower 
 | Sponsorship | 4 | Yes | A percentage of impressions, with start and end times |
 | Standard | 6, 8 or 10 | Yes | An impression goal, with start and end times |
 | Network | 12 | No | A percentage of impressions |
-| Bulk | 12 | No | An impression goal "that acts as a cap" |
-| Price priority | 12 | No | None; optional daily or lifetime caps; "fills unsold inventory with the highest-paying line item" |
+| Bulk | 12 | No | An impression goal that "functions more like an impression cap" |
+| Price priority | 12 | No | None; optional daily or lifetime caps; fills "unsold inventory with the highest-paying line item available" |
 | AdSense, Ad Exchange | 12 | No | None; the programmatic demand |
 | House | 16 | Not applicable | None; serves only when nothing else is available, "treated as if they have a $0 rate" |
 
@@ -422,9 +422,10 @@ Changes to this configuration are audited like any business rule ([Audit Trails]
 - [Microsoft Monetize: Open Dynamic Allocation and flexible priorities](https://learn.microsoft.com/en-us/xandr/monetize/open-dynamic-allocation-and-flexible-priorities), priorities 1 to 20, defaults, reselling priority
 - [Microsoft Monetize: Guaranteed delivery auction mechanics](https://learn.microsoft.com/en-us/xandr/monetize/guaranteed-delivery-auction-mechanics), one guaranteed bid and up to 14 others, pCPM, paying the booked price, roadblocks
 - [Kevel: Ad Decision Engine overview](https://dev.kevel.com/docs/delivery-basics), filters, priorities, lottery and auction selection, fallthrough, request volume
+- [Kevel API: Advertisers](https://dev.kevel.com/reference/advertisers), advertisers as the companies paying for ads, with campaigns under them
 - [Revive Adserver on GitHub](https://github.com/revive-adserver/revive-adserver), open source under GPL-2.0
 - [FreeWheel](https://www.freewheel.com/), Streaming Hub combining its SSP and ad server
 - [Mediaocean: Completion of the Innovid acquisition (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1835378/000114036125004373/ef20043552_ex99-1.htm), the February 13, 2025 closing and Flashtalking as an ad server
-- [Prebid: Before you start (ad ops)](https://docs.prebid.org/adops/before-you-start.html), priority 12 for header bidding line items, no price buckets with a complete bidding library
+- [Prebid: Before you start (ad ops)](https://docs.prebid.org/adops/before-you-start.html), 12 as the default priority, no price buckets with a complete bidding library
 - [Prebid: Price granularity](https://docs.prebid.org/adops/price-granularity.html), bucket increments, caps and line items per bidder
 - [Google AdMob: Mediation](https://support.google.com/admob/answer/3063564), the waterfall by average eCPM
