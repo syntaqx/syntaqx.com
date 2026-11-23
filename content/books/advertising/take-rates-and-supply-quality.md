@@ -10,7 +10,7 @@ tags = ["advertising", "programmatic", "take-rates", "supply-path-optimization",
 
 A take rate is the share of a transaction an intermediary keeps. In programmatic advertising there are several on every impression: the agency or trading desk, the DSP, data and verification vendors on the buy side, the SSP or exchange, and supply-side technology, before the publisher is paid. Advertisers call the sum the "ad tech tax", and the industry's best-known studies found that about half of an advertiser's programmatic spend reached publishers, that a large part of it could not be traced at all, and that much of what was traced bought impressions nobody would choose: unviewable, fraudulent or on sites built only to show ads.
 
-The engineering is hard because no single party sees the whole chain. A DSP knows what it charged and what it paid the exchange; the exchange knows the clearing price and what it paid the publisher; the publisher knows what arrived. Each hop logs its own IDs, its own time zone and its own count, and some hops are resellers that appear in nobody's contract. Measuring a take rate means joining logs across companies that never agreed to share them, and reducing it means choosing supply paths from the supply chain files (ads.txt, sellers.json and the SupplyChain object) that only work if everyone keeps them accurate. This chapter covers the published fees, the ISBA/PwC and ANA studies and what they measured, the fees found in the US court record, made-for-advertising sites, and supply path optimization, and turns them into records: fee terms per agreement, observed supply paths, log-level match results and site quality assessments. It extends `seller_accounts` and `invoice_lines` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) and builds on [How the Money Splits](/books/advertising/advertising-business#how-the-money-splits), which has the per-model splits; [Publishers & Yield](/books/advertising/publishers-and-yield) has the publisher's view of network shares and `network_revenue_shares`; ads.txt, sellers.json & SupplyChain, in Programmatic, owns the files' specifications and validation; and Invalid Traffic & Ad Fraud owns detection.
+The engineering is hard because no single party sees the whole chain. A DSP knows what it charged and what it paid the exchange; the exchange knows the clearing price and what it paid the publisher; the publisher knows what arrived. Each hop logs its own IDs, its own time zone and its own count, and some hops are resellers that appear in nobody's contract. Measuring a take rate means joining logs across companies that never agreed to share them, and reducing it means choosing supply paths from the supply chain files (ads.txt, sellers.json and the SupplyChain object) that only work if everyone keeps them accurate. This chapter covers the published fees, the ISBA/PwC and ANA studies and what they measured, the fees found in the US court record, made-for-advertising sites, and supply path optimization, and turns them into records: fee terms per agreement, observed supply paths, log-level match results and site quality assessments. It extends `seller_accounts` and `invoice_lines` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) and builds on [How the Money Splits](/books/advertising/advertising-business#how-the-money-splits), which has the per-model splits; Publishers & Yield has the publisher's view of network shares and `network_revenue_shares`; ads.txt, sellers.json & SupplyChain, in Programmatic, owns the files' specifications and validation; and Invalid Traffic & Ad Fraud owns detection.
 
 ## How the Platforms Do It
 
@@ -21,7 +21,7 @@ As of November 2026, the fees intermediaries publish or that the court record fo
 | **Alphabet traffic acquisition costs** | Network and search partners | 20.3% of advertising revenues paid to partners in 2025 | Blended across search distribution and Network publishers | Alphabet 10-K |
 | **Amazon Transparent Ad Marketplace** | Sell side (server-to-server header bidding) | "A transparent 2.5% service fee charged to bidders" | Charged to the buyer | Amazon Publisher Services |
 | **Google AdSense** | Buy and sell (network) | Buy side keeps "on average 15% of advertiser spend"; publishers receive 80% of what reaches AdSense | Two fees, applied in sequence | Google help center and blog |
-| **Google Ad Manager (DFP)** | Publisher ad server | About 1.3 to 1.7% take rate, per defense expert testimony | On the publisher's revenue | EDVA opinion |
+| **Google Ad Manager (DFP)** | Publisher ad server | About 1.3 to 1.7% take rate, per defense expert testimony | A flat fee per impression, equal to that share of the publisher's revenue | EDVA opinion |
 | **Google AdX** | Exchange | "around 20%" overall, varied per impression under dynamic revenue share | On the clearing price | EDVA opinion |
 | **Google Open Bidding** | Exchange-to-exchange | "a 5% fee" on rival exchanges' bids | On the rival's bid | EDVA opinion |
 | **Google Display & Video 360** | DSP | A standard rate of 15% in Google's 2020 disclosure | On media | Google blog (2020) |
@@ -31,7 +31,7 @@ As of November 2026, the fees intermediaries publish or that the court record fo
 Three patterns:
 
 - **Fees stack multiplicatively.** Each intermediary takes its share of what reaches it, not of the advertiser's original dollar. Two 20% fees in sequence leave 64%, not 60%.
-- **Basis matters as much as rate.** AdSense's 80% is a share of spend after the buy side's 15%, so the publisher's net is about 68% of advertiser spend. The Trade Desk's fee is on platform spend that includes data and verification; AdX's is on a clearing price. A "20% take rate" from two companies can be two different numbers.
+- **Basis matters as much as rate.** AdSense's 80% is a share of spend after the buy side's 15%, so the publisher's net is about 68% of advertiser spend. The Trade Desk's fee is on total spend that includes data and value-added services; AdX's is on a clearing price. A "20% take rate" from two companies can be two different numbers.
 - **The highest fees are the least visible.** A principal buy's margin, a reseller's share inside a supply chain, and the spread between a DSP's charge and the exchange's clearing price don't appear on any published rate card; they show up only when logs from both sides are matched.
 
 ## What the Studies Measured
@@ -54,7 +54,7 @@ ISBA, the UK advertisers' association, commissioned PwC to trace programmatic sp
 
 The headline that made news was the **unknown delta**: 15% of spend that the study could not attribute to anyone, because only 12% of impressions could be matched end to end. An unknown delta is a measure of missing data as much as of hidden fees: spend that can't be matched can't be assigned to anyone, which is why ISBA's later recommendations are mostly about data access, quality and retention.
 
-The second study, on 2022 data and published January 18, 2023, raised the impression match rate to 58% and cut the unknown delta to 3% (3% in open marketplaces and under 1% in private marketplaces), and found the share of spend reaching publishers rose by 8% against the first study. It took nine months and used ISBA's Programmatic Financial Audit Toolkit (launched February 2022). Its recommendations are a specification for the data a buyer should hold: separate DSP seats for each advertiser; well-curated, auditable private marketplaces; ads.txt; regular supply chain audits; data quality standards so every vendor can supply every Toolkit field; and data access, retention and transfer protocols, since some SSPs still required manual DSP permissions before releasing data.
+The second study, on 2022 data and published January 18, 2023, raised the impression match rate to 58% and cut the unknown delta to 3% (3% in open marketplaces and under 1% in private marketplaces), and found the share of spend reaching publishers rose by 8% against the first study. It took nine months and used ISBA's Programmatic Financial Audit Toolkit (launched February 2022). Its recommendations are a specification for the data a buyer should hold: separate DSP seats for each advertiser; well-curated, auditable private marketplaces; ads.txt; regular supply chain audits; data quality standards so every vendor can supply every Toolkit field. It named data access, retention and transfer protocols as the area still needing industry work, since some SSPs still required additional manual DSP permissions before granting data access.
 
 ### ANA (US, 2023)
 
@@ -64,7 +64,7 @@ The ANA's Programmatic Media Supply Chain Transparency Study measured quality, n
 - **The average campaign ran on 44,000 domains.**
 - **Waste of up to $20 billion,** 23% of an estimated $88 billion open-web programmatic market.
 
-The complete report (December 2023) concluded that "Only 36 cents of every dollar that enters a demand-side platform (DSP) effectively reaches the consumer," and sized an efficiency opportunity of $22 billion. The 36 cents is **not** the publisher's share: it counts only spend that bought quality impressions (measurable, viewable, not fraudulent, not on made-for-advertising sites) and nets out transaction costs. The breakdown of the rest and the study's "TrueKPI" definitions are in the full report behind ANA's member login. <!-- source-gap: adv-ana-2023-waterfall | secondary | the split of the ANA December 2023 study's remaining 64 cents between transaction costs and productivity loss | closes with: a public copy of the complete report's waterfall | checked: 2026-11-22 -->
+The complete report (December 2023) concluded that "Only 36 cents of every dollar that enters a demand-side platform (DSP) effectively reaches the consumer," and sized an efficiency opportunity of $22 billion. The 36 cents is **not** the publisher's share (the later benchmark, below, puts that near half): it is what the ANA counts as effectively reaching the consumer, and ANA's public page doesn't define the measure or split the other 64 cents between transaction costs and impressions that weren't worth buying. <!-- source-gap: adv-ana-2023-waterfall | secondary | the definition behind the ANA December 2023 study's 36 cents and the split of the remaining 64 cents between transaction costs and productivity loss | closes with: a public copy of the complete report's waterfall and definitions | checked: 2026-11-22 -->
 
 ### ANA and TAG TrustNet benchmark (2025 onward)
 
@@ -90,7 +90,7 @@ The US ad tech case put Google's own fee data into a public opinion (April 17, 2
 
 - **AdX took "around 20%"** overall. Under its sell-side dynamic revenue share it varied by impression: 15% or lower where competition was strong, 25% or higher elsewhere, around an overall rate of about 20%.
 - **DFP's fees came to roughly 1.3 to 1.7%** as a take rate, per Google's own expert; the opinion contrasts it with AdX's 20%.
-- **"Typically, between $20 to $40 of every $100 spent on digital advertising goes to the ad tech companies."**
+- **"Typically, between $20 to $40 of every $100 spent on digital advertising goes to the ad tech companies that develop and operate these tools."**
 - **Open Bidding charged rival exchanges "a 5% fee"** to compete inside DFP, one reason the court found it no substitute for header bidding.
 
 Two lessons carry past Google. **A per-impression take rate can be dynamic while the average stays fixed,** so an auditor comparing an exchange's published rate to one impression's clearing log will see apparent violations that average out; the comparison has to be over the period the contract defines. **The ad server's fee is small and the exchange's is large,** which is why control of the ad server's decision (who gets called, in what order, against which floor) was the case's center. The Google Ad Tech Cases, in Programmatic, covers liability and remedies.
@@ -211,28 +211,46 @@ With hops agency (500 bp), DSP (1,500 bp of gross), data and verification (800 b
 
 ## How to Build It
 
-Measuring take rates needs three kinds of records the core model doesn't have: the fee each intermediary is entitled to under its agreement, the paths impressions actually took, and the result of matching one party's logs to another's. Site quality classifications are a fourth. Sell-side shares to publishers are `network_revenue_shares` from Publishers & Yield; the buy side and intermediary fees go here:
+Measuring take rates needs three kinds of records the core model doesn't have: the fee each intermediary is entitled to under its agreement, the paths impressions actually took, and the result of matching one party's logs to another's. Site quality classifications are a fourth. `fee_terms` is the one table for every fee one party charges another, on either side of the chain: an agency's fee, a DSP's platform fee, an exchange's or SSP's take from the buyer or the publisher, a curator's fee, data, verification and ad serving. A fee is a percentage of a named basis, a CPM or a flat amount per period, and later chapters add their fee kinds here rather than a table of their own:
 
 ```sql
-CREATE TABLE fee_terms (                   -- a fee one party may charge another, and on what
+CREATE TABLE fee_terms (                   -- every fee one party charges another, and on what
   id                  UUID PRIMARY KEY DEFAULT uuidv7(),
-  charging_org_id     UUID NOT NULL REFERENCES organizations (id),  -- DSP, agency, data or verification vendor, curator
-  charged_org_id      UUID NOT NULL REFERENCES organizations (id),  -- the advertiser, agency or DSP paying it
-  ad_account_id       UUID REFERENCES ad_accounts (id),             -- when the fee is per account
-  kind                TEXT NOT NULL CHECK (kind IN ('agency_fee', 'platform_fee', 'data_fee',
-                        'verification_fee', 'ad_serving_fee', 'curation_fee', 'bidder_fee',
-                        'other')),
-  rate_bp             INT CHECK (rate_bp BETWEEN 0 AND 10000),
-  cpm_micros          BIGINT CHECK (cpm_micros >= 0),               -- a per-thousand fee instead
-  basis               TEXT NOT NULL CHECK (basis IN ('budget', 'gross_spend', 'media_cost',
-                        'clearing_price', 'impressions')),
+  charging_org_id     UUID NOT NULL REFERENCES organizations (id),  -- who takes it: agency, DSP, exchange or SSP, curator, vendor
+  charged_org_id      UUID REFERENCES organizations (id),           -- who pays it; null: every customer on the standard rate card
+  kind                TEXT NOT NULL CHECK (kind IN ('agency_fee', 'dsp_platform_fee',
+                        'exchange_buy_side_fee', 'exchange_sell_side_fee', 'curation_fee',
+                        'data_fee', 'verification_fee', 'ad_serving_fee', 'other')),
+  -- at most one narrower scope; none set: the whole relationship
+  agency_agreement_id UUID REFERENCES agency_agreements (id),       -- an agency's fee under its agreement
+  ad_account_id       UUID REFERENCES ad_accounts (id),
+  buyer_seat_id       UUID REFERENCES buyer_seats (id),
+  seller_account_id   UUID REFERENCES seller_accounts (id),         -- an exchange's take on one seller
+  deal_id             UUID REFERENCES deals (id),                   -- a curator's or exchange's fee on one deal
+  scope_id            UUID GENERATED ALWAYS AS (COALESCE(agency_agreement_id, ad_account_id,
+                        buyer_seat_id, seller_account_id, deal_id,
+                        '00000000-0000-0000-0000-000000000000'::UUID)) STORED,
+  method              TEXT NOT NULL CHECK (method IN ('percent', 'cpm', 'flat')),
+  rate_bp             INT CHECK (rate_bp BETWEEN 0 AND 10000),      -- percent: basis points of the basis
+  basis               TEXT CHECK (basis IN ('budget', 'gross_spend', 'media_cost', 'net_media',
+                        'clearing_price')),                         -- percent: what the rate applies to
+  cpm_micros          BIGINT CHECK (cpm_micros >= 0),               -- cpm: micros per thousand impressions
+  flat_minor          BIGINT CHECK (flat_minor >= 0),               -- flat: minor units per period
+  flat_period         TEXT CHECK (flat_period IN ('month', 'quarter', 'year', 'flight')),
+  currency            CHAR(3),                                      -- cpm and flat amounts
   disclosed           BOOLEAN NOT NULL,                             -- shown to the party paying it
-  valid_during        DATERANGE NOT NULL,
+  valid_during        DATERANGE NOT NULL,                           -- effective dates, in the agreement's days
   agreement_ref       TEXT NOT NULL,                                -- contract, rate card or terms URL and version
-  CHECK ((rate_bp IS NULL) <> (cpm_micros IS NULL)),
-  EXCLUDE USING gist (charging_org_id WITH =, charged_org_id WITH =, kind WITH =,
-    (COALESCE(ad_account_id, '00000000-0000-0000-0000-000000000000'::uuid)) WITH =,
-    valid_during WITH &&)
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (num_nonnulls(agency_agreement_id, ad_account_id, buyer_seat_id, seller_account_id,
+         deal_id) <= 1),
+  CHECK ((method = 'percent') = (rate_bp IS NOT NULL AND basis IS NOT NULL)),
+  CHECK ((method = 'cpm') = (cpm_micros IS NOT NULL)),
+  CHECK ((method = 'flat') = (flat_minor IS NOT NULL AND flat_period IS NOT NULL)),
+  CHECK (method = 'percent' OR currency IS NOT NULL),
+  EXCLUDE USING gist (charging_org_id WITH =,
+    (COALESCE(charged_org_id, '00000000-0000-0000-0000-000000000000'::UUID)) WITH =,
+    kind WITH =, scope_id WITH =, valid_during WITH &&)
 );
 
 CREATE TABLE supply_paths (                -- a distinct chain of sellers an impression arrived through
@@ -308,10 +326,10 @@ CREATE INDEX property_quality_assessments_current_idx
 ALTER TABLE invoice_lines VALIDATE CONSTRAINT invoice_lines_fee_term_fk;
 ```
 
-The take rate on a path is then a query over the buyer's spend and the matched seller revenue, never a stored percentage:
+A take rate is never a stored percentage: it is `publisher_revenue_micros / matched_spend_micros` on a log match run, reported with that run's match rate. What a seat bought by path is a query over the daily rows:
 
 ```sql
--- share of buyer spend reaching the publisher, by path hop count, for one matched run's period
+-- one seat's spend, viewability and invalid traffic by path hop count, for a period
 SELECT p.hops,
        SUM(d.spend_micros) AS spend_micros,
        SUM(d.impressions) AS impressions,
@@ -326,7 +344,10 @@ ORDER BY p.hops;
 
 Design notes:
 
-- **A fee is a term with a basis, not a percentage.** The exclusion constraint (it needs the `btree_gist` extension for the equality columns) keeps one party from holding two overlapping terms of the same kind for the same payer. `fee_terms.basis` says what the rate applies to (budget, gross spend, media cost, clearing price or impressions), so the chain can be recomputed in order; `disclosed` records whether the paying party could see it, which is what a transparency audit asks. Each fee invoice line points at its term.
+- **A fee is a term with a method and a basis, not a percentage.** `method` says whether the fee is a percentage, a CPM or a flat amount per period, and each method has exactly its own columns. For a percentage, `basis` says what the rate applies to (budget, gross spend including data and fees, media cost, media net of passed-through rebates, or the clearing price), so the chain can be recomputed in order. `disclosed` records whether the paying party could see it, which is what a transparency audit asks.
+- **The charging and the charged party are both explicit.** The same exchange appears twice: as `exchange_buy_side_fee` charged to a DSP (a bidder fee such as TAM's 2.5%) and as `exchange_sell_side_fee` charged to a publisher (AdX's take). A null `charged_org_id` is the standard rate card; a negotiated term for one payer, or one narrower scope (an agency agreement, ad account, seat, seller account or deal), overrides it, and the most specific term in force on the day wins. The exclusion constraint (it needs the `btree_gist` extension for the equality columns) keeps two terms of the same kind, payer and scope from overlapping in time.
+- **One fee table, two views of a share.** A network's or exchange's own system records what it charges as `fee_terms`; a publisher's system records what it receives as `network_revenue_shares` in Publishers & Yield, the same agreement seen from the payee's side, with the publisher's share as the complement of the take on the same basis. Agency fees live here too, pointing at the agency agreement in Agencies & Media Buying.
+- **Every fee line points at its term.** An invoice line keeps the core's coarse `kind`; `fee_term_id` gives the exact fee, rate and agreement that produced it.
 - **Paths are normalized and hashed.** The same `(asi, sid)` sequence arrives on millions of requests; storing it once per property, keyed by a hash of the normalized node list (lowercased domains, trimmed IDs), makes path-level reporting a join instead of a JSON scan. An incomplete chain (`complete = false`) is kept as its own path, because incompleteness is the signal.
 - **ads.txt status is per day.** A seller authorized today may be removed tomorrow; `supply_path_daily.ads_txt_status` records what the crawled file said on the day the impressions ran, read from the crawl history that ads.txt, sellers.json & SupplyChain models.
 - **Matching is a run with a method.** A log match covers a period, two parties, a key and a specification (ISBA's Toolkit or the audit contract); it records the match rate (`matched_impressions / buyer_impressions`) and the unknown delta on matched spend. Unmatched spend is not assumed to be fee; the match rate is reported next to every take rate derived from it, because a 12% match rate and a 58% one support different conclusions.

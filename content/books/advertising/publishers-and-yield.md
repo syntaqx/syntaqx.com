@@ -21,7 +21,7 @@ As of November 2026, from each company's own pages, filings and the court record
 | --- | --- | --- | --- |
 | **AdMob** (Google) | Ad network and mediation for apps: runs bidding networks and a waterfall that calls ad sources "one-by-one based on the average eCPM you set" | App publishers | Publisher share not stated on a public Google page (the gap noted in [An ad network split](/books/advertising/advertising-business#an-ad-network-split-adsense-style)) |
 | **AdSense** (Google) | Ad network for sites: Google sells the space to its buyers and pays per impression | Sites and publishers that want "more automation and easy-to-implement ad solutions" | Publishers receive 80% for AdSense for content, after the buying platform's fee; about 68% net when Google Ads buys; $100 payment threshold; paid between the 21st and 26th of the month |
-| **Amazon Publisher Services** | Transparent Ad Marketplace (TAM), server-to-server header bidding in "one ad call"; Unified Ad Marketplace (UAM), the turnkey version | TAM for larger publishers; UAM for publishers of all sizes | "A transparent 2.5% service fee charged to bidders" |
+| **Amazon Publisher Services** | Transparent Ad Marketplace (TAM), server-to-server header bidding in "one ad call"; Unified Ad Marketplace (UAM), the turnkey version | TAM for publishers on the APS header bidding tag with their own demand contracts; UAM, "turn-key", for publishers of all sizes | "A transparent 2.5% service fee charged to bidders" |
 | **FreeWheel** | Ad server and SSP for streaming and CTV, sold together as a "Streaming Hub"; the SSP "can be used with or without our ad server" | Streaming TV media companies | Not published |
 | **Google Ad Manager** | Publisher ad server (formerly DFP) with Google's exchange (AdX) built in | Publishers that "manage significant direct sales" and several ad sources; sign-up requires an AdSense account | AdX took "around 20%" overall and the ad server's fees came to roughly 1.3 to 1.7%, per the US court record |
 | **Kevel** | Ad serving infrastructure as APIs: Decision, Campaign Management, Inventory Management, Forecast and Reporting | Companies building their own ad platform "for retail media, sponsored listings, internal promotions, native ads, and more" | Not published |
@@ -29,7 +29,7 @@ As of November 2026, from each company's own pages, filings and the court record
 | **Mediavine** | Managed ad network: runs the site's ad stack and sells its inventory; Journey by Mediavine for growing sites | $5,000 a year in ad revenue for the full program; Journey needs 5,000 monthly sessions from the US, UK, Canada, Australia, Germany, France or the Netherlands and a domain at least 4 months old | Revenue share not stated on its requirements page |
 | **Prebid** (Prebid.org) | Open-source header bidding: Prebid.js in the browser, Prebid Server, Prebid Mobile | Any publisher; Prebid.org is a membership organization funded by dues | Free software; "more than 300 demand partners" |
 | **PubMatic** | Sell-side platform (SSP) | Publishers | $282.9 million revenue in 2025 on "nearly 336.8 trillion impressions processed" |
-| **Raptive** | Managed ad network for independent sites and creators | At least 25,000 monthly page views since October 2025, down from 100,000 | Revenue share not stated on the pages I opened |
+| **Raptive** | Managed ad network for independent sites and creators | At least 25,000 monthly page views, down from 100,000 (announced in a post last updated October 16, 2025) | Revenue share not stated on the pages I opened |
 
 Three patterns hold across the table:
 
@@ -104,7 +104,7 @@ Direct pays more per impression and costs more to earn: a sales team, an IO work
 
 ### Sell-Through
 
-Sell-through measures how much of the future the direct team has sold. Ad Manager's future sell-through report shows forecasted, available and reserved impressions for up to 90 days by day or a year by month, and defines the rate as reserved impressions over forecasted impressions, reserved meaning booked to standard or sponsorship line items. A low rate means inventory will go to the auction at auction prices; a rate near 100% means a new buyer can't be accommodated without risking under-delivery on existing guarantees, which is when publishers raise direct prices or decline deals. Forecasts overstate what is truly available: Google notes the report is "more likely to overestimate available inventory" than a line item forecast, because a forecast for one line item accounts for the fact that an ad can't appear in two slots at once. Forecasting & Avails covers the forecast and contention.
+Sell-through measures how much of the future the direct team has sold. Ad Manager's future sell-through report shows forecasted, available and reserved impressions for up to 90 days by day or a year by month, and defines the rate as reserved impressions over forecasted impressions, reserved meaning booked to standard or sponsorship line items. A low rate means inventory will go to the auction at auction prices; a rate near 100% means a new buyer can't be accommodated without risking under-delivery on existing guarantees, which is when publishers raise direct prices or decline deals. The report and a line item forecast answer different questions, and Google says "You should avoid comparing Future sell-through reports with line item forecasts": a line item forecast looks at one line item and its targeting, while the report forecasts availability across the whole network. Forecasting & Avails covers the forecast and contention.
 
 For yield, sell-through and fill are two halves of one picture. Sell-through is the share committed in advance at direct prices, fill is the share sold at all; the space between is the auction. A publisher's monthly yield review reads both, per section and ad unit, against page RPM.
 
@@ -147,7 +147,7 @@ The published or court-found terms, as of November 2026:
 | Google Open Bidding | "A 5% fee" | Taken from rival exchanges' bids competing in Ad Manager (US court record) |
 | Amazon TAM | "2.5% service fee" | "Charged to bidders", not deducted from the publisher's share |
 
-Three things follow for the system. **A share has a basis, a party and a date.** "80%" without "after the buy-side fee" can't be checked against a statement, and terms change: AdSense moved from a single revenue share to the split model with its 2024 change to per-impression payment. **Several shares stack.** An impression bought by a DSP through an SSP through a reseller reaches the publisher net of each, and a managed network's share comes after the SSPs it sells through; the publisher's revenue is the product of the chain, and only a log-level record can say which links applied. [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality) covers the chain across the industry. **Floors apply to the net.** Ad Manager's pricing rules compare a floor to the bid's value to the publisher after the revenue share, "a $1.00 bid on an 80/20 revenue share" being worth $0.80, so a publisher who sets floors from gross prices sets them wrong.
+Three things follow for the system. **A share has a basis, a party and a date.** "80%" without "after the buy-side fee" can't be checked against a statement, and terms change: AdSense moved from a single revenue share to the split model with its 2024 change to per-impression payment. **Several shares stack.** An impression bought by a DSP through an SSP through a reseller reaches the publisher net of each, and a managed network's share comes after the SSPs it sells through; the publisher's revenue is the product of the chain, and only a log-level record can say which links applied. Take Rates & Supply Quality covers the chain across the industry. **Floors apply to the net.** Ad Manager's pricing rules compare a floor to the bid's value to the publisher after the revenue share, "a $1.00 bid on an 80/20 revenue share" being worth $0.80, so a publisher who sets floors from gross prices sets them wrong.
 
 ### Payment, Thresholds and Deductions
 
@@ -163,9 +163,9 @@ Every publisher with an audience willing to pay chooses how much to charge reade
 
 **The New York Times** is mostly a subscription business. Its 2025 10-K reports total revenues of $2.82 billion: subscriptions $1.95 billion (digital-only $1.43 billion), advertising $566.0 million, and affiliate, licensing and other $308.1 million. Digital advertising was about 73% of advertising revenue and grew 20.0%, while print advertising fell 5.4%; the company had about 12.21 million paid digital-only subscribers at the end of 2025, at a digital-only ARPU of $9.68. Subscriptions are about 69% of revenue and advertising about 20% (derived from those totals).
 
-**Spotify** runs both models on one catalog. Its 2025 results report Premium revenue of €15,350 million and Ad-Supported revenue of €1,836 million, with 290 million Premium subscribers and 476 million ad-supported monthly active users at year end. Divided by the year-end counts, that is roughly €53 of revenue per subscriber against roughly €3.90 per ad-supported user (derived, and approximate because user counts move through the year): the free tier earns about a fourteenth as much per person and serves more people.
+**Spotify** runs both models on one catalog. Its 2025 results report Premium revenue of €15,350 million and Ad-Supported revenue of €1,836 million, with 290 million Premium subscribers and 476 million ad-supported monthly active users at year end. Divided by the year-end counts, that is roughly €53 of revenue per subscriber against roughly €3.86 per ad-supported user (derived, and approximate because user counts move through the year): the free tier earns about a fourteenth as much per person and serves more people.
 
-**Netflix** went the other way, adding ads to a subscription service. Its 2026 outlook includes "a projected rough doubling of our ads revenue to approximately $3 billion", sold through its own Netflix Ads Suite and programmatically.
+**Netflix** went the other way, adding ads to a subscription service. Its July 2026 shareholder letter's outlook includes "a projected rough doubling of our ads revenue to approximately $3 billion", sold through its own Netflix Ads Suite and programmatically.
 
 What the three share is the structure of the choice:
 
@@ -235,7 +235,7 @@ CREATE TABLE ad_unit_yield_daily (        -- the publisher's yield, per channel
   CHECK (channel IN ('direct', 'house') OR demand_org_id IS NOT NULL),
   CHECK (channel <> 'house' OR revenue_micros = 0),
   UNIQUE NULLS NOT DISTINCT (ad_unit_id, day, channel, demand_org_id, seller_account_id,
-    source)
+    source, version)
 );
 ```
 
@@ -318,7 +318,7 @@ WITH yield AS (                           -- the latest version of each row, fin
 ), traffic AS (
   SELECT property_id, day, SUM(page_views) AS page_views
   FROM property_traffic_daily
-  WHERE day BETWEEN $1 AND $2
+  WHERE day BETWEEN $1 AND $2 AND source = $4  -- one analytics system, or page views double
   GROUP BY property_id, day
 )
 SELECT t.property_id, t.day, t.page_views,
@@ -433,7 +433,7 @@ The mechanics are the playbook's [Audit Trails](/docs/building-blocks/audit-trai
 - [Google Ad Manager: Dynamic allocation](https://support.google.com/admanager/answer/3721872?hl=en), the temporary CPM of guaranteed line items and when house line items serve
 - [Google Ad Manager: Pricing rules](https://support.google.com/admanager/answer/9298008?hl=en), floors for non-guaranteed demand, the channels they cover, programmatic direct excluded
 - [Google Ad Manager: Pricing rules and the revenue share](https://support.google.com/admanager/answer/9298211?hl=en), floors compared to the bid's net value after the revenue share
-- [Google Ad Manager: Future sell-through report](https://support.google.com/admanager/answer/16709101?hl=en), forecasted, available and reserved impressions, the sell-through formula, horizons and overestimation
+- [Google Ad Manager: Future sell-through report](https://support.google.com/admanager/answer/16709101?hl=en), forecasted, available and reserved impressions, the sell-through formula, horizons, not comparable to line item forecasts
 - [Google Ad Manager: Interactive report metrics](https://support.google.com/admanager/table/16431202?hl=en), ad requests, fill rate, unfilled impressions, average eCPM and the viewable rate
 - [Google AdMob: Mediation](https://support.google.com/admob/answer/3063564), bidding and the waterfall by average eCPM
 - [Amazon Publisher Services: Transparent Ad Marketplace](https://aps.amazon.com/aps/transparent-ad-marketplace/), server-to-server header bidding, UAM for publishers of all sizes, the 2.5% fee charged to bidders

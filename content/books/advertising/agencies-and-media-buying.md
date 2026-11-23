@@ -18,7 +18,7 @@ As of November 2026, how the five holding companies describe their media busines
 
 | Holding company | Media business as reported | Revenue basis | What the filing says about buying |
 | --- | --- | --- | --- |
-| **Dentsu** | Media within its integrated regions | Net revenue ¥1,197,530 million of ¥1,435,245 million revenue | Results release does not describe the buying basis |
+| **Dentsu** | Not broken out in the results release | Net revenue ¥1,197,530 million of ¥1,435,245 million revenue | Results release does not describe the buying basis |
 | **Havas** | Havas Media, 38% of net revenue | Net revenue €2,783 million of €2,913 million revenue | Release does not describe the buying basis |
 | **Omnicom** | Media & Advertising discipline, $10,015.9 million of $17,271.9 million revenue; Omnicom Media networks include OMD and PHD | Revenue net of third-party costs where acting as agent; gross where principal | Agencies buy "as an agent for a disclosed principal"; "certain media buying businesses" act "as principal when we control the buying process for the purchase of the media" |
 | **Publicis** | Connected Media, 60% of net revenue | Net revenue €14,547 million; pass-through revenue €2,852 million, up 38.1% | Net revenue excludes pass-through "production & media costs" |
@@ -72,7 +72,7 @@ For the system, the rule is that **every buy carries its basis**. A line bought 
 
 A trading desk is the programmatic buying unit inside an agency or holding company: a team (and often a brand) that runs DSP seats, sets up deals with SSPs and publishers, manages data and verification vendors, and buys on behalf of the group's clients. Holding companies built them so programmatic spend from many clients would run through seats they control, with pooled data and negotiated supply terms.
 
-A trading desk can work either way. As agent, it buys in the advertiser's name on a DSP seat and charges a fee; ISBA and PwC's 2020 study found an agency fee of 7% of advertiser spend on the UK programmatic path ([An Open-Auction Programmatic Impression](/books/advertising/advertising-business#an-open-auction-programmatic-impression)). As principal, it buys inventory or audience packages and resells them at a fixed CPM, and the media cost, the DSP fee and the data fees disappear into the price. ISBA's second study recommended separate DSP seats for each advertiser, because a shared seat makes one advertiser's log-level data hard to separate for audit. [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality) covers what the studies found at each hop.
+A trading desk can work either way. As agent, it buys in the advertiser's name on a DSP seat and charges a fee; ISBA and PwC's 2020 study found an agency fee of 7% of advertiser spend on the UK programmatic path ([An Open-Auction Programmatic Impression](/books/advertising/advertising-business#an-open-auction-programmatic-impression)). As principal, it buys inventory or audience packages and resells them at a fixed CPM, and the media cost, the DSP fee and the data fees disappear into the price. The 2020 study told advertisers to "insist their agency has a separate seat for each client, and that log level data be readily available", and ISBA's second study (published January 2023) repeated the recommendation of "separate DSP seats for each advertiser". Take Rates & Supply Quality covers what the studies found at each hop.
 
 ## How Agencies Are Paid
 
@@ -86,7 +86,7 @@ Agency compensation is in the agency agreement between the advertiser and the ag
 | **Performance incentive** | A bonus or holdback tied to goals (sales, brand metrics, KPIs, qualitative reviews) | The measured result against the target, with the source, and the payout scale |
 | **Principal margin** | The difference between the resale price and the agency's cost on principal lines | Nothing the advertiser sees unless the agreement requires disclosure |
 
-The ANA's 18th Trends in Agency Compensation (December 2022, 101 marketers and 336 agency relationships) found fee-based compensation used by 82% of respondents, up from 68% in 2016; labor-based fees still the most common form, and used by 76% of smaller advertisers; fixed or output-based fees used by 53% of large advertisers (over $500 million in annual spend), up from 5% in 2016; and performance incentives down to 41%, from 48% in 2016 and 61% in 2013.
+The ANA's 18th Trends in Agency Compensation (December 2022, 101 marketers and 336 agency relationships) found fee-based compensation used by 82% of respondents, up from 68% in 2016; labor-based fees still the most common form, and used by 76% of smaller advertisers; fixed or output-based fees used by 53% of large advertisers ($500 million or more in annual spend), up from 5% in 2016; and performance incentives down to 41%, from 48% in 2016 and 61% in 2013.
 
 A commission's base is where disputes start. A 5% commission (an example rate) on $1,000,000 of media is $50,000 if the base is the media cost the agency paid, and less if the base is media net of a rebate the agency received; if the agency also bought some lines as principal, the base for those lines is the resale price, which already contains the agency's margin. My rule: **the agreement names the base, and the system computes the fee from rows of that base, never from a total someone entered**, so the advertiser's auditor can recompute it.
 
@@ -94,21 +94,21 @@ A commission's base is where disputes start. A 5% commission (an example rate) o
 
 A **rebate** (also called a volume bonus, an agency volume bonus or a free-inventory credit) is value a seller gives an agency in return for the spend the agency places with it, in cash or in free media. Where the agency buys as the advertiser's agent, the advertiser's money produced the rebate, and the question is whether it was disclosed and passed back.
 
-The ANA's Media Transparency Initiative began with a member survey in which 28% of respondents were aware of US media companies giving rebates or incentives to agencies. In June 2015 the ANA commissioned an independent study, and K2 Intelligence, with Ebiquity and FirmDecisions, ran it from October 20, 2015 to May 31, 2016, releasing it on June 7, 2016. Its findings, from 143 interviews with 150 individuals (117 directly involved in US media buying):
+The ANA's Media Transparency Initiative began with a member survey in which 28% of respondents were aware of US media companies giving rebates or incentives to agencies. In June 2015 the ANA issued a request for proposals for an independent study, and K2 Intelligence, with Ebiquity and FirmDecisions, ran it from October 20, 2015 to May 31, 2016, releasing it on June 7, 2016. Its findings, from 143 interviews with 150 individuals (117 directly involved in US media buying):
 
 - **Non-transparent practices were "pervasive" in the sample.** 59 of the 117 media-buying sources reported direct experience with them, 34 citing rebates and 33 principal transactions.
 - **Rebates were described as undisclosed or not passed through.** 41 sources said rebate deals occur in the US; 34 described rebates that were undisclosed, not passed through, or demanded by agencies, ranging from 1.67% to about 20% of aggregate media spending, and K2 found corroborating documents.
 - **Principal markups of about 30% to 90%** on media sold through principal transactions, as above.
-- **Pressure to steer spend** to media companies in which agencies held equity, with evidence of senior-level awareness.
+- **Pressure to steer spend** to media companies in which agencies or their holding companies held equity, as former senior agency employees described it; separately, K2 found evidence that senior executives were aware of, and even mandated, some non-transparent practices.
 - **A disconnect on duty:** advertisers generally believed agencies owed them more than their contracts said; some agency executives saw the relationship as defined solely by contract.
 
-K2 interviewed few television and print sources and none from radio, so the report says nothing about practices there. The lasting effect is contractual: advertisers' agency agreements now commonly include audit rights, rebate disclosure and pass-through clauses, and principal-buying consent, which is what an agency's systems must be able to evidence. <!-- source-gap: adv-agency-contract-clauses | missing | the prevalence of audit, rebate pass-through and principal consent clauses in US agency agreements | closes with: a published ANA or 4A's survey of agency agreement terms | checked: 2026-11-22 -->
+K2 found evidence across digital, out-of-home, print and television, but interviewed few television and print sources and none from radio, and says the absence of examples in those media is not conclusive. The lasting effect is contractual: advertisers' agency agreements now commonly include audit rights, rebate disclosure and pass-through clauses, and principal-buying consent, which is what an agency's systems must be able to evidence. <!-- source-gap: adv-agency-contract-clauses | missing | the prevalence of audit, rebate pass-through and principal consent clauses in US agency agreements | closes with: a published ANA or 4A's survey of agency agreement terms | checked: 2026-11-22 -->
 
 The transparency questions have since moved into programmatic: what share of spend reaches publishers, what each intermediary keeps, and whether a buy was principal. Take Rates & Supply Quality covers the ISBA and ANA studies that answer them.
 
 ## In-Housing
 
-The ANA's 2023 survey of its members (162 respondents, February and March 2023, released May 2, 2023) found that 82% had an in-house agency, up from 78% in 2018, 58% in 2013 and 42% in 2008. In-housing rarely replaces outside agencies: 92% of those with an in-house agency still worked with external agencies, and on average 61% of the work was done in-house (58% in 2018). Media is the part most often left outside: 54% of in-house agencies handled some media planning or buying.
+The ANA's 2023 survey of its members (162 respondents, February and March 2023, released May 2, 2023) found that 82% had an in-house agency, up from 78% in 2018 (the 2013 and 2008 surveys, at 58% and 42%, asked about in-house advertising capabilities rather than an agency). In-housing rarely replaces outside agencies: 92% of those with an in-house agency still worked with external agencies, and on average 61% of the work was done in-house (58% in 2018). Media is the part most often left outside: 54% of in-house agencies handled some media planning or buying.
 
 In-housing media changes the records more than the workflow. The advertiser's own organization becomes the operator of its ad accounts and the signatory of its IOs; DSP seats move to the advertiser's name (a direct contract with the DSP, its own fees and its own log-level data); and the agency agreement shrinks to the work the agency still does. Because the core model keeps `operator_org_id` and `buyer_org_id` separate from the advertiser, moving a function in-house is a change of operator on existing accounts and a new buyer on new IOs, not a migration of history.
 
@@ -118,7 +118,7 @@ Agencies are lightly regulated as buyers; the rules that bind them are contracts
 
 ## How to Build It
 
-The core model already separates the advertiser, its ad accounts and the operator, and gives insertion orders a buyer. What it lacks is the agency side's own contract and plan: the agreement under which the agency is paid and may buy as principal, the media plan that the buys fulfill, and the incentives sellers give the agency. Three new tables and two altered ones:
+The core model already separates the advertiser, its ad accounts and the operator, and gives insertion orders a buyer. What it lacks is the agency side's own contract and plan: the agreement under which the agency is paid and may buy as principal, the media plan that the buys fulfill, and the incentives sellers give the agency. The fee itself is not a column here: an agency's commission or fee is a `fee_terms` row (kind `agency_fee`, pointing at the agreement) in Take Rates & Supply Quality, the one table for every fee one party charges another. Five new tables and two altered ones:
 
 ```sql
 CREATE TABLE agency_agreements (           -- advertiser x agency: scope, pay, buying basis
@@ -130,9 +130,6 @@ CREATE TABLE agency_agreements (           -- advertiser x agency: scope, pay, b
                              'reporting']::TEXT[] AND cardinality(scope) > 0),
   compensation_model       TEXT NOT NULL CHECK (compensation_model IN ('labor_fee', 'fixed_fee',
                              'commission', 'hybrid')),
-  commission_bp            INT CHECK (commission_bp BETWEEN 0 AND 10000),  -- basis points
-  commission_base          TEXT CHECK (commission_base IN ('gross_media', 'net_media',
-                             'media_and_fees')),
   incentive_terms          JSONB NOT NULL DEFAULT '{}',  -- KPIs, targets, payout scale
   principal_buying         TEXT NOT NULL DEFAULT 'prohibited' CHECK (principal_buying IN
                              ('prohibited', 'per_buy_approval', 'allowed_disclosed')),
@@ -143,8 +140,6 @@ CREATE TABLE agency_agreements (           -- advertiser x agency: scope, pay, b
   valid_during             DATERANGE NOT NULL,
   document_ref             TEXT NOT NULL,  -- the signed agreement and version
   created_at               TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CHECK (compensation_model NOT IN ('commission', 'hybrid') OR
-         (commission_bp IS NOT NULL AND commission_base IS NOT NULL)),
   EXCLUDE USING gist (advertiser_id WITH =, agency_org_id WITH =, valid_during WITH &&)
 );
 
@@ -275,18 +270,21 @@ pub fn check_buy_basis(a: &AgencyAgreement, line: &PlanLine) -> Result<(), BuyBa
 }
 ```
 
-The commission for a billing period is a sum over delivered media on the agreement's base, with rebates subtracted only when the base is net media. In micros of the currency, rounded once to minor units on the invoice line:
+The commission for a billing period is a sum over delivered media at the agreement's `agency_fee` term, with rebates subtracted only when the term's basis is net media (`net_media`; a commission on media plus fees is basis `gross_spend` and also sums the fee lines, left out here). In micros of the currency, rounded once to minor units on the invoice line:
 
 ```sql
--- commission owed under one agreement for one month, on its declared base
+-- percentage commission owed under one agreement for one month, from its fee term
 SELECT a.id AS agency_agreement_id,
        SUM(d.cost_micros) AS media_micros,
        COALESCE(r.rebate_minor, 0) AS rebates_minor,
        ROUND((SUM(d.cost_micros) / 10000.0
-              - CASE WHEN a.commission_base = 'net_media' THEN COALESCE(r.rebate_minor, 0)
+              - CASE WHEN f.basis = 'net_media' THEN COALESCE(r.rebate_minor, 0)
                      ELSE 0 END)
-             * a.commission_bp / 10000.0) AS commission_minor  -- USD: micros / 10,000 = cents
+             * f.rate_bp / 10000.0) AS commission_minor  -- USD: micros / 10,000 = cents
 FROM agency_agreements a
+JOIN fee_terms f ON f.agency_agreement_id = a.id AND f.kind = 'agency_fee'
+  AND f.method = 'percent' AND f.basis IN ('media_cost', 'net_media')
+  AND f.valid_during @> $1::date
 JOIN ad_accounts acc ON acc.agency_agreement_id = a.id
 JOIN campaigns c ON c.ad_account_id = acc.id
 JOIN line_items li ON li.campaign_id = c.id
@@ -301,7 +299,7 @@ LEFT JOIN LATERAL (
 WHERE a.id = $3
   AND d.day >= $1 AND d.day < $2
   AND d.source = COALESCE(io.controlling_measurement, 'first_party')
-GROUP BY a.id, a.commission_base, a.commission_bp, r.rebate_minor;
+GROUP BY a.id, f.basis, f.rate_bp, r.rebate_minor;
 ```
 
 The divisor converts micros to cents for a two-decimal currency; a real system reads the exponent from the currency table ([Exponents Come From a Table](/docs/money/amounts#exponents-come-from-a-table)) and records the rounding on the invoice line.
@@ -361,8 +359,8 @@ Advertisers audit their agencies, and the audit asks for the agency's records, n
 - [ANA: Governance around principal media failing to keep pace with adoption (March 19, 2026)](https://www.ana.net/content/show/id/pr-2026-03-principalmedia), the principal media definition, survey results and recommendations
 - [ANA: Trends in Agency Compensation, 18th edition (December 13, 2022)](https://ana.net/content/show/id/76981), fee-based, fixed-fee and incentive compensation shares
 - [ANA: In-house agencies are here to stay (May 2, 2023)](https://ana.net/content/show/id/79185), in-house agency prevalence, external agency use and in-house media
-- [ISBA: Second programmatic supply chain study (2023)](https://www.isba.org.uk/article/isbas-programmatic-supply-chain-study-finds-match-rate-increases-and-reduction), the recommendation of separate DSP seats per advertiser
-- [ISBA: Programmatic Supply Chain Transparency Study, executive summary (2020)](https://www.isba.org.uk/system/files/media/documents/2020-12/executive-summary-programmatic-supply-chain-transparency-study.pdf), the 7% agency fee on the programmatic path
+- [ISBA: Second programmatic supply chain study (2023)](https://www.isba.org.uk/article/isbas-programmatic-supply-chain-study-finds-match-rate-increases-and-reduction), the recommendation of separate DSP seats per advertiser, published January 2023
+- [ISBA: Programmatic Supply Chain Transparency Study, executive summary (2020)](https://www.isba.org.uk/system/files/media/documents/2020-12/executive-summary-programmatic-supply-chain-transparency-study.pdf), the 7% agency fee on the programmatic path and the separate seat per client
 - [Publicis Groupe: Full year 2025 results](https://www.publicisgroupe.com/sites/default/files/press-releases/2026-02/CP_FY%202025_ENG.pdf), net revenue, pass-through revenue and Connected Media's share
 - [WPP: Strategy update and 2025 preliminary results](https://www.wpp.com/en/news/2026/02/strategy-update-and-2025-preliminary-results), revenue less pass-through costs and WPP Media
 - [Havas: Full year 2025 results](https://www.havas.com/press_release/havas-achieves-its-2025-guidance-in-full-and-delivers-a-solid-performance-with-organic-growth-of-3-1-and-an-adjusted-ebit-margin-of-12-9-vs-12-4-last-year/), net revenue and Havas Media's share

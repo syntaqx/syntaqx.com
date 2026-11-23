@@ -10,7 +10,7 @@ tags = ["advertising", "ad-tech", "market-size", "holding-companies", "filings",
 
 The advertising industry is a few very large companies that own audiences and run their own ad systems, a few hundred ad tech companies that connect everyone else, five holding companies that buy most of the agency-placed media, and a measurement layer that all of them argue with. The money is concentrated: Alphabet, Meta and Amazon reported $559.5 billion of advertising revenue between them in 2025, worldwide, against a US internet advertising market that IAB and PwC put at $294.6 billion. The plumbing is not: a single open-web impression can pass through a publisher ad server, a wrapper, two SSPs, a DSP, a data provider and two verification vendors, each a separate company with its own filing, owner and fee.
 
-That shape is why the landscape matters to an engineer and not only to an analyst. Who owns a vendor decides whose data it can see and which conflicts it must disclose; which products a company still runs decides which integrations survive the year (Microsoft closed its DSP in February 2026, Amazon folded its DSP into a new product); and the way each company reports revenue (gross or net, with or without traffic acquisition costs) decides whether two numbers can be compared at all. This chapter sizes the market from the IAB/PwC report, sets out advertising revenue by company from filings as of November 2026, maps the walled gardens against the open web, lists the ad tech and measurement companies by layer, covers the holding companies and the consolidation of 2025 and 2026, and records who owns whom. It extends `organizations` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) with ownership history and the products each company operates. How a dollar splits between those companies is in [How the Money Splits](/books/advertising/advertising-business#how-the-money-splits) and in depth in [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality); how agencies buy is [Agencies & Media Buying](/books/advertising/agencies-and-media-buying); the publisher's economics are [Publishers & Yield](/books/advertising/publishers-and-yield); and the Google litigation is The Google Ad Tech Cases, in the Programmatic part.
+That shape is why the landscape matters to an engineer and not only to an analyst. Who owns a vendor decides whose data it can see and which conflicts it must disclose; which products a company still runs decides which integrations survive the year (Microsoft closed its DSP in February 2026, Amazon folded its DSP into a new product); and the way each company reports revenue (gross or net, with or without traffic acquisition costs) decides whether two numbers can be compared at all. This chapter sizes the market from the IAB/PwC report, sets out advertising revenue by company from filings as of November 2026, maps the walled gardens against the open web, lists the ad tech and measurement companies by layer, covers the holding companies and the consolidation of 2025 and 2026, and records who owns whom. It extends `organizations` from [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) with ownership history and the products each company operates. How a dollar splits between those companies is in [How the Money Splits](/books/advertising/advertising-business#how-the-money-splits) and in depth in Take Rates & Supply Quality; how agencies buy is Agencies & Media Buying; the publisher's economics are Publishers & Yield; and the Google litigation is The Google Ad Tech Cases, in the Programmatic part.
 
 ## How the Platforms Do It
 
@@ -37,7 +37,7 @@ Four patterns:
 
 ## How Big the Market Is
 
-The standard US number is the IAB Internet Advertising Revenue Report, prepared by PwC from company surveys and public data and released each April for the prior calendar year. The 2025 report, released April 16, 2026:
+The standard US number is the IAB Internet Advertising Revenue Report, prepared by PwC from data reported to it by companies selling internet advertising, and released each April for the prior calendar year. The 2025 report, released April 16, 2026:
 
 | Cut | 2025 revenue | Growth | Share of total |
 | --- | --- | --- | --- |
@@ -52,7 +52,7 @@ The standard US number is the IAB Internet Advertising Revenue Report, prepared 
 | Programmatic | $162.4 billion | 20.5% | 55.1% (derived) |
 | Creator advertising | $37 billion | | |
 
-Three things about reading it. **The format rows add up; the cross-cutting rows overlap them.** Search, display, video and audio are formats that partition the total (with smaller lines not shown); social, commerce media and programmatic are cuts across those formats, so social at 40% and search at 38.8% do not mean social plus search is 78.8% of anything. **CTV is inside digital video,** and the release does not break it out, so a CTV market figure comes from elsewhere and should say which source. **The report is US-only and revenue-based,** while company filings are worldwide; Alphabet's, Meta's and Amazon's combined $559.5 billion is a global figure and can't be divided by IAB's $294.6 billion to get a US share. IAB's research page calls the $37 billion creator figure a projection, so I treat it as an estimate rather than a measured total.
+Three things about reading it. **The format rows add up; the cross-cutting rows overlap them.** Search, display, video and audio are formats that partition the total (with smaller lines not shown); social, commerce media and programmatic are cuts across those formats, so social at 40% and search at 38.8% do not mean social plus search is 78.8% of anything. **CTV is inside digital video,** and the release does not break it out, so a CTV market figure comes from elsewhere and should say which source. **The report is US-only and revenue-based,** while company filings are worldwide; Alphabet's, Meta's and Amazon's combined $559.5 billion is a global figure and can't be divided by IAB's $294.6 billion to get a US share. The $37 billion creator figure is reported as spend, a further cut across the formats rather than a format of its own, so it overlaps the rows above it too.
 
 My rule for market figures in a product (a sizing slide, a forecast, a "share of wallet" metric): **store the figure with its publisher, release date, period, geography and definition, and never combine figures from two sources in one ratio without saying so.** A US revenue survey, a worldwide filing and an analyst's spend forecast measure three different things.
 
@@ -67,7 +67,7 @@ From filings for calendar 2025 unless noted (Microsoft's fiscal year ends June 3
 | **Amazon** | Advertising services | $68,635 million (sum of the four 2025 quarters) | Revenue recognized "as ads are delivered based on the number of clicks or impressions"; fourth quarter $21,317 million, up 23% |
 | **Microsoft** | Search advertising (formerly search and news advertising) | Dollar amount not stated in the sections I could open | Search advertising revenue excluding traffic acquisition costs up 12% in fiscal 2026; LinkedIn revenue up 11% |
 | **Walmart** | Global advertising | "nearly $6.4 billion, including VIZIO" (fiscal 2026) | Up 46%; recorded "in either net sales or as a reduction to cost of sales" |
-| **AppLovin** | Revenue | $5,481 million, up 70% | Adjusted EBITDA $4,512 million, an 82% margin; sold its apps business in 2025 |
+| **AppLovin** | Revenue | $5,481 million, up 70% | Adjusted EBITDA $4,512 million, an 82% margin; completed the sale of its apps business on June 30, 2025 |
 | **Snap** | Revenue | $5,931.4 million, up 11% | Fourth-quarter other revenue (subscriptions) $232 million, 24 million subscribers |
 | **Pinterest** | Revenue | $4,221.8 million, up 16% | 619 million monthly active users, global ARPU $7.21 |
 | **Roku** | Platform revenue | $4,145 million, up 18% | "more than 90 million" logged-in streaming households |
@@ -82,14 +82,14 @@ From filings for calendar 2025 unless noted (Microsoft's fiscal year ends June 3
 
 Netflix does not report an advertising revenue line; its 2026 outlook includes "a projected rough doubling of our ads revenue to approximately $3 billion", which implies about $1.5 billion in 2025 without stating it. Apple does not report advertising separately. Unity's fourth-quarter Grow Solutions revenue was $338 million, with its Vector platform 56% of it; the release does not give a full-year Grow figure.
 
-The year since has split the field. In the third quarter of 2026 Alphabet's advertising revenue was $82,012 million against $74,182 million a year earlier, Meta's $63,061 million against $50,082 million (up 26%), and Amazon's advertising services $19,637 million against $17,703 million (up 11%), while The Trade Desk reported $736 million against $739 million, its first year-over-year decline, and Magnite's revenue rose 14% to $204.2 million with CTV contribution ex-TAC up 39%.
+The year since has split the field. In the third quarter of 2026 Alphabet's advertising revenue was $82,012 million against $74,182 million a year earlier, Meta's $63,061 million against $50,082 million (up 26%), and Amazon's advertising services $19,637 million against $17,703 million (up 11%), while The Trade Desk reported $736 million against $739 million, a year-over-year decline, and Magnite's revenue rose 14% to $204.2 million with CTV contribution ex-TAC up 39%.
 
 ### Reading Advertising Revenue
 
 The same dollar of advertiser spend shows up as different revenue at each company it passes through, and four accounting choices explain most of the gaps:
 
 - **Gross or net (principal or agent).** A company that controls the ad before it is delivered reports the advertiser's spend as revenue and the publisher's share as a cost; one that arranges the sale reports only its fee. The Trade Desk reports "as an agent on a net basis", so $13.4 billion of client spend becomes $2,896 million of revenue. Omnicom reports most agency revenue net of third-party costs but acts "as principal when we control the buying process for the purchase of the media". Advertising Revenue Accounting, in Contracts and Money, covers the test.
-- **Traffic acquisition costs.** Alphabet's advertising revenue includes ads on partners' sites and in partners' search boxes; the $59.9 billion it paid those partners is a cost of revenues. Criteo and Magnite publish contribution ex-TAC (revenue minus what they pay publishers) beside revenue because their revenue is mostly pass-through.
+- **Traffic acquisition costs.** Alphabet's advertising revenue includes ads on partners' sites and in partners' search boxes; the $59.9 billion it paid those partners is a cost of revenues. Criteo and Magnite publish contribution ex-TAC (revenue minus what they pay publishers) beside revenue because part of their revenue is passed through to publishers.
 - **Pass-through costs at agencies.** Publicis reports revenue of €17,399 million and net revenue of €14,547 million, defining net revenue as "Revenue less pass-through costs. Those costs are mainly production & media costs and out-of-pocket expenses." WPP's headline metric is revenue less pass-through costs (£10,176 million of £13,550 million revenue), Havas reports €2,913 million revenue and €2,783 million net revenue, and Dentsu ¥1,435,245 million revenue and ¥1,197,530 million net revenue. Agency net revenue is closer to a fee base than to media spend, and the media billed through agencies is far larger than any agency's revenue.
 - **Where advertising sits in a retailer's books.** Walmart books advertising in net sales or as a reduction of cost of sales depending on the arrangement; Target reports advertising inside net sales without a separate dollar figure ([How the Money Is Booked](/books/commerce/retail-media#how-the-money-is-booked)).
 
@@ -108,7 +108,7 @@ The data model consequence is the gross-versus-net split from [The Core Data Mod
 
 The share between them is not published in one number. What the filings show is direction: Alphabet's Network line (its open-web business: AdSense, AdMob and Ad Manager) fell to $29,792 million while Search and YouTube grew, and Google Network impressions fell 7% in 2025 while cost per impression rose 7%; Meta's impressions rose 12%. On the open-web side, CTV is where the growth is: 45% of Magnite's contribution ex-TAC, 45.6% of programmatic spend in the ANA's third-quarter 2025 benchmark, and over 50% growth in PubMatic's CTV revenue excluding political.
 
-The court in United States v. Google drew the boundary for antitrust purposes: it found Google had monopolized an "open-web display publisher ad server market" and an "open-web display ad exchange market" and unlawfully tied the two, and rejected a third market for advertiser ad networks. The remedies order and memorandum were filed September 2, 2026; the court declined to order a divestiture of AdX, as trade press reported from the unsealed opinion. <!-- source-gap: adv-edva-remedies-summary | secondary | the remedies granted and denied in US v. Google (ad tech), Dkt. 1858 | closes with: a text-readable copy of the remedies memorandum or final judgment | checked: 2026-11-22 --> The European Commission fined Google €2.95 billion on September 5, 2025 for self-preferencing AdX. The Google Ad Tech Cases, in Programmatic, covers both and what changes for engineers.
+The court in United States v. Google drew the boundary for antitrust purposes: it found Google had monopolized an "open-web display publisher ad server market" and an "open-web display ad exchange market" and unlawfully tied the two, and rejected a third market for advertiser ad networks. The remedies memorandum opinion, filed September 2, 2026, found structural remedies "neither realistic nor needed" and rejected divesting AdX, open-sourcing DFP's final auction logic and the contingent divestiture of the rest of DFP, adopting behavioral remedies instead and ordering the parties to file one jointly proposed final judgment. The European Commission fined Google €2.95 billion on September 5, 2025 for self-preferencing AdX. The Google Ad Tech Cases, in Programmatic, covers both and what changes for engineers.
 
 ## Ad Tech Companies by Layer
 
@@ -138,7 +138,7 @@ Five holding companies own most of the large media agencies. From their 2025 res
 | **Publicis** | Net revenue | €14,547 million (revenue €17,399 million) | 5.6% | Connected Media 60% of net revenue; pass-through revenue up 38.1% to €2,852 million |
 | **WPP** | Revenue less pass-through costs | £10,176 million (revenue £13,550 million) | -5.4% like-for-like | WPP Media's like-for-like revenue less pass-through costs down 5.9% |
 
-**Omnicom and Interpublic.** Omnicom completed its acquisition of Interpublic on November 26, 2025, at 0.344 Omnicom shares per Interpublic share, leaving legacy Omnicom holders with about 60.6% and Interpublic holders about 39.4%, and doubled its cost synergy target to $1.5 billion. The FTC's final consent order on the merger (September 2025) bars Omnicom from steering ad spend away from publishers on the basis of political or ideological viewpoint unless the advertiser directs it, and in April 2026 the FTC and eight states took action against WPP, Publicis and Dentsu alleging they coordinated on a common brand safety standard through GARM and the 4A's. Brand Safety & Suitability covers both orders; Agencies & Media Buying covers how the holding companies buy.
+**Omnicom and Interpublic.** Omnicom completed its acquisition of Interpublic on November 26, 2025, at 0.344 Omnicom shares per Interpublic share, leaving legacy Omnicom holders with about 60.6% and Interpublic holders about 39.4%, and doubled its cost synergy target to $1.5 billion. The FTC's final consent order on the merger (September 2025) bars Omnicom from steering ad spend away from publishers on the basis of political or ideological viewpoint unless the advertiser directs it, and in April 2026 the FTC and eight states took action against WPP, Publicis and Dentsu alleging they coordinated on a common brand safety standard through GARM and the 4A's Advertiser Protection Bureau. Brand Safety & Suitability covers both orders; Agencies & Media Buying covers how the holding companies buy.
 
 **Concentration on the buy side.** The holding companies are the largest customers of the independent ad tech companies. The Trade Desk's 10-K says "two holding companies would have each represented more than 10% of our gross billings in 2025." Omnicom's top 100 clients were about 54% of its revenue, each served on average by about 55 of its agencies.
 
@@ -150,7 +150,7 @@ The ownership moves of the last few years that change integrations, data access 
 | --- | --- | --- |
 | October 11, 2022 | Nielsen taken private by the Evergreen Coast Capital (Elliott) and Brookfield Business Partners consortium, $28 a share | No more public filings for the largest TV measurement company |
 | February 13, 2025 | Mediaocean completes its acquisition of Innovid, combining it with Flashtalking | Two advertiser ad servers and CTV creative platforms under one owner |
-| 2025 | AppLovin sells its apps business ($407 million net proceeds, buyer not named in its release) | AppLovin no longer owns the games it used to monetize through its own platform |
+| June 30, 2025 | AppLovin completes the sale of its apps business ($407 million net proceeds, buyer not named in its release) | AppLovin no longer owns the games it used to monetize through its own platform |
 | November 26, 2025 | Omnicom completes its acquisition of Interpublic | Two of the six large agency groups become one; a consent order on viewpoint steering |
 | December 23, 2025 | Integral Ad Science taken private by Novacap | One of the two public verification companies stops filing |
 | February 28, 2026 | Microsoft Invest closes (trade press) | Buyers migrate seats; Microsoft keeps its SSP, Monetize |
@@ -164,6 +164,8 @@ Three reasons an engineer should care about rows like these. **Conflicts are a p
 The core `organizations` table has a `parent_id` and a list of roles, which is enough for a snapshot. The landscape needs history: owners change on a date, products launch, rename and close, and a seat or account belongs to a product, not just a company. Two tables and two columns:
 
 ```sql
+CREATE EXTENSION IF NOT EXISTS btree_gist;  -- UUID equality in the exclusion constraint
+
 CREATE TABLE organization_ownerships (     -- who owned whom, and when
   id                   UUID PRIMARY KEY DEFAULT uuidv7(),
   owner_org_id         UUID NOT NULL REFERENCES organizations (id),
@@ -270,7 +272,8 @@ Design notes:
 - [Microsoft: Form 10-K for fiscal 2026](https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm), the search advertising line and its growth excluding TAC, LinkedIn growth
 - [Walmart: Fourth quarter fiscal 2026 results](https://www.sec.gov/Archives/edgar/data/104169/000010416926000032/earningsreleasefy26q4.htm), the global advertising business and how it is recorded
 - [Maplebear (Instacart): Fourth quarter 2025 shareholder letter](https://www.sec.gov/Archives/edgar/data/1579091/000157909126000006/cartfourthquarter2025sha.htm), advertising and other revenue and its share of GTV
-- [AppLovin: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1751008/000175100826000005/exhibit991-4q25earningspre.htm), revenue, adjusted EBITDA margin and the apps divestiture
+- [AppLovin: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1751008/000175100826000005/exhibit991-4q25earningspre.htm), revenue, adjusted EBITDA margin and the divestiture proceeds
+- [AppLovin: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1751008/000175100826000010/app-20251231.htm), the June 30, 2025 sale of the apps business
 - [Snap: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1564408/000156440826000011/snap-20260204xexx991pressr.htm), revenue and subscription revenue
 - [Pinterest: Fourth quarter 2025 results](https://www.sec.gov/Archives/edgar/data/1506293/000150629326000019/q4-25xpressrelease.htm), revenue, MAU and ARPU
 - [Roku: Fourth quarter 2025 shareholder letter](https://www.sec.gov/Archives/edgar/data/1428439/000162828026007670/a04exhibit991-q425form8xker.htm), platform revenue and streaming households
@@ -280,7 +283,7 @@ Design notes:
 - [Unity: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1810806/000181080626000010/a2025q4ex-991.htm), Grow Solutions and Vector, total revenue
 - [The Trade Desk: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000014/ttd-20251231.htm), net reporting as agent, Kokai and OpenPath, two holding companies over 10% of gross billings
 - [The Trade Desk: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000009/ttd-20260225x8kexx991.htm), 2025 revenue and gross spend
-- [The Trade Desk: Third quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000115/ttd-20261109x8kexx991.htm), the first year-over-year revenue decline
+- [The Trade Desk: Third quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1671933/000167193326000115/ttd-20261109x8kexx991.htm), the year-over-year revenue decline
 - [Criteo: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1576427/000157642726000004/exhibit991q42025.htm), revenue, contribution ex-TAC and retail media
 - [Magnite: Fourth quarter 2025 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000010/a991-earningsq42025.htm), revenue, contribution ex-TAC and CTV share
 - [Magnite: Third quarter 2026 results (Exhibit 99.1)](https://www.sec.gov/Archives/edgar/data/1595974/000159597426000039/a991-earningsq32026.htm), third-quarter 2026 revenue and CTV growth
@@ -296,7 +299,7 @@ Design notes:
 **Court records**
 
 - [United States v. Google LLC, E.D. Va. No. 1:23-cv-00108, Memorandum Opinion (April 17, 2025)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1410.0.pdf), the open-web display markets, the rejected advertiser ad network market, AdX market shares and the DoubleClick acquisition
-- [United States v. Google LLC, Remedies Memorandum Opinion (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date of the remedies decision
+- [United States v. Google LLC, Remedies Memorandum Opinion (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date, the rejected structural remedies and the jointly proposed final judgment
 
 **Regulation**
 
@@ -318,5 +321,4 @@ Design notes:
 - [Amazon Ads: Amazon DSP](https://advertising.amazon.com/solutions/products/amazon-dsp), Amazon DSP as part of Amazon Ads Agent and DVA+
 - [Amazon Publisher Services: Transparent Ad Marketplace](https://aps.amazon.com/aps/transparent-ad-marketplace/), the 2.5% service fee charged to bidders
 - [Prebid: Introduction](https://docs.prebid.org/overview/intro.html), Prebid.js, Prebid Server and Prebid Mobile
-- [National Law Review: Court declines to order AdX divestiture in Google ad tech case](https://natlawreview.com/article/court-declines-order-adx-divestiture-google-ad-tech-case), the remedies as reported
 - [PPC Land: Amazon DSP integrates Microsoft Monetize as preferred partner (October 7, 2025)](https://ppc.land/amazon-dsp-integrates-microsoft-monetize-ssp-as-preferred-partner/), the Microsoft Invest closing date and transition partner, as reported
