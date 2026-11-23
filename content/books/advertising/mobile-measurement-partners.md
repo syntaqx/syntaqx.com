@@ -105,7 +105,7 @@ The MMP receives device identifiers, IP addresses and in-app behavior from the a
 
 ## How to Build It
 
-An MMP adds the apps it measures, the tracking links per network, the engagements it captured, the attribution it decided, the Apple postbacks it received, the postbacks it sent, and the fraud rejections. How the records map across books: Gaming's install attributions are the app's own copy of an `mmp_attributions` row; this book's `conversions` with `source = 'mmp'` are what a network receives from `network_postbacks`; and a network's own claim as a self-attributing network is a `san_claims` row here and an attribution in the network's own system ([Attribution](/books/advertising/attribution#how-to-build-it)).
+An MMP adds the apps it measures, the tracking links per network, the engagements it captured, the attribution it decided, the postbacks it sent, and the fraud rejections, and it extends the one table of Apple postbacks, `attribution_postbacks` from [Mobile Ad IDs, ATT & SKAdNetwork](/books/advertising/mobile-ad-ids-and-att#how-to-build-it), with what the MMP adds. How the records map across books: Gaming's install attributions are the app's own copy of an `mmp_attributions` row; this book's `conversions` with `source = 'mmp'` are what a network receives from `network_postbacks`; and a network's own claim as a self-attributing network is a `san_claims` row here and an attribution in the network's own system ([Attribution](/books/advertising/attribution#how-to-build-it)).
 
 ```sql
 CREATE TABLE mmp_apps (                  -- an advertiser's app measured by this MMP
@@ -190,26 +190,24 @@ CREATE TABLE fraud_rejections (          -- an engagement or install the MMP ref
   reported_to_network_at TIMESTAMPTZ      -- the rejected-install callback or report
 );
 
-CREATE TABLE store_postbacks (           -- AdAttributionKit or SKAdNetwork postbacks, verified
-  postback_identifier   TEXT PRIMARY KEY,   -- Apple's ID: duplicates are discarded
-  received_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  framework             TEXT NOT NULL CHECK (framework IN ('adattributionkit', 'skadnetwork')),
-  ad_network_identifier TEXT NOT NULL,
-  advertised_item_identifier TEXT NOT NULL,
-  publisher_item_identifier TEXT,
-  marketplace_identifier TEXT,
-  source_identifier     TEXT,               -- 2 to 4 digits by crowd anonymity tier
-  conversion_type       TEXT NOT NULL CHECK (conversion_type IN ('download', 'redownload',
-                          're-engagement')),
-  interaction_type      TEXT CHECK (interaction_type IN ('view', 'click')),
-  did_win               BOOLEAN NOT NULL,
-  sequence_index        SMALLINT NOT NULL CHECK (sequence_index BETWEEN 0 AND 2),
-  fine_value            SMALLINT CHECK (fine_value BETWEEN 0 AND 63),
-  coarse_value          TEXT CHECK (coarse_value IN ('low', 'medium', 'high')),
-  country_code          CHAR(2),
-  key_id                TEXT NOT NULL,      -- the JWS kid that verified it
-  value_schema_version  TEXT               -- the advertiser's conversion value mapping in force
-);
+-- Apple postbacks live in attribution_postbacks (Mobile Ad IDs, ATT & SKAdNetwork), one row per
+-- postback_identifier; the MMP adds how each arrived, why verification failed, the attribution it
+-- fed and who was sent a copy.
+ALTER TABLE attribution_postbacks
+  ADD COLUMN mmp_app_id UUID,              -- the measured app, when an MMP received it
+  ADD COLUMN received_via TEXT,            -- first arrival: Apple's developer copy or a network's forward
+  ADD COLUMN verification_error TEXT,      -- null when signature_valid: 'unknown_key',
+                                           -- 'bad_signature', 'development_key', 'malformed'
+  ADD COLUMN mmp_attribution_id UUID,      -- the store_postback attribution it produced
+  ADD COLUMN forwarded_to_org_ids UUID[] NOT NULL DEFAULT '{}';  -- networks and the advertiser sent a copy
+ALTER TABLE attribution_postbacks ADD CONSTRAINT attribution_postbacks_mmp_app_fk
+  FOREIGN KEY (mmp_app_id) REFERENCES mmp_apps (id) NOT VALID;
+ALTER TABLE attribution_postbacks ADD CONSTRAINT attribution_postbacks_mmp_attribution_fk
+  FOREIGN KEY (mmp_attribution_id) REFERENCES mmp_attributions (id) NOT VALID;
+ALTER TABLE attribution_postbacks ADD CONSTRAINT attribution_postbacks_received_via_check
+  CHECK (received_via IN ('apple_direct', 'network_forward')) NOT VALID;
+ALTER TABLE attribution_postbacks ADD CONSTRAINT attribution_postbacks_verification_check
+  CHECK (signature_valid = (verification_error IS NULL)) NOT VALID;
 
 CREATE TABLE network_postbacks (         -- every postback this MMP sent to a network
   id                 UUID PRIMARY KEY DEFAULT uuidv7(),
@@ -340,7 +338,7 @@ pub fn verify_postback(jws: &str, production: bool) -> anyhow::Result<Payload> {
 }
 ```
 
-After verification, the receiver inserts into `store_postbacks` with `ON CONFLICT (postback_identifier) DO NOTHING` and returns 200 whether the row was new or a duplicate; a database failure returns 500 so the device retries. The conversion values from the unsigned top-level fields are stored with the advertiser's schema version in force, since they are only meaningful through that mapping.
+After verification, the receiver inserts into `attribution_postbacks` with `ON CONFLICT (postback_identifier) DO NOTHING`, recording `signature_valid`, `verification_error` and `received_via`, and returns 200 whether the row was new or a duplicate; a database failure returns 500 so the device retries. The conversion values from the unsigned top-level fields are stored with `cv_schema_id`, the advertiser's conversion value schema in force, since they are only meaningful through that mapping.
 
 Install counts by network for CPI reconciliation read the MMP's attributions, not the network's claims, and exclude rejected engagements:
 
@@ -384,8 +382,8 @@ Design notes:
 - **One attribution per return, superseded not edited.** A reattribution or a correction (a late SAN claim, a fraud rejection after the fact) writes a new `mmp_attributions` row with `supersedes_id`; the current answer is the row nothing supersedes, and history explains every past report.
 - **Claims and decisions are separate.** `san_claims` records what each self-attributing network said and whether it won, so the discrepancy between a network's ads manager and the MMP's report is a query, not an argument.
 - **Rejections are first-class.** `fraud_rejections` keeps the reason and rule version and when the network was told, because CPI invoices are reconciled against non-rejected attributions and networks need the feedback.
-- **Verify, then dedupe, then acknowledge.** `store_postbacks.postback_identifier` as the primary key implements Apple's duplicate rule; nothing unverified is stored as a postback, and the response code follows the storage result so Apple's nine retries cover outages.
-- **Values need their schema.** `value_schema_version` ties each postback's fine and coarse values to the mapping that gave them meaning; a schema change is a new version, never a reinterpretation of old postbacks.
+- **Verify, then dedupe, then acknowledge.** The unique `attribution_postbacks.postback_identifier` implements Apple's duplicate rule, so a network's forward of a postback already received from Apple is a no-op; a postback that fails verification is kept with `signature_valid` false and its `verification_error` but never counted, and the response code follows the storage result so Apple's nine retries cover outages.
+- **Values need their schema.** `cv_schema_id` ties each postback's fine and coarse values to the mapping that gave them meaning; a schema change is a new version, never a reinterpretation of old postbacks.
 - **No fingerprinting on iOS.** `probabilistic_window_s` is null for iOS apps by rule, enforced in the attribution engine, because Apple's agreement prohibits deriving data to uniquely identify a device.
 - **Identifiers are keyed hashes with short retention.** `device_key` is a keyed hash, engagements are partitioned and dropped after the longest window plus the fraud review period, and `child_directed` apps never store device keys for advertising measurement.
 - **Postbacks are disclosures.** `network_postbacks.fields_sent` and `consent_basis` answer "what did you share with whom," like Commerce's `conversion_uploads`.
@@ -394,7 +392,7 @@ Design notes:
 
 - **Every attribution and its supersessions,** with method, rule version, winning engagement and the SAN claims considered.
 - **Every fraud rejection** with its reason and rule version, and when the network was told.
-- **Every store postback,** verified with the key ID, and the conversion value schema in force.
+- **Every store postback,** with its verification result and key ID, the conversion value schema in force, and who was sent a copy.
 - **Every postback sent,** with fields, consent basis and the network's response, per user for privacy requests.
 - **Window and rule configuration history** per app and link, since a changed window changes every network's install count.
 
