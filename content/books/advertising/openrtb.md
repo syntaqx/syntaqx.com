@@ -26,7 +26,7 @@ As of November 2026, from each platform's public bidder documentation and the sp
 
 Two patterns:
 
-- **2.6 is the protocol.** Tech Lab's own supply-chain page lists OpenRTB v2.6.x as its most recent OpenRTB release, the repository publishes 2.6 releases through November 18, 2026, and I found no exchange that documents a 3.0 bidder integration. OpenRTB 3.0 exists (dated March 2022) and is not what is shipped.
+- **2.6 is the protocol.** Tech Lab's own supply-chain page lists OpenRTB v2.6.x as its most recent OpenRTB release, the repository publishes 2.6 releases through November 18, 2026, and I found no exchange that documents a 3.0 bidder integration. OpenRTB 3.0 exists (first released in November 2018, current text dated March 2022) and is not what is shipped.
 - **Exchanges publish the contract.** OpenRTB tells exchanges to publish their extensions to bidders and leaves billing policy, loss-notice support and macro encryption to them, so every integration starts from the exchange's guide.
 
 ## Versions and Status
@@ -52,7 +52,7 @@ A bidder declares and reads the version in the `x-openrtb-version` header ("x-op
 
 **AdCOM.** In 2.6, "all enumerated lists" moved to AdCOM (Advertising Common Object Model), the shared vocabulary also used by 3.0: device types, creative attributes, API frameworks, placement types, agent types and ID match methods. A 2.6 bidder needs the AdCOM list document as much as the 2.6 text.
 
-**3.0.** OpenRTB 3.0 (the document is dated March 2022) is a redesign: layered into transport, format, transaction and domain (AdCOM) layers, a new root `openrtb` wrapper, `Item` instead of `Imp`, HTTPS with TLS 1.2 or later required, and beta fields for signed requests under ads.cert (`ds`, `dsmap`, `cert`, `digest`). It is not drop-in compatible with 2.x, and it is not adopted: Tech Lab's pages list 3.0 as April 2022 and 2.6 as November 2022, so the final 2.6 postdates 3.0, and the 2.x line is what receives releases. Treat 3.0 as the source of the shared code lists (2.6 points to them) and of the ideas Tech Lab is moving into 2.6 piece by piece.
+**3.0.** OpenRTB 3.0 (first released in November 2018; the current document is dated March 2022) is a redesign: layered into transport, format, transaction and domain (AdCOM) layers, a new root `openrtb` wrapper, `Item` instead of `Imp`, HTTPS with TLS 1.2 or later required, and beta fields for signed requests under ads.cert (`ds`, `dsmap`, `cert`, `digest`). It is not drop-in compatible with 2.x, and it is not adopted: 2.6 came out in April 2022, more than three years after 3.0's first release, and the 2.x line is what receives releases. Treat 3.0 as the source of the shared code lists (2.6 points to them) and of the ideas Tech Lab is moving into 2.6 piece by piece.
 
 **Adjacent specifications.** The Dynamic Native Ads API 1.2 (final) defines the native request and response carried inside OpenRTB. The Agentic Real Time Framework (ARTF) 1.0, now final, defines containerized agent services that run inside a host platform and modify the bidstream; it rides alongside OpenRTB rather than replacing it.
 
@@ -94,7 +94,7 @@ A request is one `BidRequest` object with one or more `Imp` objects and the cont
 
 ## The Bid Response
 
-A response is a `BidResponse` with `id` (the request's ID), `seatbid` (one entry per seat the bidder bids for, each with `seat` and an array of `bid`), `bidid` (the bidder's own response ID), `cur` (default USD) and, when there is no bid, `nbr` (a no-bid reason). To not bid, the bidder returns "an empty response with HTTP 204"; a 200 with an empty `seatbid` is worse for the exchange to parse and should be avoided. `seatbid.group = 1` says the impressions in it must be won or lost together.
+A response is a `BidResponse` with `id` (the request's ID), `seatbid` (one entry per seat the bidder bids for, each with `seat` and an array of `bid`), `bidid` (the bidder's own response ID), `cur` (default USD) and, when there is no bid, `nbr` (a no-bid reason). To not bid, the bidder returns "an empty response with HTTP 204", the cheapest signal in bandwidth, or, to say why, a `BidResponse` with an empty `seatbid` and an `nbr` code, which the specification encourages. Many exchanges also accept an empty JSON object; a malformed response counts as a no-bid too, but it hides the bidder's bugs in the exchange's no-bid rate. `seatbid.group = 1` says the impressions in it must be won or lost together.
 
 **Bid.** `id` (bidder's bid ID); `impid` (which impression); `price` ("Bid price expressed as CPM although the actual transaction is for a unit impression only"); `adm` (the markup) or `nurl` to fetch it; `burl` and `lurl`; `adid`, `crid` ("Creative ID to assist with ad quality checking") and `cid` (campaign); `adomain` (the advertiser domain used for blocklist checks); `bundle` and `iurl` (a sample image for quality review); `cat` and `cattax`; `attr` (creative attributes); `api` and `protocol`; `dealid`; `w` and `h`; `exp` (the "number of seconds the bidder is willing to wait between the auction and the actual impression"); `dur` (creative duration, seconds, for video and audio); `slotinpod`; and `mtype`, the markup type (1 banner, 2 video, 3 audio, 4 native), which an exchange needs when an impression offers several formats.
 
@@ -512,7 +512,7 @@ Design notes:
 - **Parse prices into integer micros once** and keep the clearing price, bid price and minimum to win apart.
 - **Map extensions to named fields at the edge** with effective dates, and drop what isn't mapped.
 - **Store loss and no-bid reasons with their list,** and use them first when a deal or campaign doesn't spend.
-- **Answer no-bid with 204** and reject malformed requests with 400.
+- **Answer no-bid with 204,** or with an `nbr` code when the reason helps the exchange, and reject malformed requests with 400.
 
 ## References
 

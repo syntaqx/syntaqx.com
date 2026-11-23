@@ -26,6 +26,7 @@ The rules are best read through the enforcement record, because the orders say w
 | **Healthline** (Attorney General, July 1, 2025) | $1.55 million | No working opt-out of targeted advertising; article titles suggesting diagnoses shared; contracts without the required terms |
 | **Honda** (CPPA, March 12, 2025) | $632,500 | Excessive verification for opt-outs, a privacy choice tool that did not treat choices evenly, barriers for authorized agents, ad tech sharing without required contracts |
 | **Jam City** (Attorney General, November 21, 2025) | $1.4 million | No compliant opt-out in any of its 21 mobile apps; data of users aged 13 to 15 shared without opt-in consent |
+| **Lyft** (Attorney General, October 29, 2026) | $1.8 million | No in-app opt-out in an app-only service; consumers sent to a mobile browser to click through screens and re-verify their identity |
 | **Sephora** (Attorney General, August 24, 2022) | $1.2 million | Third-party trackers were a sale; GPC not honored; not cured within 30 days |
 | **Sling TV** (Attorney General, October 30, 2025) | $530,000 | No opt-out within its apps; no kids' profile option |
 | **Tilting Point** (Attorney General, June 19, 2024) | $500,000 | Children's data collected and shared through misconfigured SDKs without parental consent |
@@ -280,6 +281,7 @@ The result is not by itself a violation: a bidder without a service provider agr
 - [Maryland: Chapter 455 of 2024, enrolled text](https://mgaleg.maryland.gov/2024RS/Chapters_noln/CH_455_sb0541e.pdf), minimization, sensitive data, the sale ban, the teen targeting ban, thresholds and the April 1, 2026 processing date
 - [Oregon Legislature: HB 2008 (2025)](https://olis.oregonlegislature.gov/liz/2025R1/Measures/Overview/HB2008), the precise geolocation sale ban and its 1,750-foot radius, chapter 251
 - [California Attorney General: Privacy enforcement actions](https://oag.ca.gov/privacy/privacy-enforcement-actions), the Disney, DoorDash, General Motors, Jam City, Lyft, Sling TV and Tilting Point settlements
+- [California Attorney General: Lyft settlement (October 29, 2026)](https://oag.ca.gov/news/press-releases/privacy-rights-can%E2%80%99t-be-left-rearview-attorney-general-bonta-secures-18-million), the missing in-app opt-out and the $1.8 million judgment
 - [California Attorney General: Sephora settlement (August 24, 2022)](https://oag.ca.gov/news/press-releases/attorney-general-bonta-announces-settlement-sephora-part-ongoing-enforcement), trackers as a sale, GPC and the cure period
 - [California Attorney General: Healthline settlement (July 1, 2025)](https://oag.ca.gov/news/press-releases/attorney-general-bonta-announces-largest-ccpa-settlement-date-secures-155), targeted advertising opt-out, purpose limitation and contract terms
 - [CPPA: Honda settlement (March 12, 2025)](https://cppa.ca.gov/announcements/2025/20250312.html), verification, asymmetric choices, agents and missing contracts

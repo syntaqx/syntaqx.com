@@ -79,7 +79,7 @@ A TC string is up to three segments joined by dots: the core segment first, then
 | Field | Bits | What it holds |
 | --- | --- | --- |
 | `Version` | 6 | The string format version (2) |
-| `Created`, `LastUpdated` | 36 each | Deciseconds since the epoch; CMPs round to the day |
+| `Created`, `LastUpdated` | 36 each | Deciseconds since the epoch; both now carry the same day-level value, the day the string was last updated |
 | `CmpId`, `CmpVersion` | 12 each | Which registered CMP, which build |
 | `ConsentScreen` | 6 | The screen the choice was made on |
 | `ConsentLanguage` | 12 | Two letters |
@@ -139,6 +139,8 @@ From the per-purpose answers, the request's mode follows. This volume uses Googl
 The decision, as code a request-path service can run. It takes an already-decoded string and this vendor's declarations from the GVL version the string names:
 
 ```go tab="Go"
+package consent
+
 type Basis int
 
 const (
@@ -244,7 +246,7 @@ pub fn ads_mode(tc: Option<&TcData>, vendor: u16, d: &Declared) -> (&'static str
 }
 ```
 
-A real decoder also checks the policy version against the supported list, applies publisher restrictions to produce `Declared`, and handles `PurposeOneTreatment`. Two cases the sketch simplifies on purpose: the "limited" tier for a vendor with no basis for Purpose 2 means that vendor shouldn't take part in the auction at all (Prebid blocks it), and a missing string where `gdprApplies` is unknown is decided by the request's country, not by the string.
+A real decoder also checks the policy version against the supported list, applies publisher restrictions to produce `Declared`, handles `PurposeOneTreatment`, and checks any further purposes the vendor's own rules require (Google's include 7, 9 and 10). Two cases the sketch simplifies on purpose: the "limited" tier for a vendor with no basis for Purpose 2 means that vendor shouldn't take part in the auction at all (Prebid blocks it), and a missing string where `gdprApplies` is unknown is decided by the request's country, not by the string.
 
 **The decision is per vendor, the mode is per request.** A publisher's ad server computes the mode from its own vendor ID, and that is what its ranking and frequency capping read. An exchange computes a decision for every bidder it calls: one bidder may get the full request with identifiers, another the same request with `user.eids`, `user.buyeruid`, `device.ifa` and precise geo removed, and a third nothing. That per-bidder outcome is a row in `bid_requests` ([How Programmatic Works](/books/advertising/how-programmatic-works) adds `personal_data_sent` and `fields_removed`; this chapter adds the basis it was decided under).
 
