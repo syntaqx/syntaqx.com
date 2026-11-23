@@ -20,7 +20,7 @@ As of November 2026, from each party's documentation:
 
 | Party | What it requires | What it does without enough consent |
 | --- | --- | --- |
-| **Google Ad Manager and AdSense** | A TC string from a Google-certified CMP for personalized ads in the EEA and UK (from January 16, 2024) and Switzerland (from July 31, 2024). Personalized ads need consent for Purposes 1, 3 and 4 and legitimate interest (or consent) for 2, 7, 9 and 10 | Non-personalized ads with Purpose 1 consent only; **limited ads** (no cookies or local storage except for invalid traffic detection, no frequency capping or audience targeting) without Purpose 1 consent, with an invalid string, or with no certified CMP's string. From March 1, 2026, a string that doesn't meet v2.3 "may be defaulted to Limited Ads" |
+| **Google Ad Manager and AdSense** | A TC string from a Google-certified CMP for personalized ads in the EEA and UK (from January 16, 2024) and Switzerland (from July 31, 2024). Personalized ads need consent for Purposes 1, 3 and 4 and legitimate interest (or consent) for 2, 7, 9 and 10 | Non-personalized ads with Purpose 1 consent only; **limited ads** (no cookies or local storage except for invalid traffic detection, no frequency capping or audience targeting) without Purpose 1 consent, with an invalid string, or with no certified CMP's string. v2.3 is "mandatory for all TC strings generated on or after March 1, 2026", and failing it "may cause the associated ad request to be defaulted to Limited Ads" |
 | **IAB Europe TCF** | Registered CMPs and vendors, the Global Vendor List (GVL), the policies and the string format. As of November 19, 2026 the GVL is at version 186 under policy version 5 | Vendors without a legal basis for a purpose must not process for it; vendors not disclosed to the user must not process at all |
 | **Microsoft Advertising** | From May 5, 2025, explicit consent signals for site visits from the EEA, UK and Switzerland, by one of: UET consent mode (`ad_storage`), a TCF string, or a tag manager integrating its consent mode | "Impact" on advertising performance for visits without signals |
 | **Prebid.js** | The `consentManagement` module reads the CMP; `tcfControl` enforces purposes and vendor consent per module by GVL ID | Blocks user syncs and storage without Purpose 1, auction participation without Purpose 2, first-party data without Purpose 4, analytics without Purpose 7, and truncates precise geolocation without Special Feature 1 |
@@ -29,7 +29,7 @@ Three patterns:
 
 - **The framework describes; each vendor decides.** The TCF defines what the user agreed to. Google, Microsoft and Prebid each turn that into their own rules (which purposes each kind of ad needs, which fallback applies), and those rules are not identical. A system that receives TC strings has to encode its own declared bases, not copy another vendor's table.
 - **There is always a fallback, and it is three-tiered.** Personalized, non-personalized (contextual, with device storage allowed) and limited (no device storage, no identifiers) are the shape Google documents and Prebid's purpose gates produce. This volume uses the same three values for `ads_mode`.
-- **Strings expire by version, not by date.** A string written under an older policy version stays valid only as far as the policy says: v2.3 kept strings created before February 28, 2026 valid without `disclosedVendors`, and Google treats non-compliant newer strings as limited from March 1, 2026. The policy version is a column, not a guess.
+- **Strings expire by version, not by date.** A string written under an older policy version stays valid only as far as the policy says: v2.3 kept strings created before February 28, 2026 valid without `disclosedVendors`, and Google may default requests with non-compliant strings generated from March 1, 2026 to limited ads. The policy version is a column, not a guess.
 
 ## What a CMP Does
 
@@ -162,7 +162,7 @@ type TCData struct {
 // Declared is this vendor's basis per purpose after publisher restrictions.
 type Declared map[int]Basis
 
-const v23Cutoff = 1772236800 // 2026-02-28T00:00:00Z
+const v23Cutoff = 1772323200 // 2026-03-01T00:00:00Z: strings created after Feb 28 need the segment
 
 func hasBasis(tc TCData, vendor, purpose int, d Declared) bool {
 	switch d[purpose] {
@@ -217,7 +217,7 @@ pub struct TcData {
 /// This vendor's basis per purpose after publisher restrictions.
 pub type Declared = HashMap<u16, Basis>;
 
-const V23_CUTOFF: i64 = 1_772_236_800; // 2026-02-28T00:00:00Z
+const V23_CUTOFF: i64 = 1_772_323_200; // 2026-03-01T00:00:00Z: strings created after Feb 28 need the segment
 
 fn has_basis(tc: &TcData, vendor: u16, purpose: u16, d: &Declared) -> bool {
     match d.get(&purpose).copied().unwrap_or(Basis::NotAllowed) {
@@ -264,11 +264,11 @@ The string reaches partners three ways:
 
 Google layers two requirements over the TCF.
 
-**Certified CMPs.** Publishers using Ad Manager, AdSense or AdMob "are required to use a Google-certified Consent Management Platform (CMP) that integrates with the IAB's Transparency and Consent Framework (TCF)" to serve personalized ads in the EEA and UK from January 16, 2024 and in Switzerland from July 31, 2024. Without a string from a certified CMP, requests from those regions get limited ads. Google's EU User Consent Policy, which covers the EEA, UK and Switzerland, requires legally valid consent for cookies or local storage and for ads personalization, records of consent, revocation instructions and identification of each party that will use the data. For a publisher, the CMP choice is a revenue decision as much as a compliance one.
+**Certified CMPs.** Publishers using Ad Manager, AdSense or AdMob "are required to use a consent management platform (CMP) that has been certified by Google" and integrates with the TCF to serve personalized ads in the EEA and UK from January 16, 2024 and in Switzerland from July 31, 2024. "Traffic from a non-certified CMP may be eligible for non-personalized ads or limited ads", and a request from those regions with no TC string from a certified CMP gets limited ads. Google's EU User Consent Policy, which covers the EEA, UK and Switzerland, requires legally valid consent for cookies or local storage and for ads personalization, records of consent, revocation instructions and identification of each party that will use the data. For a publisher, the CMP choice is a revenue decision as much as a compliance one.
 
 **Purposes Google needs.** Personalized ads need consent for Purposes 1, 3 and 4 and legitimate interest (or consent, if the publisher's CMP asks for it) for Purposes 2, 7, 9 and 10; Google is "not flexibly registered for purposes 1, 3, and 4 and always requires consent for these purposes." Non-personalized ads need Purpose 1 consent and a basis for 2, 7, 9 and 10. Limited ads, its third tier, "disable the collection, sharing, and use of personal data for personalization of ads", and give up audience targeting, remarketing, frequency capping and unique reach measurement; they use no cookies or local storage except for invalid traffic detection.
 
-**Consent mode** is how Google's advertiser-side tags (Google Ads, Floodlight, Google Analytics) receive the choice when they don't read the TC string directly. Version 2 (November 2023) has four fields: `ad_storage`, `analytics_storage`, and two added for the Digital Markets Act era, `ad_user_data` (may user data be sent to Google for advertising) and `ad_personalization` (may it be used for personalization). In basic mode tags don't load until the user interacts with the banner; in advanced mode they load with defaults denied and send "cookieless pings", which Google uses for conversion modeling. From March 2024, EEA Customer Match uploads need both `ad_user_data` and `ad_personalization` granted, and a missing value counts as not consented. The playbook's [Gating SDKs](/docs/telemetry/consent-and-privacy#gating-sdks) explains why I default to the basic pattern; the mapping from consent mode to this volume's model is direct (`ad_storage` denied is `limited`; `ad_personalization` denied is at most `non_personalized`).
+**Consent mode** is how Google's advertiser-side tags (Google Ads, Floodlight, Google Analytics) receive the choice when they don't read the TC string directly. Version 2 (November 2023) has four fields: `ad_storage`, `analytics_storage`, and the two the November 2023 update added, `ad_user_data` (may user data be sent to Google for advertising) and `ad_personalization` (may it be used for personalization). In basic mode tags don't load until the user interacts with the banner; in advanced mode they load with defaults denied and send "cookieless pings", which Google uses for conversion modeling. From March 2024, EEA Customer Match uploads need both `ad_user_data` and `ad_personalization` granted, and a missing value counts as not consented. The playbook's [Gating SDKs](/docs/telemetry/consent-and-privacy#gating-sdks) explains why I default to the basic pattern; the mapping from consent mode to this volume's model is direct (`ad_storage` denied is `limited`; `ad_personalization` denied is at most `non_personalized`).
 
 Microsoft has the same structure with fewer fields: its UET consent mode carries `ad_storage` as granted or denied, and it accepts a TCF string as an alternative. A platform that runs an advertiser-side tag in Europe needs one of these signals from every page it is on.
 
@@ -277,8 +277,8 @@ Microsoft has the same structure with fewer fields: its UET consent mode carries
 The framework itself has been the subject of an enforcement case since 2019, and its outcome changed how the string is treated:
 
 - **The Belgian decision.** The Belgian data protection authority (APD/GBA) found in decision 21/2022 (February 2022) that the TC string is personal data and that IAB Europe is a controller for it, and imposed corrective measures and a fine.
-- **CJEU C-604/22 (March 7, 2024).** On a reference from the Brussels Market Court, the Court of Justice held that the TC string "constitutes personal data" where it can be associated with an identifier such as an IP address, and that IAB Europe can be a "joint controller" with its members for the recording of preferences in the string, but not for subsequent processing by vendors unless it influenced the purposes and means of that processing.
-- **The Market Court (May 14, 2025).** Applying the ruling, the Market Court found the string personal data and IAB Europe a joint controller for the TCF preferences, but not a controller for processing "entirely within the OpenRTB protocol", and upheld the €250,000 fine although it annulled decision 21/2022 on procedural grounds.
+- **CJEU C-604/22 (March 7, 2024).** On a reference from the Brussels Court of Appeal (its Market Court section), the Court of Justice held that the TC string "constitutes personal data" where it can be associated with an identifier such as an IP address, and that IAB Europe can be a "joint controller" with its members for the recording of preferences in the string, but not for subsequent processing by vendors unless it influenced the purposes and means of that processing.
+- **The Market Court (May 14, 2025).** Applying the ruling, the Market Court found the string personal data and IAB Europe a joint controller for the TCF preferences, but not a controller for processing "entirely within the OpenRTB protocol", and confirmed the €250,000 fine although it annulled decision 21/2022 on procedural grounds.
 - **The action plan (January 2026).** IAB Europe announced that the Market Court had annulled the APD's validation of IAB Europe's action plan as "legally flawed", returning the matter to the APD. That account is from IAB Europe, a party to the case; the court's own text wasn't available to me. <!-- source-gap: adv-tcf-action-plan-ruling | secondary | Market Court annulled the APD validation of IAB Europe's TCF action plan (January 2026) | closes with: the Market Court judgment or an APD statement | checked: 2026-11-22 -->
 
 For engineers the holdings mean three things. The string is personal data in every log it lands in. Each vendor is a controller for what it does with the data the string unlocks, so "the CMP said yes" is the start of a vendor's accountability, not the end of it. And the framework's records (which CMP, which version, which vendors disclosed) are evidence a regulator will read, which is why they're columns below.
@@ -349,7 +349,7 @@ CREATE TABLE privacy_rule_versions (      -- the decision rules every request is
   version                 INT NOT NULL UNIQUE,
   tcf_policy_versions     SMALLINT[] NOT NULL,       -- accepted TcfPolicyVersion values
   gvl_version             INT NOT NULL REFERENCES gvl_versions (version),
-  tcf_disclosed_vendors_required_from TIMESTAMPTZ NOT NULL,  -- 2026-02-28 under v2.3
+  tcf_disclosed_vendors_required_from TIMESTAMPTZ NOT NULL,  -- 2026-03-01 under v2.3 (created after Feb 28)
   mode_rules              JSONB NOT NULL,            -- signal-to-mode mapping, per regime
   jurisdiction_rules_ref  TEXT,                      -- privacy_jurisdictions snapshot (US state law)
   effective_at            TIMESTAMPTZ NOT NULL,

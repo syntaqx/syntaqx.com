@@ -18,13 +18,13 @@ This chapter covers how the laws define sale, sharing and targeted advertising, 
 
 The rules are best read through the enforcement record, because the orders say what regulators think the words mean in an ad system. California's actions that turned on advertising technology, from the Attorney General's and the CPPA's announcements, as of November 2026:
 
-| Company (regulator, date) | Amount | What the order found |
+| Company (regulator, date) | Amount | What the regulator alleged |
 | --- | --- | --- |
 | **Disney** (Attorney General, February 11, 2026) | $2.75 million | Opt-outs not applied across Disney+, Hulu and ESPN+ accounts and linked devices |
 | **DoorDash** (Attorney General, February 21, 2024) | $375,000 | Customer data sold through marketing co-ops "without providing notice or the opportunity to opt-out" |
 | **General Motors** (Attorney General, May 8, 2026) | $12.75 million | OnStar driving and location data sold to two data brokers without disclosure |
 | **Healthline** (Attorney General, July 1, 2025) | $1.55 million | No working opt-out of targeted advertising; article titles suggesting diagnoses shared; contracts without the required terms |
-| **Honda** (CPPA, March 12, 2025) | $632,500 | Excessive verification for opt-outs, an asymmetric cookie choice, barriers for authorized agents, ad tech sharing without required contracts |
+| **Honda** (CPPA, March 12, 2025) | $632,500 | Excessive verification for opt-outs, a privacy choice tool that did not treat choices evenly, barriers for authorized agents, ad tech sharing without required contracts |
 | **Jam City** (Attorney General, November 21, 2025) | $1.4 million | No compliant opt-out in any of its 21 mobile apps; data of users aged 13 to 15 shared without opt-in consent |
 | **Sephora** (Attorney General, August 24, 2022) | $1.2 million | Third-party trackers were a sale; GPC not honored; not cured within 30 days |
 | **Sling TV** (Attorney General, October 30, 2025) | $530,000 | No opt-out within its apps; no kids' profile option |
@@ -62,13 +62,13 @@ What follows for each kind of flow:
 | A measurement vendor counting impressions for the advertiser | Service provider, if contracted | The vendor using the data to build its own panel or graph |
 | A list upload to a social platform for a custom audience | Sharing, unless the platform acts as service provider for that list | The platform's terms for that product in that state |
 
-**The service provider exception is a contract, and the regulation says so.** CCPA regulation 7026(f) puts it plainly: "Service providers or contractors collecting personal information pursuant to the written contract with the business required by the CCPA and these regulations does not constitute a sale or sharing". The written contract is the whole exception. A recipient without it is a third party; a recipient with it that uses the data for cross-context advertising for others is outside it. That is why the platforms' restricted modes exist: Meta says that under Limited Data Use it will "process that data in accordance with our role as a service provider or processor," and Google says RDP means it will "limit how it uses data and only serve non-personalized ads."
+**The service provider exception is a contract, and the regulation says so.** CCPA regulation 7026(f)(1) puts it plainly: "Service providers or contractors collecting personal information pursuant to the written contract with the business required by the CCPA and these regulations does not constitute a sale or sharing". The written contract is the whole exception. A recipient without it is a third party; a recipient with it that uses the data for cross-context advertising for others is outside it. That is why the platforms' restricted modes exist: Meta says that under Limited Data Use it will "process that data in accordance with our role as a service provider or processor," and Google says RDP means it will "limit how it uses data and only serve non-personalized ads."
 
 ## The State Laws in Force
 
-The full list with effective dates and thresholds is Commerce's [The US State Laws](/books/commerce/customers-and-accounts#the-us-state-laws); IAPP's overview (last updated October 27, 2025) counts "the 19 states that have passed comprehensive privacy laws," and the four 2026 enactments (Oklahoma, Louisiana, Alabama, Vermont) take effect between 2027 and 2028. For an ad system, the laws differ on the points that change the code, not on the rights, which are nearly uniform (access, deletion, correction, portability, and opt-outs of sale, targeted advertising and profiling for significant decisions):
+The full list with effective dates and thresholds is Commerce's [The US State Laws](/books/commerce/customers-and-accounts#the-us-state-laws); IAPP's overview (last updated October 27, 2025) counts "the 19 states that have passed comprehensive privacy laws," and the four 2026 enactments take effect between 2027 and 2028 (Louisiana and Oklahoma on January 1, 2027, Alabama on May 1, 2027, Vermont on January 1, 2028, by a law firm's October 2026 summary). <!-- source-gap: adv-2026-state-laws-dates | secondary | effective dates of the Louisiana, Oklahoma, Alabama and Vermont 2026 privacy laws | closes with: the enacted bills or AG pages | checked: 2026-11-22 --> For an ad system, the laws differ on the points that change the code, not on the rights, which are nearly uniform (access, deletion, correction, portability, and opt-outs of sale, targeted advertising and profiling for significant decisions):
 
-- **Opt-out preference signals.** California requires GPC to be honored as an opt-out of sale and sharing, and other states' laws require honoring a universal opt-out mechanism from dates written into each statute. The jurisdiction table below carries the date per state rather than a list in prose, because the dates are what change. <!-- source-gap: adv-state-uoom-dates | missing | the date each state requires honoring universal opt-out mechanisms such as GPC | closes with: each state statute's UOOM provision or AG guidance (Colorado's AG page returned no content) | checked: 2026-11-22 -->
+- **Opt-out preference signals.** California requires GPC to be honored as an opt-out of sale and sharing, and other states' laws require honoring a universal opt-out mechanism from dates written into each statute. The `privacy_jurisdictions` table below carries the date per state rather than a list in prose, because the dates are what change. <!-- source-gap: adv-state-uoom-dates | missing | the date each state requires honoring universal opt-out mechanisms such as GPC | closes with: each state statute's UOOM provision or AG guidance (Colorado's AG page returned no content) | checked: 2026-11-22 -->
 - **Sensitive data: opt-in, opt-out, or ban.** Virginia requires consent to process sensitive data (its GPP section encodes it as consent), as do other states whose laws use opt-in; California gives a right to limit its use instead; Maryland forbids selling it at all.
 - **Minors.** California requires opt-in for sale or sharing of data of consumers known to be under 16; Maryland bans targeted advertising to known 13 to 17 year olds; others add their own teen rules. Children, Teens & Advertising has them.
 - **Cure periods.** Several states gave businesses a period to cure a violation after notice, and some of those periods have ended (Oregon's expired January 1, 2026 by MultiState's account). The table records the end date. <!-- source-gap: adv-state-cure-periods | secondary | Oregon cure period expiry January 1, 2026 and other states' cure period ends | closes with: the statutes' cure provisions or AG guidance | checked: 2026-11-22 -->
@@ -78,7 +78,7 @@ California's fines are set by statute and adjusted for inflation: "not more than
 
 ### Maryland
 
-Maryland's Online Data Privacy Act (Chapter 455 of 2024, approved May 9, 2024) took effect October 1, 2025 and doesn't apply to processing "before April 1, 2026". It is the strictest state law for advertising:
+Maryland's Online Data Privacy Act (Chapter 455 of 2024, approved May 9, 2024) took effect October 1, 2025; its data protection assessment section applies only prospectively, not to processing activities "before April 1, 2026". It is the strictest state law for advertising:
 
 - **Minimization, not notice.** Collection of personal data is limited to what is "reasonably necessary and proportionate" to provide or maintain the product or service the consumer requested. Most states allow any purpose disclosed in a notice; Maryland's test is necessity for what the person asked for, and ad targeting is rarely what they asked for.
 - **Sensitive data only when strictly necessary.** A controller may not collect, process or share sensitive data unless "strictly necessary to provide or maintain a specific product or service requested." The enrolled text struck the consent alternative, so consent doesn't unlock it.
@@ -117,11 +117,11 @@ Every recipient of personal data from an ad system has a role in each regime, an
 - **Third party:** anyone else. Flows to it for consideration are sales; for cross-context advertising, sharing.
 - **MSPA signatory:** a party that signed the Multi-State Privacy Agreement, which springs into force between signatories when personal information flows between them to deliver an ad, supplying the contract terms automatically ([The US National Section and the MSPA](/books/advertising/gpp-gpc-and-us-opt-outs#the-us-national-section-and-the-mspa)).
 
-The enforcement point is that the role is a document, not a claim. Honda's order found "ad tech sharing without required contracts"; Healthline's found contracts without the required protections; Tractor Supply's found no contracts with recipients. Each recipient in the system needs an agreement on file with its role per regime, the terms the law requires checked off, and dates. That record also answers the EU question for the same counterparty, controller, processor or joint controller under GDPR, which GDPR & ePrivacy for Ads covers; one table holds both.
+The enforcement point is that the role is a document, not a claim. Honda's order turned on sharing with ad tech companies without contracts containing the required terms; Healthline's on not verifying that advertising partners had agreed to the required protections; Tractor Supply's on disclosures without contracts. Each recipient in the system needs an agreement on file with its role per regime, the terms the law requires checked off, and dates. That record also answers the EU question for the same counterparty, controller, processor or joint controller under GDPR, which GDPR & ePrivacy for Ads covers; one table holds both.
 
 ## Risk Assessments and Automated Decisions
 
-California's regulations on risk assessments, cybersecurity audits and automated decision-making technology (ADMT), finalized September 23, 2025, took effect January 1, 2026. For advertising, the trigger is in the first line of the list: "Each of the following processing activities presents significant risk to consumers' privacy: (1) Selling or sharing personal information," followed by processing sensitive personal information (section 7150(b)). An ad-supported business that sells or shares must:
+California's regulations on risk assessments, cybersecurity audits and automated decision-making technology (ADMT), approved by the Office of Administrative Law as the CPPA announced on September 23, 2025, took effect January 1, 2026. For advertising, the trigger is in the first line of the list: "Each of the following processing activities presents significant risk to consumers' privacy: (1) Selling or sharing personal information," followed by processing sensitive personal information (section 7150(b)). An ad-supported business that sells or shares must:
 
 - **Assess before processing.** Conduct and document the assessment "before initiating" the activity (7155(a)(1)); for processing that began before January 1, 2026 and continues, by December 31, 2027 (7155(b)).
 - **Review and update.** At least every three years, and within 45 calendar days of a material change, such as a change of purpose, of the minimum personal information needed, or new risks consumers raise (7155(a)(2) and (3)).
@@ -153,7 +153,7 @@ CREATE TABLE privacy_jurisdictions (       -- one version of one state's (or cou
   law_name                 TEXT NOT NULL,          -- e.g. 'Maryland Online Data Privacy Act'
   version                  INT NOT NULL,
   in_force_from            DATE NOT NULL,
-  applies_to_processing_from DATE,                 -- Maryland: April 1, 2026
+  applies_to_processing_from DATE,                 -- e.g. Maryland's assessment section: April 1, 2026
   gpp_section_id           SMALLINT,               -- 8 for usca, 9 for usva, ...
   opt_out_scopes           TEXT[] NOT NULL,        -- {'sale','sharing','targeted_advertising'}
   honors_gpc_from          DATE,                   -- universal opt-out mechanism date; null: not required
@@ -257,7 +257,7 @@ The result is not by itself a violation: a bidder without a service provider agr
 - **Every counterparty's role.** The agreement, role, regime, verified terms and dates for every company the system discloses to or receives from, and when each was last reviewed.
 - **Every risk assessment.** Each activity's assessment, versions, the material changes that reopened it, the review dates and the attestations submitted.
 - **The opt-out test, run from outside.** Scheduled synthetic visits to each property and app from California and Maryland with GPC on and after opting out, capturing the outgoing requests and checking that no third party received identifiers. The regulators run the same test.
-- **Requests for which the jurisdiction was inferred.** Where `gpp_sid` was missing and geolocation decided the state, so the share of guessed jurisdictions is visible and falling.
+- **Requests for which the jurisdiction was inferred.** Where `gpp_sids` was missing and geolocation decided the state, so the share of guessed jurisdictions is visible and falling.
 
 ## What This Means for the System You Build
 
@@ -274,7 +274,7 @@ The result is not by itself a violation: a bidder without a service provider agr
 **Regulation**
 
 - [CPPA: California Consumer Privacy Act (effective January 1, 2026)](https://cppa.ca.gov/pdf/20260101_ccpa_statute.pdf), definitions of sale, sharing, cross-context behavioral advertising, sensitive personal information and precise geolocation; 1798.120(c) on minors; 1798.155 fines
-- [CPPA: CCPA Regulations (effective January 1, 2026)](https://cppa.ca.gov/regulations/pdf/ccpa_statute_eff_20260101.pdf), 7026(f) on service providers and opt-outs, 7150 risk assessment triggers, 7155 timing and retention
+- [CPPA: CCPA Regulations (effective January 1, 2026)](https://cppa.ca.gov/regulations/pdf/ccpa_statute_eff_20260101.pdf), 7026(f)(1) on service providers and opt-outs, 7150 risk assessment triggers, 7155 timing and retention
 - [CPPA: California finalizes regulations (September 23, 2025)](https://cppa.ca.gov/announcements/2025/20250923.html), the ADMT, risk assessment and cybersecurity audit rules, effective dates and attestation deadlines
 - [Maryland General Assembly: SB 541 (2024), Maryland Online Data Privacy Act](https://mgaleg.maryland.gov/mgawebsite/Legislation/Details/sb0541?ys=2024RS), approval and effective date
 - [Maryland: Chapter 455 of 2024, enrolled text](https://mgaleg.maryland.gov/2024RS/Chapters_noln/CH_455_sb0541e.pdf), minimization, sensitive data, the sale ban, the teen targeting ban, thresholds and the April 1, 2026 processing date
@@ -291,6 +291,7 @@ The result is not by itself a violation: a bidder without a service provider agr
 
 - [IAPP: US State Privacy Legislation overview](https://iapp.org/resources/article/us-state-privacy-laws-overview), the count of 19 states and the years each passed
 - [MultiState: Comprehensive privacy laws that take effect in 2026](https://multistate.us/insider/2026/2/4/all-of-the-comprehensive-privacy-laws-that-take-effect-in-2026), Oregon's cure period and geolocation rules (secondary)
+- [Benesch: Alabama, Louisiana, Oklahoma and Vermont join the compliance landscape (October 12, 2026)](https://www.beneschlaw.com/insight/the-privacy-patchwork-grows-alabama-louisiana-oklahoma-and-vermont-join-the-compliance-landscape/), the four 2026 laws and their effective dates (secondary)
 - [Moore & Van Allen: Privacy in bloom, four states reshape the landscape](https://www.mvalaw.com/data-points/privacy-in-bloom-four-states-reshape-the-data-protection-landscape-this-spring), Virginia's geolocation sale ban and Kentucky's ACR amendment (secondary)
 
 **In practice**

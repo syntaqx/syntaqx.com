@@ -20,12 +20,12 @@ As of November 2026, how Google and Meta gate the regulated categories, against 
 
 | Category | Google | Meta | Law the gate tracks |
 | --- | --- | --- | --- |
-| **Alcohol** | Restricted category in personalized ads (no advertiser-curated audiences) | Never under 18; in the US 21 or older; banned in listed countries | State drinking ages; TTB rules; DISCUS and Beer Institute codes |
+| **Alcohol** | Sensitive interest category in personalized ads (no advertiser-curated audiences) | Never under 18; in the US 21 or older; banned in listed countries | State drinking ages; TTB rules; DISCUS and Beer Institute codes |
 | **Cannabis and CBD** | Recreational drugs prohibited; topical hemp-derived CBD at 0.3% THC or less, by application, only in California, Colorado and Puerto Rico | THC products prohibited; CBD in the US only with LegitScript certification and written permission, no health claims, 18 or older; hemp in Canada, Mexico and the US | Federal scheduling; state cannabis ad rules |
 | **Crypto** | Certification against local licenses (UGP's Verifying Financial Advertisers has the countries) | Prior written permission and a regulatory license or registration | FCA financial promotion rules (UK); MiCA (EU); state and federal registration (US) |
-| **Financial products** | Restricted in personalized ads as consumer finance; financial services verification by country | Credit card, loan and insurance ads only to 18 or older; financial products are a special ad category in the US | Regulation Z, Regulation DD, FINRA 2210, fair lending |
+| **Financial products** | Consumer finance in the US and Canada can't target by gender, age, parental or marital status or ZIP code; financial services verification by country | Credit card, loan and insurance ads only to 18 or older; financial products are a special ad category in the US | Regulation Z, Regulation DD, FINRA 2210, fair lending |
 | **Gambling** | Certification per country, a valid license for every region targeted; in the US licensed by the state, never under 21 or outside licensed states; responsible gambling content on the landing page; social casino games certified separately | Prior written permission | State gaming law and regulators |
-| **Prescription drugs** | Not covered here | LegitScript certification and authorization; the US, Canada or New Zealand only; 18 or older | FDA 21 CFR 202.1 |
+| **Prescription drugs** | Prescription drug terms restricted; manufacturers in select countries and online pharmacies by country, certified by Google (LegitScript or, in some countries, NABP for pharmacies) | LegitScript certification and authorization; the US, Canada or New Zealand only; 18 or older | FDA 21 CFR 202.1 |
 
 What the table shows:
 
@@ -39,24 +39,24 @@ Section 5 of the FTC Act declares "unfair or deceptive acts or practices in or a
 
 **Deception.** The FTC's Policy Statement on Deception (October 14, 1983) sets out the elements every deception case shares: "there must be a representation, omission or practice that is likely to mislead the consumer"; the practice is examined "from the perspective of a consumer acting reasonably in the circumstances" (or of the group it targets); and it must be material, likely to affect the consumer's conduct or decision. Four parts of the statement shape how an ad is reviewed:
 
-- **The net impression governs.** The Commission considers "the entire advertisement," the entire mosaic rather than each tile; accurate text may not cure a false headline, and "fine print disclosures" may not correct a misleading representation.
+- **The net impression governs.** The Commission considers "the entire advertisement," the entire mosaic rather than each tile; accurate text may not cure a false headline, and "written disclosures or fine print may be insufficient to correct a misleading representation."
 - **Implied claims count.** Where an ad conveys more than one reasonable meaning and one is false, the advertiser is liable for the false one, so review asks what the ad says to its audience, not only what its words literally state.
 - **Express claims are presumed material,** and so are claims that significantly involve health or safety.
-- **The audience matters.** An ad aimed at children, the elderly or the seriously ill is judged from that group's point of view, which is one reason children's advertising has its own rules.
+- **The audience matters.** An ad aimed at children, the elderly or the terminally ill is judged from that group's point of view, which is one reason children's advertising has its own rules.
 
 **Substantiation.** The Policy Statement Regarding Advertising Substantiation (November 23, 1984) holds that making an objective claim without "a reasonable basis" for it is itself unfair and deceptive. When an ad claims a specific level of support ("tests prove", "clinically shown"), the advertiser must have at least that level; otherwise the reasonable basis depends on the type of claim, the product, the consequences of a false claim, the benefits of a truthful one, the cost of developing substantiation, and the amount of substantiation experts in the field would agree is reasonable. The advertiser must have, and rely on, that basis when the claim is made, so the evidence belongs in a file before the ad runs, not in a reply to the FTC afterwards.
 
 **Health claims.** The FTC's Health Products Compliance Guidance (December 2022) replaced its 1998 guide for dietary supplements and covers foods, supplements, over-the-counter drugs, homeopathic products, health equipment, diagnostic tests and health apps. Health benefit and safety claims need "competent and reliable scientific evidence," which for health benefits generally means randomized, controlled human clinical trials; animal and in vitro studies, testimonials and public health recommendations are not enough on their own. FDA has primary responsibility for labeling; the FTC for advertising.
 
-**Clear and conspicuous.** The FTC staff's ".com Disclosures" guidance (March 2013) applies the deception standard to digital ads. Required disclosures must be clear and conspicuous, placed near the claim they qualify ("the closer the disclosure is to the claim to which it relates, the better"); a disclosure that is integral to a claim "should not be communicated through a hyperlink" but placed next to the claim; a space-constrained ad should incorporate the disclosure if possible; and if a necessary disclosure can't be made clearly and conspicuously on a platform, "either the claim should be modified so the disclosure is not necessary or the ad should not be disseminated." That last rule is the one that binds ad formats: a 320x50 banner, a six-second video or a voice ad that can't carry a required disclosure can't carry the claim.
+**Clear and conspicuous.** The FTC staff's ".com Disclosures" guidance (March 2013) applies the deception standard to digital ads. Required disclosures must be clear and conspicuous, placed near the claim they qualify ("the closer the disclosure is to the claim to which it relates, the better"); a disclosure that is integral to a claim "should not be communicated through a hyperlink" but placed next to the claim; a space-constrained ad should incorporate the disclosure if possible, and only "under some circumstances" may it be made on the page the ad links to instead; and if a necessary disclosure can't be made clearly and conspicuously, "either the claim should be modified so the disclosure is not necessary or the ad should not be disseminated." That last rule is the one that binds ad formats: a 320x50 banner, a six-second video or a voice ad that can't carry an integral disclosure (one that can't go behind a link) can't carry the claim.
 
-Related FTC rules owned elsewhere, each in a sentence: endorsements must reflect the endorser's honest views and material connections must be disclosed clearly ([The Endorsement Guides](/books/commerce/acquisition-and-attribution#the-endorsement-guides)); the FTC's fake reviews rule bans buying, faking and suppressing reviews ([Fake Reviews and the FTC Rule](/books/commerce/reviews-and-ratings#fake-reviews-and-the-ftc-rule)); an unqualified "Made in USA" claim means all or virtually all ([Made in USA](/books/commerce/online-consumer-protection#made-in-usa)); and an advertised price must include mandatory fees where the fees rules and state laws apply ([Fees and Drip Pricing](/books/commerce/online-consumer-protection#fees-and-drip-pricing)).
+Related FTC rules owned elsewhere, each in a sentence: endorsements must reflect the endorser's honest views and material connections must be disclosed clearly ([The Endorsement Guides](/books/commerce/acquisition-and-attribution#the-endorsement-guides)); the FTC's fake reviews rule bans fake reviews, paying for reviews that must express a particular sentiment, and suppressing reviews ([Fake Reviews and the FTC Rule](/books/commerce/reviews-and-ratings#fake-reviews-and-the-ftc-rule)); an unqualified "Made in USA" claim means all or virtually all ([Made in USA](/books/commerce/online-consumer-protection#made-in-usa)); and an advertised price must include mandatory fees where the fees rules and state laws apply ([Fees and Drip Pricing](/books/commerce/online-consumer-protection#fees-and-drip-pricing)).
 
 ## Competitors and Self-Regulation
 
 **The Lanham Act.** Section 43(a) makes liable anyone who, "in commercial advertising or promotion, misrepresents the nature, characteristics, qualities, or geographic origin" of their own or another's goods or services, to any person who believes they are likely to be damaged (15 U.S.C. 1125(a)(1)(B)). In *Lexmark International v. Static Control Components* (March 25, 2014) the Supreme Court set the test for who may sue: a plaintiff "must allege an injury to a commercial interest in reputation or sales," and must show "economic or reputational injury flowing directly from the deception wrought by the defendant's advertising"; consumers deceived into buying are outside it. In practice that makes competitors the private enforcers of advertising claims, and comparative claims ("faster than", "#1 rated") the claims they challenge.
 
-**NAD and NARB.** BBB National Programs' National Advertising Division, founded by the advertising industry in 1971, reviews national advertising in all media for truth and accuracy, on challenges from competitors, trade associations, consumers and NGOs and on its own monitoring (about 20 to 25% of its cases). Participation is voluntary, but an advertiser that refuses to participate or to comply is referred to the FTC, and either side can appeal to the National Advertising Review Board. NAD applies the FTC's standards, so its decisions are a public body of reasoning on what substantiation a given claim needs.
+**NAD and NARB.** BBB National Programs' National Advertising Division, founded by the advertising industry in 1971, reviews national advertising in all media for truth and accuracy, on challenges from competitors, trade associations, consumers and NGOs and on its own monitoring (about 20 to 25% of its cases). Participation is voluntary, but an advertiser that refuses to participate or to comply is referred to the FTC, and the advertiser can appeal (a challenger only if its request to appeal is granted) to the National Advertising Review Board. NAD applies the FTC's standards, so its decisions are a public body of reasoning on what substantiation a given claim needs.
 
 **CARU.** The Children's Advertising Review Unit (1974) monitors child-directed advertising and applies its guidelines for children under 13; it was the first FTC-approved COPPA safe harbor. How its guidelines and COPPA apply to ad systems is [Children, Teens & Advertising](/books/advertising/children-and-teens).
 
@@ -68,7 +68,7 @@ For a platform, NAD decisions and Lanham Act suits matter less as risks than as 
 
 The Alcohol and Tobacco Tax and Trade Bureau regulates alcohol advertising under the Federal Alcohol Administration Act, with rules for wine, distilled spirits and malt beverages; its definition of an advertisement reaches "any other media" ([Alcohol: The Three-Tier System](/books/commerce/age-restricted-goods#alcohol-the-three-tier-system) has the definition). The prohibited practices for spirits ads (27 CFR 5.235) include false or misleading statements, disparagement of competitors, misleading claims about tests or guarantees, statements inconsistent with the label, age claims not on the label, misleading health-related statements and claims of origin, and "organic" claims that don't meet USDA rules.
 
-The industry codes set the placement rule that matters to an ad system. The Distilled Spirits Council's Code of Responsible Practices (2025 edition) says digital marketing communications "should be placed only in media where at least 73.8% of the audience is reasonably expected to be of the legal purchase age," measured with reliable, up-to-date audience composition data (for digital, syndicated "2+" data such as comScore or Nielsen, averaged over three months), or where a platform is used to target an audience of legal purchase age directly; it requires age affirmation with full date of birth before direct engagement, and semi-annual random post-audits of placements against the standard. The Beer Institute publishes its own Advertising and Marketing Code. On the platforms, Meta requires 21 or older for alcohol ads in the US, and Google treats alcohol as a restricted category for audiences.
+The industry codes set the placement rule that matters to an ad system. The Distilled Spirits Council's Code of Responsible Practices (2025 edition) says digital marketing communications "should be placed only in media where at least 73.8% of the audience is reasonably expected to be of the legal purchase age," measured with reliable, up-to-date audience composition data (for digital, syndicated "2+" data such as comScore or Nielsen, averaged over three months), or where a platform is used to target an audience of legal purchase age directly; it requires age affirmation with full date of birth before direct engagement, and semi-annual random post-audits of placements against the standard. The Beer Institute publishes its own Advertising and Marketing Code. On the platforms, Meta requires 21 or older for alcohol ads in the US, and Google treats alcohol as a sensitive interest category, closed to advertiser-curated audiences.
 
 ### Prescription Drugs and Devices
 
@@ -76,7 +76,7 @@ FDA regulates prescription drug advertising under 21 CFR 202.1. Every ad must pr
 
 ### Gambling
 
-Gambling advertising law is state law in the US: each state that licenses sports betting, online casinos or lotteries sets its own advertising rules through its gaming regulator, and I have not tabulated them here. The platforms translate the patchwork into certification. Google requires certification before any gambling ad, a separate application per country and a valid local license for every region targeted; in the US lotteries must be state-run, horse racing, sports betting and online casino advertisers must be licensed by the state where legal, ads must "not target users under 21 or users outside of the state(s) where they are licensed," and landing pages must carry responsible gambling information, a warning about compulsive gambling with help resources, an age warning, terms, and the licensee's name and license number. Online gambling applications move into Google Ads accounts from November 19, 2026. Social casino games (simulated gambling with "no opportunity to win something of value") need their own certification and a separate account. Meta allows online gambling and gaming ads only with prior written permission.
+Gambling advertising law is state law in the US: each state that licenses sports betting, online casinos or lotteries sets its own advertising rules through its gaming regulator, and I have not tabulated them here. The platforms translate the patchwork into certification. Google requires certification to run gambling and gambling-promoting content, a separate application per country and a valid local license for every region targeted; in the US lotteries must be state-run, horse racing, lottery courier, sports betting and online casino advertisers must be licensed by the state where legal, ads must "not target users under 21 or users outside of the state(s) where they are licensed," and the ad or landing page must carry "a warning against the dangers of addictive and compulsive gambling," with assistance information, responsible gambling information, an age warning and terms on the destination. From November 19, 2026, online gambling certification applications are submitted through the Google Ads account. Social casino games (simulated gambling with "no opportunity to win something of value") need their own certification and a separate account. Meta allows online gambling and gaming ads only with prior written permission.
 
 The system consequence is geographic precision: a sports betting ad licensed in one state must not serve across the state line, so the line item's geography is the license's, and the location used to enforce it must be accurate enough to place the person in a state.
 
@@ -86,17 +86,17 @@ In the UK, crypto promotions to consumers have been inside the FCA's financial p
 
 ### Consumer Credit and Deposits
 
-Credit ads in the US have trigger rules. Under Regulation Z, an ad for closed-end credit that states the amount or percentage of a down payment, the number of payments or period of repayment, the amount of any payment, or the amount of any finance charge must also state the down payment, the terms of repayment over the full term, and the annual percentage rate, "using that term," with any possible increase (12 CFR 1026.24(d)); any rate stated must be stated as an APR (1026.24(c)). Open-end credit ads have a parallel set of triggers, such as a finance charge, a periodic rate expressed as an APR or a membership fee (12 CFR 1026.16(b)). Deposit ads have Regulation DD's: a stated rate is an APY, "free" only if no fee can apply, and a bonus triggers its conditions ([Advertising](/books/banking-and-lending/deposit-accounts#advertising) in the Banking & Lending volume). Fair lending rules on who sees credit ads are [Sensitive Data and Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting#discriminatory-targeting).
+Credit ads in the US have trigger rules. Under Regulation Z, an ad for closed-end credit that states the amount or percentage of a down payment, the number of payments or period of repayment, the amount of any payment, or the amount of any finance charge must also state the down payment, the terms of repayment over the full term, and the annual percentage rate, "using that term," with any possible increase (12 CFR 1026.24(d)); any rate stated must be stated as an APR, with the fact that it may increase if it can (1026.24(c)); the commentary allows the abbreviation "APR." Open-end credit ads have a parallel set of triggers, such as a finance charge, a periodic rate expressed as an APR or a membership fee (12 CFR 1026.16(b)). Deposit ads have Regulation DD's: a stated rate is an APY, "free" only if no fee can apply, and a bonus triggers its conditions ([Advertising](/books/banking-and-lending/deposit-accounts#advertising) in the Banking & Lending volume). Fair lending rules on who sees credit ads are [Sensitive Data and Discriminatory Targeting](/books/advertising/sensitive-data-and-discriminatory-targeting#discriminatory-targeting).
 
 Triggers are a good fit for software because they are structural: whether the creative shows a payment amount is a fact about the creative, and the required disclosures follow from it mechanically (below).
 
 ### Cannabis
 
-Cannabis is legal in many states and not federally ([Federal Status as of October 2026](/books/commerce/cannabis-and-hemp#federal-status-as-of-october-2026) in the Commerce volume), so its advertising rules are state rules, and they borrow the alcohol industry's audience composition idea with higher thresholds. California allows broadcast, cable, radio, print and digital advertising only where at least 71.6% of the audience is reasonably expected to be 21 or older, shown with reliable, up-to-date audience composition data (census data and county estimates don't qualify), produced to the regulator immediately on request, with the placement pulled if the data is missing or short (4 CCR 15040). Maryland's cannabis regulator requires at least 85% of the audience to be reasonably expected to be 21 or older for television, radio, internet, mobile app, social media and print. Neither threshold matters on Meta or Google, which don't accept THC product ads at all (Meta's drugs policy; Google's dangerous products policy), so cannabis advertising has to find inventory elsewhere, and there the audience composition evidence is the buyer's and seller's to keep.
+Cannabis is legal in many states and not federally ([Federal Status as of October 2026](/books/commerce/cannabis-and-hemp#federal-status-as-of-october-2026) in the Commerce volume), so its advertising rules are state rules, and they borrow the alcohol industry's audience composition idea with thresholds of their own (California's sits just below the spirits code's 73.8%, Maryland's well above it). California allows broadcast, cable, radio, print and digital advertising only where at least 71.6% of the audience is reasonably expected to be 21 or older, shown with reliable, up-to-date audience composition data (census data and county estimates don't qualify), produced to the regulator immediately on request, with the placement pulled if the data is missing or short (4 CCR 15040). Maryland's cannabis regulator requires at least 85% of the audience to be reasonably expected to be 21 or older for television, radio, internet, mobile app, social media and print. Neither threshold matters on Meta or Google, which don't accept THC product ads at all (Meta's drugs policy; Google's dangerous products policy), so cannabis advertising has to find inventory elsewhere, and there the audience composition evidence is the buyer's and seller's to keep.
 
 ### AI-Generated Content
 
-Where disclosure of AI-generated content in ads is law today, it is mostly in political advertising ([DSA, DMA & Political Ads](/books/advertising/dsa-dma-and-political-ads#us-political-ad-law)); elsewhere, an AI-generated image is judged by the same deception standard as any other, so a synthetic "before and after" or a fabricated testimonial is deceptive whatever made it. AI disclosure rules beyond political ads, and generative creative tools, are AI in Advertising, in Running the Platform.
+In the US, where disclosure of AI-generated content in ads is law today, it is mostly in political advertising ([DSA, DMA & Political Ads](/books/advertising/dsa-dma-and-political-ads#us-political-ad-law)); elsewhere, an AI-generated image is judged by the same deception standard as any other, so a synthetic "before and after" or a fabricated testimonial is deceptive whatever made it. AI disclosure rules beyond political ads, and generative creative tools, are AI in Advertising, in Running the Platform.
 
 ## Platforms as the De Facto Regulator
 
@@ -243,19 +243,20 @@ func Missing(s Shown, d Disclosures, aprCanIncrease bool) []string {
 		out = append(out, "rate_not_stated_as_apr")
 	}
 	triggered := s.DownPayment || s.NumPayments || s.PaymentAmount || s.FinanceCharge
-	if !triggered {
-		return out
+	if triggered {
+		if !d.DownPayment {
+			out = append(out, "trigger_down_payment_missing")
+		}
+		if !d.RepaymentTerms {
+			out = append(out, "trigger_repayment_terms_missing")
+		}
+		if !d.APR {
+			out = append(out, "trigger_apr_missing")
+		}
 	}
-	if !d.DownPayment {
-		out = append(out, "trigger_down_payment_missing")
-	}
-	if !d.RepaymentTerms {
-		out = append(out, "trigger_repayment_terms_missing")
-	}
-	if !d.APR {
-		out = append(out, "trigger_apr_missing")
-	} else if aprCanIncrease && !d.APRMayIncrease {
-		out = append(out, "trigger_apr_increase_missing")
+	// A stated rate or a triggered APR must say if the rate may increase (24(c), 24(d)(2)(iii)).
+	if (s.Rate || triggered) && aprCanIncrease && !d.APRMayIncrease {
+		out = append(out, "apr_increase_missing")
 	}
 	return out
 }
@@ -288,19 +289,20 @@ pub fn missing(s: &Shown, d: &Disclosures, apr_can_increase: bool) -> Vec<&'stat
         out.push("rate_not_stated_as_apr");
     }
     let triggered = s.down_payment || s.num_payments || s.payment_amount || s.finance_charge;
-    if !triggered {
-        return out;
+    if triggered {
+        if !d.down_payment {
+            out.push("trigger_down_payment_missing");
+        }
+        if !d.repayment_terms {
+            out.push("trigger_repayment_terms_missing");
+        }
+        if !d.apr {
+            out.push("trigger_apr_missing");
+        }
     }
-    if !d.down_payment {
-        out.push("trigger_down_payment_missing");
-    }
-    if !d.repayment_terms {
-        out.push("trigger_repayment_terms_missing");
-    }
-    if !d.apr {
-        out.push("trigger_apr_missing");
-    } else if apr_can_increase && !d.apr_may_increase {
-        out.push("trigger_apr_increase_missing");
+    // A stated rate or a triggered APR must say if the rate may increase (24(c), 24(d)(2)(iii)).
+    if (s.rate || triggered) && apr_can_increase && !d.apr_may_increase {
+        out.push("apr_increase_missing");
     }
     out
 }
@@ -352,7 +354,7 @@ Typed actors and append-only history are in [Audit Trails](/docs/building-blocks
 - [15 U.S.C. 1125 (Cornell LII)](https://www.law.cornell.edu/uscode/text/15/1125), Lanham Act section 43(a)(1)(B) false advertising
 - [27 CFR 5.235 (Cornell LII)](https://www.law.cornell.edu/cfr/text/27/5.235), prohibited practices in distilled spirits advertising
 - [21 CFR 202.1 (Cornell LII)](https://www.law.cornell.edu/cfr/text/21/202.1), the brief summary, fair balance and the major statement for broadcast and DTC TV and radio ads
-- [CFPB: Regulation Z 1026.24, advertising (closed-end credit)](https://www.consumerfinance.gov/rules-policy/regulations/1026/24/), the triggering terms and required disclosures, and rates stated as APRs
+- [CFPB: Regulation Z 1026.24, advertising (closed-end credit)](https://www.consumerfinance.gov/rules-policy/regulations/1026/24/), the triggering terms and required disclosures, rates stated as APRs with any increase, and the commentary allowing "APR"
 - [CFPB: Regulation Z 1026.16, advertising (open-end credit)](https://www.consumerfinance.gov/rules-policy/regulations/1026/16/), the open-end triggering terms
 - [California 4 CCR 15040 (Cornell LII)](https://law.cornell.edu/regulations/california/4-CCR-15040), the 71.6% audience composition rule, the data requirements and removal
 
@@ -361,7 +363,7 @@ Typed actors and append-only history are in [Audit Trails](/docs/building-blocks
 - [FTC: Policy Statement on Deception (October 14, 1983)](https://www.ftc.gov/system/files/documents/public_statements/410531/831014deceptionstmt.pdf), the elements of deception, the entire advertisement, fine print, implied meanings and the materiality presumptions
 - [FTC: Policy Statement Regarding Advertising Substantiation (November 23, 1984)](https://www.ftc.gov/legal-library/browse/ftc-policy-statement-regarding-advertising-substantiation), the reasonable basis requirement, establishment claims and the factors
 - [FTC: Health Products Compliance Guidance (December 2022)](https://www.ftc.gov/business-guidance/resources/health-products-compliance-guidance), scope, the replaced 1998 guide and competent and reliable scientific evidence
-- [FTC: .com Disclosures (March 2013)](https://www.ftc.gov/sites/default/files/attachments/press-releases/ftc-staff-revises-online-advertising-disclosure-guidelines/130312dotcomdisclosures.pdf), clear and conspicuous, proximity, hyperlinks for integral disclosures, space-constrained ads and when an ad should not be disseminated
+- [FTC: .com Disclosures (March 2013)](https://www.ftc.gov/sites/default/files/attachments/press-releases/ftc-staff-revises-online-advertising-disclosure-guidelines/130312dotcomdisclosures.pdf), clear and conspicuous, proximity, hyperlinks for integral disclosures, space-constrained ads and the landing page exception, and when an ad should not be disseminated
 - [FCA: FCA sets expectations ahead of incoming crypto marketing rules (September 7, 2023)](https://www.fca.org.uk/news/press-releases/fca-sets-expectations-ahead-incoming-crypto-marketing-rules), the October 8, 2023 start, the four routes and the January 8, 2024 modification
 - [FCA: PS23/6 Financial promotion rules for cryptoassets](https://www.fca.org.uk/publications/policy-statements/ps23-6-financial-promotion-rules-cryptoassets), risk warnings, the incentive ban, positive frictions, categorisation and appropriateness
 - [Maryland Cannabis Administration: Advertising restrictions (updated March 21, 2024)](https://cannabis.maryland.gov:443/Documents/2024%20Industry%20Licensees/10.2.23%20Version%20of%20Advertising%20Restrictions%20UPDATED%20March.21.24.pdf), the 85% audience composition requirement by medium
@@ -380,8 +382,10 @@ Typed actors and append-only history are in [Audit Trails](/docs/building-blocks
 **In practice**
 
 - [Google: Gambling and games policy](https://support.google.com/adspolicy/answer/6018017), certification per country, US state licensing, the under-21 and out-of-state targeting ban, landing page requirements, the November 19, 2026 move into Google Ads and social casino games
-- [Google: Personalized advertising policy](https://support.google.com/adspolicy/answer/143465), alcohol, gambling and consumer finance among the restricted categories
+- [Google: Personalized advertising policy](https://support.google.com/adspolicy/answer/143465), alcohol and gambling as sensitive interest categories without advertiser-curated audiences, and consumer finance's targeting limits in the US and Canada
 - [Google: Dangerous products or services policy](https://support.google.com/adspolicy/answer/6014299), recreational drugs and the topical CBD exception in California, Colorado and Puerto Rico
-- [Meta: Advertising Standards](https://transparency.meta.com/policies/ad-standards/), restricted goods and services: gambling with prior written permission, crypto, financial products to 18 and older
+- [Google: Healthcare and medicines policy](https://support.google.com/adspolicy/answer/176031), prescription drug terms, manufacturers and online pharmacies by country, Google certification, LegitScript and NABP
+- [Meta: Advertising Standards](https://transparency.meta.com/policies/ad-standards/), restricted goods and services: gambling with prior written permission, financial products to 18 and older, special ad categories
+- [Meta: Cryptocurrency products and services ad policy](https://transparency.meta.com/policies/ad-standards/restricted-goods-services/cryptocurrency-products-and-services/), prior written permission and a recognized regulatory license or registration
 - [Meta: Alcohol ad policy](https://transparency.meta.com/policies/ad-standards/restricted-goods-services/alcohol/), the 18 minimum, 21 or older in the US and the country bans
 - [Meta: Drugs and pharmaceuticals ad policy](https://transparency.meta.com/policies/ad-standards/restricted-goods-services/drugs-pharmaceuticals/), THC prohibited, CBD with LegitScript in the US, hemp, and prescription drugs with LegitScript certification
