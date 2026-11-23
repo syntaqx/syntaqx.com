@@ -31,6 +31,7 @@ export const SIDEBAR_LABELS: Record<string, string> = {
   "Docs, Wikis and Files": "Docs and Files",
   "Embedded Insurance and Service Contracts": "Embedded",
   "Fair Play and Safety": "Fair Play",
+  "Freight Brokerage": "Brokerage",
   "Funding and Licensing": "Funding",
   "Hiring and HR Records": "HR Records",
   "How Games Get Made": "Making Games",
