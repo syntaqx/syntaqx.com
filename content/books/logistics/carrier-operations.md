@@ -36,7 +36,7 @@ Three patterns:
 
 ## The Carrier's Order
 
-A tender accepted by a carrier becomes a load the carrier owns: the core `loads` row with `owner_party_id` set to the carrier, the customer's reference (the shipper's shipment ID or the broker's load number), the receivable rate from the tender or the customer's agreement, and the stops with appointments. A carrier keeps the customer's identifiers exactly as sent, because the customer's 214 status messages and the carrier's 210 invoice must quote them back (Transportation EDI covers the messages). Before it is dispatched, the load is checked against the customer's credit and any equipment or service requirement (team, hazmat, temperature) the carrier's fleet must meet.
+A tender accepted by a carrier becomes a load the carrier owns: the core `loads` row with `owner_party_id` set to the carrier, the customer's reference (the shipper's shipment ID or the broker's load number), the receivable rate from the tender or the customer's agreement, and the stops with appointments. A carrier keeps the customer's identifiers exactly as sent, because the customer's 214 status messages and the carrier's 210 invoice must quote them back ([Transportation EDI](/books/logistics/transportation-edi) covers the messages). Before it is dispatched, the load is checked against the customer's credit and any equipment or service requirement (team, hazmat, temperature) the carrier's fleet must meet.
 
 ## Dispatch
 
@@ -402,7 +402,7 @@ Design notes:
 - **Model loads as legs** so teams, relays and repowers are normal, not exceptions.
 - **Derive equipment availability from 49 CFR 396 records:** open DVIR defects, lapsed annual inspections, out-of-service orders and overdue regulatory maintenance.
 - **Compute settlements from lines with sources,** apply the lease version in force per trip, refuse undocumented chargebacks, and compute the 15-day due date.
-- **Reuse Truckload's lease, pool and custody tables** and leave company-driver pay calculation to payroll.
+- **Reuse [Truckload](/books/logistics/truckload#how-to-build-it)'s lease, pool and custody tables** and leave company-driver pay calculation to payroll.
 
 ## References
 

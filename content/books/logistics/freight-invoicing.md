@@ -59,7 +59,7 @@ Billing before delivery exists, mainly in LTL, where prepaid freight is often bi
 
 ## The 210 as the Bill
 
-The X12 210, "Motor Carrier Freight Details and Invoice," is the bill in EDI; rail (410) and ocean (310) have their own sets, and the segment-by-segment detail, partner variance and versions are Transportation EDI's. The parts that map to the core tables, from XPO's 4010 guide:
+The X12 210, "Motor Carrier Freight Details and Invoice," is the bill in EDI; rail (410) and ocean (310) have their own sets, and the segment-by-segment detail, partner variance and versions are [Transportation EDI](/books/logistics/transportation-edi)'s. The parts that map to the core tables, from XPO's 4010 guide:
 
 | 210 element | Meaning | Maps to |
 | --- | --- | --- |

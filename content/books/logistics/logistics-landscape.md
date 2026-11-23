@@ -61,7 +61,7 @@ The patterns:
 
 **Parcel.** UPS, FedEx, the Postal Service and Amazon run the national networks, with regional carriers beneath them ([Parcel Networks From the Carrier Side](/books/logistics/parcel-networks); the shipper's view is [Shipping & Carriers](/books/commerce/shipping-and-carriers)).
 
-**Ocean and air.** Ocean liner shipping is concentrated in a few carriers (MSC, Maersk, CMA CGM, COSCO, Hapag-Lloyd) and their alliances; air cargo moves in passenger bellies and freighters, mostly booked by forwarders (Ocean Shipping and Air Cargo).
+**Ocean and air.** Ocean liner shipping is concentrated in a few carriers (MSC, Maersk, CMA CGM, COSCO, Hapag-Lloyd) and their alliances; air cargo moves in passenger bellies and freighters, mostly booked by forwarders ([Ocean Shipping](/books/logistics/ocean-shipping) and [Air Cargo](/books/logistics/air-cargo)).
 
 ## Brokers, 3PLs and Forwarders
 
@@ -71,7 +71,7 @@ The patterns:
 
 **3PLs** is the broad label for companies that run logistics for shippers under contract: managed transportation (a 3PL operating the shipper's freight on a TMS, often the shipper's own, and paid a fee), contract warehousing (GXO, and the warehouse arms of DHL Supply Chain and others), and integrated services. The same company can be a broker on one shipper's loads and a managed transportation provider on another's, with different revenue recognition: C.H. Robinson records managed solutions and customs brokerage at the net amount and most transportation gross.
 
-**Forwarders and NVOCCs** arrange international freight and consolidate it: Expeditors, Kuehne+Nagel, DSV, Flexport and C.H. Robinson's Global Forwarding. Their licensing and systems are Freight Forwarders & NVOCCs.
+**Forwarders and NVOCCs** arrange international freight and consolidate it: Expeditors, Kuehne+Nagel, DSV, Flexport and C.H. Robinson's Global Forwarding. Their licensing and systems are [Freight Forwarders & NVOCCs](/books/logistics/forwarders-and-nvoccs).
 
 **Freight payment and finance** sit underneath: Cass audits and pays freight bills (34.451 million transportation invoices, $36.447 billion, in 2025), Triumph factors carrier invoices and runs a payments network, and DAT and Truckstop sell factoring next to their load boards ([How the Money Splits](/books/logistics/logistics-business#how-the-money-splits)).
 
@@ -227,7 +227,7 @@ pub async fn apply_corporate_event(svc: &Service, e: CorporateEvent) -> Result<(
 Design notes:
 
 - **Effective time, not announcement time.** A deal announced in one quarter and closed in another changes invoices, tax IDs and remit-to addresses only from closing; `effective_at` is what records follow, and the source is kept.
-- **Parents are a pointer, history is events.** `parent_party_id` answers "who owns this carrier now"; the events answer "who owned it when this load moved." Ownership percentages for sanctions screening are Export Compliance & Screening's.
+- **Parents are a pointer, history is events.** `parent_party_id` answers "who owns this carrier now"; the events answer "who owned it when this load moved." Ownership percentages for sanctions screening are [Export Compliance & Screening](/books/logistics/export-compliance)'s.
 - **A party never becomes another party.** When companies merge, both rows survive with a successor link, because every old load, invoice and claim names the one that existed then ([Merges, Recorded and Reversible](/docs/building-blocks/record-linkage#merges-recorded-and-reversible)).
 - **Size bands are inputs, not judgments.** A banded power unit count drives routing and vetting rules (a one-truck carrier on a five-load-a-day lane); the count comes from the registry's MCS-150 data, so the band is a view over it rather than a second copy that can drift.
 

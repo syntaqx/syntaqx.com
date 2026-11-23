@@ -12,7 +12,7 @@ A bill of materials (BOM) is the list of what goes into a product: for each pare
 
 It is hard because the tree changes, and the same product has several trees at once. Engineering designs one structure (by function, as the CAD assembly is drawn); manufacturing builds another (by how the plant assembles it, with the packaging and the adhesive engineering never listed); costing and planning may use simplified versions of their own. Every structure changes over time through engineering changes, each with a date or a serial number from which it applies, while the old version is still on open work orders, in stock, and in units already shipped. A BOM system that can answer "what is the pump made of" but not "what was this pump made of, built on March 3 at plant 2" can't support a recall, a warranty claim or a cost variance.
 
-This chapter covers what a BOM line carries, engineering and manufacturing BOMs, phantoms and kits, variants, versions and effectivity, the engineering change process from request to order, releasing from PLM to the ERP, and the vendors. It extends `items` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model), with the plant settings and work centers from [ERP, MES & ISA-95](/books/logistics/manufacturing-systems#how-to-build-it). How MRP uses the BOM is [MRP, Scheduling & Work Orders](/books/logistics/production-planning#the-mrp-explosion); the record of which lots went into which unit (as built, not as designed) is Lot & Serial Traceability's.
+This chapter covers what a BOM line carries, engineering and manufacturing BOMs, phantoms and kits, variants, versions and effectivity, the engineering change process from request to order, releasing from PLM to the ERP, and the vendors. It extends `items` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model), with the plant settings and work centers from [ERP, MES & ISA-95](/books/logistics/manufacturing-systems#how-to-build-it). How MRP uses the BOM is [MRP, Scheduling & Work Orders](/books/logistics/production-planning#the-mrp-explosion); the record of which lots went into which unit (as built, not as designed) is [Lot & Serial Traceability](/books/logistics/lot-traceability)'s.
 
 ## How the Platforms Do It
 
@@ -244,7 +244,7 @@ That is one level of real demand (with phantoms flattened), which is what a work
 ## Auditing
 
 - **Every version, with its effective range, approval and the ECO that created or ended it,** never overwritten, so "what was the structure on March 3 at plant 2" has one answer.
-- **Every ECO with its affected items, dispositions, approvals and reason,** because quality systems, customers (in automotive through PPAP, covered in Quality Systems) and regulators ask why a change was made and who approved it.
+- **Every ECO with its affected items, dispositions, approvals and reason,** because quality systems, customers (in automotive through PPAP, covered in [Quality Systems](/books/logistics/quality-management)) and regulators ask why a change was made and who approved it.
 - **The structure each work order used,** stored or referenced by version on the order, so cost variances and as-built records compare against what was released, not today's BOM.
 - **PLM release messages, as received,** keyed by the PLM's IDs, so a disagreement between PLM and ERP can be traced to a release.
 

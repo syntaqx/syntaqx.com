@@ -327,7 +327,7 @@ Two quantity rules every plant has to set:
 - **Overproduction.** ERPNext's "allowable percentage by which the actual production quantity can exceed the planned quantity specified in a work order"; my rule is to refuse a report above it rather than warn.
 - **Underproduction.** ERPNext allows partial completion; Dynamics 365 leaves an order open for "additional quantities" until "End job" is set. Whether a short order is closed (the shortfall becomes new demand at the next MRP run) or held open (its remaining quantity stays a scheduled receipt) is a rule per item, and MRP's view of supply depends on it.
 
-The output of a work order is usually a lot: the core `lots` row, made at the plant, with its production date. Which component lots went into it is the genealogy that Lot & Serial Traceability records; this chapter records quantities consumed per component, and traceability records them per lot.
+The output of a work order is usually a lot: the core `lots` row, made at the plant, with its production date. Which component lots went into it is the genealogy that [Lot & Serial Traceability](/books/logistics/lot-traceability) records; this chapter records quantities consumed per component, and traceability records them per lot.
 
 ## Consumption and Backflush
 

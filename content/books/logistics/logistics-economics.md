@@ -12,7 +12,7 @@ Logistics companies sell capacity, and how they make money depends on whether th
 
 For a system, the economics decide which numbers must be computable. An LTL carrier lives on revenue per hundredweight and operating ratio by terminal and lane; a truckload carrier on revenue per mile, empty miles and revenue per tractor; a broker on gross margin per load and per rep; an agent network on commission per agent; a warehouse operator on cost per unit handled against the contract's rates. Each is a sum over records the core model already holds, plus costs it doesn't: what the driver was paid, what the fuel cost, what the tractor costs per mile. This chapter covers operating ratio and the unit metrics, gross and net revenue, the asset-based and asset-light models with their filed numbers, the agent model, contract warehousing economics, and the records that make each computable. It extends `freight_charges` and `loads` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model).
 
-The money in a single movement is [How the Money Splits](/books/logistics/logistics-business#how-the-money-splits); the companies themselves are [The Logistics Landscape](/books/logistics/logistics-landscape); the broker's per-load pricing is [Pricing and Margin](/books/logistics/freight-brokerage#pricing-and-margin). Revenue recognition (principal or agent, in-transit revenue, accrued purchased transportation) is Logistics Accounting; warehouse client billing is Contract Logistics & 3PL Billing; driver settlements are Carrier Dispatch & Asset Management.
+The money in a single movement is [How the Money Splits](/books/logistics/logistics-business#how-the-money-splits); the companies themselves are [The Logistics Landscape](/books/logistics/logistics-landscape); the broker's per-load pricing is [Pricing and Margin](/books/logistics/freight-brokerage#pricing-and-margin). Revenue recognition (principal or agent, in-transit revenue, accrued purchased transportation) is [Logistics Accounting](/books/logistics/logistics-accounting); warehouse client billing is [Contract Logistics & 3PL Billing](/books/logistics/contract-logistics); driver settlements are [Carrier Dispatch & Asset Management](/books/logistics/carrier-operations).
 
 ## How the Companies Do It
 
@@ -70,7 +70,7 @@ A broker or forwarder that is the principal, controlling the service and carryin
 
 The comparable number is the spread, under whichever name: adjusted gross profit at C.H. Robinson, revenue less cost of transportation at RXO, net revenue elsewhere. In C.H. Robinson's North American Surface Transportation segment it was $1,706.3 million on $11,562.7 million of revenue in 2025 (about 14.8%, my division); in Global Forwarding $741.9 million on $3,090.0 million (about 24.0%). The two percentages aren't comparable as margins: forwarding does more of the work (consolidation, documentation, customs), and some of its transactions are recorded net, which shrinks the denominator.
 
-The accounting judgment (principal or agent, and when revenue is recognized over a transit) is [ASC 606 and IFRS 15 in Five Steps](/docs/money/accounting#asc-606-and-ifrs-15-in-five-steps) and Logistics Accounting. The system's job is simpler: keep both sides of every load as lines, so the spread is a sum and the gross figure is a presentation choice made later.
+The accounting judgment (principal or agent, and when revenue is recognized over a transit) is [ASC 606 and IFRS 15 in Five Steps](/docs/money/accounting#asc-606-and-ifrs-15-in-five-steps) and [Logistics Accounting](/books/logistics/logistics-accounting). The system's job is simpler: keep both sides of every load as lines, so the spread is a sum and the gross figure is a presentation choice made later.
 
 ## Asset-Based and Asset-Light
 
@@ -98,7 +98,7 @@ The economics follow the structure:
 - **Fixed and variable (transactional).** A fixed fee for the facility and management plus rates per unit received, stored, picked and shipped; the provider earns more when it beats its own productivity assumptions and loses when volume falls below the plan the fixed fee assumed.
 - **Gainshare.** Savings against a baseline are split, which needs an agreed baseline and measured productivity.
 
-Margins are thin at scale: GXO's operating income was about 1.9% of revenue in 2025 (my division of $245 million by $13,178 million). Start-up costs come before the revenue ("The timing and magnitude of our new contract start-ups can vary"), so a new contract loses money in its first months. Contract Logistics & 3PL Billing covers how the rates become invoices.
+Margins are thin at scale: GXO's operating income was about 1.9% of revenue in 2025 (my division of $245 million by $13,178 million). Start-up costs come before the revenue ("The timing and magnitude of our new contract start-ups can vary"), so a new contract loses money in its first months. [Contract Logistics & 3PL Billing](/books/logistics/contract-logistics) covers how the rates become invoices.
 
 ## How to Build It
 

@@ -413,7 +413,7 @@ pub fn shipped<'a>(
 }
 ```
 
-A mock trace (pick a supplier lot, run where-used and the shipments, time it, compare with what the floor says) is the cheapest test of whether these records are complete; Recalls From the Manufacturer's Side records those drills.
+A mock trace (pick a supplier lot, run where-used and the shipments, time it, compare with what the floor says) is the cheapest test of whether these records are complete; [Recalls From the Manufacturer's Side](/books/logistics/manufacturing-recalls) records those drills.
 
 ## Auditing
 

@@ -63,7 +63,7 @@ A retailer purchase order runs a loop with a document at each step, and the bran
 1. **850 Purchase Order** arrives: items, quantities, cost, ship-to distribution center, ship window or must-arrive-by date. It becomes an `orders` row with `channel = 'wholesale'` and the PO number as `external_ref` ([Channel Orders](/books/commerce/order-management#channel-orders-marketplaces-and-purchase-orders)).
 2. **855 Acknowledgment** goes back, accepting, changing or rejecting each line.
 3. **860 Change** from the buyer may follow: a quantity cut, a date moved, a line cancelled. It is a change request against the order, recorded beside the original.
-4. **Routing.** For collect shipments (the retailer pays freight), the brand requests routing (a portal request or an EDI 753) and the retailer assigns a carrier and appointment (a 754). Best Buy wants the request "no later than 12:00 PM CST 7 business days prior to the PO delivery date."
+4. **Routing.** For collect shipments (the retailer pays freight), the brand requests routing (a portal request or an EDI 753) and the retailer assigns a carrier and appointment (a 754), tendering the load down its own carrier routing guide ([Freight Procurement & Routing Guides](/books/logistics/procurement-and-routing-guides#routing-guides), [Tendering & Acceptance](/books/logistics/tendering)). Best Buy wants the request "no later than 12:00 PM CST 7 business days prior to the PO delivery date."
 5. **Ship.** Cartons labeled with GS1-128 labels, a bill of lading with the retailer's load ID, and an **856 Ship Notice** sent before the truck arrives.
 6. **810 Invoice** for what shipped.
 7. **820 Remittance** with the payment on terms, net of deductions, each with a code.

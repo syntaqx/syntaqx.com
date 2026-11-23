@@ -254,7 +254,7 @@ Trucker Tools' "Off Route Alerts" and "Out of Range" alerts, FourKites' disrupti
 
 The recipients of freight notifications are mostly businesses: the shipper's customer service team, the consignee's receiving dock, the shipper's own customer, the carrier's dispatcher. Each wants different news on a different channel:
 
-- **The consignee's dock** wants to know before the window passes that a truck won't make it, and a new time, so it can move the door and the labor. The appointment change itself is a dock scheduling transaction (Yard Management & Dock Scheduling owns it).
+- **The consignee's dock** wants to know before the window passes that a truck won't make it, and a new time, so it can move the door and the labor. The appointment change itself is a dock scheduling transaction ([Yard Management & Dock Scheduling](/books/logistics/yard-and-dock) owns it).
 - **The shipper** wants exceptions with a cause and a plan, often as an outbound 214 with an appointment status (AB for a delivery appointment) and a reason code ([The 214 Shipment Status](/books/logistics/transportation-edi#the-214-shipment-status)), a webhook, a portal, or email to a team.
 - **The shipper's customer,** a store or a plant, wants the current range and a tracking link ([Sharing the Timeline](/books/logistics/visibility-and-tracking#sharing-the-timeline)).
 - **The carrier** wants to know that the broker sees the problem and what it needs (a new ETA, a reason, a recovery plan) before it gets a phone call.

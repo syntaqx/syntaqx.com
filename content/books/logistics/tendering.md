@@ -94,7 +94,7 @@ Two strategies, which SAP's tendering types name:
 - **Sequential (peer-to-peer).** One carrier at a time, in guide order, each with its response window; SAP describes it as "sequential tendering to preselected carriers," waiting for an answer "or until the maximum response time has passed." It respects the guide and the award, and it is slow: four positions at two hours each is eight hours of a load's lead time.
 - **Broadcast.** Several carriers at once; "best offer" waits for answers and picks, "first acceptable offer" takes the first acceptance. It is fast and buys at whatever price is acceptable, and it needs the one-accepted-tender rule and immediate withdrawal of the others.
 
-Most guides mix them: sequential through the contracted positions, then broadcast to a spot pool or a set of brokers, as SAP's multi-step tendering plans and the routing guide's `on_exhausted` step allow. Each step skips carriers that can't take the load now: one already tried in this waterfall, one over its capacity for the period, one whose authority or insurance check failed (Carrier Onboarding & Vetting), one that doesn't run that day of the week. The skip is recorded with its reason, because a skip looks exactly like a rejection in an acceptance report unless it is labeled.
+Most guides mix them: sequential through the contracted positions, then broadcast to a spot pool or a set of brokers, as SAP's multi-step tendering plans and the routing guide's `on_exhausted` step allow. Each step skips carriers that can't take the load now: one already tried in this waterfall, one over its capacity for the period, one whose authority or insurance check failed ([Carrier Onboarding & Vetting](/books/logistics/carrier-onboarding)), one that doesn't run that day of the week. The skip is recorded with its reason, because a skip looks exactly like a rejection in an acceptance report unless it is labeled.
 
 Choosing the next step, from the guide's entries, the tenders already sent and the carriers' current usage:
 
@@ -207,7 +207,7 @@ The pickup's weekday is taken in the origin facility's time zone (Go's `pickup` 
 When the guide is exhausted, the load still has to move. The spot step is one of a small set of moves, chosen by the guide's `on_exhausted` rule and the time left:
 
 - **Request spot quotes** from a set of carriers and brokers, with a short validity, and tender to the best acceptable quote. The quote becomes a one-load `rate_agreements` row (`spot_quote`), and the tender references it.
-- **Post to a load board** (DAT, Truckstop) and book a carrier that responds, which for a broker is daily work (Load Boards & Digital Freight Matching covers the boards and auto-booking).
+- **Post to a load board** (DAT, Truckstop) and book a carrier that responds, which for a broker is daily work ([Load Boards & Digital Freight Matching](/books/logistics/load-boards-and-matching) covers the boards and auto-booking).
 - **Tender to a broker with guaranteed capacity** at an agreed premium, the arrangement the C.H. Robinson and MIT research recommends placing as second backup rather than last resort.
 - **Escalate to a person,** with the waterfall's history in front of them, when the pickup is close.
 
@@ -222,7 +222,7 @@ Tender acceptance is the industry's simplest metric and the easiest to compute w
 - **Dropped loads.** An acceptance followed by a drop is worse than a rejection, because it costs lead time; count drops separately and subtract them from the carrier's effective acceptance.
 - **Market context.** SONAR's national outbound tender rejection index (14.5% in the third quarter of 2026, 12.87% on November 13, 2026) is the market's version of the same measure; a carrier rejecting 15% of a shipper's tenders in that quarter is behaving like the market, and one rejecting 40% is not.
 
-The definitions are the same ones Logistics Metrics uses for its scorecards; what matters here is that the tender rows carry enough state (position, skip, withdrawal, channel, drop) to compute any of them.
+The definitions are the same ones [Logistics Metrics](/books/logistics/logistics-metrics) uses for its scorecards; what matters here is that the tender rows carry enough state (position, skip, withdrawal, channel, drop) to compute any of them.
 
 ## How to Build It
 

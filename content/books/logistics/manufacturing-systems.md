@@ -78,9 +78,9 @@ The MES runs what happens between a work order's release and its completion:
 - **Dispatching:** which order runs on which line, in which sequence, this shift, with the work instructions and the recipe or program version.
 - **Material on the floor:** what was staged, scanned and consumed, by lot, and the containers moved between operations.
 - **Production reporting:** good and scrap quantities per operation, labor and machine time, and the output lot.
-- **Quality on the floor:** in-process checks, sampling plans and holds; AVEVA lists "quality sample plan execution" and statistical process control. Quality systems in depth are Quality Systems.
+- **Quality on the floor:** in-process checks, sampling plans and holds; AVEVA lists "quality sample plan execution" and statistical process control. Quality systems in depth are [Quality Systems](/books/logistics/quality-management).
 - **Performance:** machine states, downtime reasons and OEE; AVEVA's MES measures "OEE KPIs and schedule adherence in real time."
-- **The record of how each unit or lot was made,** which traceability and recalls later read (Lot & Serial Traceability is where that genealogy is modeled).
+- **The record of how each unit or lot was made,** which traceability and recalls later read ([Lot & Serial Traceability](/books/logistics/lot-traceability) is where that genealogy is modeled).
 
 Dynamics 365's production life cycle shows the hand-offs the two levels share, whichever system runs them: created (manually or by "firming planned orders"), estimated (material and resource consumption calculated), scheduled ("operations scheduling" for a "rough, long-term plan" or "job scheduling" for "a detailed plan" with finite capacity), released (after a material availability check, which in Dynamics also releases the BOM lines to warehouse management), picked, started (where consumption can be posted automatically, "known as preflushing, forward flushing, or autoconsumption"), reported as finished (where unreported consumption can be "automatically allocated through back-flushing"), quality assessment, put away, and ended (estimated costs "reversed and replaced with actual costs").
 
@@ -124,9 +124,9 @@ Plants are already `facilities` rows of kind `plant`. The deltas: the plant's co
 ALTER TABLE facilities
   ADD COLUMN erp_plant_code TEXT;        -- the ERP's plant, site or organization code
 
+-- items.base_uom, the unit inventory, BOMs and MRP count in, comes from Warehouse Management Systems.
 ALTER TABLE items
-  ADD COLUMN procurement_type TEXT,      -- the default; plants override in item_plant_settings
-  ADD COLUMN base_uom         TEXT;      -- the unit inventory, BOMs and MRP count in
+  ADD COLUMN procurement_type TEXT;      -- the default; plants override in item_plant_settings
 ALTER TABLE items ADD CONSTRAINT items_procurement_type_check
   CHECK (procurement_type IN ('make', 'buy', 'make_or_buy', 'subcontract')) NOT VALID;
 
