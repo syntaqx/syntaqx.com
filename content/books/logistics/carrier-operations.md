@@ -21,8 +21,8 @@ As of November 2026, from vendor product pages (each vendor's claims are its own
 | Vendor | Product | Dispatch and operations | Assets and maintenance | Settlements |
 | --- | --- | --- | --- | --- |
 | **Alvys** | Alvys TMS, for carriers, brokers and hybrids | "Sourcing & Dispatching," "Dispatch and planning," a driver mobile app | "Asset Management," "Fleet management" | "Driver management and settlement," "Carrier and Driver Settlement"; "3,000+ trucking companies," by its count |
-| **Fleetio** | Fleet maintenance | Not a dispatch product; integrates with telematics providers and ELDs | Preventive maintenance to "Increase uptime and reduce breakdowns"; work orders to "Plan, schedule and approve"; inspection forms; "Powering 1,300,000+ fleet assets" | Not applicable |
-| **Rose Rocket** | Rose Rocket TMS | "Dispatch Workflows," "Quote Management" | Not described on the page | "Freight Audit & Pay" |
+| **Fleetio** | Fleet maintenance | Not a dispatch product; integrates with telematics providers and ELDs | Preventive maintenance to "Increase uptime and reduce breakdowns"; work orders to "Plan, schedule and approve"; inspections ("Get compliant, complete forms every time"); "Powering 1,300,000+ fleet assets" (another banner on the same page says "1,000,000+ powered assets") | Not applicable |
+| **Rose Rocket** | Rose Rocket TMS | "Dispatch Workflows," "Quote Management," "Driver Management" | Not described on the page | "Freight Audit & Pay"; driver settlements not described |
 | **Trimble** | TMW.Suite, TruckMate, Trimble TMS for Carriers | TMW.Suite, "our enterprise level TMS solution" for truckload carriers, brokers, 3PLs and private fleets; TruckMate for LTL, intermodal and "complex trucking companies"; "AI-powered dispatch and order management" in TMS for Carriers | TMS for Carriers tracks "driver and equipment compliance deadlines" | TruckMate runs "from order entry to settlement" |
 | **Trimble** | TMT Fleet Maintenance | Not applicable | Preventive maintenance, repairs and warranty recovery; "real-time engine diagnostics" connected to "shop work orders and parts inventory"; fault code tracking | Not applicable |
 
@@ -30,7 +30,7 @@ McLeod Software, whose LoadMaster product is a long-standing carrier TMS, refuse
 
 Three patterns:
 
-- **The carrier TMS is an operations and accounting system.** TruckMate's "order entry to settlement" and Alvys' settlements and accounting show the scope: a carrier's TMS issues the customer invoice and the driver's pay from the same load, which a shipper's TMS never does.
+- **The carrier TMS is an operations and accounting system.** TruckMate's "order entry to settlement" and Alvys' settlement and "Accounting & Payroll" modules show the scope: a carrier's TMS issues the customer invoice and the driver's pay from the same load, which a shipper's TMS never does.
 - **Maintenance often lives in a separate product fed by telematics.** Trimble sells TMT apart from TMW.Suite; Fleetio integrates with telematics and ELD vendors. The carrier TMS needs maintenance status (is this tractor available?) without owning the shop.
 - **Compliance deadlines are dispatch constraints.** Trimble's TMS for Carriers tracks "driver and equipment compliance deadlines" because an expired medical card or a lapsed annual inspection takes a driver or a truck out of the assignable pool, the same as a breakdown.
 
@@ -69,7 +69,7 @@ The structure that holds all of these is a sequence of **legs** on the load: eac
 The regulations set the maintenance records a carrier keeps, and the dispatch system enforces their consequences:
 
 - **Systematic maintenance and its records** (49 CFR 396.3). "Every motor carrier and intermodal equipment provider must systematically inspect, repair, and maintain" the vehicles it controls, and for each vehicle it has controlled for 30 consecutive days keep its identification ("company number, if so marked, make, serial number, and year"), "a means to indicate the nature and due date of the various inspection and maintenance operations to be performed," and "a record of inspection, repairs, and maintenance indicating their date and nature." The records are kept where the vehicle is housed or maintained "for a period of 1 year," and "for 6 months after the motor vehicle leaves the motor carrier's control."
-- **Driver vehicle inspection reports** (396.11). At the end of each day's work, the driver reports on each vehicle operated, covering brakes, steering, lights and reflectors, tires, horn, wipers, mirrors, coupling devices, wheels and rims, and emergency equipment, but "drivers are not required to prepare a report if no defect or deficiency is discovered by or reported to the driver." Before the vehicle runs again, the carrier certifies on the report that each listed defect was repaired or that repair is unnecessary, and keeps the report and certifications for three months. Carriers operating only one commercial motor vehicle are exempt.
+- **Driver vehicle inspection reports** (396.11). At the end of each day's work, the driver reports on each vehicle operated, covering brakes, steering, lights and reflectors, tires, horn, wipers, mirrors, coupling devices, wheels and rims, and emergency equipment, but "drivers are not required to prepare a report if no defect or deficiency is discovered by or reported to the driver." Before the vehicle runs again, the carrier certifies on the report that each listed defect was repaired or that repair is unnecessary, and keeps the report, the certification and the next driver's review for three months from the date the report was prepared. A carrier operating only one commercial motor vehicle, a driveaway-towaway operation and a private motor carrier of passengers (nonbusiness) are exempt, and intermodal equipment tendered by an intermodal equipment provider is reported under the provider's own process (396.11(b)).
 - **The next driver's review** (396.13). Before driving, a driver must "be satisfied that the motor vehicle is in safe operating condition," review the last report where one was required, and "sign the report to acknowledge that the driver has reviewed it."
 - **Periodic (annual) inspection** (396.17 and 396.21). Every commercial motor vehicle must have passed an inspection of the components in appendix A to part 396 "at least once during the preceding 12 months," with proof on the vehicle; the report identifies the inspector, the carrier, the date, the vehicle and the components with their results, and is kept "for a period of fourteen months."
 
@@ -382,7 +382,7 @@ Design notes:
 - **Legs carry the people and machines.** Hours, pay, fuel and maintenance read `dispatch_legs`; the load's own driver, tractor and trailer columns describe the current leg only.
 - **Dispatch snapshots what it checked.** `hos_snapshot_id` and `checks` keep the clocks, qualification and equipment status as they were at assignment, so a later log edit or a late inspection record doesn't rewrite what dispatch knew.
 - **Availability is derived, never typed.** `equipment_units.assignable` is maintained from inspection reports, maintenance orders and schedules by the same rules as the query above; a dispatcher can't toggle it.
-- **Retention is computed per record.** `retain_until` follows 396.11 (three months) and 396.21 (fourteen months); 396.3 records live for a year and six months after the vehicle leaves the carrier's control ([Data Retention](/docs/building-blocks/data-retention)).
+- **Retention is computed per record.** `retain_until` follows 396.11 (three months) and 396.21 (fourteen months); 396.3 records are kept for a year where the vehicle is housed or maintained, and for six months after the vehicle leaves the carrier's control ([Data Retention](/docs/building-blocks/data-retention)).
 - **Settlements are statements of lines.** Each line points at the revenue charge, the lease chargeback or the leg that produced it, and the supporting document; the net is a sum, stored only when the statement is issued.
 - **The lease version is the trip's.** Settlement lines apply the `equipment_leases` version in force on each trip's date, which [Truckload](/books/logistics/truckload#how-to-build-it) versions.
 - **Drivers' positions and hours are personal data.** Access and retention follow [Consent, Law and Retention](/docs/building-blocks/location-tracking#consent-law-and-retention).
@@ -391,7 +391,7 @@ Design notes:
 
 - **Every dispatch** with who confirmed it, the clocks and checks it relied on, and the driver's acknowledgment.
 - **Every leg,** with driver, co-driver, tractor and trailer, times and miles, the record behind hours, pay and fuel tax.
-- **Maintenance records per 396.3,** each vehicle's identification, schedule and history, kept a year and six months after it leaves the fleet.
+- **Maintenance records per 396.3,** each vehicle's identification, schedule and history, kept a year where the vehicle is housed or maintained and six months after it leaves the fleet.
 - **Every driver vehicle inspection report** with the repair certification and the next driver's review, kept three months, and every periodic inspection report kept fourteen.
 - **Every settlement** with its lines, the rated freight bill for percentage pay, every chargeback's supporting document, the date the delivery documents arrived and the date paid.
 
@@ -409,16 +409,16 @@ Design notes:
 **Regulations**
 
 - [49 CFR 396.3: Inspection, repair, and maintenance](https://www.law.cornell.edu/cfr/text/49/396.3), systematic maintenance, the required records and their retention
-- [49 CFR 396.11: Driver vehicle inspection reports](https://www.law.cornell.edu/cfr/text/49/396.11), the end-of-day report, no-defect exception, repair certification, three-month retention and exemptions
-- [49 CFR 396.13: Driver inspection](https://www.law.cornell.edu/cfr/text/49/396.13), the next driver's review and signature
+- [49 CFR 396.11: Driver vehicle inspection reports](https://www.law.cornell.edu/cfr/text/49/396.11), the end-of-day report, no-defect exception, repair certification, three-month retention, exemptions and intermodal equipment
+- [49 CFR 396.13: Driver inspection](https://www.law.cornell.edu/cfr/text/49/396.13), the safe-condition check, the next driver's review and signature
 - [49 CFR 396.17: Periodic inspection](https://www.law.cornell.edu/cfr/text/49/396.17), the 12-month inspection, proof on the vehicle and who may perform it
 - [49 CFR 396.21: Periodic inspection recordkeeping](https://www.law.cornell.edu/cfr/text/49/396.21), report contents and fourteen-month retention
 - [49 CFR 376.12: Written lease requirements](https://www.law.cornell.edu/cfr/text/49/376.12), the 15-day payment, rated freight bill, chargeback documents, damage deductions and escrow on settlement sheets
 
 **Vendors**
 
-- [Alvys](https://alvys.com/), dispatch, asset management and driver and carrier settlement
-- [Fleetio](https://www.fleetio.com/), preventive maintenance, work orders, inspections and telematics integrations
-- [Rose Rocket](https://www.roserocket.com/), dispatch workflows
+- [Alvys](https://alvys.com/), dispatch, asset management, driver and carrier settlement, accounting and payroll, and the 3,000+ trucking companies count
+- [Fleetio](https://www.fleetio.com/), preventive maintenance, work orders, inspections, telematics and ELD integrations, and the fleet asset counts
+- [Rose Rocket](https://www.roserocket.com/), dispatch workflows, quote management, driver management and freight audit and pay
 - [Trimble: Transportation management](https://transportation.trimble.com/en/solutions/transportation-management), TMW.Suite, TruckMate and TMS for Carriers
 - [Trimble: Fleet maintenance](https://transportation.trimble.com/en/solutions/fleet-maintenance), TMT Fleet Maintenance, diagnostics, work orders and parts

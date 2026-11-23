@@ -24,14 +24,14 @@ As of November 2026, from vendor product pages and filings (each vendor's claims
 | **Blue Yonder** | Transportation Management | Shippers and logistics providers | "Optimization and Planning," "intelligent optimization and load planning," "Transportation Procurement" with bid management "across every mode" |
 | **Descartes Systems Group** | Several TMS lines, including 3GTMS | Shippers, brokers and 3PLs | Acquired 3GTMS, "a leading provider of transportation management solutions," on March 24, 2025 for about $112.7 million net of cash |
 | **e2open** (WiseTech Global) | Transportation management within e2open's network | Shippers and logistics providers | Taken private by WiseTech on August 3, 2025 at US$3.30 a share, an enterprise value of US$2.1 billion |
-| **Infios** (formerly Körber Supply Chain Software) | Infios Transportation Management | "From regional distributors to global 3PLs" | Körber's joint venture with KKR completed its acquisition of MercuryGate, "a provider of transportation management systems (TMS)," announced October 1, 2024; "Körber Supply Chain Software is now Infios" |
+| **Infios** (formerly Körber Supply Chain Software) | Infios Transportation Management | Supply chain execution customers, "5,000+ customers in 70+ countries" by its own count | Transportation management that handles carrier selection, rerouting and appointment updates within a customer's business rules; Körber's joint venture with KKR completed its acquisition of MercuryGate, "a provider of transportation management systems (TMS)," announced October 1, 2024; "Körber Supply Chain Software is now Infios" |
 | **Manhattan Associates** | Manhattan Active Transportation Management | Shippers, often alongside its WMS | "Optimize loads, routes, modes, carriers, and constraints together"; "Tender freight to carriers, manage acceptance, and coordinate dock appointments"; "Audit transportation charges against contracted rates"; private fleet and common carriers "in the same optimization run" with its Dispatch product |
-| **Rose Rocket** | Rose Rocket TMS | Carriers and brokers | "Quote Management," "Dispatch Workflows," "Freight Audit & Pay"; "$3B+ Processed in 2025" |
-| **SAP** | SAP S/4HANA Transportation Management | Shippers and logistics providers | Carrier selection by priority, cost, business share and allocations; tendering by peer-to-peer and broadcast steps; strategic freight procurement with freight agreement RFQs |
+| **Rose Rocket** | Rose Rocket TMS | Transportation operations teams (dispatch, operations, finance); its review ratings come from carriers and brokers | "Quote Management," "Dispatch Workflows," "Freight Audit & Pay"; "$3B+ Processed in 2025" |
+| **SAP** | SAP S/4HANA Transportation Management | Shippers and logistics providers | Carrier selection by priority, lowest cost, business shares and allocations; four tendering types, peer-to-peer (response required or not) and broadcast (best offer or first acceptable offer); strategic freight procurement around a "freight agreement master RFQ" |
 | **Trimble** | TMW.Suite, TruckMate, Trimble TMS for Carriers and for Shippers | Truckload carriers, brokers and private fleets (TMW.Suite); LTL and intermodal carriers (TruckMate) | TMW.Suite is "our enterprise level TMS solution"; TruckMate a "dispatch, operations and accounting system" from "order entry to settlement" |
 | **Uber Freight** (Uber Technologies segment) | Brokerage and managed transportation | Shippers and carriers | "Powers a managed transportation and logistics network and connects Shippers and Carriers in a digital marketplace"; carriers get "transportation management and other logistics services"; $5,099 million of 2025 revenue |
 
-Oracle Transportation Management, Blue Yonder, e2open, Manhattan and SAP are the large shipper-side suites; McLeod, Trimble, Alvys and Rose Rocket serve carriers and brokers. McLeod Software's site refused automated fetches, so its products (LoadMaster for carriers, PowerBroker for brokers, by industry usage) are named here without its own description. <!-- source-gap: logistics-tms-mcleod | missing | McLeod LoadMaster and PowerBroker product scope | closes with: McLeod's product pages or a published customer filing naming them | checked: 2026-11-22 -->
+Oracle Transportation Management, Blue Yonder, e2open, Manhattan and SAP are the large shipper-side suites (Oracle's online help is rendered by script and couldn't be read, so it is named without its own description, as in [Tendering & Acceptance](/books/logistics/tendering#how-the-platforms-do-it)); McLeod, Trimble, Alvys and Rose Rocket serve carriers and brokers. McLeod Software's site refused automated fetches, so its products (LoadMaster for carriers, PowerBroker for brokers, by industry usage) are named here without its own description. <!-- source-gap: logistics-tms-mcleod | missing | McLeod LoadMaster and PowerBroker product scope | closes with: McLeod's product pages or a published customer filing naming them | checked: 2026-11-22 -->
 
 Four patterns:
 
@@ -58,7 +58,7 @@ The spine is shared, which is why the core model works for all three: `owner_par
 Every TMS runs the same pipeline; the three kinds enter it at different steps and own different ones:
 
 1. **Order intake.** Orders arrive from the ERP (or a customer's 204 or portal entry for a broker or carrier) with ship-from, ship-to, lines, requested dates and a delivery term. The term decides who books the freight: under a collect or buyer-arranged term the buyer's TMS plans it; under a prepaid or seller-arranged term the seller's does. Order changes after this step are the commonest source of rework, so each order carries a version.
-2. **Release and shipment building.** Orders (or lines of them) become shipments when they are ready to ship: inventory allocated, dates firm, credit cleared. One order can become several shipments; one shipment can carry lines from several orders to the same consignee. Oracle's term for an order made ready for planning is an order release; SAP builds freight units from orders. The point where demand becomes freight is a state change with a reason, not a batch job's side effect.
+2. **Release and shipment building.** Orders (or lines of them) become shipments when they are ready to ship: inventory allocated, dates firm, credit cleared. One order can become several shipments; one shipment can carry lines from several orders to the same consignee. Vendors name the result differently (an Oracle order release, an SAP freight unit), and the core model maps both to shipments ([The Core Data Model](/books/logistics/logistics-business#the-core-data-model)). The point where demand becomes freight is a state change with a reason, not a batch job's side effect.
 3. **Planning.** Shipments are assigned a mode and either rated individually (parcel, LTL) or grouped into loads (truckload, multi-stop, pool) with stops and appointments ([Load Planning & Optimization](/books/logistics/load-planning)). A carrier's TMS skips this for most freight: the tender it receives is already a load.
 4. **Rating.** Each shipment or load is priced against agreements in force, producing estimated charges on the relevant side ([Rating, Tariffs & Accessorials](/books/logistics/rating-and-accessorials#the-rating-engine)).
 5. **Carrier selection and tendering.** The routing guide ranks carriers for the lane; the load is tendered down the waterfall until one accepts, or goes to the spot market ([Freight Procurement & Routing Guides](/books/logistics/procurement-and-routing-guides#routing-guides), [Tendering & Acceptance](/books/logistics/tendering#the-tender-state-machine)). Acceptance sets `loads.carrier_party_id`.
@@ -96,7 +96,7 @@ My rule at each boundary: the TMS stores the partner's identifiers and message a
 
 ## How to Build It
 
-The core model has the three records and their current status. The TMS adds what drives the pipeline: on orders, who arranges the freight and the order's version; on shipments, release and hold state; on loads, how the plan was made and approved. New tables hold the transition history of shipments and loads and how each carrier connects for each pipeline function. `ALTER`s run on a live database as the business chapter describes ([Lock-Aware DDL](/docs/database/zero-downtime-migrations#lock-aware-ddl)):
+The core model has the three records and their current status. The TMS adds what drives the pipeline: on orders, who arranges the freight and the order's version; on shipments, release and hold state; on shipment lines, the order version each was built from; on loads, how the plan was made and approved. New tables hold the transition history of shipments and loads and how each carrier connects for each pipeline function. `ALTER`s run on a live database as the business chapter describes ([Lock-Aware DDL](/docs/database/zero-downtime-migrations#lock-aware-ddl)):
 
 ```sql
 ALTER TABLE orders
@@ -109,11 +109,13 @@ ALTER TABLE orders ADD CONSTRAINT orders_freight_arranged_by_check
 ALTER TABLE shipments
   ADD COLUMN ready_at           TIMESTAMPTZ,  -- released for planning
   ADD COLUMN hold_reason        TEXT,   -- 'credit', 'inventory', 'order_change', 'customs'
-  ADD COLUMN order_version      INT,    -- the order version this shipment was built from
   ADD COLUMN planned_load_count SMALLINT NOT NULL DEFAULT 0;  -- legs planned, for multi-leg moves
 ALTER TABLE shipments ADD CONSTRAINT shipments_hold_reason_check
   CHECK (hold_reason IS NULL OR hold_reason IN ('credit', 'inventory', 'order_change',
     'customs', 'customer_request', 'other')) NOT VALID;
+
+ALTER TABLE shipment_lines              -- a shipment can carry lines from several orders
+  ADD COLUMN order_version INT;          -- the order version this line was built from
 
 ALTER TABLE loads
   ADD COLUMN planned_by     TEXT,        -- 'manual', 'optimizer', 'customer_tender', 'carrier'
@@ -200,7 +202,7 @@ HAVING count(DISTINCT t.carrier_party_id) > 1;
 Design notes:
 
 - **One function moves each record's state.** Status columns change only through a transition function that checks the allowed transition, writes the transition row and the outbox event in the same transaction ([One Function Moves the State](/docs/building-blocks/workflows#one-function-moves-the-state)).
-- **Order versions travel with shipments.** A shipment built from order version 3 that sees version 4 arrive is flagged for re-planning, not silently edited; the planner decides whether the load changes.
+- **Order versions travel with shipments.** A shipment line built from order version 3 that sees version 4 arrive flags its shipment for re-planning instead of being silently edited; the planner decides whether the load changes.
 - **Partner state is input, not truth.** A 990 or 214 is stored as a document and applied through the same transition function as a user's click, with the document as the cause.
 - **Channels are per function and per carrier.** A carrier can accept tenders by EDI, send status by API and invoice by PDF; `carrier_channel_profiles` routes each function, and a change of channel is a new validity range, so in-flight loads finish on the old one.
 - **The TMS emits, others subscribe.** Accruals, notifications and visibility read the outbox; none of them is called inline from a transition.
@@ -219,7 +221,7 @@ Design notes:
 - **Model the pipeline as states with guarded transitions,** and keep the transition history as rows with actors and causes.
 - **Expect every step to repeat:** re-plan after order changes, re-tender after drops, re-rate after reweighs, and keep each attempt.
 - **Treat partner messages as commands,** idempotent and applied through the same transition rules as users.
-- **Version orders and carry the version onto shipments,** so a late change is a visible decision.
+- **Version orders and carry the version onto shipment lines,** so a late change is a visible decision.
 - **Route each function per carrier,** because carriers connect differently for tenders, status and invoices.
 - **Draw the boundaries with the ERP, WMS, yard and payment systems explicitly,** storing their identifiers and messages as received.
 
@@ -236,8 +238,10 @@ Design notes:
 
 - [Alvys](https://alvys.com/), modules for carriers and brokers, integrations and customer count
 - [Blue Yonder: Transportation management](https://blueyonder.com/solutions/transportation-management), optimization, load planning and procurement
-- [Infios](https://www.infios.com/), Infios Transportation Management and the rename from Körber Supply Chain Software
+- [Infios](https://www.infios.com/), Infios Transportation Management, its customer count and the rename from Körber Supply Chain Software
 - [Manhattan Associates: Transportation management](https://www.manh.com/solutions/supply-chain-management-software/transportation-management), joint optimization, tendering, audit and private fleet planning
 - [Rose Rocket](https://www.roserocket.com/), quote management, dispatch workflows and freight audit and pay
 - [SAP Learning: Carrier selection in SAP S/4HANA Transportation Management](https://learning.sap.com/courses/planning-and-execution-in-sap-s-4hana-transportation-management/carrier-selection), selection strategies, allocations and business shares
+- [SAP Learning: Understanding strategic freight procurement](https://learning.sap.com/courses/charges-and-settlement-in-sap-s-4hana-transportation-management/understanding-strategic-freight-procurement), the freight agreement master RFQ
+- [SAP Documentation: Tendering profile](https://help.sap.com/saphelp_tm91/helpdata/en/43/01feea1b5241e1be095e05e5c9072d/content.htm), the four tendering types
 - [Trimble: Transportation management](https://transportation.trimble.com/en/solutions/transportation-management), TMW.Suite, TruckMate and Trimble TMS for carriers and shippers

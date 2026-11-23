@@ -20,9 +20,9 @@ As of November 2026, from vendor product pages and documentation (each vendor's 
 
 | Vendor | Planning scope, as described | Constraints and options named | Execution link |
 | --- | --- | --- | --- |
-| **Blue Yonder** (Transportation Management) | "Optimization and Planning," "intelligent optimization and load planning" for complex global networks | Not detailed on the page | "Faster multimodal execution" |
-| **Manhattan Associates** (Active Transportation Management) | "Optimize loads, routes, modes, carriers, and constraints together"; plans "re-optimize[d] as capacity, rates, demand, and disruptions change" | Private fleet and common carrier capacity "in the same optimization run" with its Dispatch product | Shared data with its WMS for dock and door decisions; a customer reports cutting "empty miles by 8%" |
-| **SAP** (S/4HANA Transportation Management) | Carrier selection after planning, by priority, cost, business share and allocations | Allocation capacity buckets per dimension (volume, weight, TEU); continuous moves or round trips allowed, disallowed or set per lane; incompatibilities checked when enabled | Ranked carriers feed tendering |
+| **Blue Yonder** (Transportation Management) | "Optimization and Planning," "intelligent optimization and load planning" for "complex and ever-changing global networks" | Its 3D load building names "space, weight, service goals, and real world constraints" | "faster multimodal execution" |
+| **Manhattan Associates** (Active Transportation Management) | "Optimize loads, routes, modes, carriers, and constraints together"; "Continuously re-optimize as capacity, rates, demand, and disruptions change" | Private-fleet and common-carrier capacity "in the same optimization run" when its Dispatch product is paired with the TMS | Transportation insights "inform dock and door selection and warehouse putaway" in its WMS; Manhattan reports that customer Giant Eagle "cut empty miles by 8%" |
+| **SAP** (S/4HANA Transportation Management) | Carrier selection after planning, by priority, lowest total cost, business shares and allocations | Allocation capacities "for multiple dimensions, such as volume, weight, and 20-foot equivalent units"; a continuous move type (only simple continuous moves, only round trips, not considered, or decided per transportation lane); incompatibilities checked when enabled | A carrier ranking list; the highest-ranked carrier can be assigned to the freight order automatically |
 | **Trimble** (PC\*Miler and TMS) | Mileage and truck routing underneath planning: "practical, shortest or fastest routing options" | Truck-specific routing | Mileage for billing, driver pay and audit |
 | **Field Operations' routing engines** (OR-Tools and peers) | The general vehicle routing problem with time windows and capacities | Covered in [What Exists: Solvers and Routing APIs](/books/field-operations/route-optimization#what-exists-solvers-and-routing-apis) | Not freight-specific |
 
@@ -39,7 +39,7 @@ The first decision for each shipment is the mode, and it is a cost comparison un
 | Option | When it wins | What it costs |
 | --- | --- | --- |
 | **Parcel** | A few cartons under the parcel carrier's limits | Per package by weight, zone and dimensional weight ([Dimensional Weight](/books/commerce/shipping-and-carriers#dimensional-weight)) |
-| **LTL** | One to about six pallets to one consignee | Discounted base rate by class or density and weight, plus fuel and accessorials ([Base Rates, Weight Breaks and Discounts](/books/logistics/freight-classification#base-rates-weight-breaks-and-discounts)) |
+| **LTL** | A pallet or a few to one consignee, under the carrier's lineal-foot and capacity-load thresholds | Discounted base rate by class or density and weight, plus fuel and accessorials ([Base Rates, Weight Breaks and Discounts](/books/logistics/freight-classification#base-rates-weight-breaks-and-discounts)) |
 | **Volume LTL or partial truckload** | More pallets than LTL prices well, not a full trailer | A quote by linear feet or pallets, often from the LTL carrier's capacity rules ([Cube, Length and Capacity Rules](/books/logistics/freight-classification#cube-length-and-capacity-rules)) |
 | **Multi-stop truckload** | Several shipments along a route that together fill a trailer | Linehaul plus stop-off charges and out-of-route miles |
 | **Pool distribution** | Many small shipments to one region | A truckload to a pool point plus local delivery per shipment |
@@ -51,9 +51,9 @@ The comparison needs a rate for every candidate on the same basis, which is why 
 
 Consolidation groups shipments onto one load. The candidates are shipments with compatible origins, destinations along a common path, overlapping windows, and freight that can ride together. The rules that make a group feasible:
 
-- **Windows.** Each pickup and delivery inside its appointment or window, in the facility's time zone, with realistic dwell at each stop (an hour or two at a live load, minutes at a drop).
+- **Windows.** Each pickup and delivery inside its appointment or window, in the facility's time zone, with realistic dwell at each stop (a live load or unload holds the truck far longer than a drop does).
 - **Order.** Pickups before their deliveries; for a truckload with several deliveries, the unload order compatible with the load order (the last stop's freight goes in first, at the nose).
-- **Compatibility.** Hazmat segregation (Hazardous Materials in Transport owns the table), temperature (one setpoint per trailer compartment), food and non-food rules a shipper sets, and customers that require dedicated trailers.
+- **Compatibility.** Hazmat segregation ([Segregation, Loading and Attendance](/books/logistics/hazmat-in-transport#segregation-loading-and-attendance) owns the table), temperature (one setpoint per trailer compartment), food and non-food rules a shipper sets, and customers that require dedicated trailers.
 - **Capacity.** Weight, floor positions and cube (the next section).
 - **Hours.** The trip's driving and on-duty time against the clocks a driver will have (below).
 - **Cost.** The consolidated load, priced with stop-offs and out-of-route miles, beats the sum of the alternatives; otherwise the shipments go separately.
@@ -62,7 +62,7 @@ Consolidation also changes what each shipper pays. A broker or 3PL consolidating
 
 ## Multi-Stop Truckloads
 
-A multi-stop truckload is one `loads` row with several `stops`, and every extra stop has a price and a time. J.B. Hunt's published carrier rule pays a stop-off added after tender at "$50 + Out of Route miles," at the load's per-mile rate, which is the shape most agreements use: a fee per stop beyond the first pickup and last delivery, plus the miles the detour adds. The planner prices both, and it also prices the stop's time: a stop with an hour and a half of dwell consumes the driver's 14-hour window as surely as driving does.
+A multi-stop truckload is one `loads` row with several `stops`, and every extra stop has a price and a time. J.B. Hunt's carrier accessorial schedule, as published in December 2020, pays a stop-off added after tender at "$50 + Out of Route miles (OOR)," with the out-of-route dollars per mile matching the load's, which is the shape most agreements use: a fee per stop beyond the first pickup and last delivery, plus the miles the detour adds. The planner prices both, and it also prices the stop's time: a stop with an hour and a half of dwell consumes the driver's 14-hour window as surely as driving does.
 
 Sequencing the stops is a small traveling-salesman problem with time windows, usually solved exactly for the handful of stops a truckload has, or taken from the mileage engine's route. What makes freight sequencing different is that the plan has to be executable at the dock: the freight for the first delivery must be at the tail of the trailer, so the stop order fixes the loading order, and the WMS must build the trailer in reverse stop sequence. A plan that resequences stops after the trailer is loaded is a plan the driver can't follow.
 
@@ -78,8 +78,8 @@ For the data model, a pooled shipment rides two loads: the linehaul (leg 1, from
 
 A trailer is full by one of three measures, and the planner checks all three on every candidate:
 
-- **Weight.** The federal limit on the Interstate System is 80,000 pounds gross vehicle weight, 20,000 on any single axle and 34,000 on a tandem (23 CFR 658.17), and the bridge formula can lower the gross for a given axle spacing; [Truckload](/books/logistics/truckload#equipment) owns the axle check. Freight payload is what's left after the tractor and trailer's tare; ArcBest describes a 53-foot dry van as able to "accommodate up 45,000 pounds of freight," a figure to read as typical, since the real limit is the specific tractor and trailer's tare and axle spacing.
-- **Floor positions.** A 53-foot dry van has "up to 26 standard pallet positions across their floor space" (ArcBest): 48-by-40-inch pallets two across and thirteen deep, loaded straight. Turned or pinwheeled pallets can fit more where the trailer's interior width allows, and stackable freight doubles positions only when the combined height and the pallets' stacking limits allow it.
+- **Weight.** The federal limit on the Interstate System is 80,000 pounds gross vehicle weight, 20,000 on any single axle and 34,000 on a tandem (23 CFR 658.17), and the bridge formula can lower the gross for a given axle spacing; [Truckload](/books/logistics/truckload#equipment) owns the axle check. Freight payload is what's left after the tractor and trailer's tare. As of November 2026, ArcBest's undated dry van guide says 53-foot vans "can accommodate up [to] 45,000 pounds of freight," a figure to read as typical, since the real limit is the specific tractor and trailer's tare and axle spacing; I found no second carrier or standards source publishing a payload figure to benchmark it. <!-- source-gap: logistics-load-planning-van-payload | secondary | a 53-foot dry van carries about 45,000 lb of freight | closes with: a dated carrier, trailer-manufacturer or FHWA/ATA publication of typical tare or payload for a five-axle van combination | checked: 2026-11-22 -->
+- **Floor positions.** The same ArcBest guide gives 53-foot vans "up to 26 standard pallet positions across their floor space," which is the arithmetic of 48-by-40-inch pallets loaded straight, two across and thirteen deep: 13 × 48 inches is 52 feet of a 53-foot floor, and two 40-inch faces are 80 inches of a trailer whose typical width ArcBest gives as 8 feet 6 inches (102 inches, less the walls inside). Turned or pinwheeled pallets can fit more where the trailer's interior width allows, and stackable freight doubles positions only when the combined height and the pallets' stacking limits allow it.
 - **Cube.** Light freight runs out of space before weight; the trailer's interior length, width and height (which vary by manufacturer and by lining) bound it. The handling units' dimensions as tendered, and as measured by the carrier where LTL freight was dimensioned, are the input ([Reweighs, Inspections and Reclassification](/books/logistics/freight-classification#reweighs-inspections-and-reclassification)).
 
 The planner works per handling unit, not per line: a pallet's footprint, height, weight and stackability decide where it can go, and `handling_units.stackable` is already in the core model. Exact three-dimensional loading (which pallet where) is a bin-packing problem most freight planners approximate with floor positions and a stacking rule; the actual position of each handling unit, once loaded, is recorded per load in [LTL Networks](/books/logistics/ltl-networks#how-to-build-it)' `load_handling_units`. The equipment's own capacity (payload, floor positions, interior dimensions, compartments) is data per equipment type, not a constant in code, because a 53-foot reefer, a 48-foot flatbed and a 40-foot high-cube container each carry a different envelope.
@@ -216,7 +216,7 @@ The hours check here is the first-order one (driving and window against what's l
 
 ## Continuous Moves
 
-A continuous move (or round trip) links loads so that one carrier's truck delivers the first and picks up the second nearby, with little empty driving between. For a shipper, it is a way to buy two loads at a lower total from a carrier that would otherwise deadhead; SAP's carrier selection lets continuous moves be "allowed, disallowed, or set per transportation lane." For a carrier, it is the deadhead problem [Truckload](/books/logistics/truckload#deadhead) describes, solved from the shipper's side. The plan records the link between the loads and the discount it was priced at, and tenders them as a pair; if the carrier rejects one, the other's price no longer holds, which is a rule the tender carries.
+A continuous move (or round trip) links loads so that one carrier's truck delivers the first and picks up the second nearby, with little empty driving between. For a shipper, it is a way to buy two loads at a lower total from a carrier that would otherwise deadhead; SAP's carrier selection offers a continuous move type of "only simple continuous moves are allowed, only round-trips are allowed, continuous moves are not considered at all," or a setting where "this decision is made on the transportation lane level." For a carrier, it is the deadhead problem [Truckload](/books/logistics/truckload#deadhead) describes, solved from the shipper's side. The plan records the link between the loads and the discount it was priced at, and tenders them as a pair; if the carrier rejects one, the other's price no longer holds, which is a rule the tender carries.
 
 ## Plans as Runs
 
@@ -274,15 +274,17 @@ ALTER TABLE stops
   ADD COLUMN out_of_route_tenths   INT,          -- miles the stop adds, for stop-off pricing
   ADD COLUMN billable_stop_off     BOOLEAN NOT NULL DEFAULT FALSE;
 
-CREATE TABLE pool_points (               -- a cross-dock that breaks down pooled freight
-  facility_id      UUID PRIMARY KEY REFERENCES facilities (id),
+CREATE TABLE pool_points (               -- a cross-dock that breaks down pooled freight, per version
+  id               UUID PRIMARY KEY DEFAULT uuidv7(),
+  facility_id      UUID NOT NULL REFERENCES facilities (id),
   operator_party_id UUID NOT NULL REFERENCES parties (id),
   serves           TEXT[] NOT NULL,      -- lane keys: 'zip3:303', 'zip3:300'
   cutoff_local     TIME NOT NULL,        -- linehaul must arrive by, in the facility's zone
   delivery_days    SMALLINT NOT NULL DEFAULT 1,  -- days from cutoff to local delivery
   handling_charge  BIGINT,               -- per shipment, minor units
   currency         CHAR(3) NOT NULL,
-  valid_during     TSTZRANGE NOT NULL
+  valid_during     TSTZRANGE NOT NULL,
+  UNIQUE (facility_id, valid_during)
 );
 
 CREATE TABLE load_plan_runs (            -- one optimization or manual planning run
@@ -388,9 +390,9 @@ Design notes:
 
 **Vendors and carriers**
 
-- [Manhattan Associates: Transportation management](https://www.manh.com/solutions/supply-chain-management-software/transportation-management), joint optimization of loads, routes, modes and carriers, re-optimization and private fleet planning
-- [Blue Yonder: Transportation management](https://blueyonder.com/solutions/transportation-management), optimization and load planning
-- [SAP Learning: Carrier selection](https://learning.sap.com/courses/planning-and-execution-in-sap-s-4hana-transportation-management/carrier-selection), allocation capacity by volume, weight and TEU, continuous moves per lane and incompatibilities
+- [Manhattan Associates: Transportation management](https://www.manh.com/solutions/supply-chain-management-software/transportation-management), joint optimization of loads, routes, modes and carriers, re-optimization, private-fleet planning with Dispatch, dock and door selection, and Giant Eagle's 8% empty-mile reduction
+- [Blue Yonder: Transportation management](https://blueyonder.com/solutions/transportation-management), optimization and load planning, 3D load building constraints, multimodal execution
+- [SAP Learning: Carrier selection](https://learning.sap.com/courses/planning-and-execution-in-sap-s-4hana-transportation-management/carrier-selection), priority and lowest-cost selection, business shares, allocation capacity by volume, weight and TEU, continuous move types per lane, incompatibilities and the carrier ranking list
 - [Trimble: PC\*Miler](https://transportation.trimble.com/en/solutions/mapping-and-routing/pcmiler), practical, shortest and fastest truck routing
-- [ArcBest: What you need to know about dry van shipping](https://arcb.com/blog/what-you-need-to-know-about-dry-van-shipping), 26 pallet positions and about 45,000 pounds of freight in a 53-foot dry van
-- [J.B. Hunt: Standardized accessorials in Carrier 360 (December 11, 2020)](https://www.jbhunt.com/blog/j-b-hunt-360/carrier/standardized-accessorials-in-carrier-360), the stop-off charge of $50 plus out-of-route miles
+- [ArcBest: What you need to know about dry van shipping (undated, checked November 22, 2026)](https://arcb.com/blog/what-you-need-to-know-about-dry-van-shipping), 26 pallet positions, up to 45,000 pounds of freight and 53 by 8.5 by 8.5 feet typical dimensions for a 53-foot dry van
+- [J.B. Hunt: Standardized accessorials in Carrier 360 (December 11, 2020)](https://www.jbhunt.com/blog/j-b-hunt-360/carrier/standardized-accessorials-in-carrier-360), the post-tender stop-off charge of $50 plus out-of-route miles at the load's dollars per mile

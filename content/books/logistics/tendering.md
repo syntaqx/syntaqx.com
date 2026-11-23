@@ -23,8 +23,8 @@ As of November 2026, from published implementation guides, vendor documentation 
 | **Kroger** (Harris Teeter 204, version 4030) | EDI 204 | Not stated in the purpose code section | B2A-01 codes 00 Original, 01 Cancellation, 05 Replace |
 | **C.H. Robinson** (truckload 990 guide, version 4010) | EDI 990 from carriers | Not stated | B1-04 is mandatory; codes A Reservation Accepted, D Reservation Cancelled, R Delete, U Change; "If you use R we will consider this as a Decline," "If you use U will consider this as an Accept"; B1-02 echoes its load number from the 204's B2-04 |
 | **XPO** (990 guide, version 4010) | EDI 990 | Not stated | B1-04 codes A Reservation Accepted, B Conditional Acceptance, C Counter Proposal Made, D Reservation Cancelled, N New, R Delete, U Change; optional N9 references and K1 remarks |
-| **SAP** (S/4HANA and TM tendering) | Freight requests for quotation or direct tendering of freight orders | A maximum response duration per tendering step; in direct tendering the system "generally awards the carrier if the carrier does not reject the FO within a given time limit" | Four types: peer-to-peer with response required, peer-to-peer with no response required, broadcast with best offer, broadcast with first acceptable offer; multi-step tendering plans mix them; tendering stops when the freight order changes |
-| **J.B. Hunt** (Carrier 360 rules, buy side) | App and API | Not stated | Truck ordered not used pays only if the load was dispatched (driver en route or arrived) or cancelled the same day as pickup and tendered more than 30 minutes before the pickup appointment |
+| **SAP** (S/4HANA and TM tendering) | Freight requests for quotation or direct tendering of freight orders | A maximum response duration per tendering step; in direct tendering the system "generally awards a carrier if he or she does not reject the FO within a given time limit" | Four types: peer-to-peer with response required, peer-to-peer with no response required, broadcast with best offer, broadcast with first acceptable offer; multi-step tendering plans mix them; tendering can be set to stop when the freight order changes |
+| **J.B. Hunt** (Carrier 360 rules, buy side, published December 11, 2020) | App and API | Not stated | Truck ordered not used pays only if the load was dispatched (driver en route or arrived) or cancelled the same day as pickup and tendered more than 30 minutes before the pickup appointment |
 
 Oracle Transportation Management's online help, which documents its tender statuses and timers, is rendered by script and could not be read for this chapter. <!-- source-gap: logistics-tendering-otm | missing | OTM tender statuses, response-time calculation and retender properties | closes with: a readable copy of OTM's Tender Shipment and Secure Resources help topics | checked: 2026-11-22 -->
 
@@ -67,9 +67,9 @@ Five rules keep the machine honest:
 
 ## Changes and Cancellations
 
-After a tender is sent, the load can change: an appointment moves, a stop is added, the weight goes up, the rate is renegotiated. My rule is that a material change (any date, stop, equipment, rate or hazmat change) is a new revision of the tender that needs a new answer, and a non-material one (a reference number, a contact) is a message that doesn't. The partner's 204 purpose code carries the revision: 04 at CN, 05 at Kroger's Harris Teeter, and SAP stops tendering when a freight order changes. The prior revision becomes `superseded`, and if the carrier had accepted it, the carrier is still covering the load until it answers the new revision; a rejection of the change is a decision the sender then makes (accept the old terms, or re-tender). Revisions are rows, not updates, so the terms the carrier accepted are always recoverable.
+After a tender is sent, the load can change: an appointment moves, a stop is added, the weight goes up, the rate is renegotiated. My rule is that a material change (any date, stop, equipment, rate or hazmat change) is a new revision of the tender that needs a new answer, and a non-material one (a reference number, a contact) is a message that doesn't. The partner's 204 purpose code carries the revision: 04 at CN, 05 at Kroger's Harris Teeter, and SAP can be set to stop tendering when a freight order changes. The prior revision becomes `superseded`, and if the carrier had accepted it, the carrier is still covering the load until it answers the new revision; a rejection of the change is a decision the sender then makes (accept the old terms, or re-tender). Revisions are rows, not updates, so the terms the carrier accepted are always recoverable.
 
-Cancellation after acceptance is where money changes hands. J.B. Hunt's published carrier rule pays $200 for a truck ordered not used ($150 if the carrier's location services were off), but only if the load was dispatched (the driver en route or arrived) or was cancelled the same day as pickup and tendered more than 30 minutes before the pickup appointment. Each condition is a timestamp the system has: acceptance, dispatch, cancellation, appointment. The TONU charge is computed from them as an event accessorial ([Accessorials](/books/logistics/rating-and-accessorials#accessorials)) and references the tender. A carrier dropping an accepted load is the mirror case: no charge in most agreements, but a mark against the carrier's acceptance record, and a new tender for the load that is often more expensive and closer to pickup.
+Cancellation after acceptance is where money changes hands. J.B. Hunt's carrier rule, as published in December 2020, pays $200 for a truck ordered not used ($150 if the carrier's location services were off), but only if the load was dispatched (the driver en route or arrived) or was cancelled the same day as pickup and tendered more than 30 minutes before the pickup appointment. Each condition is a timestamp the system has: acceptance, dispatch, cancellation, appointment. The TONU charge is computed from them as an event accessorial ([Accessorials](/books/logistics/rating-and-accessorials#accessorials)) and references the tender. A carrier dropping an accepted load is the mirror case: often no charge, but a mark against the carrier's acceptance record, and a new tender for the load that is often more expensive and closer to pickup.
 
 ## Rejections and Reasons
 
@@ -145,7 +145,7 @@ func ExpiresAt(sent, pickup time.Time, e Entry, minLead time.Duration) time.Time
 ```
 
 ```rust tab="Rust"
-use chrono::{DateTime, Datelike, Duration, Utc, Weekday};
+use chrono::{DateTime, Duration, Utc, Weekday};
 use std::collections::{HashMap, HashSet};
 
 pub struct Entry {
@@ -168,7 +168,7 @@ pub fn next_step<'a>(
     tried: &HashSet<String>,
     used: &HashMap<String, u32>,
     eligible: impl Fn(&str) -> bool,
-    pickup: DateTime<Utc>,
+    pickup_day: Weekday, // the pickup's weekday in the origin facility's zone
 ) -> (Option<&'a Entry>, Vec<Skip>) {
     let mut skipped = Vec::new();
     for e in guide {
@@ -176,7 +176,7 @@ pub fn next_step<'a>(
             Some("already_tendered")
         } else if e.capacity_loads.is_some_and(|cap| used.get(&e.carrier_id).copied().unwrap_or(0) >= cap) {
             Some("over_capacity")
-        } else if !e.days_of_week.is_empty() && !e.days_of_week.contains(&pickup.weekday()) {
+        } else if !e.days_of_week.is_empty() && !e.days_of_week.contains(&pickup_day) {
             Some("day_of_week")
         } else if !eligible(&e.carrier_id) {
             Some("not_eligible")
@@ -200,7 +200,7 @@ pub fn expires_at(sent: DateTime<Utc>, pickup: DateTime<Utc>, e: &Entry, min_lea
 }
 ```
 
-The pickup's weekday is taken in the origin facility's time zone before it reaches this code; a Monday 01:00 pickup in Chicago is a Monday, whatever the server's clock says.
+The pickup's weekday is taken in the origin facility's time zone (Go's `pickup` carries the facility's location; Rust's `pickup_day` is computed from it before the call): a Sunday 20:00 pickup in Chicago is a Sunday, although it is already Monday in UTC.
 
 ## The Spot Fallback
 
@@ -302,15 +302,15 @@ The timer's work, run every minute and safe to run twice:
 ```sql
 WITH due AS (
   UPDATE tenders
-  SET status = CASE silence_means WHEN 'accepted' THEN 'accepted' ELSE 'expired' END,
-      responded_at = expires_at
-  WHERE status = 'sent' AND expires_at <= NOW()
-  RETURNING id, status, expires_at
+  SET status = 'expired'
+  WHERE status = 'sent' AND expires_at <= NOW() AND silence_means = 'expired'
+  RETURNING id, expires_at
 )
 INSERT INTO tender_events (tender_id, kind, from_status, to_status, occurred_at)
-SELECT id, 'expired', 'sent', status, expires_at FROM due;
--- an 'accepted' by silence also covers the load, through the same function as a 990;
--- the unique index rejects it if another tender on the load was accepted first
+SELECT id, 'expired', 'sent', 'expired', expires_at FROM due;
+-- tenders where silence means 'accepted' go one at a time through the same function
+-- as a 990, because acceptance also covers the load; the unique index rejects one whose
+-- load another tender already covers, without failing the rest of the batch
 ```
 
 And first-tender acceptance and coverage position by lane for a month:
@@ -368,7 +368,7 @@ Design notes:
 
 **Vendors and carriers**
 
-- [SAP Documentation: Freight tendering](https://help.sap.com/saphelp_tm94/helpdata/en/6c/921d2b67584ec2a2a7c0bcc8a0b8dc/content.htm), freight RFQs, direct tendering and award on no rejection, multi-step plans and stopping on change
+- [SAP Documentation: Freight tendering](https://help.sap.com/saphelp_tm94/helpdata/en/6c/921d2b67584ec2a2a7c0bcc8a0b8dc/content.htm), freight RFQs, direct tendering and award on no rejection, multi-step plans and the option to stop on change
 - [SAP Documentation: Peer-to-peer tendering](https://help.sap.com/saphelp_tm91/helpdata/en/5f/57f175cde9425ba738335c6ef75c11/content.htm), sequential tendering and the maximum response time
 - [SAP Documentation: Tendering profile](https://help.sap.com/saphelp_tm91/helpdata/en/43/01feea1b5241e1be095e05e5c9072d/content.htm), the four tendering types and the maximum response duration
 - [J.B. Hunt: Standardized accessorials in Carrier 360 (December 11, 2020)](https://www.jbhunt.com/blog/j-b-hunt-360/carrier/standardized-accessorials-in-carrier-360), the conditions for truck ordered not used
@@ -376,5 +376,5 @@ Design notes:
 **Market**
 
 - [FreightWaves: Q3 2026 freight earnings, rates, capacity and 2027 bid outlook (November 16, 2026)](https://www.freightwaves.com/?p=586024), the tender rejection averages and the November 13, 2026 value
-- [SONAR: How to interpret tender rejection rates](https://gosonar.com/freight-market-blog/how-to-interpret-tender-rejection-rates), the outbound tender rejection index and its bands
+- [SONAR: How to interpret tender rejection rates (June 26, 2025)](https://gosonar.com/freight-market-blog/how-to-interpret-tender-rejection-rates), the outbound tender rejection index and its bands
 - [C.H. Robinson: Research proves why you should put your spot freight in your route guide (May 23, 2023)](https://www.chrobinson.com/en-us/resources/blog/why-you-should-put-spot-freight-in-your-route-guide/), spot providers as a guide position
