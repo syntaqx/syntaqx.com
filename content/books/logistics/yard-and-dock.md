@@ -10,7 +10,7 @@ tags = ["logistics", "warehouse", "yard-management", "dock-scheduling", "appoint
 
 The yard is the part of a warehouse that isn't inside it: the gate where trucks enter, the lot where trailers wait, the doors where they are loaded and unloaded, and the spotters (yard drivers, hostlers or shunters, in different regions) who move trailers between them. A busy distribution center may have more trailers in its yard than doors on its building, most of them owned by carriers, some loaded and waiting to be received, some empty waiting to be loaded, some loaded and waiting for a carrier to hook them. Dock scheduling decides when each truck is expected and at which door; yard management records what is actually in the yard, where, since when and in what state.
 
-The records matter because the yard is where the warehouse's time and the carrier's time collide, and both bill for it. A carrier whose driver waited four hours past an appointment bills detention to its customer, who passes it to the shipper or receiver whose dock caused it; a carrier whose trailer sat in a customer's yard for nine days bills trailer detention; a receiver that refused a load for arriving three hours late wants that recorded too. The DOT Inspector General's estimate of what detention costs drivers and carriers is in [Rating, Tariffs & Accessorials](/books/logistics/rating-and-accessorials#detention), which owns the rules and rates; FMCSA's own detention study, approved for information collection in February 2024, planned to collect data from about 80 carriers and 2,500 drivers. Whoever holds the gate and door records with trustworthy timestamps wins those disputes, and the warehouse is the party that has them.
+The records matter because the yard is where the warehouse's time and the carrier's time collide, and both bill for it. A carrier whose driver waited four hours past an appointment bills detention to its customer, who passes it to the shipper or receiver whose dock caused it; a carrier whose trailer sat in a customer's yard for nine days bills trailer detention; a receiver that refused a load for arriving three hours late wants that recorded too. The DOT Inspector General's estimate of what detention costs drivers and carriers is in [Rating, Tariffs & Accessorials](/books/logistics/rating-and-accessorials#detention), which owns the rules and rates; FMCSA's own detention study, in a February 2024 notice that it would submit the information collection to the Office of Management and Budget, planned to collect data from about 80 carriers and 2,500 drivers. Whoever holds the gate and door records with trustworthy timestamps wins those disputes, and the warehouse is the party that has them.
 
 This chapter covers the platforms, the yard as data, dock appointments and booking APIs, the gate (check-in, seals and inspections), yard moves, yard checks, live and drop operations, and detention evidence. It extends `facilities`, `stops` and `equipment_units` from [The Core Data Model](/books/logistics/logistics-business#the-core-data-model), and the locations and receipts of [Warehouse Management Systems](/books/logistics/warehouse-management#how-to-build-it). Marine terminal and rail ramp appointments, booked in the terminal's own system, are [Intermodal & Drayage](/books/logistics/intermodal-and-drayage#how-to-build-it)'s `terminal_appointments`; trailer pools and hook and drop custody are [Truckload](/books/logistics/truckload#live-drop-and-preloaded)'s.
 
@@ -25,7 +25,7 @@ As of November 2026, from vendor pages and developer documentation:
 | **Infios** | Yard Management System | Connects "display panels, traffic lights, gate systems and transponders"; "constraint-based scheduling" of dock and slot availability |
 | **Kaleris** | Yard Management | "A global leader in yard management solutions since 2004"; configurable check-in and check-out, live yard inventory checks, two-way move tasks for yard drivers, dock door management, tracking of "outbound trailers incurring detention charges" with accessorial charge profiles, self-scheduled appointments for "yard managers, warehouse teams, carriers, and suppliers," RTLS, and multilingual driver kiosks; a 2023 pre-check-in app issuing a QR code, with a claimed check-in time cut of "over 80%" |
 | **Opendock** (Loadsmart) | Dock scheduling with a carrier API | JWT authentication; warehouse search; load types that set appointment length; availability by load type; appointment creation that may return a "requested" status when the warehouse confirms; per-warehouse reference number rules |
-| **Oracle** | Warehouse Management Cloud | A Yard location type, a trailer screen, and appointments that track "planned and actual arrival time and the lead-time from the trailer's check-in time to the receipt of the first LPN" |
+| **Oracle** | Warehouse Management Cloud | Dock and Yard location types, and appointments that track "planned and actual arrival time and the lead-time from the trailer's check-in time to the receipt of the first LPN" |
 
 Three patterns:
 
@@ -63,7 +63,7 @@ Check-in is where the yard's evidence starts. A truck arrives at the gate, and t
 
 Kaleris's kiosks let drivers "check in at their convenience in any language"; its pre-check-in app issues a QR code and alerts the yard system in advance so a door or spot can be reserved before the truck reaches the gate.
 
-**Seals and inspections.** For cross-border freight under CBP's CTPAT program, the shipper seals the trailer "immediately after loading/stuffing/packing" with a high-security seal meeting ISO 17712, and the seal is checked by the "VVTT" process: view the seal and locking mechanisms, verify the seal number against the shipment documents, tug on the seal, and twist and turn a bolt seal to make sure nothing unscrews. CTPAT's highway carrier criteria also call for 17-point inspections of tractors (7 points) and trailers (10 points) "upon entering and departing the storage yards and at the point of loading/stuffing," and for warehouse managers to "periodically verify seal numbers used on conveyances." Domestic shippers apply the same discipline to high-value and food loads. The data consequences: the seal number on the ASN or bill of lading, the seal number found at the gate, the seal applied at departure, and any mismatch as an exception with photos, since a broken or wrong seal decides who bears a shortage claim ([Cargo Liability & Claims](/books/logistics/cargo-claims)).
+**Seals and inspections.** For cross-border freight under CBP's CTPAT program, the shipper seals the trailer "immediately after loading/stuffing/packing" with a high-security seal meeting ISO 17712, and the seal is checked by the "VVTT" process: view the seal and locking mechanisms, verify the seal number against the shipment documents, tug on the seal, and twist and turn a bolt seal to make sure nothing unscrews. CTPAT's highway carrier criteria also call for 17-point inspections of tractors (7 points) and trailers (10 points), where feasible "upon entering and departing the storage yards and at the point of loading/stuffing," and for dock supervisors or warehouse managers to "periodically verify seal numbers used on conveyances." Domestic shippers apply the same discipline to high-value and food loads. The data consequences: the seal number on the ASN or bill of lading, the seal number found at the gate, the seal applied at departure, and any mismatch as an exception with photos, since a broken or wrong seal decides who bears a shortage claim ([Cargo Liability & Claims](/books/logistics/cargo-claims)).
 
 Check-out records the reverse: gate-out time, the seal applied, the trailer's state and the bill of lading that left with it. The gate-in to gate-out interval is the truck's time on site, the basis of detention.
 
@@ -102,7 +102,7 @@ The yard system's records feed the carrier's: a drop at a customer is a `trailer
 
 The same records answer the facility's side: a receiver that charges carriers or vendors for missed appointments (a common retail practice, in vendor compliance programs that Commerce covers in [Wholesale & Retail Distribution](/books/commerce/wholesale-and-retail-distribution#routing-guides)) proves the miss with the appointment and the gate log. The law gives the facility a direct stake: a shipper or receiver that requires a driver to be assisted in loading or unloading must provide the assistance or compensate the owner or operator for its costs, and may not coerce a carrier to load or unload or to pay someone to do it (49 U.S.C. 14103(a) and (b), covered with lumpers in the rating chapter).
 
-Every one of these facts is an event with an occurred time and a received time, in the facility's zone, with its source; the facility's version and the carrier's version of an arrival can differ by an hour, and both are kept ([Event Time Versus Received Time](/books/logistics/logistics-business#the-core-data-model)).
+Every one of these facts is an event with an occurred time and a received time, in the facility's zone, with its source; the facility's version and the carrier's version of an arrival can differ by an hour, and both are kept ([The Core Data Model](/books/logistics/logistics-business#the-core-data-model)).
 
 ## How to Build It
 
@@ -119,7 +119,7 @@ ALTER TABLE warehouse_locations ADD CONSTRAINT warehouse_locations_door_directio
   CHECK (door_direction IS NULL OR door_direction IN ('inbound', 'outbound', 'both')) NOT VALID;
 
 ALTER TABLE facilities
-  ADD COLUMN yard_rules JSONB NOT NULL DEFAULT '{}';  -- late and no-show thresholds, versioned
+  ADD COLUMN yard_rules JSONB NOT NULL DEFAULT '{}';  -- late and no-show thresholds, with a version key
 
 ALTER TABLE equipment_units
   ADD COLUMN last_seen_facility_id UUID REFERENCES facilities (id),  -- a cache of the latest visit
@@ -158,6 +158,7 @@ CREATE TABLE dock_appointments (         -- the facility's reservation of a door
   arrival_outcome     TEXT CHECK (arrival_outcome IN ('early', 'on_time', 'late')),
   late_by             INTERVAL,
   cancelled_by        TEXT CHECK (cancelled_by IN ('carrier', 'facility', 'supplier')),
+  judged_by_rule_ref  TEXT,              -- the yard_rules version that set the outcome
   created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (facility_id, confirmation_number),
   EXCLUDE USING gist (door_location_id WITH =, booked_window WITH &&)
@@ -316,7 +317,7 @@ Design notes:
 
 - [49 U.S.C. 14103: Loading and unloading motor vehicles](https://www.law.cornell.edu/uscode/text/49/14103), the shipper's or receiver's duty to provide assistance or compensate, and the prohibition on coercing loading, unloading or lumper payments
 - [CBP: CTPAT Minimum Security Criteria, Highway Carriers (October 2021)](https://www.cbp.gov/sites/default/files/assets/documents/2022-May/CTPAT%20Highway%20Carriers%20MSC%20October%202021%20%28508%29.pdf), the 17-point tractor and trailer inspection, ISO 17712 high-security seals, seal audits and the VVTT process
-- [FMCSA: Impact of Driver Detention Time on Safety and Operations, information collection approval notice (February 16, 2024)](https://www.federalregister.gov/documents/2024/02/16/2024-03256/agency-information-collection-activities-approval-of-a-new-information-collection-request-impact-of), the planned study of about 80 carriers and 2,500 drivers
+- [FMCSA: Impact of Driver Detention Time on Safety and Operations, information collection notice (February 16, 2024)](https://www.federalregister.gov/documents/2024/02/16/2024-03256/agency-information-collection-activities-approval-of-a-new-information-collection-request-impact-of), the notice of submission to OMB and the planned study of about 80 carriers and 2,500 drivers
 
 **Vendors and developer documentation**
 

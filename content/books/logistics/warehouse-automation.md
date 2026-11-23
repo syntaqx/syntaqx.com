@@ -20,17 +20,17 @@ As of November 2026, from annual and quarterly reports, filings and vendor pages
 
 | Company | What it sells | Scale and model |
 | --- | --- | --- |
-| **Amazon** (Amazon Robotics) | Its own robots for its own network: Proteus, which it describes as its first fully autonomous mobile robot; Sequoia inventory storage; Sparrow and Vulcan arms; DeepFleet, a generative AI model for the fleet | More than 1 million robots deployed since 2012; not sold to third parties |
-| **AutoStore** | Cube storage: an aluminum grid of stacked bins, robots that run on top of it, and ports where people or arms pick | 2025 revenue $538.6 million, gross margin 72.4%, backlog $557.0 million; "all sales are distributed, designed, installed, and serviced by" partner integrators; about 2,050 systems in more than 68 countries (November 2026); an opex offering, AutoStore-as-a-Service, launched in 2025 |
+| **Amazon** (Amazon Robotics) | Its own robots for its own network: Proteus, which it describes as its first fully autonomous mobile robot; Sequoia inventory storage; Sparrow and Vulcan arms; DeepFleet, a generative AI model for the fleet | More than 1 million robots deployed across its operations network since 2012, as of its June 2026 update |
+| **AutoStore** | Cube storage: an aluminum grid of stacked bins, robots that run on top of it, and ports where people or arms pick | 2025 revenue $538.6 million, gross margin 72.4%, backlog $557.0 million at year end; "distributed, designed, installed, and serviced by a network of qualified system integrators"; about 2,050 systems in more than 68 countries (November 5, 2026); an opex offering, AutoStore-as-a-Service, introduced in 2025 |
 | **Dematic** | Automation systems with a software stack of WMS, WES and WCS | Defines WES as uniting "warehouse management and control functionality into a single execution platform to release work continuously," and WCS as directly controlling "conveyors, shuttles, sorters, and AS/RSs" |
-| **Ocado Group** (Ocado Technology Solutions) | Grocery fulfillment centers on a grid with robots, licensed to retailers | 2025 revenue £561.2 million; 30 live sites and 122 live modules at year end; Kroger closed three customer fulfillment centers in January 2026 and paid Ocado $350 million |
+| **Ocado Group** (Ocado Technology Solutions) | Grocery fulfillment centers on a grid with robots, licensed to retailers | Technology Solutions revenue £561.2 million in FY25 (52 weeks to November 30, 2025); 30 live sites and 122 live modules at year end; Kroger closed three customer fulfillment centers in January 2026 and paid Ocado $350 million |
 | **Symbotic** | A multi-level storage structure with autonomous bots for cases and totes, lifts between levels, and robotic depalletizing and palletizing cells | Fiscal 2025 (to September 27, 2025) revenue $2,246.9 million, about 85% from Walmart; 50 systems in deployment and 48 operational under support; backlog about $22.5 billion; acquired Walmart's Advanced Systems and Robotics business in January 2025 |
 
 Three patterns:
 
 - **The market is concentrated on both sides.** A few vendors sell dense storage at scale, and their customers are concentrated too: Symbotic's 10-K says Walmart "accounted for approximately 85% of our total revenue," and its 2022 agreement extended automation to all 42 of Walmart's regional distribution centers. A software team integrating with automation integrates with one vendor's controller per building, often for a decade.
 - **Integrators sit in the middle.** AutoStore sells only through partners, which design, install and service each system; the WMS team talks to the integrator's controller, not to the robot maker.
-- **The business model is moving toward service.** AutoStore launched AutoStore-as-a-Service in 2025 and signed $34.4 million of contract value that year; Symbotic's GreenBox joint venture with SoftBank offers "warehouse-as-a-service." Automation priced per unit handled or per month is a 3PL-style contract, with the same metering and billing problems ([Contract Logistics & 3PL Billing](/books/logistics/contract-logistics)).
+- **The business model is moving toward service.** AutoStore introduced AutoStore-as-a-Service in 2025 and signed $34.4 million of contract value that year; Symbotic's GreenBox joint venture with SoftBank offers "warehouse-as-a-service." Automation priced per unit handled or per month is a 3PL-style contract, with the same metering and billing problems ([Contract Logistics & 3PL Billing](/books/logistics/contract-logistics)).
 
 ## The Kinds of Automation
 
@@ -41,7 +41,7 @@ Three patterns:
 - **Unit-load AS/RS:** cranes in tall aisles storing full pallets, for reserve storage at density and with no forklift travel.
 - **Mini-load and shuttle systems:** totes and cases in racking served by cranes or by shuttles running on each level with lifts at the end of the aisle, for case and each picking.
 - **Cube storage (grid):** AutoStore's design, where bins are "stacked high and tight within the Grid," the grid's aluminum frame doubles as the robots' rails, and robots on top "drive, dig, collect, and deliver" bins to ports. A bin under others is reached by moving the ones above it, so the controller continually re-sorts the stacks to keep fast movers near the top. Ocado's grid works on the same principle for grocery.
-- **Case-handling structures:** Symbotic's bots move cases through a multi-level structure, robotic cells depalletize inbound pallets into cases and build outbound mixed pallets in store-friendly sequence, and its software re-optimizes tasks many times a second.
+- **Case-handling structures:** Symbotic's bots move cases through a multi-level structure, robotic cells depalletize inbound pallets into cases and build outbound mixed pallets in store-friendly sequence, and its software re-optimizes every task multiple times per second.
 
 **Goods-to-person.** The common thread of AS/RS and cube storage: the location travels to a stationary worker at a port, who picks the item the screen shows into an order tote, often guided by lights. The worker's productivity is set by how fast the system presents bins, not by walking, which changes the labor standard ([Labor Standards](/books/logistics/warehouse-operations#labor-standards)).
 
@@ -100,7 +100,7 @@ Automation is sized for a design rate (totes per hour per port, cartons per hour
 - **Availability and downtime,** every fault with its start, end, cause code and the work it stranded. Downtime is a contract measure when automation is bought as a service or run by an integrator under a service agreement.
 - **A degraded mode.** When a sorter stops, cartons go to manual sort lanes; when an AS/RS is down, the building may have no other access to that stock. The WMS needs a defined fallback (release work to manual zones, hold waves, reroute to other doors), triggered by the WCS's status, and tested.
 
-Peak is the stress test: Lineage, the cold storage operator, sees occupancy peak between mid-September and early December, and e-commerce volumes spike in November and December. Automation that runs at its design limit in peak has no slack for faults, which is why buildings keep manual capacity beside it.
+Peak is the stress test: Lineage, the cold storage operator, reports that its occupancy and warehouse revenues "generally peak between mid-September and early December," with the holiday season and the northern hemisphere harvest. Automation that runs at its design limit in peak has no slack for faults, which is why buildings keep manual capacity beside it.
 
 ## Economics
 
@@ -150,7 +150,7 @@ CREATE TABLE automation_messages (       -- every message across the boundary, a
   kind                 TEXT NOT NULL CHECK (kind IN ('master_data', 'task_release',
                          'task_cancel', 'scan', 'confirmation', 'exception', 'snapshot',
                          'status', 'heartbeat')),
-  message_ref          TEXT NOT NULL,    -- our task ID outbound; the controller's event ID inbound
+  message_ref          TEXT NOT NULL,    -- the task ID outbound; the controller's event ID inbound
   sequence             BIGINT,           -- the sender's sequence, when it has one
   task_id              UUID REFERENCES warehouse_tasks (id),
   lpn_id               UUID REFERENCES warehouse_lpns (id),
@@ -184,7 +184,7 @@ CREATE TABLE automation_snapshots (      -- what the machine says it holds, for 
 CREATE TABLE automation_snapshot_lines (
   snapshot_id     UUID NOT NULL REFERENCES automation_snapshots (id),
   container_ref   TEXT NOT NULL,         -- the bin or tote, as the controller names it
-  item_id         UUID REFERENCES items (id),
+  item_id         UUID NOT NULL REFERENCES items (id),  -- an empty bin has no line
   machine_qty     NUMERIC(14, 3) NOT NULL,
   wms_qty         NUMERIC(14, 3),        -- filled by the comparison
   movement_id     UUID REFERENCES inventory_movements (id),  -- the approved adjustment
@@ -216,7 +216,7 @@ WHERE t.id = msg.task_id
 RETURNING t.id;
 ```
 
-When the update returns no row (a duplicate, or a task already completed or cancelled), the message stays with `applied = false` for the audit; when it returns one, the same transaction posts the inventory movement and sets `applied`. Tasks past their `automation_deadline_at` without a confirmation are listed by the index above for a re-query of the controller.
+A duplicate inserts nothing, because the first copy is already kept; when the update returns no row for a new message (the task was already completed, cancelled or shorted), the message stays with `applied = false` for the audit; when it returns one, the same transaction posts the inventory movement and sets `applied`. Tasks past their `automation_deadline_at` without a confirmation are listed by the index above for a re-query of the controller.
 
 Design notes:
 
@@ -250,15 +250,16 @@ Design notes:
 **Filings and reports**
 
 - [Symbotic: Form 10-K for the fiscal year ended September 27, 2025](https://www.sec.gov/Archives/edgar/data/1837240/000183724025000278/sym-20250927.htm), revenue by type, gross margin, net loss, systems in deployment and operational, Walmart's share of revenue, the master automation agreements, the Walmart ASR acquisition and micro-fulfillment commitments, GreenBox, backlog, and the system's bots, structure and cells
-- [AutoStore: Q4 2025 report](https://www.autostoresystem.com/hubfs/04%20Website%20Docs/IR/Q4%202025/AutoStore%20Q4%202025%20Report.pdf), 2025 revenue, margins, order intake, backlog, the partner model, revenue recognized at a point in time and over time, AutoStore-as-a-Service and the Ocado settlement payments
+- [AutoStore: Q4 2025 report](https://www.autostoresystem.com/hubfs/04%20Website%20Docs/IR/Q4%202025/AutoStore%20Q4%202025%20Report.pdf), 2025 revenue, margins, order intake, backlog, the partner model, revenue recognized at a point in time and over time, AutoStore-as-a-Service and the Ocado settlement payments; sales through partners
 - [AutoStore: Q3 2026 press release](https://www.autostoresystem.com/hubfs/02%20Website/Investor%20relations/2026%20Documents/Q3%202026/Q3%202026%20Quarterly%20Press%20Release.pdf), about 2,050 systems in more than 68 countries
 - [Ocado Group: FY25 results announcement](https://cdn.prod.website-files.com/667974bf1bf45146cf81ef1f/699fefa5d86d170effa78fe6_FY25%20Results%20Announcement.pdf), Technology Solutions revenue, live sites and modules, the Kroger closures and payment, the Sobeys closure and FY26 guidance
-- [Lineage: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1868159/000186815926000012/line-20251231.htm), the mid-September to early December occupancy peak
+- [Lineage: Form 10-K for 2025](https://www.sec.gov/Archives/edgar/data/1868159/000186815926000012/line-20251231.htm), the mid-September to early December occupancy and revenue peak
 
 **Vendors**
 
-- [Amazon: Amazon robotics in fulfillment centers](https://www.aboutamazon.com/news/operations/amazon-robotics-robots-fulfillment-center), more than 1 million robots since 2012, Proteus, Sequoia, Sparrow, Vulcan and DeepFleet
+- [Amazon: Amazon robotics in fulfillment centers](https://www.aboutamazon.com/news/operations/amazon-robotics-robots-fulfillment-center), more than 1 million robots since 2012 (updated June 4, 2026), Proteus, Sequoia, Sparrow, Vulcan and DeepFleet
 - [AutoStore: The system](https://www.autostoresystem.com/system), the grid, bins, robots, ports and controller
+- [AutoStore: Partners](https://www.autostoresystem.com/partners), distribution, design, installation and service by qualified system integrators
 - [Dematic: Software](https://www.dematic.com/en-us/software/), its definitions of WMS, WES and WCS
 - [Infios: Warehouse Control System](https://www.infios.com/en/supply-chain-solutions/warehouse-control-system), control of material handling equipment through its logic controllers, vendor-neutral
 - [Manhattan Associates: Warehouse Management](https://www.manh.com/solutions/supply-chain-management-software/warehouse-management), warehouse execution built into the WMS and the Manhattan Automation Network
