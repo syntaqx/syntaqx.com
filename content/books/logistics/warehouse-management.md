@@ -367,7 +367,7 @@ Design notes:
 - **Every receipt,** the notice as received, the seal expected and found, expected against received and damaged per line, the OS&D exceptions with photos, and the advice sent back.
 - **Every count and adjustment,** the hidden system quantity, the count, the variance and its value, the approver and the reason, so shrink can be tested and a client's loss claim answered.
 - **Every status change,** from available to hold and back, with who released it; a recall or a customs hold must show it was respected.
-- **Lot genealogy across moves,** so a lot's every location and every shipment that carried it can be listed without gaps (Lot & Serial Traceability, later in this volume, builds on it).
+- **Lot genealogy across moves,** so a lot's every location and every shipment that carried it can be listed without gaps ([Lot & Serial Traceability](/books/logistics/lot-traceability) builds on it).
 - **Configuration history,** location types, putaway rules, allocation strategies and count tolerances with their effective dates, because "why did it send that pallet there" is answered by the rule in force at the time ([Record Which Rule Decided](/docs/building-blocks/rules-as-data#record-which-rule-decided)).
 
 ## What This Means for the System You Build

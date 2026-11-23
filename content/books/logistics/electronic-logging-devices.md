@@ -104,7 +104,7 @@ FMCSA opened a review of the ELD rule with an advance notice of proposed rulemak
 The ELD is the regulated slice of a telematics stream that carries far more:
 
 - **Positions.** The gateway reports GPS positions far more precisely and often than the ELD's ±1 mile record. Raw positions go to the playbook's high-rate positions table, and the milestones and check calls derived from them become `shipment_events` with source `eld` in the core model ([The Core Data Model](/books/logistics/logistics-business#the-core-data-model), [Where Positions Come From](/books/logistics/visibility-and-tracking#where-positions-come-from)); how positions become arrivals and ETAs is in [Visibility & Tracking](/books/logistics/visibility-and-tracking#arrival-and-departure-at-facilities) and [Arrival and Departure Detection](/docs/building-blocks/location-tracking#arrival-and-departure-detection). A broker usually gets them through a visibility network the carrier authorizes rather than from the ELD vendor directly.
-- **Diagnostics and fuel.** Fault codes, odometer and fuel used feed maintenance, IFTA mileage by jurisdiction (Fuel, Tolls & Fuel Cards) and cost per mile.
+- **Diagnostics and fuel.** Fault codes, odometer and fuel used feed maintenance, IFTA mileage by jurisdiction ([Fuel, Tolls & Fuel Cards](/books/logistics/fuel-and-fuel-cards)) and cost per mile.
 - **Safety events and video.** Harsh events and camera footage are covered in [Safety Scores and Dashcams](/books/field-operations/fleet-and-safety#safety-scores-and-dashcams), and are evidence in crash and cargo claims.
 - **Driver communications.** Dispatch messages through the fleet management system are a supporting document category under 395.11, so the message log is part of the hours record.
 

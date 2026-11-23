@@ -34,7 +34,7 @@ Three patterns:
 
 ## Inside a Warehouse
 
-A warehouse management system (WMS) directs the work in a building. The vocabulary is shared across vendors (Oracle, Manhattan, NetSuite WMS and the 3PLs' own systems):
+A warehouse management system (WMS) directs the work in a building; its internals from the operator's side (locations, license plates, balances and movements) are the Logistics volume's [Warehouse Management Systems](/books/logistics/warehouse-management). The vocabulary is shared across vendors (Oracle, Manhattan, NetSuite WMS and the 3PLs' own systems):
 
 - **Receiving.** A truck arrives against an advance ship notice (ASN), which Oracle's WMS defines as "a notification of pending deliveries, similar to a packing list" that usually "represents the entire contents of an inbound trailer." Cartons or pallets are scanned, counted and checked against the notice; overs, shorts and damage are recorded before anything is stocked.
 - **License plates.** Each pallet, carton or tote carries a license plate number (LPN), so the system can move a container of units as one thing. GS1's Serial Shipping Container Code (SSCC) is the standard plate on cartons and pallets moving between companies.
@@ -72,7 +72,7 @@ A 3PL rents the brand a share of a building, its labor and its carrier rates. Th
 
 The economics push brands toward 3PLs with several nodes (ShipMonk claims reach to "95% of the US within 2 days"), because stock split across two or three buildings lowers zones and transit times at the cost of more inventory in total and more splits ([Splits and Merges](/books/commerce/order-management#splits-and-merges)).
 
-The integration consequence is that a 3PL invoice is an order-level cost the brand has to allocate back to orders and SKUs to know its margin ([Business Models & Unit Economics](/books/commerce/business-models#the-unit-economics)). ShipBob's webhooks include billing topics (charge, refund and credit created) for that reason; a 3PL that only sends a monthly PDF makes contribution margin a spreadsheet exercise.
+The integration consequence is that a 3PL invoice is an order-level cost the brand has to allocate back to orders and SKUs to know its margin ([Business Models & Unit Economics](/books/commerce/business-models#the-unit-economics)). ShipBob's webhooks include billing topics (charge, refund and credit created) for that reason; a 3PL that only sends a monthly PDF makes contribution margin a spreadsheet exercise. How the 3PL turns rate cards and warehouse activity into that invoice is [Contract Logistics & 3PL Billing](/books/logistics/contract-logistics).
 
 ## Amazon Multi-Channel Fulfillment and FBA
 

@@ -47,7 +47,7 @@ X12's transportation sets, with their official titles, who sends them, and where
 | **215** | Motor Carrier Pickup Manifest | Shipper to carrier | `shipments`, `stop_shipments` |
 | **216** | Motor Carrier Shipment Pickup Notification | Shipper to carrier | A pickup request |
 | **217** | Motor Carrier Loading and Route Guide | Shipper to carrier | Routing instructions, kept as `documents` |
-| **300**, **301**, **303** | Reservation (Booking Request) (Ocean); Confirmation (Ocean); Booking Cancellation (Ocean) | Shipper or forwarder and ocean carrier | Ocean bookings (Ocean Shipping) |
+| **300**, **301**, **303** | Reservation (Booking Request) (Ocean); Confirmation (Ocean); Booking Cancellation (Ocean) | Shipper or forwarder and ocean carrier | Ocean bookings ([Ocean Shipping](/books/logistics/ocean-shipping)) |
 | **304** | Shipping Instructions | Shipper or forwarder to ocean carrier | The data for the bill of lading |
 | **310** | Freight Receipt and Invoice (Ocean) | Ocean carrier to bill-to party | `freight_invoices`, `documents` |
 | **315** | Status Details (Ocean) | Ocean carrier to shipper | `shipment_events` with source `edi_315` |
@@ -324,16 +324,16 @@ Three details decide whether the invoice matches:
 - **The invoice can come before the freight.** XPO's guide says that "On collect freight bills the data in B309 will be the actual delivery date. For the shipments invoiced prior to delivery, the B309 will be the estimated date of delivery." The delivery date qualifier (017 or 035) is stored, and an invoice for an undelivered shipment waits for proof of delivery before approval.
 - **Codes become charge kinds through the map.** FUE is `fuel_surcharge`, DSC is `discount` (a negative line), HAZ and PYS are accessorials; another carrier uses other codes for the same charges. Every line keeps the code as billed in `freight_invoice_lines.code` and the kind it mapped to, so audit compares like with like.
 
-How the 210 is audited against the rate, matched to payable charges, short paid and rebilled is Freight Invoicing & Settlement and Freight Audit & Payment.
+How the 210 is audited against the rate, matched to payable charges, short paid and rebilled is [Freight Invoicing & Settlement](/books/logistics/freight-invoicing) and [Freight Audit & Payment](/books/logistics/freight-audit-and-payment).
 
 ## Ocean, Rail and Other Modes
 
 The same structure, different sets, and in ocean a standard that is replacing them:
 
-- **Ocean.** A shipper or forwarder books with a 300, the carrier confirms with a 301 (or cancels with a 303), shipping instructions for the bill of lading go as a 304, statuses come back as 315s ("Status Details (Ocean)"), and the freight bill as a 310. The Digital Container Shipping Association publishes API standards for the same exchanges (Booking, Bill of Lading, Track & Trace, Arrival Notice), and carriers offer both; Ocean Shipping covers the DCSA standards and their event codes, and [Logistics APIs & Standards](/books/logistics/logistics-apis#standards-bodies) covers integrating with them. A 315 lands in `shipment_events` with source `edi_315`, mapped through the same partner code maps as a 214.
+- **Ocean.** A shipper or forwarder books with a 300, the carrier confirms with a 301 (or cancels with a 303), shipping instructions for the bill of lading go as a 304, statuses come back as 315s ("Status Details (Ocean)"), and the freight bill as a 310. The Digital Container Shipping Association publishes API standards for the same exchanges (Booking, Bill of Lading, Track & Trace, Arrival Notice), and carriers offer both; [Ocean Shipping](/books/logistics/ocean-shipping) covers the DCSA standards and their event codes, and [Logistics APIs & Standards](/books/logistics/logistics-apis#standards-bodies) covers integrating with them. A 315 lands in `shipment_events` with source `edi_315`, mapped through the same partner code maps as a 214.
 - **Intermodal and drayage.** Ramps and terminals report as 322 ("Terminal Operations and Intermodal Ramp Activity"); a broker dispatches a dray with a 204 or a 317 ("Delivery/Pickup Order"), and the dray carrier answers in 214s with gate codes (I1, OA), as C.H. Robinson's dray guide shows. The ramp events and the "available" milestone are [Ramps and Rail Legs](/books/logistics/intermodal-and-drayage#ramps-and-rail-legs).
 - **Rail.** The 404 bill of lading instructions, the 417 waybill interchange, the 418 advance consist, the 426 revenue waybill and the 410 freight bill are mapped in [Rail Freight](/books/logistics/rail-freight#waybills-interchange-and-car-events).
-- **Air.** Air cargo runs on IATA's own messages (FWB, FHL, FSU) and its ONE Record standard rather than X12; Air Cargo covers them.
+- **Air.** Air cargo runs on IATA's own messages (FWB, FHL, FSU) and its ONE Record standard rather than X12; [Air Cargo](/books/logistics/air-cargo) covers them.
 - **Outside North America.** UN/EDIFACT has transport messages of its own; the concepts map one to one, and the partner map records the syntax with the version.
 
 ## Versions and Envelopes

@@ -77,7 +77,7 @@ For a retailer or a brand, the inputs to that decision arrive through ordinary c
 
 A recall, usually negotiated with CPSC as a corrective action plan (often through its Fast Track program for firms that report and propose a remedy quickly), has the same steps for every seller:
 
-1. **Scope.** Which products, which lots or date codes, which units: the tracking label data and inventory lots decide it ([Lots, Serials, Expiry and Kits](/books/commerce/inventory#lots-serials-expiry-and-kits)).
+1. **Scope.** Which products, which lots or date codes, which units: the tracking label data and inventory lots decide it ([Lots, Serials, Expiry and Kits](/books/commerce/inventory#lots-serials-expiry-and-kits)). The manufacturer finds those lots by walking its lot genealogy ([Lot & Serial Traceability](/books/logistics/lot-traceability)), and runs its own side of the recall, including FDA, FSIS and NHTSA recalls, as [Recalls From the Manufacturer's Side](/books/logistics/manufacturing-recalls) describes.
 2. **Stop sale.** Every channel at once: listings suspended on the site and marketplaces, store POS blocking the items or lots at the register, warehouse and 3PL stock moved to an unsellable recall bucket, open orders held before they ship.
 3. **Find the buyers.** Orders with the affected items, with contact details and ship-to addresses; store sales where a loyalty account or digital receipt links a customer ([Receipts and Privacy](/books/commerce/point-of-sale#receipts-and-privacy)).
 4. **Notify.** Direct notice to every known buyer, the public recall notice, and notices to retail and marketplace partners, each send recorded.

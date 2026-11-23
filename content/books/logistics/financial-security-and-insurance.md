@@ -28,7 +28,7 @@ Who must carry what, as of November 2026, from the regulations and statutes, wit
 | **C.H. Robinson's carriers** | Contract requirement | $1,000,000 auto liability, $100,000 cargo | Certificate from the carrier's agent to Highway | Carrier FAQ |
 | **TQL's carriers** | Contract requirement | $1,000,000 auto liability (more where local law requires), $100,000 cargo | Verified with the carrier's agent, monitored for lapses | Carrier vetting page |
 
-Ocean intermediaries have their own FMC bonds ($50,000 for an ocean freight forwarder, $75,000 for an NVOCC; [Who's Who](/books/logistics/logistics-business#who-s-who)), which Freight Forwarders & NVOCCs covers; customs bonds belong to Customs Brokers & Bonds.
+Ocean intermediaries have their own FMC bonds ($50,000 for an ocean freight forwarder, $75,000 for an NVOCC; [Who's Who](/books/logistics/logistics-business#who-s-who)), which [Freight Forwarders & NVOCCs](/books/logistics/forwarders-and-nvoccs) covers; customs bonds belong to [Customs Brokers & Bonds](/books/logistics/customs-brokers-and-bonds).
 
 Three patterns:
 
@@ -98,7 +98,7 @@ The rule that changed the market is the **financial responsibility final rule** 
 5. **Bankruptcy is not failure by itself.** A Title 11 filing alone isn't financial failure (387.307(f)(2)), and the drawdown notice rule doesn't apply once the broker has filed (387.307(e)(2)).
 6. **Sureties are policed too.** A surety or trustee that violates the section loses its ability to file financial responsibility instruments for 3 years, after notice and 30 days to contest (387.307(g)); the statute also allows a civil penalty of up to $10,000 (13906(b)(7)).
 
-For a carrier, the practical meaning is that a broker that stops paying now loses its authority within days of the surety's first payment rather than months later, and the 60-day claims window after publication is the deadline to file against the bond. A $75,000 fund split across every unpaid carrier of a failed broker pays little, which is why Paying Carriers, Quick Pay & Factoring treats a broker's payment behavior as a credit question, not an insurance one.
+For a carrier, the practical meaning is that a broker that stops paying now loses its authority within days of the surety's first payment rather than months later, and the 60-day claims window after publication is the deadline to file against the bond. A $75,000 fund split across every unpaid carrier of a failed broker pays little, which is why [Paying Carriers, Quick Pay & Factoring](/books/logistics/paying-carriers) treats a broker's payment behavior as a credit question, not an insurance one.
 
 ## Monitoring Coverage
 
@@ -109,7 +109,7 @@ Coverage is checked at onboarding and then watched, because every element can ch
 - **Expiry dates.** Policies renew yearly; a certificate whose policy expires next week is valid today and useless on a load delivering after it. The check compares expiry with the load's delivery window, not today.
 - **The load's specifics.** Commodity (hazmat needs the higher liability row, high-value goods may need a higher cargo limit), equipment (a reefer load needs reefer breakdown cover where the shipper requires it) and units (scheduled vehicles).
 
-Vendors sell this monitoring as part of carrier onboarding; Carrier Onboarding & Vetting compares them. The records below are the same whichever vendor feeds them.
+Vendors sell this monitoring as part of carrier onboarding; [Carrier Onboarding & Vetting](/books/logistics/carrier-onboarding) compares them. The records below are the same whichever vendor feeds them.
 
 ## How to Build It
 
@@ -243,7 +243,7 @@ Design notes:
 
 ## Auditing
 
-- **What coverage was on file and certified when the carrier was chosen,** for each load: the filing check, the certificate and coverage lines, the requirements in force and the result. A negligent selection claim against a broker turns on what the broker knew or should have checked when it chose the carrier (How Freight Brokerage Works covers the case law), and this record is the answer.
+- **What coverage was on file and certified when the carrier was chosen,** for each load: the filing check, the certificate and coverage lines, the requirements in force and the result. A negligent selection claim against a broker turns on what the broker knew or should have checked when it chose the carrier ([How Freight Brokerage Works](/books/logistics/freight-brokerage) covers the case law), and this record is the answer.
 - **Every certificate as received,** with how it arrived and whether it was verified with the agent, kept beyond the policy term for the claim window.
 - **Every cancellation notice and when it was seen,** against loads tendered after it.
 - **The broker's own bond events,** claims, payments and notices, with the response deadlines met or missed ([Audit Trails](/docs/building-blocks/audit-trails)).

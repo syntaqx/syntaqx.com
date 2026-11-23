@@ -38,6 +38,8 @@ RLI's split is the industry's split. **Contract** surety (bid, performance and p
 | **Customs and federal bonds** | US government agencies | Importers' duties, federal licensing and contract obligations |
 | **Public official bonds** | A public body | Faithful performance by an official who handles public money |
 
+Two freight bonds show the commercial pattern at work: the importer's customs bond, which secures duties to CBP ([Customs Bonds](/books/logistics/customs-brokers-and-bonds#customs-bonds)), and the BMC-84 bond a freight broker or forwarder files with FMCSA for unpaid carriers and shippers ([Broker and Forwarder Security](/books/logistics/financial-security-and-insurance#broker-and-forwarder-security)).
+
 Fidelity bonds (employee dishonesty) are named bonds but are really two-party insurance for the employer, and are usually written on crime forms.
 
 ## Federal Bonds and the Miller Act

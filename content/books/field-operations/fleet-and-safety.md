@@ -28,6 +28,8 @@ Once a vehicle is a CMV, a set of obligations attach, and each one is a record t
 
 The last row is an app requirement disguised as a driving rule. A technician app that pops up a "confirm your next stop" dialog or expects a dispatcher's message to be acknowledged while the van is moving is asking a CMV driver to break the law, and it's a distraction risk for every other driver too. Gate interactions on vehicle motion (from telematics or the phone's activity recognition), and let voice and auto-advance handle the rest.
 
+A fleet whose drivers fall outside the short-haul exception runs the full rules, covered for motor carriers in [Hours of Service](/books/logistics/hours-of-service) and [ELDs & Telematics](/books/logistics/electronic-logging-devices).
+
 ## The Telematics Market
 
 Fleet telematics vendors sell the hardware (a vehicle gateway on the diagnostic port, a dash camera) and a platform that turns its signals into locations, trips, hours of service logs, inspections, fuel tax reports and safety events. Field service platforms integrate with them rather than compete. The four most commonly integrated expose very different APIs:

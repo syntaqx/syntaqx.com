@@ -135,7 +135,7 @@ Many vendors still get paid by check, often because nobody ever enrolled them in
 
 ## Stopping the Changed Bank Account
 
-The defining fraud in payables is business email compromise: an email, apparently from a vendor or an executive, asking to send the next payment somewhere new. The FBI's 2025 Internet Crime Report counts 24,768 BEC complaints and $3.05 billion in reported losses, second only to investment fraud. The attacker doesn't need to break anything. They only need the payer to update a bank account.
+The defining fraud in payables is business email compromise: an email, apparently from a vendor or an executive, asking to send the next payment somewhere new. The FBI's 2025 Internet Crime Report counts 24,768 BEC complaints and $3.05 billion in reported losses, second only to investment fraud. The attacker doesn't need to break anything. They only need the payer to update a bank account. In freight the change can also arrive as a forged notice of assignment or remit-to change on a carrier's invoice ([Paying Carriers, Quick Pay & Factoring](/books/logistics/paying-carriers#payment-diversion-controls)).
 
 So bank detail changes are the most carefully controlled operation in the system:
 
