@@ -385,9 +385,9 @@ And detention owed at a stop under an agreement's rule, from the stop's own time
 ```sql
 SELECT st.id AS stop_id,
        a.code,
-       GREATEST(0, EXTRACT(EPOCH FROM (st.departed_at
-         - GREATEST(st.arrived_at, lower(st.appointment)))) / 60 - a.free_minutes)::int
-         AS billable_minutes
+       floor(GREATEST(0, EXTRACT(EPOCH FROM (st.departed_at
+         - GREATEST(st.arrived_at, lower(st.appointment)))) / 60 - a.free_minutes))::int
+         AS billable_minutes          -- whole minutes; a cast alone would round
 FROM stops st
 JOIN accessorial_rates a ON a.rate_agreement_id = $2 AND a.code = 'DET'
 WHERE st.load_id = $1

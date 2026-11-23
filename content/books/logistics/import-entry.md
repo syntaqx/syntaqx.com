@@ -90,7 +90,7 @@ The entry (cargo release; on paper, CBP Form 3461) asks CBP to release the goods
 
 ### The Entry Number
 
-Every entry has an 11-character number: "the three-digit filer code, followed by the seven-digit entry number, and completed with the one-digit check digit" (Form 7501 instructions, block 1). The filer code is CBP's assignment to the broker or self-filing importer; the seven digits are the filer's own sequence. The check digit is a Luhn-style sum over the ten preceding characters, with letters in the filer code mapped to digits first (A, J and S are 1, 2 and 2 in a table the instructions print), every second position doubled with its digits summed, and the result subtracted from the next multiple of ten. CBP's example, "B76-0324527-8," checks:
+Every entry has an 11-character number: "the three-digit filer code, followed by the seven-digit entry number, and completed with the one-digit check digit" (Form 7501 instructions, block 1). The filer code is CBP's assignment to the broker or self-filing importer; the seven digits are the filer's own sequence. The check digit is a Luhn-style sum over the ten preceding characters, with letters in the filer code mapped to digits first (A, J and S are 1, 1 and 2 in a table the instructions print), every second position doubled with its digits summed, and the result subtracted from the next multiple of ten. CBP's example, "B76-0324527-8," checks:
 
 ```go tab="Go"
 // EntryCheckDigit computes the check digit of a CBP entry number from its three-
@@ -199,7 +199,7 @@ Until liquidation, the importer can fix its own entry summary. A post-summary co
 
 ### Liquidation
 
-Liquidation is CBP's final computation of duty. An entry not liquidated within one year from entry is "deemed liquidated" at the rate, value and amount the importer asserted, unless CBP extends liquidation (up to four years from entry in total) or it is suspended by statute or court order, as AD/CVD entries are until Commerce issues instructions, after which CBP has six months (19 U.S.C. 1504). Refunds or bills follow liquidation within 90 days. Liquidation is posted in ACE and on CBP's bulletin notice; the system records the liquidation date, type (no change, increase, decrease) and amount for each entry, because the protest clock starts there.
+Liquidation is CBP's final computation of duty. An entry not liquidated within one year from entry is "deemed liquidated" at the rate, value and amount the importer asserted, unless CBP extends liquidation (up to four years from entry in total) or it is suspended by statute or court order, as AD/CVD entries are until Commerce issues instructions, after which CBP has six months (19 U.S.C. 1504). After liquidation, CBP refunds an excess deposit with interest within 30 days, and a bill for increased duties is due 30 days after it issues (19 U.S.C. 1505(b)). Liquidation is posted in ACE and on CBP's bulletin notice; the system records the liquidation date, type (no change, increase, decrease) and amount for each entry, because the protest clock starts there.
 
 ### Protests
 
@@ -437,6 +437,7 @@ Design notes:
 **Statutes and regulations**
 
 - [19 U.S.C. 1504: Limitation on liquidation](https://www.law.cornell.edu/uscode/text/19/1504), deemed liquidation, extensions, suspension and refund timing
+- [19 U.S.C. 1505: Payment of duties and fees](https://www.law.cornell.edu/uscode/text/19/1505), 30 days to pay a bill or refund an excess deposit after liquidation
 - [19 U.S.C. 1514: Protest against decisions of CBP](https://www.law.cornell.edu/uscode/text/19/1514), the 180-day deadline and protestable decisions
 - [19 U.S.C. 1592: Penalties for fraud, gross negligence, and negligence](https://www.law.cornell.edu/uscode/text/19/1592), penalty levels and prior disclosure
 - [19 CFR 4.7: Inward foreign manifest](https://www.law.cornell.edu/cfr/text/19/4.7), the 24-hour vessel cargo declaration and the bulk exemption

@@ -267,8 +267,9 @@ SELECT DISTINCT w.lot_id, l.lot_code, sl.shipment_id, s.consignee_party_id,
        s.destination_facility_id
 FROM where_used w
 JOIN lots l ON l.id = w.lot_id
-LEFT JOIN shipment_lines sl ON sl.lot_id = w.lot_id
-LEFT JOIN shipments s ON s.id = sl.shipment_id AND s.status <> 'cancelled';
+LEFT JOIN (shipment_lines sl
+           JOIN shipments s ON s.id = sl.shipment_id AND s.status <> 'cancelled')
+  ON sl.lot_id = w.lot_id;                       -- a cancelled shipment drops its lines too
 ```
 
 The same walk in application code, both directions, for a service that keeps a plant's genealogy in memory or answers traces from a graph store. It returns each lot reached with its shortest distance from the start and stops on cycles:
