@@ -54,6 +54,10 @@ Delivery on December 28, 2026 is January 2027 business on a broadcast calendar a
 The broadcast month is computable from the rule alone:
 
 ```go tab="Go"
+package billing
+
+import "time"
+
 // lastSunday returns the last Sunday of year/month.
 func lastSunday(year int, month time.Month) time.Time {
 	d := time.Date(year, month+1, 0, 0, 0, 0, 0, time.UTC) // last day of month
@@ -150,7 +154,7 @@ Money changes after an invoice in four ways, and none of them edits the invoice:
 - **A corrected invoice.** A wrong invoice (wrong rate, wrong count, wrong debtor) is voided or credited in full and reissued. The 3.0 terms exempt "corrections of previously provided invoices" from the 90-day deadline, which is the only reason that deadline doesn't trap a correction.
 - **A refund.** Where the buyer prepaid, a credit can become money back: under 3.0, an agency that "has made a cash prepayment" for an IO that under-delivered and is current on its other balances "may elect to receive a refund." The refund itself is a payment, the Payments volume's ([Payouts & Settlement](/books/payments/payouts-and-settlement)).
 
-My rules: every credit or correction names the invoice line or delivery rows it corrects and the reason; a credit is never larger than what it corrects without a reviewed exception; and the credit's period is the period it is issued in, while its reference is the period it corrects, so both "what did March cost?" and "what did we credit in April?" have answers.
+My rules: every credit or correction names the invoice line or delivery rows it corrects and the reason; a credit is never larger than what it corrects without a reviewed exception; and the credit's period is the period it is issued in, while its reference is the period it corrects, so both "what did March cost?" and "what was credited in April?" have answers.
 
 ## Prepayment and Proration
 

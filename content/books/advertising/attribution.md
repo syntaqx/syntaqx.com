@@ -204,6 +204,10 @@ CREATE TABLE attribution_credits (       -- the platform's answer: which interac
 A rules-based attribution is a pure function of the setting, the conversion time and the candidate interactions. The sketch applies click, engaged-view and view windows, gives clicks precedence over engaged views and engaged views over views (my default, which keeps view-through from taking credit a click earned), and returns the last eligible interaction of the winning kind with its lag:
 
 ```go tab="Go"
+package attribution
+
+import "time"
+
 type Touch struct {
 	EventID    string
 	LineItemID string
