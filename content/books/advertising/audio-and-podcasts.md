@@ -19,11 +19,11 @@ As of November 2026, from annual reports and company pages. Rows are sellers of 
 
 | Seller | What it sells | How it's bought | Published scale |
 | --- | --- | --- | --- |
-| **iHeartMedia** | Broadcast radio, its Digital Audio Group (including podcasting) and Katz Media representation | Direct sales, programmatic marketplaces and the Triton Audio Marketplace, "an open audio exchange" across broadcast, podcast and streaming | Podcasting revenue $563.7 million in 2025 (from $448.8 million in 2024); "167 million global monthly downloads and streams," as measured by Podtrac |
+| **iHeartMedia** | Broadcast radio, its Digital Audio Group (including podcasting) and Katz Media representation | Direct sales, programmatic marketplaces and the Triton Audio Marketplace, "an innovative global open audio exchange" across broadcast, podcast and streaming | Podcasting revenue $563.7 million in 2025 (from $448.8 million in 2024); "167 million global monthly downloads and streams," as measured by Podtrac |
 | **SiriusXM** (Pandora, SiriusXM Media, AdsWizz) | Audio, display and video ads on Pandora's free tier, off-platform inventory, and the SiriusXM Podcast Network | Direct through SiriusXM Media; AdsWizz technology "from dynamic ad insertion to advanced programmatic platforms" | SiriusXM Media reaches "approximately 170 million monthly listeners"; Pandora had about 41.1 million monthly active users at December 31, 2025 |
-| **Spotify** | Ads in music and podcasts on its free tier, and podcast inventory through Megaphone and the Spotify Audience Network ("audio-first advertising marketplace") | Direct, Spotify Ads Manager and the Spotify Ad Exchange (launched April 2, 2025 through The Trade Desk and DV360) | Ad-Supported revenue €1,836 million in 2025, 11% of total revenue; 476 million ad-supported monthly active users |
+| **Spotify** | Ads in music and podcasts on its free tier, and podcast inventory through Megaphone and the Spotify Audience Network ("audio-first advertising marketplace") | Direct, Spotify Ads Manager and the Spotify Ad Exchange (open to The Trade Desk and DV360 as of April 2, 2025) | Ad-Supported revenue €1,836 million in 2025, 11% of total revenue; 476 million ad-supported monthly active users |
 
-The filings also show the pricing shift. Spotify's ad revenue fell 1% in 2025, which it attributes mainly to lower direct music and podcast sales from "a decrease in fixed-CPM rates as well as a decrease in music impressions sold," partly offset by €103 million more from automated channels "driven by more music impressions sold, mainly on biddable offerings." Audio is moving from direct, fixed-price sales to auctions, as display did a decade earlier, and its systems need the programmatic plumbing (OpenRTB audio, deals, supply chain files) that the rest of this volume describes.
+The filings also show the pricing shift. Spotify's ad revenue fell 1% in 2025, which it attributes mainly to lower direct music and podcast sales from "a decrease in fixed-CPM rates as well as a decrease in music impressions sold," partly offset by €103 million more from automated channels "driven by an increase in music impressions sold primarily on our biddable offerings." Audio is moving from direct, fixed-price sales to auctions, as display did a decade earlier, and its systems need the programmatic plumbing (OpenRTB audio, deals, supply chain files) that the rest of this volume describes.
 
 ## Streaming Audio
 
@@ -322,7 +322,7 @@ CREATE TABLE host_read_spots (            -- a host-read ad booked into episodes
 
 ALTER TABLE ad_events ADD COLUMN measured_by TEXT;  -- 'server_log' or 'client_beacon', per the guidelines
 ALTER TABLE ad_events ADD CONSTRAINT ad_events_measured_by_check
-  CHECK (measured_by IN ('server_log', 'client_beacon')) NOT VALID;  -- on each partition, then the parent
+  CHECK (measured_by IN ('server_log', 'client_beacon')) NOT VALID;  -- on the parent; Postgres adds it to every partition
 ```
 
 Design notes:

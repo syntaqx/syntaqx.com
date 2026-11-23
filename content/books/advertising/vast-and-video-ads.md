@@ -20,10 +20,10 @@ As of November 2026, from the specifications and each vendor's documentation. Ro
 | Standard or system | Role | Versions supported | Notes |
 | --- | --- | --- | --- |
 | **AWS Elemental MediaTailor** | Server-side ad insertion: requests VAST or VMAP from an ad decision server and stitches the ads | VAST and VMAP from the ADS | Transcodes ads to match the content; an ad not yet transcoded is skipped and prepared "for the next request" |
-| **Google Ad Manager Dynamic Ad Insertion** | Server-side insertion for live and VOD | "VAST-compliant ads only" | VPAID not supported; every video ad must be transcoded into HLS variants, at the latest on the first monetizable impression |
+| **Google Ad Manager Dynamic Ad Insertion** | Server-side insertion for live and VOD | "All video ads must be VAST compliant" | VPAID not supported; every video ad must be transcoded into HLS variants, at the latest on the first monetizable impression |
 | **Google IMA SDK (HTML5)** | Client-side player SDK that requests and plays VAST | VAST 2 and 3 fully; VAST 4 partially (SIMID, multiple `UniversalAdId`, some 4.0 features); VMAP 1.0.1 partially; VPAID 2; SIMID 1.0; OM SDK 1.3 | VMAP tracking events, error codes and `repeatAfter` unsupported |
 | **IAB Tech Lab OM SDK** | Measurement API (OMID) verification vendors use through one integration | OMID 1.6 current | Web video SDK since December 2020; CTV formats in the November 2026 release |
-| **IAB Tech Lab SIMID** | Interactive layer replacing VPAID's interactivity | 1.2 | Creative runs sandboxed; "allows publisher players to be in control of their streams" |
+| **IAB Tech Lab SIMID** | Interactive layer replacing VPAID's interactivity | 1.2 | Creative runs sandboxed; separation "allows publisher players to be in control of their streams" |
 | **IAB Tech Lab VAST** | The ad response format | 4.3 (December 2022) latest published; CTV Addendum (July 2024); 4.4 on GitHub with "Publication Date TBD" | VPAID "Deprecated, replaced with SIMID" |
 
 Two things stand out. Support is uneven: the most widely used client SDK still fully supports only VAST 2 and 3, so a creative that relies on a 4.x feature has to degrade. And the server-side services don't play VPAID at all, which is why CTV and stitched video run on plain media files plus OMID and SIMID where the device allows.
@@ -32,7 +32,7 @@ Two things stand out. Support is uneven: the most widely used client SDK still f
 
 A VAST response is a `<VAST>` root with a `version` attribute and one or more `<Ad>` elements, each either an `<InLine>` (the ad itself) or a `<Wrapper>` (a pointer to another VAST document plus this party's tracking). An `Ad` with a `sequence` attribute is part of a pod and plays in that order. The InLine carries:
 
-- **`<AdSystem>`, `<AdTitle>`, `<AdServingId>`:** who served it, and an ID for this serve that tracking can echo as `[ADSERVINGID]`, "formatted as {AD SERVER NAME}-{UUID}".
+- **`<AdSystem>`, `<AdTitle>`, `<AdServingId>`:** who served it, and an ID for this serve that tracking can echo as `[ADSERVINGID]`, in the macro list's format `{AD SERVER NAME}-{UUID}`.
 - **`<Impression>`:** URLs to call when the impression occurs. All Impression URIs in the InLine and every preceding Wrapper "should be triggered at the same time when the impression for the ad occurs, or as close in time as possible."
 - **`<Error>`:** URLs to call with `[ERRORCODE]` when the ad fails.
 - **`<AdVerifications>`:** verification scripts. IAB Tech Lab "strongly recommends" OMID-compatible code; a player that declines one must call its `verificationNotExecuted` URI with a reason code.
@@ -41,7 +41,7 @@ A VAST response is a `<VAST>` root with a `version` attribute and one or more `<
 
 **UniversalAdId** is required for linear ads and identifies the creative across systems. It "consists of an attribute for defining the `idRegistry`" (the registry where the ID is cataloged, such as Ad-ID for US TV commercials) and the ID value; VAST 4.2 allows several. It is the field that lets a stitcher cache one transcode for a creative served by ten ad servers, a pod deduplicate the same commercial bought twice, and a TV measurer match a digital spot to its linear airing. The CTV guide says it plainly: "there needs to be a way to uniquely identify each piece of creative content across all ad systems."
 
-**Media files and the mezzanine.** `<MediaFile>` "should only be used to include video or audio files"; code goes in `<InteractiveCreativeFile>`. The **mezzanine** is "the raw high-quality video file that the publisher can use to produce the best quality file where needed"; it is never played, only transcoded, and exists for server-side insertion, where the stitcher must re-encode the ad to match the content's ladder. Error 406 means a mezzanine was required and missing, 407 that it is "still downloading" (so the ad was skipped this time), and 411 that it is out of spec.
+**Media files and the mezzanine.** `<MediaFile>` "should only be used to include video or audio files"; code goes in `<InteractiveCreativeFile>`. The **mezzanine** is "the raw high-quality video file that the publisher can use to produce the best quality file where needed"; it is never played, only transcoded, and exists for server-side insertion, where the stitcher must re-encode the ad to match the content's ladder. Error 406 means a mezzanine was required and missing, 407 that it is being downloaded for the first time (so the ad was skipped this time), and 411 that it is out of spec.
 
 A minimal InLine with one rendition, a mezzanine, a verification script and quartile tracking:
 
@@ -115,7 +115,7 @@ My rule for a system that produces VAST: emit the lowest version that carries wh
 
 A **Wrapper** says "the ad is over there" (`<VASTAdTagURI>`) and adds this party's `<Impression>`, `<Error>` and tracking. The player fetches the next document, and the next, until it reaches an InLine, then fires every party's impression URLs together when the ad starts. Wrappers are how an agency ad server, a DSP and an SSP each count the same impression from their own pixels without trusting each other's.
 
-The spec limits the chain: "VAST Wrappers should be limited to five before resulting in an InLine response." A player that sees more may stop, call the error URLs with 302 ("Wrapper limit reached") and move on. Error codes "should be sent for every wrapper in the chain that provides one," so a failure deep in the chain reaches every party that wrapped it. Two attributes on a Wrapper control fallbacks: `followAdditionalWrappers` (whether the chain may continue) and `fallbackOnNoAd` (whether to try the next ad in a pod or buffet if this one comes back empty).
+The spec limits the chain: "VAST Wrappers should be limited to five before resulting in an InLine response." A player that sees more may stop, call the error URLs with 302 ("Wrapper limit reached") and move on. "Error codes should be sent for all wrappers in the chain where provided," so a failure deep in the chain reaches every party that wrapped it. Two attributes on a Wrapper control fallbacks: `followAdditionalWrappers` (whether the chain may continue) and `fallbackOnNoAd` (whether to try the next ad in a pod or buffet if this one comes back empty).
 
 Server-side stitchers don't play wrappers: the CTV guide says "If the VAST tag response is a Wrapper tag then the ad-stitching service should extract the inner InLine response," and fire the accumulated tracking itself. So in SSAI, the stitcher does the chain resolution a player would, under a much tighter time budget, for thousands of viewers at once.
 
@@ -271,14 +271,14 @@ Three rules turn events into counts. The impression is the `<Impression>` URLs, 
 | `[ADPLAYHEAD]` | The ad's playhead, HH:MM:SS.mmm (replaces `[CONTENTPLAYHEAD]`, deprecated in 4.1) | 4.1 |
 | `[BREAKPOSITION]` | 1 pre-roll, 2 mid-roll, 3 post-roll, 4 standalone, 0 none or other | 4.1 |
 | `[SERVERSIDE]` | 0 the client fired it; 1 a server fired it on behalf of a client that told it to; 2 a server fired it on behalf of another server or on its own decision | 4.1 |
-| `[DEVICEIP]`, `[SERVERUA]`, `[CLIENTUA]` | The device's IP when a server makes the call; the server's own user agent, which "should name the company and product"; the player and VAST client | 4.1 |
+| `[DEVICEIP]`, `[SERVERUA]`, `[CLIENTUA]` | The device's IP when a server makes the call; the server's own user agent, which should "identify the company and product or service making the request"; the player and VAST client | 4.1 |
 | `[IFA]`, `[IFATYPE]`, `[LIMITADTRACKING]` | The device's advertising ID, its type and the limit-ad-tracking setting | 4.1 |
 | `[TRANSACTIONID]` | A UUID generated by the initiating player and passed down the chain | 4.1 |
 | `[ADSERVINGID]`, `[UNIVERSALADID]` | This serve's ID; the creative's registry and ID | 4.1 |
 | `[GDPRCONSENT]`, `[GPPSTRING]`, `[REGULATIONS]` | The TCF string, the GPP string and the regulations that apply | 4.1, 4.x |
 | `[BREAKMAXDURATION]`, `[BREAKMAXADS]` | The break's maximum seconds and ads | 4.2 |
 
-Values a player knows but may not share are replaced with -2, unknown values with -1, where a macro allows it. A counter receiving video beacons stores `[SERVERSIDE]` with the event, because 1 and 2 are different trust levels: a server acting on a client's playback signal is the MRC's acceptable "initiated based on client-side events" case; a server acting on its own is not.
+Values a player knows but may not share are replaced with -2, unknown values with -1, where a macro allows it. A counter receiving video beacons stores `[SERVERSIDE]` with the event, because 1 and 2 are different trust levels: a server acting on a client's playback signal can meet the MRC's client-initiated counting requirement; a server acting on its own cannot.
 
 ## Error Codes
 
@@ -300,7 +300,7 @@ VAST describes ads; **VMAP** (Video Multiple Ad Playlist) describes when breaks 
 
 VPAID (Video Player-Ad Interface Definition) let an ad ship executable code that the player ran inside itself, for two purposes: interactivity (an overlay, a choice, a game) and measurement (verification vendors' code inside the ad). Running arbitrary ad code in the player was slow, unsafe and impossible on most TVs and in server-side insertion. IAB Tech Lab's VAST page now lists VPAID as "Deprecated, replaced with SIMID," and the Digital Video Technical Working Group replaced it with two narrower standards:
 
-- **SIMID** (Secure Interactive Media Interface Definition), now 1.2, for interactivity: the creative runs "in a secure enclosure" and can request player operations, while the publisher's player keeps control of the media; 1.2 requires that "session IDs be cryptographically secure," and SIMID "enables use cases such as server-side ad insertion (SSAI)." In VAST it arrives as an `<InteractiveCreativeFile>`.
+- **SIMID** (Secure Interactive Media Interface Definition), now 1.2, for interactivity: the creative is "securely enclosed in the SIMID container" and can request player operations, while the publisher's player keeps control of the media; 1.2 requires that "session IDs be cryptographically secure," and SIMID "enables use cases such as server-side ad insertion (SSAI)." In VAST it arrives as an `<InteractiveCreativeFile>`.
 - **OMID** (Open Measurement Interface Definition) for measurement: the publisher integrates OM SDK once, and every verification vendor's script in `<AdVerifications>` reads the same signals.
 
 Support lags the standard: Google's HTML5 IMA SDK still lists VPAID 2 alongside SIMID 1.0 and OM SDK 1.3, and its server-side DAI lists VPAID as not supported. My default for a buy that needs interactivity or verification is SIMID and OMID with a plain media file fallback, because a VPAID-only creative simply doesn't run on the devices where video money is moving.
@@ -387,7 +387,18 @@ ALTER TABLE ad_events
   ADD COLUMN progress_offset_ms INT;        -- for kind 'progress'
 ```
 
-The core `ad_events.kind` check lists only the impression, click and quartile events. Widening it to VAST's vocabulary (`loaded`, `progress`, `skip`, `mute`, `unmute`, `pause`, `resume`, `close_linear`, `creative_view`, `interactive_start`, `not_used`) is done the way the core describes for the partitioned logs: add the new check `NOT VALID` on each partition and validate it, then replace the parent's constraint, which Postgres accepts without a scan once every partition carries a validated equivalent.
+The core `ad_events.kind` check lists only the impression, click, video start, quartile and reward events. Widening it to VAST's vocabulary (`loaded`, `progress`, `skip`, `mute`, `unmute`, `pause`, `resume`, `close_linear`, `creative_view`, `interactive_start`, `not_used`) works on the partitioned log like on any table: a check added `NOT VALID` on the parent is added to every partition, also unvalidated, and `VALIDATE CONSTRAINT` on the parent then scans each partition under a lock that doesn't block reads or writes. Postgres rejects `ALTER TABLE ONLY` for the check, because a partitioned table's check has to hold on all of its partitions.
+
+```sql
+ALTER TABLE ad_events DROP CONSTRAINT ad_events_kind_check;
+ALTER TABLE ad_events ADD CONSTRAINT ad_events_kind_check
+  CHECK (kind IN ('impression', 'viewable_impression', 'click', 'video_start',
+    'first_quartile', 'midpoint', 'third_quartile', 'complete', 'reward',
+    'loaded', 'progress', 'skip', 'mute', 'unmute', 'pause', 'resume', 'close_linear',
+    'creative_view', 'interactive_start', 'not_used')) NOT VALID;  -- a superset: old rows pass
+
+ALTER TABLE ad_events VALIDATE CONSTRAINT ad_events_kind_check;  -- recurses to every partition
+```
 
 Design notes:
 
@@ -420,6 +431,7 @@ Design notes:
 
 **Specifications**
 
+- [PostgreSQL 18: ALTER TABLE](https://www.postgresql.org/docs/18/sql-altertable.html), NOT VALID checks, recursion to partitions and the VALIDATE CONSTRAINT lock
 - [IAB Tech Lab: VAST](https://iabtechlab.com/standards/vast/), VAST 4.3 (December 2022) as the latest listed, the CTV Addendum (July 2024), VPAID deprecated and replaced with SIMID, the mezzanine in VAST 4, Open Measurement in 4.1, SIMID in 4.2
 - [IAB Tech Lab: VAST 4.3 specification (GitHub)](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/VAST4.x/main/4.3.md), tracking events, idRegistry, unavailable-macro values
 - [IAB Tech Lab: VAST 4.4 draft (GitHub)](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/VAST4.x/main/4.4.md), "Publication Date TBD", the non-linear and CTV additions, error codes, the five-wrapper limit, Impression timing, AdVerifications, the mezzanine and InteractiveCreativeFile
@@ -428,6 +440,7 @@ Design notes:
 - [IAB Tech Lab: SIMID](https://iabtechlab.com/standards/simid/), SIMID 1.2, the secure enclosure, player control, secure session IDs and SSAI use cases
 - [IAB Tech Lab: Open Measurement SDK](https://iabtechlab.com/standards/open-measurement-sdk/), OMID 1.6 and the web video SDK
 - [IAB Tech Lab: CTV Programmatic Guide](https://iabtechlab.com/standards-old/ctv-programmatic-guide/), extracting the InLine from wrappers in SSAI, the need for a universal creative identifier
+- [MRC: Server-Side Ad Insertion and OTT Guidance (August 2021, PDF)](https://mediaratingcouncil.org/sites/default/files/Standards/083021%20SSAI%20and%20OTT%20Guidance%20%20FINAL.pdf), counting server-side tracking on client-initiated signals
 
 **In practice**
 

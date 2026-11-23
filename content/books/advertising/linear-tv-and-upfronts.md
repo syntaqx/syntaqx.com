@@ -70,7 +70,7 @@ Between the sale and the screen sits **traffic**: turning orders into a log of w
 
 After air, the **as-run log** records what actually ran: each spot's air time, break, program, length and creative ID, and whether it ran as scheduled, was preempted or missed. It is the seller's proof of performance, the basis of the invoice, and the input to posting; a spot that didn't run isn't billed and isn't posted, and a spot that ran in the wrong program may be owed a make-good under the order's terms. Digital out-of-home has the same idea under the name affidavit or proof of play.
 
-**Creative identity.** Each commercial carries a code that every system uses: Ad-ID, "The Industry's Ad Registry," run by a company of the 4A's and the ANA, identifies advertising assets across "Every Creative. Every Platform. Every Format." In digital video the same ID travels as VAST's `UniversalAdId` with `idRegistry="ad-id.org"`, which is how a TV measurer, an ACR provider and a streaming ad server recognize the same spot. VAST & Video Ads makes the universal ad ID required on every video creative for exactly this reason.
+**Creative identity.** Each commercial carries a code that every system uses: Ad-ID, "The Industry's Ad Registry," run by a company held by the 4A's and the ANA, identifies advertising assets across "Every Creative. Every Platform. Every Format. Everywhere." In digital video the same ID travels as VAST's `UniversalAdId` with `idRegistry="ad-id.org"`, which is how a TV measurer, an ACR provider and a streaming ad server recognize the same spot. VAST & Video Ads makes the universal ad ID required on every video creative for exactly this reason.
 
 ## Political Advertising on Broadcast
 

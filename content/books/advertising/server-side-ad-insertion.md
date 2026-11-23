@@ -23,7 +23,7 @@ As of November 2026, from each vendor's documentation. Rows are SSAI services an
 | **AWS Elemental MediaTailor** | Stitches personalized ads into HLS and DASH for VOD and live; channel assembly builds linear channels from VOD | Server-side by default ("as each ad is played back, MediaTailor sends beacons"), or client-side, chosen at session start; sessionless server-side beaconing for server-guided insertion | Prefetch schedules for live breaks, single or recurring, up to 24 hours ahead; TPS-based traffic shaping |
 | **Google Ad Manager (Dynamic Ad Insertion and optimized pods)** | Server-side insertion for live linear and VOD for Ad Manager 360 publishers; optimized pods return several ads from one request | Impression pixels loaded by the IMA SDK in the DAI workflow | Max and exact pod durations; ad buffet of 3 ads by default, up to 9; "the same line item cannot serve multiple times in an optimized ad pod"; competitive exclusion labels |
 | **IAB Tech Lab (CTV guide, OpenRTB 2.6)** | The protocol: pods in the bid request, device headers on server-side calls | Stitchers must send `X-Device-IP` and `X-Device-User-Agent` | `podid`, `podseq`, `slotinpod`, `maxseq`, `poddur`, `rqddurs`, `mincpmpersec`, `durfloors`, `poddedupe` (provisional) |
-| **MRC (SSAI and OTT Guidance, August 2021)** | The counting rules | Server-side counting acceptable when "initiated based on client-side events"; otherwise segregated and disclaimed | SSAI providers verified by measurement vendors |
+| **MRC (SSAI and OTT Guidance, August 2021)** | The counting rules | Server-side tracking held to the client-initiated counting requirements; otherwise segregated and disclaimed | SSAI providers verified by measurement vendors |
 
 Most large streaming publishers run a stitcher from one vendor, an ad server from another and several SSPs behind it, so the pod a viewer sees was decided by three systems that each log part of it. The records in this chapter are what let them agree on what played.
 
@@ -39,7 +39,7 @@ The flow in MediaTailor's documentation is the general shape:
 
 Two consequences follow for the ad system. Each viewer's manifest is different, so in stitched mode MediaTailor describes it as "Per-session, not cacheable" at the CDN: every manifest request reaches the stitcher, which is the cost and the scaling problem of SSAI. And the player doesn't need to know where ads are, which is good for playback smoothness and bad for interactivity, skip buttons and client-side measurement unless the stitcher also tells the player (through manifest tags or a tracking API) where the ads are.
 
-**Unfilled time.** A break whose ads don't fill its duration is padded with slate or with the original content (the program's own break content, or the "source content plays" fallback in some services). VAST's error 206 ("ad break shortened") exists for the reverse case, a break that turned out shorter than the ads chosen for it.
+**Unfilled time.** A break whose ads don't fill its duration is padded with slate or with the original content (the program's own break content, which some services fall back to). VAST's error 206 ("ad break shortened") exists for the reverse case, a break that turned out shorter than the ads chosen for it.
 
 ## Server-Guided Ad Insertion
 
@@ -60,7 +60,7 @@ SGAI trades the stitcher's per-session manifest load for a requirement on the pl
 
 Where the stitcher fires the beacons, every ad server and verification vendor in the chain sees all of a stream's impressions arrive from a handful of data center addresses. Three rules make that countable:
 
-- **Initiated by playback.** The MRC's guidance requires client-initiated counting and accepts server-side counting "as long as it is initiated based on client-side events"; measurement that doesn't meet it "should be segregated in reporting and disclaimed as non-compliant." In MediaTailor's stitched mode, the trigger is the player requesting an ad segment URL ("when the player requests playback from an ad segment URL ... AWS Elemental MediaTailor sends the appropriate beacon"), which ties the beacon to the device actually fetching the ad, not to the stitcher's decision. VAST 4.x requires calls from a publisher's server to fire "concurrently with the matching playback events."
+- **Initiated by playback.** The MRC's guidance holds tracking a server sends on the player's behalf to the same client-initiated counting requirements; measurement that doesn't meet them "should be segregated in reporting and disclaimed as non-compliant." In MediaTailor's stitched mode, the trigger is the player requesting an ad segment URL ("when the player requests playback from an ad segment URL ... AWS Elemental MediaTailor sends the appropriate beacon"), which ties the beacon to the device actually fetching the ad, not to the stitcher's decision. The VAST 4.4 draft's publisher implementation note has calls from a publisher's server made "concurrently with the corresponding playback events."
 - **Device headers.** Every server-side request and beacon carries the device's identity: `X-Device-IP` and `X-Device-User-Agent` (required), and `X-Device-Referer`, `X-Device-Accept-Language` and `X-Device-Requested-With` when available, matching the original ad request. The `[SERVERSIDE]` macro says whether a server fired the call on a client's signal (1) or on its own (2).
 - **Verified stitchers.** The MRC requires that "providers indicating use of SSAI must be verified as such by measurement vendors," with their traffic measurable for invalid traffic "or otherwise treated as unknown." In practice that means an allowlist of stitcher identities (authenticated connections or published IP ranges), not trust in whoever sets an `X-Device-IP` header.
 
@@ -96,7 +96,7 @@ The first and last slots matter because viewers are most likely to see them: the
 
 Filling a dynamic pod is a small optimization problem: choose a set of ads whose durations fit in `poddur`, at most `maxseq` of them, each above its floor (`mincpmpersec` times its duration, or the matching `durfloors` range), no two that conflict, maximizing what the pod earns. Each ad is one impression, so a 30-second spot at a $30 CPM earns the same as a 15-second spot at $30; per second, the 15 is worth twice as much. A filler that ranks by CPM fills the pod with long ads; one that ranks by CPM per second fills it with short ones; the right answer depends on what else fits.
 
-Google Ad Manager's optimized pods show the practical rules a seller layers on top: pod durations may be a maximum (ads must fit) or exact ("the sum of all ad durations must equal the value set"), using "the duration in the VAST, not the media file duration"; "the same line item cannot serve multiple times in an optimized ad pod"; higher-priority line items have higher value, remnant ones compete on CPM; and an **ad buffet** of extra ads (3 by default, up to 9) stands by to replace pod ads that fail to play, though line items with competitive exclusion labels "are not eligible to serve to the ad buffet," and programmatic guaranteed is not eligible either.
+Google Ad Manager's optimized pods show the practical rules a seller layers on top: pod durations may be a maximum (ads must fit) or exact ("the sum of all ad durations must equal the value set"), using "the duration found in the VAST, not the media file duration"; "the same line item cannot serve multiple times in an optimized ad pod"; higher-priority line items have higher value, remnant ones compete on CPM; and an **ad buffet** of extra ads (3 by default, up to 9) stands by to replace pod ads that fail to play, though once a line item with a competitive exclusion label serves in the pod, other line items with the same label can't serve to the buffet, and programmatic guaranteed is not eligible either.
 
 With `maxseq` small (most pods hold two to six ads), an exact search is affordable. A filler that maximizes total price under duration, count, floor and separation constraints:
 
@@ -340,7 +340,7 @@ ALTER TABLE bids
   ADD COLUMN displaced_by_bid_id UUID;    -- the bid that held the separation key or slot
 ```
 
-The `auctions` and `bids` alters are on partitioned logs, so each check is added `NOT VALID` per partition, validated, and then on the parent, as [The Core Data Model](/books/advertising/advertising-business#the-core-data-model) describes.
+The `auctions` and `bids` alters are on partitioned logs. A check added `NOT VALID` on a partitioned parent is added to every partition, unvalidated, and a later `VALIDATE CONSTRAINT` on the parent checks each partition; `ALTER TABLE ONLY` is rejected for a check on a partitioned table, so there is no per-partition step to script.
 
 Design notes:
 
