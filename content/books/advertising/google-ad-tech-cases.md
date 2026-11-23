@@ -46,17 +46,17 @@ Two patterns:
 - **The tie.** AdX's real-time bids from Google Ads demand were available in full only to publishers using DFP, and DFP gave AdX advantages no other exchange had.
 - **First Look.** AdX got the first opportunity to bid on DFP impressions, even when publishers preferred other exchanges.
 - **Last Look.** When header bidding spread (the opinion dates its "widespread adoption by large publishers" to 2015, with the winning header bid often entered into DFP as a floor against AdX), AdX could see the best header bid and outbid it.
-- **Unified Pricing Rules (2019).** Google removed publishers' ability to set different floors for AdX and other exchanges. The court found UPR "did not require a level playing field", because it still let publishers set higher floors on third-party exchanges than on AdX, and that it increased AdX's win rates.
+- **Unified Pricing Rules (2019).** Google removed publishers' ability to set different floors for AdX and other exchanges. The court found UPR "did not require a level playing field", because it still let publishers set higher floors on third-party exchanges than on AdX, and that it increased the impressions AdX won and the revenue it received.
 - **Open Bidding (2018).** Google's in-DFP alternative to header bidding was not a substitute, the court found, because of its "5% fee", its ban on rival exchanges' own DSP bids, and the bid data it shared with Google.
 - **Project Poirot (2017).** DV360 shaded its bids on non-AdX exchanges; after a second version in late 2018, DV360 bids on rivals fell by up to 90% and rivals' DV360 revenue fell 15% on average, with OpenX's down 40%.
 
-The opinion also records the money: AdX took "around 20%" overall, varied per impression under dynamic revenue share, while DFP's fees came to roughly 1.3 to 1.7%, and "typically, between $20 to $40 of every $100 spent on digital advertising goes to the ad tech companies." By early 2014, AdX won 53% of the inventory DFP made available for auction.
+The opinion also records the money: AdX took "around 20%" overall, varied per impression under dynamic revenue share, while publisher ad server fees for large publishers "typically average about 1% to 2%" of the impression's revenue, and "typically, between $20 to $40 of every $100 spent on digital advertising goes to the ad tech companies." By early 2014, AdX won 53% of the inventory DFP made available for auction.
 
 ## The Remedies
 
-The remedies phase produced a two-page order and a 106-page memorandum (Dkt. 1858) filed September 2, 2026; the memorandum was unsealed September 16, 2026. The memorandum's text on the public docket is a scanned image, so the summary below comes from reporting on the unsealed opinion; I could not open the court's own text, and the final judgment's entry date and any appeal were not confirmed on reachable pages as of November 22, 2026. <!-- source-gap: adv-google-remedies-primary | secondary | the remedies granted and denied, effective date and duration in US v. Google (ad tech), from the court's own text | closes with: a text-searchable copy of Dkt. 1858 or the entered final judgment | checked: 2026-11-22 --> <!-- source-gap: adv-google-remedies-appeal | status | the entry date of the final judgment and whether Google or the plaintiffs appealed | closes with: the E.D. Va. or Fourth Circuit docket | checked: 2026-11-22 -->
+The remedies phase produced a two-page order and a 106-page memorandum (Dkt. 1858) filed September 2, 2026; the memorandum was unsealed September 16, 2026. The memorandum on the public docket is a scanned image; the summary below follows reporting on the unsealed opinion, checked against the scan's machine-read (OCR) text where that text was legible, which is not the same as reading the entered final judgment. The final judgment's entry date and any appeal were not confirmed on reachable pages as of November 22, 2026. <!-- source-gap: adv-google-remedies-primary | secondary | the remedies granted and denied, effective date and duration in US v. Google (ad tech), from the court's own text | closes with: a text-searchable copy of Dkt. 1858 or the entered final judgment | checked: 2026-11-22 --> <!-- source-gap: adv-google-remedies-appeal | status | the entry date of the final judgment and whether Google or the plaintiffs appealed | closes with: the E.D. Va. or Fourth Circuit docket | checked: 2026-11-22 -->
 
-**Denied**, per those reports:
+**Denied**:
 
 - divestiture of AdX, which the court found "neither realistic nor needed";
 - open-sourcing DFP's final auction logic;
@@ -66,7 +66,7 @@ The remedies phase produced a two-page order and a 106-page memorandum (Dkt. 185
 - broad anti-circumvention and anti-retaliation provisions, as too vague;
 - the plaintiffs' 15-year term.
 
-**Granted**, per those reports, for six years, worldwide, effective 60 days after entry:
+**Granted**, for six years, worldwide (per the reporting), effective 60 days after entry:
 
 - **No tie.** Google may not condition DFP on AdX or AdX on DFP, or recreate the tie by other means; publishers using DFP need not use AdX to reach Google Ads demand.
 - **No First Look, Last Look or Unified Pricing Rules** for indirect (non-direct-sold) transactions.
@@ -74,9 +74,10 @@ The remedies phase produced a two-page order and a 106-page memorandum (Dkt. 185
 - **Prebid interoperability.** Google must build integrations that let Prebid solicit real-time AdX bids for "all indirect open-web display inventory", and DFP publishers must be able to route indirect and programmatic direct demand through Prebid.
 - **AdX bids to rival ad servers** on the same terms DFP receives them.
 - **Data.** Publishers may export their DFP data to competing ad servers and receive AdX bid data, including losing bids; Google must document how DFP selects ads and provide a per-ad data file with candidate prices, adjustments and the reason the winner was chosen.
+- **Buy side.** Remedies on Google Ads (AdWords) bidding, which may favor AdX only for advertiser return on investment and not because Google owns it; none on DV360, which the court found played no role in the liability phase.
 - **Oversight.** A Monitor with access to documents, employees and source code, supported by a Technical Committee and an Internal Compliance Officer.
 
-The court found the behavioral remedies "can be fully implemented within 15 months." A plaintiffs' expert estimated that removing Unified Pricing Rules alone would lower AdX's take rate from 20% to roughly 16.6%. Magnite's guidance for 2027, given in its third-quarter 2026 results, excludes "upside from Google remedies."
+The court found that, with only behavioral remedies, the final judgment "should be implemented within 15 months." A plaintiffs' expert estimated that removing Unified Pricing Rules alone would lower AdX's take rate from 20% to roughly 16.6%. Magnite's guidance for 2027, given in its third-quarter 2026 results, excludes "upside from Google remedies."
 
 ## The EU Decision
 
@@ -84,7 +85,7 @@ On September 5, 2025 the European Commission fined Google €2.95 billion in Cas
 
 ## The Other Cases
 
-**Texas and the states.** Texas, leading a group of states, sued Google over ad tech in the Eastern District of Texas (No. 4:20-cv-00957, Judge Sean Jordan); reports describe the jury trial as stayed in July 2025 until final judgment in the Virginia case. Texas's $1.375 billion settlement with Google in May 2025 resolved privacy suits, not this case, which press summaries sometimes conflate. <!-- source-gap: adv-texas-adtech-status | secondary | the stay and current status of Texas v. Google (ad tech) | closes with: the E.D. Tex. docket or an order | checked: 2026-11-22 -->
+**Texas and the states.** Texas, leading a group of states, sued Google over ad tech in the Eastern District of Texas (No. 4:20-cv-00957, Judge Sean Jordan); reports describe the jury trial as stayed in July 2025 until final judgment in the Virginia case. Texas's $1.375 billion settlement with Google in May 2025 resolved privacy suits, not this case, which press summaries sometimes conflate. <!-- source-gap: adv-texas-privacy-settlement | secondary | Texas's May 2025 $1.375 billion settlement with Google covered privacy suits, not the ad tech case | closes with: the Texas Attorney General's release or the settlement agreement | checked: 2026-11-22 --> <!-- source-gap: adv-texas-adtech-status | secondary | the stay and current status of Texas v. Google (ad tech) | closes with: the E.D. Tex. docket or an order | checked: 2026-11-22 -->
 
 **Canada.** The Commissioner of Competition applied to the Competition Tribunal in November 2024 seeking divestiture of DFP and AdX and a penalty; the Bureau's release and the Tribunal's pages were not reachable for this chapter. <!-- source-gap: adv-canada-adtech-status | secondary | the Canada Competition Bureau's Google ad tech application and its status | closes with: the Competition Tribunal file or a Bureau release | checked: 2026-11-22 -->
 
@@ -226,8 +227,8 @@ Design notes:
 
 **Court records**
 
-- [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Memorandum Opinion, Dkt. 1410 (April 17, 2025)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1410.0.pdf), parties and procedure, the markets and shares, the rejected advertiser ad network market, the tie, First Look, Last Look, Unified Pricing Rules, Open Bidding, Project Poirot, AdX and DFP fees, the DoubleClick acquisition and AdX's 2014 win share
-- [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Remedies Memorandum Opinion, Dkt. 1858 (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date and length of the remedies memorandum
+- [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Memorandum Opinion, Dkt. 1410 (April 17, 2025)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1410.0.pdf), parties and procedure, the markets and shares, the rejected advertiser ad network market, the tie, First Look, Last Look, Unified Pricing Rules, Open Bidding, Project Poirot, AdX and publisher ad server fees, the DoubleClick acquisition and AdX's 2014 win share
+- [United States v. Google LLC, No. 1:23-cv-00108 (E.D. Va.), Remedies Memorandum Opinion, Dkt. 1858 (September 2, 2026)](https://storage.courtlistener.com/recap/gov.uscourts.vaed.533508/gov.uscourts.vaed.533508.1858.0.pdf), the filing date and length of the remedies memorandum, and (from the scan's OCR text) the rejection of structural relief as "neither realistic nor needed", the Prebid and rival ad server integrations, data sharing, the AdWords-only buy-side remedies, the six-year term, the 60-day effective date, the 15-month implementation and the 16.6% UPR take-rate estimate
 
 **Regulation**
 

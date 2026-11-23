@@ -273,7 +273,7 @@ Two rules the sketch encodes. The deadline is the exchange's, not each bidder's:
 
 A DSP can only use what it knows about a browser if it can recognize the browser in a bid request, and the exchange's cookie is not the DSP's cookie: browsers don't let one domain read another's. Cookie syncing (cookie matching) is the workaround: on some page load, a pixel or redirect chain passes the exchange's ID for the browser to the DSP's domain, or the other way, so each side can store the pair and the exchange can put the DSP's ID in later requests as `user.buyeruid`.
 
-Google documents the flows plainly. In the bidder-initiated, bidirectional flow, the bidder places a match tag pointing at `https://cm.g.doubleclick.net/pixel?google_nid=...&google_cm`, Google answers with a 302 to the bidder's URL carrying `google_gid` (the Google user ID, a web-safe base64 string) and `google_cver`, and the bidder stores the pair and answers with a 1x1 pixel or a 204. In the unidirectional, hosted flow the bidder redirects to Google with `google_hm`, at most 40 bytes of its own data, and Google stores it in a hosted match table and returns it in each bid request as `user.buyeruid`. Google asks bidders not to resync users whose hosted entry is fresh (an entry "may be considered expired after 14 days"), throttles pixel-matching bidders whose response rate falls below 90%, and omits the Google user ID for users in US states with privacy restrictions while still sending the hosted match data. Prebid.js runs the same idea from the publisher's side: its user sync settings decide which bidders may drop sync pixels or iframes, how many, and after how long.
+Google documents the flows plainly. In the bidder-initiated, bidirectional flow, the bidder places a match tag pointing at `https://cm.g.doubleclick.net/pixel?google_nid=...&google_cm`, Google answers with a 302 to the bidder's URL carrying `google_gid` (the Google user ID, a web-safe base64 string) and `google_cver`, and the bidder stores the pair and answers with a 1x1 pixel or a 204. In the unidirectional, hosted flow the bidder redirects to Google with `google_hm`, at most 40 bytes of its own data, and Google stores it in a hosted match table and returns it in each bid request as `user.buyeruid`. Google asks bidders not to resync users whose hosted entry is fresh (an entry "may be considered expired in 14 days"), throttles pixel-matching bidders whose response rate falls below 90%, and omits the Google user ID for users in US states with privacy restrictions while still sending the hosted match data. Prebid.js runs the same idea from the publisher's side: its user sync settings decide which bidders may drop sync pixels or iframes, how many, and after how long.
 
 OpenRTB records how an identifier was matched: the EID object's `mm` field uses AdCOM's match methods, where 2 is "Browser Cookie Sync", 3 "Authenticated", 4 "Observed" and 5 "Inference", and `atype` separates browser IDs (1), in-app device IDs (2) and person-based IDs "same across devices" (3).
 
@@ -311,7 +311,7 @@ An auction produces one price and several shares of it. With a DSP winning at a 
 | DSP platform fee on top, 20% of media | $0.001000 | Charged to the advertiser by the DSP, outside the auction |
 | Advertiser's cost | $0.006000 | The DSP's gross spend for this impression |
 
-The publisher sees $4.25 CPM, the advertiser pays $6.00 CPM, and $1.75 CPM goes to the two platforms; the ratio of what the publisher receives to what the advertiser pays is the "working media" share the ANA and ISBA studies measure. In Google Ad Manager the floor applies to the net value: on an 80/20 revenue share, a $1.00 bid is worth $0.80 against the floor. In a second-price auction (OpenRTB's `at = 2`, "Second Price Plus"), the winner pays the second-highest bid plus a small increment, so the clearing price differs from the bid and both are recorded; the industry moved to first price, and Google Ad Manager announced its move to a unified first-price auction on September 5, 2019. The fee mechanics are in [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) and the take-rate studies in Take Rates & Supply Quality.
+The publisher sees $4.25 CPM, the advertiser pays $6.00 CPM, and $1.75 CPM goes to the two platforms; the ratio of what the publisher receives to what the advertiser pays is the "working media" share the ANA and ISBA studies measure. In Google Ad Manager the floor applies to the net value: on an 80/20 revenue share, a $1.00 bid is worth $0.80 against the floor. In a second-price auction (OpenRTB's `at = 2`, "Second Price Plus"), the winner pays the second-highest bid plus a small increment, so the clearing price differs from the bid and both are recorded; the industry moved to first price, and Google Ad Manager, having announced a unified first-price auction in March 2019, began its full rollout to all partners in a September 5, 2019 post. The fee mechanics are in [SSPs & Ad Exchanges](/books/advertising/ssps-and-exchanges) and the take-rate studies in Take Rates & Supply Quality.
 
 Every party also keeps its own count. The exchange counts on the billing notice it fires; the DSP counts on its impression pixel or on the exchange's billing notice; the publisher counts in its ad server; the advertiser's ad server and verification vendor count again. These counts are `delivery_daily` rows with different `source` values, and they never agree exactly ([How the Money Splits](/books/advertising/advertising-business#how-the-money-splits)).
 
@@ -414,7 +414,7 @@ Design notes:
 - **Every callout, by bidder.** Which bidders were sent each request, with what deadline, what came back and how long it took, so a DSP's claim that it was "throttled" or a publisher's question about lost demand can be answered from records.
 - **What each bidder received.** The fields removed under consent and opt-out rules per bidder and request, kept for the period a data protection authority or state attorney general can ask about.
 - **Every sync, with its consent.** Partner, local and partner IDs, the consent strings at sync time, expiry and revocation, so the reach of an opt-out can be shown.
-- **Every auction and bid.** The type, floor, bids, winner, clearing price and fee, as the core model requires; the MRC's auction transparency standards require disclosing the auction type and how a bid becomes a clearing price.
+- **Every auction and bid.** The type, floor, bids, winner, clearing price and fee, as the core model requires; the MRC's auction transparency standards require disclosing the auction type and how a bid becomes a clearing price (written for closed-loop auctions) and the transaction ID, placement ID and supply chain over OpenRTB.
 
 The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 
@@ -435,7 +435,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 - [IAB Tech Lab: OpenRTB 2.6 specification](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb2.x/main/2.6.md), tmax, at, bidfloor, pmp, source.tid and schain, user.buyeruid and eids, nurl, lurl and burl, the auction price and minimum-to-win macros, HTTP POST and 204 for no bid
 - [IAB Tech Lab: AdCOM 1.0](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/AdCOM/main/AdCOM%20v1.0%20FINAL.md), agent types and ID match methods including browser cookie sync
 - [IAB Tech Lab: Programmatic Auction Definitions](https://iabtechlab.com/standards/programmatic-auction-definitions/), the auction definition and multi-hop supply chains, finalized June 24, 2026
-- [MRC: Digital Advertising Auction Transparency Standards (January 2026)](https://mediaratingcouncil.org/sites/default/files/Standards/MRC_Digital_Advertising_Auction_Transparency_Standards_FINAL_0.pdf), disclosure of auction type and bid-to-clearing conversion
+- [MRC: Digital Advertising Auction Transparency Standards (January 2026)](https://mediaratingcouncil.org/sites/default/files/Standards/MRC_Digital_Advertising_Auction_Transparency_Standards_FINAL_0.pdf), disclosure of auction type and bid-to-clearing conversion for closed-loop auctions, tid, gpid and schain for OpenRTB
 
 **Reference**
 
@@ -458,6 +458,7 @@ The mechanics are in [Audit Trails](/docs/building-blocks/audit-trails).
 - [Index Exchange](https://www.indexexchange.com/), self-description and Index Cloud
 - [Magnite](https://www.magnite.com/), self-description and channels
 - [OpenX](https://www.openx.com/), self-description and OpenXSelect
+- [Yahoo DSP](https://www.yahooinc.com/yahoo-dsp), channels and Backstage curated supply
 
 **Filings**
 

@@ -21,12 +21,12 @@ As of November 2026, from each platform's public bidder documentation and the sp
 | --- | --- | --- |
 | **Google Authorized Buyers** | Exchange (AdX) calling outside bidders | "Authorized Buyers supports two RTB protocols": OpenRTB in Protobuf and OpenRTB in JSON; response deadline "80 to 1000 ms" |
 | **IAB Tech Lab** | Standards body | "OpenRTB version history is now fully maintained in Github"; 2.6 releases from 2.6-202210 to 2.6-202611 |
-| **Microsoft (Xandr) Monetize** | SSP | Documents CTV request parameters, including `ifa_type` values (`aaid`, `idfa`, `rida`, `tifa`, `vida` and others) for streaming inventory |
+| **Microsoft (Xandr) Monetize** | SSP | Documents CTV ad tag parameters, including `ifa_type` values (`aaid`, `idfa`, `rida`, `tifa`, `vida` and others) for streaming inventory |
 | **Prebid Server** | Open-source header bidding server | "an open-source solution for server-to-server header bidding", in Go and Java versions |
 
 Two patterns:
 
-- **2.6 is the protocol.** Tech Lab's own supply-chain page lists OpenRTB v2.6.x as current, the repository publishes 2.6 releases through November 18, 2026, and I found no exchange that documents a 3.0 bidder integration. OpenRTB 3.0 exists (dated March 2022) and is not what is shipped.
+- **2.6 is the protocol.** Tech Lab's own supply-chain page lists OpenRTB v2.6.x as its most recent OpenRTB release, the repository publishes 2.6 releases through November 18, 2026, and I found no exchange that documents a 3.0 bidder integration. OpenRTB 3.0 exists (dated March 2022) and is not what is shipped.
 - **Exchanges publish the contract.** OpenRTB tells exchanges to publish their extensions to bidders and leaves billing policy, loss-notice support and macro encryption to them, so every integration starts from the exchange's guide.
 
 ## Versions and Status
@@ -54,7 +54,7 @@ A bidder declares and reads the version in the `x-openrtb-version` header ("x-op
 
 **3.0.** OpenRTB 3.0 (the document is dated March 2022) is a redesign: layered into transport, format, transaction and domain (AdCOM) layers, a new root `openrtb` wrapper, `Item` instead of `Imp`, HTTPS with TLS 1.2 or later required, and beta fields for signed requests under ads.cert (`ds`, `dsmap`, `cert`, `digest`). It is not drop-in compatible with 2.x, and it is not adopted: Tech Lab's pages list 3.0 as April 2022 and 2.6 as November 2022, so the final 2.6 postdates 3.0, and the 2.x line is what receives releases. Treat 3.0 as the source of the shared code lists (2.6 points to them) and of the ideas Tech Lab is moving into 2.6 piece by piece.
 
-**Adjacent specifications.** The Dynamic Native Ads API 1.2 (July 2017) defines the native request and response carried inside OpenRTB. The Agentic Real Time Framework (ARTF) 1.0, final August 12, 2026, defines containerized agent services that run inside a host platform and modify the bidstream; it rides alongside OpenRTB rather than replacing it.
+**Adjacent specifications.** The Dynamic Native Ads API 1.2 (final) defines the native request and response carried inside OpenRTB. The Agentic Real Time Framework (ARTF) 1.0, now final, defines containerized agent services that run inside a host platform and modify the bidstream; it rides alongside OpenRTB rather than replacing it.
 
 ## The Bid Request
 
@@ -74,11 +74,11 @@ A request is one `BidRequest` object with one or more `Imp` objects and the cont
 
 **Source.** `fd` (0 when the exchange makes the final sale decision, 1 when an upstream source such as a header bidding wrapper does), `tid` (a transaction ID common to all participants), `pchain` and `schain`, the SupplyChain object, which 2.6 moved from `source.ext.schain` into `source` itself.
 
-**Regs.** `coppa` (1 when the COPPA Rule applies), `gdpr` (0 or 1; "omitted means unknown"), `us_privacy` (the older US Privacy String, deprecated within GPP), `gpp` (the GPP string; OpenRTB still calls it the Global Privacy Platform, while Tech Lab now calls GPP the "Global Privacy Protocol") and `gpp_sid` (the GPP sections that apply to this transaction). The consent fields are only as good as their handling downstream: a bidder that receives `regs.gdpr = 1` with no `user.consent` must treat the user as not having consented.
+**Regs.** `coppa` (1 when the COPPA Rule applies), `gdpr` (0 or 1; "omission indicates unknown"), `us_privacy` (the older US Privacy String, deprecated within GPP), `gpp` (the GPP string; OpenRTB still calls it the Global Privacy Platform, while Tech Lab now calls GPP the "Global Privacy Protocol") and `gpp_sid` (the GPP sections that apply to this transaction). The consent fields are only as good as their handling downstream: a bidder that receives `regs.gdpr = 1` with no `user.consent` must treat the user as not having consented.
 
 ### Auction types
 
-`at` is 1 for first price and 2 for "Second Price Plus" (the default), with exchange-specific types from 500. The specification doesn't define "plus" as a term; its example clears a second-price auction at "the second-best price plus $0.01". A deal can override the auction type for its own bids, and `Deal.at = 3` says the deal's `bidfloor` is "the agreed deal price": a fixed-price deal. The industry runs first price for display (Google Ad Manager moved to a unified first-price auction announced September 5, 2019), so a bidder must not assume `at = 2` because the field is absent from one exchange's requests; it must read the exchange's guide. Auction Mechanics covers the theory and bid shading's reason for existing.
+`at` is 1 for first price and 2 for "Second Price Plus" (the default), with exchange-specific types from 500. The specification doesn't define "plus" as a term; its example clears a second-price auction at "the second-best price plus $0.01". A deal can override the auction type for its own bids, and `Deal.at = 3` says the deal's `bidfloor` is "the agreed upon deal price": a fixed-price deal. The industry runs first price for display (Google Ad Manager announced a unified first-price auction in March 2019 and completed the rollout from September 2019), so a bidder must not assume `at = 2` because the field is absent from one exchange's requests; it must read the exchange's guide. Auction Mechanics covers the theory and bid shading's reason for existing.
 
 ### Deals
 
@@ -86,7 +86,7 @@ A request is one `BidRequest` object with one or more `Imp` objects and the cont
 
 ### Video, audio and native
 
-**Video** requires `mimes` and recommends `minduration` and `maxduration` (or `rqddurs`, the exact acceptable durations, for live TV), `protocols` (VAST versions), `startdelay` (pre-, mid- or post-roll), `plcmt` (the placement type: since 2.6-202303 it replaces `placement`, which is deprecated), `linearity`, `skip`, `skipmin` and `skipafter`, `api`, `playbackmethod` and the pod fields: `podid` shared by every impression in a pod, `podseq` (the pod's position in the stream), `slotinpod`, `maxseq` (maximum ads in a dynamic pod), `poddur` (seconds available in a dynamic pod), `mincpmpersec` ("Price floor per second" for the dynamic portion) and `poddedupe` (provisional). A pod request is either one `Imp` per slot sharing a `podid` (a structured pod) or one `Imp` with `poddur` and `maxseq` (a dynamic pod), or both.
+**Video** requires `mimes` and recommends `minduration` and `maxduration` (or `rqddurs`, the exact acceptable durations, for live TV), `protocols` (VAST versions), `startdelay` (pre-, mid- or post-roll), `plcmt` (the placement type: since 2.6-202303 it replaces `placement`, which is deprecated), `linearity`, `skip`, `skipmin` and `skipafter`, `api`, `playbackmethod` and the pod fields: `podid` shared by every impression in a pod, `podseq` (the pod's position in the stream), `slotinpod`, `maxseq` (maximum ads in a dynamic pod), `poddur` (seconds available in a dynamic pod), `mincpmpersec` (a minimum CPM per second, the floor for the dynamic portion of a pod) and `poddedupe` (provisional). A pod request is either one `Imp` per slot sharing a `podid` (a structured pod) or one `Imp` with `poddur` and `maxseq` (a dynamic pod), or both.
 
 **Audio** mirrors video (`mimes`, durations, `poddur`, `rqddurs`, `podid`, `slotinpod`, `mincpmpersec`, `durfloors`) and adds audio specifics: `feed` (the feed type), `stitched`, `nvol` (volume normalization), `maxextended`, bit rates and companion banners.
 
@@ -96,7 +96,7 @@ A request is one `BidRequest` object with one or more `Imp` objects and the cont
 
 A response is a `BidResponse` with `id` (the request's ID), `seatbid` (one entry per seat the bidder bids for, each with `seat` and an array of `bid`), `bidid` (the bidder's own response ID), `cur` (default USD) and, when there is no bid, `nbr` (a no-bid reason). To not bid, the bidder returns "an empty response with HTTP 204"; a 200 with an empty `seatbid` is worse for the exchange to parse and should be avoided. `seatbid.group = 1` says the impressions in it must be won or lost together.
 
-**Bid.** `id` (bidder's bid ID); `impid` (which impression); `price` ("Bid price expressed as CPM although the actual transaction is for a unit impression only"); `adm` (the markup) or `nurl` to fetch it; `burl` and `lurl`; `adid`, `crid` ("Creative ID for ad quality checking") and `cid` (campaign); `adomain` (the advertiser domain used for blocklist checks); `bundle` and `iurl` (a sample image for quality review); `cat` and `cattax`; `attr` (creative attributes); `api` and `protocol`; `dealid`; `w` and `h`; `exp` ("seconds the bidder will wait between auction and impression"); `dur` (creative duration, seconds, for video and audio); `slotinpod`; and `mtype`, the markup type (1 banner, 2 video, 3 audio, 4 native), which an exchange needs when an impression offers several formats.
+**Bid.** `id` (bidder's bid ID); `impid` (which impression); `price` ("Bid price expressed as CPM although the actual transaction is for a unit impression only"); `adm` (the markup) or `nurl` to fetch it; `burl` and `lurl`; `adid`, `crid` ("Creative ID to assist with ad quality checking") and `cid` (campaign); `adomain` (the advertiser domain used for blocklist checks); `bundle` and `iurl` (a sample image for quality review); `cat` and `cattax`; `attr` (creative attributes); `api` and `protocol`; `dealid`; `w` and `h`; `exp` (the "number of seconds the bidder is willing to wait between the auction and the actual impression"); `dur` (creative duration, seconds, for video and audio); `slotinpod`; and `mtype`, the markup type (1 banner, 2 video, 3 audio, 4 native), which an exchange needs when an impression offers several formats.
 
 A minimal bid on the deal in the request from [How Programmatic Works](/books/advertising/how-programmatic-works#what-a-bid-request-looks-like):
 
@@ -169,7 +169,7 @@ The loss reasons are the single most useful debugging signal in programmatic: a 
 
 ## Extensions
 
-"Any object may contain extensions", named `ext`, and "Exchanges are responsible for publishing their extensions to bidders." In practice extensions carry three kinds of things: fields an exchange needs before Tech Lab standardizes them (several 2.6 releases promoted community extensions, including SupplyChain from `source.ext.schain`), exchange-specific signals (its own IDs, its traffic quality scores, its deal attributes) and the fields of adjacent specifications (Prebid's `ext.prebid` in Prebid Server requests).
+"Any object may contain extensions", named `ext`, and "Exchanges using these objects are responsible for publishing their extensions to their bidders." In practice extensions carry three kinds of things: fields an exchange needs before Tech Lab standardizes them (several 2.6 releases promoted community extensions, including SupplyChain from `source.ext.schain`), exchange-specific signals (its own IDs, its traffic quality scores, its deal attributes) and the fields of adjacent specifications (Prebid's `ext.prebid` in Prebid Server requests).
 
 My rules for extensions: parse them into named, typed fields per exchange at the edge of the bidder and drop the rest; never let `ext` fields leak into core logic without a mapping, because the same idea (a viewability prediction, a reward flag) has a different path at each exchange; and when Tech Lab promotes an extension into the core object, read both locations during the transition and prefer the core one, the same tolerance the versioning rule requires.
 
@@ -443,7 +443,7 @@ CREATE TABLE bid_notices (               -- every win, billing and loss notice s
   min_to_win_cpm_micros BIGINT,          -- ${AUCTION_MIN_TO_WIN}
   currency            CHAR(3),
   loss_reason         SMALLINT,          -- ${AUCTION_LOSS}
-  multiplier          INT NOT NULL DEFAULT 1,  -- ${AUCTION_MULTIPLIER}
+  multiplier          NUMERIC NOT NULL DEFAULT 1 CHECK (multiplier > 0),  -- ${AUCTION_MULTIPLIER}, a float, may be below 1
   imp_ts              TIMESTAMPTZ,       -- ${AUCTION_IMP_TS}
   fired_from          TEXT CHECK (fired_from IN ('server', 'client', 'vast_tracker')),
   http_status         SMALLINT,          -- on 'sent': the bidder's answer
@@ -477,8 +477,8 @@ SELECT r.exchange,
        date_trunc('day', n.occurred_at)                         AS day,
        count(*) FILTER (WHERE n.kind = 'win')                   AS wins,
        count(*) FILTER (WHERE n.kind = 'billing')               AS billable,
-       sum(n.clearing_cpm_micros * n.multiplier / 1000)
-         FILTER (WHERE n.kind = 'billing')                      AS billed_micros
+       round(sum(n.clearing_cpm_micros * n.multiplier / 1000)
+         FILTER (WHERE n.kind = 'billing'))                     AS billed_micros
 FROM bid_notices n
 JOIN (SELECT DISTINCT ON (external_id) external_id, upstream_org_id AS exchange
       FROM ad_requests WHERE received_at >= now() - interval '8 days') r
@@ -523,15 +523,15 @@ Design notes:
 - [IAB Tech Lab: OpenRTB 3.0](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/openrtb/main/OpenRTB%20v3.0%20FINAL.md), the layered design, Item, TLS 1.2, ads.cert beta fields, and the no-bid and loss reason code lists
 - [IAB Tech Lab: AdCOM 1.0](https://raw.githubusercontent.com/InteractiveAdvertisingBureau/AdCOM/main/AdCOM%20v1.0%20FINAL.md), the enumerated lists 2.6 moved out, agent types and ID match methods
 - [IAB Tech Lab: OpenRTB](https://iabtechlab.com/standards/openrtb/), version listing and the move of version history to GitHub
-- [IAB Tech Lab: Supply Chain Foundations](https://iabtechlab.com/standards/supply-chain-foundations/), OpenRTB v2.6.x listed as current
+- [IAB Tech Lab: Supply Chain Foundations](https://iabtechlab.com/standards/supply-chain-foundations/), OpenRTB v2.6.x listed as the most recent release
 - [IAB Tech Lab: OpenRTB Native](https://iabtechlab.com/standards/openrtb-native/), Dynamic Native Ads API 1.2
-- [IAB Tech Lab: Agentic Real Time Framework](https://iabtechlab.com/standards/artf/), ARTF 1.0 final August 12, 2026
+- [IAB Tech Lab: Agentic Real Time Framework](https://iabtechlab.com/standards/artf/), ARTF 1.0 final, containerized agent services for bidstream mutation
 - [IAB Tech Lab: Global Privacy Protocol](https://iabtechlab.com/gpp/), the current name of GPP
 
 **Reference**
 
 - [Google Authorized Buyers: Get started with real-time bidding](https://developers.google.com/authorized-buyers/rtb/start), OpenRTB in Protobuf and JSON and the response deadline
 - [Google Ad Manager: Rolling out first price auctions (September 5, 2019)](https://blog.google/products/admanager/rolling-out-first-price-auctions-google-ad-manager-partners/), the unified first-price auction
-- [Microsoft Learn: Required parameters for CTV inventory](https://learn.microsoft.com/en-us/xandr/monetize/required-parameters-for-ctv-inventory), ifa_type values for streaming requests
+- [Microsoft Learn: Required parameters for CTV inventory](https://learn.microsoft.com/en-us/xandr/monetize/required-parameters-for-ctv-inventory), ifa_type values on CTV ad tags
 - [Google Authorized Buyers: Cookie matching](https://developers.google.com/authorized-buyers/rtb/cookie-guide), HTTPS required on all endpoints
 - [Prebid.org: Prebid Server overview](https://docs.prebid.org/prebid-server/overview/prebid-server-overview.html), server-to-server header bidding in Go and Java
