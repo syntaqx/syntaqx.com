@@ -19,10 +19,10 @@ Who must carry what, as of November 2026, from the regulations and statutes, wit
 | Who | Requirement | Amount | Proof filed with FMCSA | Source |
 | --- | --- | --- | --- | --- |
 | **For-hire carrier, nonhazardous property, fleet only under 10,001 lb GVWR** | Public liability | $300,000 | As below | 387.303T(b)(1) |
-| **For-hire carrier, nonhazardous property, 10,001 lb GVWR or more** | Public liability | $750,000 | BMC-91 or BMC-91X by the insurer; BMC-82 for a surety bond | 387.9, 387.313 |
+| **For-hire carrier, nonhazardous property, 10,001 lb GVWR or more** | Public liability | $750,000 | BMC-91 or BMC-91X by the insurer; BMC-82 for a surety bond | 387.9, 387.313T |
 | **For-hire or private carrier of oil and of hazmat not in the higher rows** | Public liability | $1,000,000 | As above | 387.9 |
 | **For-hire or private carrier of bulk hazmat, certain explosives and highway route controlled radioactive material** | Public liability | $5,000,000 | As above | 387.9 |
-| **Household goods carrier** | Cargo | $5,000 per vehicle, $10,000 per occurrence | BMC-34 certificate or BMC-83 bond | 387.303T(c), 387.313 |
+| **Household goods carrier** | Cargo | $5,000 per vehicle, $10,000 per occurrence | BMC-34 certificate or BMC-83 bond | 387.303T(c), 387.313T |
 | **Property broker** | Surety bond or trust fund | $75,000 | BMC-84 (bond) or BMC-85 (trust) | 387.307, 13906(b)(3) |
 | **Freight forwarder** | Financial security for unpaid charges | $75,000 "regardless of the number of branch offices or sales agents" | As for brokers | 13906(c)(4) |
 | **C.H. Robinson's carriers** | Contract requirement | $1,000,000 auto liability, $100,000 cargo | Certificate from the carrier's agent to Highway | Carrier FAQ |
@@ -34,7 +34,7 @@ Three patterns:
 
 - **The regulation sets a floor for the public, not for the freight.** The 387.9 minimums protect people a truck hurts; they say nothing about the cargo, and the $75,000 broker bond protects carriers and shippers a broker doesn't pay. Brokers and shippers set what protects them (auto liability above the minimum, cargo limits) in contracts, and both large brokers above land on the same figures.
 - **The insurer, not the carrier, files.** Every federal filing and cancellation comes from the insurer or surety, so a carrier can't fake an FMCSA filing, but a certificate in a PDF is only as good as its source. Both brokers above refuse certificates from the carrier: C.H. Robinson's must come "directly from your insurance agent," and TQL verifies "directly with the carrier's insurance agent."
-- **Cancellation is a dated event with notice.** A policy or bond on file can't be cancelled until 30 days after FMCSA receives the notice (387.313(d)), so a monitoring system that reads cancellations sees the lapse coming about a month ahead.
+- **Cancellation is a dated event with notice.** A policy or bond on file can't be cancelled until 30 days after FMCSA receives the notice (387.313T(d)), so a monitoring system that reads cancellations sees the lapse coming about a month ahead.
 
 ## Public Liability Minimums
 
@@ -57,7 +57,7 @@ Three rules sit around the numbers:
 
 ## Filings and Cancellations
 
-Proof to FMCSA is a set of standard forms, filed by the insurer or surety on FMCSA's website (387.313(b)):
+Proof to FMCSA is a set of standard forms, filed with FMCSA by the insurer or surety (387.313T(a) and (b) for the carrier forms; 387.307 for the broker's bond and trust):
 
 | Form | What it is | Filed by |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ Proof to FMCSA is a set of standard forms, filed by the insurer or surety on FMC
 | **BMC-35** | Notice of cancellation of a motor carrier insurance policy | The insurer |
 | **BMC-36** | Notice of cancellation of a motor carrier or broker surety bond | The surety |
 
-"Policies, bonds, and other securities" can't be cancelled or withdrawn "until 30 days after" written notice on the prescribed form, counted from FMCSA's receipt (387.313(d)). As with registration ([The Rules in Flux](/books/logistics/operating-authority#motus-and-the-rules-in-flux)), Cornell's 387.313 carries notes that the section was suspended in 2017, amended in 2019 and "again suspended indefinitely," and the forms above are the ones the registration notice and the T sections still use. The BMC-91X matters most in practice: a carrier whose $1,000,000 auto liability is a $750,000 primary and a $250,000 excess layer shows two insurers' filings, and both have to be in force for the minimum to be met.
+"Surety bonds, certificates of insurance and other securities or agreements" can't be cancelled or withdrawn "until 30 days after" written notice on the prescribed form, counted from "the date such notice on the prescribed form is actually received by the FMCSA" (387.313T(d)). As with registration ([The Rules in Flux](/books/logistics/operating-authority#motus-and-the-rules-in-flux)), Cornell's 387.313 carries notes that the section was suspended in 2017, amended in 2019 and "again suspended indefinitely," so the operative text is 387.313T, and the forms above are the ones it and the registration notice still use. The BMC-91X matters most in practice: a carrier whose $1,000,000 auto liability is a $750,000 primary and a $250,000 excess layer shows two insurers' filings, and both have to be in force for the minimum to be met.
 
 A filing is not a certificate. A certificate of insurance (usually an ACORD 25) lists the carrier's policies (auto liability, cargo, general liability, sometimes trailer interchange), their limits, dates and the certificate holder, "AS A MATTER OF INFORMATION ONLY" ([What a Certificate Is](/books/insurance/certificates-of-insurance#what-a-certificate-is)); the federal filing is the insurer's representation to the government that the minimum exists. A broker needs both: the filing says the carrier may operate, the certificate says what it carries above that and for cargo.
 
@@ -130,7 +130,7 @@ CREATE TABLE insurance_filings (         -- a BMC filing on record with FMCSA, a
   currency          CHAR(3) NOT NULL DEFAULT 'USD',
   effective_on      DATE NOT NULL,
   cancellation_received_on  DATE,       -- BMC-35 or BMC-36 received by FMCSA
-  cancellation_effective_on DATE,       -- at least 30 days later (387.313(d))
+  cancellation_effective_on DATE,       -- at least 30 days later (387.313T(d))
   source_check_id   UUID REFERENCES carrier_registration_checks (id),
   CHECK (cancellation_effective_on IS NULL OR cancellation_received_on IS NULL
          OR cancellation_effective_on >= cancellation_received_on + 30)
@@ -270,7 +270,8 @@ Design notes:
 - [49 CFR 387.15: Forms](https://www.law.cornell.edu/cfr/text/49/387.15), the endorsement in the form FMCSA prescribes and continuous coverage
 - [49 CFR 387.303T: Security for the protection of the public, minimum limits](https://www.law.cornell.edu/cfr/text/49/387.303T), $300,000 for fleets only under 10,001 pounds, the $750,000 and hazmat rows, and household goods cargo of $5,000 and $10,000
 - [49 CFR 387.307: Property broker surety bond or trust fund](https://www.law.cornell.edu/cfr/text/49/387.307), the $75,000, trust assets, cancellation, drawdown notices, suspension, financial failure, the 60-day claims window and surety suspension
-- [49 CFR 387.313: Forms and procedures](https://www.law.cornell.edu/cfr/text/49/387.313), the BMC forms, 91X aggregation, BMC-35 and 36 cancellations on 30 days' notice, filing on FMCSA's website and the suspension notes
+- [49 CFR 387.313T: Forms and procedures](https://www.law.cornell.edu/cfr/text/49/387.313T), the BMC forms in force, 91X aggregation, and BMC-35 and 36 cancellations 30 days after FMCSA's actual receipt
+- [49 CFR 387.313: Forms and procedures (suspended)](https://www.law.cornell.edu/cfr/text/49/387.313), the 2017 suspension, 2019 amendment and indefinite suspension notes
 
 **Federal Register**
 

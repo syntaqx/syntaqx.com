@@ -18,7 +18,7 @@ A motor carrier's federal and interstate registration is several records, filed 
 
 | Record | Who keeps it | Who needs it | Form or channel | Clock |
 | --- | --- | --- | --- | --- |
-| **USDOT number** | FMCSA | Every motor carrier subject to the regulations, private and for-hire, plus brokers, forwarders, intermodal equipment providers and cargo tank facilities (390.201 lists them) | MCS-150 (and 150B, 150C) in the legacy forms; Motus since its release | Before operations, then every 24 months (390.19) |
+| **USDOT number** | FMCSA | Every motor carrier subject to the regulations, private and for-hire, plus brokers, forwarders, intermodal equipment providers and cargo tank manufacturers and repairers (the suspended 390.201 lists them; 390.19T is the filing rule in force) | MCS-150 (and 150B, 150C) in the legacy forms; Motus since its release | Before operations, then every 24 months (390.19T) |
 | **Operating authority** | FMCSA | For-hire motor carriers of regulated freight, brokers, freight forwarders, and Mexico-domiciled and non-North America-domiciled carriers (13902 to 13904, 365.101) | OP-1 and its variants: OP-1(P), OP-1(FF), OP-1(MX), OP-1(NNA) | A $300 fee per application (360.3T); insurance and BOC-3 due within 20 days of the preliminary grant (365.109T) |
 | **Process agents** | FMCSA | Every registrant: carriers for each state they operate in and traverse, brokers for each state with an office or where contracts are written (366.4T) | BOC-3, usually a blanket designation filed by a process agent company | Before authority is granted; on change |
 | **Financial security** | FMCSA, filed by the insurer or surety | Carriers (public liability, and cargo for household goods), brokers and forwarders ($75,000 bond or trust) | BMC-91, 91X, 34, 82, 83, 84, 85 and their cancellations | Continuous; 30 days' notice to cancel ([Bonds & Insurance Minimums](/books/logistics/financial-security-and-insurance)) |
@@ -28,7 +28,7 @@ A motor carrier's federal and interstate registration is several records, filed 
 Three patterns:
 
 - **Two identifiers, two meanings.** The USDOT number identifies the company to safety enforcement; the docket number identifies a grant of authority. FMCSA's April 2026 Motus notice says the agency "will continue to identify all regulated entities by a USDOT Number as the unique identifier," and in the same paragraph that Motus's phase II "will not include ... the elimination of MC/FF numbers." A registration record needs both, and a company can have several dockets (a carrier docket and a broker docket) under one USDOT number.
-- **The regulation in the book is not always the regulation in force.** The 2015 URS rule rewrote parts 360, 365, 366, 387 and 390, and when FMCSA suspended its later phases in January 2017 it restored the earlier text as temporary sections marked "T." Cornell's copy of 365.109, 366.4 and 387.313 carries the suspension notes, and the operative text is 365.109T, 366.4T and their siblings. 390.19 and 390.201 were suspended again "indefinitely, effective Nov. 17, 2023." Citing or encoding the wrong version is an easy mistake; this chapter cites the T sections where they apply.
+- **The regulation in the book is not always the regulation in force.** The 2015 URS rule rewrote parts 360, 365, 366, 387 and 390, and when FMCSA suspended its later phases in January 2017 it restored the earlier text as temporary sections marked "T." Cornell's copies of 360.3, 365.109, 366.4, 387.313 and 390.19 carry suspension notes, and the operative text is the T section beside each (360.3T, 365.109T, 366.4T, 387.313T, 390.19T). 390.19 was amended and "again suspended indefinitely" in November 2023, and 390.201, which has no T sibling, was "suspended indefinitely, effective Nov. 17, 2023." Citing or encoding the wrong version is an easy mistake; this chapter cites the T sections where they apply.
 - **Registration is a snapshot a counterparty keeps re-checking.** Every status in the table changes from outside the carrier's system: the insurer files a cancellation, FMCSA publishes a suspension in its Register, the UCR year turns over. A broker or shipper stores what it checked and when, not a boolean.
 
 ## Who Needs What
@@ -36,7 +36,7 @@ Three patterns:
 The split that decides everything is **for-hire versus private** and **interstate versus intrastate**:
 
 - **A private carrier** hauls its own goods in its own trucks (a manufacturer's fleet, a grocery chain's DCs to its stores). Operating in interstate commerce, it needs a USDOT number and must comply with the safety regulations, but it needs no operating authority because it isn't selling transportation. It still carries the 387.9 minimums when it hauls hazmat, because that table's hazmat rows apply to "For-hire and Private" carriers.
-- **A for-hire carrier** hauls other people's goods for pay. Interstate, it needs a USDOT number and operating authority unless the freight or operation is exempt from economic registration; the URS rule's list of registrants itself names "exempt and non-exempt for-hire carriers" (390.201). An exempt for-hire carrier still needs the USDOT number and the safety compliance.
+- **A for-hire carrier** hauls other people's goods for pay. Interstate, it needs a USDOT number and operating authority unless the freight or operation is exempt from economic registration; the URS rule's list of registrants itself names "an exempt for-hire motor carrier, a non-exempt for-hire motor carrier" (390.201(b)(1), suspended, but the distinction stands). An exempt for-hire carrier still needs the USDOT number and the safety compliance.
 - **A broker** arranges transportation by motor carrier for compensation (13102(2)) and needs broker authority and the $75,000 security. It needs a USDOT number but runs no trucks. A carrier that brokers loads it can't cover needs broker authority for those loads too; How Freight Brokerage Works covers where the line sits.
 - **A freight forwarder** assembles and consolidates shipments and takes responsibility from receipt to destination (13102(8)), needs forwarder authority (an FF docket) and the same $75,000 security (13906(c)(4)).
 - **Intrastate carriers** are registered by their states, many of which require a USDOT number for intrastate commercial vehicles too; the federal rules here govern interstate commerce.
@@ -73,12 +73,12 @@ A process agent is the person in a state on whom court papers can be served for 
 
 Three recurring obligations keep a registration alive:
 
-- **The biennial update.** Every carrier files an updated MCS-150 "Every 24 months," on a schedule keyed to its USDOT number (390.19(b)): the last digit sets the month (1 for January through 9 for September, 0 for October), and the next-to-last digit sets the year, odd digits in odd-numbered years and even digits in even years. A carrier that misses it is subject to penalties under 49 U.S.C. 521(b)(2)(B) and "will have its USDOT Number deactivated and will be prohibited from conducting transportation" (390.19(g)). The schedule is computable, so the system computes it ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). Cornell's copy carries a 2023 suspension note on the section's amended text, so I treat the schedule as the rule in force and recheck it when the registration rulemaking lands.
+- **The biennial update.** Every carrier files an updated MCS-150 "Every 24 months," on a schedule keyed to its USDOT number (390.19T(b)): the last digit sets the month (1 for January through 9 for September, 0 for October), and the next-to-last digit sets the year, odd digits in odd-numbered years and even digits in even years. A carrier that misses it is subject to penalties under 49 U.S.C. 521(b)(2)(B) "and deactivation of its USDOT Number" (390.19T(b)(4)). The schedule is computable, so the system computes it ([Deadlines Are Computed and Stored](/docs/building-blocks/rules-as-data#deadlines-are-computed-and-stored)). The suspended 390.19 carries the same digit schedule, so the schedule survives whichever version applies; I recheck it when the registration rulemaking lands.
 - **Unified Carrier Registration.** Interstate carriers, brokers, forwarders and leasing companies register with the UCR Plan each year and pay a fee set by FMCSA rule. The final rule of September 1, 2026, effective October 1, sets the 2027 fees by the number of commercial motor vehicles owned or operated:
 
 | Bracket | Vehicles | 2025 and 2026 | 2027 onward |
 | --- | --- | --- | --- |
-| B1 | 0-2 (and every broker, forwarder and leasing company) | $46 | $55 |
+| B1 | 0-2 (and every broker and leasing company; forwarders pay by fleet size) | $46 | $55 |
 | B2 | 3-5 | $138 | $167 |
 | B3 | 6-20 | $276 | $333 |
 | B4 | 21-100 | $963 | $1,163 |
@@ -93,14 +93,14 @@ Fuel tax (IFTA) and apportioned plates (IRP) are state-run interstate registrati
 
 Registration ends or pauses in a handful of ways, and each arrives as a different event:
 
-- **Insurance or bond cancelled.** Registration stays in effect only while the security requirements are met (13906(a)(1)), and the Secretary may suspend for failure to comply with 13906 (13905(f)). An insurer must give 30 days' notice on Form BMC-35 (policies) or BMC-36 (bonds), counted from FMCSA's receipt (387.313(d)). For a broker, a drawdown below $75,000 suspends authority within 7 business days of notice unless cured (387.307(e)). The cancellation notice is the earliest warning a counterparty can see, and it arrives roughly 30 days before the authority goes inactive.
+- **Insurance or bond cancelled.** Registration stays in effect only while the security requirements are met (13906(a)(1)), and the Secretary may suspend for failure to comply with 13906 (13905(f)). An insurer must give 30 days' notice on Form BMC-35 (policies) or BMC-36 (bonds), counted from the date FMCSA actually receives it (387.313T(d)). For a broker, a drawdown below $75,000 suspends authority within 7 business days of notice unless cured (387.307(e)). The cancellation notice is the earliest warning a counterparty can see, and it arrives roughly 30 days before the authority goes inactive.
 - **Unpaid civil penalty.** A carrier that doesn't pay "within 90 days after the date specified for payment by FMCSA's final agency order" is "prohibited from operating in interstate commerce starting on the next (i.e., the 91st) day," until "the FMCSA has received full payment" (386.83). The statute separately allows withholding, suspending or revoking a registration for failure "to pay a civil penalty" (13905(d)(2)(B)).
 - **Unsafe or unfit.** The Secretary "shall revoke the registration of a motor carrier that has been prohibited from operating" for failing the safety fitness requirements of 31144, and shall revoke on finding operations that are "an imminent hazard" (13905(f)); an Unsatisfactory rating's prohibition is in [Safety Ratings, CSA & Inspections](/books/logistics/safety-and-csa#safety-ratings-and-investigations).
 - **Willful noncompliance.** On complaint or on its own initiative, after "notice and an opportunity for a proceeding," FMCSA may suspend, amend or revoke for "willful failure to comply" (13905(d)), and revocation by order follows when the registrant "willfully does not comply with the order for a period of 30 days" (13905(e)).
-- **Biennial update missed.** The USDOT number is deactivated (390.19(g)), which isn't revocation of the docket but stops operation just the same.
+- **Biennial update missed.** The USDOT number is deactivated (390.19T(b)(4)), which isn't revocation of the docket but stops operation just the same.
 - **Voluntary revocation.** A carrier that closes, or that moves its trucks under another carrier, asks FMCSA to revoke its authority on Form OCE-46 ("Request for Revocation of Authority Granted," in the Motus notice's list and the subject of FMCSA's 2026 information collection renewals).
 
-Operating while inactive has an immediate consequence on the road: a vehicle providing transportation that requires authority "must not be operated" without it or beyond its scope, and the carrier "must be ordered out of service" (392.9a), with review "no later than 10 days after" the order. Reinstatement of revoked authority is a petition with a fee of $80 (360.3T(f)(52)), and the insurance and process agent filings have to be current again first. For the system, reinstatement creates a new active period on the same authority row, not a new carrier; the history of gaps is itself a vetting signal.
+Operating while inactive has an immediate consequence on the road: a vehicle providing transportation that requires authority "must not be operated" without it or beyond its scope, and the carrier "shall be ordered out of service" (392.9a), with review "not later than 10 days after issuance" of the order. Reinstatement of revoked authority is a petition with a fee of $80 (360.3T(f)(52)), and the insurance and process agent filings have to be current again first. For the system, reinstatement creates a new active period on the same authority row, not a new carrier; the history of gaps is itself a vetting signal.
 
 ## How to Build It
 
@@ -112,7 +112,7 @@ ALTER TABLE carriers
   ADD COLUMN operation_class  TEXT,          -- authorized_for_hire, exempt_for_hire, private, intrastate_only
   ADD COLUMN usdot_status     TEXT,          -- active, inactive, out_of_service, deactivated
   ADD COLUMN mcs150_filed_on  DATE,          -- the last biennial update FMCSA shows
-  ADD COLUMN mcs150_due_on    DATE,          -- computed from the USDOT number (390.19)
+  ADD COLUMN mcs150_due_on    DATE,          -- computed from the USDOT number (390.19T)
   ADD COLUMN power_units      INT;           -- as reported on the MCS-150
 ALTER TABLE carriers ADD CONSTRAINT carriers_usdot_status_check
   CHECK (usdot_status IN ('active', 'inactive', 'out_of_service', 'deactivated')) NOT VALID;
@@ -199,7 +199,7 @@ The biennial due date is a function of the USDOT number, the last filing and the
 ```sql
 CREATE FUNCTION mcs150_due_on(usdot TEXT, last_filed DATE) RETURNS DATE
 LANGUAGE sql IMMUTABLE AS $$
-  -- 390.19(b): last digit picks the month (0 = October), next-to-last digit's parity the year
+  -- 390.19T(b): last digit picks the month (0 = October), next-to-last digit's parity the year
   WITH d AS (
     SELECT CASE right(usdot, 1)::INT WHEN 0 THEN 10 ELSE right(usdot, 1)::INT END AS month,
            (substr(usdot, length(usdot) - 1, 1)::INT % 2) AS odd
@@ -271,9 +271,11 @@ Design notes:
 - [49 CFR 365.109: FMCSA review of the application (suspended)](https://www.law.cornell.edu/cfr/text/49/365.109), the 2017 suspension note
 - [49 CFR 366.4T: Required designations](https://www.law.cornell.edu/cfr/text/49/366.4T), process agents for carriers and brokers by state
 - [49 CFR 386.83: Sanction for failure to pay civil penalties](https://www.law.cornell.edu/cfr/text/49/386.83), the 90-day deadline and the 91st-day prohibition
-- [49 CFR 387.313: Forms and procedures](https://www.law.cornell.edu/cfr/text/49/387.313), BMC-35 and BMC-36 cancellations on 30 days' notice
+- [49 CFR 387.313T: Forms and procedures](https://www.law.cornell.edu/cfr/text/49/387.313T), BMC-35 and BMC-36 cancellations on 30 days' notice from FMCSA's actual receipt
+- [49 CFR 387.313: Forms and procedures (suspended)](https://www.law.cornell.edu/cfr/text/49/387.313), the suspension note
 - [49 CFR 387.307: Property broker surety bond or trust fund](https://www.law.cornell.edu/cfr/text/49/387.307), suspension within 7 business days of a drawdown notice
-- [49 CFR 390.19: Motor carrier identification report](https://www.law.cornell.edu/cfr/text/49/390.19), the MCS-150 before operations and every 24 months, the digit schedule, deactivation and the suspension note
+- [49 CFR 390.19T: Motor carrier identification report](https://www.law.cornell.edu/cfr/text/49/390.19T), the MCS-150 every 24 months, the digit schedule, penalties and deactivation
+- [49 CFR 390.19: Motor carrier identification report (suspended)](https://www.law.cornell.edu/cfr/text/49/390.19), the 2017 and 2023 suspension notes and the same digit schedule
 - [49 CFR 390.201: USDOT Registration](https://www.law.cornell.edu/cfr/text/49/390.201), who registers and the November 17, 2023 suspension
 - [49 CFR 392.9a: Operating authority](https://www.law.cornell.edu/cfr/text/49/392.9a), operating without authority, out-of-service orders and 10-day review
 
