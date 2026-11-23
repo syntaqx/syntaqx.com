@@ -60,13 +60,13 @@ All prices are in the core's units: CPMs and bids in integer micros of the curre
 
 Notes on the variants:
 
-- **A CPM names its money basis.** The gross CPM an advertiser sees, the media CPM the DSP paid, the clearing CPM at the exchange and the publisher's net eCPM are four numbers for the same impression; the definition records which. With Take Rates & Supply Quality's illustrative chain (agency 5%, DSP 15%, data and verification 8% and SSP 20%), a $10.00 gross CPM reaches the publisher as $5.85.
+- **A CPM names its money basis.** The gross CPM an advertiser sees, the media CPM the DSP paid, the clearing CPM at the exchange and the publisher's net eCPM are four numbers for the same impression; the definition records which. With [Take Rates & Supply Quality](/books/advertising/take-rates-and-supply-quality#a-fee-chain-worked)'s illustrative chain (agency 5%, DSP 15%, data and verification 8% and SSP 20%), a $10.00 gross CPM reaches the publisher as $5.85.
 - **eCPM is an effective price,** not a pricing model: a CPC line item that paid $1.50 for 0.5% CTR has an eCPM of $7.50. It is the comparison metric across pricing models and the publisher's yield number; a CPM line item's eCPM equals its CPM only when nothing was free or credited.
 - **CPA and CPI inherit their attribution.** The same spend over the same purchases gives different CPAs under 7-day-click and 1-day-click; the definition records the setting, and a platform-reported CPA is stored next to the advertiser's own, not instead of it.
 
 ## Publisher Yield
 
-Publishers & Yield owns these and their formula chain; they are restated here so the whole volume has one list:
+[Publishers & Yield](/books/advertising/publishers-and-yield#the-yield-metrics) owns these and their formula chain; they are restated here so the whole volume has one list:
 
 | Metric | Definition | Over |
 | --- | --- | --- |
@@ -74,7 +74,7 @@ Publishers & Yield owns these and their formula chain; they are restated here so
 | **Fill rate** | Filled ad requests ÷ ad requests | `ad_decisions.outcome` not `'unfilled'` |
 | **Page RPM** | Estimated earnings ÷ page views × 1,000 | Earnings, `property_traffic_daily` |
 | **Impression RPM** | Estimated earnings ÷ impressions × 1,000 (close to eCPM) | Earnings, impressions |
-| **Sell-through rate** | Reserved impressions ÷ forecasted impressions × 100 | Forecasts and reservations (Forecasting & Avails) |
+| **Sell-through rate** | Reserved impressions ÷ forecasted impressions × 100 | Forecasts and reservations ([Forecasting & Avails](/books/advertising/forecasting-and-avails#check-inventory-versus-sell-through)) |
 
 Page RPM is the product of requests per page view, fill rate and eCPM ([The Formula Chain](/books/advertising/publishers-and-yield#the-formula-chain)); judging a yield change on eCPM alone misleads, because a higher floor raises eCPM and lowers fill. RPM is computed on estimated earnings, finalized later, so it is provisional for its period.
 
@@ -85,7 +85,7 @@ Page RPM is the product of requests per page view, fill rate and eCPM ([The Form
 | **Bid rate** | Callouts answered with at least one bid ÷ callouts sent | `bid_requests.status` | How Programmatic Works |
 | **Timeout rate** | Callouts that timed out ÷ callouts sent | `bid_requests.status = 'timeout'` | How Programmatic Works; [Real-Time Bidding at Scale](/books/advertising/bidding-at-scale#the-latency-budget) |
 | **Win rate** | Auctions won ÷ auctions bid in | `bids.outcome` | Demand-Side Platforms |
-| **Render rate** | Impressions counted ÷ auctions won | `ad_events`, `bids` | Counting Impressions & Clicks |
+| **Render rate** | Impressions counted ÷ auctions won | `ad_events`, `bids` | [Counting Impressions & Clicks](/books/advertising/counting-impressions-and-clicks) |
 | **Shading** | 1 − bid ÷ unshaded bid, averaged over bids | `bids.price_cpm_micros`, `unshaded_cpm_micros` | Demand-Side Platforms |
 | **Floor clearance** | Auctions with a bid at or above the floor ÷ auctions with a floor | `auctions.status` | Floors & Yield Optimization |
 
@@ -95,7 +95,7 @@ The two denominators of win rate are the commonest disagreement on the buy side.
 
 | Metric | Definition | Over | Owning chapter |
 | --- | --- | --- | --- |
-| **CTR** | Valid clicks ÷ impressions, same source | `delivery_daily.clicks`, `impressions` | Counting Impressions & Clicks |
+| **CTR** | Valid clicks ÷ impressions, same source | `delivery_daily.clicks`, `impressions` | [Counting Impressions & Clicks](/books/advertising/counting-impressions-and-clicks) |
 | **CVR** (conversion rate) | Attributed conversions ÷ interactions that can be tracked to a conversion, same period, named action and setting | `attribution_credits`, `ad_events` | Attribution |
 | **Video completion rate (VCR)** | Completed views ÷ video starts | `ad_events` kinds `video_start`, `complete` | VAST & Video Ads |
 | **ROAS** | Attributed conversion value ÷ cost, as a ratio | `conversions.value_micros`, `attribution_credits.credit_ppm`, `delivery_daily.cost_micros` | Attribution; Automated Bidding |
@@ -105,7 +105,7 @@ The two denominators of win rate are the commonest disagreement on the buy side.
 
 Notes on the variants:
 
-- **CTR counts valid clicks over the same source's impressions.** Click validation (Counting Impressions & Clicks) removes duplicates, stale clicks and invalid traffic; a CTR over raw clicks is a diagnostic, labeled as such.
+- **CTR counts valid clicks over the same source's impressions.** Click validation ([Counting Impressions & Clicks](/books/advertising/counting-impressions-and-clicks#click-measurement-and-validation)) removes duplicates, stale clicks and invalid traffic; a CTR over raw clicks is a diagnostic, labeled as such.
 - **CVR's denominator is interactions, and its numerator can exceed it.** Google's rule that counting every conversion can push the rate past 100% is correct for its definition; the volume's default counts one conversion per interaction per action, and "every" counting is a named variant.
 - **ROAS and ACoS are the same measurement inverted,** with Amazon's example: $50 of spend that earns $100 is ACoS 50% and ROAS 2. Both are attributed figures and inherit the attribution's assumptions; TACoS and iROAS are the two numbers that don't depend on the platform's own attribution, which is why Commerce prefers TACoS for the business and Incrementality & Lift owns iROAS.
 - **Credit is fractional under data-driven models.** `attribution_credits.credit_ppm` splits a conversion across touches, so attributed conversions and value are sums of credits, not counts of conversions.
@@ -114,8 +114,8 @@ Notes on the variants:
 
 | Metric | Definition | Over | Owning chapter |
 | --- | --- | --- | --- |
-| **Measurable rate** | Impressions a viewability measurer could measure ÷ impressions | `viewability_measurements.status` | Viewability & Attention |
-| **Viewability rate** | Viewable impressions ÷ measurable impressions, under a named standard | `viewability_measurements`, `delivery_daily.viewable_impressions` | Viewability & Attention |
+| **Measured rate** | Impressions measured as viewable or non-viewable ÷ rendered served impressions (the MRC's "Measured Rate") | `viewability_measurements.status` | Viewability & Attention |
+| **Viewability rate** | Viewable impressions ÷ measured (viewable plus non-viewable) impressions, under a named standard | `viewability_measurements`, `delivery_daily.viewable_impressions` | Viewability & Attention |
 | **Viewable impressions per impression** | Viewable ÷ all impressions | Same | Viewability & Attention |
 | **IVT rate** | Invalid impressions ÷ gross impressions (valid plus invalid), by class (GIVT, SIVT) and measurer | `delivery_daily.invalid_impressions`, `sivt_impressions` | Invalid Traffic & Ad Fraud |
 | **Invalid click rate** | Invalid clicks ÷ gross clicks | `delivery_daily.invalid_clicks` | Invalid Traffic & Ad Fraud |
@@ -124,8 +124,8 @@ Notes on the variants:
 
 Notes on the variants:
 
-- **Viewability rate divides by measurable, not served.** Google's definition and the MRC's both use measurable impressions; a vendor that can't measure 30% of impressions reports a rate over the 70% it saw. A buyer comparing two sellers needs the measurable rate beside the viewability rate, or viewable over all impressions, which is the honest single number.
-- **The standard is part of the definition.** The MRC's display standard (50% of pixels for one continuous second), its video standard (two continuous seconds of play) and the cross-media standard (100% of pixels for two seconds) give three different viewability rates for the same video impression; `viewability_standards` names which.
+- **Viewability rate divides by measurable, not served.** Google divides by measurable impressions and the MRC by measured ones (viewable plus non-viewable); a vendor that can't measure 30% of impressions reports a rate over the 70% it saw. A buyer comparing two sellers needs the measured rate beside the viewability rate, or viewable over all impressions, which is the honest single number.
+- **The standard is part of the definition.** The MRC's display standard (50% of pixels for one continuous second), its video standard (50% of pixels for two continuous seconds of play) and the cross-media standard (100% of pixels for two seconds) give three different viewability rates for the same video impression; `viewability_standards` names which.
 - **IVT rate's denominator is gross impressions,** because the valid count is what's left after removal. A rate over the valid count overstates it slightly and confuses readers; the definition says which.
 - **Discrepancy has a direction and a denominator.** Reconciliation & Discrepancies stores both, because a 10% tolerance computed over the controlling count and over the compared count are different thresholds.
 
@@ -258,19 +258,27 @@ The sketch assumes conversions in one currency, the account's; a mixed-currency 
 Win rate and bid rate for a bidder per day, with both denominators:
 
 ```sql
-SELECT br.sent_at::date                                              AS day,
-       count(*)                                                      AS callouts,
-       count(*) FILTER (WHERE br.status = 'bid')                     AS callouts_with_bids,
-       (SELECT count(*) FROM bids b
-         WHERE b.auction_started_at >= $2 AND b.auction_started_at < $3
-           AND b.buyer_seat_id = $1)                                 AS bids,
-       (SELECT count(*) FROM bids b
-         WHERE b.auction_started_at >= $2 AND b.auction_started_at < $3
-           AND b.buyer_seat_id = $1 AND b.outcome = 'won')           AS wins
-FROM bid_requests br
-WHERE br.bidder_org_id = $4 AND br.sent_at >= $2 AND br.sent_at < $3
-GROUP BY 1;
+WITH callouts AS (
+  SELECT br.sent_at::date                                AS day,
+         count(*)                                        AS callouts,
+         count(*) FILTER (WHERE br.status = 'bid')       AS callouts_with_bids
+  FROM bid_requests br
+  WHERE br.bidder_org_id = $4 AND br.sent_at >= $2 AND br.sent_at < $3
+  GROUP BY 1
+), bid_counts AS (
+  SELECT b.auction_started_at::date                      AS day,
+         count(*)                                        AS bids,
+         count(*) FILTER (WHERE b.outcome = 'won')       AS wins
+  FROM bids b
+  WHERE b.buyer_seat_id = $1
+    AND b.auction_started_at >= $2 AND b.auction_started_at < $3
+  GROUP BY 1
+)
+SELECT day, c.callouts, c.callouts_with_bids, b.bids, b.wins
+FROM callouts c FULL JOIN bid_counts b USING (day)
+ORDER BY day;
 -- bid rate = callouts_with_bids / callouts; win rate = wins / bids
+-- $1 the bidder's seat at this exchange, $4 the bidder's organization
 ```
 
 Design notes:
@@ -293,7 +301,7 @@ Design notes:
 
 - **Write one definition per metric** with its source, money basis, denominator, IVT treatment, attribution setting, clock and maturity, and version it.
 - **Make every price metric say whose money it is:** gross, media cost, clearing or seller net.
-- **Divide viewability by measurable impressions** and show the measurable rate beside it.
+- **Divide viewability by measured impressions** and show the measured rate beside it.
 - **Define win rate as wins over bids,** and keep bid rate and render rate as their own metrics.
 - **Store ROAS and ACoS as ratios from fractional credits** under a named attribution setting, and keep TACoS and iROAS as the checks that don't depend on it.
 - **Compute reach and GRPs over the whole schedule,** on viewable impressions filtered for SIVT, and never sum reach.
@@ -305,7 +313,7 @@ Design notes:
 **Specifications**
 
 - [MRC: Cross-Media Audience Measurement Standards, Phase I Video](https://mediaratingcouncil.org/sites/default/files/Standards/MRC%20Cross-Media%20Audience%20Measurement%20Standards%20%28Phase%20I%20Video%29%20Final.pdf), reach, frequency, rating and GRP formulas on viewable impressions filtered for SIVT, and the 100%-for-two-seconds cross-media threshold
-- [MRC: Viewable Ad Impression Measurement Guidelines v2.0](https://mediaratingcouncil.org/sites/default/files/Standards/081815%20Viewable%20Ad%20Impression%20Guideline_v2.0_Final.pdf), the display (50% of pixels, one continuous second) and video (two continuous seconds) viewable standards and measurable impressions
+- [MRC: Viewable Ad Impression Measurement Guidelines v2.0](https://mediaratingcouncil.org/sites/default/files/Standards/081815%20Viewable%20Ad%20Impression%20Guideline_v2.0_Final.pdf), the display (50% of pixels, one continuous second) and video (50% of pixels, two continuous seconds) viewable standards, and the Measured Rate and Viewable Rate formulas
 
 **Reference**
 
@@ -313,5 +321,9 @@ Design notes:
 - [Google Ads Help: Conversion rate](https://support.google.com/google-ads/answer/2684489?hl=en), the interaction denominator and rates over 100% when counting every conversion
 - [Google Ads Help: About Target ROAS bidding](https://support.google.com/google-ads/answer/6268637?hl=en), the 500% target ROAS example
 - [Amazon Ads: ACOS (advertising cost of sales)](https://advertising.amazon.com/library/guides/acos-advertising-cost-of-sales), the ACoS formula and ROAS as its inverse, with the $50 and $100 example
+- [Google AdSense Help: Revenue per thousand impressions (RPM)](https://support.google.com/adsense/answer/190515?hl=en), the page RPM formula
+- [Google Ad Manager Help: Interactive report metrics](https://support.google.com/admanager/table/16431202?hl=en), the viewable rate over measurable impressions and fill rate
+- [Google Ad Manager Help: Future sell-through report](https://support.google.com/admanager/answer/16709101?hl=en), the sell-through rate formula
+- [AppsFlyer: Cost per install](https://www.appsflyer.com/glossary/cost-per-install/), CPI and eCPI
 - [Display & Video 360 Help: Use the Optimization view](https://support.google.com/displayvideo/answer/7563784?hl=en), win rate over impressions bid on, lost to bid and lost to budget
-- [OpenRTB 2.6](https://github.com/InteractiveAdvertisingBureau/openrtb2.x/blob/main/2.6.md), prices as CPMs in the bid request and response
+- [IAB Tech Lab: OpenRTB 2.6](https://github.com/InteractiveAdvertisingBureau/openrtb2.x/blob/main/2.6.md), prices as CPMs in the bid request and response

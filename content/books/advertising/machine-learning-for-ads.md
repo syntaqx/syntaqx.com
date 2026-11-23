@@ -20,9 +20,9 @@ The large platforms have published how their ad prediction systems work, in pape
 | Platform | Source | What it describes |
 | --- | --- | --- |
 | **Google** | "Ad Click Prediction: a View from the Trenches", KDD 2013 | Search ad CTR prediction with FTRL-Proximal online logistic regression; per-coordinate learning rates that "reduced AucLoss by 11.2%"; 16-bit q2.13 coefficients that "save 75% of the RAM for coefficient storage" with "no measurable loss"; subsampling of unclicked queries with importance weights; progressive validation; isotonic calibration |
-| **Google** | Consent mode conversion modeling | Models using "consented user journeys" to estimate conversions where consent was declined, once a click threshold is met; advertiser-specific "calibration factors" from cookieless pings |
+| **Google** | Consent mode conversion modeling | Models conversions where consent was declined "using observable user journeys where users have consented to cookie usage", once a click threshold is met; advertiser-specific "calibration factors" from cookieless pings |
 | **Meta** | "Practical Lessons from Predicting Clicks on Ads at Facebook", ADKDD 2014 | Boosted decision trees feeding logistic regression, beating either alone "by over 3%"; normalized entropy and calibration as the metrics; training daily rather than weekly reduced NE "by approximately 1%"; negative downsampling with a recalibration formula; an "online joiner" that labels impressions after a waiting window |
-| **Meta** | Andromeda, December 2024 | A retrieval stage that selects "from tens of millions of ad candidates into a few thousand" before ranking; "+6% recall" and "+8% ads quality on selected segments"; "10,000x" model capacity |
+| **Meta** | Andromeda, December 2024 | A retrieval stage that selects "from tens of millions of ad candidates into a few thousand" before ranking; "+6% recall improvement" and "+8% ads quality improvement on selected segments"; "10,000x" model capacity |
 | **Meta** | GEM, November 2025 | A generative ads foundation model, "trained across thousands of GPUs", whose knowledge is transferred to "hundreds of user-facing vertical models"; "a 5% increase in ad conversions on Instagram and a 3% increase in ad conversions on Facebook Feed in Q2" |
 | **The Trade Desk** | Form 10-K for 2025 | "Koa's artificial intelligence capabilities are used across various aspects of the platform"; no model details published |
 
@@ -311,7 +311,7 @@ HAVING count(*) > 10000
 ORDER BY abs(1 - (sum(b.p_click_ppm) / 1e6) / NULLIF(count(c.id), 0)) DESC;
 ```
 
-The sketch counts at most one click per impression only if clicks are deduplicated upstream, which Counting Impressions & Clicks' click validation does; at scale it runs in the warehouse over the same columns.
+The sketch counts at most one click per impression only if clicks are deduplicated upstream, which [Counting Impressions & Clicks](/books/advertising/counting-impressions-and-clicks#click-measurement-and-validation)' click validation does; at scale it runs in the warehouse over the same columns.
 
 Design notes:
 

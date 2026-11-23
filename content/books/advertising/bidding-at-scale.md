@@ -36,7 +36,7 @@ How a quota is set, on Authorized Buyers as the documented example:
 
 - **A configured limit per endpoint and location.** The bidder (or its account manager) sets a maximum per server URL; the limit is enforced per trading location and URL pair, and the account's total can't exceed what the exchange has configured for it.
 - **A spend-based ceiling.** "The maximum quota limit for your bidder also depends on your recent spend." A bidder that buys little gets less traffic regardless of what it asks for, which is the exchange protecting its own callout cost.
-- **Priority within the quota.** Programmatic guaranteed requests are always sent; above the quota, other pretargeting matches "are dropped".
+- **Priority within the quota.** "Programmatic Guarantee requests are always prioritized", with requests the bidder is likely to bid on favored next; above the quota, other pretargeting matches "are dropped".
 - **Inaccuracy at small volume.** The system "is less accurate at small volumes": a limit of "about 1,000 QPS or less" can be exceeded, sometimes doubled, so a small bidder sizes for more than its quota.
 
 The economics are asymmetric. The exchange pays to build and send each callout and to wait for it; the bidder pays to receive, parse and decide. Neither is paid until an impression bills, so both want the other to filter: the exchange wants bidders to declare what they will buy (pretargeting, `connection_filters` in SSPs & Ad Exchanges), and the bidder wants the exchange to send only what it is likely to buy (shaping, below). A quota is the negotiated ceiling between them, and spend-based quotas make the ceiling follow value.
@@ -127,7 +127,7 @@ A bidder is a funnel of stages ordered by cost, so that most requests exit befor
 
 1. **Parse and validate.** Decode JSON or protobuf, reject malformed requests with HTTP 400, answer obvious non-matches with 204. OpenRTB says calls with no content return 204 and "an empty bid response" is another way to say no-bid.
 2. **Pre-filter on the request alone.** Supply rules (`supply_sources` in Demand-Side Platforms: blocked sellers, unauthorized paths, MFA lists), ads.txt authorization, the consent signals, the channel and format. These need no user lookup and remove a large share of traffic.
-3. **Retrieve candidates.** Find the line items whose targeting matches, from an inverted index over targeting expressions in the line item snapshot (Ad Servers describes the index). A few thousand line items can be scanned; a few million can't.
+3. **Retrieve candidates.** Find the line items whose targeting matches, from an inverted index over targeting expressions in the line item snapshot ([Ad Servers](/books/advertising/ad-servers#building-one) describes the index). A few thousand line items can be scanned; a few million can't.
 4. **Check budget, pacing and frequency.** Each candidate's regional budget allocation and pacing participation rate, and the user's frequency counts where the consent mode allows a user key.
 5. **Look up the user.** The user store (segments, recency, syncs), keyed by the identifier the request carries and the mode allows. This is the stage most likely to blow the budget, so it is bounded by a timeout and allowed to miss.
 6. **Score.** Predict click, conversion or view probabilities per candidate with the models from Machine Learning for Ads; at scale this is the largest compute cost per bid.
@@ -143,7 +143,7 @@ Traffic shaping is the exchange deciding, per callout, whether a bidder is likel
 - **Learn from the bidder's own history.** Smart Throttling's inputs are the bidder's "historical bidding behavior" plus inventory, user and deal characteristics; Supply Stream Efficiency scores traffic "as determined by the bidder's bidding and buying history".
 - **Shape harder near the cap.** Smart Throttling is "applied automatically when your endpoint QPS reaches its limit"; Monetize filters "As a bidder approaches their QPS cap" so that "only the most valuable traffic is retained".
 - **Keep exploring.** Monetize sends "New and low-scoring traffic ... in controlled amounts, enabling bidders to explore new opportunities". Without an exploration share, a shaping model only ever sees traffic it already predicted well and can't learn that a bidder's appetite changed.
-- **Deals bypass it.** Requests carrying a bidder's deal go regardless, as Authorized Buyers' prioritization of programmatic guaranteed requests does.
+- **Deals weigh heavily.** Smart Throttling counts "Deal presence" among its inputs, and Authorized Buyers prioritizes programmatic guaranteed requests within the quota; neither page says deal requests bypass shaping entirely.
 
 SSPs & Ad Exchanges records the mechanism: `bidder_connections.exploration_bp` is the exploration share and `bid_requests.shaping` says whether each callout went because it scored, because it was exploration, or because it carried a deal. Two consequences for a bidder. Its volume can fall without any change on its side, because the exchange's model of it changed; and a new campaign that wants inventory the bidder never bought before will see little of it until exploration traffic shows the bidder now bids there. A bidder that changes strategy should tell its exchanges, or widen its declared filters, rather than wait for the models to notice.
 
