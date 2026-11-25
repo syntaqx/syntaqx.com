@@ -26,9 +26,10 @@ describe("cn", () => {
     );
   });
 
-  it("lets a text size replace an earlier leading, but not a later one", () => {
-    expect(cn("leading-snug", "text-lg")).toBe("text-lg");
+  it("keeps leading next to a text size, unless the size sets its own line height", () => {
+    expect(cn("leading-snug", "text-lg")).toBe("leading-snug text-lg");
     expect(cn("text-lg", "leading-snug")).toBe("text-lg leading-snug");
+    expect(cn("leading-snug", "text-lg/7")).toBe("text-lg/7");
   });
 
   it("keeps custom utilities", () => {
