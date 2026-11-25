@@ -30,8 +30,9 @@ describe("routeAt", () => {
 });
 
 describe("clsReport", () => {
-  it("stays quiet at or below the 0.1 threshold", () => {
-    expect(clsReport(metric(0.1), marks, [1440, 900])).toBeNull();
+  it("stays quiet at or below the 0.25 poor line", () => {
+    expect(clsReport(metric(0.25), marks, [1440, 900])).toBeNull();
+    expect(clsReport(metric(0.14), marks, [1440, 900])).toBeNull();
     expect(clsReport(metric(0.02), marks, [1440, 900])).toBeNull();
   });
 
