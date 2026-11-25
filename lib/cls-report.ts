@@ -7,8 +7,12 @@
 
 import type { CLSMetricWithAttribution } from "web-vitals/attribution";
 
-/** Web Vitals' "needs improvement" threshold: anything at or below is good. */
-export const CLS_REPORT_THRESHOLD = 0.1;
+/**
+ * Web Vitals' "poor" line. Speed Insights judges the p75 against 0.1; single
+ * sessions between 0.1 and 0.25 were browser translation and font reflow,
+ * while the real bugs (a footer jumping 0.55) sat well above it.
+ */
+export const CLS_REPORT_THRESHOLD = 0.25;
 
 /** A client-side navigation: when it started, and the path it went to. */
 export interface RouteMark {

@@ -67,7 +67,7 @@ Sentry.init({
   denyUrls: [/\/_next-live\/feedback\//, /\/_vercel\/insights\//, /\/[0-9a-f]{16}\/script\.js/],
 });
 
-// Layout shift: when a session's CLS passes 0.1, one warning naming the
+// Layout shift: when a session's CLS passes 0.25 (poor), one warning naming the
 // element that moved most and the route it moved on (paths only, never
 // fragments). Speed Insights reports CLS per route with no element.
 // A browser translating the page (Chrome wraps the new text in <font> and
@@ -81,7 +81,7 @@ if (production) {
   onCLS((metric) => {
     if (translated()) return;
     const report = clsReport(metric, routes, [innerWidth, innerHeight]);
-    if (report) Sentry.captureMessage("Layout shift above 0.1", { level: "warning", ...report });
+    if (report) Sentry.captureMessage("Layout shift above 0.25", { level: "warning", ...report });
   });
   // Slow interactions and loads, with the element and where the time went.
   onINP((metric) => {
