@@ -31,15 +31,29 @@ const michroma = Michroma({
   weight: "400",
 });
 
+// Preloads share the first round trips with the render-blocking CSS: on slow
+// 4G, five of them (180 KB) held the stylesheet back 1.5s. Only faces a first
+// paint needs are preloaded; italic and code text swap in when they arrive,
+// over fallbacks sized to match.
 const hanken = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
-  style: ["normal", "italic"],
+  style: "normal",
+});
+
+// The same family name, so <em> picks it up; it just isn't preloaded. Only its
+// variable is applied (a className would italicize the page).
+const hankenItalic = Hanken_Grotesk({
+  variable: "--font-hanken-italic",
+  subsets: ["latin"],
+  style: "italic",
+  preload: false,
 });
 
 const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -88,6 +102,7 @@ export default function RootLayout({
         bigShoulders.variable,
         michroma.variable,
         hanken.variable,
+        hankenItalic.variable,
         jetbrains.variable,
         "h-full",
       )}
