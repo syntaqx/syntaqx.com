@@ -256,7 +256,9 @@ function tick(now: number, last: { t: number; prev: number }) {
     running = false;
     return;
   }
-  requestAnimationFrame((n) => tick(n, last));
+  // Some browsers (privacy extensions, bots) patch rAF and pass no timestamp;
+  // a NaN clock indexes every scene out of bounds.
+  requestAnimationFrame(() => tick(performance.now(), last));
   if (now - last.t < 1000 / 30) return;
   const dt = Math.min(0.1, (now - last.prev) / 1000);
   last.t = now;
@@ -450,7 +452,7 @@ export function SceneArt({
       if (!running) {
         running = true;
         const now = performance.now();
-        requestAnimationFrame((n) => tick(n, { t: 0, prev: now }));
+        requestAnimationFrame(() => tick(performance.now(), { t: 0, prev: now }));
       }
     }
 
