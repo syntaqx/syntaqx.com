@@ -47,14 +47,20 @@ if (pages.length === 0) {
 
 const { index } = await pagefind.createIndex();
 let indexed = 0;
-for (const { file, url } of pages) {
-  const content = await readFile(file, "utf8");
-  // Legacy-slug aliases prerender as static 308 stubs; they'd show up as
-  // duplicate, empty results.
-  if (content.includes('id="__next-page-redirect"')) continue;
-  await index.addHTMLFile({ url, content });
-  indexed++;
+// Several files in flight at once, so reading the next file overlaps with
+// Pagefind parsing the last one instead of waiting on each round trip.
+const queue = pages.values();
+async function worker() {
+  for (const { file, url } of queue) {
+    const content = await readFile(file, "utf8");
+    // Legacy-slug aliases prerender as static 308 stubs; they'd show up as
+    // duplicate, empty results.
+    if (content.includes('id="__next-page-redirect"')) continue;
+    await index.addHTMLFile({ url, content });
+    indexed++;
+  }
 }
+await Promise.all(Array.from({ length: 16 }, worker));
 await index.writeFiles({ outputPath: "public/pagefind" });
 await pagefind.close();
 

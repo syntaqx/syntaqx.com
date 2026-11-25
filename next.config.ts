@@ -183,6 +183,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // `next build` runs the same `tsc` as CI's Typecheck job, which main
+  // requires before a merge; skipping it here saves the deploy that time.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // Inlined into the client bundle, where only NEXT_PUBLIC_* variables
   // otherwise exist: instrumentation-client.ts enables Sentry on it, and
   // without this it read undefined in every browser and never reported.
