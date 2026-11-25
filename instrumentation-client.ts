@@ -70,9 +70,16 @@ Sentry.init({
 // Layout shift: when a session's CLS passes 0.1, one warning naming the
 // element that moved most and the route it moved on (paths only, never
 // fragments). Speed Insights reports CLS per route with no element.
+// A browser translating the page (Chrome wraps the new text in <font> and
+// marks <html> translated-ltr/rtl; the site never emits either) reflows it
+// with no input, so those sessions aren't reported.
 const routes: RouteMark[] = [{ at: 0, path: location.pathname }];
+const translated = () =>
+  /\btranslated-(ltr|rtl)\b/.test(document.documentElement.className) ||
+  document.querySelector("font") !== null;
 if (production) {
   onCLS((metric) => {
+    if (translated()) return;
     const report = clsReport(metric, routes, [innerWidth, innerHeight]);
     if (report) Sentry.captureMessage("Layout shift above 0.1", { level: "warning", ...report });
   });
