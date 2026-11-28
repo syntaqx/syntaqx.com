@@ -45,7 +45,17 @@ export default function AboutPage() {
                 millions of users to scrappy startups where I was racking and stacking servers,
                 writing deployment scripts, and acting as the entire infrastructure team. The
                 breadth is the point. Every industry, every scale, every fire has shaped how I think
-                about building things.
+                about building things. The{" "}
+                <Link href="/docs" className="text-link">
+                  docs
+                </Link>{" "}
+                and{" "}
+                <Link href="/books" className="text-link">
+                  books
+                </Link>{" "}
+                are where that breadth gets written down: the playbook I build from, and one book
+                per industry I&apos;ve shipped software in, sourced from public filings, regulations
+                and vendor docs.
               </p>
               <p>
                 That exposure taught me something: everywhere you look, the same problems exist. The
