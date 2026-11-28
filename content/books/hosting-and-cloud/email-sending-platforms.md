@@ -106,6 +106,7 @@ Separating traffic by type and by customer is the other half of reputation manag
 - **SES tenants** (August 1, 2025) let one AWS account divide its sending into tenants with automated reputation policies: "Standard (recommended) which pauses sending for high-impact findings," "Strict which pauses for any reputation finding," or "None for manual monitoring." From June 1, 2026 "each tenant maintains a separate suppression list," and from September 17, 2026 Virtual Deliverability Manager reports deliverability per tenant.
 - **Postmark** recommends that a platform "set up each customer on their own Server," and says "using a single sending domain for multiple customers is a big no-no," asking for past stats with "a bounce rate below 10% and a spam complaint of 0.1% or lower" before onboarding a customer.
 - **SendGrid** includes subuser management on its Pro plan.
+- **SendPost**, SendX's email API and SMTP relay, is built around sub-accounts: "each tenant has separate API keys, domains, suppressions, and statistics." Its docs tell a platform to "create separate sub-accounts for each tenant." Dedicated IP pools sit at the account level, and the platform assigns a pool to each tenant.
 
 ## Bounces, Blocks and Suppression
 
@@ -299,6 +300,7 @@ Notes on the sketch:
 - [Resend: Pricing](https://resend.com/pricing), plans, dedicated IP add-on and free limits
 - [Resend: Dedicated IPs](https://resend.com/docs/knowledge-base/how-do-dedicated-ips-work), eligibility and warmup split
 - [Resend: Account quotas and limits](https://resend.com/docs/knowledge-base/account-quotas-and-limits), quotas, domains, the hard limit and the request rate
+- [SendPost: Multi-tenant sending](https://docs.sendpost.io/api-reference/common-use-cases/multi-tenant), a sub-account per tenant with its own keys, domains, suppressions and stats; account-level IP pools
 
 **Company history**
 
