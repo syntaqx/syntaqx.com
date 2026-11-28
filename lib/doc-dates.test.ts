@@ -52,6 +52,33 @@ describe("parseLastModified()", () => {
     expect(dates.has("content/docs/industries/payments/ach.md")).toBe(false);
     expect(dates.has("content/docs/old.md")).toBe(false);
   });
+
+  it("skips ignored commits: a link rewrite keeps the date of the last real edit", () => {
+    const dates = parseLastModified(log, new Set(), new Set(["c3"]));
+    expect(dates.get("content/docs/money/amounts.md")).toBe("2026-09-01T09:00:00-06:00");
+    // Never changed outside the ignored commit: its date is all there is.
+    expect(dates.get("content/docs/requests/idempotency.md")).toBe("2026-10-22T12:00:00-06:00");
+  });
+
+  it("follows a move made in an ignored commit back to the last real edit", () => {
+    const moves = [
+      `${S}c2${S}2026-11-03T12:00:00-06:00`,
+      "",
+      "R095\tcontent/docs/architecture/audit-trails.md\tcontent/docs/building-blocks/audit-trails.md",
+      `${S}c1${S}2026-10-01T09:00:00-06:00`,
+      "",
+      "M\tcontent/docs/architecture/audit-trails.md",
+    ].join("\n");
+    const dates = parseLastModified(moves, new Set(), new Set(["c2"]));
+    expect(dates.get("content/docs/building-blocks/audit-trails.md")).toBe(
+      "2026-10-01T09:00:00-06:00",
+    );
+  });
+
+  it("shows no date when the only real edit is past a shallow boundary", () => {
+    const dates = parseLastModified(log, new Set(["c2"]), new Set(["c3"]));
+    expect(dates.has("content/docs/money/amounts.md")).toBe(false);
+  });
 });
 
 describe("parseFirstAdded()", () => {

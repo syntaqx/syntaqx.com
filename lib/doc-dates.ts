@@ -24,8 +24,9 @@ const SEP = "\u0001";
 export function parseLastModified(
   log: string,
   shallowBoundaries: ReadonlySet<string> = new Set(),
+  ignored: ReadonlySet<string> = new Set(),
 ): Map<string, string> {
-  return parseHistory(log, shallowBoundaries).modified;
+  return parseHistory(log, shallowBoundaries, ignored).modified;
 }
 
 /**
@@ -41,8 +42,18 @@ export function parseFirstAdded(
   return parseHistory(log, shallowBoundaries).added;
 }
 
-function parseHistory(log: string, shallowBoundaries: ReadonlySet<string>) {
+/**
+ * `ignored` commits (.content-dates-ignore-revs) aren't edits, like a pure
+ * move: a file keeps the date of its last real change, or the ignored
+ * commit's date when it has no other.
+ */
+function parseHistory(
+  log: string,
+  shallowBoundaries: ReadonlySet<string>,
+  ignored: ReadonlySet<string> = new Set(),
+) {
   const dates = new Map<string, string>();
+  const fallback = new Map<string, string>();
   const unknown = new Set<string>();
   const added = new Map<string, string>();
   // Paths deleted before their current file was added: older history is another file's.
@@ -76,14 +87,33 @@ function parseHistory(log: string, shallowBoundaries: ReadonlySet<string>) {
     }
     if (dates.has(line) || unknown.has(line)) continue;
     if (shallowBoundaries.has(commit)) unknown.add(line);
-    else dates.set(line, date);
+    else if (ignored.has(commit)) {
+      if (!fallback.has(line)) fallback.set(line, date);
+    } else dates.set(line, date);
   }
 
+  for (const [line, date] of fallback) {
+    if (!dates.has(line) && !unknown.has(line)) dates.set(line, date);
+  }
   return { modified: dates, added };
 }
 
 // The resume's data: /resume's structured data dates from its last change.
 const RESUME = "lib/resume.ts";
+
+// Commits that aren't edits (link rewrites, sidebar frontmatter).
+const IGNORE_REVS = ".content-dates-ignore-revs";
+
+/** Full SHAs from a .git-blame-ignore-revs style file; none if it's missing. */
+function readRevs(file: string): Set<string> {
+  if (!existsSync(file)) return new Set();
+  return new Set(
+    readFileSync(file, "utf8")
+      .split("\n")
+      .map((s) => s.replace(/#.*/, "").trim())
+      .filter(Boolean),
+  );
+}
 
 let cache: { modified: Map<string, string>; added: Map<string, string> } | undefined;
 
@@ -114,7 +144,7 @@ export function docDates(): { modified: Map<string, string>; added: Map<string, 
       "content/books",
       RESUME,
     ]);
-    cache = parseHistory(log, boundaries);
+    cache = parseHistory(log, boundaries, readRevs(IGNORE_REVS));
   } catch {
     // No git (or no repository) where this runs: show no dates.
     cache = { modified: new Map(), added: new Map() };
