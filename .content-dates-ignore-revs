@@ -1,0 +1,14 @@
+# Commits that don't count as an edit for a doc's "Updated" date (lib/doc-dates.ts):
+# link rewrites after moves and sidebar frontmatter, no change to what a page says.
+# Same format as .git-blame-ignore-revs: one full SHA per line, # for comments.
+
+# #219 reorder the playbook (order frontmatter)
+461af9ae97a098310e29c45dcd5b55321fb29bd5
+# #220 split Building Blocks out of Architecture (moves, link rewrites)
+e03dfc96ddb74edaaab5848c7d15a18cff6748e7
+# #221 move Trust & Safety to Building Blocks (link rewrites)
+2bea7392ca7173affc64ab177793b804ade3ebf9
+# #224 reorder sections (order frontmatter)
+8152c1cfd11b29f2e6768bd40d197e9ca7bab877
+# #254 sidebar labels on one line (nav_title frontmatter)
+1abd5cae887a919e598de9ed4951302a3119f69c

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { format } from "date-fns";
 import { markdownToHtml, type DocData } from "@/lib/docs";
 import { CopyCodeScript } from "@/components/copy-code";
@@ -14,7 +15,7 @@ import { JsonLd } from "@/components/json-ld";
 import { DocsHeader } from "@/components/docs-header";
 import { DocsToc } from "@/components/docs-toc";
 import type { Heading } from "@/lib/posts";
-import { article, type Crumb } from "@/lib/schema";
+import { article, personRef, type Crumb } from "@/lib/schema";
 
 const REPO = "https://github.com/syntaqx/syntaqx.com";
 
@@ -86,6 +87,12 @@ export async function DocArticle({
             className="mt-3 flex flex-wrap items-center justify-between gap-x-5 gap-y-3"
           >
             <div className="inst flex flex-wrap items-center gap-x-5 gap-y-2 text-muted-foreground">
+              <span>
+                By{" "}
+                <Link href="/about" rel="author" className="text-link">
+                  {personRef.name}
+                </Link>
+              </span>
               <span>{doc.readingMinutes} min read</span>
               {modified && (
                 <span>
