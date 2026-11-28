@@ -53,9 +53,9 @@ export default function AboutPage() {
                 <Link href="/books" className="text-link">
                   books
                 </Link>{" "}
-                are where that breadth gets written down: the playbook I build from, and books on
-                the industries I&apos;ve built in and around, sourced from public filings,
-                regulations and vendor docs.
+                are where that breadth gets written down: the playbook I build from, and one book
+                per industry I&apos;ve shipped software in, sourced from public filings, regulations
+                and vendor docs.
               </p>
               <p>
                 That exposure taught me something: everywhere you look, the same problems exist. The
